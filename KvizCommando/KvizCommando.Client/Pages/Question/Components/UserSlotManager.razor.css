@@ -1,0 +1,22 @@
+﻿.list-grid {
+    grid-template-columns: 5px 8px max-content 60px 5fr 1fr
+}
+.category.cell {
+    max-width: 60px
+}
+.category-cell.category-cellext {
+    font-size: 1rem;
+    text-align: center;
+   
+}
+
+
+.value-cell.value-cellext {
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.ratio-cell.ratio-cellext {
+    font-size: 1rem;
+}

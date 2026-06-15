@@ -1,0 +1,16 @@
+{
+  "Button.Back": "Vissza",
+  "Button.Send": "Beküld",
+  "Password": "Jelszó",
+  "screen.WarningMessage": "Ez az oldal nem támogatott ezen a képernyőméreten!",
+  "Modal.Language.Content.en": "The changes will be applied after you refresh the game page.",
+  "Modal.Language.Content.hu": "A változtatások az oldal újra töltésével aktíválódnak!",
+  "Modal.Language.Keep": "Nyelv megtart",
+  "Modal.Language.Restart.en": "Reload",
+  "Modal.Language.Restart.hu": "Újratölt",
+  "Modal.Language.Title.en": "Refresh the page?",
+  "Modal.Language.Title.hu": "Betölti az oldalt?",
+  "Username": "Felhasználónév",
+  "Email": "E-mail cím:",
+  "Password.Confirm": "Jelszó megerősítése"
+}

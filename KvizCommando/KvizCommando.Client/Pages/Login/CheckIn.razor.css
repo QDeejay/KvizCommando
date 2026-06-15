@@ -1,0 +1,128 @@
+﻿.checkin-panel {
+    width: 400px;
+    margin: 10px auto;
+    
+}
+
+/* HEAD border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);/*/
+.checkin-head {
+    text-align: center;
+    padding: 4px;
+}
+
+/* BODY * background-color: #1c1c1c;/*/
+.checkin-body {
+    margin-top: 20px; /* Ezt állítsd, hogy milyen messze legyen a HEAD-től */
+    display: flex;
+    flex-direction: column;
+    gap: 4px; /* mezők közti térköz */
+}
+
+/* FOOTER */
+.checkin-footer {
+    bottom: 0;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: left;
+}
+
+.checkin-row {
+    display: flex;
+    justify-content: space-between; /* bal és jobb szél */
+    margin-top: 8px;
+   
+}
+
+
+/* Link stílus */
+.AcceptTerms-link {
+    margin-left: 0px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem; /* Méret állítása itt */
+    color: #aaff44;
+    text-decoration: none;
+    white-space: normal;
+    word-break: break-word;
+    align-items: center;
+    font-size: 10px;
+    padding-left:4px;
+}
+
+    .AcceptTerms-link:hover {
+        color: #ddff77;
+        text-decoration: underline;
+    }
+
+.AcceptTerms-label {
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    color: #cccccc;
+}
+
+.checkin-action {
+    display: flex;
+    flex-direction: row;
+ 
+    justify-content: flex-start; /* függőleges középvonal */
+    gap: 4px; /* checkbox és gomb közötti távolság */
+}
+.checkin-checkbox {
+    display: flex;
+    justify-content: flex-start;
+    top: 0;
+}
+.label-text {
+    padding-left: 4px;
+}
+.checkin-AcceptText {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start; /* függőleges középvonal */
+}
+
+/* alap checkbox kinézet kikapcsolása */
+input[type="checkbox"].AcceptTerms-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #777; /* keret színe */
+    border-radius: 4px; /* lekerekítés (opcionális) */
+    background-color: #fff; /* háttérszín alapból */
+    cursor: url('/Images/cursors/active.cur'), pointer;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+}
+input[type=checkbox]:focus {
+    outline: none;
+    box-shadow: none;
+}
+    /* pipa állapot */
+    input[type="checkbox"].AcceptTerms-checkbox:checked {
+        background-color: #bbb; /* marad a háttér ugyanaz */
+        border-color: #777;
+        color: #777; /* ez lesz a pipa színe */
+    }
+
+        /* pipa megjelenítése */
+        input[type="checkbox"].AcceptTerms-checkbox:checked::after {
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            font-size: 8px;
+            color: #000; /* pipa színe */
+        }
+.kc-modal-body  {
+    display: block;
+    width: 100%;
+    height: 300vh;
+    border: 0;
+}
+/* Scrollbar testreszabás az iframe-hez */
+
+

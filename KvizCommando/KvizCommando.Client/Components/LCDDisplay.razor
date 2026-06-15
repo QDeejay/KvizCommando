@@ -1,0 +1,11 @@
+﻿<div class="lcd-display"
+    style="background: @(DisplayLed == "On" ? BgOn : BgOff); color:@(DisplayLed == "On" ? FgOn : FgOff);">
+    @if (CurrentText != null)
+    {
+        <div class="lcd-text @(IsVisible ? "visible" : "")" style="color:@LedColor;">@CurrentText</div>
+    }
+    else
+    {
+        <div class="lcd-text">-- Kvíz Commando--</div>
+    }
+</div>

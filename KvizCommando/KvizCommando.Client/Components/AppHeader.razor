@@ -1,0 +1,29 @@
+﻿<header class="app-header">
+    <div class="app-header__right dropdown">
+        <button id="userToggle"
+                type="button"
+                class="dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                aria-label="User menu">
+            
+            
+            <i class="bi bi-person-circle"></i>
+            <span class="ms-2"></span>
+        </button>
+
+        <ul id="userMenu" class="dropdown-menu dropdown-menu-end">
+            <li><h6 class="dropdown-header">@DisplayName</h6></li>
+            <li><a class="dropdown-item" href="/profile">@lclRow1</a></li>
+            <li><a class="dropdown-item" href="/settings">@lclRow2</a></li>
+            <li><a class="dropdown-item" href="/settings">@lclRow3</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li><button  class="dropdown-item" @onclick="OnLogout">@lclLogout</button></li>
+        </ul>
+    </div>
+</header>
+<!--
+DisplayName
+
+
+-->

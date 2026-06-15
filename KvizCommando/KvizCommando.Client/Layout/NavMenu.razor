@@ -1,0 +1,69 @@
+﻿@inherits LayoutComponentBase
+@if (_isReady == true)
+{
+    <nav class="side-nav @(IsCollapsed ? "collapsed" : "")">
+        <div class="kc-sidenav-collapse-btn" @onclick="() => OnToggleSidebar.InvokeAsync()">
+            <img src="images/logo.webp" alt="Logo" class="nav-logo" />
+        </div>
+        @if (!IsCollapsed)
+        {
+            
+            <NavLink class=@btnNavClass[0] href="home" @onclick="() => OnNavClick(0)" Match="NavLinkMatch.All">
+                <i class="bi bi-house-door"></i>
+                <span>@Lang["nav.Button.Home"]</span>
+            </NavLink>
+
+            <NavLink class=@btnNavClass[1] href="question" @onclick="() => OnNavClick(1)" Match="NavLinkMatch.All">
+                <i class="bi bi-person-badge-fill"></i>
+                <span>@Lang["nav.Button.Team"]</span>
+            </NavLink>
+
+            <NavLink class=@btnNavClass[2] href="team" @onclick="() => OnNavClick(2)" Match=" NavLinkMatch.All">
+                <i class="bi bi-patch-question"></i>
+                <span>@Lang["nav.Button.Question"]</span>
+            </NavLink>
+
+            <NavLink class=@btnNavClass[3] href="gamesolo" @onclick="() => OnNavClick(3)" Match=" NavLinkMatch.All">
+                <i class="bi bi-controller"></i>
+                <span>@Lang["nav.Button.Game"]</span>
+            </NavLink>
+            <NavLink class=@btnNavClass[3] href="gamevs" @onclick="() => OnNavClick(4)" Match=" NavLinkMatch.All">
+                <i class="bi bi-controller"></i>
+                <span>@Lang["nav.Button.Game"] VS</span>
+            </NavLink>
+
+            <NavLink class=@btnNavClass[5] href="#">
+                <i class="bi bi-shop"></i>
+                <span>@Lang["nav.Button.Shop"]</span>
+            </NavLink>
+
+            <NavLink class=@btnNavClass[6] href="#">
+                <i class="bi bi-graph-up"></i>
+                <span>@Lang["nav.Button.Statistic"]</span>
+            </NavLink>
+
+            <NavLink class=@btnNavClass[7] href="#">
+                <i class="bi bi-calendar-event"></i>
+                <span>@Lang["nav.Button.Events"]</span>
+            </NavLink>
+
+            <NavLink class=@btnNavClass[8] href="#">
+                <i class="bi bi-chat-left-text"></i>
+                <span>@Lang["nav.Button.Messages"]</span>
+            </NavLink>
+
+            <NavLink class=@btnNavClass[9] href="#">
+                <i class="bi bi-people"></i>
+                <span>@Lang["nav.Button.Community"]</span>
+            </NavLink>
+            <!--
+                <div class="nav-footer">
+                <NavLink class=@btnNavClass[15] href="#">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <div>@Lang["nav.Button.Exit"]</div>
+                </NavLink>
+            </div>
+            -->
+        }
+</nav>
+}

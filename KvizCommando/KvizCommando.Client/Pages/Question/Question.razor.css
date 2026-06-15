@@ -1,0 +1,45 @@
+﻿
+.box-container {
+    width: 100%;
+    max-width: 100%;
+    justify-items: center;
+    z-index:101;
+}
+.lcd-wrapper {
+    height: 100%;
+    width: 95%;
+}
+
+.attention-text {
+    margin: 30px 30px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+.placeholder {
+    opacity: 0.6;
+    font-style: italic;
+    padding: 8px 0;
+}
+.quest-selector {
+    display: flex;
+    position:relative;
+    top: -50px;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
+    width: 440px;
+}
+
+
+.btn-bar {
+    display:flex;
+    justify-content: center;
+    margin-top: 12px;
+}
+    .btn-bar.hidden {
+        display: none;
+    }

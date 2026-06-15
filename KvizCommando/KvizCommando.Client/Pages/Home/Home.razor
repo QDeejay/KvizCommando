@@ -1,0 +1,53 @@
+﻿@page "/home"
+
+
+<LangGuard Culture=@culture Module="home" OnReady="BuildButtons">
+    <PageContainer>
+        
+            @if (_isReady == true)
+            {
+            <div class="home-selector">
+                    @foreach (string bx in BtnOrder)
+                    {
+                        var box = Box(bx);
+                            <ContentBox Header="@box.Header"
+                                        Footer="@box.Footer"
+                                        FooterDisplay="@box.FooterDisplay"
+                                        Size="@((string.IsNullOrEmpty(@box.Size)) ? bboardSize : box.Size)"
+                                        Resizable="@((string.IsNullOrEmpty(@box.Size)))"
+                                        ShowImage="@(!(string.IsNullOrEmpty(@box.ImageSrc)))"
+                                        ImageSrc="@box.ImageSrc"
+                                        IsClickable="@box.IsClickable"
+                                        IsEnabled="@box.IsEnabled"
+                                        ClickId="@box.ClickId"
+                                        OnClick="OnBoxClick"
+                                        FooterClick="CloseBBoard">
+                                        @if (string.IsNullOrEmpty(@box.ImageSrc))
+                                        {
+                                            <div class="lcd-wrapper">
+                                                <div class="lcd-display-outer">
+                                                    <div class="lcd-display-inner" style="align-content:start;">
+                                                        <div class="bboard-item">
+                                                            @BboardHTML
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                            </ContentBox>
+                    }
+             </div>
+            }
+    </PageContainer>
+</LangGuard>
+
+
+
+
+
+
+
+
+
+
+

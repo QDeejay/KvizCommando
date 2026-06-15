@@ -1,0 +1,42 @@
+﻿.modal-custom {
+    width: 400px;
+    height: 200px;
+    margin: auto;
+    border: 2px solid #444; /* egyszerű placeholder keret */
+    border-radius: 8px;
+    font-family: 'Special Elite', cursive;
+    background-color: var(--bs-dark); /* Bootstrap változó */
+    color: #d3d3d3;
+   
+}
+/* Title */
+.modal-header-custom {
+    padding-top: 10px;
+}
+
+.modal-title-custom {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 0;
+    
+}
+
+/* Message */
+.modal-message {
+    font-size: 0.9rem;
+    margin: 0;
+    padding: 0 5px;
+}
+
+/* Footer – gombok 20px-re az aljától */
+.modal-footer-custom {
+    margin-bottom: 20px;
+}
+.modal-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    filter: invert(1); /* sötét háttéren fehér X */
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}

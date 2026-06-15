@@ -1,0 +1,77 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+	<PropertyGroup>
+		<EmbeddedResourceUseDependentUponConvention>false</EmbeddedResourceUseDependentUponConvention>
+	</PropertyGroup>
+	<PropertyGroup>
+		<InvariantGlobalization>false</InvariantGlobalization>
+		<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+	</PropertyGroup>
+
+
+
+
+
+	<ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="8.0.18" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.18" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.18" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.18" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.18">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.18" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.18" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.18">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="6.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KvizCommando.Client\KvizCommando.Client.csproj" />
+    <ProjectReference Include="..\KvizCommando.Shared\KvizCommando.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\StaticData\" />
+    <Folder Include="Resources\Client\localization\en\" />
+    <Folder Include="Resources\Client\localization\hu\" />
+    <Folder Include="wwwroot\Board\hu\" />
+    <Folder Include="wwwroot\Board\en\" />
+    <Folder Include="wwwroot\Localization\" />
+  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Infrastructure\Email\Templates\**\*.*" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="Data\UserJsons\**" />
+	  <Content Remove="Data\UserJsons\**" />
+	  <EmbeddedResource Remove="Data\UserJsons\**" />
+	  <None Remove="Data\UserJsons\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="Infrastructure\Email\Templates\EmailTemplates\Auth\Class.cs" />
+	</ItemGroup>
+
+
+
+
+
+	<UsingTask TaskName="ResxExporter.ResxExporter" AssemblyFile="..\..\BuildTools\ResxExporter\bin\Release\net472\ResxExporter.dll" />
+
+	<Target Name="RunResxExporter" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+		<ResxExporter SourceRoot="..\KvizCommando.Server\Resources\Client" OutputRoot="..\KvizCommando.Server\wwwroot\localization" />
+	</Target>
+	
+
+
+</Project>

@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Button.Hire" xml:space="preserve">
+    <value>Hire</value>
+  </data>
+  <data name="Label.Attitude.Sec" xml:space="preserve">
+    <value>Secondary modifiers:</value>
+  </data>
+  <data name="Label.Help" xml:space="preserve">
+    <value>Helps</value>
+  </data>
+  <data name="Label.Level" xml:space="preserve">
+    <value>Level: </value>
+  </data>
+  <data name="Label.Attitude.Help" xml:space="preserve">
+    <value>Help modifiers:</value>
+  </data>
+  <data name="Label.Name" xml:space="preserve">
+    <value>Name: </value>
+  </data>
+  <data name="Label.PopUp.NotHire" xml:space="preserve">
+    <value>Currently it is an open position,  but unfortunately, you do not able to hire a teammember, because you fired somebody in the past 24 hour!</value>
+  </data>
+  <data name="Label.Rank" xml:space="preserve">
+    <value>Rank:</value>
+  </data>
+  <data name="Label.TeamName" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="tabPane.General" xml:space="preserve">
+    <value>Gen</value>
+  </data>
+  <data name="tabPane.General.Title" xml:space="preserve">
+    <value>Team information</value>
+  </data>
+  <data name="Button.Upgrade" xml:space="preserve">
+    <value>Promote</value>
+  </data>
+  <data name="Label.Attitude.3rd" xml:space="preserve">
+    <value>Extra modifiers:</value>
+  </data>
+  <data name="SubBtn.OverView" xml:space="preserve">
+    <value>Overview</value>
+  </data>
+  <data name="SubBtn.Main" xml:space="preserve">
+    <value>Primary</value>
+  </data>
+  <data name="SubBtn.Second" xml:space="preserve">
+    <value>Secondary</value>
+  </data>
+  <data name="SubBtn.Helps" xml:space="preserve">
+    <value>Helps</value>
+  </data>
+  <data name="SubBtn.Hire" xml:space="preserve">
+    <value>Recruit</value>
+  </data>
+  <data name="tabPane.Recruit.Title" xml:space="preserve">
+    <value>teammate recruitment</value>
+  </data>
+  <data name="label.TeamDevPointShort" xml:space="preserve">
+    <value>Tp:</value>
+  </data>
+  <data name="Label.SkillPointShort" xml:space="preserve">
+    <value>Sp&lt;{0}&gt;:</value>
+  </data>
+  <data name="Label.Menbers" xml:space="preserve">
+    <value>Members:</value>
+  </data>
+  <data name="Label.Credit" xml:space="preserve">
+    <value>Credit:</value>
+  </data>
+  <data name="Label.Bonus" xml:space="preserve">
+    <value>Bonus:</value>
+  </data>
+  <data name="tabPane.Member.Title" xml:space="preserve">
+    <value>Teammate information</value>
+  </data>
+  <data name="Label.Pension" xml:space="preserve">
+    <value>Pension:</value>
+  </data>
+  <data name="Label.Next" xml:space="preserve">
+    <value>Next to Xp:</value>
+  </data>
+  <data name="Label.Remark.Develop" xml:space="preserve">
+    <value>(Able to develope)</value>
+  </data>
+  <data name="Label.Modifiers" xml:space="preserve">
+    <value>Modifiers:</value>
+  </data>
+  <data name="SubBtn.Extra" xml:space="preserve">
+    <value>Extra mods</value>
+  </data>
+  <data name="Label.Remark.AtMaximum" xml:space="preserve">
+    <value>On Maximum</value>
+  </data>
+  <data name="modal.Title.Promote" xml:space="preserve">
+    <value>Team member promotion</value>
+  </data>
+  <data name="modal.Title.Retire" xml:space="preserve">
+    <value>Team member retirement</value>
+  </data>
+  <data name="modal.Title.Handle" xml:space="preserve">
+    <value>Handle team member</value>
+  </data>
+  <data name="modal.Button.Retire" xml:space="preserve">
+    <value>Retire</value>
+  </data>
+  <data name="modal.Button.Promote" xml:space="preserve">
+    <value>Promote</value>
+  </data>
+  <data name="modal.Button.Fire" xml:space="preserve">
+    <value>Fire</value>
+  </data>
+  <data name="modal.Button.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="modal.Title.Hire" xml:space="preserve">
+    <value>Team member hire</value>
+  </data>
+  <data name="modal.Button.Hire" xml:space="preserve">
+    <value>Hire</value>
+  </data>
+  <data name="modal.Button.Heal" xml:space="preserve">
+    <value>Charge</value>
+  </data>
+  <data name="modal.Label.Orient1" xml:space="preserve">
+    <value>Main:</value>
+  </data>
+  <data name="modal.Label.Orient2" xml:space="preserve">
+    <value>2nd:</value>
+  </data>
+  <data name="modal.Label.Pros" xml:space="preserve">
+    <value>Category bonuses:</value>
+  </data>
+  <data name="modal.Label.Cons" xml:space="preserve">
+    <value>Category maluses:</value>
+  </data>
+  <data name="Label.Vitality" xml:space="preserve">
+    <value>Vitality:</value>
+  </data>
+  <data name="modal.Text.Handle1" xml:space="preserve">
+    <value>The current teammember has lack of vitality points. If you have orientation relevant develepment points, you can restore!</value>
+  </data>
+  <data name="modal.Text.Handle2" xml:space="preserve">
+    <value>Attention!</value>
+  </data>
+  <data name="modal.Text.Handle3" xml:space="preserve">
+    <value>If you choose fire option, you will not able to hire another member for a day!</value>
+  </data>
+  <data name="modal.Text.Handle4" xml:space="preserve">
+    <value>You have to get {0} points to be able to charge!</value>
+  </data>
+  <data name="modal.Text.Promote1" xml:space="preserve">
+    <value>The cost of promote is 1 Tp!</value>
+  </data>
+  <data name="modal.Label.Unlocks" xml:space="preserve">
+    <value>Unlocks:</value>
+  </data>
+  <data name="modal.Text.Retire1" xml:space="preserve">
+    <value>The team member will be retired, the collected pension will be added to  your credit pot!</value>
+  </data>
+  <data name="Label.Attitude.Mai" xml:space="preserve">
+    <value>Main modifiers:</value>
+  </data>
+  <data name="label.TeamDevPoint" xml:space="preserve">
+    <value>Team development points:</value>
+  </data>
+  <data name="Label.Class" xml:space="preserve">
+    <value>Class</value>
+  </data>
+  <data name="Button.Modify" xml:space="preserve">
+    <value>Modify</value>
+  </data>
+  <data name="modal.Text.Promote2" xml:space="preserve">
+    <value>The promotion is free, because of rank class changing!</value>
+  </data>
+  <data name="Label.PopUp.NoFree" xml:space="preserve">
+    <value>Curremtly there is no vaccant position!</value>
+  </data>
+</root>

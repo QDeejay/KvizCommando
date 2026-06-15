@@ -1,0 +1,73 @@
+﻿@using KvizCommando.Shared.Contracts.Question
+@using KvizCommando.Client.Helpers
+
+<div class="lcd-display-outer">
+    <div class="lcd-display-inner">
+
+        <div class="list-grid">
+            <div></div>
+            <div class="list-header no-cell">@Lang["question.Table.Header.No"]</div>
+            <div class="list-header category-cell">@Lang["question.Table.Header.Category"]</div>
+
+            @for (var i = 0; i < RowCount; i++)
+            {
+                var row = i;
+                var ownLimit = Math.Min(
+                    ExtInfo.AvailablePendingSlot,
+                    ExtInfo.AvailableUserSlot - ExtInfo.FreeUserSlot
+                );
+
+                if (row < ownLimit)
+                {
+                        Options = CatHelper.OptionsUpdate(CategoryOptionHelpers.optionType.Own, ExtInfo.CharCatMask);
+                    <div>o</div>
+                }
+                else
+                {
+                        Options = CatHelper.OptionsUpdate(CategoryOptionHelpers.optionType.Normal, ExtInfo.CharCatMask);
+                    <div></div>
+                }
+
+                <div class="no-cell">@((row + 1).ToString())</div>
+
+                <div class="value-cell @(EditingRowIndex == row ? "editing" : null)">
+                    @if (EditingRowIndex == row)
+                    {
+                        <select class="inline-editor"
+                                @bind="WorkingCodes[row]"
+                                @bind:event="onchange"
+                                @onclick:stopPropagation="true"
+                                @onkeydown="OnEditorKeyDown"
+                                autofocus>
+                            @foreach (var opt in Options)
+                            {
+                                <option value="@opt.Code">@QuestionHelper.GetLabel(opt, culture)</option>
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <button type="button"
+                                class="value-button"
+                                @onclick="() => StartEdit(row)"
+                                @onclick:stopPropagation="true">
+                                @CatHelper.ResolveLabel(WorkingCodes[row], culture)
+                        </button>
+                    }
+                </div>
+            }
+        </div>
+
+        <label class="message-label" style=" @((!isSuccess ? "color:red;" : ""))">
+            @MessageFact
+        </label>
+
+    </div>
+</div>
+<div class="save-bar">
+    <button class=" military-button"
+            disabled="@(!IsDirty)"
+            @onclick="OnSaveSlots">
+        @Lang["question.Button.Save"]
+    </button>
+</div>

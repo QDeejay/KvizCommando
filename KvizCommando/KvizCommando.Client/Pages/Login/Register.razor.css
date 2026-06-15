@@ -1,0 +1,45 @@
+﻿.regist-panel {
+    width: 400px;
+    margin: 10px auto;
+}
+
+/* HEAD border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);/*/
+.regist-head {
+    text-align: center;
+    padding: 4px;
+}
+
+/* BODY * background-color: #1c1c1c;/*/
+.regist-body {
+    margin-top: 8px; /* Ezt állítsd, hogy milyen messze legyen a HEAD-től */
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* mezők közti térköz */
+}
+
+/* FOOTER */
+.regist-footer {
+    margin-top: 4px;
+    display: flex;
+    justify-content: left;
+}
+
+/* Link stílus */
+.regist-link {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem; /* Méret állítása itt */
+    color: #aaff44;
+    text-decoration: none;
+}
+
+    .regist-link:hover {
+        color: #ddff77;
+        text-decoration: underline;
+    }
+.button-row {
+    display: flex;
+    justify-content: space-between; /* bal és jobb szél */
+    margin-top: 4px;
+}
+

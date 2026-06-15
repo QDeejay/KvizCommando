@@ -1,0 +1,10 @@
+{
+  "Button": "Belépés",
+  "ButtonLink": "Regisztráció",
+  "CheckBox.RememberMe": "Emlékezz rám",
+  "Error.EmptyFields": "Töltsd ki az összes mezőt!",
+  "Error.Login": "Hibás belépési adataok vagy nincs ellenőrizve az e-mail cím!",
+  "ForgotPassword": "Elfelejtett jelszó",
+  "Label.Providers": "Egyéb lehetőségek:",
+  "Title": "Bejelentkezés"
+}

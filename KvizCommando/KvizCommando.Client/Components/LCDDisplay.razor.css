@@ -1,0 +1,46 @@
+﻿.lcd-display {
+    overflow: hidden;
+    position: relative;
+    min-height: 38px;
+    /*border-radius: 8px;*/
+    /* margin-left: 10px;*/
+    border: inset 2px #777;
+    border-radius: 4px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4), inset 0 4px 8px rgba(0,0,0,0.7);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.2rem;
+    color: #222F16;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(210, 255, 57, 0.9);
+    box-sizing: border-box;
+}
+
+.lcd-text {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(30%);
+    transition: opacity 0.4s, transform 0.5s;
+    text-align: center;
+    padding: 8px 0;
+    color: #222F16;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.2rem;
+}
+
+    .lcd-text.visible {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+
+
+
+
+
+
+
+
+

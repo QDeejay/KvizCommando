@@ -1,0 +1,58 @@
+﻿
+
+<div class="@CssClass" @onclick="HandleClick" style="@BackgroundStyle">
+    <div class="box-header label-title">@Header
+        @if (Header.Length > 13 && Size=="small")
+        {
+            <span class="tooltip-box">@Header</span>
+        }
+    </div>
+
+    <div class="box-content">
+        @if (ShowImage && !string.IsNullOrEmpty(ImageSrc))
+        {
+            <img src="@ImageSrc" alt="logo" />
+        }
+        else
+        {
+            @ChildContent
+        }
+    </div>
+    
+    @if (Resizable == true)
+    {
+        CursorStyle = "cursor: url('/Images/cursors/active.cur'), pointer;";
+
+    }
+    else
+    {
+        CursorStyle = "";
+    }
+    <div class="@FooterClass" @onclick="ToggleSize" style=@CursorStyle>
+        @Footer
+        @if (Resizable && (Size == "large" || Size == "minimalized"))
+        {
+            <span class="toggle-icon @(Size == "minimalized" ? "arrow-down" : "arrow-up")"></span>
+        }
+    </div>
+
+    @if (!IsEnabled)
+    {
+        <div class="disabled-overlay">
+
+
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="ban-icon" viewBox="0 0 512 512">
+                <path fill="grey" d="M352 224V160C352 89.3 294.7 32 224 32S96 89.3 96 160v64H80c-26.5 0-48 21.5-48 48v160c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48h-16zM144 160c0-44.1 35.9-80 80-80s80 35.9 80 80v64H144v-64zm112 192v48c0 8.8-7.2 16-16 16s-16-7.2-16-16v-48c-9.6-5.5-16-15.8-16-27.5c0-17.7 14.3-32 32-32s32 14.3 32 32c0 11.7-6.4 22-16 27.5z" />
+            </svg>
+           
+            
+        </div>
+    }
+</div>
+<!--
+     <svg xmlns="http://www.w3.org/2000/svg" class="ban-icon" viewBox="0 0 512 512">
+                <path fill="darkred" d="M256,48C141.1,48,48,141.1,48,256s93.1,208,208,208s208-93.1,208-208S370.9,48,256,48z M142.1,142.1 c31.6-31.6,74.4-49,113.9-49c34.2,0,66.7,11.2,93.3,31.9L174,366.1c-20.7-26.6-31.9-59.1-31.9-93.3 C142.1,216.5,159.5,173.7,142.1,142.1z M256,464c-34.2,0-66.7-11.2-93.3-31.9L338,145.9c20.7,26.6,31.9,59.1,31.9,93.3 C370,374.5,332.5,432,256,464z" />
+                </svg>
+
+-->

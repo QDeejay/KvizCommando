@@ -1,0 +1,60 @@
+﻿<div class="modal fade" id="@Id" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered @SizeClass">
+        <div class="modal-content modal-custom">
+
+            <div class="modal-header-custom text-center">
+                <h5 class="modal-title-custom">@Title</h5>
+                <button type="button" class="btn-close modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @if (CheckBottom==true)
+            {
+                <div id="termsBody" class="modal-body kc-modal-body" style="overflow-y: auto;" @onscroll="OnTermsScroll">
+                    @ChildContent
+                </div>
+            }
+            else
+            {
+                <div id="termsBody" class="modal-body kc-modal-body">
+                    @ChildContent
+                </div>
+            }
+            <div class="modal-checkbox">
+                @if (!string.IsNullOrWhiteSpace(CheckBoxText) && CheckBoxText!="#")
+                {
+                    <input class="form-check-input notshow-checkbox" type="checkbox" id="notshow" @bind="CheckBox" />
+                    <label class="form-check-label notshow-label" for="notshow">
+                        @CheckBoxText
+                    </label>
+                }
+            </div>
+            <div class="modal-footer-custom d-flex justify-content-around">
+                @if (!string.IsNullOrWhiteSpace(ActionText1) && ActionText1 != "#")
+                {
+                    <button class="military-button"
+                            disabled="@(CanAccept==false)"
+                            @onclick="OnActionClicked1"
+                            style="@ActionButtonStyle1">
+                        @ActionText1
+                    </button>
+                }
+                @if (!string.IsNullOrWhiteSpace(ActionText2) && ActionText2 != "#")
+                {
+                    <button class="military-button"
+                            style="@ActionButtonStyle2"
+                            disabled="@(CanAccept == false)"
+                            @onclick="OnActionClicked2">
+                        @ActionText2
+                    </button>
+                }
+                @if (!string.IsNullOrWhiteSpace(CloseText) && CloseText != "#")
+                {
+                    <button class="military-button--secondary" data-bs-dismiss="modal">
+                        @CloseText
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,13 @@
+﻿.recruit-tab {
+    width: 100%;
+    height: 87%;
+    border-top:dashed;
+    border-bottom:dashed;
+    border-color: rgba(10,10,10,0.5) ;
+}
+.recruit-row {
+    margin-top: 10px;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}

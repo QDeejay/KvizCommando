@@ -1,0 +1,135 @@
+﻿.login-panel {
+    width: 400px;
+    margin: 10px auto;
+    
+   
+    
+}
+
+/* HEAD border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);/*/
+.login-head {
+    text-align: center;
+    padding: 4px;
+}
+
+/* BODY * background-color: #1c1c1c;/*/
+.login-body {
+    margin-top: 8px; /* Ezt állítsd, hogy milyen messze legyen a HEAD-től */
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* mezők közti térköz */
+}
+
+/* FOOTER */
+.login-footer {
+    margin-top: 8px;
+    display: flex;
+    justify-content: left;
+}
+
+.login-footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+    .login-footer-links .divider {
+        color: #888;
+        font-weight: bold;
+        user-select: none;
+    }
+
+
+/* Link stílus */
+.login-link {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem; /* Méret állítása itt */
+    color: #aaff44;
+    text-decoration: none;
+}
+
+    .login-link:hover {
+        color: #ddff77;
+        text-decoration: underline;
+    }
+
+.remember-me-label {
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    color: #cccccc;
+}
+
+.login-actions {
+    display: flex;
+    align-items: center; /* függőleges középvonal */
+    gap:10px;
+    
+    /* checkbox és gomb közötti távolság */
+}
+
+/* a custom checkbox a korábbi definíció szerint */
+
+/* alap checkbox kinézet kikapcsolása */
+input[type="checkbox"].custom-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #777; /* keret színe */
+    border-radius: 4px; /* lekerekítés (opcionális) */
+    background-color: #fff; /* háttérszín alapból */
+    cursor: url('/Images/cursors/active.cur'), pointer;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+}
+input[type=checkbox]:focus {
+    outline: none;
+    box-shadow: none;
+}
+    /* pipa állapot */
+    input[type="checkbox"].custom-checkbox:checked {
+        background-color: #bbb; /* marad a háttér ugyanaz */
+        border-color: #777;
+        color: #777; /* ez lesz a pipa színe */
+    }
+
+        /* pipa megjelenítése */
+        input[type="checkbox"].custom-checkbox:checked::after {
+            
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            font-size: 16px;
+            color: #000; /* pipa színe */
+        }
+
+.btn-provider {
+  
+    
+   
+    padding: 1px;
+
+    width: max-content; /* alap szélesség */
+
+    height: 30px;
+    color: #fff;
+  
+}
+
+    .btn-provider:hover {
+        
+        opacity: 0.7;
+    }
+.other-providers {
+    position:absolute;
+   
+    bottom:20px;
+    
+    align-items: center;
+    justify-content: right;
+}

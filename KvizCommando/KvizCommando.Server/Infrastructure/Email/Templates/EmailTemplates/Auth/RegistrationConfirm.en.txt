@@ -1,0 +1,12 @@
+﻿Welcome Private!
+
+Please confirm your email to activate your {{AppName}} account.
+
+Confirm:
+{{ConfirmUrl}}
+
+This link is valid for {{TokenValidityHours}} hour(s).
+
+If you didn’t request this, please ignore this email or contact us at {{SupportEmail}}.
+
+© {{Year}} {{AppName}}

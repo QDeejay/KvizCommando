@@ -1,0 +1,52 @@
+﻿<div class="title">@vm.Rows[0].Label</div>
+<div class="list-grid bottom-extend @(TabPos==0 ? "gapped-rows" : "")">
+    
+    
+    @for (int i = 1; i < vm.Rows.Count; i++)
+    {
+        var row = i;
+        var bgColorBtn = "";
+         <div class="row-marker">
+            <label>@(vm.Rows[row].Remark != "" ? "!" : string.Empty)</label>
+        </div>
+        
+        @if (vm.Rows[0].Column1 == "False")
+        {
+            colorColumn = row < 7 ? "color: green;" : "color: red;";
+        }
+        else
+        {
+            colorColumn = string.Empty;
+        }
+        <div class="datacol-1">@vm.Rows[row].Label</div>
+        <div class="datacol-2">@vm.Rows[row].Column1</div>
+        <div class="datacol-3" style="@colorColumn">@vm.Rows[row].Column2</div>
+        <div class="datacol-4">
+            @if (vm.Rows[row].action > 100)
+            {
+              
+                if (vm.Rows[row].action > 400)
+                    bgColorBtn = "background-color: darkslateblue;";
+                else if (vm.Rows[row].action > 300)
+                    bgColorBtn = "background-color: #a64b2a;";
+                else if (vm.Rows[row].action > 200)
+                    bgColorBtn = "background-color: forestgreen;";
+                    else
+                    bgColorBtn = "background-color: darkolivegreen;";
+                <button class="action-button"
+                        style="@bgColorBtn"   
+                        @onclick="@(() => OnActionButtonPushed(row))">
+                        @vm.Rows[row].Remark</button>
+            }
+            else
+            {
+                <div class="action-label"
+                       @onclick="@(() => OnActionButtonPushed(row))">
+                       @vm.Rows[row].Remark</div>
+            }
+        </div>
+
+
+        
+    }
+</div>

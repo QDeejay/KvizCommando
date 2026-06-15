@@ -1,0 +1,278 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+/* === ALAP BEÁLLÍTÁSOK === */
+html, body {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #0c1f17; /* katonai sötétzöld */
+    color: white;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    overflow: hidden;
+    cursor: url('/Images/cursors/normal.cur'), default;
+}
+/* Linkek, gombok, hover */
+/* interaktív elemek (hover) */
+a:hover,
+button:hover,
+input[type=button]:hover {
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+/* disabled elemek */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+}
+label {
+    cursor: url('/Images/cursors/normal.cur'), default;
+}
+
+
+.company-logo {
+    position:absolute;
+    top:4px;
+    left:0;
+    height:4%;
+    width:auto;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+/* === LINKEK, GOMBOK === */
+a, .btn-link {
+    color: #0071c1;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+/* === TARTALOM PADDING === */
+.content {
+    padding-top: 1.1rem;
+}
+
+/* === VALIDÁCIÓ === */
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+/* === HIBAÜZENET PANEL === */
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+.blazor-error-boundary {
+    background: url(data:image/svg+xml;base64,...) no-repeat 1rem/1.8rem, #b32121;
+    padding: 1rem 1rem 1rem 3.7rem;
+    color: white;
+}
+
+    .blazor-error-boundary::after {
+        content: "An error has occurred.";
+    }
+
+header {
+    background-color: #0c1f17; /* sötétzöld */
+
+    height: 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0px;
+    font-family: 'Special Elite', cursive;
+    
+    z-index: 9999;
+}
+    header .left {
+        
+        width: 9%;
+        
+        text-align: center;
+        color: #d3d3d3;
+        font-size: 1.4rem;
+  
+        letter-spacing: 0.5px;
+    }
+    header .right {
+        color: #d3d3d3;
+        padding: 1%;
+        font-size: 150%;
+        margin-right:10px;
+        letter-spacing: 0.5px;
+    }
+
+
+
+
+
+/* === KÓD SZÍNEZÉS === */
+code {
+    color: #c02d76;
+}
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(51, 51, 51, 0.5); /* sötétszürke, 50% */
+    color: lightgray;
+    font-size: 8px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 8px 0;
+    z-index: 999;
+    backdrop-filter:blur(2px);
+}
+
+
+img {
+    user-select: none; /* ne lehessen kijelölni */
+    pointer-events: none; /* ne lehessen ráklikkelni vagy húzni */
+    -webkit-user-drag: none; /* Safari / Chrome – ne lehessen húzni */
+}
+/* ===== Loader Overlay ===== */
+#loader-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(0px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
+    z-index: 1060;
+    cursor: url('/Images/cursors/normalload.cur'), wait;
+}
+
+    #loader-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+        backdrop-filter: blur(4px);
+    }
+
+.loader-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+
+
+.loading-logo {
+    width: 30vw;
+    height: 30vh;
+    animation: coin-swing 2s ease-in-out infinite;
+    transform-style: preserve-3d;
+}
+
+@keyframes coin-swing {
+    0% {
+        transform: rotateY(-60deg);
+    }
+
+    50% {
+        transform: rotateY(60deg);
+    }
+
+    100% {
+        transform: rotateY(-60deg);
+    }
+}
+.loader-wrapper {
+    width: 70%;
+    margin: 80vh auto;
+    text-align: center;
+    font-family: 'Special Elite', cursive;
+    color: #cccccc;
+}
+
+.loader-percent::after {
+    content: var(--blazor-load-percentage-text, "0%");
+    display: block;
+    font-size: 30px; /* TODO: állítsd be */
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.loader-bar {
+    width: 100%;
+    height: 20px;
+    background: #222;
+    border: 2px solid #cccccc;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 0 10px #000 inset, 0 0 5px #ccc;
+}
+
+.loader-fill {
+    height: 100%;
+    width: var(--blazor-load-percentage, 0%);
+    background: repeating-linear-gradient( 45deg, #cccccc, #cccccc 10px, #999999 10px, #999999 20px );
+    box-shadow: inset 0 0 5px #000;
+    transition: width 0.05s ease-in-out;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

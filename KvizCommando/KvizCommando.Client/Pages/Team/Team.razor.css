@@ -1,0 +1,13 @@
+﻿.label-title {
+    align-items: center;
+}
+.lcd-wrapper {
+    height: 100%;
+    width: 95%;
+}
+.message-label {
+    display: block;
+    text-align: center;
+    font-size: 16px;
+    margin-top: 20px;
+}

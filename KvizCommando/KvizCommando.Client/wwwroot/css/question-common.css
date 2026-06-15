@@ -1,0 +1,195 @@
+﻿
+.lcd-display-outer {
+    background-color: rgba(210, 255, 57, 0.9);
+    border: inset 2px #777;
+    border-radius: 4px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4), inset 0 4px 8px rgba(0,0,0,0.7);
+    padding: 0;
+    width: 100%;
+    height: 85%; /* vagy amit szeretnél */
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden; /* nagyon fontos! */
+}
+
+.lcd-display-inner {
+    color: #222F16;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.2rem;
+    padding: 4px 6px;
+    display: block;
+    width: 100%;
+    /* itt szabályozod, mennyit látsz egyben */
+    min-height: 100%;
+    scrollbar-gutter: stable;
+    overflow: auto;
+    /* itt szabályozod, mennyit látsz egyben */
+    text-align: left;
+    max-height: 100%; /* itt szabályozod, mennyit látsz egyben */
+    background: transparent;
+}
+
+    .lcd-display-inner::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .lcd-display-inner::-webkit-scrollbar-track {
+        /*background-color: #001f3f;  háttér: katonai kék */
+        background-color: #D2FF39;
+        border: inset 2px #777;
+        border-radius: 4px;
+    }
+
+    .lcd-display-inner::-webkit-scrollbar-thumb {
+        background-color: #bfa800; /* halványsárga */
+        border-radius: 4px;
+        border: 1px solid #333;
+    }
+
+        .lcd-display-inner::-webkit-scrollbar-thumb:hover {
+            background-color: #ffe14d; /* világosabb hover */
+        }
+
+/* szerkesztés vizuális jelzése */
+/* Három box vízszintesen, középre */
+content-row {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 4px;
+    flex-wrap: wrap;
+}
+
+
+.list-grid {
+    display: grid;
+    grid-template-columns: 10px max-content 1fr;
+    column-gap: 6px;
+    row-gap: 1px;
+    padding: 4px 0;
+    padding-left: 1px; /* <<< 10px balról */
+    user-select: none;
+    align-items: center;
+}
+
+.list-header {
+    font-weight: 600;
+    opacity: 0.75;
+}
+
+/* NO oszlop: jobbra igazítva, a saját celláján belül is a jobb szélre ül */
+.no-cell {
+    justify-self: end; /* <<< a cella tartalma a jobb szélre kerül */
+    text-align: right;
+    padding-right: 1px;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+.category-cell {
+    min-height: 16px;
+    display: flex;
+    min-width: 0; /* grid/flex shrink engedélyezés */
+    justify-self: stretch;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+/* Kategória oszlop: balra igazítva (alapértelmezett), border változatlan */
+.value-cell {
+    min-height: 16px;
+    display: table-column;
+    min-width: 0; /* grid/flex shrink engedélyezés */
+    justify-self: stretch;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+
+.ratio-cell {
+    min-height: 16px;
+    display: flex;
+    display: table-column;
+    justify-self: stretch;
+    text-align: right;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+.custom-radio {
+    appearance: none; /* böngésző alap kinézet kikapcsolása */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #444;
+    border-radius: 2px;
+    position: relative;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+    .custom-radio:checked::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 8px;
+        height: 8px;
+        background-color: #444;
+        border-radius: 2px;
+        transform: translate(-50%, -50%);
+    }
+
+.value-cell.editing {
+    padding: 2px 4px;
+}
+
+/* „szövegként” látszó gomb a belépéshez */
+.value-button {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0px 10px;
+    border: none;
+    white-space: nowrap;
+    background: transparent;
+    border-radius: 8px;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+    pointer-events: auto; /* biztos ami biztos */
+    text-align: left;
+}
+
+    .value-button:hover {
+        background: rgba(0, 0, 0, 0.05);
+        cursor: url('/Images/cursors/active.cur'), pointer;
+    }
+
+/* natív select: inline, stabil megjelenítés */
+.inline-editor {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+    border-radius: 6px;
+    user-select: auto; /* engedjük a kijelölést */
+    pointer-events: auto; /* kattintható marad */
+    background: transparent;
+    box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.8);
+}
+
+    .inline-editor option {
+        background-color: #1e293b;
+        color: #e2e8f0;
+        width: 99%;
+    }
+
+select:focus {
+    outline: none;
+}
+
+
+.usr-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+

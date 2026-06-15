@@ -1,0 +1,90 @@
+﻿@page "/team"
+@using KvizCommando.Client.Data;
+@using KvizCommando.Client.Components.CharacterComponent
+@using KvizCommando.Client.Pages.Team
+@using KvizCommando.Client.Pages.Team.Components
+<link href="css/team-common.css" rel="stylesheet" />
+
+<LangGuard Culture=@culture Module="team" OnReady="BoxReady">
+     @if (_isLoaded == true)
+{
+        <KcModal @ref="teamModal"
+                 Id="teamModal"
+                 Title="@Lang[tModal.Title]"
+                 SizeClass="@tModal.Size"
+                 ActionText1="@Lang[tModal.ActionText1]"
+                 ActionText2="@Lang[tModal.ActionText2]"
+                 CloseText="@Lang[tModal.CloseText]"
+                 OnAction1="@tModal.AsyncAction1"
+                 OnAction2="@tModal.AsyncAction2"
+                 OnCloseAction="CloseModalAction"
+                 ActionButtonStyle1="@tModal.ActionStyle1"
+                 CheckBottom="@tModal.CheckBottom"
+                 CheckBoxText="@Lang[tModal.CheckBoxText]"
+                 CheckBoxKey="@tModal.CheckBoxKey"
+                 CheckBoxAction="@tModal.AsyncCheckBoxAction">
+
+                 @if (ModalOption>0)
+                 {
+                 <TeamModalRender mode="@ModalOption"
+                                  tabPosH="@activeHTab"
+                                  canNo="@selectedCandidateId"
+                                  Candidate="@TeamState.Candidates[activeHTab]"
+                                  TeamMember="@SelectedMember" />
+                 }
+
+                 </KcModal>
+
+      <PageContainer>
+
+
+                <HorizontalTabPane ActiveHIndex="@activeHTab" 
+                                   ActiveHIndexChanged="@OnHTabChanged"
+                                   TabHEnabled="@tabHEnabled"
+                                   ActiveVIndex="@activeVTab"
+                                   ActiveVIndexChanged="@OnVTabChanged"
+                                   TabTitle="@tabTitle"
+                                   HTabs="@hTabs"
+                                   VTabs="@vTabs"
+                                   PicTabEnabled="@picTabEnable">
+                                  
+
+                    <Content1>
+                        <UpperBlockDisplay DatatoProc="@_generalInfo"/>    
+                    </Content1>
+                    <Content2>
+                        <BottomBlockDisplay InputData="@TeamState.Snapshot"
+                                                TabPos="@activeHTab"
+                                                ActionButtonPushed="OnTeamManagerButtonPressed" />
+                    </Content2>
+                    <Content3>
+                        <BottomBlockViaButtons DatatoProc="@_generalInfo"
+                                               DataHelp="@TeamState.Help"
+                                               TabPosH="@activeHTab"
+                                               TabPosV="@activeVTab"
+                                               ModifySkill="OnSaveButtonPressed" />
+                    <label class="message-label" style="@((!isTeamSuccess ? "color:red;" : ""))">
+                        @MessageTeam
+                    </label>
+                    </Content3>
+                    <Content4>
+                        <RecruitBlockDisplay RecruitData="@TeamState.Candidates[activeHTab]"
+                                            TabPos="@activeHTab"
+                                            candidateOrder="@RecruitMixer"
+                                            SelectedCandidate="OnCandidateSelected" />
+                    </Content4>
+
+                     <Content5>
+                        <CharacterView PicCode="@pictureCode" />
+                    </Content5>
+                    <ButtonRow>
+                    @if (activeVTab == 3)
+                    {
+                        <button class="military-button" disabled="@(selectedCandidateId == 0)" @onclick="OnHireButtonPressed">@(Lang["team.Button.Hire"])</button>
+                    }
+                    </ButtonRow>
+                </HorizontalTabPane>
+            
+     </PageContainer>
+    }
+</LangGuard>

@@ -1,0 +1,105 @@
+﻿@if (isLoaded && mode>0)
+{
+    <div class="modal-display">
+        <div class="info-block">
+            <div>@Info.Name</div>
+            <div class="modal-value" style="color: @(Info.Color)">@Info.NameValue</div>
+            <div>@Info.Level</div>
+            <div class="modal-value right">@Info.LevelValue</div>
+            <div>@Info.Rank</div>
+            <div class="modal-value">@Info.RankValue</div>
+            <div>@Info.Devpoints</div>
+            <div class="modal-value right">@Info.DevPointsValue</div>
+            <div>@Info.Orient1</div>
+            <div class="modal-value">@Info.Orient1Value</div>
+            <div></div>
+            <div class="modal-value right" style="color:green">@Info.AddedDevPoints</div>
+            <div>@Info.Orient2</div>
+            <div class="modal-value">@Info.Orient2Value</div>
+           
+        </div>
+        @if (mode == 2 || mode == 3)
+        {
+            <div class="divider">
+                <span class="modal-@(rh.NewClass ? "promrank" : "promlevel")">@rh.RankClass</span>
+            </div>
+            <div class="divider">
+                <span class="modal-promlevel">@rh.Level</span>
+                <span class="modal-promrank">@rh.Rank</span>
+            </div>
+        
+        }
+        @switch (mode)
+        {
+        case 1:
+            <div class="hire-skillblock">
+            <div class="modal-subtitle">@vmHir.labelpros</div>
+            <div></div>
+                @for (int i = 0; i < vmHir.Rows.Count; i++)
+                {
+                    @if (i == 3)
+                    {
+                        <div class="modal-subtitle">@vmHir.labelcons</div>
+                        <div></div>
+                    }
+                    <div>@vmHir.Rows[i].CategoryName</div>
+                    <div class="modal-value times" style="color: @(vmHir.Rows[i].color)">@vmHir.Rows[i].ValueDisplay</div>
+                }
+                </div>
+                break;
+            case 2:
+                var label =string.Empty;
+                var color = "color: ";
+                <div class="promote-block">
+                    @for (int i = 0; i < vmPro.Rows.Count; i++)
+                    {
+                        @if (i == 2 || i == 6 || i == 10)
+                        {
+                            if (i == 2)
+                                label = vmPro.Unlocks;
+                            else if (i == 6)
+                                label = vmPro.UnlockMaxLevels1;
+                            else
+                                label = vmPro.UnlockMaxLevels2;
+                            <div class="modal-subtitle"> @label </div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        }
+                        color = $"color: {vmPro.Rows[i].color};";
+                        <div >@vmPro.Rows[i].CategoryName</div>
+                        <div class="modal-value right" style="@color">@vmPro.Rows[i].ValueDisplay</div>
+                        <div class="modal-separator">@vmPro.Rows[i].separator</div>
+                        <div class="modal-value right" style="@color">@vmPro.Rows[i].ValueChangeDisplay</div>
+                    }
+            </div>
+                <div class="info-row4">(@vmPro.infotext1)</div>
+                break;
+            case 3:
+                <div class="promote-block">
+                    <div class="modal-subtitle"> @vmRet.Unlocks </div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    @for (int i = 0; i < vmRet.Rows.Count; i++)
+                    {
+                        <div>@vmRet.Rows[i].CategoryName</div>
+                        <div class="modal-value right">@vmRet.Rows[i].ValueDisplay</div>
+                        <div class="modal-separator">@vmRet.Rows[i].separator</div>
+                        <div class="modal-value right" style="@(vmRet.Rows[i].color)">@vmRet.Rows[i].ValueChangeDisplay</div>
+                    }
+                </div>
+                <div class="info-row4">@vmRet.infotext1</div>
+                break;
+            case 4:
+            <div class="handle-block">
+                <div class="info-row1">@vmHan.infotext1</div>
+                <div class="info-row2">@vmHan.infotext2</div>
+                <div class="info-row3">@vmHan.infotext3</div>
+                <div class="info-row4">@vmHan.infotext4</div>
+            </div>
+                break;
+
+    }
+    </div>
+}

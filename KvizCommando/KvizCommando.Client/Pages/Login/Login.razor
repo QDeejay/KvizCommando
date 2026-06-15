@@ -1,0 +1,77 @@
+﻿@page "/"
+@layout KvizCommando.Client.Layout.EmptyLayout
+
+
+
+<LangGuard Culture=@culture Module="login">
+<div class="login-panel">
+    <div class="login-head">
+            <label class="label-title">@Lang["login.Title"]</label>
+    </div>
+
+    <div class="login-body">
+            <label class="label-text">@Lang["common.Email"] </label>
+
+        <input class="lcd-input" 
+                type="text"
+                   @bind-value="LoginForm.Email"
+               @bind-value:event="oninput" />
+
+            <label class="label-text">@Lang["common.Password"]</label>
+        <input class="lcd-input" 
+                type="password"
+                   @bind-value="LoginForm.Password"
+               @bind-value:event="oninput"/>
+        
+    </div>
+
+    <div>
+        
+            <div class="login-actions">
+                <button class="military-button" disabled="@(!CanLogin)" @onclick="LoginUser">@Lang["login.Button"]</button>
+                <div class="form-check">
+                         <input class="form-check-input custom-checkbox" type="checkbox" id="rememberMe" @bind="RememberMe" />
+                         <label class="form-check-label remember-me-label" for="rememberMe">
+                            @Lang["login.CheckBox.RememberMe"]
+                        </label>
+                    </div>
+               
+            </div>
+         
+                
+            </div>
+         
+        <hr />
+        <div class="login-footer-links">
+                <a href="/ForgotPsw" class="login-link">@Lang["login.ForgotPassword"]</a>
+            <span class="divider">/</span>
+                <a href="/register" class="login-link">@Lang["login.ButtonLink"]</a>
+        </div>
+         
+</div>
+
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+   
+    <p style="color:red">@ErrorMessage</p>
+}
+<div class="other-providers">
+                 <label class="label-text">@Lang["login.Label.Providers"]</label>
+                    <a class="btn btn-provider" href="/login/facebook">
+                     <img src="https://www.facebook.com/images/fb_icon_325x325.png" 
+                          alt="Facebook logo" style="width:25px;height:25px;margin-right:8px;">
+                    </a> 
+                    <a class="btn btn-provider"  @onclick="BypassLogin">
+                     <img src="icon-192.png" 
+                          alt="Facebook logo" style="width:30px;height:30px;margin-right:8px;">
+                    </a> 
+
+
+
+                
+                </div>
+
+
+</LangGuard>
+

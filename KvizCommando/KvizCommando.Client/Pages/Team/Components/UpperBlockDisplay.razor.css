@@ -1,0 +1,28 @@
+﻿.list-grid {
+    display: grid;
+    grid-template-columns: 120px 300px 120px 80px;
+    column-gap: 2px;
+    row-gap: 0;
+    padding: 2px 0;
+    padding-left: 1px; /* <<< 10px balról */
+    user-select: none;
+    align-items: center;
+    text-align: left;
+}
+.separator {
+    border-top: 2px solid #333;
+    width: 100%;
+    opacity: 0.5;   
+}
+.left-value,
+.right-value {
+    font-weight: bold;
+    opacity: 0.9
+}
+.right-type,
+.right-value {
+    text-align: right;
+}
+.left-value {
+    text-overflow: ellipsis;
+}

@@ -1,0 +1,27 @@
+﻿.extend {
+    grid-template-columns: 10px 280px 60px 70px 200px;
+    grid-template-rows:40px 40px 40px 40px 40px;
+}
+
+
+.button-section {
+    display: block;
+    font-weight: bold;
+    opacity: 0.9;
+    width: auto;
+    text-align: center;
+    align-content: center;
+}
+.modifier-button {
+    
+    margin: 5px;
+    width: 40px;
+    background-color: darkolivegreen;
+    color: lightgrey;
+    opacity: 0.8;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+    .modifier-button:disabled {
+        cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+        opacity: 0.6;
+    }

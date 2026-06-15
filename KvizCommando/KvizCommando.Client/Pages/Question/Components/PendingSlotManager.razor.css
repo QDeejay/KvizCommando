@@ -1,0 +1,36 @@
+﻿.list-grid {
+    grid-template-columns: 5px 8px max-content 60px 5fr 1fr;
+}
+
+.category-cell {
+    max-width: 60px
+}
+.category-cell.category-cellext {
+    font-size: 1rem;
+    text-align: center;
+}
+.value-cell.value-cellext {
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: auto;
+}
+.ratio-cell.ratio-cellext {
+    font-size: 1rem
+}
+.row-marker {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    animation: blink 1s step-start infinite;
+}
+@keyframes blink {
+    0%, 49% {
+        visibility: visible;
+    }
+
+    50%, 100% {
+        visibility: hidden;
+    }
+}

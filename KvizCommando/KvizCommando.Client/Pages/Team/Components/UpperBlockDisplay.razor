@@ -1,0 +1,10 @@
+﻿<div class="list-grid">
+    @for (int i = 0; i < 5; i++)
+    {
+        <div>@vm.Rows[i].Label</div>
+        <div class="left-value">@vm.Rows[i].Value</div>
+        <div class="right-type">@vm.Rows[i+5].Label</div>
+        <div class="right-value">@vm.Rows[i+5].Value</div>
+    }  
+</div>
+<hr class="separator">

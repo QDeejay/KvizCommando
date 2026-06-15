@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Box.Footer.FactorySlots" xml:space="preserve">
+    <value>Saját kérdések száma: {0}</value>
+  </data>
+  <data name="Box.Footer.New" xml:space="preserve">
+    <value>Üres helyek: {0}</value>
+  </data>
+  <data name="Box.Footer.PendingSlots" xml:space="preserve">
+    <value>Elbírálva: {0}</value>
+  </data>
+  <data name="Box.Footer.UsrSlots" xml:space="preserve">
+    <value>Állapot: {0}/{1}</value>
+  </data>
+  <data name="Box.Title.FactorySlots" xml:space="preserve">
+    <value>Felszerelés</value>
+  </data>
+  <data name="Box.Title.New" xml:space="preserve">
+    <value>Új kérdés</value>
+  </data>
+  <data name="Box.Title.PendingSlots" xml:space="preserve">
+    <value>Fűggőben levő kérdések ({0}/{1})</value>
+  </data>
+  <data name="Box.Title.PendingSlots.NoData" xml:space="preserve">
+    <value>Fűggőben levő kérdések</value>
+  </data>
+  <data name="Box.Title.UsrSlots" xml:space="preserve">
+    <value>Felhasználói kérdések ({0}/{1})</value>
+  </data>
+  <data name="Box.Title.UsrSlots.NoData" xml:space="preserve">
+    <value>Felhasználói kérdések</value>
+  </data>
+  <data name="Button.Close" xml:space="preserve">
+    <value>Bezár</value>
+  </data>
+  <data name="Button.Delete" xml:space="preserve">
+    <value>Töröl</value>
+  </data>
+  <data name="Button.Handle" xml:space="preserve">
+    <value>Kezel</value>
+  </data>
+  <data name="Button.Move" xml:space="preserve">
+    <value>Mozgat</value>
+  </data>
+  <data name="Button.New" xml:space="preserve">
+    <value>Új</value>
+  </data>
+  <data name="Button.Save" xml:space="preserve">
+    <value>Mentés</value>
+  </data>
+  <data name="Button.Send" xml:space="preserve">
+    <value>Elküld</value>
+  </data>
+  <data name="Button.ToPending" xml:space="preserve">
+    <value>&gt;&gt;</value>
+  </data>
+  <data name="Button.ToUsr" xml:space="preserve">
+    <value>&lt;&lt;</value>
+  </data>
+  <data name="Label.AnswerNg" xml:space="preserve">
+    <value>Rossz válasz</value>
+  </data>
+  <data name="Label.AnswerOk" xml:space="preserve">
+    <value>Jó válasz</value>
+  </data>
+  <data name="Modal.Text.Confirm" xml:space="preserve">
+    <value>Biztos benne? Ez a művelet nem visszavonható. A kérdésed törölve lesz és többet nem adhatod a felszerelésedhez!</value>
+  </data>
+  <data name="Modal.Text.Handle" xml:space="preserve">
+    <value>Mit kiván tenni a következő kérdéssel? </value>
+  </data>
+  <data name="Modal.Text.Remark" xml:space="preserve">
+    <value>Visszajelzés</value>
+  </data>
+  <data name="Modal.Title.Confirm" xml:space="preserve">
+    <value>Kérelem megerősítése</value>
+  </data>
+  <data name="Modal.Title.Handling" xml:space="preserve">
+    <value>Művelet a kérdéssel</value>
+  </data>
+  <data name="Modal.Title.New" xml:space="preserve">
+    <value>Új kérdés beküldése</value>
+  </data>
+  <data name="Table.Content.Empty" xml:space="preserve">
+    <value>Összes</value>
+  </data>
+  <data name="Table.Header.Category" xml:space="preserve">
+    <value>Kategoria</value>
+  </data>
+  <data name="Table.Header.No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Table.Header.Question" xml:space="preserve">
+    <value>Kérdés</value>
+  </data>
+  <data name="Table.Header.Ratio" xml:space="preserve">
+    <value>Arány</value>
+  </data>
+  <data name="Table.Header.Remark" xml:space="preserve">
+    <value>Info:</value>
+  </data>
+  <data name="Table.Header.ShortCat" xml:space="preserve">
+    <value>Kateg.</value>
+  </data>
+  <data name="Table.Header.Status" xml:space="preserve">
+    <value>Státusz</value>
+  </data>
+  <data name="Table.Status.Approved" xml:space="preserve">
+    <value>Jóváhagyva</value>
+  </data>
+  <data name="Table.Status.None" xml:space="preserve">
+    <value>Nincs</value>
+  </data>
+  <data name="Table.Status.Pending" xml:space="preserve">
+    <value>Fűggőben</value>
+  </data>
+  <data name="Table.Status.Rejected" xml:space="preserve">
+    <value>Elutasítva</value>
+  </data>
+  <data name="Text.Attention" xml:space="preserve">
+    <value>Magasabb csapat szint elérés szükséges, hogy hozzá férj ehhez az opcióhoz! </value>
+  </data>
+  <data name="Title.Page" xml:space="preserve">
+    <value>Kérdések kezelése</value>
+  </data>
+</root>

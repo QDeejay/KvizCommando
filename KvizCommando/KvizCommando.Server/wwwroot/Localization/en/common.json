@@ -1,0 +1,16 @@
+{
+  "Button.Back": "Back",
+  "Button.Send": "Send",
+  "Password": "Password",
+  "screen.WarningMessage": "This site not supported on that size",
+  "Modal.Language.Content.en": "The changes will be applied after you refresh the game page.",
+  "Modal.Language.Content.hu": "A változtatások az oldal újra töltésével aktíválódnak!",
+  "Modal.Language.Keep": "Keep Language",
+  "Modal.Language.Restart.en": "Reload",
+  "Modal.Language.Restart.hu": "Újratölt",
+  "Modal.Language.Title.en": "Refresh the page?",
+  "Modal.Language.Title.hu": "Betölti az oldalt?",
+  "Username": "Username",
+  "Email": "E-mail address:",
+  "Password.Confirm": "Confirm password"
+}

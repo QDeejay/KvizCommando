@@ -1,0 +1,22 @@
+{
+  "button.CheckIn": "Check in",
+  "ButtonLink.Terms": "Terms of Service",
+  "Reason.DisplayName": "You did not set player name!",
+  "Reason.TermsUpdated": "Terms and conditoion are updated, please check and accept it to logging in!",
+  "Title.DisplayName": "New player logging in",
+  "Title.TermsOutdated": "The terms updated",
+  "Label.DisplayName": "Public player name",
+  "Reason.FallBack": "Expired call, navigate back to login page",
+  "Title.Fallback": "New player logging in",
+  "Label.AcceptTerms": "I have read and agree to the ",
+  "button.RedirectToLogin": "Logout",
+  "Team.Append": "' team",
+  "modal.TermsTitle": "Terms of Service",
+  "modal.Button.Action": "I Understood",
+  "modal.Button.Close": "Close",
+  "Reason.SuggestedName": "Suggest:",
+  "modal.PrivacyTitle": "Privacy Policy",
+  "ButtonLink.Privacy": "Privacy Policy",
+  "Label.AcceptTerms1": "and the ",
+  "Label.AcceptTerms2": "."
+}

@@ -1,0 +1,96 @@
+﻿.modal-display {
+    font-size: 1.1rem;
+    
+}
+.info-block {
+    display: grid;
+    grid-template-columns: 60px 340px 80px 70px;
+    margin-bottom: 10px;
+}
+
+.hire-skillblock {
+  
+    display: grid;
+    grid-template-columns: 300px 80px;
+}
+
+.promote-block {
+   
+    display: grid;
+    grid-template-columns: 290px 60px 40px 60px;
+    width: 100%;
+}
+.handle-block {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+
+
+
+.modal-subtitle {
+    text-decoration: underline;
+    margin-top:20px;
+}
+
+.info-row1 {
+    font-size: 1.6rem;
+    color: red;
+    font-weight: bold;
+    padding:20px;
+}
+.info-row2 { 
+}
+
+.info-row3 {
+    margin-top:10px;
+    font-weight:bold;
+}
+.info-row4 {
+    text-align: center;
+    font-size: 0.7rem;
+    margin-top: 20px;
+}
+
+
+
+.modal-separator {
+    padding-left:10px
+}
+.modal-value {
+    font-weight: bold;
+}
+.right {
+    align-content: center;
+    text-align: right;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    margin: 2px 0 4px 0;
+}
+
+    .divider::before,
+    .divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid #666;
+    }
+
+    .divider:not(:empty)::before {
+        margin-right: .75em;
+    }
+
+    .divider:not(:empty)::after {
+        margin-left: .75em;
+    }
+.modal-promlevel {
+    color: lightgray;
+}
+.modal-promrank {
+    padding-left:4px;
+    color: greenyellow;
+}

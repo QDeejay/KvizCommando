@@ -1,0 +1,65 @@
+﻿@using KvizCommando.Client.Services
+@inherits LayoutComponentBase
+<HeadContent>
+    <link href="css/MainLayout.css" rel="stylesheet" />
+</HeadContent>
+
+
+@if (_isReady)
+{
+
+    <AppHeader DisplayName="@HomeState.UserMainData!.UserName"
+               lclRow1="@Lang["mainlayout.Bootstrap.Label.Profile"]"
+               lclRow2="@Lang["mainlayout.Bootstrap.Label.Settings"]"
+               lclLogout="@Lang["mainlayout.Bootstrap.Label.Logout"]"
+               OnLogout="Logout" />
+
+    <div class="kc-mainlayout-root">
+
+
+        <LangGuard Culture=@culture Module="nav">
+            <div class="kc-mainlayout-nav-side @(sidebarCollapsed ? "collapsed" : "")">
+                <NavMenu Hs="@Hs"
+                         OnClickedNavButton="OnSelect"
+                         OnToggleSidebar="ToggleSidebar" 
+                         IsCollapsed="@sidebarCollapsed" />
+            </div>
+        </LangGuard>
+        <main>
+            <section class="kc-mainlayout-content-side">
+                <header class="kc-mainlayout-content-header">
+                    <div class="kc-mainlayout-content-header--left">
+                        <div class="kc-back-button @(_backNavigationEna ? "" : "btn-hidden")">@("◀") </div>
+                        <div class="kc-actual-page-title">
+                            
+                            <h2>@_currentTitle</h2>
+                        </div>
+                        
+                    </div>
+
+                    <div class="kc-mainlayout-content-header--center">
+                        <div class="kc-header-lcd-display">
+                            <LCDDisplay />
+                        </div> 
+                        <span class="kc-sound-button" @onclick="OnMusicClick">
+                            <img class="kc-sound-picture"
+                                 src=@(_isMusicOn ? "images/musicon.webp" : "images/musicoff.webp")
+                                 alt="MusicOn" />
+                        </span>
+                    </div>
+
+
+                    <div class="kc-mainlayout-content-header--right">
+                        <span class="kc-header-greeting">@_Greetings</span>
+                    </div>
+                </header>
+
+                <div class="kc-mainlayout-content-container">
+                    @Body
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+}

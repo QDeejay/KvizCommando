@@ -1,0 +1,11 @@
+﻿@using KvizCommando.Client.Services
+
+
+@if (_isReady)
+{
+    @ChildContent
+}
+else
+{
+    @LoadingContent
+}

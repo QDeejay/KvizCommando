@@ -1,0 +1,7 @@
+﻿.main-pagecontainer {
+    display: flex;
+    flex-direction: row;
+    margin-top: 60px;
+    justify-content: center;
+    z-index: 10;
+}

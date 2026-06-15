@@ -1,0 +1,53 @@
+﻿.side-nav {
+    /* 🔧 Állítható nav sáv szélesség */
+    background-color: #0c1f17; /* 🔧 Itt adod meg a színt */
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    /*border-bottom: 1px solid #004400; 
+        border-right: 1px solid #004400; 
+    */
+    box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.6);
+    z-index: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    height: 100vh;
+    width: 100%;
+    overflow-y: auto;
+    transform: translateY(0);
+}
+    .side-nav.collapsed {
+        height: 80px;
+        width: 80px;
+       
+    }
+
+.kc-sidenav-collapse-btn {
+    background-color: transparent;
+    border: none;
+}
+
+    .kc-sidenav-collapse-btn:hover {
+        background-color: rgba(255,255,255,0.1);
+        cursor: url('/Images/cursors/active.cur'), pointer;
+        border: grey 1px solid;
+    }
+
+.nav-logo {
+    display: block;
+    width: 100%;
+    height: auto;
+    z-index: 0;
+}
+
+
+    .nav-footer {
+        position: relative;
+        width: auto;
+        bottom: 0px;
+        left: 0;
+        margin-top: auto;
+        margin-bottom: 0px;
+        height: 6%;
+        display: flex;
+        z-index: 0;
+    }

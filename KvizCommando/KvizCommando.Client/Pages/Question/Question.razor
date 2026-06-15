@@ -1,0 +1,115 @@
+﻿@page "/question"
+@using KvizCommando.Client.Helpers
+@using KvizCommando.Client.Pages.Question
+@using KvizCommando.Client.Pages.Question.Components
+<link href="css/question-common.css" rel="stylesheet" />
+
+<LangGuard Culture=@culture Module="question" OnReady="BuildButtons">
+    @if (_isLoaded == true)
+    {
+        <Subheader Title="@SubHeaderTitle"
+                   HeadButton="OnHeadButtonClick" />
+                <KcModal @ref="questionModal"
+                         Id="questionModal"
+                         Title="@Lang[qModal.Title]"
+                         SizeClass="@qModal.Size"
+                         ActionText1="@Lang[qModal.ActionText1]"
+                         ActionText2="@Lang[qModal.ActionText2]"
+                         CloseText="@Lang[qModal.CloseText]"
+                         OnAction1="@qModal.AsyncAction1"
+                         OnAction2="@qModal.AsyncAction2"
+                         ActionButtonStyle1="@qModal.ActionStyle1"
+                         CheckBottom="@qModal.CheckBottom"
+                         CheckBoxText="@Lang[qModal.CheckBoxText]"
+                         CheckBoxKey="@qModal.CheckBoxKey"
+                         CheckBoxAction="@qModal.AsyncCheckBoxAction">
+                    @if (ModalOption != 0 && SelectedId != 100)
+                    {
+                        <ModalRender Mode="@ModalOption"
+                                     Slot="@QuestionState.PendingSlots[ModalOption==2 ? SelectedId:1]"
+                                     renderHTML="@renderHTML" />
+                    }
+                </KcModal>
+
+
+        <PageContainer>
+            @if (ScreenOption == 0)
+            {
+                <div class="quest-selector">
+                    @foreach (var btn in _qbuttons!)
+                    {
+                        <ContentBox Header="@btn.Header"
+                                    Footer="@btn.Footer"
+                                    FooterDisplay="@btn.FooterDisplay"
+                                    Size="@btn.Size"
+                                    ShowImage="true"
+                                    ImageSrc="@btn.ImageSrc"
+                                    IsClickable="@btn.IsEnabled"
+                                    IsEnabled="@btn.IsEnabled"
+                                    ClickId="@btn.ClickId"
+                                    OnClick="OnRootBtnClick" />
+                    }
+                </div>
+            }
+            else
+            {
+               
+                <div class="box-container">
+                   
+
+                    <ContentBox Header=@BoxHeader 
+                        Footer="" FooterDisplay=false 
+                        Size="@(ScreenOption == 1 ? "halflarge" : "large")" 
+                        Resizable="false">
+                            <div class="lcd-wrapper">
+                                @switch (ScreenOption)
+                                {
+                                    case 1:
+                                        <FactorySlotsBase ExtInfo="@QuestionState.ExtendedInfo"
+                                                          WorkingCodes="@WorkingCodes"
+                                                          OriginalCodes="@OriginalCodes"
+                                                          MessageFact="@MessageFact"
+                                                          isSuccess="@isSuccess"
+                                                          SaveSlots="OnFactSaveAsync" />
+                                        break;
+                                    case 2:
+                                        <UserSlotManager ExtInfo="@QuestionState.ExtendedInfo"
+                                                         Slots="@QuestionState.Userlots"
+                                                         NotShowDel="@localNotShowStateDel"
+                                                         SelectedIdChanged="OnSelectId" />
+                                        break;
+                                    case 3:
+                                        <PendingSlotManager ExtInfo="@QuestionState.ExtendedInfo"
+                                                            Slots="@QuestionState.PendingSlots"
+                                                            HandleSlot="CallPendModal" />
+                                        break;
+                                    case 4:
+                                        <NewQuestionManager ExtInfo="@QuestionState.ExtendedInfo"
+                                                            MessageUsr="@MessageUsr"
+                                                            isSuccess="@isSuccess"
+                                                            SendQuestion="SaveToForm" />
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                <div class="btn-bar @(ScreenOption == 4 || ScreenOption == 1 ? "hidden" : "")">
+                                    <button class="military-button"
+                                            disabled="@(SelectedId == 100)"
+                                            style="@BoxBtnStyle"
+                                            @onclick="OnBoxBtnClick">
+                                        @BoxBtnText
+                                    </button>
+                                </div>
+                            </div>
+                       
+                    </ContentBox>
+                    
+                </div>
+
+            } 
+        </PageContainer>
+    }
+</LangGuard>
+
+
+

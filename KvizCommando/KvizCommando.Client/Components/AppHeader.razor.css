@@ -1,0 +1,75 @@
+﻿/* a fejléc padding marad, balra kell, jobbra nem kell extra */
+.app-header {
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: right;
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    top: 0;
+    right: 0;
+    height:5vh;
+    z-index: 101;
+    
+}
+
+/* fejléc jobb oldali konténer */
+.app-header__right {
+    
+    position: relative; /* ehhez igazodik a dropdown */
+}
+
+/* menü doboz */
+#userMenu.dropdown-menu.dropdown-menu-end {
+    background-color: #fff9db;
+    opacity:0.9;
+    border: 1px solid #f3d36b;
+    border-radius: 12px 0 0 12px; /* bal kerek, jobb flush */
+    min-width: 14rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+}
+
+/* itemek */
+#userMenu .dropdown-item {
+    border-radius: 6px;
+    padding: .5rem .75rem;
+    color: #444;
+}
+
+    #userMenu .dropdown-item:hover,
+    #userMenu .dropdown-item:focus {
+        background-color: #ffe8a3;
+        color: #111;
+        
+        display: block;
+        width: 100%;
+        text-align: inherit;
+    }
+
+/* toggle button */
+#userToggle {
+    background-color: transparent !important; /* minden körülmények között áttetsző */
+    border: none;
+    padding: .375rem;
+    line-height: 1;
+    color: #d3d3d3; /* ikon+nyíl színe */
+    box-shadow: none;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+    /* Hover/fókusz/nyitott állapot */
+    #userToggle:hover,
+    #userToggle:focus,
+    #userToggle:active,
+    #userToggle.show,
+    #userToggle[aria-expanded="true"] {
+        background-color: transparent !important;
+        border: none;
+        color: whitesmoke; /* picit világosabb ikon+nyíl */
+        box-shadow: none;
+        outline: 0;
+    }
+
+    /* Ikon méret */
+    #userToggle .bi {
+        font-size: 1.25rem;
+    }

@@ -1,0 +1,19 @@
+{
+  "Button": "Regisztráció",
+  "ConfirmPassword": "Jelszó megerősítése",
+  "Email": "E-mail cím",
+  "Error.ClientSide": "Kliens oldali hiba!",
+  "Error.DataBase": "Hiba a regisztráció során!",
+  "Error.EmailExists": "Ez az e-mail már foglalt!",
+  "Error.EmailInvalid": "Érvénytelen e-mail cím!",
+  "Error.PasswordMismatch": "A két jelszó nem egyezik.",
+  "Error.PasswordTooShort": "\"A jelszónak legalább 6 karakterből kell állnia.",
+  "Error.RequiredFields": "Töltsd ki az összes kötelező mezőt!",
+  "Error.UsernameExists": "Ez a felhasználónév már foglalt.",
+  "Error.UsernameLong": "Maximum 20 karakter!",
+  "Error.UsernameShort": "Minimum 3 karakter!",
+  "Error.UsernameTypeFail": "Nem tartalmazhat speciális karakter!",
+  "ResultMsg01": "Sikeres regisztráció!",
+  "ResultMsg02": "Megadott emailre elküdtük a megerősítő linket!",
+  "Title": "Regisztráció"
+}

@@ -1,0 +1,44 @@
+﻿@page "/forgotpsw"
+@layout EmptyLayout
+
+<LangGuard Culture=@culture Module="forgotosw">
+<div class="forgotpsw-panel">
+    <div class="forgotpsw-head">
+            <label class="label-title">@Lang["forgotosw.Title"]</label>
+    </div>
+    <div class="forgotpsw-body">
+            @if (Success != true)
+            {
+                <label class="label-text">@Lang["forgotosw.Email"] </label>
+                <input class="lcd-input"
+               type="text"
+               @bind-value="formData.email"
+               @bind-value:event="oninput"
+               style="@((ColorSW ? "border: 1px solid red;" : null))" />
+        
+        
+        
+                <button class="military-button" disabled="@(!CanSend)" type="button" @onclick="SendEmail">
+                        @Lang["common.Button.Send"]
+                </button>     
+            }
+            else
+            {
+                <br><br>
+            }
+            <label style="@((ColorSW ? "color: red;" : null))" class="label-text">@ResultMessage</label>
+    </div>
+
+
+    <div class="forgotpsw-footer">
+        <button class="military-button--secondary" @onclick="NavigateHome">
+                @Lang["common.Button.Back"]
+        </button>
+
+    </div>
+</div> 
+</LangGuard>
+
+
+   
+        

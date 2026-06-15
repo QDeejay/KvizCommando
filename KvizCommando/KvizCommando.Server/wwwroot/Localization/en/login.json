@@ -1,0 +1,10 @@
+{
+  "Button": "Login",
+  "ButtonLink": "Registration",
+  "CheckBox.RememberMe": "Remember me",
+  "Error.EmptyFields": "Fill up all fields",
+  "Error.Login": "Invalid login details or your email address is not verified!",
+  "ForgotPassword": "Forgot password",
+  "Label.Providers": "Other login providers:",
+  "Title": "Login"
+}

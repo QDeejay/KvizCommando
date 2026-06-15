@@ -1,0 +1,41 @@
+﻿@page "/register"
+@layout EmptyLayout
+
+<LangGuard Culture=@culture Module="register">
+
+<div class="regist-panel">
+    <div class="regist-head">
+            <label class="label-title">@Lang["register.Title"]</label>
+    </div>
+
+        <div class="regist-body">
+            <label class="label-text">@Lang["register.Email"]</label>
+            <input class="lcd-input" @bind-value="FormData.Email"
+                                        @bind-value:event="oninput"
+                   style="@((EmailFiledSW ? "border: 1px solid red;" : null))" />
+
+            <label class="label-text">@Lang["common.Password"]</label>
+            <input class="lcd-input" type="password" @bind-value="FormData.Password" 
+                                        @bind-value:event="oninput"
+                   style="@((PasswordFiledSW ? "border: 1px solid red;" : null))" />
+
+            <label class="label-text">@Lang["common.Password.Confirm"]</label>
+            <input class="lcd-input" type="password" @bind-value="FormData.ConfirmPassword" 
+                                                         @bind-value:event="oninput"
+               style="@((PasswordFiledSW ? "border: 1px solid red;" : null))" />
+            <div class="button-row">             
+                <button class="military-button" disabled="@(!CanRegister)" type="button" @onclick="HandleValidSubmit">
+                    @Lang["register.Button"]
+                </button>
+                <button class="military-button--secondary" @onclick="NavigateHome">
+                    @Lang["common.Button.Back"]
+                </button>
+            </div>
+        </div>
+
+    <div class="regist-footer">      
+        <br>
+        <p style="color:red">@ResultMessage</p>
+    </div>
+</div>
+</LangGuard>

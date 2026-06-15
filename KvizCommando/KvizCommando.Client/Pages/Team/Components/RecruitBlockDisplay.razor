@@ -1,0 +1,39 @@
+﻿<div class="recruit-tab">
+    @if (_couldBeHire)
+    {
+        @for (int i = 1; i < vm.Cards.Count / 2 + 1; i++)
+        {
+            var indL = i - 1;
+            var indR = i + 3;
+            <div class="recruit-row">
+
+                <RecruitCard CardNo="@(vm.Cards[indL].ClickId)"
+                CardName="@(vm.Cards[indL].Name)"
+                CardInfo1="@(vm.Cards[indL].MainCat)"
+                CardInfo2="@(vm.Cards[indL].SubCat)"
+                CardInfo3="@(vm.Cards[indL].ExtCat)"
+                SecOrient="@(vm.Cards[indL].SubOrientSh)"
+                Sex="@(vm.Cards[indL].Sex)"
+                SelectedCardNo="SelectedId"
+                Selected="OnCandidateSelected" />
+
+                <RecruitCard CardNo="@(vm.Cards[indR].ClickId)"
+                CardName="@(vm.Cards[indR].Name)"
+                CardInfo1="@(vm.Cards[indR].MainCat)"
+                CardInfo2="@(vm.Cards[indR].SubCat)"
+                CardInfo3="@(vm.Cards[indR].ExtCat)"
+                SecOrient="@(vm.Cards[indR].SubOrientSh)"
+                Sex="@(vm.Cards[indR].Sex)"
+                SelectedCardNo="SelectedId"
+                Selected="OnCandidateSelected"/>
+            </div>
+        }
+
+    }
+    else
+    {
+        <div class="hire-info">
+
+        </div>    
+    }
+</div>

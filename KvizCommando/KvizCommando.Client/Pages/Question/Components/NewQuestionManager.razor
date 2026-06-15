@@ -1,0 +1,93 @@
+﻿@using KvizCommando.Shared.Contracts.Question
+@using KvizCommando.Client.Helpers
+
+
+@if (_isLoaded)
+{
+    <div class="newquest-body">
+        <div class="category-part" >
+            <label class="label-text">@Lang["question.Table.Header.Category"]: </label>
+            <select class="inline-editor"
+                    @bind="formData.Category"
+                    @bind:event="onchange"
+                    @onclick:stopPropagation="true"
+                    @onkeydown="OnEditorKeyDown"
+                    autofocus>
+                <option value="0"
+                        disabled="@(formData.Category != 0 || isSuccess)"
+                        selected="@(formData.Category == 0)">
+                    @Lang["mainlayout.Option.Default"]
+                </option>
+                @foreach (var opt in Options)
+                {
+                    <option value="@opt.Code">@QuestionHelper.GetLabel(opt, culture)</option>
+                }
+            </select>
+        </div>
+
+        <div class="question-lettercounter">
+            <label class="label-text">@Lang["question.Table.Header.Question"]</label>
+            <label class="label-text">@($"{formData.Question?.Length ?? 0}/{areaLenght}")</label>
+        </div>
+        <div class="question-wrapper">
+            <textarea class="lcd-input lcd-area"
+                      maxlength="@areaLenght"
+                      disabled="@disabledLcd"
+                      @bind-value="formData.Question"
+                      @bind-value:event="oninput"
+                      style="@disCursor
+                             @disBckGround " />
+            <div class="question-wrapper-right">
+                <button class="military-button" id="0"
+                        disabled="@disabledSendButton"
+                        @onclick="@OnSaveQuestion">
+                    @Lang["question.Button.Send"]
+                </button>
+            </div>
+
+        </div>
+
+
+        <div class="answer-table">
+            <div class="answer-row">
+                <label class="label-text">@Lang["question.Label.AnswerOk"]</label>
+                <input class="lcd-input"
+                       type="text"
+                       maxlength="@answerLenght"
+                       disabled="@disabledAnswer"
+                       @bind-value="@formData.Answers[0]"
+                       @bind-value:event="oninput" />
+                <label class="label-text">@Lang["question.Label.AnswerNg"]</label>
+                <input class="lcd-input"
+                       type="text"
+                       maxlength="@answerLenght"
+                       disabled="@(formData.Question.Length < 10 || formData.Category == 0 || !formData.Question.Contains('?'))"
+                       @bind-value="@formData.Answers[1]"
+                       @bind-value:event="oninput" />
+                <br>
+            </div>
+
+            <div class="answer-row" style="margin-right:10px">
+                <label class="label-text">@Lang["question.Label.AnswerNg"]</label>
+                <input class="lcd-input"
+                       type="text"
+                       maxlength="@answerLenght"
+                       disabled="@disabledAnswer"
+                       @bind-value="@formData.Answers[2]"
+                       @bind-value:event="oninput" />
+                <label class="label-text">@Lang["question.Label.AnswerNg"]</label>
+                <input class="lcd-input"
+                       type="text"
+                       maxlength="@answerLenght"
+                       disabled="@disabledAnswer"
+                       @bind-value="@formData.Answers[3]"
+                       @bind-value:event="oninput" />
+            </div>
+
+            <p class="message-row">@MessageUsr</p>
+        </div>
+    </div>
+    <div class="usr-bar">
+       
+    </div>
+}

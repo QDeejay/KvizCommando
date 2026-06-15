@@ -1,0 +1,90 @@
+﻿
+
+<div class="htp-wrapper">
+    <div class="htp-tabbar">
+        <div class="htp-tab @(ActiveHIndex == 0 ? "active" : "") @(TabHEnabled.Item1[0] ? "" : "disabled")" @onclick="() => SetHTab(0)" disabled="@(!TabHEnabled.Item1[0])">
+            @HTabs[0]
+        </div>
+        <div class="htp-tab @(ActiveHIndex == 1 ? "active" : "") @(TabHEnabled.Item1[1] ? "" : "disabled")" @onclick="() => SetHTab(1)" disabled="@(!TabHEnabled.Item1[1])">
+            @HTabs[1]
+            <span class="tooltip-box" >@TabHEnabled.Item2[1]</span>
+        </div>
+        <div class="htp-tab @(ActiveHIndex == 2 ? "active" : "") @(TabHEnabled.Item1[2] ? "" : "disabled")" @onclick="() => SetHTab(2)" disabled="@(!TabHEnabled.Item1[2])">
+            @HTabs[2]
+            <span class="tooltip-box">@TabHEnabled.Item2[2]</span>
+        </div>
+        <div class="htp-tab @(ActiveHIndex == 3 ? "active" : "") @(TabHEnabled.Item1[3] ? "" : "disabled")" @onclick="() => SetHTab(3)" disabled="@(!TabHEnabled.Item1[3])">
+            @HTabs[3]
+            <span class="tooltip-box">@TabHEnabled.Item2[3]</span>
+        </div>
+        <div class="htp-tab @(ActiveHIndex == 4 ? "active" : "") @(TabHEnabled.Item1[4] ? "" : "disabled")" @onclick="() => SetHTab(4)" disabled="@(!TabHEnabled.Item1[4])">
+            @HTabs[4]
+            <span class="tooltip-box">@TabHEnabled.Item2[4] </span>
+        </div>
+        <div class="htp-tab @(ActiveHIndex == 5 ? "active" : "") @(TabHEnabled.Item1[5] ? "" : "disabled")" @onclick="() => SetHTab(5)" disabled="@(!TabHEnabled.Item1[5])">
+            @HTabs[5]
+            <span class="tooltip-box">@TabHEnabled.Item2[5] </span>
+        </div>
+        <div class="htp-tab @(ActiveHIndex == 6 ? "active" : "") @(TabHEnabled.Item1[6] ? "" : "disabled")" @onclick="() => SetHTab(6)" disabled="@(!TabHEnabled.Item1[6])">
+            @HTabs[6]
+            <span class="tooltip-box">@TabHEnabled.Item2[6] </span>
+        </div>
+        <div class="htp-tab @(ActiveHIndex == 7 ? "active" : "") @(TabHEnabled.Item1[7] ? "" : "disabled")" @onclick="() => SetHTab(7)" disabled="@(!TabHEnabled.Item1[7])">
+            @HTabs[7]
+            <span class="tooltip-box">@TabHEnabled.Item2[7] </span>
+        </div>
+        <div class="htp-tab @(ActiveHIndex == 8 ? "active" : "") @(TabHEnabled.Item1[8] ? "" : "disabled")" @onclick="() => SetHTab(8)" disabled="@(!TabHEnabled.Item1[8])">
+            @HTabs[8]
+            <span class="tooltip-box">@TabHEnabled.Item2[8] </span>
+        </div>
+    </div>
+    <div class="vtp-tabbar">
+        <div class="vtp-tab  @(ActiveVIndex == 0 ? "active" : "") @(TabVEnabled[0] ? "" : "disabled")" @onclick="() => SetVTab(0)" disabled="@(!TabVEnabled[0])">
+            @VTabs[0]
+        </div>
+        <div class="vtp-tab @(ActiveVIndex == 1 ? "active" : "") @(TabVEnabled[1] ? "" : "disabled")" @onclick="() => SetVTab(1)" disabled="@(!TabVEnabled[1])">
+            @VTabs[1]
+        </div>
+        @if (ActiveHIndex > 0)
+        {
+            <div class="vtp-tab @(ActiveVIndex == 2 ? "active" : "") @(TabVEnabled[2] ? "" : "disabled")" @onclick="() => SetVTab(2)" disabled="@(!TabVEnabled[2])">
+                @VTabs[2]
+            </div>
+            <div class="vtp-tab @(ActiveVIndex == 3 ? "active" : "") @(TabVEnabled[3] ? "" : "disabled")" @onclick="() => SetVTab(3)" disabled="@(!TabVEnabled[3])">
+                @VTabs[3]
+            </div>
+        } 
+    </div>
+    <div class="htp-contentbox">
+        <label class="label-title">@title</label>
+        @if (ActiveVIndex != 3)
+        {
+            <div class="lcd-display-outer @(ActiveVIndex == 0 ? "extended" : "collapsed")">
+                 <div class="lcd-display-inner">
+                        @Content1
+                    @if (ActiveVIndex==0)
+                    {
+                        @Content2
+                    }
+                    else 
+                    {
+                        @Content3
+                    }
+                 </div>
+            </div>
+        }
+        else
+        {
+            @Content4
+            <div class="button-row">
+                @ButtonRow
+            </div>
+        }
+    </div>
+    <div class="pic-contentbox @(picTabVisible==false ? "closed" : "opened")">
+        @if (picTabVisible)
+        {
+            @Content5
+        }  
+    </div>
+</div>

@@ -1,0 +1,219 @@
+﻿.military-button {
+    font-family: 'Lucida Console', monospace;
+    font-size: 18px;
+    background-color: #4b5320; /* sötét katonai zöld */
+    color: #f0eec2; /* világos bézses szöveg */
+    border: 2px solid #333;
+    border-radius: 4px;
+    padding: 2px 8px; /* függőleges és vízszintes belső tér */
+    width: max-content;
+    min-width: 120px; /* alap szélesség */
+
+    height: 30px;
+    letter-spacing: 1px;
+    box-shadow: inset 0 0 0 rgba(0, 0, 0, 0);
+    transition: all 0.2s ease-in-out;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+    margin-top: 12px
+}
+
+    .military-button:hover {
+        background-color: #5f6a2e;
+        box-shadow: 0 0 4px rgba(255, 255, 200, 0.2);
+       
+    }
+
+    .military-button:active {
+        background-color: #394314;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+        transform: translateY(1px);
+    }
+
+    .military-button:disabled {
+     
+        background-color: #777 !important;
+        color: #bbb;
+        border-color: #555;
+        cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+        box-shadow: none;
+    }
+
+.military-button--secondary {
+    font-family: 'Lucida Console', monospace;
+    background-color: #4e3b2b; /* sötétbarna */
+    color: #f0eec2;
+    border: 2px solid #333;
+    border-radius: 4px;
+    padding: 2px 8px; /* függőleges és vízszintes belső tér */
+    min-width: 120px; /* alap szélesség */
+    height: 30px;
+    letter-spacing: 1px;
+    box-shadow: inset 0 0 0 rgba(0, 0, 0, 0);
+    transition: all 0.2s ease-in-out;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+    margin-top: 12px
+}
+
+.military-button--secondary:hover {
+    background-color: #5e4532;
+}
+
+    .military-button--secondary:disabled {
+        background-color: #777;
+        color: #bbb;
+        border-color: #555;
+        cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+    }
+
+.lcd-input {
+    background-color: #001f3f; /* sötét, katonai kék */
+    color: #bfa800; /* halvány sárga szöveg */
+    font-family: 'Times New Roman', serif;
+    font-size: 1rem;
+    padding: 4px 12px;
+    border: inset 1px #777; /* süllyesztett hatás */
+    border-radius: 4px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+    outline: none;
+    width: 250px;
+    cursor: url('/Images/cursors/IBeam.cur'), text !important;
+}
+
+    .lcd-input:focus {
+        box-shadow: inset 0 2px 6px rgba(212, 180, 0, 0.4), 0 0 4px #d4b400;
+        cursor: url('/cursors/IBeam.cur') text !important;
+    }
+    .lcd-input:disabled {
+        cursor: url('/Images/cursors/disabled.cur'), not-allowed !Important;
+        width: 250px;
+        background-color: #2a2a2a;
+    }
+
+.label-title {
+    font-family: 'Courier New', monospace;
+    font-size: 1.4rem;
+    color: #cccccc;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-align: center;
+    display: block; /* szükséges a text-align működéséhez */
+    width: calc(100% - 10px);
+    padding-left:5px;
+    white-space: nowrap; /* 1. Ne törje a szöveget új sorba */
+    overflow: hidden; /* 2. Rejtse el ami kilóg */
+    text-overflow: ellipsis;
+    
+}
+
+.label-text {
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    color: #cccccc;
+    letter-spacing: 0.2px;
+    text-align: left; /* opcionális, mivel alapból az */
+    display: block;
+}
+
+
+
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.25) !important;
+    backdrop-filter: blur(0px); /* alap: nincs blur */
+    -webkit-backdrop-filter: blur(0px);
+    
+}
+    .modal-backdrop.show {
+        backdrop-filter: blur(4px); /* aktiválódáskor blur */
+        -webkit-backdrop-filter: blur(4px);
+        opacity: 1 !important; /* színből jön az áttetszőség */
+      
+    }
+
+.tooltip-box {
+    display: none;
+    position: absolute;
+    width: max-content;
+    border: 2px solid rgba(64, 64, 64, 0.7);
+    background: #333;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 12px;
+    box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
+    
+}
+
+.navigation-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    width: 100%;
+    height: 5.4vh;
+    padding: 0 12px;
+    font-family: Arial, sans-serif;
+    color: #d3d3d3;
+    background-color: #0c1f17;
+    text-decoration: none;
+    transition: background-color 0.2s, border-right-width 0.2s;
+    box-sizing: border-box;
+    font-size: clamp(12px, 1.2vh, 34px);
+  
+    gap: 8px;
+}
+
+    .navigation-button i {
+        flex-shrink: 0;
+        font-size: clamp(12px, 1.6vh, 34px);
+        color: inherit;
+        transition: transform 0.2s ease;
+    }
+
+    .navigation-button span {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .navigation-button:hover {
+        background-color: #11292E;
+        border-right: 4px solid whitesmoke;
+        color: whitesmoke;
+    }
+
+        .navigation-button:hover i {
+            transform: scale(1.1);
+        }
+
+    .navigation-button.active {
+        background-color: whitesmoke;
+        border-right: 6px solid whitesmoke;
+        color: #004400;
+    }
+
+    .navigation-button.disabled {
+        background-color: #666666;
+        color: #d3d3d3;
+        pointer-events: none;
+        border: 1px solid #004400;
+        border-right: 4px solid #004400;
+        cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+    }
+
+@media (min-height: 900px) and (min-width: 1200px) {
+    .navigation-button {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        gap: 2px;
+    }
+
+        .navigation-button i {
+            padding: 0;
+        }
+
+        .navigation-button span {
+            text-align: center;
+        }
+}
