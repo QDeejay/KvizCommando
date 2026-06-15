@@ -91,8 +91,8 @@ public static class HomeButtonSpecs
         new ButtonSpec {
             //Key = ButtonKey.Question, 
             TitleKey = "home.Box.Title.Question",
-            ImageSrc = "images/buttons/questions.webp", Size = "medium", 
-            FooterDisplay = false, 
+            ImageSrc = "images/buttons/questions.webp", Size = "medium",
+            FooterDisplay = false,
             ClickId = 11,
             Pick = s => s.Question,
             BuildFooter = (lang, b) => ""
@@ -101,6 +101,7 @@ public static class HomeButtonSpecs
             //Key = ButtonKey.Question, 
             TitleKey = "home.Title.BulleteinBoard",
             ImageSrc = string.Empty, Size = string.Empty,
+            LcdBackground=true,
             FooterDisplay = false,
             ClickId = 0,
             Pick = s => s.InfoBoard,

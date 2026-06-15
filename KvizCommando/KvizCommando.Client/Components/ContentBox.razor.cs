@@ -20,6 +20,7 @@ namespace KvizCommando.Client.Components
         [Parameter] public bool Resizable { get; set; } = false;
         [Parameter] public bool FooterDisplay { get; set; } = false;
         [Parameter] public int ClickId { get; set; }
+        [Parameter] public bool LcdDisplay { get; set; } = false;
         private string CursorStyle { get; set; } = string.Empty;
         protected string CssClass =>
             $"content-box {Size}" + (IsClickable ? " clickable" : "");

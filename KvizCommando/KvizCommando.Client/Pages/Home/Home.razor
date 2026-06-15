@@ -13,27 +13,28 @@
                             <ContentBox Header="@box.Header"
                                         Footer="@box.Footer"
                                         FooterDisplay="@box.FooterDisplay"
-                                        Size="@((string.IsNullOrEmpty(@box.Size)) ? bboardSize : box.Size)"
-                                        Resizable="@((string.IsNullOrEmpty(@box.Size)))"
-                                        ShowImage="@(!(string.IsNullOrEmpty(@box.ImageSrc)))"
+                                        Size="@(box.ReSizable ? bboardSize : box.Size)"
+                                        Resizable="@box.ReSizable"
+                                        ShowImage="@box.ShowImage"
                                         ImageSrc="@box.ImageSrc"
-                                        IsClickable="@box.IsClickable"
+                                        LcdDisplay="@box.LcdDisplay"
                                         IsEnabled="@box.IsEnabled"
                                         ClickId="@box.ClickId"
+                                        IsClickable="@box.IsClickable"
                                         OnClick="OnBoxClick"
                                         FooterClick="CloseBBoard">
-                                        @if (string.IsNullOrEmpty(@box.ImageSrc))
-                                        {
-                                            <div class="lcd-wrapper">
-                                                <div class="lcd-display-outer">
-                                                    <div class="lcd-display-inner" style="align-content:start;">
-                                                        <div class="bboard-item">
-                                                            @BboardHTML
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        }
+                        <div class="lcd-wrapper">
+                            <div class="lcd-display-outer">
+                                <div class="bboard-item">
+                                    @BboardHTML
+                                </div>
+
+                                
+                            </div>
+                        </div>
+
+                                              
+                                                  
                             </ContentBox>
                     }
              </div>

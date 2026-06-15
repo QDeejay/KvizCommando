@@ -8,7 +8,11 @@ namespace KvizCommando.Client.Models.ViewModels
         public string Footer { get; init; } = "";
         public bool FooterDisplay { get; init; }
         public string Size { get; init; } = "medium"; // small | medium | wide
+        public bool ReSizable { get; init; } = false;
+        public bool ShowImage { get; init; } = false;
         public string ImageSrc { get; init; } = string.Empty;
+        public bool LcdDisplay { get; init; } = false;
+
         public bool IsClickable { get; init; } = true;
         public bool IsEnabled { get; init; }
         public int ClickId { get; init; }
@@ -17,9 +21,11 @@ namespace KvizCommando.Client.Models.ViewModels
     {   
         public string TitleKey { get; init; } = default!;
         public string ImageSrc { get; init; } = default!;
+        public bool LcdBackground { get; init; } = false;
         public string Size { get; init; } = "medium";
         public bool FooterDisplay { get; init; }
         public int ClickId { get; init; }
+
 
     }
 }

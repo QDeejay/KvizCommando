@@ -162,3 +162,17 @@
     font-size:0.8rem;
    
 }
+
+.lcd-wrapper {
+    height: 100%;
+    width: 95%;
+    /*
+    overflow-y: scroll;
+    scrollbar-gutter: stable;  görgetősáv mindig jelenik meg 
+
+    */
+}
+
+
+
+   

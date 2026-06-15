@@ -20,10 +20,14 @@ public static class HomeButtonsBuilder
                 Footer = spec.BuildFooter(lang, btn),
                 FooterDisplay = spec.FooterDisplay,
                 Size = spec.Size,
+                ReSizable = string.IsNullOrEmpty(spec.Size),
+                ShowImage = !string.IsNullOrEmpty(spec.ImageSrc),
                 ImageSrc = spec.ImageSrc,
-                IsClickable = spec.ClickId>0, 
                 IsEnabled = btn.Enable,
-                ClickId = spec.ClickId
+                ClickId = spec.ClickId,
+                IsClickable = spec.ClickId > 0,
+                LcdDisplay = spec.LcdBackground && string.IsNullOrEmpty(spec.ImageSrc) && spec.ClickId == 0
+
             });
         }
 

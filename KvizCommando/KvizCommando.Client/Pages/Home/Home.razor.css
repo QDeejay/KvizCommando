@@ -17,19 +17,6 @@
 .bboard-item {
     display:flex;
 }
-
-
-
-.lcd-wrapper {
-    height: 100%;
-    width: 95%;
-    /*
-    overflow-y: scroll;
-    scrollbar-gutter: stable;  görgetősáv mindig jelenik meg 
-
-    */
-}
-
 .lcd-display-outer {
     background-color: #D2FF39;
     border: inset 2px #777;
@@ -58,24 +45,25 @@
     max-height: 100%; /* itt szabályozod, mennyit látsz egyben */
     background: transparent;
 }
+.lcd-display-inner::-webkit-scrollbar {
+    width: 10px;
+}
 
-    .lcd-display-inner::-webkit-scrollbar {
-        width: 10px;
+.lcd-display-inner::-webkit-scrollbar-track {
+    /*background-color: #001f3f;  háttér: katonai kék */
+    background-color: #D2FF39;
+    border: inset 2px #777;
+    border-radius: 4px;
+}
+
+.lcd-display-inner::-webkit-scrollbar-thumb {
+    background-color: #bfa800; /* halványsárga */
+    border-radius: 4px;
+    border: 1px solid #333;
+}
+
+    .lcd-display-inner::-webkit-scrollbar-thumb:hover {
+        background-color: #ffe14d; /* világosabb hover */
     }
 
-    .lcd-display-inner::-webkit-scrollbar-track {
-        /*background-color: #001f3f;  háttér: katonai kék */
-        background-color: #D2FF39;
-        border: inset 2px #777;
-        border-radius: 4px;
-    }
 
-    .lcd-display-inner::-webkit-scrollbar-thumb {
-        background-color: #bfa800; /* halványsárga */
-        border-radius: 4px;
-        border: 1px solid #333;
-    }
-
-        .lcd-display-inner::-webkit-scrollbar-thumb:hover {
-            background-color: #ffe14d; /* világosabb hover */
-        }
