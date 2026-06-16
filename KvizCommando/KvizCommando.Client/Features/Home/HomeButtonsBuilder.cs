@@ -8,9 +8,6 @@ public static class HomeButtonsBuilder
 {
     public static Dictionary<string, ContentBoxVm> Build(HomeScreen hs, ILanguageService lang)
     {
-
-        //var list = new List<ContentBoxVm>(HomeButtonSpecs.Specs.Count);
-
         var dict = new Dictionary<string, ContentBoxVm>(HomeButtonSpecs.Specs.Count);
 
         foreach (var spec in HomeButtonSpecs.Specs)
@@ -33,25 +30,7 @@ public static class HomeButtonsBuilder
                 IsClickable = spec.ClickId > 0,
                 LcdDisplay = spec.LcdBackground && string.IsNullOrEmpty(spec.ImageSrc) && spec.ClickId == 0
             };
-            /*
-            list.Add(new ContentBoxVm
-            {
-                Header = lang[spec.TitleKey],
-                Footer = spec.BuildFooter(lang, btn),
-                FooterDisplay = spec.FooterDisplay,
-                Size = spec.Size,
-                ReSizable = string.IsNullOrEmpty(spec.Size),
-                ShowImage = !string.IsNullOrEmpty(spec.ImageSrc),
-                ImageSrc = spec.ImageSrc,
-                IsEnabled = btn.Enable,
-                ClickId = spec.ClickId,
-                IsClickable = spec.ClickId > 0,
-                LcdDisplay = spec.LcdBackground && string.IsNullOrEmpty(spec.ImageSrc) && spec.ClickId == 0
-
-            }); 
-             
-             */
-
+           
         }
 
         return dict;

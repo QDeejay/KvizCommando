@@ -8,29 +8,31 @@ using System;
 
 namespace KvizCommando.Client.Features.Question
 {
-    public static class QBtnBtnBuilder
+    public static class QBtnBoxBuilder
     {
 
-        public static List<ContentBoxVm> BuildButtons(QuestionExtendedInfo qs, ILanguageService lang)
+
+        public static Dictionary<string, ContentBoxVm> BuildBoxes(QuestionExtendedInfo qs, ILanguageService lang)
         {
-            var list = new List<ContentBoxVm>(QuestionButtonSpecs.Specs.Count);
+            var dict = new Dictionary<string, ContentBoxVm>(QuestionButtonSpecs.Specs.Count);
 
             foreach (var spec in QuestionButtonSpecs.Specs)
             {
-                var btn = spec; 
-                list.Add(new ContentBoxVm
+                var btn = spec;
+                var footer = string.IsNullOrEmpty(spec.TitleKey);
+                dict[btn.Key.ToString()] = new ContentBoxVm 
                 {
-                    Header = lang[spec.TitleKey],
-                    Footer = spec.BuildFooter(lang, qs),
+                    Header = !footer ? spec.BuildBoxText(lang, qs) : lang[spec.TitleKey],
+                    Footer = footer ?  spec.BuildBoxText(lang, qs) : string.Empty,
                     FooterDisplay = spec.FooterDisplay,
                     Size = spec.Size,
                     ImageSrc = spec.ImageSrc,
                     IsClickable = true,
                     IsEnabled = btn.CheckEnable(qs),
                     ClickId = spec.ClickId
-                });
+                };
             }
-            return list;
+            return dict;
         }
        
     }

@@ -1,4 +1,5 @@
-﻿using KvizCommando.Client.Helpers;
+﻿using KvizCommando.Client.Features.Question;
+using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.Language;
 using KvizCommando.Shared.Models.Dtos;
@@ -7,14 +8,34 @@ namespace KvizCommando.Client.Features.Sologame
 { 
 
    
-    public sealed class SgameBtnSpecs : ButtonVm
+    public abstract class SgameBtnSpecs : ButtonVm
     {
-        public Func<int, string> BuildImageSrc { get; init; } = default!;
-        public Func<ILanguageService, ResultDtos, string> BuildFooter { get; init; } = default!;
+        
+        internal SgameBoxKey Key { get; init; }
+        internal Func<int, string> BuildImageSrc { get; init; } = default!;
+        
     }
+
+    public sealed class SgameBtnRoot : SgameBtnSpecs
+    {
+        internal Func<ILanguageService, SoloGameDtos, string> BuildFooter { get; init; } = default!;
+    }
+    public sealed class SgameBtnContent : SgameBtnSpecs
+    {
+        internal int BtnQnty { get; init; }
+        internal Func<int, string, string> BuildTitle { get; init; } = default!;
+        internal Func<ILanguageService, ResultDtos, string> BuildFooter { get; init; } = default!;
+    }
+
+
+    
 
     public static class SoloButtonSpecs
     {
+     
+        private const int CatQnty = 16;
+        private const int OriQnty = 8;
+
         private static readonly string[] CatFileName = 
             {
                 "","religion", "famousdates","music","sport","technology","naturalscience","famouspepole","sculpture_painting",
@@ -24,34 +45,45 @@ namespace KvizCommando.Client.Features.Sologame
            {
                 "","teologist","historian","artist","gamer","engineer","scientist","trendy","educated"
             };
-        public static readonly IReadOnlyList<SgameBtnSpecs> Specs = new[]
+        public static readonly IReadOnlyList<SgameBtnRoot> RootSpecs = new[]
         {
-            new SgameBtnSpecs {
+            new SgameBtnRoot {
+                Key = SgameBoxKey.RtBtnCategory,
                 TitleKey = "solo.Button.Title.Categories",
-                ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = true, ClickId = 10,
-                BuildFooter = (lang, sg) => lang["solo.Button.Footer.Catandori"].FormatSafe(sg.Points)
+                ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = true, ClickId = 401,
+                BuildFooter = (lang, sg) => lang["solo.Button.Footer.Catandori"].FormatSafe(sg.CategoryResults.Sum(r => r?.Points ?? 0))
             },
-            new SgameBtnSpecs {
+            new SgameBtnRoot {
+                Key = SgameBoxKey.RtBtnOrient,
                 TitleKey = "solo.Button.Title.Orients",
-                ImageSrc = "images/solo/orients.webp", Size = "wide", FooterDisplay = true, ClickId = 11,
-                BuildFooter =(lang, sg) => lang["solo.Button.Footer.Catandori"].FormatSafe(sg.Points)
+                ImageSrc = "images/solo/orients.webp", Size = "wide", FooterDisplay = true, ClickId = 402,
+                BuildFooter =(lang, sg) => lang["solo.Button.Footer.Catandori"].FormatSafe(sg.OrientResults.Sum(r => r?.Points ?? 0))
             },
-            new SgameBtnSpecs {
+            new SgameBtnRoot {
+                Key = SgameBoxKey.RtBtnCampaign,
                 TitleKey = "solo.Button.Title.Campaign",
-                ImageSrc = "images/solo/campaign.webp", Size = "wide", FooterDisplay = false, ClickId = 12,
+                ImageSrc = "images/solo/campaign.webp", Size = "wide", FooterDisplay = false, ClickId = 403,
                 BuildFooter = (lang, sg) => ""
             },
 
-            new SgameBtnSpecs {
-                //BuildTitle = (ix, cult) => CategoryNameLocalizer.GetCategory(ix,cult),
-                BuildImageSrc = (ix) => $"images/categories/{CatFileName[ix]}.webp", Size ="small", FooterDisplay=true, ClickId=20,
-                BuildFooter = (lang,sg) => lang["solo.Button.Footer.Games"].FormatSafe(sg.Points,sg.Time)
+        };
+        public static readonly IReadOnlyList<SgameBtnContent> ContentSpecs = new[]
+        {
+              new SgameBtnContent {
+                Key = SgameBoxKey.BtnCat,
+                BtnQnty = CatQnty,
+                BuildTitle = (ix, cult) => CategoryNameLocalizer.GetCategory(ix,cult),
+                BuildImageSrc = (ix) => $"images/categories/{CatFileName[ix]}.webp", Size ="small", FooterDisplay=true, ClickId=420,
+                BuildFooter = (lang,rd) => lang["solo.Button.Footer.Games"].FormatSafe(rd.Points,rd.Time)
             },
-            new SgameBtnSpecs {
-                //BuildTitle = (ix, cult) => CategoryNameLocalizer.GetCategory(ix,cult),
-                BuildImageSrc = (ix) => $"images/orients/{OriFileName[ix]}.webp", Size ="tall", FooterDisplay=true, ClickId=50,
-                BuildFooter = (lang,sg) => lang["solo.Button.Footer.Games"].FormatSafe(sg.Points,sg.Time)
+            new SgameBtnContent {
+                Key = SgameBoxKey.BtnOri,
+                BtnQnty = OriQnty,
+                BuildTitle = (ix, cult) => OrientationLocalizer.GetOrientation(ix,cult),
+                BuildImageSrc = (ix) => $"images/orients/{OriFileName[ix]}.webp", Size ="tall", FooterDisplay=true, ClickId=450,
+                BuildFooter = (lang,rd) => lang["solo.Button.Footer.Games"].FormatSafe(rd.Points,rd.Time)
             }
+
         };
     }
 }

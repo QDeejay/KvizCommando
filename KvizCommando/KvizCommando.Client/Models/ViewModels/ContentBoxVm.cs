@@ -20,7 +20,7 @@ namespace KvizCommando.Client.Models.ViewModels
     }
     public abstract class ButtonVm
     {   
-
+      
         public string TitleKey { get; init; } = default!;
         public string ImageSrc { get; init; } = default!;
         public bool LcdBackground { get; init; } = false;

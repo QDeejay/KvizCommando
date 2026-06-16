@@ -4,28 +4,12 @@ using KvizCommando.Client.Services.Language;
 using KvizCommando.Shared.Models.Dtos; // itt van a HomeDTOs, HomeScreen, ScreenButtonEntity
 
 namespace KvizCommando.Client.Features.Home;
-public enum HomeBoxKey
-{
-    // ------------------------------------- //
-                    InfoBoard,
-    // ------------------ ------------------- //           
-                 Question, Team,
-    // ------------------ ------------------- //
-                 GameVs, GameSolo,
-    // ------------------ ------------------- //
-                  Shop,  Rankings,
-    // ----------------- -------------------- //
-                Statistic, Events,
-    // ------------------ ------------------- //
-                Community, Messages
-    // ----------------- -------------------- //
-}
 
 public sealed class ButtonSpec : ButtonVm
 {
-    public HomeBoxKey Key { get; init; }
-    public Func<HomeScreen, ScreenButtonEntity> Pick { get; init; } = default!;
-    public Func<ILanguageService, ScreenButtonEntity, string> BuildFooter { get; init; } = default!;
+    internal HomeBoxKey Key { get; init; }
+    internal Func<HomeScreen, ScreenButtonEntity> Pick { get; init; } = default!;
+    internal Func<ILanguageService, ScreenButtonEntity, string> BuildFooter { get; init; } = default!;
 }
 
 public static class HomeButtonSpecs
