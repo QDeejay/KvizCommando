@@ -1,5 +1,8 @@
 ﻿using Blazored.LocalStorage;
+using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Home;
+using KvizCommando.Client.Features.Question;
+using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
@@ -23,34 +26,27 @@ public partial class Home : ComponentBase
     [Inject] private IHomeState HomeState { get; set; } = default!;
     [Inject] private PageTitleService PageTitle { get; set; } = default!;
     [Inject] protected HttpClient Http { get; set; } = default!;
+    [Inject] public IDisplayMessageState DisplayState { get; set; } = default!;
 
 
     private readonly string Minimal = "minimalized";
     private readonly string large = "large";
     private string bboardSize = string.Empty;
-    private string[] BtnOrder = new[] 
-    { "InfoBoard",
-      "Question", "Shop", 
-      "GameVs", "GameSolo",
-      "Team", "Rankings", 
-      "Statistic", "Events",
-      "Community", "Messages" };
+    private string[] BtnOrder = Array.Empty<string>();
+
 
     private MarkupString BboardHTML = new();
     private bool _isReady;
-    private List<ContentBoxVm>? _boxes;
+    private Dictionary<string, ContentBoxVm>? _boxesDict;
+    //private List<ContentBoxVm>? _boxes;
 
     private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
-    private ContentBoxVm Box(string orx)
-    {
-        var field = typeof(HomeBtnIndex).GetField(orx)!; 
-        int idx= (int)(field.GetValue(null) ?? 0);
-        return _boxes![idx];
-    }
+    private ContentBoxVm Box(string orx) => _boxesDict![orx];
+    
     private void BuildButtons()
     {
-        _boxes = HomeButtonsBuilder.Build(HomeState.HomeScreen!, Lang); 
+        _boxesDict = HomeButtonsBuilder.Build(HomeState.HomeScreen!, Lang);
     }
     private void OnBoxClick(int boxId)
     {
@@ -75,10 +71,13 @@ public partial class Home : ComponentBase
     {
         await Loader.Show();
         await HomeState.EnsureLoadedAsync();
+        
+
+        BtnOrder = Enum.GetNames<HomeBoxKey>();
         string url = $"/BulletinBoard/{culture}/bb.html";
         var lastBB = await LocalStorage.GetItemAsync<DateTime>("B.B");
         BboardHTML = new MarkupString(await Http.GetStringAsync(url));
-        if ( lastBB.ToUniversalTime() < HomeState.ExtendedInfo.LastInfo)
+        if ( lastBB.ToUniversalTime() < HomeState.ExtendedInfo!.LastInfo)
         {
             bboardSize = large;  
         }
@@ -86,11 +85,31 @@ public partial class Home : ComponentBase
         { 
             bboardSize = Minimal;
         }
-        PageTitle.SetTitle(Lang["mainlayout.Header.Home"], 0);
+        PageTitle.SetTitle(Lang["mainlayout.Header.Home"], 0, HomeState.UserMainData!.RankEnum);
+        UpdateLedDisplay();
         _isReady = true;
         await Loader.Hide();
         
      
+    }
+
+    private void UpdateLedDisplay()
+    {
+        var main = HomeState.UserMainData!;
+        var next = HomeState.ExtendedInfo!.NextXp;
+        int level = main.RankEnum;
+        string levelStr = RankNameTable.Data[level].PublicLevel ?? "";
+
+        var messages = new List<string>
+            {
+                Lang["mainlayout.Text.TeamName"].FormatSafe(main.TeamName),
+                Lang["mainlayout.Text.TeamLevel"].FormatSafe(levelStr),
+                Lang["mainlayout.Text.Xp"].FormatSafe(main.XP),
+                Lang["mainlayout.Text.NextLevelXp"].FormatSafe(next),
+                Lang["mainlayout.Text.Credit"].FormatSafe(main.Credit),
+                Lang["mainlayout.Text.Voucher"].FormatSafe(main.Voucher)
+            };
+        DisplayState.SetMessages(messages);
     }
 }
 
