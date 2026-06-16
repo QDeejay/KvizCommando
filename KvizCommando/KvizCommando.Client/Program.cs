@@ -98,5 +98,13 @@ builder.Services.AddScoped<PageTitleService>();
 builder.Services.AddScoped<IdentityRulesService>();
 builder.Services.AddBlazoredSessionStorage();
 
+
+
+///
+/// Version 1.026.0621.01
+/// 
+
+
+
 await builder.Build().RunAsync();
 

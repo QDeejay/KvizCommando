@@ -83,7 +83,7 @@ namespace KvizCommando.Client.Pages.Question
             }
             else renderHTML = new MarkupString(string.Empty);
 
-            PageTitle.SetTitle(Lang["mainlayout.Header.Question"],101);
+            PageTitle.SetTitle(Lang["mainlayout.Header.Question"],101,-1);
 
             (OriginalCodes, WorkingCodes) = QuestionHelper.CloneFactorySlots(QuestionState.FactorySlots);
             await Loader.Hide();
