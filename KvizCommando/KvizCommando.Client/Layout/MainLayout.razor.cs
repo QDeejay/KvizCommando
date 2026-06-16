@@ -11,6 +11,7 @@ using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Globalization;
+using System.Reflection.Emit;
 
 namespace KvizCommando.Client.Layout
 {
@@ -18,9 +19,8 @@ namespace KvizCommando.Client.Layout
     {
         [Inject] private ILanguageService Lang { get; set; } = default!;
         [Inject] public PageTitleService PageTitle { get; set; } = default!;
-        [Inject] public IDisplayMessageState DisplayState { get; set; } = default!;
+        //[Inject] public IDisplayMessageState DisplayState { get; set; } = default!;
         [Inject] private IHomeState HomeState { get; set; } = default!;
-        [Inject] private IQuestionState QuestionState { get; set; } = default!;
         [Inject] private IUserService UserService { get; set; } = default!;
         [Inject] private ILoadingService Loader { get; set; } = default!;
         [Inject] private AudioService Audio { get; set; } = default!;
@@ -30,7 +30,7 @@ namespace KvizCommando.Client.Layout
         private bool _isMusicOn;
         private string? _currentTitle = string.Empty;
         private bool sidebarCollapsed = false;
-        private string? _Greetings;
+        private string? _Greetings = string.Empty;
 
         private void ToggleSidebar() => sidebarCollapsed = !sidebarCollapsed;
         private bool _backNavigationEna => sidebarCollapsed ? PageTitle.NavPage > 0 : PageTitle.NavPage > 99;
@@ -41,33 +41,17 @@ namespace KvizCommando.Client.Layout
             await Loader.Show();
             Console.WriteLine($"[{this}] has been started");
             _isReady = false;
-
             culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
             await Lang.LoadModuleAsync(culture, "mainlayout");  // szükséges
 
             await HomeState.EnsureLoadedAsync();
-            await QuestionState.EnsureLoadedAsync();
+            //await QuestionState.EnsureLoadedAsync();
 
-            var main = HomeState.UserMainData!;
-            var next = HomeState.ExtendedInfo!.NextXp;
+            
 
-            int level = main.RankEnum;
-            string levelStr = RankNameTable.Data[level].PublicLevel ?? "";
-
-            var messages = new List<string>
-            {
-                Lang["mainlayout.Text.TeamName"].FormatSafe(main.TeamName),
-                Lang["mainlayout.Text.TeamLevel"].FormatSafe(levelStr),
-                Lang["mainlayout.Text.Xp"].FormatSafe(main.XP),
-                Lang["mainlayout.Text.NextLevelXp"].FormatSafe(next),
-                Lang["mainlayout.Text.Credit"].FormatSafe(main.Credit),
-                Lang["mainlayout.Text.Voucher"].FormatSafe(main.Voucher)
-            };
-            DisplayState.SetMessages(messages);
-
-            var rankName = RankNameLocalizer.GetName(level, culture);
-            _Greetings = Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
+            //var rankName = RankNameLocalizer.GetName(level, culture);
+            //_Greetings = Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
 
             // await JS.InvokeVoidAsync("appHeader.setUser", true, HomeState.UserMainData.UserName);
             if (Audio.EnteredNormal)
@@ -86,12 +70,21 @@ namespace KvizCommando.Client.Layout
         protected override void OnInitialized()
         {
             _currentTitle = PageTitle.Title;
+            var rankName = PageTitle.Rank>=0 ? RankNameLocalizer.GetName(PageTitle.Rank, culture) : "";
+            _Greetings = Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
             PageTitle.OnTitleChanged += UpdateTitle;
 
         }
         private void UpdateTitle()
         {
             _currentTitle = PageTitle.Title;
+            var rankName = PageTitle.Rank >= 0 ? RankNameLocalizer.GetName(PageTitle.Rank, culture) : "";
+            _Greetings = Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
+            _ = InvokeAsync(StateHasChanged);
+        }
+        private void HeadDisplayUpdate()
+        {
+
             _ = InvokeAsync(StateHasChanged);
         }
         protected async Task OnMusicClick()

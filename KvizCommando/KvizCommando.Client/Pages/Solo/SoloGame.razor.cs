@@ -77,7 +77,7 @@ namespace KvizCommando.Client.Pages.Solo
         {
             await Loader.Show();
             await SoloState.EnsureLoadedAsync();
-            PageTitle.SetTitle(Lang["mainlayout.Header.GameSolo"],3);
+            PageTitle.SetTitle(Lang["mainlayout.Header.GameSolo"],3, -1);
             //_isLoaded = true;
             if (_isLoaded==false)
                 {

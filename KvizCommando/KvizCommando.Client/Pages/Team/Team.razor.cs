@@ -46,7 +46,7 @@ namespace KvizCommando.Client.Pages.Team
         {
             await Loader.Show();
             await TeamState.EnsureLoadedAsync();
-            PageTitle.SetTitle(Lang["mainlayout.Header.Team"],1);
+            PageTitle.SetTitle(Lang["mainlayout.Header.Team"],1, -1);
             _generalInfo = TeamState.TeamInfo ?? new ExtendedInfo();
             _isLoaded = true;
             RecruitMixer.Shuffle();
