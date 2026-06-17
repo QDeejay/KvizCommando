@@ -7,22 +7,35 @@
    <PageContainer>
         @if (_isLoaded == true)
         {
-            <div class="main-selector @(_buttonAryStart == CatBtnCount + OriBtnCount ? "root-buttons" : "")">
-                        @for (int i = _buttonAryStart; i < _buttonAryEnd; i++)
-                        {
-                        var btn = _soloBtns[i];
-                                <ContentBox Header="@btn.Header"
-                                            Footer="@btn.Footer"
-                                            FooterDisplay="@btn.FooterDisplay"
-                                            Size="@btn.Size"
-                                            ShowImage="true"
-                                            ImageSrc="@btn.ImageSrc"
-                                            IsClickable="@btn.IsEnabled"
-                                            IsEnabled="@btn.IsEnabled"
-                                            ClickId="@btn.ClickId"
-                                            OnClick="OnBtnClick" />
-                        }  
-            </div>
+          
         }
    </PageContainer>
 </LangGuard>
+
+
+<!-- 
+
+  <div class="main-selector @(_buttonAryStart == CatBtnCount + OriBtnCount ? "root-buttons" : "")">
+@for (int i = _buttonAryStart; i < _buttonAryEnd; i++)
+{
+    var btn = _soloBtns[i];
+                                    <ContentBox Header="@btn.Header"
+                                                Footer="@btn.Footer"
+                                                FooterDisplay="@btn.FooterDisplay"
+                                                Size="@btn.Size"
+                                                ShowImage="true"
+                                                ImageSrc="@btn.ImageSrc"
+                                                IsClickable="@btn.IsEnabled"
+                                                IsEnabled="@btn.IsEnabled"
+                                                ClickId="@btn.ClickId"
+                                                OnClick="OnBtnClick" />
+}
+            </div>
+
+
+
+
+
+
+
+-->

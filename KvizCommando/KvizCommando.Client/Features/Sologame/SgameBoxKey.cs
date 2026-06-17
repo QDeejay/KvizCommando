@@ -3,19 +3,22 @@
 namespace KvizCommando.Client.Features.Question
 
 {
-    internal enum SgameBoxKey
+    internal enum SgameBoxKeyRoot
     {
         // -------------- Root ----------------- //
         RtBtnCategory,
         //------------------  
         RtBtnOrient,
         // ------------------
-        RtBtnCampaign,
+        RtBtnCampaign 
+    };
+    internal enum SgameBoxKeySub 
+    {
         // ---------- Cat boxes * 16 -------- 
-        BtnCat,
+        BtnCat=16,
         // --------- Ori boxes * 8 ---------- //
-        BtnOri,
+        BtnOri=8
         // ------------------ 
-       
     }
+
 }

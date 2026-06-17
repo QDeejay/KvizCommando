@@ -1,13 +1,13 @@
 ﻿@page "/home"
 
 
-<LangGuard Culture=@culture Module="home" OnReady="BuildButtons">
+<LangGuard Culture=@culture Module="@ActualPage" OnReady="() => BuildButtons(ActualPage)">
     <PageContainer>
         
             @if (_isReady == true)
             {
             <div class="home-selector">
-                    @foreach (string bx in BtnOrder)
+                @foreach (string bx in BoxOrder)
                     {
                         var box = Box(bx);
                             <ContentBox Header="@box.Header"

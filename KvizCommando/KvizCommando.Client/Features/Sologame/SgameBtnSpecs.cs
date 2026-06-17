@@ -10,8 +10,8 @@ namespace KvizCommando.Client.Features.Sologame
    
     public abstract class SgameBtnSpecs : ButtonVm
     {
-        
-        internal SgameBoxKey Key { get; init; }
+
+        internal Enum Key { get; init; } = default!;
         internal Func<int, string> BuildImageSrc { get; init; } = default!;
         internal Func<SoloGameDtos,int, bool> BuildEnable { get; init; } = default!;
     }
@@ -48,21 +48,21 @@ namespace KvizCommando.Client.Features.Sologame
         public static readonly IReadOnlyList<SgameBtnRoot> RootSpecs = new[]
         {
             new SgameBtnRoot {
-                Key = SgameBoxKey.RtBtnCategory,
+                Key = SgameBoxKeyRoot.RtBtnCategory,
                 TitleKey = "solo.Button.Title.Categories",
                 ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = true, ClickId = 401,
                 BuildEnable = (sg,ix) => sg.GameCategoryEna,
                 BuildFooter = (lang, sg) => lang["solo.Button.Footer.Catandori"].FormatSafe(sg.CategoryOverall)
             },
             new SgameBtnRoot {
-                Key = SgameBoxKey.RtBtnOrient,
+                Key = SgameBoxKeyRoot.RtBtnOrient,
                 TitleKey = "solo.Button.Title.Orients",
                 ImageSrc = "images/solo/orients.webp", Size = "wide", FooterDisplay = true, ClickId = 402,
                 BuildEnable = (sg,ix) => sg.GameOrientsEna,
                 BuildFooter =(lang, sg) => lang["solo.Button.Footer.Catandori"].FormatSafe(sg.OrientOverall)
             },
             new SgameBtnRoot {
-                Key = SgameBoxKey.RtBtnCampaign,
+                Key = SgameBoxKeyRoot.RtBtnCampaign,
                 TitleKey = "solo.Button.Title.Campaign",
                 ImageSrc = "images/solo/campaign.webp", Size = "wide", FooterDisplay = false, ClickId = 403,
                 BuildEnable = (sg,ix) => sg.GameCampaignEna,
@@ -73,7 +73,7 @@ namespace KvizCommando.Client.Features.Sologame
         public static readonly IReadOnlyList<SgameBtnContent> ContentSpecs = new[]
         {
               new SgameBtnContent {
-                Key = SgameBoxKey.BtnCat,
+                Key = SgameBoxKeySub.BtnCat,
                 BtnQnty = CatQnty,
                 BuildTitle = (ix, cult) => CategoryNameLocalizer.GetCategory(ix,cult),
                 BuildImageSrc = (ix) => $"images/categories/{CatFileName[ix]}.webp", Size ="small", FooterDisplay=true, ClickId=420,
@@ -81,7 +81,7 @@ namespace KvizCommando.Client.Features.Sologame
                 BuildFooter = (lang,rd) => lang["solo.Button.Footer.Games"].FormatSafe(rd.Points,rd.Time)
             },
             new SgameBtnContent {
-                Key = SgameBoxKey.BtnOri,
+                Key = SgameBoxKeySub.BtnOri,
                 BtnQnty = OriQnty,
                 BuildTitle = (ix, cult) => OrientationLocalizer.GetOrientation(ix,cult),
                 BuildImageSrc = (ix) => $"images/orients/{OriFileName[ix]}.webp", Size ="tall", FooterDisplay=true, ClickId=450,

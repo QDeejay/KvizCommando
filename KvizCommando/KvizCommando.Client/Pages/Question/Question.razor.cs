@@ -65,7 +65,7 @@ namespace KvizCommando.Client.Pages.Question
             
             if (QuestionState.Snapshot != null)
             {
-                _qbuttons = QBtnBtnBuilder.BuildButtons(QuestionState.ExtendedInfo!, Lang);
+                //_qbuttons = QBtnBtnBuilder.BuildButtons(QuestionState.ExtendedInfo!, Lang);
                 _isLoaded = true;
             }
         }

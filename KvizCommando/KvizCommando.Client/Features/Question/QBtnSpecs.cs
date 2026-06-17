@@ -16,7 +16,7 @@ namespace KvizCommando.Client.Features.Question
    
     public sealed class QBoxSpecs : ButtonVm
     {
-        internal QBoxKey Key { get; init; }
+        internal Enum Key { get; init; } = default!;
         internal Func <QuestionExtendedInfo,bool> CheckEnable { get; init; } = default!;
         internal Func<ILanguageService, QuestionExtendedInfo, string> BuildBoxText { get; init; } = default!;
     }
@@ -27,56 +27,56 @@ namespace KvizCommando.Client.Features.Question
         public static readonly IReadOnlyList<QBoxSpecs> Specs = new[]
         {
             new QBoxSpecs {
-                Key = QBoxKey.RtBtnFactory,
+                Key = QBoxKeyRoot.RtBtnFactory,
                 TitleKey = "question.Box.Title.FactorySlots",
                 ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = true, ClickId = 101,
                 BuildBoxText = (lang, qn) => lang["question.Box.Footer.FactorySlots"].FormatSafe(qn.NoFownQuestion),
                 CheckEnable = (qn) => true
             },
             new QBoxSpecs {
-                Key = QBoxKey.RtBtnUsr,
+                Key = QBoxKeyRoot.RtBtnUsr,
                 TitleKey = "question.Box.Title.UsrSlots.NoData",
                 ImageSrc = "images/solo/orients.webp", Size = "wide", FooterDisplay = true, ClickId = 102,
                 BuildBoxText =(lang, qn) => lang["question.Box.Footer.UsrSlots"].FormatSafe(qn.OccupiedUserSlot,qn.AvailableUserSlot),
                 CheckEnable = (qn) => qn.AvailableUserSlot>0
             },
             new QBoxSpecs {
-                Key = QBoxKey.RtBtnPendig,
+                Key = QBoxKeyRoot.RtBtnPendig,
                 TitleKey = "question.Box.Title.PendingSlots.NoData",
                 ImageSrc = "images/solo/campaign.webp", Size = "wide", FooterDisplay = true, ClickId = 103,
                 BuildBoxText = (lang, qn) => lang["question.Box.Footer.PendingSlots"].FormatSafe(qn.HandlePendingSlot),
                 CheckEnable = (qn) => qn.AvailablePendingSlot>0
             },
             new QBoxSpecs {
-                Key = QBoxKey.RtBtnNew,
+                Key = QBoxKeyRoot.RtBtnNew,
                 TitleKey = "question.Modal.Title.New",
                 ImageSrc = "images/solo/campaign.webp", Size = "wide", FooterDisplay = true, ClickId = 104,
                 BuildBoxText = (lang, qn) => lang["question.Box.Footer.New"].FormatSafe(qn.FreePendingSlot),
                 CheckEnable = (qn) => qn.FreePendingSlot > 0
             },
             new QBoxSpecs {
-                Key = QBoxKey.FactSlots,
+                Key = QBoxKeyContent.FactSlots,
                 TitleKey = "question.Box.Title.FactorySlots",
                 ImageSrc = string.Empty, Size = "halflarge", FooterDisplay = false, ClickId = 1001,
                 BuildBoxText = (lang, qn) => "",
                 CheckEnable = (qn) => false
             },
             new QBoxSpecs {
-                Key = QBoxKey.UsrSlots,
+                Key = QBoxKeyContent.UsrSlots,
                 TitleKey = string.Empty,
                 BuildBoxText = (lang, qn) => lang["question.Box.Title.UsrSlots"].FormatSafe(qn.OccupiedUserSlot, qn.AvailableUserSlot),
                 ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 1002,
                 CheckEnable = (qn) => false
             },
             new QBoxSpecs {
-                Key = QBoxKey.PendigSlots,
+                Key = QBoxKeyContent.PendigSlots,
                 TitleKey = string.Empty,
                 BuildBoxText = (lang, qn) =>  lang["question.Box.Title.PendingSlots"].FormatSafe(qn.OccupiedPendingSlot, qn.AvailableUserSlot >> 1),
                 ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 1003,
                 CheckEnable = (qn) => false
             },
             new QBoxSpecs {
-                Key = QBoxKey.NewSlot,
+                Key = QBoxKeyContent.NewSlot,
                 TitleKey = "question.Modal.Title.New",
                 ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 1004,
                 BuildBoxText = (lang, qn) => "",

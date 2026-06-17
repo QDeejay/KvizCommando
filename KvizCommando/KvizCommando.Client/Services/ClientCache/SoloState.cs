@@ -14,8 +14,8 @@ namespace KvizCommando.Client.Services.ClientCache
         public bool IsLoaded => _snapshot is not null && !_dirty;
 
         public SoloGameDtos? Snapshot => _snapshot;
-        public ResultDtos[]? CatResult => _snapshot?.CategoryResults;
-        public ResultDtos[]? OriResult => _snapshot?.OrientResults;
+        public ResultDto[]? CatResult => _snapshot?.CategoryResults;
+        public ResultDto[]? OriResult => _snapshot?.OrientResults;
         //public bool[]? Orimask => _snapshot?.ActiveOrients;
         //public int? CatOvr => _snapshot?.CategoryResults?.Sum(r => r?.Points ?? 0) ?? 0;
         //public int? OriOvr => _snapshot?.OrientResults?.Sum(r => r?.Points ?? 0) ?? 0;

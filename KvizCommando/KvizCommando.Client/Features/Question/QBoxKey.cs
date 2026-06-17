@@ -3,7 +3,7 @@
 namespace KvizCommando.Client.Features.Question
 
 {
-    internal enum QBoxKey
+    internal enum QBoxKeyRoot
     {
         // -------------- Root ----------------- //
         RtBtnFactory,
@@ -12,7 +12,9 @@ namespace KvizCommando.Client.Features.Question
         // ------------------
         RtBtnPendig,
         // ------------------ 
-        RtBtnNew,
+        RtBtnNew
+    }
+    internal enum QBoxKeyContent { 
         // --------- Content Boxes ---------- //
         FactSlots,
         // ------------------ 

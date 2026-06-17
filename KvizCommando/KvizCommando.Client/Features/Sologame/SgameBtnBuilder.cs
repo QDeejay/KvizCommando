@@ -56,6 +56,26 @@ namespace KvizCommando.Client.Features.Sologame
             return dict;
         }
     }
+
+    public static class BxOrdSolo
+    {
+        public static readonly string[] Root = Enum.GetNames<SgameBoxKeyRoot>();
+
+        public static readonly string[] Cat = BuildNames(SgameBoxKeySub.BtnCat);
+        public static readonly string[] Ori = BuildNames(SgameBoxKeySub.BtnOri);
+
+        private static string[] BuildNames(SgameBoxKeySub name) 
+        {
+            var count = (int)name;
+            string[] names = new string[count];
+            for (int i = 0; i < count; i++)
+            {
+                names[i] = $"{name.ToString()}{i}";
+            }
+           return names;
+        }
+    }
+
 }
 /*
  * 

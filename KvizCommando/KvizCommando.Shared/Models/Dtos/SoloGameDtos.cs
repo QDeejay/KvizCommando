@@ -16,8 +16,8 @@ namespace KvizCommando.Shared.Models.Dtos
     public sealed class SoloGameDtos
     {
         // Raw adatok - referencia, 0 allokáció
-        public ResultDto[] CategoryResults { get; }
-        public ResultDto[] OrientResults { get; }
+        public ResultDto[] CategoryResults { get; set; }
+        public ResultDto[] OrientResults { get; set; }
 
         // Enable maskok - 1 allokáció csak a CatEna
         public bool[] OrientEna { get; }

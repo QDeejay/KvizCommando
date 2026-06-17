@@ -1,6 +1,7 @@
 ﻿using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.Language;
 using KvizCommando.Shared.Models.Dtos;
+using System.ComponentModel.DataAnnotations;
 
 namespace KvizCommando.Client.Features.Home;
 
@@ -35,4 +36,10 @@ public static class HomeButtonsBuilder
 
         return dict;
     }
+    
+
+}
+public static class BxOrdHome
+{
+    public static readonly string[] Root = Enum.GetNames<HomeBoxKey>();
 }

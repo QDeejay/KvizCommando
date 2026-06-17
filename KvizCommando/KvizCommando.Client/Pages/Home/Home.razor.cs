@@ -2,6 +2,7 @@
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Home;
 using KvizCommando.Client.Features.Question;
+using KvizCommando.Client.Features.Sologame;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.Audio;
@@ -24,6 +25,11 @@ public partial class Home : ComponentBase
     [Inject] public ILocalStorageService LocalStorage { get; set; } = default!;
     [Inject] private ILoadingService Loader { get; set; } = default!;
     [Inject] private IHomeState HomeState { get; set; } = default!;
+    [Inject] private IQuestionState QuestionState { get; set; } = default!;
+    [Inject] private ITeamState TeamState { get; set; } = default!;
+    [Inject] private ISoloState SoloState { get; set; } = default!;
+
+
     [Inject] private PageTitleService PageTitle { get; set; } = default!;
     [Inject] protected HttpClient Http { get; set; } = default!;
     [Inject] public IDisplayMessageState DisplayState { get; set; } = default!;
@@ -32,21 +38,51 @@ public partial class Home : ComponentBase
     private readonly string Minimal = "minimalized";
     private readonly string large = "large";
     private string bboardSize = string.Empty;
-    private string[] BtnOrder = Array.Empty<string>();
+    private string[] BoxOrder = Array.Empty<string>();
+    private string[] BoxOrderHome= Array.Empty<string>();
+    internal string[] BoxOrderQuestion = Array.Empty<string>();
+    internal string[] BoxOrderSolo = Array.Empty<string>();
 
 
+    private string ActualPage = "home";
     private MarkupString BboardHTML = new();
     private bool _isReady;
-    private Dictionary<string, ContentBoxVm>? _boxesDict;
-    //private List<ContentBoxVm>? _boxes;
+    private bool _btnReady;
+    private Dictionary<string, ContentBoxVm>? _boxesDict= new Dictionary<string, ContentBoxVm>();
+    
 
     private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
     private ContentBoxVm Box(string orx) => _boxesDict![orx];
     
-    private void BuildButtons()
+    private void BuildButtons(string page)
     {
-        _boxesDict = HomeButtonsBuilder.Build(HomeState.HomeScreen!, Lang);
+        var boxes = new Dictionary<string, ContentBoxVm>();
+        var reqpage = BoxOrderHome;
+        switch (page)
+        {
+            
+            case "home":
+                boxes = HomeButtonsBuilder.Build(HomeState.HomeScreen!, Lang);
+                reqpage = BoxOrderHome;
+                break;
+            case "question":
+                boxes = QBtnBoxBuilder.BuildBoxes(QuestionState.ExtendedInfo!,Lang);
+                reqpage = BoxOrderQuestion;
+                break;
+            case "solo":
+                boxes = SgameBtnBuilder.BuildBoxes(SoloState.Snapshot!, culture, Lang);
+                reqpage= BoxOrderSolo;
+                break;
+
+        }
+        foreach (var box in boxes)
+        {
+            _boxesDict[box.Key]= box.Value;
+        }
+        BoxOrder = reqpage;
+
+
     }
     private void OnBoxClick(int boxId)
     {
@@ -54,13 +90,23 @@ public partial class Home : ComponentBase
         Console.WriteLine($"Box {boxId} kattintva.");
         switch (boxId) 
         {
-            case 4: Nav.NavigateTo("/solo");
+            case 0: ActualPage = "home";
+                //BoxOrder = BoxOrderHome;
                 break;
-            case 10: Nav.NavigateTo("/team");
+            case 4: ActualPage = "solo"; 
+                //BoxOrder = BoxOrderSolo;
+                //Nav.NavigateTo("/solo");
                 break;
-            case 11: Nav.NavigateTo("/question");
+            case 2: ActualPage = "team";
+                //BoxOrder = BoxOrderTeam;
+                //Nav.NavigateTo("/team");
+                break;
+            case 1: ActualPage = "question";
+                //BoxOrder = BoxOrderQuestion;
+                //Nav.NavigateTo("/question");
                 break;
         }
+        BuildButtons(ActualPage);
     }
     private async Task CloseBBoard()
     {
@@ -73,7 +119,7 @@ public partial class Home : ComponentBase
         await HomeState.EnsureLoadedAsync();
         
 
-        BtnOrder = Enum.GetNames<HomeBoxKey>();
+       
         string url = $"/BulletinBoard/{culture}/bb.html";
         var lastBB = await LocalStorage.GetItemAsync<DateTime>("B.B");
         BboardHTML = new MarkupString(await Http.GetStringAsync(url));
@@ -91,6 +137,18 @@ public partial class Home : ComponentBase
         await Loader.Hide();
         
      
+    }
+    protected override void OnInitialized()
+    {
+        if (!_btnReady)
+        {
+            ActualPage = "home";
+            BoxOrderHome = BxOrdHome.Root;
+            BoxOrderQuestion = BxOrdQuest.Root;
+            BoxOrderSolo = BxOrdSolo.Root;
+            _btnReady=true;
+            BoxOrder = BoxOrderHome;
+        }
     }
 
     private void UpdateLedDisplay()

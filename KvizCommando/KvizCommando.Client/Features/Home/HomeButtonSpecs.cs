@@ -33,14 +33,14 @@ public static class HomeButtonSpecs
         new ButtonSpec {
             Key = HomeBoxKey.Shop, 
             TitleKey = "home.Box.Title.Shop",
-            ImageSrc = "images/buttons/shop.webp", Size = "medium", FooterDisplay = false, ClickId = 5,
+            ImageSrc = "images/buttons/shop.webp", Size = "medium", FooterDisplay = false, ClickId = 4,
             Pick = s => s.Shop,
             BuildFooter = (lang, b) => ""
         },
         new ButtonSpec {
             Key = HomeBoxKey.Rankings, 
             TitleKey = "home.Box.Title.Rankings",
-            ImageSrc = "images/buttons/ranking.webp", Size = "medium", FooterDisplay = true, ClickId = 6,
+            ImageSrc = "images/buttons/ranking.webp", Size = "medium", FooterDisplay = true, ClickId = 5,
             Pick = s => s.Ranking,
             BuildFooter = (lang, b) =>
                 b.FooterData1 < 1
@@ -50,14 +50,14 @@ public static class HomeButtonSpecs
         new ButtonSpec {
             Key = HomeBoxKey.Statistic, 
             TitleKey = "home.Box.Title.Statistic",
-            ImageSrc = "images/buttons/statistic.webp", Size = "small", FooterDisplay = false, ClickId = 7,
+            ImageSrc = "images/buttons/statistic.webp", Size = "small", FooterDisplay = false, ClickId = 6,
             Pick = s => s.Statistic,
             BuildFooter = (lang, b) => ""
         },
         new ButtonSpec {
             Key = HomeBoxKey.Events, 
             TitleKey = "home.Box.Title.Events",
-            ImageSrc = "images/buttons/events.webp", Size = "wide", FooterDisplay = true, ClickId = 8,
+            ImageSrc = "images/buttons/events.webp", Size = "wide", FooterDisplay = true, ClickId = 7,
             Pick = s => s.Events,
             BuildFooter = (lang, b) => b.FooterData1 switch
             {
@@ -70,21 +70,21 @@ public static class HomeButtonSpecs
         new ButtonSpec {
             Key = HomeBoxKey.Community, 
             TitleKey = "home.Box.Title.Community",
-            ImageSrc = "images/buttons/community.webp", Size = "medium", FooterDisplay = true, ClickId = 1,
+            ImageSrc = "images/buttons/community.webp", Size = "medium", FooterDisplay = true, ClickId = 8,
             Pick = s => s.Community,
             BuildFooter = (lang, b) => lang["home.Box.Footer.Community"].FormatSafe(b.FooterData1, b.FooterData2)
         },
         new ButtonSpec {
             Key = HomeBoxKey.Messages, 
             TitleKey = "home.Box.Title.Messages",
-            ImageSrc = "images/buttons/messages.webp", Size = "medium", FooterDisplay = true, ClickId = 2,
+            ImageSrc = "images/buttons/messages.webp", Size = "medium", FooterDisplay = true, ClickId = 9,
             Pick = s => s.Messages,
             BuildFooter = (lang, b) => lang["home.Box.Footer.Messages"].FormatSafe(b.FooterData1)
         },
         new ButtonSpec {
             Key = HomeBoxKey.Team, 
             TitleKey = "home.Box.Title.Team",
-            ImageSrc = "images/buttons/team.webp", Size = "medium", FooterDisplay = true, ClickId = 10,
+            ImageSrc = "images/buttons/team.webp", Size = "medium", FooterDisplay = true, ClickId = 2,
             Pick = s => s.Team,
             BuildFooter = (lang, b) => lang["home.Box.Footer.Team"].FormatSafe(b.FooterData1, b.FooterData2)
         },
@@ -93,7 +93,7 @@ public static class HomeButtonSpecs
             TitleKey = "home.Box.Title.Question",
             ImageSrc = "images/buttons/questions.webp", Size = "medium",
             FooterDisplay = false,
-            ClickId = 11,
+            ClickId = 1,
             Pick = s => s.Question,
             BuildFooter = (lang, b) => ""
         },

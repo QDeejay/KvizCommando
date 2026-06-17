@@ -36,4 +36,14 @@ namespace KvizCommando.Client.Features.Question
         }
        
     }
+    public static class BxOrdQuest
+    {
+        public static readonly string[] Root = Enum.GetNames<QBoxKeyRoot>();
+       
+        public static readonly string[] Fact = [QBoxKeyContent.FactSlots.ToString()];
+        public static readonly string[] Usr =  [QBoxKeyContent.UsrSlots.ToString()];
+        public static readonly string[] Pend = [QBoxKeyContent.PendigSlots.ToString()];
+        public static readonly string[] New =  [QBoxKeyContent.NewSlot.ToString()];
+
+    }
 }
