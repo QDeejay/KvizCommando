@@ -19,8 +19,6 @@ namespace KvizCommando.Client.Features.Question
         internal QBoxKey Key { get; init; }
         internal Func <QuestionExtendedInfo,bool> CheckEnable { get; init; } = default!;
         internal Func<ILanguageService, QuestionExtendedInfo, string> BuildBoxText { get; init; } = default!;
-        //internal Func<ILanguageService, QuestionExtendedInfo, string> BuildFooter { get; init; } = default!;
-
     }
 
     public static class QuestionButtonSpecs
@@ -70,20 +68,20 @@ namespace KvizCommando.Client.Features.Question
                 ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 1002,
                 CheckEnable = (qn) => false
             },
-             new QBoxSpecs {
+            new QBoxSpecs {
                 Key = QBoxKey.PendigSlots,
                 TitleKey = string.Empty,
                 BuildBoxText = (lang, qn) =>  lang["question.Box.Title.PendingSlots"].FormatSafe(qn.OccupiedPendingSlot, qn.AvailableUserSlot >> 1),
                 ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 1003,
                 CheckEnable = (qn) => false
             },
-             new QBoxSpecs {
+            new QBoxSpecs {
                 Key = QBoxKey.NewSlot,
                 TitleKey = "question.Modal.Title.New",
                 ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 1004,
                 BuildBoxText = (lang, qn) => "",
                 CheckEnable = (qn) => false
-
+             }
         };
     }
 

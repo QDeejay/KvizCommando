@@ -17,23 +17,19 @@ namespace KvizCommando.Client.Features.Sologame
         {
             var dict = new Dictionary<string, ContentBoxVm>();
             //var spec = new SgameBtnSpecs();
-            var mask = ss.ActiveOrients.Concat(ss.ActiveOrients).ToArray();
-            var rootEna = i < 2 ? mask.Any(x => x) : false;
-            Console.WriteLine($"mask:{mask.ToString()}");
-          
+            Console.WriteLine($"mask:{ss.OrientEna.ToString()}");
+
             foreach (var spec in SoloButtonSpecs.RootSpecs)
             {
-                
-               
-                dict.Add(spec.Key,new ContentBoxVm
+                dict.Add(spec.Key.ToString(), new ContentBoxVm
                 {
                     Header = lang[spec.TitleKey],
                     Footer = spec.BuildFooter(lang, ss),
                     FooterDisplay = spec.FooterDisplay,
                     Size = spec.Size,
                     ImageSrc = spec.ImageSrc,
-                    IsClickable = ena,
-                    IsEnabled = ena,
+                    IsClickable = spec.BuildEnable(ss, 1),
+                    IsEnabled = spec.BuildEnable(ss, 1),
                     ClickId = spec.ClickId
                 });
 
@@ -49,17 +45,21 @@ namespace KvizCommando.Client.Features.Sologame
                         FooterDisplay = spec.FooterDisplay,
                         Size = spec.Size,
                         ImageSrc = spec.BuildImageSrc(i),
-                        IsClickable = mask[i - 1],
-                        IsEnabled = mask[i - 1],
+                        IsClickable = spec.BuildEnable(ss, i),
+                        IsEnabled = spec.BuildEnable(ss, i),
                         ClickId = spec.ClickId + i
                     });
 
-                }
+                } 
+            }
 
-
-
-            
-            bool ena;
+            return dict;
+        }
+    }
+}
+/*
+ * 
+ *     bool ena;
             for (int i = 0; i < 3; i++)
             {
                 spec = SoloButtonSpecs.Specs[i]; 
@@ -83,15 +83,6 @@ namespace KvizCommando.Client.Features.Sologame
             }
             
 
-
-
-
-            return dict;
-        }
-       
-    }
-}
-/*
  list.Add(new ContentBoxVm
                 {
                     Header = CategoryNameLocalizer.GetCategory(i, cult),

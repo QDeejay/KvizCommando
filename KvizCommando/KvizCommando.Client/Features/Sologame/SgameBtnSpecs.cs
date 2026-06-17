@@ -13,7 +13,7 @@ namespace KvizCommando.Client.Features.Sologame
         
         internal SgameBoxKey Key { get; init; }
         internal Func<int, string> BuildImageSrc { get; init; } = default!;
-        
+        internal Func<SoloGameDtos,int, bool> BuildEnable { get; init; } = default!;
     }
 
     public sealed class SgameBtnRoot : SgameBtnSpecs
@@ -24,7 +24,7 @@ namespace KvizCommando.Client.Features.Sologame
     {
         internal int BtnQnty { get; init; }
         internal Func<int, string, string> BuildTitle { get; init; } = default!;
-        internal Func<ILanguageService, ResultDtos, string> BuildFooter { get; init; } = default!;
+        internal Func<ILanguageService, ResultDto, string> BuildFooter { get; init; } = default!;
     }
 
 
@@ -51,18 +51,21 @@ namespace KvizCommando.Client.Features.Sologame
                 Key = SgameBoxKey.RtBtnCategory,
                 TitleKey = "solo.Button.Title.Categories",
                 ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = true, ClickId = 401,
-                BuildFooter = (lang, sg) => lang["solo.Button.Footer.Catandori"].FormatSafe(sg.CategoryResults.Sum(r => r?.Points ?? 0))
+                BuildEnable = (sg,ix) => sg.GameCategoryEna,
+                BuildFooter = (lang, sg) => lang["solo.Button.Footer.Catandori"].FormatSafe(sg.CategoryOverall)
             },
             new SgameBtnRoot {
                 Key = SgameBoxKey.RtBtnOrient,
                 TitleKey = "solo.Button.Title.Orients",
                 ImageSrc = "images/solo/orients.webp", Size = "wide", FooterDisplay = true, ClickId = 402,
-                BuildFooter =(lang, sg) => lang["solo.Button.Footer.Catandori"].FormatSafe(sg.OrientResults.Sum(r => r?.Points ?? 0))
+                BuildEnable = (sg,ix) => sg.GameOrientsEna,
+                BuildFooter =(lang, sg) => lang["solo.Button.Footer.Catandori"].FormatSafe(sg.OrientOverall)
             },
             new SgameBtnRoot {
                 Key = SgameBoxKey.RtBtnCampaign,
                 TitleKey = "solo.Button.Title.Campaign",
                 ImageSrc = "images/solo/campaign.webp", Size = "wide", FooterDisplay = false, ClickId = 403,
+                BuildEnable = (sg,ix) => sg.GameCampaignEna,
                 BuildFooter = (lang, sg) => ""
             },
 
@@ -74,6 +77,7 @@ namespace KvizCommando.Client.Features.Sologame
                 BtnQnty = CatQnty,
                 BuildTitle = (ix, cult) => CategoryNameLocalizer.GetCategory(ix,cult),
                 BuildImageSrc = (ix) => $"images/categories/{CatFileName[ix]}.webp", Size ="small", FooterDisplay=true, ClickId=420,
+                BuildEnable = (sg,ix) => sg.CatEna[ix],
                 BuildFooter = (lang,rd) => lang["solo.Button.Footer.Games"].FormatSafe(rd.Points,rd.Time)
             },
             new SgameBtnContent {
@@ -81,6 +85,7 @@ namespace KvizCommando.Client.Features.Sologame
                 BtnQnty = OriQnty,
                 BuildTitle = (ix, cult) => OrientationLocalizer.GetOrientation(ix,cult),
                 BuildImageSrc = (ix) => $"images/orients/{OriFileName[ix]}.webp", Size ="tall", FooterDisplay=true, ClickId=450,
+                BuildEnable = (sg,ix) => sg.OrientEna[ix],
                 BuildFooter = (lang,rd) => lang["solo.Button.Footer.Games"].FormatSafe(rd.Points,rd.Time)
             }
 

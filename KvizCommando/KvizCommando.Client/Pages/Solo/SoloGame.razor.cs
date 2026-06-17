@@ -39,7 +39,7 @@ namespace KvizCommando.Client.Pages.Solo
         private int _buttonAryStart = CatBtnCount+ OriBtnCount;
         private int _buttonAryEnd = CatBtnCount + OriBtnCount + RootButtonCount;
         private string SubHeaderTitle = string.Empty;
-        private List<ContentBoxVm>? _soloBtns;
+        private Dictionary<string,ContentBoxVm>? _soloBtns;
 
         //private ContentBoxVm soloBtn(int idx) => _soloBtns![idx];
 
@@ -47,7 +47,7 @@ namespace KvizCommando.Client.Pages.Solo
         {
             if (SoloState.Snapshot != null)
             {
-                _soloBtns = SgameBtnBuilder.BuildButtons(SoloState.Snapshot!, culture, Lang);
+                _soloBtns = SgameBtnBuilder.BuildBoxes(SoloState.Snapshot!, culture, Lang);
                 _isLoaded = true;
             }
         }
@@ -55,7 +55,8 @@ namespace KvizCommando.Client.Pages.Solo
         private void OnBtnClick(int btnId)
         {
             Console.WriteLine($"megnyomta a paraszt következő gombot: {btnId}");
-            switch (btnId) 
+            /*
+                switch (btnId) 
             {
                 case  1: _buttonAryStart = CatBtnCount + OriBtnCount; _buttonAryEnd = CatBtnCount + OriBtnCount + RootButtonCount; 
                         SubHeaderTitle=string.Empty; 
@@ -67,6 +68,8 @@ namespace KvizCommando.Client.Pages.Solo
                     SubHeaderTitle = _soloBtns[CatBtnCount + OriBtnCount+1].Header ?? "";
                     break;
             }
+             */
+
             Console.WriteLine($"megnyomta a paraszt következő gombot: {SubHeaderTitle}");
         }
         private void OnHeadButtonClick()

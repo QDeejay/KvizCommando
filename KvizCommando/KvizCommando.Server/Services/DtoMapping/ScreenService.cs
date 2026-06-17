@@ -13,8 +13,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.IO;
+using System.Numerics;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace KvizCommando.Server.Services.DtoMapping
@@ -389,19 +391,15 @@ namespace KvizCommando.Server.Services.DtoMapping
                 _logger.LogWarning("Player not found in cache. userId={UserId}", playerId);
                 return null;
             }
-            foreach (var cs in player.CategoryStats)
-            { 
+
+           
+           
                 
-            }
-
-            var SoloDto = new SoloGameDtos
-            {
-                ActiveOrients = player.CharCatMask,
-                OrientResults = GetOriResultFromCache(player.OrientStats),
-                CategoryResults = GetCatResultFromCache(player.CategoryStats)
-
-            };
-            return SoloDto;
+           
+            return new SoloGameDtos(false,
+                player.CharCatMask,
+                GetOriResultFromCache(player.OrientStats),
+                GetCatResultFromCache(player.CategoryStats));
         }
 
         private AttidtudeDto ConvertAttitude(AttitudeBranch attitude, int rank, int max1, int max2)
@@ -433,14 +431,14 @@ namespace KvizCommando.Server.Services.DtoMapping
             };
         }
 
-        private ResultDtos[] GetCatResultFromCache(List<PlayerCategoryStat> data)
+        private ResultDto[] GetCatResultFromCache(List<PlayerCategoryStat> data)
         {
             int ix;
-            var result = new ResultDtos[data.Count+1];
-            for (int i = 0; i < result.Length; i++)
-            {
-                result[i] = new ResultDtos();
-            }
+            var result = new ResultDto[data.Count+1];
+            //for (int i = 0; i < result.Length; i++)
+           // {
+             //   result[i] = new ResultDto();
+            //}
             foreach (var d in data)
             { 
                 ix=Math.Min((int)d.CategoryId,16);
@@ -450,13 +448,13 @@ namespace KvizCommando.Server.Services.DtoMapping
             return result;
         }
 
-        private ResultDtos[] GetOriResultFromCache(List<PlayerOrientStat> data)
+        private ResultDto[] GetOriResultFromCache(List<PlayerOrientStat> data)
         {
             int ix;
-            var result = new ResultDtos[data.Count + 1];
+            var result = new ResultDto[data.Count + 1];
             for (int i = 0; i < result.Length; i++)
             {
-                result[i] = new ResultDtos();
+                result[i] = new ResultDto();
             }
             foreach (var d in data)
             {
