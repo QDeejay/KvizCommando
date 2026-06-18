@@ -117,6 +117,8 @@ public partial class Home : ComponentBase
     {
         await Loader.Show();
         await HomeState.EnsureLoadedAsync();
+        await QuestionState.EnsureLoadedAsync();
+        await SoloState.EnsureLoadedAsync();
         
 
        
