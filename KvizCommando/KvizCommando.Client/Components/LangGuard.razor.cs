@@ -18,10 +18,16 @@ namespace KvizCommando.Client.Components
 
         private bool _isReady = false;
         private string? _lastCulture;
-
+        private string prevModule = string.Empty;
         protected override async Task OnParametersSetAsync()
         {
-            await EnsureModuleLoadedAsync();
+            if (prevModule != Module)
+            { 
+                _isReady = false;
+                await EnsureModuleLoadedAsync();
+                prevModule = Module;
+            }
+            
         }
 
         protected override void OnInitialized()

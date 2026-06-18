@@ -22,14 +22,17 @@ namespace KvizCommando.Client.Features.Question
                 var footer = string.IsNullOrEmpty(spec.TitleKey);
                 dict[btn.Key.ToString()] = new ContentBoxVm 
                 {
-                    Header = !footer ? spec.BuildBoxText(lang, qs) : lang[spec.TitleKey],
-                    Footer = footer ?  spec.BuildBoxText(lang, qs) : string.Empty,
+                    Header = footer ? spec.BuildBoxText(lang, qs) : lang[spec.TitleKey],
+                    Footer = !footer ?  spec.BuildBoxText(lang, qs) : string.Empty,
                     FooterDisplay = spec.FooterDisplay,
                     Size = spec.Size,
                     ImageSrc = spec.ImageSrc,
+                    ShowImage = !string.IsNullOrEmpty(spec.ImageSrc),
                     IsClickable = true,
                     IsEnabled = btn.CheckEnable(qs),
-                    ClickId = spec.ClickId
+                    ClickId = spec.ClickId,
+                    LcdDisplay = spec.LcdBackground
+
                 };
             }
             return dict;

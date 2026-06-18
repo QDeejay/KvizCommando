@@ -44,7 +44,7 @@ namespace KvizCommando.Client.Layout
             culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
             await Lang.LoadModuleAsync(culture, "mainlayout");  // szükséges
-
+            await Lang.LoadModuleAsync(culture, "home");
             await HomeState.EnsureLoadedAsync();
             //await QuestionState.EnsureLoadedAsync();
 

@@ -11,6 +11,7 @@ using KvizCommando.Shared.Models.User;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Numerics;
@@ -380,7 +381,6 @@ namespace KvizCommando.Server.Services.DtoMapping
                 //QuestionButtons = buttons
             };
         }
-
         public async Task<SoloGameDtos?> GetSoloGameScreenAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
             sessionId = "Teszt";
@@ -391,17 +391,35 @@ namespace KvizCommando.Server.Services.DtoMapping
                 _logger.LogWarning("Player not found in cache. userId={UserId}", playerId);
                 return null;
             }
+            var mask = player.CharCatMask;
+            var results = new SoloResults 
+                {
+                    OrientResults = GetOriResultFromCache(player.OrientStats),
+                    CategoryResults = GetCatResultFromCache(player.CategoryStats)
 
-           
-           
-                
-           
-            return new SoloGameDtos(false,
-                player.CharCatMask,
-                GetOriResultFromCache(player.OrientStats),
-                GetCatResultFromCache(player.CategoryStats));
+                 };
+            var enables = new SoloEnables
+            {
+                EnaCampaign = false,
+                EnaCategory = mask.AsSpan().Contains(true),
+                EnaOrient = mask.AsSpan().Contains(true),
+                EnaOri = mask,
+                EnaCat = mask.Concat(mask).ToArray(),
+            };
+
+
+            return new SoloGameDtos
+            {
+                Mask = mask,
+                Results = results,
+                Enables = enables
+            };
+
         }
-
+        /// <summary>
+        /// Itt vanna az osztály privát helperei
+        /// </summary>
+     
         private AttidtudeDto ConvertAttitude(AttitudeBranch attitude, int rank, int max1, int max2)
         {
             int modifier1 = 21 - max1;
@@ -430,37 +448,39 @@ namespace KvizCommando.Server.Services.DtoMapping
                 lvlOvrMax = (byte)maxLevel,
             };
         }
-
         private ResultDto[] GetCatResultFromCache(List<PlayerCategoryStat> data)
         {
             int ix;
-            var result = new ResultDto[data.Count+1];
-            //for (int i = 0; i < result.Length; i++)
-           // {
-             //   result[i] = new ResultDto();
-            //}
+            var result = new ResultDto[data.Count + 1];
+            result[0] = new ResultDto { Points=0, Time=0.0 };
             foreach (var d in data)
             { 
                 ix=Math.Min((int)d.CategoryId,16);
-                result[ix].Points = d.HighScore;
-                result[ix].Time = d.HighScoreTime;
+                result[ix] = new ResultDto 
+                {
+                    Points = d.HighScore,
+                    Time = d.HighScoreTime
+                };
+                result[0].Points=+ d.HighScore;
+                result[0].Time  =+ d.HighScoreTime;
             }
             return result;
         }
-
         private ResultDto[] GetOriResultFromCache(List<PlayerOrientStat> data)
         {
             int ix;
             var result = new ResultDto[data.Count + 1];
-            for (int i = 0; i < result.Length; i++)
-            {
-                result[i] = new ResultDto();
-            }
+            result[0] = new ResultDto { Points = 0, Time = 0.0 };
             foreach (var d in data)
             {
                 ix = Math.Min((int)d.OrientId, 8);
-                result[ix].Points = d.HighScore;
-                result[ix].Time = d.HighScoreTime;
+                result[ix] = new ResultDto
+                {
+                    Points = d.HighScore,
+                    Time = d.HighScoreTime
+                };
+                result[0].Points = +d.HighScore;
+                result[0].Time = +d.HighScoreTime;
             }
             return result;
         }

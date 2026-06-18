@@ -17,36 +17,37 @@ namespace KvizCommando.Client.Features.Sologame
         {
             var dict = new Dictionary<string, ContentBoxVm>();
             //var spec = new SgameBtnSpecs();
-            Console.WriteLine($"mask:{ss.OrientEna.ToString()}");
 
             foreach (var spec in SoloButtonSpecs.RootSpecs)
             {
                 dict.Add(spec.Key.ToString(), new ContentBoxVm
                 {
                     Header = lang[spec.TitleKey],
-                    Footer = spec.BuildFooter(lang, ss),
+                    Footer = spec.BuildFooter(lang, ss.Results),
                     FooterDisplay = spec.FooterDisplay,
                     Size = spec.Size,
                     ImageSrc = spec.ImageSrc,
-                    IsClickable = spec.BuildEnable(ss, 1),
-                    IsEnabled = spec.BuildEnable(ss, 1),
+                    ShowImage = !string.IsNullOrEmpty(spec.ImageSrc),
+                    IsClickable = spec.BuildEnable(ss.Enables, 1),
+                    IsEnabled = spec.BuildEnable(ss.Enables, 1),
                     ClickId = spec.ClickId
                 });
 
             }
             foreach (var spec in SoloButtonSpecs.ContentSpecs)
             {
-                for (int i = 1; i < spec.BtnQnty; i++)
+                for (int i = 1; i <= spec.BtnQnty; i++)
                 {
                     dict.Add($"{spec.Key.ToString()}{i}", new ContentBoxVm
                     {
                         Header = CategoryNameLocalizer.GetCategory(i, cult),
-                        Footer = spec.BuildFooter(lang, ss.CategoryResults![i]),
+                        Footer = spec.BuildFooter(lang, ss.Results, i),
                         FooterDisplay = spec.FooterDisplay,
                         Size = spec.Size,
                         ImageSrc = spec.BuildImageSrc(i),
-                        IsClickable = spec.BuildEnable(ss, i),
-                        IsEnabled = spec.BuildEnable(ss, i),
+                        ShowImage = !string.IsNullOrEmpty(spec.BuildImageSrc(i)),
+                        IsClickable = spec.BuildEnable(ss.Enables, i-1),
+                        IsEnabled = spec.BuildEnable(ss.Enables, i-1),
                         ClickId = spec.ClickId + i
                     });
 
@@ -70,7 +71,7 @@ namespace KvizCommando.Client.Features.Sologame
             string[] names = new string[count];
             for (int i = 0; i < count; i++)
             {
-                names[i] = $"{name.ToString()}{i}";
+                names[i] = $"{name.ToString()}{i+1}";
             }
            return names;
         }

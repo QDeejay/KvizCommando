@@ -4,6 +4,7 @@ using KvizCommando.Client.Features.Home;
 using KvizCommando.Client.Features.Question;
 using KvizCommando.Client.Features.Sologame;
 using KvizCommando.Client.Helpers;
+using KvizCommando.Client.Layout;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
@@ -46,67 +47,74 @@ public partial class Home : ComponentBase
 
     private string ActualPage = "home";
     private MarkupString BboardHTML = new();
-    private bool _isReady;
-    private bool _btnReady;
+    private bool _isReady = false;
+    private bool _isLoaded = false;
+    private bool _btnReady = false;
     private Dictionary<string, ContentBoxVm>? _boxesDict= new Dictionary<string, ContentBoxVm>();
-    
-
     private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-
     private ContentBoxVm Box(string orx) => _boxesDict![orx];
-    
     private void BuildButtons(string page)
     {
         var boxes = new Dictionary<string, ContentBoxVm>();
-        var reqpage = BoxOrderHome;
         switch (page)
-        {
-            
-            case "home":
-                boxes = HomeButtonsBuilder.Build(HomeState.HomeScreen!, Lang);
-                reqpage = BoxOrderHome;
+        {    
+            case "home": boxes = HomeButtonsBuilder.Build(HomeState.HomeScreen!, Lang);
                 break;
-            case "question":
-                boxes = QBtnBoxBuilder.BuildBoxes(QuestionState.ExtendedInfo!,Lang);
-                reqpage = BoxOrderQuestion;
+            case "question": boxes = QBtnBoxBuilder.BuildBoxes(QuestionState.ExtendedInfo!, Lang);
                 break;
-            case "solo":
-                boxes = SgameBtnBuilder.BuildBoxes(SoloState.Snapshot!, culture, Lang);
-                reqpage= BoxOrderSolo;
+            case "solo":  boxes = SgameBtnBuilder.BuildBoxes(SoloState.Snapshot!, culture, Lang);
                 break;
-
+            default: boxes = HomeButtonsBuilder.Build(HomeState.HomeScreen!, Lang);
+                break;
         }
+        
         foreach (var box in boxes)
         {
-            _boxesDict[box.Key]= box.Value;
+            _boxesDict![box.Key]= box.Value;
         }
-        BoxOrder = reqpage;
-
-
+        _isReady = true && _isLoaded;
     }
     private void OnBoxClick(int boxId)
     {
         // kattintás kezelése
         Console.WriteLine($"Box {boxId} kattintva.");
+        _isReady = false;
+        var title = Lang["mainlayout.Header.Home"];
         switch (boxId) 
         {
             case 0: ActualPage = "home";
-                //BoxOrder = BoxOrderHome;
-                break;
-            case 4: ActualPage = "solo"; 
-                //BoxOrder = BoxOrderSolo;
-                //Nav.NavigateTo("/solo");
-                break;
-            case 2: ActualPage = "team";
-                //BoxOrder = BoxOrderTeam;
-                //Nav.NavigateTo("/team");
+                BoxOrder = BxOrdHome.Root;
                 break;
             case 1: ActualPage = "question";
-                //BoxOrder = BoxOrderQuestion;
-                //Nav.NavigateTo("/question");
+                title = Lang["mainlayout.Header.Question"];
+                BoxOrder = BxOrdQuest.Root;
                 break;
-        }
+            case 2:
+                ActualPage = "team";
+                title = Lang["mainlayout.Header.Team"];
+                //Nav.NavigateTo("/team");
+                break;
+            case 3:
+                ActualPage = "vs";
+                //Nav.NavigateTo("/solo");
+                break;
+            case 4:
+                ActualPage = "solo";
+                title = Lang["mainlayout.Header.GameSolo"];
+                BoxOrder = BxOrdSolo.Root;
+                //Nav.NavigateTo("/solo");
+                break;
+            //Nav.NavigateTo("/question");
+            case 401: BoxOrder = BxOrdSolo.Cat;
+                title = _boxesDict![SgameBoxKeyRoot.RtBtnCategory.ToString()].Header;
+                break;
+            case 402: BoxOrder= BxOrdSolo.Ori;
+                title = _boxesDict![SgameBoxKeyRoot.RtBtnOrient.ToString()].Header;
+                break;
+            }
         BuildButtons(ActualPage);
+        PageTitle.SetTitle(title, boxId, -1);
+
     }
     private async Task CloseBBoard()
     {
@@ -119,9 +127,7 @@ public partial class Home : ComponentBase
         await HomeState.EnsureLoadedAsync();
         await QuestionState.EnsureLoadedAsync();
         await SoloState.EnsureLoadedAsync();
-        
-
-       
+        await TeamState.EnsureLoadedAsync();
         string url = $"/BulletinBoard/{culture}/bb.html";
         var lastBB = await LocalStorage.GetItemAsync<DateTime>("B.B");
         BboardHTML = new MarkupString(await Http.GetStringAsync(url));
@@ -135,22 +141,15 @@ public partial class Home : ComponentBase
         }
         PageTitle.SetTitle(Lang["mainlayout.Header.Home"], 0, HomeState.UserMainData!.RankEnum);
         UpdateLedDisplay();
-        _isReady = true;
         await Loader.Hide();
-        
-     
+        ActualPage = "home";
+        BoxOrder = BxOrdHome.Root;
+        _isLoaded = true;
+        if (_isReady == false)
+            BuildButtons(ActualPage);
     }
     protected override void OnInitialized()
     {
-        if (!_btnReady)
-        {
-            ActualPage = "home";
-            BoxOrderHome = BxOrdHome.Root;
-            BoxOrderQuestion = BxOrdQuest.Root;
-            BoxOrderSolo = BxOrdSolo.Root;
-            _btnReady=true;
-            BoxOrder = BoxOrderHome;
-        }
     }
 
     private void UpdateLedDisplay()

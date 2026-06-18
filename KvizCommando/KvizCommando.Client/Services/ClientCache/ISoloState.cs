@@ -7,8 +7,8 @@ namespace KvizCommando.Client.Services.ClientCache
         bool IsLoaded { get; }
         SoloGameDtos? Snapshot { get; }
 
-        ResultDto[]? CatResult { get; }
-        ResultDto[]? OriResult { get; }
+        public SoloEnables? Enables { get; }
+        public SoloResults? REsults { get; }
 
 
         //bool[]? Orimask { get; }

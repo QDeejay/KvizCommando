@@ -7,17 +7,81 @@ using System.Threading.Tasks;
 namespace KvizCommando.Shared.Models.Dtos
 {
 
-    public sealed class ResultDto
-    {
-        public int Points { get; set; }
-        public double Time { get; set; }
-    }
 
     public sealed class SoloGameDtos
     {
+        public bool[] Mask { get; set; } = [];
+
+        public SoloEnables Enables { get; set; } = default!;
+        public SoloResults Results { get; set; } = default!;
+        
+    }
+   
+    public sealed class SoloEnables
+    {
+        public bool EnaCampaign { get; set; } = false;
+        public bool EnaCategory { get; set; } = false;
+        public bool EnaOrient { get; set; } = false;
+
+        public bool[] EnaCat { get; set; } = new bool[16];
+        public bool[] EnaOri { get; set; } = new bool[8];
+    }
+    public sealed class SoloResults 
+    {
+            public ResultDto[] OrientResults { get; set; } = [];
+            public ResultDto[] CategoryResults { get; set; } = [];
+            //public ResultDto OverallCategory { get; set; } = default!;
+            //public ResultDto OverallOrient { get; set; } = default!;
+     }
+    public sealed class ResultDto
+    {
+        public int Points { get; set; } = 0;
+        public double Time { get; set; } = 0.0;
+    }
+
+
+}
+
+
+/*
+ 
+    public sealed class SoloGameDtos
+    {
+        public readonly bool[] InitEna = [false, false, false, false, false, false, false, false];
+
+        public bool[] ActiveOris = new bool[8];
+
+        public Results Results { get; set; } = default!;
+       
+    }
+    public class Results 
+    {
+        public ResultDtos[] CategoryResults { get; set; } = new ResultDtos[17];
+        public ResultDtos[] OrientResults { get; set; } = new ResultDtos[9];
+        public int CategoryOverall => CategoryResults?.Sum(r => r?.Points ?? 0) ?? 0;
+        public int OreintOverall => OrientResults?.Sum(r => r?.Points ?? 0) ?? 0;
+    }
+    public sealed class ResultDtos
+    {
+        public int Points { get; set; } = 0;
+        public double Time { get; set; } = 0.0;
+    }
+    public sealed class SoloButtonEnables(bool[] mask) {
+
+
+        public bool GameCampaignEna { get; set; } = mask.Any(x => x);
+        public bool GameCategoryEna { get; set; } = mask.Any(x => x);
+        public bool GameOrientsEna { get; set; } = false;
+        public bool[] OrientEna => mask;
+        public bool[] CatEna => mask is null ? Array.Empty<bool>() : mask.Concat(mask).ToArray();
+    }
+
+ 
+ public sealed class SoloGameDtos
+    {
         // Raw adatok - referencia, 0 allokáció
-        public ResultDto[] CategoryResults { get; set; }
-        public ResultDto[] OrientResults { get; set; }
+        public ResultDto[] CategoryResults { get;  }
+        public ResultDto[] OrientResults { get; }
 
         // Enable maskok - 1 allokáció csak a CatEna
         public bool[] OrientEna { get; }
@@ -82,42 +146,4 @@ namespace KvizCommando.Shared.Models.Dtos
         }
     }
 
-
-
-}
-/*
- 
-    public sealed class SoloGameDtos
-    {
-        public readonly bool[] InitEna = [false, false, false, false, false, false, false, false];
-
-        public bool[] ActiveOris = new bool[8];
-
-        public Results Results { get; set; } = default!;
-       
-    }
-    public class Results 
-    {
-        public ResultDtos[] CategoryResults { get; set; } = new ResultDtos[17];
-        public ResultDtos[] OrientResults { get; set; } = new ResultDtos[9];
-        public int CategoryOverall => CategoryResults?.Sum(r => r?.Points ?? 0) ?? 0;
-        public int OreintOverall => OrientResults?.Sum(r => r?.Points ?? 0) ?? 0;
-    }
-    public sealed class ResultDtos
-    {
-        public int Points { get; set; } = 0;
-        public double Time { get; set; } = 0.0;
-    }
-    public sealed class SoloButtonEnables(bool[] mask) {
-
-
-        public bool GameCampaignEna { get; set; } = mask.Any(x => x);
-        public bool GameCategoryEna { get; set; } = mask.Any(x => x);
-        public bool GameOrientsEna { get; set; } = false;
-        public bool[] OrientEna => mask;
-        public bool[] CatEna => mask is null ? Array.Empty<bool>() : mask.Concat(mask).ToArray();
-    }
-
- 
- 
  */

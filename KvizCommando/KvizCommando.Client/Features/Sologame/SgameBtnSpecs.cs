@@ -13,18 +13,18 @@ namespace KvizCommando.Client.Features.Sologame
 
         internal Enum Key { get; init; } = default!;
         internal Func<int, string> BuildImageSrc { get; init; } = default!;
-        internal Func<SoloGameDtos,int, bool> BuildEnable { get; init; } = default!;
+        internal Func<SoloEnables,int, bool> BuildEnable { get; init; } = default!;
     }
 
     public sealed class SgameBtnRoot : SgameBtnSpecs
     {
-        internal Func<ILanguageService, SoloGameDtos, string> BuildFooter { get; init; } = default!;
+        internal Func<ILanguageService, SoloResults, string> BuildFooter { get; init; } = default!;
     }
     public sealed class SgameBtnContent : SgameBtnSpecs
     {
         internal int BtnQnty { get; init; }
         internal Func<int, string, string> BuildTitle { get; init; } = default!;
-        internal Func<ILanguageService, ResultDto, string> BuildFooter { get; init; } = default!;
+        internal Func<ILanguageService, SoloResults, int, string> BuildFooter { get; init; } = default!;
     }
 
 
@@ -51,24 +51,23 @@ namespace KvizCommando.Client.Features.Sologame
                 Key = SgameBoxKeyRoot.RtBtnCategory,
                 TitleKey = "solo.Button.Title.Categories",
                 ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = true, ClickId = 401,
-                BuildEnable = (sg,ix) => sg.GameCategoryEna,
-                BuildFooter = (lang, sg) => lang["solo.Button.Footer.Catandori"].FormatSafe(sg.CategoryOverall)
+                BuildEnable = (se,ix) => se.EnaCategory,
+                BuildFooter = (lang, sr) => lang["solo.Button.Footer.Catandori"].FormatSafe(sr.CategoryResults[0].Points)
             },
             new SgameBtnRoot {
                 Key = SgameBoxKeyRoot.RtBtnOrient,
                 TitleKey = "solo.Button.Title.Orients",
                 ImageSrc = "images/solo/orients.webp", Size = "wide", FooterDisplay = true, ClickId = 402,
-                BuildEnable = (sg,ix) => sg.GameOrientsEna,
-                BuildFooter =(lang, sg) => lang["solo.Button.Footer.Catandori"].FormatSafe(sg.OrientOverall)
+                BuildEnable = (se,ix) => se.EnaOrient,
+                BuildFooter =(lang, sr) => lang["solo.Button.Footer.Catandori"].FormatSafe(sr.OrientResults[0].Points)
             },
             new SgameBtnRoot {
                 Key = SgameBoxKeyRoot.RtBtnCampaign,
                 TitleKey = "solo.Button.Title.Campaign",
                 ImageSrc = "images/solo/campaign.webp", Size = "wide", FooterDisplay = false, ClickId = 403,
-                BuildEnable = (sg,ix) => sg.GameCampaignEna,
-                BuildFooter = (lang, sg) => ""
+                BuildEnable = (se,ix) => se.EnaCampaign,
+                BuildFooter = (lang, sr) => ""
             },
-
         };
         public static readonly IReadOnlyList<SgameBtnContent> ContentSpecs = new[]
         {
@@ -77,16 +76,16 @@ namespace KvizCommando.Client.Features.Sologame
                 BtnQnty = CatQnty,
                 BuildTitle = (ix, cult) => CategoryNameLocalizer.GetCategory(ix,cult),
                 BuildImageSrc = (ix) => $"images/categories/{CatFileName[ix]}.webp", Size ="small", FooterDisplay=true, ClickId=420,
-                BuildEnable = (sg,ix) => sg.CatEna[ix],
-                BuildFooter = (lang,rd) => lang["solo.Button.Footer.Games"].FormatSafe(rd.Points,rd.Time)
+                BuildEnable = (se,ix) => se.EnaCat[ix],
+                BuildFooter = (lang,sr, ix) => lang["solo.Button.Footer.Games"].FormatSafe(sr.CategoryResults[ix].Points,sr.CategoryResults[ix].Time)
             },
             new SgameBtnContent {
                 Key = SgameBoxKeySub.BtnOri,
                 BtnQnty = OriQnty,
                 BuildTitle = (ix, cult) => OrientationLocalizer.GetOrientation(ix,cult),
                 BuildImageSrc = (ix) => $"images/orients/{OriFileName[ix]}.webp", Size ="tall", FooterDisplay=true, ClickId=450,
-                BuildEnable = (sg,ix) => sg.OrientEna[ix],
-                BuildFooter = (lang,rd) => lang["solo.Button.Footer.Games"].FormatSafe(rd.Points,rd.Time)
+                BuildEnable = (se,ix) => se.EnaOri[ix],
+                BuildFooter = (lang,sr,ix) => lang["solo.Button.Footer.Games"].FormatSafe(sr.OrientResults[ix].Points,sr.OrientResults[ix].Time)
             }
 
         };

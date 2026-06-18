@@ -6,7 +6,8 @@
         
             @if (_isReady == true)
             {
-            <div class="home-selector">
+            var style = $"{ActualPage ?? "home"}-selector"; 
+            <div class="@(style)">
                 @foreach (string bx in BoxOrder)
                     {
                         var box = Box(bx);

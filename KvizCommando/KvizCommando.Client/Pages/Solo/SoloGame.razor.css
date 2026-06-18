@@ -1,4 +1,7 @@
-﻿
+﻿.root-buttons {
+    grid-template-columns: 1fr;
+    max-width: 440px;
+}
 .main-selector {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* mindig 4 oszlop */
@@ -7,10 +10,7 @@
     margin: 0 auto; /* ez rakja középre az egész blokkot */
     width: 100%;
 }
-.root-buttons {
-    grid-template-columns: 1fr;
-    max-width: 440px;
-}
+
 
 
 
