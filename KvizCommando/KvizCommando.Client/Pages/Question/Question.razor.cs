@@ -20,7 +20,7 @@ namespace KvizCommando.Client.Pages.Question
     public partial class Question : ComponentBase, IDisposable
     {
         [Inject] protected PageTitleService PageTitle { get; set; } = default!;
-        [Inject] protected ILoadingService Loader { get; set; } = default!;
+        
         [Inject] protected ILanguageService Lang { get; set; } = default!;
         [Inject] protected IQuestionState QuestionState { get; set; } = default!;
         [Inject] protected IApiService QuestApi { get; set; } = default!;
@@ -71,7 +71,7 @@ namespace KvizCommando.Client.Pages.Question
         }
         protected override async Task OnInitializedAsync()
         {
-            await Loader.Show();
+         
             await QuestionState.EnsureLoadedAsync();
             localNotShowStateDel = await LocalStorage.GetItemAsync<bool>(localNotShowDel);
             localNotShowState = await LocalStorage.GetItemAsync<bool>(localNotShowNew);
@@ -86,7 +86,7 @@ namespace KvizCommando.Client.Pages.Question
             PageTitle.SetTitle(Lang["mainlayout.Header.Question"],101,-1);
 
             (OriginalCodes, WorkingCodes) = QuestionHelper.CloneFactorySlots(QuestionState.FactorySlots);
-            await Loader.Hide();
+       
             if (_isLoaded==false)
                 BuildButtons();
         }

@@ -27,9 +27,10 @@ namespace KvizCommando.Server.Services.DtoMapping
             _logger = logger;
         }
 
-        public async Task<bool> SaveFactorySlotsAsync(int playerId, SaveFactoryRequest dto, CancellationToken ct)
+        public async Task<bool?> SaveFactorySlotsAsync(int playerId, SaveFactoryRequest dto, CancellationToken ct)
         {
-            var sessionId = "Teszt";
+            //var sessionId = "Teszt";
+            //var sessionId = sessionid;
             var loadout = new PlayerLoadout
             {
                 UserSlotsJson = null, // nem módosítjuk
@@ -39,20 +40,23 @@ namespace KvizCommando.Server.Services.DtoMapping
             
             var success = await _cache.UpdatePartialLoadoutLockedAsync(
                 playerId,
-                sessionId,
+                dto.SessionId,
                 loadout,
                 ct);
             return success;
         }
-        public async Task<bool> ManageSlotsAsync(int playerId, ManageSlotRequest dto, CancellationToken ct)
+        public async Task<bool?> ManageSlotsAsync(int playerId, ManageSlotRequest dto, CancellationToken ct)
         {
-            var sessionId = "Teszt";
-
-            
+            //var sessionId = "Teszt";
+            //var sessionId = sessionid;
             ///
             /// Data validácio a cacheben
             /// 
-            var (player, question) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
+            var (player, question) = await _cache.GetOrLoadLockedAsync(playerId, dto.SessionId, ct);
+            if (player == null) 
+                return false;
+            if (player?.SessionId == "denied")
+                return null;
             var lvl = player?.Core.RankEnum ?? 0;
             var maxUsrSlot = RankRewards.List[lvl].OwnQuestSlot;
             var maxPendingSlot = maxUsrSlot >> 1;
@@ -89,18 +93,23 @@ namespace KvizCommando.Server.Services.DtoMapping
             }
             var succes = await _cache.UpdatePartialQuestionsLockedAsync(
                 playerId,
-                sessionId,
+                dto.SessionId,
                 dto,
                 ct
                 );
 
             return succes;
         }
-        public async Task<bool> SendNewQuestionAsync(int playerId, NewQuestionRequest dto, CancellationToken ct)
+        public async Task<bool?> SendNewQuestionAsync(int playerId, NewQuestionRequest dto, CancellationToken ct)
         {
-            var sessionId = "Teszt";
+            //var sessionId = "Teszt";
+            //var sessionId = sessionid;
 
-            var (player, question) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
+            var (player, question) = await _cache.GetOrLoadLockedAsync(playerId, dto.SessionId, ct);
+            if (player == null)
+                return false;   
+            if (player.SessionId == "denied")
+                return null;
             var freependingslot = question.pSlots.Take(5).Count(x => x.CategoryNo == 0);
             if (freependingslot == 0)
             {
@@ -116,13 +125,13 @@ namespace KvizCommando.Server.Services.DtoMapping
             }
             var succes = await _cache.UpdatePartialNewQuestionLockedAsync(
                 playerId,
-                sessionId,
+                dto.SessionId,
                 dto,
                 ct
                 );
 
 
-        return true;
+        return succes;
         }
     }
 }

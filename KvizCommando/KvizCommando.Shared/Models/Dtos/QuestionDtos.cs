@@ -5,6 +5,7 @@ namespace KvizCommando.Shared.Models.Dtos
 {
     public class QuestionDtos
     {
+        public bool AccessDenied { get; set; } = false;
         public int[] FactorySlots { get; set; } = new int[11]; // Fill up category names no
 
         public UserSlot[] Userlots { get; set; } = new UserSlot[11]; // Userdeclareted questions

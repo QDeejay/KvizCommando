@@ -26,11 +26,14 @@ namespace KvizCommando.Server.Services.DtoMapping
         }
        
         
-        public async Task<bool> SaveModifiedSkillAsync(int playerid, ModifySkillRequest dto, CancellationToken ct = default)
+        public async Task<bool?> SaveModifiedSkillAsync(int playerid, ModifySkillRequest dto, CancellationToken ct = default)
         {
-            var sessionId = "Teszt";
-            var (player, question) = await _cache.GetOrLoadLockedAsync(playerid, sessionId, ct);
-            
+            //var sessionId = "Teszt";
+            var (player, question) = await _cache.GetOrLoadLockedAsync(playerid, dto.SessionId, ct);
+            if (player == null)
+                return false;
+            if (player.SessionId == "denied")
+                return null;
             if (dto.MemberId>0 && player.CharCatMask[dto.MemberId-1] == false)
                 return false;
             
@@ -67,12 +70,16 @@ namespace KvizCommando.Server.Services.DtoMapping
             int totalUsedPoints = dto.SkillChanges.Sum();
             int modifiedMemberId = dto.MemberId; // 0=team, 1-8=characters
             Console.WriteLine($"Modifying skills for player {playerid}, member {modifiedMemberId}, total used points {totalUsedPoints}");
-            return await _cache.UpdatePartialModifySillsLockedAsync(playerid, sessionId, newHelpJson, dto, ct );
+            return await _cache.UpdatePartialModifySillsLockedAsync(playerid, dto.SessionId, newHelpJson, dto, ct );
         }
-        public async Task<bool> ManageTeamAsync(int playerid, ManageTeamRequest dto, CancellationToken ct = default)
+        public async Task<bool?> ManageTeamAsync(int playerid, ManageTeamRequest dto, CancellationToken ct = default)
         {
-            var sessionId = "Teszt";
-            var (player, question) = await _cache.GetOrLoadLockedAsync(playerid, sessionId, ct);
+            //ar sessionId = "Teszt";
+            var (player, question) = await _cache.GetOrLoadLockedAsync(playerid, dto.SessionId, ct);
+            if ( player==null)
+                return false;
+            if (player.SessionId == "denied")
+                return null;
             var member = player.Characters[dto.MemberNo - 1];
             var candidate = player.CandidateCharacters[dto.MemberNo - 1];
            
@@ -122,11 +129,8 @@ namespace KvizCommando.Server.Services.DtoMapping
                     return false;
             }
 
-            return await _cache.UpdatePartialCharachters(playerid, sessionId, dto, ct);
+            return await _cache.UpdatePartialCharachters(playerid, dto.SessionId, dto, ct);
         }
-       
-       
-       
     }
 }
 

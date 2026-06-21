@@ -6,6 +6,7 @@ using KvizCommando.Client.Features.Sologame;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Layout;
 using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Pages.Home;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Dto;
@@ -18,59 +19,69 @@ using static System.Net.WebRequestMethods;
 
 namespace KvizCommando.Client.Pages.Home;
 
-public partial class Home : ComponentBase
+public partial class Home : ComponentBase, IDisposable
 {
-    [Inject] private NavigationManager Nav { get; set; } = default!;
-    [Inject] private ILanguageService Lang { get; set; } = default!;
-    [Inject] public IScreenApiService HomeApi { get; set; } = default!;
-    [Inject] public ILocalStorageService LocalStorage { get; set; } = default!;
-    [Inject] private ILoadingService Loader { get; set; } = default!;
-    [Inject] private IHomeState HomeState { get; set; } = default!;
-    [Inject] private IQuestionState QuestionState { get; set; } = default!;
-    [Inject] private ITeamState TeamState { get; set; } = default!;
-    [Inject] private ISoloState SoloState { get; set; } = default!;
+    [CascadingParameter] protected ILanguageService Lang { get; set; } = default!;
+   
+    [CascadingParameter] protected ILocalStorageService LocalStorage { get; set; } = default!;
+    [CascadingParameter] protected int NavTo { get; set; } = default!;
+    [Inject] protected NavigationManager Nav { get; set; } = default!;
+    // [Inject] protected IScreenApiService HomeApi { get; set; } = default!;
 
 
-    [Inject] private PageTitleService PageTitle { get; set; } = default!;
+    [Inject] protected IHomeState HomeState { get; set; } = default!;
+    [Inject] protected IQuestionState QuestionState { get; set; } = default!;
+    [Inject] protected ITeamState TeamState { get; set; } = default!;
+    [Inject] protected ISoloState SoloState { get; set; } = default!;
+    [Inject] protected PageTitleService PageTitle { get; set; } = default!;
     [Inject] protected HttpClient Http { get; set; } = default!;
-    [Inject] public IDisplayMessageState DisplayState { get; set; } = default!;
+    [Inject] protected IDisplayMessageState DisplayState { get; set; } = default!;
+
+    private int oldNavTo { get; set; } = -1;
+
+    protected override void OnParametersSet()
+    {
+        if (oldNavTo != NavTo)
+        {
+            oldNavTo = NavTo;
+            OnBoxClick(NavTo);
+        }
+        base.OnParametersSet();
+    }
 
 
     private readonly string Minimal = "minimalized";
     private readonly string large = "large";
     private string bboardSize = string.Empty;
     private string[] BoxOrder = Array.Empty<string>();
-    private string[] BoxOrderHome= Array.Empty<string>();
-    internal string[] BoxOrderQuestion = Array.Empty<string>();
-    internal string[] BoxOrderSolo = Array.Empty<string>();
+
 
 
     private string ActualPage = "home";
     private MarkupString BboardHTML = new();
     private bool _isReady = false;
     private bool _isLoaded = false;
-    private bool _btnReady = false;
-    private Dictionary<string, ContentBoxVm>? _boxesDict= new Dictionary<string, ContentBoxVm>();
+    private Dictionary<string, ContentBoxVm>? _boxesDict = new Dictionary<string, ContentBoxVm>();
     private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
     private ContentBoxVm Box(string orx) => _boxesDict![orx];
     private void BuildButtons(string page)
     {
         var boxes = new Dictionary<string, ContentBoxVm>();
         switch (page)
-        {    
+        {
             case "home": boxes = HomeButtonsBuilder.Build(HomeState.HomeScreen!, Lang);
                 break;
             case "question": boxes = QBtnBoxBuilder.BuildBoxes(QuestionState.ExtendedInfo!, Lang);
                 break;
-            case "solo":  boxes = SgameBtnBuilder.BuildBoxes(SoloState.Snapshot!, culture, Lang);
+            case "solo": boxes = SgameBtnBuilder.BuildBoxes(SoloState.Snapshot!, culture, Lang);
                 break;
             default: boxes = HomeButtonsBuilder.Build(HomeState.HomeScreen!, Lang);
                 break;
         }
-        
+
         foreach (var box in boxes)
         {
-            _boxesDict![box.Key]= box.Value;
+            _boxesDict![box.Key] = box.Value;
         }
         _isReady = true && _isLoaded;
     }
@@ -80,7 +91,7 @@ public partial class Home : ComponentBase
         Console.WriteLine($"Box {boxId} kattintva.");
         _isReady = false;
         var title = Lang["mainlayout.Header.Home"];
-        switch (boxId) 
+        switch (boxId)
         {
             case 0: ActualPage = "home";
                 BoxOrder = BxOrdHome.Root;
@@ -108,10 +119,10 @@ public partial class Home : ComponentBase
             case 401: BoxOrder = BxOrdSolo.Cat;
                 title = _boxesDict![SgameBoxKeyRoot.RtBtnCategory.ToString()].Header;
                 break;
-            case 402: BoxOrder= BxOrdSolo.Ori;
+            case 402: BoxOrder = BxOrdSolo.Ori;
                 title = _boxesDict![SgameBoxKeyRoot.RtBtnOrient.ToString()].Header;
                 break;
-            }
+        }
         BuildButtons(ActualPage);
         PageTitle.SetTitle(title, boxId, -1);
 
@@ -120,10 +131,11 @@ public partial class Home : ComponentBase
     {
         bboardSize = Minimal;
         await LocalStorage.SetItemAsync("B.B", DateTime.UtcNow);
+       
     }
     protected override async Task OnInitializedAsync()
     {
-        await Loader.Show();
+        
         await HomeState.EnsureLoadedAsync();
         await QuestionState.EnsureLoadedAsync();
         await SoloState.EnsureLoadedAsync();
@@ -131,17 +143,17 @@ public partial class Home : ComponentBase
         string url = $"/BulletinBoard/{culture}/bb.html";
         var lastBB = await LocalStorage.GetItemAsync<DateTime>("B.B");
         BboardHTML = new MarkupString(await Http.GetStringAsync(url));
-        if ( lastBB.ToUniversalTime() < HomeState.ExtendedInfo!.LastInfo)
+        if (lastBB.ToUniversalTime() < HomeState.ExtendedInfo!.LastInfo)
         {
-            bboardSize = large;  
+            bboardSize = large;
         }
         else
-        { 
+        {
             bboardSize = Minimal;
         }
         PageTitle.SetTitle(Lang["mainlayout.Header.Home"], 0, HomeState.UserMainData!.RankEnum);
         UpdateLedDisplay();
-        await Loader.Hide();
+        //await Loader.HideAsync();
         ActualPage = "home";
         BoxOrder = BxOrdHome.Root;
         _isLoaded = true;
@@ -169,6 +181,12 @@ public partial class Home : ComponentBase
                 Lang["mainlayout.Text.Voucher"].FormatSafe(main.Voucher)
             };
         DisplayState.SetMessages(messages);
+    }
+    public void Dispose()
+    {
+        oldNavTo = -1;
+        _isLoaded = false;
+        GC.SuppressFinalize(this);
     }
 }
 

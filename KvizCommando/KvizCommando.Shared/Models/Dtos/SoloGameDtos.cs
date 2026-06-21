@@ -10,6 +10,7 @@ namespace KvizCommando.Shared.Models.Dtos
 
     public sealed class SoloGameDtos
     {
+        public bool AccessDenied { get; set; } = false;
         public bool[] Mask { get; set; } = [];
 
         public SoloEnables Enables { get; set; } = default!;

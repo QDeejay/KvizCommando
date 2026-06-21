@@ -18,28 +18,33 @@ namespace KvizCommando.Client.Pages.Login
     public partial class Login : ComponentBase
     {
         [Inject] private IUserService UserService { get; set; } = default!;
-        [Inject] private ILoadingService Loader { get; set; } = default!;
+        
         [Inject] private ILanguageService Lang { get; set; } = default!;
         [Inject] private NavigationManager Nav { get; set; } = default!;
      
+        private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
+        private bool EnterPassPage = false;
 
-        string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-
-        protected LoginRequestForm LoginForm = new ();
+        private LoginRequestForm LoginForm = new ();
       
-        protected string ErrorMessage { get; set; } = string.Empty;
-        protected bool RememberMe { get; set; } = false;
-       
+        private string ErrorMessage { get; set; } = string.Empty;
+
+        private bool CanNext => !string.IsNullOrWhiteSpace(LoginForm.Email);
         private bool CanLogin => !string.IsNullOrWhiteSpace(LoginForm.Email)
                               && !string.IsNullOrWhiteSpace(LoginForm.Password);
 
-        protected async Task LoginUser()
+        private void OnSwitchPass()
+        { 
+            EnterPassPage = !EnterPassPage;
+        }
+
+        private async Task LoginUser()
         {
             try
             {
-                await Loader.Show();
-
+              
+                
                 var response = await UserService.LoginAsync(LoginForm);
 
                 if (response.Success)
@@ -61,15 +66,15 @@ namespace KvizCommando.Client.Pages.Login
             }
             finally
             {
-               await Loader.Hide();
+               
             }
 
         }
-        protected async Task BypassLogin()
+        private async Task BypassLogin()
         {
             LoginForm.Email = "qleedeejay@freemial.hu";
             LoginForm.Password = "-Ranger1980-0621";
-            await Loader.Show();
+            
             try
             {
                
@@ -93,12 +98,13 @@ namespace KvizCommando.Client.Pages.Login
             }
             finally
             {
-                await Loader.Hide();
+               
             }
         }
 
         protected override async Task OnInitializedAsync()
         {
+            EnterPassPage = false;
             var uri = Nav.ToAbsoluteUri(Nav.Uri);
             var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
             var Error = query["error"];

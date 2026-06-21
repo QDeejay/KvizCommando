@@ -9,6 +9,7 @@ using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Microsoft.SqlServer.Server;
 using System.Security.Claims;
 
@@ -43,6 +44,7 @@ namespace KvizCommando.Server.Controllers
         [ProducesResponseType(typeof(ApiResponse), 400)]
         [ProducesResponseType(typeof(ApiResponse), 401)]
         [ProducesResponseType(typeof(ApiResponse), 500)]
+        [ProducesResponseType(typeof(ApiResponse), 501)]
 
         public async Task<ActionResult<ApiResponse>> SaveSkillsAsync(
            [FromBody] ModifySkillRequest dto,
@@ -63,13 +65,19 @@ namespace KvizCommando.Server.Controllers
                 return NotFound("No Player record found for this user.");
 
             var success = await _teamService.SaveModifiedSkillAsync(playerId.Value, dto, ct);
-            if (!success)
+            
+            if (success == null)
+            {
+                _logger.LogWarning($"Session ID probléma user:{userId} sessionId:", dto.SessionId);
+                return StatusCode(501, ApiResponse.Fail(_localizer["Error.Session"].Value));
+            }
+            else if (success == false)
             {
                 _logger.LogWarning($"Skill modosítás sikertelen. userId={userId}", userId);
                 return StatusCode(500, ApiResponse.Fail(_localizer["Error.Internal"].Value));
             }
-
-            return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value));
+            else
+                return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value));
         }
 
         [HttpPost("manage")] // POST /api/team/manage
@@ -79,6 +87,7 @@ namespace KvizCommando.Server.Controllers
         [ProducesResponseType(typeof(ApiResponse), 400)]
         [ProducesResponseType(typeof(ApiResponse), 401)]
         [ProducesResponseType(typeof(ApiResponse), 500)]
+        [ProducesResponseType(typeof(ApiResponse), 501)]
         public async Task<ActionResult<ApiResponse>> ManageTeamAsync(
            [FromBody] ManageTeamRequest dto,
            CancellationToken ct)
@@ -105,13 +114,21 @@ namespace KvizCommando.Server.Controllers
 
 
             var success = await _teamService.ManageTeamAsync(playerId.Value, dto, ct);
-            if (!success)
+           
+           
+            if (success == null)
             {
-                _logger.LogWarning($"Csapatmodositás sikertelen. userId={userId}", userId);
+                _logger.LogWarning($"Session ID probléma user:{userId} sessionId:", dto.SessionId);
+                return StatusCode(501, ApiResponse.Fail(_localizer["Error.Session"].Value));
+            }
+            else if (success == false)
+            {
+                _logger.LogWarning($"Csapatmodositás sikertelen ({dto.ReqType.ToString()}) sikertelen. userId={userId}", userId);
                 return StatusCode(500, ApiResponse.Fail(_localizer["Error.Internal"].Value));
             }
+            else
+                return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value));
 
-            return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value));
         }
 
 

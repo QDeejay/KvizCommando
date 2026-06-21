@@ -21,7 +21,6 @@ builder.Services.AddBlazoredSessionStorage();
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<ILanguageService, LanguageService>();
-builder.Services.AddScoped<ILoadingService, LoadingService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<CategoryOptionHelpers>();
 builder.Services.AddScoped<DevDataBuilder>();
@@ -29,7 +28,8 @@ builder.Services.AddScoped<UpperBlockDataBuilder>();
 builder.Services.AddScoped<BottomBlockDataBuilder>();
 builder.Services.AddScoped<RecruitBlockBuilder>();
 builder.Services.AddSingleton<AudioService>();
-
+builder.Services.AddSingleton<LoaderService>();
+builder.Services.AddSingleton<SessionService>();
 builder.Services.AddScoped<ITeamModalDataBuilder, TeamModalDataBuilder>();
 
 // ...

@@ -8,39 +8,11 @@
 
 @if (_isReady)
 {
-    @if (!HideLanguageSelector)
-    {
-        <div class="lang-selector">
-            <button id="langToggle"
-            type="button"
-            class="dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false">
-                <i class="bi bi-globe"></i>
-            </button>
-
-            <ul id="langMenu" class="dropdown-menu dropdown-menu-end">
-                <li>
-                    <a class="dropdown-item d-flex align-items-center" @onclick="HuClick">
-                        <span class="flag flag-hu"></span> Magyar
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item d-flex align-items-center" @onclick="EnClick">
-                        <span class="flag flag-en"></span> English
-                    </a>
-                </li>
-            </ul>
-        </div>
-    }
-    <LanguageConfirm @ref="ConfirmModal" />
-
-
-    <!-- KÖZÉPSŐ RÉSZ (Árnyékkal és tartalommal) -->
+  
 <div class="layout-center">
    
     <div class="main-container">
-        <img src="/images/logo.webp" alt="Logo" class="logo" />
+            <img src="/images/logo.webp" alt="Logo" class="logo-small" />
         <div class="content-body">
               
             @Body

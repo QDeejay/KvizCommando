@@ -8,6 +8,7 @@ using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Microsoft.SqlServer.Server;
 using System.Security.Claims;
 
@@ -48,6 +49,7 @@ namespace KvizCommando.Server.Controllers
         [ProducesResponseType(typeof(ApiResponse), 400)]
         [ProducesResponseType(typeof(ApiResponse), 401)]
         [ProducesResponseType(typeof(ApiResponse), 500)]
+        [ProducesResponseType(typeof(ApiResponse), 501)]
         public async Task<ActionResult<ApiResponse>> SaveFactoryAsync(
             [FromBody] SaveFactoryRequest dto,
             CancellationToken ct)
@@ -71,17 +73,24 @@ namespace KvizCommando.Server.Controllers
             if (playerId is null or 0)
                 return NotFound("No Player record found for this user.");
 
-
+          
             // write-through frissítés a cache-ben + store-ban
             var success = await _questionService.SaveFactorySlotsAsync(playerId.Value, dto,ct);
 
-            if (!success)
+            if (success == null)
+            {
+                _logger.LogWarning($"Session ID probléma user:{userId} sessionId:", dto.SessionId);
+                return StatusCode(501, ApiResponse.Fail(_localizer["Error.Session"].Value));
+            }
+            else if (success == false)
             {
                 _logger.LogWarning("Factory slot mentés sikertelen. userId={UserId}", userId);
                 return StatusCode(500, ApiResponse.Fail(_localizer["Error.Internal"].Value));
             }
+            else
+                return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value));
 
-            return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value));
+
         }
 
         [HttpPost("manageslot")] // POST /api/questions/manageslot
@@ -91,6 +100,7 @@ namespace KvizCommando.Server.Controllers
         [ProducesResponseType(typeof(ApiResponse), 400)]
         [ProducesResponseType(typeof(ApiResponse), 401)]
         [ProducesResponseType(typeof(ApiResponse), 500)]
+        [ProducesResponseType(typeof(ApiResponse), 501)]
         public async Task<ActionResult<ApiResponse>> ManageSlotAsync(
             [FromBody] ManageSlotRequest dto,
             CancellationToken ct)
@@ -110,12 +120,21 @@ namespace KvizCommando.Server.Controllers
                 return NotFound("No Player record found for this user.");
 
             var success = await _questionService.ManageSlotsAsync(playerId.Value, dto, ct);
-            if (!success)
+
+            if (success == null)
             {
-                _logger.LogWarning("Factory slot mentés sikertelen. userId={UserId}", userId);
+                _logger.LogWarning($"Session ID probléma user:{userId} sessionId:", dto.SessionId);
+                return StatusCode(501, ApiResponse.Fail(_localizer["Error.Session"].Value));
+            }
+            else if (success == false)
+            {
+                _logger.LogWarning($"Slot művelet: ({dto.ReqType.ToString()}) sikertelen. userId={userId}", userId);
                 return StatusCode(500, ApiResponse.Fail(_localizer["Error.Internal"].Value));
             }
-            return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value));
+            else
+                return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value));
+
+
         }
 
         [HttpPost("sendnew")] // POST /api/questions/sendnew
@@ -125,6 +144,7 @@ namespace KvizCommando.Server.Controllers
         [ProducesResponseType(typeof(ApiResponse), 400)]
         [ProducesResponseType(typeof(ApiResponse), 401)]
         [ProducesResponseType(typeof(ApiResponse), 500)]
+        [ProducesResponseType(typeof(ApiResponse), 501)]
         public async Task<ActionResult<ApiResponse>> NewQuestionAsync(
            [FromBody] NewQuestionRequest dto,
            CancellationToken ct)
@@ -153,14 +173,20 @@ namespace KvizCommando.Server.Controllers
                 return NotFound("No Player record found for this user.");
 
             var success = await _questionService.SendNewQuestionAsync(playerId.Value, dto, ct);
-            if (!success)
+           
+            if (success == null)
+            {
+                _logger.LogWarning($"Session ID probléma user:{userId} sessionId:", dto.SessionId);
+                return StatusCode(501, ApiResponse.Fail(_localizer["Error.Session"].Value));
+            }
+            else if (success == false)
             {
                 _logger.LogWarning($"Új kérdés mentés sikertelen. userId={userId}", userId);
                 return StatusCode(500, ApiResponse.Fail(_localizer["Error.Internal"].Value));
             }
-
-
-            return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value));
+            else
+                return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value));
+            
         }
 
         // Egységes API válasz

@@ -18,58 +18,58 @@ namespace KvizCommando.Server.Services.PlayerCache
             int playerId,
             string sessionId,
             CancellationToken ct = default);
-        Task<bool> UpdatePartialCharachters(
+        Task<bool?> UpdatePartialCharachters(
             int playerId,
             string sessionId,
             ManageTeamRequest teamReq,
             CancellationToken ct = default
             );
-        Task<bool> UpdatePartialModifySillsLockedAsync(
+        Task<bool?> UpdatePartialModifySillsLockedAsync(
            int playerId,
            string sessionId,
            string newhelpdata,
            ModifySkillRequest newskilldata,
            CancellationToken ct = default);
-       Task<bool> UpdatePartialQuestionsLockedAsync(
+       Task<bool?> UpdatePartialQuestionsLockedAsync(
            int playerId,
            string sessionId,
            ManageSlotRequest slotReq,
            CancellationToken ct = default);
-       Task<bool> UpdatePartialNewQuestionLockedAsync(
+       Task<bool?> UpdatePartialNewQuestionLockedAsync(
            int playerId,
            string sessionId,
            NewQuestionRequest slotReq,
            CancellationToken ct = default);
-        Task<bool> UpdatePartialLoadoutLockedAsync(
+        Task<bool?> UpdatePartialLoadoutLockedAsync(
            int playerId,
            string sessionId,
            PlayerLoadout newLoadout,
            CancellationToken ct = default);
          
-        Task<bool> UpdatePartialAskStatsLockedAsync(
+        Task<bool?> UpdatePartialAskStatsLockedAsync(
             int playerId,
             string sessionId,
             PlayerAskStats newStats,
             CancellationToken ct = default);
-        Task<bool> UpdatePartialCategoryStatsLockedAsync(
+        Task<bool?> UpdatePartialCategoryStatsLockedAsync(
             int playerId,
             string sessionId,
             List<PlayerCategoryStat> newStats,
             CancellationToken ct = default);
-        Task<bool> UpdatePartialOrientStatsLockedAsync(
+        Task<bool?> UpdatePartialOrientStatsLockedAsync(
             int playerId,
             string sessionId,
             List<PlayerOrientStat> newStats,
             CancellationToken ct = default);
 
 
-        Task<bool> UpdateAllLockedAsync(
+        Task<bool?> UpdateAllLockedAsync(
             int playerId,
             string sessionId,
             CachedPlayer updated,
             CachedQuestion updatedQ,
             CancellationToken ct = default);
-        Task<bool> LogoutLockedRequestAsync(
+        Task<bool?> LogoutLockedRequestAsync(
             int playerId,
             string sessionId,
             CancellationToken ct = default);

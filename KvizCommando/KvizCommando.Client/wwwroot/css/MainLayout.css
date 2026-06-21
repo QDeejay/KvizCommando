@@ -5,7 +5,7 @@
     flex-direction: row;
     height: 100vh;
     width: 100vw;
-    background-image: url('/images/lobby.webp'); /* ⬅️ Itt állítod be a háttérképet */
+   /* ⬅️ Itt állítod be a háttérképet */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -14,4 +14,18 @@
     background-attachment: fixed; /* opcionális: ne mozogjon görgetésre */
     image-rendering: auto; /* vagy 'crisp-edges' kísérletnek */
     z-index:0;
+    opacity:0.95;
+}
+.kc-unsupported-screen {
+    display: none;
+}
+
+@media (max-width: 900px), (max-height: 700px) {
+    .unsupported-screen {
+        display: flex;
+    }
+
+    .kc-mainlayout-root {
+        display: none;
+    }
 }

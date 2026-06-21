@@ -196,7 +196,10 @@ namespace KvizCommando.Server.Services.PlayerCache
             try
             {
                 if (entry.Player.SessionId != sessionId)
-                    return (null, null);
+                    return (new CachedPlayer 
+                    {
+                        SessionId = "denied"
+                    }, null);
 
                 entry.LastAccessUtc = DateTime.UtcNow;
                 return (entry.Player, entry.CachedQ);
@@ -237,7 +240,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             }
         }
        
-        public async Task<bool> UpdatePartialCharachters(
+        public async Task<bool?> UpdatePartialCharachters(
             int playerId,
             string sessionId,
             ManageTeamRequest teamReq,
@@ -251,7 +254,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             try 
             {
                 if (entry.Player.SessionId != sessionId)
-                    return false;
+                    return null;
                 var member = entry.Player.Characters[teamReq.MemberNo - 1] ?? new CharachterSlot();
                 var candidate = entry.Player.CandidateCharacters[teamReq.MemberNo - 1] ?? new RecruitSlot();
 
@@ -347,7 +350,7 @@ namespace KvizCommando.Server.Services.PlayerCache
 
         }
         
-        public async Task<bool> UpdatePartialModifySillsLockedAsync(
+        public async Task<bool?> UpdatePartialModifySillsLockedAsync(
            int playerId,
            string sessionId,
            string newhelpdata,
@@ -360,7 +363,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             try
             {
                 if (entry.Player.SessionId != sessionId)
-                    return false;
+                    return null;
                 if (newskilldata.MemberId > 0)
                 {
                     entry.Player.Characters[newskilldata.MemberId - 1].DevPoints -= newskilldata.SkillChanges.Sum();
@@ -385,7 +388,7 @@ namespace KvizCommando.Server.Services.PlayerCache
                 entry.Lock.Release();
             }
         }
-        public async Task<bool> UpdatePartialQuestionsLockedAsync(
+        public async Task<bool?> UpdatePartialQuestionsLockedAsync(
            int playerId,
            string sessionId,
            ManageSlotRequest slotReq,
@@ -398,7 +401,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             try
             {
                 if (entry.Player.SessionId != sessionId)
-                    return false;
+                    return null;
 
                 switch (slotReq.ReqType)
                 {
@@ -453,7 +456,7 @@ namespace KvizCommando.Server.Services.PlayerCache
                 entry.Lock.Release();
             }
         }
-        public async Task<bool> UpdatePartialNewQuestionLockedAsync(
+        public async Task<bool?> UpdatePartialNewQuestionLockedAsync(
            int playerId,
            string sessionId,
            NewQuestionRequest slotReq,
@@ -461,9 +464,12 @@ namespace KvizCommando.Server.Services.PlayerCache
         {
             var entry = await GetOrCreateEntryAsync(playerId, sessionId, ct);
             if (entry is null) return false;
+
             await entry.Lock.WaitAsync(ct);
             try
             {
+                if (entry.Player.SessionId != sessionId)
+                    return null;
                 //var firstEmpty = Array.FindIndex(entry.Player.PendingQuestions, q => q.CategoryNo == 0);
                 if (slotReq.SlotNo > 4) return false;
                 var tempId = entry.CachedQ.pSlots[slotReq.SlotNo].Id;
@@ -492,7 +498,7 @@ namespace KvizCommando.Server.Services.PlayerCache
         // --------------------------------------------------------
         // Részleges frissítések
         // --------------------------------------------------------
-        public async Task<bool> UpdatePartialLoadoutLockedAsync(
+        public async Task<bool?> UpdatePartialLoadoutLockedAsync(
             int playerId,
             string sessionId,
             PlayerLoadout newLoadout,
@@ -505,7 +511,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             try
             {
                 if (entry.Player.SessionId != sessionId)
-                    return false;
+                    return null;
 
                 if (newLoadout.FactorySlotsJson != null)
                     entry.Player.Loadout.FactorySlotsJson = newLoadout.FactorySlotsJson;
@@ -527,7 +533,7 @@ namespace KvizCommando.Server.Services.PlayerCache
         }
 
 
-        public async Task<bool> UpdatePartialAskStatsLockedAsync(
+        public async Task<bool?> UpdatePartialAskStatsLockedAsync(
             int playerId,
             string sessionId,
             PlayerAskStats newStats,
@@ -540,7 +546,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             try
             {
                 if (entry.Player.SessionId != sessionId)
-                    return false;
+                    return null;
 
                 entry.Player.AskStats = newStats;
                 entry.Dirty |= DirtyFlags.AskStats;
@@ -553,7 +559,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             }
         }
         // kategoria statisztika frissités
-        public async Task<bool> UpdatePartialCategoryStatsLockedAsync(
+        public async Task<bool?> UpdatePartialCategoryStatsLockedAsync(
             int playerId,
             string sessionId,
             List<PlayerCategoryStat> newStats,
@@ -566,7 +572,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             try
             {
                 if (entry.Player.SessionId != sessionId)
-                    return false;
+                    return null;
 
                 entry.Player.CategoryStats = newStats;
                 entry.Dirty |= DirtyFlags.CategoryStats;
@@ -579,7 +585,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             }
         }
         // Orientáció statisztika frissités
-        public async Task<bool> UpdatePartialOrientStatsLockedAsync(
+        public async Task<bool?> UpdatePartialOrientStatsLockedAsync(
             int playerId,
             string sessionId,
             List<PlayerOrientStat> newStats,
@@ -592,7 +598,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             try
             {
                 if (entry.Player.SessionId != sessionId)
-                    return false;
+                    return null;
 
                 entry.Player.OrientStats = newStats;
                 entry.Dirty |= DirtyFlags.OrientStats;
@@ -611,7 +617,7 @@ namespace KvizCommando.Server.Services.PlayerCache
         // --------------------------------------------------------
         // Teljes frissítés
         // --------------------------------------------------------
-        public async Task<bool> UpdateAllLockedAsync(
+        public async Task<bool?> UpdateAllLockedAsync(
             int playerId,
             string sessionId,
             CachedPlayer updated,
@@ -625,7 +631,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             try
             {
                 if (entry.Player.SessionId != sessionId)
-                    return false;
+                    return null;
 
                 entry.Player.Core = updated.Core;
                 entry.Player.Loadout = updated.Loadout;
@@ -658,7 +664,7 @@ namespace KvizCommando.Server.Services.PlayerCache
         // --------------------------------------------------------
         // Logout jelzés
         // --------------------------------------------------------
-        public async Task<bool> LogoutLockedRequestAsync(
+        public async Task<bool?> LogoutLockedRequestAsync(
             int playerId,
             string sessionId,
             CancellationToken ct = default)
@@ -670,7 +676,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             try
             {
                 if (entry.Player.SessionId != sessionId)
-                    return false;
+                    return null;
 
                 if (entry.HasAnyDirty == false)
                 {

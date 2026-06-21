@@ -45,8 +45,8 @@
     <Folder Include="Data\StaticData\" />
     <Folder Include="Resources\Client\localization\en\" />
     <Folder Include="Resources\Client\localization\hu\" />
-    <Folder Include="wwwroot\Board\hu\" />
-    <Folder Include="wwwroot\Board\en\" />
+    <Folder Include="wwwroot\Denied\hu\" />
+    <Folder Include="wwwroot\Denied\en\" />
     <Folder Include="wwwroot\Localization\" />
   </ItemGroup>
 	<ItemGroup>
@@ -54,9 +54,13 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Remove="Data\UserJsons\**" />
+	  <Compile Remove="wwwroot\Board\**" />
 	  <Content Remove="Data\UserJsons\**" />
+	  <Content Remove="wwwroot\Board\**" />
 	  <EmbeddedResource Remove="Data\UserJsons\**" />
+	  <EmbeddedResource Remove="wwwroot\Board\**" />
 	  <None Remove="Data\UserJsons\**" />
+	  <None Remove="wwwroot\Board\**" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Remove="Infrastructure\Email\Templates\EmailTemplates\Auth\Class.cs" />

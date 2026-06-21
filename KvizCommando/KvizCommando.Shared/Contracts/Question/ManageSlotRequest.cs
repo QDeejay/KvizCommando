@@ -8,6 +8,7 @@ namespace KvizCommando.Shared.Contracts.Question
 {
     public sealed class ManageSlotRequest
     {
+        public string SessionId { get; set; } = string.Empty;
         public int SlotNo { get; set; } = 0;
         public SlotManageType ReqType { get; set; }
     }

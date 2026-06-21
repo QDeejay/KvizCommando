@@ -42,11 +42,14 @@ namespace KvizCommando.Server.Services.DtoMapping
         {
 
             var (player, question) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
+
             if (player == null)
             {
                 //_logger.LogWarning("Player not found in cache. userId={UserId}", userId);
                 return null;
             }
+            if (player.SessionId == "denied")
+                return new HomeDTOs() { AccessDenied=true };
             var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
             var url = Path.Combine(_env.WebRootPath, "BulletinBoard",culture,"bb.html");
            
@@ -153,15 +156,18 @@ namespace KvizCommando.Server.Services.DtoMapping
                 HomeScreen = homeScreen
             };
         }
-        public async Task<TeamDtos> GetTeamScreenDataAsync(int playerId, string sessionId, CancellationToken ct = default)
+        public async Task<TeamDtos?> GetTeamScreenDataAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
-            sessionId = "Teszt";
+            //sessionId = "Teszt";
             var (player, slot) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
+           
             if (player is null)
             {
                 _logger.LogWarning("Player not found in cache. userId={UserId}", playerId);
                 return null;
             }
+            if (player.SessionId == "denied")
+                return new TeamDtos() { AccessDenied = true };
             TeamMemberDto?[] teamMembers = new TeamMemberDto[9];
             CandidateDto?[] candidates = new CandidateDto[9];
             bool[] tempCharmask = new bool[9];
@@ -260,9 +266,9 @@ namespace KvizCommando.Server.Services.DtoMapping
 
             return teamDto;
         }
-        public async Task<QuestionDtos?> GetQuestionScreenAsync(int playerId, CancellationToken ct = default)
+        public async Task<QuestionDtos?> GetQuestionScreenAsync(int playerId, string sessionId,CancellationToken ct = default)
         {
-            var sessionId = "Teszt";
+            //var sessionId = "Teszt";
 
             var (player, slot) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
             if (player is null)
@@ -270,6 +276,8 @@ namespace KvizCommando.Server.Services.DtoMapping
                 _logger.LogWarning("Player not found in cache. userId={UserId}", playerId);
                 return null;
             }
+            if (player.SessionId == "denied")
+                return new QuestionDtos() { AccessDenied = true };
             // ----- Rank / slot kapacitások -----
             var level = player.Core.RankEnum; // invariáns tábla szerint létezik
             var rewards = RankRewards.List[level];
@@ -383,7 +391,7 @@ namespace KvizCommando.Server.Services.DtoMapping
         }
         public async Task<SoloGameDtos?> GetSoloGameScreenAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
-            sessionId = "Teszt";
+            //sessionId = "Teszt";
             var (player, slot) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
             
             if (player is null)
@@ -391,6 +399,8 @@ namespace KvizCommando.Server.Services.DtoMapping
                 _logger.LogWarning("Player not found in cache. userId={UserId}", playerId);
                 return null;
             }
+            if (player.SessionId == "denied")
+                return new SoloGameDtos() { AccessDenied = true };
             var mask = player.CharCatMask;
             var results = new SoloResults 
                 {

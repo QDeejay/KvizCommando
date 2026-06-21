@@ -1,24 +1,20 @@
 ﻿.login-panel {
     width: 400px;
+    height:400px;
     margin: 10px auto;
-    
-   
-    
 }
 
-/* HEAD border-radius: 6px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);/*/
 .login-head {
     text-align: center;
     padding: 4px;
 }
 
-/* BODY * background-color: #1c1c1c;/*/
 .login-body {
     margin-top: 8px; /* Ezt állítsd, hogy milyen messze legyen a HEAD-től */
     display: flex;
     flex-direction: column;
     gap: 2px; /* mezők közti térköz */
+    
 }
 
 /* FOOTER */
@@ -26,6 +22,7 @@
     margin-top: 8px;
     display: flex;
     justify-content: left;
+    
 }
 
 .login-footer-links {
@@ -65,6 +62,7 @@
 .login-actions {
     display: flex;
     align-items: center; /* függőleges középvonal */
+    justify-content:center;
     gap:10px;
     
     /* checkbox és gomb közötti távolság */
@@ -109,16 +107,10 @@ input[type=checkbox]:focus {
         }
 
 .btn-provider {
-  
-    
-   
     padding: 1px;
-
     width: max-content; /* alap szélesség */
-
     height: 30px;
     color: #fff;
-  
 }
 
     .btn-provider:hover {
@@ -126,10 +118,24 @@ input[type=checkbox]:focus {
         opacity: 0.7;
     }
 .other-providers {
+    display:flex;
     position:absolute;
-   
     bottom:20px;
-    
     align-items: center;
     justify-content: right;
 }
+    .other-providers.hide {
+        display:none;
+    }
+.back-button-row {
+    display:flex;
+    position:absolute;
+    top:40px;
+}
+    .back-button-row.hide {
+        display:none;
+    }
+
+    .military-button.back-version {
+        min-width: 0;
+    }

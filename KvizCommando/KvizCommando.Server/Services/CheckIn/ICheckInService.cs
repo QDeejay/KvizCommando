@@ -9,7 +9,7 @@ namespace KvizCommando.Server.Services.CheckIn
 {
     public interface ICheckInService
     {
-        Task<CheckInGetResponse> GetStatusAsync(string userId, CancellationToken ct);
+        Task<CheckInGetResponse> GetStatusAsync(string userId, string sessionid, CancellationToken ct);
         /// <summary>
         /// Visszatér: üres lista = siker; különben IdentityErrorCodes kulcsok listája.
         /// </summary>

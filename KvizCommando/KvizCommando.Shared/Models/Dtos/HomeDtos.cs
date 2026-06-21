@@ -5,6 +5,7 @@ namespace KvizCommando.Shared.Models.Dtos
 {
     public class HomeDTOs
     {
+        public bool AccessDenied { get; set; } = false;
         public UserMainData UserMainData { get; set; } = new();
 
         public HomeScreen HomeScreen { get; set; } = new();

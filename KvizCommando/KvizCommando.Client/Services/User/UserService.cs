@@ -19,7 +19,7 @@ namespace KvizCommando.Client.Services.User
     public sealed class UserService : IUserService
     {
         // private readonly IJSRuntime _js;
-        private readonly IHomeState _homeState;
+        private readonly IHomeState _home;
         private const string CheckInRoute = "api/checkin";
         private const string CheckInCacheKey = "checkin:status";
 
@@ -27,19 +27,23 @@ namespace KvizCommando.Client.Services.User
         private readonly ISessionStorageService _session;
         private readonly NavigationManager _nav;
         private readonly AudioService _audio;
+        private readonly SessionService _sessionCache;
         public UserService(
 
-            IHomeState hometate,
+            IHomeState home,
             HttpClient http,
             ISessionStorageService session,
             NavigationManager navigationManager,
-            AudioService audio)
+            AudioService audio,
+            SessionService sessionCache
+            )
         {
-            _homeState = hometate ?? throw new ArgumentNullException(nameof(hometate));
+            _home = home ?? throw new ArgumentNullException(nameof(home));
             _http = http;
             _session = session;
             _nav = navigationManager;
             _audio = audio;
+            _sessionCache = sessionCache;
         }
 
         public async Task<(bool Success, string Errors)> LoginAsync(LoginRequestForm formData)
@@ -68,8 +72,9 @@ namespace KvizCommando.Client.Services.User
         }
         public async Task LogoutAsync(bool soft)
         {
+            var SessionId = _sessionCache.SessionId;
             await Task.Delay(300);
-            await _http.PostAsJsonAsync("api/logout",new { });
+            await _http.PostAsJsonAsync("api/logout", SessionId);
             await _audio.StopMusicAsync();
 
             if (soft)
@@ -79,7 +84,7 @@ namespace KvizCommando.Client.Services.User
             else
             {
                 await _session.ClearAsync();
-                _homeState.Clear();
+                _home.Clear();
                 _nav.NavigateTo("/", forceLoad: true);
             }
         }
@@ -208,7 +213,11 @@ namespace KvizCommando.Client.Services.User
         }
         public async Task<(bool Success, List<string> Errors)> CheckInStartAsync(bool needToRoute, CancellationToken ct = default)
         {
-            var resp = await _http.GetAsync(CheckInRoute, ct);
+            string sessionId = Guid.NewGuid().ToString("N");
+            await _session.SetItemAsync("SessionId", sessionId);
+            _sessionCache.SessionId = sessionId;
+
+            var resp = await _http.GetAsync($"{CheckInRoute}?sessionId={sessionId}", ct);
             
 
             if (resp.StatusCode == HttpStatusCode.Unauthorized)
@@ -241,8 +250,10 @@ namespace KvizCommando.Client.Services.User
             {
                 await _audio.InitializeAsync();
                 _audio.EnteredNormal = true;
+                await _home.EnsureLoadedAsync();
                 await Task.Delay(500);
-             
+
+
                 _nav.NavigateTo("/home");
             }
             return (true, new List<string> { });
@@ -253,6 +264,8 @@ namespace KvizCommando.Client.Services.User
         public async Task<(bool Success, List<string> Errors, string SugDispName)> CheckInFinishedAsync(CheckInPostRequest request, CancellationToken ct = default)
         {
             var suggestedName = string.Empty;
+            var sessionId = _sessionCache.SessionId;
+            request.SessionId = sessionId ?? string.Empty;
             var errors = new List<string> { "DefaultError" };
             var resp = await _http.PostAsJsonAsync(CheckInRoute, request, cancellationToken: ct);        
             var content = await resp.Content.ReadFromJsonAsync<CheckInPostResponse>(ct);

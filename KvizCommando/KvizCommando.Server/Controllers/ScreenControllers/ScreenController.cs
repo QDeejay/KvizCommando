@@ -28,10 +28,10 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
         [ProducesResponseType(typeof(HomeDTOs), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<HomeDTOs>> GetHomeScreenAsync(CancellationToken ct)
+        public async Task<ActionResult<HomeDTOs>> GetHomeScreenAsync([FromQuery] string sessionId, CancellationToken ct)
 
         {
-            var sessionId = "Teszt";
+            //var sessionId = "Teszt";
             
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
                      ?? User.FindFirstValue("sub")
@@ -58,7 +58,7 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
         [ProducesResponseType(typeof(QuestionDtos), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<QuestionDtos>> GetQuestionScreenAsync(CancellationToken ct)
+        public async Task<ActionResult<QuestionDtos>> GetQuestionScreenAsync([FromQuery] string sessionId, CancellationToken ct)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
                      ?? User.FindFirstValue("sub")
@@ -70,7 +70,7 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
             if (playerId is null or 0)
                 return NotFound("No Player record found for this user.");
 
-            var dto = await _screenService.GetQuestionScreenAsync(playerId.Value, ct);
+            var dto = await _screenService.GetQuestionScreenAsync(playerId.Value, sessionId, ct);
             if (dto is null)
                 return NotFound();
 
@@ -81,9 +81,9 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
         [ProducesResponseType(typeof(TeamDtos), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<TeamDtos>> GetTeamScreenAsync(CancellationToken ct)
+        public async Task<ActionResult<TeamDtos>> GetTeamScreenAsync([FromQuery] string sessionId, CancellationToken ct)
         {
-            var sessionId = "Teszt";
+            //var sessionId = "Teszt";
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
                      ?? User.FindFirstValue("sub")
                      ?? throw new InvalidOperationException("Missing user id");
@@ -104,9 +104,9 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
         [ProducesResponseType(typeof(SoloGameDtos), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<SoloGameDtos>> GetSoloScreenAsync(CancellationToken ct)
+        public async Task<ActionResult<SoloGameDtos>> GetSoloScreenAsync([FromQuery] string sessionId, CancellationToken ct)
         {
-            var sessionId = "Teszt";
+            //var sessionId = "Teszt";
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
                      ?? User.FindFirstValue("sub")
                      ?? throw new InvalidOperationException("Missing user id");

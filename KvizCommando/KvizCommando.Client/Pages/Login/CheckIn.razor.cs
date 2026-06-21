@@ -234,7 +234,7 @@ namespace KvizCommando.Client.Pages.Login
         {
             await Session.RemoveItemAsync(CheckInCacheKey);
             await Service.LogoutAsync(true);
-            Nav.NavigateTo("/");
+            Nav.NavigateTo("/login");
         }
         public void Dispose()
         {

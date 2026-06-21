@@ -9,7 +9,7 @@ namespace KvizCommando.Server.Services.Players
         /// <summary>
         /// Inaktiválja a játékost cache-ben, ha van, azonosított UserId alapján.
         /// </summary>
-        Task LogoutAndRemoveCacheAsync(string userId, CancellationToken ct = default);
+        Task LogoutAndRemoveCacheAsync(string userId, string sessionId, CancellationToken ct = default);
 
        /// Task<int> GetPlayerIdAsync(string userId, CancellationToken ct = default);
     }

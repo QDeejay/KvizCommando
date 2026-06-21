@@ -9,6 +9,7 @@ namespace KvizCommando.Shared.Contracts.Question
     public sealed class SaveFactoryRequest
     {
         // Pl. 12 elemű lista; a szerver oldali validáció kezeli a szabályokat.
+        public string SessionId { get; set; } = string.Empty;
         public int[] CategorySlots { get; set; } = Array.Empty<int>();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using KvizCommando.Client.Helpers;
+using KvizCommando.Client.Models.StoreModels;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Contracts.Team;
@@ -11,21 +12,25 @@ namespace KvizCommando.Client.Services.Dto
         private readonly HttpClient _http;
         private readonly IHomeState _home;
         private readonly IQuestionState _question;
-        private readonly ITeamState _team; 
+        private readonly ITeamState _team;
+        private readonly SessionService _sessionCache;
         public ApiService(
             HttpClient http,
             IHomeState home,
             IQuestionState questionstate, 
-            ITeamState teamstate)
+            ITeamState teamstate,
+            SessionService sessioncache)
         {
             _http = http;
             _home = home;
             _question = questionstate;
             _team = teamstate;
+            _sessionCache = sessioncache;
         }
         public async Task<(bool Success, string Message)> SaveFactorySlotsAsync(SaveFactoryRequest dto)
         {
             string? msg = string.Empty;
+            dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
 
@@ -52,6 +57,7 @@ namespace KvizCommando.Client.Services.Dto
         public async Task<(bool Success, string Message)> ManageSlotAsync(ManageSlotRequest dto)
         {
             string? msg = string.Empty;
+            dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
                 var response = await _http.PostAsJsonAsync($"/api/question/manageslot", dto);
@@ -75,6 +81,7 @@ namespace KvizCommando.Client.Services.Dto
         public async Task<(bool Success, string Message)> SendNewQuestionAsync(NewQuestionRequest dto)
         {
             string? msg = string.Empty;
+            dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
                 var response = await _http.PostAsJsonAsync($"/api/question/sendnew", dto);
@@ -97,6 +104,7 @@ namespace KvizCommando.Client.Services.Dto
         public async Task<(bool Success, string Message)> ModifyTeamAsync(ModifySkillRequest dto)
         {
             string? msg = string.Empty;
+            dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
                 var response = await _http.PostAsJsonAsync($"/api/team/modify", dto);
@@ -119,6 +127,7 @@ namespace KvizCommando.Client.Services.Dto
         public async Task<(bool Success, string Message)> ManageTeamAsync(ManageTeamRequest dto)
         {
             string? msg = string.Empty;
+            dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
                 var response = await _http.PostAsJsonAsync($"/api/team/manage", dto);

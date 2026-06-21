@@ -1,0 +1,74 @@
+﻿.loader-overlay {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(0px);
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    pointer-events: none;
+    transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
+    cursor: url('/Images/cursors/normalload.cur'), wait;
+}
+    /* 
+         
+   
+         display: none;
+    position: absolute;
+    z-index: 101;
+    height: 100vh;
+    width: 100%;
+    
+    right: 0;
+   
+    
+    align-items: center;
+    justify-content: center;
+    
+   
+    z-index:101;
+*/
+
+
+
+    .loader-overlay.active {
+      
+        opacity: 1;
+        pointer-events: auto;
+        backdrop-filter: blur(4px);
+    }
+
+.loader-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+
+
+.loading-logo {
+    width: 20vw;
+    height: 20vh;
+    animation: coin-swing 2s ease-in-out infinite;
+    transform-style: preserve-3d;
+}
+
+@keyframes coin-swing {
+    0% {
+        transform: rotateY(-60deg);
+    }
+
+    50% {
+        transform: rotateY(60deg);
+    }
+
+    100% {
+        transform: rotateY(-60deg);
+    }
+}

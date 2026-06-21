@@ -8,6 +8,7 @@ namespace KvizCommando.Shared.Models.Dtos
 {
     public sealed class TeamDtos
     {
+        public bool AccessDenied { get; set; } = false;
         public ExtendedInfo TeamInfo { get; set; } = new ExtendedInfo();
         public TeamMemberDto[]? TeamMembers { get; set; } = new TeamMemberDto[9];
 

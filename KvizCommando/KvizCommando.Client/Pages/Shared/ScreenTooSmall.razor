@@ -1,11 +1,9 @@
-﻿@inherits ScreenTooSmallBase
+﻿@inherits ScreenTooSmallLayer
 
-@if (ShowWarning)
-{
+
     <div class="screen-warning-overlay">
         <div class="warning-box">
             <div class="icon">⚠️</div>
             <div class="text">@Lang["common.screen.WarningMessage"]</div> 
         </div>
     </div>
-}

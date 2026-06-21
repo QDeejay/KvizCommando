@@ -17,7 +17,7 @@ namespace KvizCommando.Client.Pages.Team
     public partial class Team : ComponentBase
     {
         [Inject] protected PageTitleService PageTitle { get; set; } = default!;
-        [Inject] protected ILoadingService Loader { get; set; } = default!;
+      
         [Inject] protected ILanguageService Lang { get; set; } = default!;
         [Inject] protected ITeamState TeamState { get; set; } = default!;
         [Inject] protected IApiService TeamApi { get; set; } = default!;
@@ -44,13 +44,13 @@ namespace KvizCommando.Client.Pages.Team
         private bool picTabEnable => pictureCode != string.Empty;
         protected override async Task OnInitializedAsync()
         {
-            await Loader.Show();
+            
             await TeamState.EnsureLoadedAsync();
             PageTitle.SetTitle(Lang["mainlayout.Header.Team"],1, -1);
             _generalInfo = TeamState.TeamInfo ?? new ExtendedInfo();
             _isLoaded = true;
             RecruitMixer.Shuffle();
-            await Loader.Hide();
+           
             
         }
         private void BoxReady()
@@ -104,7 +104,7 @@ namespace KvizCommando.Client.Pages.Team
         {
             try
             {
-                await Loader.Show();
+               
                 var (success, message) = await TeamApi.ModifyTeamAsync(request);
                 MessageTeam = message;
                 isTeamSuccess = success;
@@ -120,7 +120,7 @@ namespace KvizCommando.Client.Pages.Team
             catch (Exception ex) { Console.WriteLine($"Save failed: {ex.Message}"); }
             finally 
             {
-                await Loader.Hide();
+                
             }
             
         }
@@ -184,7 +184,7 @@ namespace KvizCommando.Client.Pages.Team
         {
             try
             {
-                await Loader.Show();
+               
                 var response = await TeamApi.ManageTeamAsync(new ManageTeamRequest()
                 {
                     CandidateId = selectedCandidateId,
@@ -209,7 +209,7 @@ namespace KvizCommando.Client.Pages.Team
             }
             catch (Exception ex) { Console.WriteLine($"Save failed: {ex.Message}"); }
             
-            finally { await Loader.Hide(); }
+            finally { }
             
         }
         private void OnCandidateSelected(int candidateId)

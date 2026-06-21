@@ -1,4 +1,6 @@
-﻿using CsvHelper.Configuration.Attributes;
+﻿using Blazored.LocalStorage;
+using Blazored.SessionStorage;
+using CsvHelper.Configuration.Attributes;
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services;
@@ -17,43 +19,60 @@ namespace KvizCommando.Client.Layout
 {
     public partial class MainLayout : LayoutComponentBase, IDisposable
     {
-        [Inject] private ILanguageService Lang { get; set; } = default!;
-        [Inject] public PageTitleService PageTitle { get; set; } = default!;
-        //[Inject] public IDisplayMessageState DisplayState { get; set; } = default!;
+        [Inject] protected ILanguageService Lang { get; set; } = default!;
+        [Inject] protected ILocalStorageService LocalStorage { get; set; } = default!;
+        [Inject] protected ISessionStorageService SessionStorage { get; set; } = default!;
+        [Inject] protected NavigationManager Nav { get; set; } = default!;
+        [Inject] protected SessionService SessionService { get; set; } = default!;
+        [Inject] private PageTitleService PageTitle { get; set; } = default!;
+        [Inject] public IDisplayMessageState DisplayState { get; set; } = default!;
         [Inject] private IHomeState HomeState { get; set; } = default!;
         [Inject] private IUserService UserService { get; set; } = default!;
-        [Inject] private ILoadingService Loader { get; set; } = default!;
         [Inject] private AudioService Audio { get; set; } = default!;
 
         private string culture = "hu";
         private bool _isReady = false;
+        private bool _loggedIn = false;
         private bool _isMusicOn;
         private string? _currentTitle = string.Empty;
         private bool sidebarCollapsed = false;
         private string? _Greetings = string.Empty;
+        private int NavigateTo = 0;
 
-        private void ToggleSidebar() => sidebarCollapsed = !sidebarCollapsed;
+        private void ToggleSidebar() => sidebarCollapsed = (!sidebarCollapsed && _loggedIn);
         private bool _backNavigationEna => sidebarCollapsed ? PageTitle.NavPage > 0 : PageTitle.NavPage > 99;
-        private HomeScreen Hs => HomeState.HomeScreen!;
+        private HomeScreen Hs => _loggedIn ? HomeState.HomeScreen! : new HomeScreen();
         protected override async Task OnInitializedAsync()
 
         {
-            await Loader.Show();
-            Console.WriteLine($"[{this}] has been started");
             _isReady = false;
+            Console.WriteLine($"[{this}] has been started");
+         
+            var culture = await LocalStorage.GetItemAsync<string>("userLang");
+            if (string.IsNullOrWhiteSpace(culture))
+            {
+                culture = "hu-HU";
+                await LocalStorage.SetItemAsync("userLang", culture);
+            }
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(culture);
+            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(culture);
             culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
+
+            await Lang.LoadModuleAsync(culture, "common");  // szükséges
             await Lang.LoadModuleAsync(culture, "mainlayout");  // szükséges
             await Lang.LoadModuleAsync(culture, "home");
-            await HomeState.EnsureLoadedAsync();
-            //await QuestionState.EnsureLoadedAsync();
 
-            
+            var sessionId = await SessionStorage.GetItemAsync<string>("SessionId");
+            if (!string.IsNullOrWhiteSpace(sessionId))
+            {
+                SessionService.SessionId = sessionId;
+                _loggedIn = true;
+                await HomeState.EnsureLoadedAsync();
+            }
+            else { _loggedIn = false; }
+             
 
-            //var rankName = RankNameLocalizer.GetName(level, culture);
-            //_Greetings = Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
-
-            // await JS.InvokeVoidAsync("appHeader.setUser", true, HomeState.UserMainData.UserName);
             if (Audio.EnteredNormal)
             {
                 Console.WriteLine("Playing music because EnteredNormal is true.");
@@ -65,14 +84,15 @@ namespace KvizCommando.Client.Layout
                 Console.WriteLine("Not playing music because EnteredNormal is false.");
             }
 
+            PageTitle.OnTitleChanged += UpdateTitle;
             _isReady = true;
         }
         protected override void OnInitialized()
         {
-            _currentTitle = PageTitle.Title;
-            var rankName = PageTitle.Rank>=0 ? RankNameLocalizer.GetName(PageTitle.Rank, culture) : "";
-            _Greetings = Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
-            PageTitle.OnTitleChanged += UpdateTitle;
+           // _currentTitle = PageTitle.Title;
+           // var rankName = PageTitle.Rank>=0 ? RankNameLocalizer.GetName(PageTitle.Rank, culture) : "";
+           // _Greetings = Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
+           // 
 
         }
         private void UpdateTitle()
@@ -103,11 +123,13 @@ namespace KvizCommando.Client.Layout
         }
         protected void OnBackClick()
         {
+            OnSelect(PageTitle!.PrevPage);
             Console.WriteLine("Back button clicked.");
         }
-        private async Task OnSelect(int selected)
+        private void OnSelect(int selected)
         {
-            await Task.Delay(100);
+            NavigateTo = selected;
+
         }
         public void Dispose()
         {
@@ -116,7 +138,7 @@ namespace KvizCommando.Client.Layout
         }
         public async void Logout()
         {
-            await Loader.Show();
+           
             await Task.Delay(501);
             await UserService.LogoutAsync(false);
             Console.WriteLine("User logged out.");

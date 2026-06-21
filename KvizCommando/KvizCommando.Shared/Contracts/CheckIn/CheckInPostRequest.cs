@@ -11,7 +11,8 @@
             /// Opcionális. Ha a felhasználónak nincs DisplayName-je, itt küldi meg.
             /// </summary>
             public string? DisplayName { get; set; }
-             public string? TeamName { get; set; }
+            public string? TeamName { get; set; }
+            public string? SessionId { get; set; }
           
 
         /// <summary>

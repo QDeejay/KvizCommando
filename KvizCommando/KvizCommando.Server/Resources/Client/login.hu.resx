@@ -120,11 +120,17 @@
   <data name="Button" xml:space="preserve">
     <value>Belépés</value>
   </data>
+  <data name="Button.Next" xml:space="preserve">
+    <value>Következő</value>
+  </data>
   <data name="ButtonLink" xml:space="preserve">
     <value>Regisztráció</value>
   </data>
   <data name="CheckBox.RememberMe" xml:space="preserve">
     <value>Emlékezz rám</value>
+  </data>
+  <data name="Enter.Password" xml:space="preserve">
+    <value>Add meg a jelszót a következőhöz:</value>
   </data>
   <data name="Error.EmptyFields" xml:space="preserve">
     <value>Töltsd ki az összes mezőt!</value>
@@ -140,5 +146,8 @@
   </data>
   <data name="Title" xml:space="preserve">
     <value>Bejelentkezés</value>
+  </data>
+  <data name="Title2" xml:space="preserve">
+    <value>Jelszó megadása</value>
   </data>
 </root>

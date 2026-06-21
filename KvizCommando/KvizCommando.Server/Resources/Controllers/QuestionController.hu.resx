@@ -129,6 +129,9 @@
   <data name="Error.RequestIsNull" xml:space="preserve">
     <value>&lt; Sikertelen (8004)&gt;</value>
   </data>
+  <data name="Error.Session" xml:space="preserve">
+    <value>Másik eszközön be lett jelentkezve!</value>
+  </data>
   <data name="Error.UnAuthorized" xml:space="preserve">
     <value>&lt; Sikertelen (8005)&gt;</value>
   </data>

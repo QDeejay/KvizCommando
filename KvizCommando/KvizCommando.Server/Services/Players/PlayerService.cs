@@ -23,9 +23,9 @@ namespace KvizCommando.Server.Services.Players
             _idCasche = userPlayerId;
         }
 
-        public async Task LogoutAndRemoveCacheAsync(string userId, CancellationToken ct = default)
+        public async Task LogoutAndRemoveCacheAsync(string userId, string sessionId, CancellationToken ct = default)
         {
-            var sessionId = "Teszt"; // nincs jelentősége, csak egyedi legyen
+            //var sessionId = "Teszt"; // nincs jelentősége, csak egyedi legyen
             var playerId = await _idCasche.GetPlayerIdAsync(userId);
             if (playerId is null or 0)
             {
@@ -35,7 +35,7 @@ namespace KvizCommando.Server.Services.Players
            
             await _cache.LogoutLockedRequestAsync(playerId.Value, sessionId, ct);
             _idCasche.Invalidate(userId);
-            _logger.LogDebug("Logout: Cache removed for PlayerId={PlayerId}, UserId={UserId}", playerId);
+            _logger.LogDebug($"Logout: Cache removed for PlayerId={playerId}, UserId={userId}, SessionId:{sessionId}");
         }
         /*
         public async Task<int> GetPlayerIdAsync(string userId, CancellationToken ct = default)

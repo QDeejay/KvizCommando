@@ -18,6 +18,7 @@ public static class LogoutEndpoints
            
         // POST /api/logout
         group.MapPost("", async (
+            string? sessionId,
             HttpContext httpContext,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -56,8 +57,8 @@ public static class LogoutEndpoints
 
             // TODO: cache invalidálás (ha lesz PlayerCache)
             // PlayerCache.Remove(user.Id);
-           
-            await playerService.LogoutAndRemoveCacheAsync(userId, ct);
+            Console.WriteLine($"Kijelentkezés User{userId} Session:{sessionId}");
+            await playerService.LogoutAndRemoveCacheAsync(userId, sessionId, ct);
 
             return Results.NoContent();
         });

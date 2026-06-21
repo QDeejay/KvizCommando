@@ -19,7 +19,7 @@ namespace KvizCommando.Client.Pages.Solo
     public partial class SoloGame : ComponentBase
     {
         [Inject] protected PageTitleService PageTitle { get; set; } = default!;
-        [Inject] protected ILoadingService Loader { get; set; } = default!;
+       
         [Inject] protected ILanguageService Lang { get; set; } = default!;
 
         [Inject] protected ISoloState SoloState { get; set; } = default!;
@@ -78,7 +78,7 @@ namespace KvizCommando.Client.Pages.Solo
         }
         protected override async Task OnInitializedAsync()
         {
-            await Loader.Show();
+            
             await SoloState.EnsureLoadedAsync();
             PageTitle.SetTitle(Lang["mainlayout.Header.GameSolo"],3, -1);
             //_isLoaded = true;
@@ -86,7 +86,7 @@ namespace KvizCommando.Client.Pages.Solo
                 {
                     BuildButtons();
                 }
-            await Loader.Hide();
+            
         }
     }
 }

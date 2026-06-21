@@ -14,6 +14,7 @@ public class AuthRedirectHandler : DelegatingHandler
     }
     private static readonly string[] _ignore401Endpoints =
         {
+            "/start",
             "/login",
             "/register",
             "/checkin",
@@ -33,7 +34,7 @@ public class AuthRedirectHandler : DelegatingHandler
 
             if (!_ignore401Endpoints.Any(ignore => path.Contains(ignore)))
             {
-                _navigation.NavigateTo("/", true);
+                _navigation.NavigateTo("/login", true);
             }
         }
 

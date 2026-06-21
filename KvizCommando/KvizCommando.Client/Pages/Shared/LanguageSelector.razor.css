@@ -1,0 +1,91 @@
+﻿.lang-selector {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    display: flex;
+    height: 5%;
+    align-items: center;
+    justify-content: right;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0px;
+    font-family: 'Special Elite', cursive;
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    z-index: 1000;
+}
+
+
+
+
+/* 🌐 Nyelvválasztó menü doboz */
+#langMenu.dropdown-menu.dropdown-menu-end {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #fff9db;
+    border: 1px solid #f3d36b;
+    border-radius: 12px 0 0 12px; /* bal kerek, jobb flush */
+    min-width: 10rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+}
+
+/* 🌐 Itemek */
+#langMenu .dropdown-item {
+    border-radius: 6px;
+    padding: .5rem .75rem;
+    color: #444;
+    display: flex;
+    align-items: center;
+    gap: .5rem; /* zászló és szöveg közé kis hely */
+}
+
+    #langMenu .dropdown-item:hover,
+    #langMenu .dropdown-item:focus {
+        background-color: #ffe8a3;
+        color: #111;
+    }
+
+/* 🌐 Nyelvváltó gomb (földgömb ikon) */
+#langToggle {
+    background-color: transparent !important;
+    border: none;
+    padding: .375rem;
+    line-height: 1;
+    color: #d3d3d3; /* ikon színe */
+    box-shadow: none;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+    #langToggle:hover,
+    #langToggle:focus,
+    #langToggle:active,
+    #langToggle.show,
+    #langToggle[aria-expanded="true"] {
+        background-color: transparent !important;
+        border: none;
+        color: whitesmoke; /* hover → világosabb */
+        box-shadow: none;
+        outline: 0;
+    }
+
+    #langToggle .bi {
+        font-size: 1.25rem;
+    }
+
+/* 🌐 Zászló ikon placeholder (később lehet SVG / sprite helyett background-image) */
+.flag {
+    width: 30px;
+    height: 14px;
+    display: inline-block;
+    background-size: cover;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+}
+
+.flag-hu {
+    background-image: url('/images/flags/hu.png');
+}
+
+.flag-en {
+    background-image: url('/images/flags/en.png');
+}

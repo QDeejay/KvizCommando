@@ -7,9 +7,8 @@ namespace KvizCommando.Server.Services.DtoMapping
     public interface IQuestionService
     {
      
-        Task<bool> SaveFactorySlotsAsync(int playerId, SaveFactoryRequest dto, CancellationToken ct);
-        Task<bool> ManageSlotsAsync(int playerId, ManageSlotRequest dto, CancellationToken ct);
-        Task<bool> SendNewQuestionAsync(int playerId, NewQuestionRequest dto, CancellationToken ct);
-
+        Task<bool?> SaveFactorySlotsAsync(int playerId, SaveFactoryRequest dto, CancellationToken ct);
+        Task<bool?> ManageSlotsAsync(int playerId, ManageSlotRequest dto, CancellationToken ct);
+        Task<bool?> SendNewQuestionAsync(int playerId, NewQuestionRequest dto, CancellationToken ct);
     }
 }

@@ -36,13 +36,13 @@ public sealed class CheckInController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(CheckInGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> GetAsync(CancellationToken ct)
+    public async Task<IActionResult> GetAsync([FromQuery] string sessionId, CancellationToken ct)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
                      ?? User.FindFirstValue("sub")
                      ?? throw new InvalidOperationException("Missing user id");
 
-        var dto = await _service.GetStatusAsync(userId, ct);
+        var dto = await _service.GetStatusAsync(userId,sessionId, ct);
        
         
         return Ok(dto);

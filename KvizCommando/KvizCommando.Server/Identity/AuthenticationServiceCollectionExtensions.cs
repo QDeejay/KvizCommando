@@ -104,7 +104,7 @@ public static class AuthenticationServiceCollectionExtensions
             options.Cookie.HttpOnly = true;
             options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 
-            options.ExpireTimeSpan = TimeSpan.FromHours(1);
+            options.ExpireTimeSpan = TimeSpan.FromDays(7);
             options.SlidingExpiration = true;
 
             options.Events = new CookieAuthenticationEvents

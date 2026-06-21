@@ -7,29 +7,48 @@
 
 @if (_isReady)
 {
+    if (_loggedIn)
+    {
+        <AppHeader DisplayName="@HomeState.UserMainData!.UserName"
+        lclRow1="@Lang["mainlayout.Bootstrap.Label.Profile"]"
+        lclRow2="@Lang["mainlayout.Bootstrap.Label.Settings"]"
+        lclLogout="@Lang["mainlayout.Bootstrap.Label.Logout"]"
+        OnLogout="Logout" />
+    }
+    else
+    {
+        <LanguageSelector />
+    }
 
-    <AppHeader DisplayName="@HomeState.UserMainData!.UserName"
-               lclRow1="@Lang["mainlayout.Bootstrap.Label.Profile"]"
-               lclRow2="@Lang["mainlayout.Bootstrap.Label.Settings"]"
-               lclLogout="@Lang["mainlayout.Bootstrap.Label.Logout"]"
-               OnLogout="Logout" />
 
-    <div class="kc-mainlayout-root">
+    <div class="kc-unsupported-screen">
+        <ScreenTooSmall />
+    </div>
 
+    <div class="kc-mainlayout-root" 
+         style="@(_loggedIn  
+                  ? "background-image: url('/images/lobby.webp');" 
+                  : "background-image: url('/images/login.webp');")">
+        
 
         <LangGuard Culture=@culture Module="nav">
-            <div class="kc-mainlayout-nav-side @(sidebarCollapsed ? "collapsed" : "")">
+            <div class="kc-mainlayout-nav-side @(sidebarCollapsed || !_loggedIn ? "collapsed" : "")">
                 <NavMenu Hs="@Hs"
                          OnClickedNavButton="OnSelect"
                          OnToggleSidebar="ToggleSidebar" 
-                         IsCollapsed="@sidebarCollapsed" />
+                         IsCollapsed="@(sidebarCollapsed || !_loggedIn)" />
             </div>
         </LangGuard>
         <main>
             <section class="kc-mainlayout-content-side">
                 <header class="kc-mainlayout-content-header">
-                    <div class="kc-mainlayout-content-header--left">
-                        <div class="kc-back-button @(_backNavigationEna ? "" : "btn-hidden")">@("◀") </div>
+                    @if (_loggedIn)
+                  {  
+                      <div class="kc-mainlayout-content-header--left">
+                        <div class="kc-back-button @(_backNavigationEna ? "" : "btn-hidden")"
+                             @onclick="OnBackClick">
+                            @("◀")
+                        </div>
                         <div class="kc-actual-page-title">
                             
                             <h2>@_currentTitle</h2>
@@ -52,10 +71,22 @@
                     <div class="kc-mainlayout-content-header--right">
                         <span class="kc-header-greeting">@_Greetings</span>
                     </div>
+                    }
                 </header>
-                <ScreenTooSmall />
+            
                 <div class="kc-mainlayout-content-container">
-                    @Body
+                    <LoaderView />
+                    <CascadingValue Value="UserService">
+                        <CascadingValue Value="Lang">
+                                <CascadingValue Value="LocalStorage" >
+                                    <CascadingValue Value="Nav">
+                                        <CascadingValue Value=NavigateTo>
+                                            @Body
+                                        </CascadingValue>
+                                    </CascadingValue>
+                                </CascadingValue>
+                        </CascadingValue>
+                    </CascadingValue>
                 </div>
             </section>
         </main>

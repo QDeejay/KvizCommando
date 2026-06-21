@@ -20,13 +20,14 @@
     .military-button:hover {
         background-color: #5f6a2e;
         box-shadow: 0 0 4px rgba(255, 255, 200, 0.2);
-       
+        cursor: url('/Images/cursors/active.cur'), pointer;
     }
 
     .military-button:active {
         background-color: #394314;
         box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
         transform: translateY(1px);
+        cursor: url('/Images/cursors/active.cur'), pointer;
     }
 
     .military-button:disabled {
@@ -216,4 +217,14 @@
         .navigation-button span {
             text-align: center;
         }
+}
+@media(max-width: 1000px) {
+    .navigation-button {
+        justify-content: center;
+        gap: 0;
+    }
+    .navigation-button span
+    {
+        display:none;
+    }
 }

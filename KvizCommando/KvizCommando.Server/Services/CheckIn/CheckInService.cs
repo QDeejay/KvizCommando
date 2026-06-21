@@ -57,10 +57,10 @@ namespace KvizCommando.Server.Services.CheckIn
             _cacheService = cacheService;
         }
 
-        public async Task<CheckInGetResponse> GetStatusAsync(string userId, CancellationToken ct)
+        public async Task<CheckInGetResponse> GetStatusAsync(string userId, string sessionid, CancellationToken ct)
         {
             // csak a szükséges mezők
-            var sessionId = "Teszt";
+            //var sessionId = sessionid;
             /*
             var user = await _userManager.Users
                 .Where(u => u.Id == userId)
@@ -91,7 +91,7 @@ namespace KvizCommando.Server.Services.CheckIn
             var success = (requiredDispName == false && requiredTerms == false);
             if (success==true && _playerId != null) 
                 {
-                    await _cacheService.NewSessionCheckLockedAsync(_playerId ?? 0, sessionId);
+                    await _cacheService.NewSessionCheckLockedAsync(_playerId ?? 0, sessionid);
                 }
 
 
@@ -106,7 +106,7 @@ namespace KvizCommando.Server.Services.CheckIn
 
         public async Task<(IReadOnlyList<string>,string Suggested)> CompleteAsync(string userId, CheckInPostRequest request, CancellationToken ct)
         {
-            var sessionId = "Teszt";
+            var sessionId = request.SessionId ?? string.Empty;
             var errorKeys = new List<string>();
             var currentTerms = _termsProvider.GetCurrentTerms();
 
@@ -198,15 +198,11 @@ namespace KvizCommando.Server.Services.CheckIn
                 //wait EnsurePlayerExistsAsync(userId, DisplayName, TeamName, ct);
                 await _playerDb.CreatePlayerToDbAsync(userId, DisplayName, TeamName, ct);
             }
-          
+            await _cacheService.NewSessionCheckLockedAsync(_playerId ?? 0, sessionId);
             return (Array.Empty<string>(),"");
         }
 
-        private static string SessionIdGen()
-        { 
-            var sb = new StringBuilder();
-            return string.Empty;
-        }
+       
 
     }
 }

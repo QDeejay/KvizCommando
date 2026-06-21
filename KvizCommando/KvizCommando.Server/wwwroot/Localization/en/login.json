@@ -1,10 +1,13 @@
 {
   "Button": "Login",
+  "Button.Next": "Next",
   "ButtonLink": "Registration",
   "CheckBox.RememberMe": "Remember me",
+  "Enter.Password": "Enter your password for:",
   "Error.EmptyFields": "Fill up all fields",
   "Error.Login": "Invalid login details or your email address is not verified!",
   "ForgotPassword": "Forgot password",
   "Label.Providers": "Other login providers:",
-  "Title": "Login"
+  "Title": "Login",
+  "Title2": "Enter password"
 }
