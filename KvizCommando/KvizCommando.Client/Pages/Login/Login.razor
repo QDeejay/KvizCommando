@@ -1,94 +1,86 @@
 ﻿@page "/login"
-@layout KvizCommando.Client.Layout.EmptyLayout
+@layout LoginLayout
 
-
-
-<LangGuard Culture=@culture Module="login">
-<div class="login-panel">
-    <div class="back-button-row @(EnterPassPage ? "" : "hide")">
-            <button class="military-button back-version" disabled="@(!EnterPassPage)" @onclick="OnSwitchPass">@(" << ")</button>
+<LangGuard Culture=@Culture Module="login">
+    <div class="kc-back-button-row @(_enterPassPage ? "" : "hide")">
+        <button class="military-button back-version" disabled="@(!_enterPassPage)" @onclick="OnSwitchPass">@(" << ")</button>
     </div>
-    <div class="login-head">
-            <label class="label-title">@(EnterPassPage? Lang["login.Title2"] : Lang["login.Title"])</label>
-    </div>
-
-    <div class="login-body">
-        @if (!EnterPassPage)
-            {
-                <label class="label-text">@Lang["common.Email"] </label>
-                <input class="lcd-input"
-                       style="width:stretch;"
-                       type="text"
-                       @bind-value="LoginForm.Email"
-                       @bind-value:event="oninput" />
-
-                <div class="form-check">
-                    <input class="form-check-input custom-checkbox" type="checkbox" id="rememberMe" @bind="LoginForm.rememberMe" />
-                    <label class="form-check-label remember-me-label" for="rememberMe">
-                        @Lang["login.CheckBox.RememberMe"]
-                    </label>
-                </div>     
-            }
-            else
-            {
-
-                <label class="label-text">@Lang["login.Enter.Password"]</label>
-                <label class="label-text">@LoginForm.Email</label>
-                <br>
-                <label class="label-text">@Lang["common.Password"]</label>
-                <input class="lcd-input"
-                       style="width:stretch;"
-                       type="password"
-                       @bind-value="LoginForm.Password"
-                       @bind-value:event="oninput" />
-            }
-
-       
-
-            
-            <div class="login-actions">
-                @if (EnterPassPage)
+<div class="kc-login-panel">
+    <div class="kc-login-pnael--divider-top">
+            <div class="kc-login-head">
+                <label class="label-title">@(_enterPassPage? Lang["login.Title2"] : Lang["login.Title"])</label>
+            </div>
+            <div class="kc-login-body">
+                @if (!_enterPassPage)
                 {
-                    <button class="military-button" disabled="@(!CanLogin)" @onclick="LoginUser">@Lang["login.Button"]</button>
+                    <label class="label-text">@Lang["common.Email"] </label>
+                    <input class="lcd-input"
+                           style="width:stretch; @(_invalidEmail ? "border: 1px solid red;" : null)"
+                           type="text"
+                           @bind-value="LoginForm.Email"
+                           @bind-value:event="oninput" 
+                           />
+
+                    <div class="form-check">
+                        <input class="form-check-input custom-checkbox" type="checkbox" id="rememberMe" @bind="LoginForm.rememberMe" />
+                        <label class="form-check-label remember-me-label" for="rememberMe">
+                            @Lang["login.CheckBox.RememberMe"]
+                        </label>
+                    </div>
                 }
                 else
-                { 
-                    <button class="military-button" disabled="@(!CanNext)" @onclick="OnSwitchPass">@Lang["login.Button.Next"]</button> 
+                {
+                    <div class="kc-login-body--info-row">
+                        <label class="label-text">@Lang["login.Enter.Password"]</label>
+                        <label class="label-text masked-email">@_maskedEmail</label>
+                    </div>
+
+                    <label class="label-text">@Lang["common.Password"]</label>
+                    <input class="lcd-input"
+                           style="width:stretch;"
+                           type="password"
+                           @bind-value="LoginForm.Password"
+                           @bind-value:event="oninput" />
                 }
+                <div class="kc-login-body--action-row">
+                    @if (_enterPassPage)
+                    {
+                        <button class="military-button" disabled="@(!CanLogin)" @onclick="LoginUser">@Lang["login.Button"]</button>
+                    }
+                    else
+                    {
+                        <button class="military-button" disabled="@(!CanNext)" @onclick="OnSwitchPass">@Lang["login.Button.Next"]</button>
+                    }
+                </div>
             </div>
     </div>
-
-        <hr />
-        <div class="login-footer-links">
-                <a href="/ForgotPsw" class="login-link">@Lang["login.ForgotPassword"]</a>
-            <span class="divider">/</span>
-                <a href="/register" class="login-link">@Lang["login.ButtonLink"]</a>
-        </div>
-         
-</div>
-
-
-@if (!string.IsNullOrEmpty(ErrorMessage))
-{
-   
-    <p style="color:red">@ErrorMessage</p>
-}
-    <div class="other-providers @(EnterPassPage ? "hide" : "")">
-                 <label class="label-text">@Lang["login.Label.Providers"]</label>
-                    <a class="btn btn-provider" href="/login/facebook">
-                     <img src="https://www.facebook.com/images/fb_icon_325x325.png" 
-                          alt="Facebook logo" style="width:25px;height:25px;margin-right:8px;">
-                    </a> 
-                    <a class="btn btn-provider"  @onclick="BypassLogin">
-                     <img src="icon-192.png" 
-                          alt="Facebook logo" style="width:30px;height:30px;margin-right:8px;">
-                    </a> 
-
-
-
-                
+    <div class="kc-login-panel--divider-bottom">
+            <div class="kc-login-error-row">
+                @if (!string.IsNullOrEmpty(_errorMessage))
+                {
+                    <p style="color:red">@_errorMessage</p>
+                }
+            </div>
+            <div class="kc-login-footer">
+                <div class="kc-login-footer--other-providers-row @(_enterPassPage ? "hide" : "")">
+                    <label class="label-text">@Lang["login.Label.Providers"]</label>
+                    <a class="kc-btn-provider" href="/login/facebook">
+                        <img src="https://www.facebook.com/images/fb_icon_325x325.png"
+accesskey="       "      alt="Facebook logo" style="width:25px;height:25px;margin-right:8px;">
+                    </a>
+                    <a class="kc-btn-provider" @onclick="BypassLogin">
+                        <img src="icon-192.png"
+                             alt="Facebook logo" style="width:30px;height:30px;margin-right:8px;">
+                    </a>
                 </div>
-
-
+            </div>
+            <hr/>
+            <div class="kc-login-links-row">
+                <a href="/ForgotPsw" class="kc-login-link">@Lang["login.ForgotPassword"]</a>
+                <span class="divider">/</span>
+                <a href="/register" class="kc-login-link">@Lang["login.ButtonLink"]</a>
+            </div>
+            <hr/>
+    </div>
+</div>
 </LangGuard>
-

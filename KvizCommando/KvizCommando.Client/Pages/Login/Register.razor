@@ -1,41 +1,64 @@
 ﻿@page "/register"
-@layout EmptyLayout
+@layout LoginLayout
 
-<LangGuard Culture=@culture Module="register">
-
-<div class="regist-panel">
-    <div class="regist-head">
+<LangGuard Culture=@_culture Module="register">
+    <div class="kc-back-button-row">
+        <button class="military-button back-version" @onclick="NavigateHome">@(" << ")</button>
+    </div>
+<div class="kc-regist-panel">
+    <div class="kc-regist-head">
             <label class="label-title">@Lang["register.Title"]</label>
     </div>
+    <div class="kc-regist-body">
+            @if (!_registSucces)
+            {
+                <div class="kc-regist-body--divider">
+                    <label class="label-text">@Lang["register.Email"]</label>
+                    <input class="lcd-input"
+                           @bind-value="FormData.Email"
+                           @bind-value:event="oninput"
+                           style="width:stretch; @((_emailFiledSW ? "border: 1px solid red;" : null))" />
+                </div>
+                <div class="kc-regist-body--divider">
+                    <label class="label-text">@Lang["common.Password"]</label>
+                    <input class="lcd-input" type="password" @bind-value="FormData.Password"
+                           @bind-value:event="oninput"
+                           style="width:stretch; @((_passwordFiledSW ? "border: 1px solid red;" : null))" />
 
-        <div class="regist-body">
-            <label class="label-text">@Lang["register.Email"]</label>
-            <input class="lcd-input" @bind-value="FormData.Email"
-                                        @bind-value:event="oninput"
-                   style="@((EmailFiledSW ? "border: 1px solid red;" : null))" />
+                </div>
+                <div class="kc-regist-body--divider">
 
-            <label class="label-text">@Lang["common.Password"]</label>
-            <input class="lcd-input" type="password" @bind-value="FormData.Password" 
-                                        @bind-value:event="oninput"
-                   style="@((PasswordFiledSW ? "border: 1px solid red;" : null))" />
+                    <label class="label-text">@Lang["common.Password.Confirm"]</label>
+                    <input class="lcd-input" type="password" @bind-value="FormData.ConfirmPassword"
+                           @bind-value:event="oninput"
+                           style="width:stretch; @((_passwordFiledSW ? "border: 1px solid red;" : null))" />
+                </div>
+                <div class="kc-regist-body--button-row">
+                    <button class="military-button" disabled="@(!CanRegister)" type="button" @onclick="HandleValidSubmit">
+                        @Lang["register.Button"]
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="kc-regist-body--success">
+                    <label style="color:limegreen; font-size: 24px;" class=" label-text">@Lang["register.ResultMsg01"]</label>
+                    <br>
+                    <label class="label-text">@Lang["register.ResultMsg02"]</label>
+                </div>
 
-            <label class="label-text">@Lang["common.Password.Confirm"]</label>
-            <input class="lcd-input" type="password" @bind-value="FormData.ConfirmPassword" 
-                                                         @bind-value:event="oninput"
-               style="@((PasswordFiledSW ? "border: 1px solid red;" : null))" />
-            <div class="button-row">             
-                <button class="military-button" disabled="@(!CanRegister)" type="button" @onclick="HandleValidSubmit">
-                    @Lang["register.Button"]
-                </button>
-                <button class="military-button--secondary" @onclick="NavigateHome">
-                    @Lang["common.Button.Back"]
-                </button>
-            </div>
+            }
+
         </div>
-
-    <div class="regist-footer">      
-        <br>
-        <p style="color:red">@ResultMessage</p>
+    <div class="kc-regist-footer">
+            <div class="kc-regist-error-row">
+                @if (!string.IsNullOrEmpty(_resultMessage))
+                {
+                    <p style="color:red">@_resultMessage</p>
+                }
+            </div>  
+           
     </div>
+       
 </div>
 </LangGuard>

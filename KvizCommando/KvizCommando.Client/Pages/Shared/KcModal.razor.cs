@@ -7,8 +7,8 @@ namespace KvizCommando.Client.Pages.Shared
 {
     public partial class KcModal : ComponentBase, IDisposable
     {
-        [Inject] protected IJSRuntime JS { get; set; } = default!;
-        [Inject] protected ILocalStorageService LocalStorage { get; set; } = default!;
+        [Inject] private IJSRuntime JS { get; set; } = default!;
+        [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
         [Parameter] public string Id { get; set; } = "kcModal";
         [Parameter] public string Title { get; set; } = "Modal title";
         [Parameter] public string ActionText1 { get; set; } = string.Empty;

@@ -32,7 +32,7 @@ public partial class Confirm : ComponentBase
         }
         private void NavigateHome()
         {
-            Nav.NavigateTo("/");
+            Nav.NavigateTo("/login");
         }
     }
 

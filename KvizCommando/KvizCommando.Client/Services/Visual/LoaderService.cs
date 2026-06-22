@@ -5,52 +5,44 @@ using static System.Net.WebRequestMethods;
 
 namespace KvizCommando.Client.Services.Visual
 {
-
     public sealed class LoaderService
     {
-
-
         public event Action? OnShow;
         public event Action? OnHide;
 
         public bool IsVisible { get; private set; }
+        private DateTime _lastTrigger;
+        private bool _workerRunning;
 
-        private bool _cancelShow;
-
-        public async Task ShowAsync()
+        public void Trigger()
         {
-            if (IsVisible)
-                return;
-
-            _cancelShow = false;
-
-            await Task.Delay(500);
-
-            if (_cancelShow)
-                return;
-
-            IsVisible = true;
-
-            OnShow?.Invoke();
-        }
-
-        public async Task HideAsync()
-        {
-            _cancelShow = true;
-
+            _lastTrigger = DateTime.UtcNow;
             if (!IsVisible)
-                return;
+            {
+                IsVisible = true;
+                OnShow?.Invoke();
+            }
 
-            await Task.Delay(1000);
-
-            IsVisible = false;
-
-            OnHide?.Invoke();
+            if (!_workerRunning)
+            {
+                _workerRunning = true;
+                _ = WorkerAsync();
+            }
         }
-
-    }
-
-}
-/*
  
- */
+        private async Task WorkerAsync()
+        {
+            while (_workerRunning)
+            {
+                await Task.Delay(100);
+                if (DateTime.UtcNow - _lastTrigger < TimeSpan.FromMilliseconds(1000))
+                    continue;
+                IsVisible = false;
+                _workerRunning= false;
+                OnHide?.Invoke();
+                return;
+            }
+        }
+    }
+}
+

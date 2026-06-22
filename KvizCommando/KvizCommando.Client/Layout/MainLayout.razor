@@ -4,7 +4,7 @@
     <link href="css/MainLayout.css" rel="stylesheet" />
 </HeadContent>
 
-
+<LoaderView />
 @if (_isReady)
 {
     if (_loggedIn)
@@ -25,6 +25,8 @@
         <ScreenTooSmall />
     </div>
 
+
+   
     <div class="kc-mainlayout-root" 
          style="@(_loggedIn  
                   ? "background-image: url('/images/lobby.webp');" 

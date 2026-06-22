@@ -2,15 +2,18 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using KvizCommando.Client.Services.Visual;
 using Microsoft.AspNetCore.Components;
 
 public class AuthRedirectHandler : DelegatingHandler
 {
     private readonly NavigationManager _navigation;
+    private readonly LoaderService _loader;
 
-    public AuthRedirectHandler(NavigationManager navigation)
+    public AuthRedirectHandler(NavigationManager navigation, LoaderService loader)
     {
         _navigation = navigation;
+        _loader = loader;
     }
     private static readonly string[] _ignore401Endpoints =
         {
@@ -25,6 +28,7 @@ public class AuthRedirectHandler : DelegatingHandler
      HttpRequestMessage request,
      CancellationToken cancellationToken)
     {
+        _loader.Trigger();
         var response = await base.SendAsync(request, cancellationToken);
 
         if (response.StatusCode == HttpStatusCode.Unauthorized)
@@ -37,7 +41,6 @@ public class AuthRedirectHandler : DelegatingHandler
                 _navigation.NavigateTo("/login", true);
             }
         }
-
 
         return response;
     }

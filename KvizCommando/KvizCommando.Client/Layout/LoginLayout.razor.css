@@ -1,6 +1,6 @@
 ﻿
 /* === KÖZÉP === */
-.layout-center {
+.kc-loginlayout-center {
     position: relative;
     display: flex;
     justify-content: center;
@@ -10,9 +10,9 @@
 }
 
 /* A középre igazított fix főkonténer */
-.main-container {
+.kc-loginlayout-center--container {
     display: flex;
-    flex-direction:column;
+    flex-direction: column;
     border-radius: 22px;
     background-color: rgba(51, 51, 51, 0.9);
     border-width: 2px;
@@ -22,11 +22,11 @@
     width: 500px;
     height: 545px;
     position: relative;
-    align-items:center;
+    align-items: center;
     box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
 }
 
-.logo-small {
+.kc-logo-small {
     max-width: 80px;
     height: 80px;
     border-radius: 80px;
@@ -34,7 +34,7 @@
  
 }
 
-.content-body {
+.kc-loginlayout-content-body {
     flex: 1;
     color: white;
     overflow: auto;

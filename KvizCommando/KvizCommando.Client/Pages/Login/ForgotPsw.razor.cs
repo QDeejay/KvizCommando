@@ -49,7 +49,7 @@ namespace KvizCommando.Client.Pages.Login
         }
         private void NavigateHome()
         {
-            Nav.NavigateTo("/");
+            Nav.NavigateTo("/login");
         }
         private bool IsValidEmail(string email)
         {

@@ -21,21 +21,22 @@ namespace KvizCommando.Client.Pages.Home;
 
 public partial class Home : ComponentBase, IDisposable
 {
-    [CascadingParameter] protected ILanguageService Lang { get; set; } = default!;
+    [CascadingParameter] private ILanguageService Lang { get; set; } = default!;
    
-    [CascadingParameter] protected ILocalStorageService LocalStorage { get; set; } = default!;
-    [CascadingParameter] protected int NavTo { get; set; } = default!;
-    [Inject] protected NavigationManager Nav { get; set; } = default!;
+    [CascadingParameter] private ILocalStorageService LocalStorage { get; set; } = default!;
+    [CascadingParameter] private int NavTo { get; set; } = default!;
+    // [Inject] protected NavigationManager Nav { get; set; } = default!;
     // [Inject] protected IScreenApiService HomeApi { get; set; } = default!;
 
 
-    [Inject] protected IHomeState HomeState { get; set; } = default!;
-    [Inject] protected IQuestionState QuestionState { get; set; } = default!;
-    [Inject] protected ITeamState TeamState { get; set; } = default!;
-    [Inject] protected ISoloState SoloState { get; set; } = default!;
-    [Inject] protected PageTitleService PageTitle { get; set; } = default!;
-    [Inject] protected HttpClient Http { get; set; } = default!;
-    [Inject] protected IDisplayMessageState DisplayState { get; set; } = default!;
+    [Inject] private IHomeState HomeState { get; set; } = default!;
+    [Inject] private IQuestionState QuestionState { get; set; } = default!;
+    [Inject] private ITeamState TeamState { get; set; } = default!;
+    [Inject] private ISoloState SoloState { get; set; } = default!;
+    [Inject] private PageTitleService PageTitle { get; set; } = default!;
+    [Inject] private HttpClient Http { get; set; } = default!;
+    [Inject] private IDisplayMessageState DisplayState { get; set; } = default!;
+   
 
     private int oldNavTo { get; set; } = -1;
 

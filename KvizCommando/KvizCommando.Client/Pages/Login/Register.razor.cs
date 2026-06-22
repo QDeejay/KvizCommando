@@ -11,21 +11,21 @@ using System.Text.RegularExpressions;
 
 namespace KvizCommando.Client.Pages.Login
 {
-    public partial class Register : ComponentBase
+    public partial class Register : ComponentBase, IDisposable
     {
         [Inject] private NavigationManager Nav { get; set; } = default!;
         [Inject] private IdentityRulesService IdentityRules { get; set; } = default!;
         [Inject] private ILanguageService Lang { get; set; } = default!;
-        [Inject] public IUserService UserService { get; set; } = default!;
+        [Inject] private IUserService UserService { get; set; } = default!;
 
-        string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-        private RegisterRequestForm FormData { get; set; } = new();
+        private readonly RegisterRequestForm FormData = new();
+        private RegisterOptionsResponse? Options = default!;
+        private string _resultMessage  = string.Empty;
+        private bool _emailFiledSW = false;
+        private bool _passwordFiledSW = false;
+        private bool _registSucces = false;
 
-        private RegisterOptionsResponse? Options { get; set; }
-        private string ResultMessage { get; set; } = string.Empty;
-        private bool ShowValidation { get; set; } = false;
-        private bool EmailFiledSW { get; set; } = false;
-        private bool PasswordFiledSW { get; set; } = false;
+        private string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         private bool CanRegister =>
             !string.IsNullOrWhiteSpace(FormData.ConfirmPassword)
             && !string.IsNullOrWhiteSpace(FormData.Email)
@@ -33,66 +33,66 @@ namespace KvizCommando.Client.Pages.Login
 
         private async Task HandleValidSubmit()
         {
-            ShowValidation = true;
-            ResultMessage = null;
+            //_showValidation = true;
+            _resultMessage = string.Empty;
             
             // --- Email ---
-            if (!IsValidEmail(FormData.Email))
+            if (!LoginHelper.IsValidEmail(FormData.Email))
             {
-                ResultMessage = Lang["identityerrors.InvalidEmail"].FormatSafe(FormData.Email);
-                EmailFiledSW = true;
+                _resultMessage = Lang["identityerrors.InvalidEmail"].FormatSafe(FormData.Email);
+                _emailFiledSW = true;
             }
             else
             {
-                EmailFiledSW = false;
+                _emailFiledSW = false;
             }
 
             // --- Password: IdentityOptions alapján teljes ellenőrzés ---
-            PasswordFiledSW = false;
+            _passwordFiledSW = false;
             if (Options is not null)
             {
                 var pwd = FormData.Password ?? string.Empty;
 
                 if (pwd.Length < Options.RequiredLength)
                 {
-                    ResultMessage = Lang["identityerrors.PasswordTooShort"].FormatSafe(Options.RequiredLength);
-                    PasswordFiledSW = true;
+                    _resultMessage = Lang["identityerrors.PasswordTooShort"].FormatSafe(Options.RequiredLength);
+                    _passwordFiledSW = true;
                 }
                 else if (Options.RequireDigit && !pwd.Any(char.IsDigit))
                 {
-                    ResultMessage = Lang["identityerrors.PasswordRequiresDigit"];
-                    PasswordFiledSW = true;
+                    _resultMessage = Lang["identityerrors.PasswordRequiresDigit"];
+                    _passwordFiledSW = true;
                 }
                 else if (Options.RequireLowercase && !pwd.Any(char.IsLower))
                 {
-                    ResultMessage = Lang["identityerrors.PasswordRequiresLower"];
-                    PasswordFiledSW = true;
+                    _resultMessage = Lang["identityerrors.PasswordRequiresLower"];
+                    _passwordFiledSW = true;
                 }
                 else if (Options.RequireUppercase && !pwd.Any(char.IsUpper))
                 {
-                    ResultMessage = Lang["identityerrors.PasswordRequiresUpper"];
-                    PasswordFiledSW = true;
+                    _resultMessage = Lang["identityerrors.PasswordRequiresUpper"];
+                    _passwordFiledSW = true;
                 }
                 else if (Options.RequireNonAlphanumeric && pwd.All(char.IsLetterOrDigit))
                 {
-                    ResultMessage = Lang["identityerrors.PasswordRequiresNonAlphanumeric"];
-                    PasswordFiledSW = true;
+                    _resultMessage = Lang["identityerrors.PasswordRequiresNonAlphanumeric"];
+                    _passwordFiledSW = true;
                 }
                 else if (Options.RequiredUniqueChars > 1 && pwd.Distinct().Count() < Options.RequiredUniqueChars)
                 {
-                    ResultMessage = Lang["identityerrors.PasswordRequiresUniqueChars"].FormatSafe(Options.RequiredLength);
-                    PasswordFiledSW = true;
+                    _resultMessage = Lang["identityerrors.PasswordRequiresUniqueChars"].FormatSafe(Options.RequiredLength);
+                    _passwordFiledSW = true;
                 }
                 else if (FormData.Password != FormData.ConfirmPassword)
                 {
-                    ResultMessage = Lang["identityerrors.PasswordNotMatched"];
-                    PasswordFiledSW = true;
+                    _resultMessage = Lang["identityerrors.PasswordNotMatched"];
+                    _passwordFiledSW = true;
                 }
             }
            
 
             // Ha bármelyik mező hibás, ne küldjük a szerverre
-            if (EmailFiledSW || PasswordFiledSW)
+            if (_emailFiledSW || _passwordFiledSW)
                 return;
 
             
@@ -101,7 +101,7 @@ namespace KvizCommando.Client.Pages.Login
 
             if (success)
             {
-                Nav.NavigateTo("/registersucces");
+                _registSucces = true;
                 return;
             }
 
@@ -109,33 +109,23 @@ namespace KvizCommando.Client.Pages.Login
             if (errors is { Count: > 0 })
             {
                 // csak az első hibát mutatjuk; ha több kell, join-olható
-                ResultMessage = Lang[$"identityerrors.{errors[0]}"];
+                _resultMessage = Lang[$"identityerrors.{errors[0]}"];
             }
             else
             {
-                ResultMessage = Lang["identityerrors.DefaultError"];
-            }
-        }
-        private bool IsValidEmail(string email)
-        {
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
+                _resultMessage = Lang["identityerrors.DefaultError"];
             }
         }
         private void NavigateHome()
         {
-            Nav.NavigateTo("/");
+            Nav.NavigateTo("/login");
         }
         protected override async Task OnInitializedAsync()
         {
-            culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-            Options = await IdentityRules.GetRulesAsync();
+             _registSucces = false;
+             _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+             Options = await IdentityRules.GetRulesAsync();
         }
+        public void Dispose() { }
     }
 }

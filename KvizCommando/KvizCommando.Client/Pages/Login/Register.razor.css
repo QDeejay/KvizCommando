@@ -1,45 +1,50 @@
-﻿.regist-panel {
+﻿.kc-regist-panel {
     width: 400px;
     margin: 10px auto;
 }
 
 /* HEAD border-radius: 6px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);/*/
-.regist-head {
+.kc-regist-head {
     text-align: center;
     padding: 4px;
 }
 
 /* BODY * background-color: #1c1c1c;/*/
-.regist-body {
+.kc-regist-body {
     margin-top: 8px; /* Ezt állítsd, hogy milyen messze legyen a HEAD-től */
     display: flex;
     flex-direction: column;
-    gap: 2px; /* mezők közti térköz */
+    gap: 8px; /* mezők közti térköz */
+}
+.kc-regist-body--divider {
+}
+kc-regist-body--success {
+    margin-top: 30px; /* Ezt állítsd, hogy milyen messze legyen a HEAD-től */
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* mezők közti térköz */
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+.kc-regist-body--button-row {
+    display: flex;
+    align-items: center; /* függőleges középvonal */
+    justify-content: center;
+    gap: 10px;
 }
 
 /* FOOTER */
-.regist-footer {
-    margin-top: 4px;
+.kc-regist-footer {
+    margin-top:30px;
     display: flex;
     justify-content: left;
 }
-
-/* Link stílus */
-.regist-link {
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem; /* Méret állítása itt */
-    color: #aaff44;
-    text-decoration: none;
-}
-
-    .regist-link:hover {
-        color: #ddff77;
-        text-decoration: underline;
-    }
-.button-row {
+.kc-regist-error-row {
     display: flex;
-    justify-content: space-between; /* bal és jobb szél */
-    margin-top: 4px;
+    position: static;
+    bottom: 0;
 }
+
 
