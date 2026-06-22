@@ -1,7 +1,7 @@
 ﻿@page "/register"
-@layout EmptyLayout
+@layout LoginHelper
 
-<LangGuard Culture=@culture Module="register">
+<LangGuard Culture=@_culture Module="register">
 
 <div class="regist-panel">
     <div class="regist-head">
@@ -12,17 +12,17 @@
             <label class="label-text">@Lang["register.Email"]</label>
             <input class="lcd-input" @bind-value="FormData.Email"
                                         @bind-value:event="oninput"
-                   style="@((EmailFiledSW ? "border: 1px solid red;" : null))" />
+                   style="@((_emailFiledSW ? "border: 1px solid red;" : null))" />
 
             <label class="label-text">@Lang["common.Password"]</label>
             <input class="lcd-input" type="password" @bind-value="FormData.Password" 
                                         @bind-value:event="oninput"
-                   style="@((PasswordFiledSW ? "border: 1px solid red;" : null))" />
+                   style="@((_passwordFiledSW ? "border: 1px solid red;" : null))" />
 
             <label class="label-text">@Lang["common.Password.Confirm"]</label>
             <input class="lcd-input" type="password" @bind-value="FormData.ConfirmPassword" 
                                                          @bind-value:event="oninput"
-               style="@((PasswordFiledSW ? "border: 1px solid red;" : null))" />
+                   style="@((_passwordFiledSW ? "border: 1px solid red;" : null))" />
             <div class="button-row">             
                 <button class="military-button" disabled="@(!CanRegister)" type="button" @onclick="HandleValidSubmit">
                     @Lang["register.Button"]
@@ -35,7 +35,7 @@
 
     <div class="regist-footer">      
         <br>
-        <p style="color:red">@ResultMessage</p>
+            <p style="color:red">@_resultMessage</p>
     </div>
 </div>
 </LangGuard>

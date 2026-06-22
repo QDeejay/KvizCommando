@@ -19,13 +19,13 @@ namespace KvizCommando.Client.Pages.Question
 {
     public partial class Question : ComponentBase, IDisposable
     {
-        [Inject] protected PageTitleService PageTitle { get; set; } = default!;
+        [Inject] private PageTitleService PageTitle { get; set; } = default!;
         
-        [Inject] protected ILanguageService Lang { get; set; } = default!;
-        [Inject] protected IQuestionState QuestionState { get; set; } = default!;
-        [Inject] protected IApiService QuestApi { get; set; } = default!;
-        [Inject] protected HttpClient Http { get; set; } = default!;
-        [Inject] protected ILocalStorageService LocalStorage { get; set; } = default!;
+        [Inject] private ILanguageService Lang { get; set; } = default!;
+        [Inject] private IQuestionState QuestionState { get; set; } = default!;
+        [Inject] private IApiService QuestApi { get; set; } = default!;
+        [Inject] private HttpClient Http { get; set; } = default!;
+        [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
 
         private int SelectedId { get; set; }
         private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;

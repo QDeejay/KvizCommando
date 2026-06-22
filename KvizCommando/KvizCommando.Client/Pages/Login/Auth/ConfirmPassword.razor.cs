@@ -111,12 +111,12 @@ public partial class ConfirmPassword : ComponentBase
         var email = query["email"];
         var code = query["code"];
 
-        FormData.email = email;
-        FormData.resetCode = code;
+        FormData.email = email ?? string.Empty;
+        FormData.resetCode = code ?? string.Empty;
     }
     private void NavigateHome()
     {
-        Nav.NavigateTo("/");
+        Nav.NavigateTo("/login");
     }
 }
 
