@@ -19,7 +19,7 @@
 
         public Func<Task> AsyncAction1 { get; init; } = () => Task.CompletedTask;
         public Func<Task> AsyncAction2 { get; init; } = () => Task.CompletedTask;
-        public Action? AsyncCheckBoxAction { get; init; } = default;
+        public Action? AsyncCheckBoxAction { get; init; } = default!;
     }
    
 }

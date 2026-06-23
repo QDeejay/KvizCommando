@@ -73,7 +73,7 @@ namespace KvizCommando.Client.Services.User
         public async Task LogoutAsync(bool soft)
         {
             var SessionId = _sessionCache.SessionId;
-            await Task.Delay(300);
+            await Task.Delay(1);
             await _http.PostAsJsonAsync("api/logout", SessionId);
             await _audio.StopMusicAsync();
 
@@ -249,11 +249,8 @@ namespace KvizCommando.Client.Services.User
             else
             {
                 await _audio.InitializeAsync();
-                _audio.EnteredNormal = true;
                 await _home.EnsureLoadedAsync();
-                await Task.Delay(500);
-
-
+                _audio.EnteredNormal = true;
                 _nav.NavigateTo("/home");
             }
             return (true, new List<string> { });

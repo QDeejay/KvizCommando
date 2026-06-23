@@ -8,14 +8,12 @@ namespace KvizCommando.Client.Pages.Shared
 {
     public partial class LanguageConfirmBase : ComponentBase 
     {
-        [Inject] protected IJSRuntime JS { get; set; } = default!;
+        [Inject] private IJSRuntime JS { get; set; } = default!;
         [Inject] private ILanguageService Lang { get; set; } = default!;
         protected string SelectedLanguage { get; set; } = "Placeholder";
         protected string ConfirmMessage { get; set; } = "Placeholder";
         protected string LocalstoreLang { get; set; } = "Placeholder";
-
         protected string ModalTitle {get; set;} = "Placeholder";
-
         protected string ReloadText { get; set; } = "Placeholder";
         protected string CancelText { get; set; } = "Placeholder";
 
@@ -36,10 +34,7 @@ namespace KvizCommando.Client.Pages.Shared
                 LocalstoreLang = "hu-HU";
             } 
 
-
-
-                await JS.InvokeVoidAsync("localStorage.setItem", "userLang", LocalstoreLang);
-
+            await JS.InvokeVoidAsync("localStorage.setItem", "userLang", LocalstoreLang);
             await JS.InvokeVoidAsync("location.reload");
         }
 

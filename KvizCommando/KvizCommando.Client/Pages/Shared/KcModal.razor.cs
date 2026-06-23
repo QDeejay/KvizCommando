@@ -37,7 +37,6 @@ namespace KvizCommando.Client.Pages.Shared
             CheckBox = false;
             CanAccept = false;
             await JS.InvokeVoidAsync("kcModal.show", $"#{Id}");
-            
             if (CheckBottom == true && _bottomReached!=true)
             {
                 
@@ -46,8 +45,6 @@ namespace KvizCommando.Client.Pages.Shared
 
             }
             else CanAccept = true;
-
-
         }
         public async Task HideAsync() 
         {
@@ -108,9 +105,10 @@ namespace KvizCommando.Client.Pages.Shared
         }
         public void Dispose()
         {
-            OnAction1 = default;
-            OnAction2 = default;
-            CheckBoxAction = default;
+            OnAction1 = default!;
+            OnAction2 = default!;
+            OnCloseAction = default!;
+            CheckBoxAction = default!;
             GC.SuppressFinalize(this);
         }
     }

@@ -29,7 +29,6 @@ namespace KvizCommando.Client.Services.Visual
                 _ = WorkerAsync();
             }
         }
- 
         private async Task WorkerAsync()
         {
             while (_workerRunning)

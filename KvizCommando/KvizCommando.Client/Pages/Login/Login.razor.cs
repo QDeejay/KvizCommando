@@ -27,14 +27,14 @@ namespace KvizCommando.Client.Pages.Login
         private bool CanLogin => !string.IsNullOrWhiteSpace(LoginForm.Email)
                               && !string.IsNullOrWhiteSpace(LoginForm.Password);
 
-        private async Task OnSwitchPass()
+        private void OnSwitchPass()
         {
             _invalidEmail = false;
+            _errorMessage = string.Empty;
             var valid = LoginHelper.IsValidEmail(LoginForm.Email);
             if (valid)
             {
                 _enterPassPage = !_enterPassPage;
-
                 LoginForm.Password = string.Empty;
                 _maskedEmail = LoginHelper.MaskEmail(LoginForm.Email);
             }
@@ -42,9 +42,8 @@ namespace KvizCommando.Client.Pages.Login
             {
                 _errorMessage = Lang["identityerrors.InvalidEmail"].FormatSafe(LoginForm.Email);
                 _invalidEmail = true;
-                await Task.Delay(1000);
+                _ = ShowError();
             }
-            _errorMessage = string.Empty;
         }
         private async Task LoginUser()
         {
@@ -103,7 +102,11 @@ namespace KvizCommando.Client.Pages.Login
 
             }
         }
-
+        private async Task ShowError()
+        {
+            await Task.Delay(1000);
+            _errorMessage = string.Empty;
+        }
         protected override async Task OnInitializedAsync()
         {
             _enterPassPage = false;

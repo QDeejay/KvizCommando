@@ -21,7 +21,6 @@
             },
             new ModalPar
             {
-
                 Mode = 2,
                 Title = "question.Modal.Title.Handling",
                 ActionText1 = "question.Button.Delete",

@@ -3,6 +3,7 @@ using Blazored.SessionStorage;
 using KvizCommando.Client;
 using KvizCommando.Client.Features.Team;
 using KvizCommando.Client.Helpers;
+using KvizCommando.Client.Http;
 using KvizCommando.Client.Services;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
@@ -63,6 +64,7 @@ builder.Services.AddScoped(sp =>
     };
 });
 */
+builder.Services.AddTransient<LoaderHandler>();
 builder.Services.AddTransient<LanguageHandler>();
 builder.Services.AddTransient<AuthRedirectHandler>();
 builder.Services.AddTransient<LoggingHandler>();
@@ -78,6 +80,7 @@ builder.Services.AddHttpClient("DefaultWithLang", client =>
 {
     client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
 })
+.AddHttpMessageHandler<LoaderHandler>()
 .AddHttpMessageHandler<LanguageHandler>()
 .AddHttpMessageHandler<LoggingHandler>()
 .AddHttpMessageHandler<AuthRedirectHandler>();

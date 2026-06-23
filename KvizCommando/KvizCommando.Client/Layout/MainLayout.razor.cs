@@ -67,8 +67,8 @@ namespace KvizCommando.Client.Layout
             if (!string.IsNullOrWhiteSpace(sessionId))
             {
                 SessionService.SessionId = sessionId;
-                _loggedIn = true;
                 await HomeState.EnsureLoadedAsync();
+                _loggedIn = true;
             }
             else { _loggedIn = false; }
              
@@ -139,7 +139,7 @@ namespace KvizCommando.Client.Layout
         public async void Logout()
         {
            
-            await Task.Delay(501);
+            await Task.Delay(1);
             await UserService.LogoutAsync(false);
             Console.WriteLine("User logged out.");
         }
