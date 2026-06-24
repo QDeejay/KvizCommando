@@ -1,11 +1,10 @@
 ﻿.forgotpsw-panel {
-    width: 400px;
+    width: 380px;
     height: 300px;
     margin: 10px auto;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    
 }
 
 .forgotpsw-head {

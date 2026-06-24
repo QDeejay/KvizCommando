@@ -1,26 +1,23 @@
 ﻿@page "/"
 
-<LangGuard Culture=@culture Module="login">
-    <div class="layout-center">
+<LangGuard Culture=@_culture Module="login">
+    <PageContainer>
+        <div class="layout-center">
 
-        <div class="main-container">
-            <img src="/images/logo.webp" alt="Logo" class="logo" />
-            <div class="content-body">
-                <div class="login-panel">
-                    <div class="login-head">
-                        <label class="label-title">@Lang["login.Title"]</label>
+            <div class="main-container">
+                <img src="/images/logo.webp" alt="Logo" class="logo" />
+                <div class="content-body">
+                    <div class="login-panel">
+                        <div class="login-head">
+                            <label class="label-title">@Lang["login.Title"]</label>
+                        </div>
+                        <div class="login-footer">
+                            <button class="military-button" disabled="@(!_isLoaded)" @onclick="LoginUser">@Lang["login.Button"]</button>
+                        </div>
                     </div>
-
-
-                    <div class="login-footer">
-                            <button class="military-button" disabled="@(!_isLoaded)" @onclick="LoginUser">@Lang["login.Button"]</button>  
-                    </div>
-
                 </div>
-               
             </div>
         </div>
-    </div>
-
+    </PageContainer>
 </LangGuard>
 

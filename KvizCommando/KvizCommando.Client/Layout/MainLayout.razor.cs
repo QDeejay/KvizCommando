@@ -19,29 +19,29 @@ namespace KvizCommando.Client.Layout
 {
     public partial class MainLayout : LayoutComponentBase, IDisposable
     {
-        [Inject] protected ILanguageService Lang { get; set; } = default!;
-        [Inject] protected ILocalStorageService LocalStorage { get; set; } = default!;
-        [Inject] protected ISessionStorageService SessionStorage { get; set; } = default!;
-        [Inject] protected NavigationManager Nav { get; set; } = default!;
-        [Inject] protected SessionService SessionService { get; set; } = default!;
+        [Inject] private ILanguageService Lang { get; set; } = default!;
+        [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
+        [Inject] private ISessionStorageService SessionStorage { get; set; } = default!;
+        [Inject] private NavigationManager Nav { get; set; } = default!;
+        [Inject] private SessionService SessionService { get; set; } = default!;
         [Inject] private PageTitleService PageTitle { get; set; } = default!;
-        [Inject] public IDisplayMessageState DisplayState { get; set; } = default!;
+        [Inject] private IDisplayMessageState DisplayState { get; set; } = default!;
         [Inject] private IHomeState HomeState { get; set; } = default!;
         [Inject] private IUserService UserService { get; set; } = default!;
         [Inject] private AudioService Audio { get; set; } = default!;
 
-        private string culture = "hu";
+        private string _culture = "hu";
         private bool _isReady = false;
         private bool _loggedIn = false;
         private bool _isMusicOn;
         private string? _currentTitle = string.Empty;
-        private bool sidebarCollapsed = false;
+        private bool _sidebarCollapsed = false;
         private string? _Greetings = string.Empty;
         private int NavigateTo = 0;
 
-        private void ToggleSidebar() => sidebarCollapsed = (!sidebarCollapsed && _loggedIn);
-        private bool _backNavigationEna => sidebarCollapsed ? PageTitle.NavPage > 0 : PageTitle.NavPage > 99;
-        private HomeScreen Hs => _loggedIn ? HomeState.HomeScreen! : new HomeScreen();
+        private void ToggleSidebar() => _sidebarCollapsed = (!_sidebarCollapsed && _loggedIn);
+        private bool _backNavigationEna => _sidebarCollapsed ? PageTitle.NavPage > 0 : PageTitle.NavPage > 99;
+        private HomeScreen Hs => _loggedIn ? HomeState.HomeScreen! : new HomeScreen() {  };
         protected override async Task OnInitializedAsync()
 
         {
@@ -56,12 +56,10 @@ namespace KvizCommando.Client.Layout
             }
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(culture);
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(culture);
-            culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-
-
-            await Lang.LoadModuleAsync(culture, "common");  // szükséges
-            await Lang.LoadModuleAsync(culture, "mainlayout");  // szükséges
-            await Lang.LoadModuleAsync(culture, "home");
+            _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+            await Lang.LoadModuleAsync(_culture, "common");  // szükséges
+            await Lang.LoadModuleAsync(_culture, "mainlayout");  // szükséges
+            await Lang.LoadModuleAsync(_culture, "home");
 
             var sessionId = await SessionStorage.GetItemAsync<string>("SessionId");
             if (!string.IsNullOrWhiteSpace(sessionId))
@@ -98,7 +96,7 @@ namespace KvizCommando.Client.Layout
         private void UpdateTitle()
         {
             _currentTitle = PageTitle.Title;
-            var rankName = PageTitle.Rank >= 0 ? RankNameLocalizer.GetName(PageTitle.Rank, culture) : "";
+            var rankName = PageTitle.Rank >= 0 ? RankNameLocalizer.GetName(PageTitle.Rank, _culture) : "";
             _Greetings = Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
             _ = InvokeAsync(StateHasChanged);
         }

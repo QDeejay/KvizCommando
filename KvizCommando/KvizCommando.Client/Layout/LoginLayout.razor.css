@@ -37,7 +37,7 @@
 .kc-loginlayout-content-body {
     flex: 1;
     color: white;
-    overflow: auto;
+    overflow: auto; 
 }
 
 

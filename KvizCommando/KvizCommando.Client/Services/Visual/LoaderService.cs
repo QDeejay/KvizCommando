@@ -9,7 +9,6 @@ namespace KvizCommando.Client.Services.Visual
     {
         public event Action? OnShow;
         public event Action? OnHide;
-        // ez az
         public bool IsVisible { get; private set; }
         private DateTime _lastTrigger;
         private bool _workerRunning;

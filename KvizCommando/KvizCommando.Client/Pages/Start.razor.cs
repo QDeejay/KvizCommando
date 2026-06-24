@@ -13,16 +13,13 @@ namespace KvizCommando.Client.Pages
 {
     public partial class Start : ComponentBase, IDisposable
     {
-        [CascadingParameter]
-        protected ILanguageService Lang { get; set; } = default!;
+        [Inject] private ILanguageService Lang { get; set; } = default!;
 
-        [CascadingParameter]
-        protected NavigationManager Nav { get; set; } = default!;
+        [Inject] private NavigationManager Nav { get; set; } = default!;
 
-        [CascadingParameter]
-        protected IUserService UserService { get; set; } = default!;
+        [Inject] private IUserService UserService { get; set; } = default!;
 
-        string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+        private readonly string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         private bool _isLoaded = false;
 
         protected override async Task OnInitializedAsync()

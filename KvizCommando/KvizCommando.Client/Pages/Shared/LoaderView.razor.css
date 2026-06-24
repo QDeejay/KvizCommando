@@ -53,8 +53,8 @@
 
 
 .loading-logo {
-    width: 20vw;
-    height: 20vh;
+    width: 30vw;
+    height: 30vh;
     animation: coin-swing 2s ease-in-out infinite;
     transform-style: preserve-3d;
 }

@@ -21,14 +21,13 @@ namespace KvizCommando.Client.Pages.Home;
 
 public partial class Home : ComponentBase, IDisposable
 {
-    [CascadingParameter] private ILanguageService Lang { get; set; } = default!;
    
-    [CascadingParameter] private ILocalStorageService LocalStorage { get; set; } = default!;
     [CascadingParameter] private int NavTo { get; set; } = default!;
     // [Inject] protected NavigationManager Nav { get; set; } = default!;
     // [Inject] protected IScreenApiService HomeApi { get; set; } = default!;
 
-
+    [Inject] private ILanguageService Lang { get; set; } = default!;
+    [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
     [Inject] private IHomeState HomeState { get; set; } = default!;
     [Inject] private IQuestionState QuestionState { get; set; } = default!;
     [Inject] private ITeamState TeamState { get; set; } = default!;

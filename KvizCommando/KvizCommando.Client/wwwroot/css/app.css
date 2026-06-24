@@ -174,16 +174,16 @@ img {
 /* ===== Loader Overlay ===== */
 
 .loader-wrapper {
-    width: 70%;
-   
-    margin: 75vh auto;
-   
-  
+    position: fixed;
+    width: 100%;
+    margin: 10px auto;
+    bottom: 40px;
     text-align: center;
+
+    justify-items: center;
     font-family: 'Special Elite', cursive;
     color: #cccccc;
-    z-index:9999;
-  
+    z-index: 9999;
 }
 
 .loader-percent::after {
@@ -195,7 +195,7 @@ img {
 }
 
 .loader-bar {
-    width: 100%;
+    width: 90%;
     height: 20px;
     background: #222;
     border: 2px solid #cccccc;

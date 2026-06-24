@@ -1,35 +1,35 @@
 ﻿
-
 /* === KÖZÉP === */
 .layout-center {
-    position: relative;
+    position: fixed;
+    top: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 120px); /* header + footer */
-    padding-top: 20px;
-    min-width: 850px;
+    min-height: 100vh; /* header + footer */
+    min-width: 100%;
 }
-
 /* A középre igazított fix főkonténer */
 .main-container {
     display: flex;
+    flex-direction: column;
     border-radius: 22px;
     background-color: rgba(51, 51, 51, 0.9);
+    box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
     border-width: 2px;
     border-style: solid;
     border-color: rgba(64, 64, 64, 0.7);
-    padding: 30px;
-    width: 850px;
-    height: 400px;
+    width: 520px;
+    height: 580px;
     position: relative;
-    box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
+    align-items: center;
 }
 /* BAL OLDAL: LOGO */
 .logo {
-    max-width: 420px;
-    height: 420px;
-    margin-right: 20px;
+    display:flex;
+    height:stretch;
+    width:500px;
+    height:auto;
     border-radius: 12px;
 }
 
@@ -37,29 +37,43 @@
 .content-body {
     flex: 1;
     color: white;
-    overflow: auto;
+    width:100%;
+    justify-items:center;
+    padding:5px;
 }
 
 
 
 .login-panel {
-    width: 400px;
-    margin: 10px auto;
-    height:90%;
-    align-content:center;
-   
+    display:flex;
+    position:relative;
+    flex-direction:column;
+    top:-30px;
+    padding:10px;
+    width:85%;
 }
 
 /* HEAD border-radius: 6px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);/*/
 .login-head {
     text-align: center;
-    padding: 4px;
 }
 
 /* FOOTER */
 .login-footer {
-    margin-top: 8px;
     display: flex;
     justify-content: center;
+}
+@media (max-width: 500px), (max-height: 382px) {
+    .layout-center {
+        align-items: start;
+        top:70px;
+    }
+        .main-container {
+        width: 260px;
+        height: 480px;
+    }
+    .logo {
+        width: 380px;
+    }
 }

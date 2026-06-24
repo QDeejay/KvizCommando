@@ -20,74 +20,61 @@
         <LanguageSelector />
     }
 
-
     <div class="kc-unsupported-screen">
         <ScreenTooSmall />
     </div>
 
-
-   
-    <div class="kc-mainlayout-root" 
-         style="@(_loggedIn  
+    <div class="kc-mainlayout-root"  style="@(_loggedIn  
                   ? "background-image: url('/images/lobby.webp');" 
                   : "background-image: url('/images/login.webp');")">
         
 
-        <LangGuard Culture=@culture Module="nav">
-            <div class="kc-mainlayout-nav-side @(sidebarCollapsed || !_loggedIn ? "collapsed" : "")">
+        <LangGuard Culture=@_culture Module="nav">
+            <div class="kc-mainlayout-nav-side @(_sidebarCollapsed || !_loggedIn ? "collapsed" : "")">
                 <NavMenu Hs="@Hs"
                          OnClickedNavButton="OnSelect"
                          OnToggleSidebar="ToggleSidebar" 
-                         IsCollapsed="@(sidebarCollapsed || !_loggedIn)" />
+                         IsCollapsed="@(_sidebarCollapsed || !_loggedIn)" />
             </div>
         </LangGuard>
         <main>
             <section class="kc-mainlayout-content-side">
-                <header class="kc-mainlayout-content-header">
-                    @if (_loggedIn)
-                  {  
-                      <div class="kc-mainlayout-content-header--left">
-                        <div class="kc-back-button @(_backNavigationEna ? "" : "btn-hidden")"
-                             @onclick="OnBackClick">
-                            @("◀")
-                        </div>
-                        <div class="kc-actual-page-title">
-                            
-                            <h2>@_currentTitle</h2>
-                        </div>
-                        
-                    </div>
-
-                    <div class="kc-mainlayout-content-header--center">
-                        <div class="kc-header-lcd-display">
-                            <LCDDisplay />
-                        </div> 
-                        <span class="kc-sound-button" @onclick="OnMusicClick">
-                            <img class="kc-sound-picture"
-                                 src=@(_isMusicOn ? "images/musicon.webp" : "images/musicoff.webp")
-                                 alt="MusicOn" />
-                        </span>
-                    </div>
-
-
-                    <div class="kc-mainlayout-content-header--right">
-                        <span class="kc-header-greeting">@_Greetings</span>
-                    </div>
+                @if (_loggedIn)
+                    {
+                        <header class="kc-mainlayout-content-header">
+                            <div class="kc-mainlayout-content-header--left-warper">
+                                  <div class="kc-collapse-btn @(!_sidebarCollapsed ? "" : "collapsed")" @onclick="() => ToggleSidebar()">
+                                            <img src="images/logo.webp" alt="Logo" class="nav-logo" />
+                                  </div>
+                                  <div class="kc-mainlayout-content-header--left">
+                                            <div class="kc-back-button @(_backNavigationEna ? "" : "btn-hidden")"
+                                                 @onclick="OnBackClick">
+                                                @("◀")
+                                            </div>
+                                            <div class="kc-actual-page-title">
+                                                <h2>@_currentTitle</h2>
+                                            </div>
+                                        </div>
+                            </div>
+                            <div class="kc-mainlayout-content-header--center">
+                                <div class="kc-header-lcd-display">
+                                    <LCDDisplay />
+                                </div> 
+                                <span class="kc-sound-button" @onclick="OnMusicClick">
+                                    <img class="kc-sound-picture"
+                                         src=@(_isMusicOn ? "images/musicon.webp" : "images/musicoff.webp")
+                                         alt="MusicOn" />
+                                </span>
+                            </div>
+                            <div class="kc-mainlayout-content-header--right">
+                                <span class="kc-header-greeting">@_Greetings</span>
+                            </div>           
+                        </header>
                     }
-                </header>
-            
                 <div class="kc-mainlayout-content-container">
                     <LoaderView />
-                    <CascadingValue Value="UserService">
-                        <CascadingValue Value="Lang">
-                                <CascadingValue Value="LocalStorage" >
-                                    <CascadingValue Value="Nav">
-                                        <CascadingValue Value=NavigateTo>
-                                            @Body
-                                        </CascadingValue>
-                                    </CascadingValue>
-                                </CascadingValue>
-                        </CascadingValue>
+                    <CascadingValue Value=NavigateTo>
+                        @Body
                     </CascadingValue>
                 </div>
             </section>

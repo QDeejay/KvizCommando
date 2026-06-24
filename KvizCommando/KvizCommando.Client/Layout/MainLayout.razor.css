@@ -1,11 +1,12 @@
 ﻿.kc-mainlayout-nav-side {
     flex: 0 0 6%;
     min-width: 60px;
-    z-index: 101;
+    z-index: 100;
 }
     .kc-mainlayout-nav-side.collapsed {
         flex: 0 0 auto;
-        min-width: 0px;
+        width: 0px;
+       display:none;
     }
 
     .kc-mainlayout-content-side {
@@ -16,24 +17,32 @@
 .kc-mainlayout-content-header {
     display: grid;
     position: relative;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns:1fr auto 1fr;
     align-items: center;
     background-color: #0c1f17;
     font-family: 'Special Elite', cursive;
     color: #d3d3d3;
+    border-bottom: 1px solid #004400;
     box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.6);
     height: 60px;
     gap: 0 10px;
     z-index: 100;
-    
+}
+
+.kc-mainlayout-content-header--left-warper {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    height: 100%;
 }
 .kc-mainlayout-content-header--left {
+    width: 100%;
     padding: 0 10px 0 5px;
 }
 
-.kc-mainlayout-content-header--center {
-    justify-self: center;
-}
+    .kc-mainlayout-content-header--center {
+        justify-self: center;
+    }
 
 .kc-mainlayout-content-header--right {
     width: 100%;
@@ -41,29 +50,20 @@
     justify-content: flex-end;
    
 }
-
-
 .kc-mainlayout-content-header--right,
 .kc-mainlayout-content-header--left {
     min-width: 0;
     display: flex;
     align-items: center;
     height: 80%;
-    
-    
 }
 
 .kc-mainlayout-content-header--left,
 .kc-mainlayout-content-header--center,
 .kc-mainlayout-content-header--right {
-   
     box-shadow: inset 0 4px 8px rgba(0,0,0,0.7);
     border: inset 2px rgba(23,23,23,0.4);
 }
-
-
-
-
 
 .kc-back-button {
     display: flex;
@@ -72,7 +72,6 @@
     border-radius: 16px;
     font-size: 1.3rem;
 }
-
     .kc-back-button:hover {
         background-color: rgba(255,255,255,0.1);
         color: whitesmoke;
@@ -95,6 +94,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+
 .kc-mainlayout-content-header--center {
     display: flex;
     flex-direction: row;
@@ -158,27 +158,31 @@ main {
     overflow-y: auto; /* <<< GÖRGETÉS engedélyezése */
 }
 
-
-/*
-.app-title {
-    font-weight: bold;
-    margin: 0;
-    font-size: 1.5rem;
-}
-
-.credit-label {
-    margin-left: 1rem;
-}
-
-.credit-value {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    color: #00ff99;
-    font-weight: bold;
+.kc-collapse-btn {
+    background-color: transparent;
+    border: none;
+    width: 58px;
+    display: none;
 }
 
 
-*/
+.kc-collapse-btn.collapsed {
+    display:flex;
+}
+
+
+.kc-collapse-btn:hover {
+    background-color: rgba(255,255,255,0.1);
+    cursor: url('/Images/cursors/active.cur'), pointer;
+    border: grey 1px solid;
+}
+
+.nav-logo {
+    display: block;
+    width: 60px;
+    height: auto;
+    z-index: 0;
+}
+
 
 

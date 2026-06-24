@@ -214,8 +214,6 @@ namespace KvizCommando.Client.Services.User
         public async Task<(bool Success, List<string> Errors)> CheckInStartAsync(bool needToRoute, CancellationToken ct = default)
         {
             string sessionId = Guid.NewGuid().ToString("N");
-            await _session.SetItemAsync("SessionId", sessionId);
-            _sessionCache.SessionId = sessionId;
 
             var resp = await _http.GetAsync($"{CheckInRoute}?sessionId={sessionId}", ct);
             
@@ -248,6 +246,8 @@ namespace KvizCommando.Client.Services.User
             }
             else
             {
+                await _session.SetItemAsync("SessionId", sessionId);
+                _sessionCache.SessionId = sessionId;
                 await _audio.InitializeAsync();
                 await _home.EnsureLoadedAsync();
                 _audio.EnteredNormal = true;
@@ -261,8 +261,8 @@ namespace KvizCommando.Client.Services.User
         public async Task<(bool Success, List<string> Errors, string SugDispName)> CheckInFinishedAsync(CheckInPostRequest request, CancellationToken ct = default)
         {
             var suggestedName = string.Empty;
-            var sessionId = _sessionCache.SessionId;
-            request.SessionId = sessionId ?? string.Empty;
+            var sessionId = Guid.NewGuid().ToString("N");
+            request.SessionId = sessionId;
             var errors = new List<string> { "DefaultError" };
             var resp = await _http.PostAsJsonAsync(CheckInRoute, request, cancellationToken: ct);        
             var content = await resp.Content.ReadFromJsonAsync<CheckInPostResponse>(ct);

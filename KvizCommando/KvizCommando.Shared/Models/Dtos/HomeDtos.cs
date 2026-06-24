@@ -24,6 +24,7 @@ namespace KvizCommando.Shared.Models.Dtos
 
     public class HomeScreen
     {
+        public bool NavBarEnable { get; set; } = true; 
         public ScreenButtonEntity VsGame { get; set; } = new();
         public ScreenButtonEntity SoloGame { get; set; } = new();
         public ScreenButtonEntity Team { get; set; } = new();

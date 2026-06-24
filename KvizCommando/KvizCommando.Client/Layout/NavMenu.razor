@@ -2,7 +2,7 @@
 @if (_isReady == true)
 {
     <nav class="side-nav @(IsCollapsed ? "collapsed" : "")">
-        <div class="kc-sidenav-collapse-btn" @onclick="() => OnToggleSidebar.InvokeAsync()">
+        <div class="kc-sidenav-collapse-btn@(Hs.NavBarEnable ? "" : "-disabled") @(IsCollapsed ? "collapsed" : "")" @onclick="() => OnToggleSidebar.InvokeAsync()">
             <img src="images/logo.webp" alt="Logo" class="nav-logo" />
         </div>
         @if (!IsCollapsed)

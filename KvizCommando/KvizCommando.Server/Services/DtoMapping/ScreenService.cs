@@ -82,6 +82,7 @@ namespace KvizCommando.Server.Services.DtoMapping
 
             var homeScreen = new HomeScreen
             {
+                NavBarEnable = true,
                 Team = new ScreenButtonEntity
                 {
                     Enable = true,
