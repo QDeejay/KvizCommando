@@ -16,8 +16,6 @@ using Microsoft.AspNetCore.Components;
 using System.Globalization;
 using System.IO;
 using static System.Net.WebRequestMethods;
-using Microsoft.AspNetCore.Components;
-
 namespace KvizCommando.Client.Pages.Home;
 
 public partial class Home : ComponentBase, IDisposable
@@ -68,6 +66,7 @@ public partial class Home : ComponentBase, IDisposable
         {
             _boxesDict![box.Key] = box.Value;
         }
+        _boxesDict![HomeBoxKey.InfoBoard.ToString()].Size = bboardSize;
         _isReady = true && _isLoaded;
         Console.WriteLine("djfpsadjfo");
     }

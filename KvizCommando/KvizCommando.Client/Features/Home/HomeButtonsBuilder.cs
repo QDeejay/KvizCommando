@@ -26,9 +26,10 @@ public static class HomeButtonsBuilder
                 ReSizable = string.IsNullOrEmpty(spec.Size),
                 ShowImage = !string.IsNullOrEmpty(spec.ImageSrc),
                 ImageSrc = spec.ImageSrc,
+                BgImageSrc = spec.BgImageSrc,
                 IsEnabled = btn.Enable,
                 ClickId = spec.ClickId,
-                IsClickable = spec.ClickId > 0,
+                IsClickable = spec.ClickId > 0 && btn.Enable,
                 LcdDisplay = spec.LcdBackground && string.IsNullOrEmpty(spec.ImageSrc) && spec.ClickId == 0
             };
            

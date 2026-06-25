@@ -14,19 +14,10 @@
                 @foreach (string bx in BoxOrder)
                     {
                         var box = Box(bx);
-                            <ContentBox Header="@box.Header"
-                                        Footer="@box.Footer"
-                                        FooterDisplay="@box.FooterDisplay"
-                                        Size="@(box.ReSizable ? bboardSize : box.Size)"
-                                        Resizable="@box.ReSizable"
-                                        ShowImage="@box.ShowImage"
-                                        ImageSrc="@box.ImageSrc"
-                                        LcdDisplay="@box.LcdDisplay"
-                                        IsEnabled="@box.IsEnabled"
-                                        ClickId="@box.ClickId"
-                                        IsClickable="@box.IsClickable"
-                                        OnClick="OnBoxClick"
-                                        FooterClick="CloseBBoard">
+               
+                    <ContentBox Vm="@box"
+                                OnClick="OnBoxClick"
+                                FooterClick="CloseBBoard">
                                         <div class="bboard-item">
                                             @BboardHTML
                                         </div>    
