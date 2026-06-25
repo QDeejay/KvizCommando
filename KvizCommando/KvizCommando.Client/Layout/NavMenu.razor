@@ -13,22 +13,22 @@
                 <span>@Lang["nav.Button.Home"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[1] href="question" @onclick="() => OnNavClick(1)" Match="NavLinkMatch.All">
+            <NavLink class=@btnNavClass[1] href="question" @onclick="() => OnNavClick(2)" Match="NavLinkMatch.All">
                 <i class="bi bi-person-badge-fill"></i>
                 <span>@Lang["nav.Button.Team"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[2] href="team" @onclick="() => OnNavClick(2)" Match=" NavLinkMatch.All">
+            <NavLink class=@btnNavClass[2] href="team" @onclick="() => OnNavClick(1)" Match=" NavLinkMatch.All">
                 <i class="bi bi-patch-question"></i>
                 <span>@Lang["nav.Button.Question"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[3] href="solo" @onclick="() => OnNavClick(3)" Match=" NavLinkMatch.All">
+            <NavLink class=@btnNavClass[3] href="solo" @onclick="() => OnNavClick(4)" Match=" NavLinkMatch.All">
                 <i class="bi bi-controller"></i>
                 <span>@Lang["nav.Button.Game"]</span>
             </NavLink>
-            <NavLink class=@btnNavClass[3] href="gamevs" @onclick="() => OnNavClick(4)" Match=" NavLinkMatch.All">
-                <i class="bi bi-controller"></i>
+            <NavLink class=@btnNavClass[3] href="gamevs" @onclick="() => OnNavClick(3)" Match=" NavLinkMatch.All">
+                <i class="bi bi-controller"></i><i class="bi bi-controller"></i>
                 <span>@Lang["nav.Button.Game"] VS</span>
             </NavLink>
 

@@ -10,11 +10,11 @@
 
         public event Action? OnTitleChanged;
 
-        public void SetTitle(string title, int backNavigation, int rank)
+        public void SetTitle(string title, int currentPage, int rank)
         {
             PrevPage = NavPage;
             Title = title;
-            NavPage = backNavigation;
+            NavPage = currentPage;
             Rank = rank>=0 ? rank : Rank;
             OnTitleChanged?.Invoke();
         }

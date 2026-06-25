@@ -53,7 +53,7 @@ namespace KvizCommando.Client.Layout
         {
             ActPageGroup = btn;
             if (OnClickedNavButton.HasDelegate)
-            await OnClickedNavButton.InvokeAsync(btn);
+               await OnClickedNavButton.InvokeAsync(btn);
         }
     }
 }

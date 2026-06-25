@@ -43,11 +43,9 @@ namespace KvizCommando.Client.Layout
         private bool _backNavigationEna => _sidebarCollapsed ? PageTitle.NavPage > 0 : PageTitle.NavPage > 99;
         private HomeScreen Hs => _loggedIn ? HomeState.HomeScreen! : new HomeScreen() {  };
         protected override async Task OnInitializedAsync()
-
         {
             _isReady = false;
             Console.WriteLine($"[{this}] has been started");
-         
             var culture = await LocalStorage.GetItemAsync<string>("userLang");
             if (string.IsNullOrWhiteSpace(culture))
             {
@@ -60,7 +58,6 @@ namespace KvizCommando.Client.Layout
             await Lang.LoadModuleAsync(_culture, "common");  // szükséges
             await Lang.LoadModuleAsync(_culture, "mainlayout");  // szükséges
             await Lang.LoadModuleAsync(_culture, "home");
-
             var sessionId = await SessionStorage.GetItemAsync<string>("SessionId");
             if (!string.IsNullOrWhiteSpace(sessionId))
             {
@@ -69,8 +66,6 @@ namespace KvizCommando.Client.Layout
                 _loggedIn = true;
             }
             else { _loggedIn = false; }
-             
-
             if (Audio.EnteredNormal)
             {
                 Console.WriteLine("Playing music because EnteredNormal is true.");
@@ -85,14 +80,6 @@ namespace KvizCommando.Client.Layout
             PageTitle.OnTitleChanged += UpdateTitle;
             _isReady = true;
         }
-        protected override void OnInitialized()
-        {
-           // _currentTitle = PageTitle.Title;
-           // var rankName = PageTitle.Rank>=0 ? RankNameLocalizer.GetName(PageTitle.Rank, culture) : "";
-           // _Greetings = Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
-           // 
-
-        }
         private void UpdateTitle()
         {
             _currentTitle = PageTitle.Title;
@@ -100,12 +87,7 @@ namespace KvizCommando.Client.Layout
             _Greetings = Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
             _ = InvokeAsync(StateHasChanged);
         }
-        private void HeadDisplayUpdate()
-        {
-
-            _ = InvokeAsync(StateHasChanged);
-        }
-        protected async Task OnMusicClick()
+        private async Task OnMusicClick()
         {
             _isMusicOn = !_isMusicOn;
             if (Audio.EnteredNormal)
@@ -119,6 +101,10 @@ namespace KvizCommando.Client.Layout
             }
 
         }
+
+
+
+
         protected void OnBackClick()
         {
             OnSelect(PageTitle!.PrevPage);
@@ -129,17 +115,36 @@ namespace KvizCommando.Client.Layout
             NavigateTo = selected;
 
         }
+
+
+
         public void Dispose()
         {
             PageTitle.OnTitleChanged -= UpdateTitle; // <-- a helyes handlerre iratkozunk le
             GC.SuppressFinalize(this);
         }
-        public async void Logout()
+        public async Task Logout()
         {
-           
-            await Task.Delay(1);
             await UserService.LogoutAsync(false);
             Console.WriteLine("User logged out.");
         }
     }
 }
+/*
+ 
+
+        private void HeadDisplayUpdate()
+        {
+
+            _ = InvokeAsync(StateHasChanged);
+        }
+   protected override void OnInitialized()
+        {
+           // _currentTitle = PageTitle.Title;
+           // var rankName = PageTitle.Rank>=0 ? RankNameLocalizer.GetName(PageTitle.Rank, culture) : "";
+           // _Greetings = Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
+           // 
+
+        }
+ 
+ */

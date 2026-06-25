@@ -1,6 +1,6 @@
 ﻿
 /* === KÖZÉP === */
-.layout-center {
+.kc-start-layout {
     position: fixed;
     top: 0;
     display: flex;
@@ -10,7 +10,7 @@
     min-width: 100%;
 }
 /* A középre igazított fix főkonténer */
-.main-container {
+.kc-start-main-container {
     display: flex;
     flex-direction: column;
     border-radius: 22px;
@@ -24,8 +24,7 @@
     position: relative;
     align-items: center;
 }
-/* BAL OLDAL: LOGO */
-.logo {
+.kc-start-logo {
     display:flex;
     height:stretch;
     width:500px;
@@ -33,8 +32,7 @@
     border-radius: 12px;
 }
 
-/* JOBB OLDAL: BODY TARTALOM */
-.content-body {
+.kc-start-content-body {
     flex: 1;
     color: white;
     width:100%;
@@ -42,9 +40,7 @@
     padding:5px;
 }
 
-
-
-.login-panel {
+.kc-start-login-panel {
     display:flex;
     position:relative;
     flex-direction:column;
@@ -53,27 +49,25 @@
     width:85%;
 }
 
-/* HEAD border-radius: 6px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);/*/
-.login-head {
+.kc-start-login-panel--head {
     text-align: center;
 }
-
 /* FOOTER */
-.login-footer {
+.kc-start-login-panel--footer {
     display: flex;
     justify-content: center;
 }
-@media (max-width: 500px), (max-height: 382px) {
-    .layout-center {
+
+@media (max-width: 420px), (max-height: 382px) {
+    .kc-start-layout {
         align-items: start;
-        top:70px;
+        top: 70px;
     }
-        .main-container {
+    .kc-start-main-container {
         width: 260px;
         height: 480px;
     }
-    .logo {
+    .kc-start-logo {
         width: 380px;
     }
 }

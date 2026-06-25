@@ -46,7 +46,6 @@ public partial class Home : ComponentBase, IDisposable
             oldNavTo = NavTo;
             OnBoxClick(NavTo);
         }
-        base.OnParametersSet();
     }
 
 
@@ -87,7 +86,6 @@ public partial class Home : ComponentBase, IDisposable
     }
     private void OnBoxClick(int boxId)
     {
-        // kattintás kezelése
         Console.WriteLine($"Box {boxId} kattintva.");
         _isReady = false;
         var title = Lang["mainlayout.Header.Home"];
@@ -103,19 +101,15 @@ public partial class Home : ComponentBase, IDisposable
             case 2:
                 ActualPage = "team";
                 title = Lang["mainlayout.Header.Team"];
-                //Nav.NavigateTo("/team");
                 break;
             case 3:
                 ActualPage = "vs";
-                //Nav.NavigateTo("/solo");
                 break;
             case 4:
                 ActualPage = "solo";
                 title = Lang["mainlayout.Header.GameSolo"];
                 BoxOrder = BxOrdSolo.Root;
-                //Nav.NavigateTo("/solo");
                 break;
-            //Nav.NavigateTo("/question");
             case 401: BoxOrder = BxOrdSolo.Cat;
                 title = _boxesDict![SgameBoxKeyRoot.RtBtnCategory.ToString()].Header;
                 break;
