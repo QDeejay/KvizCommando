@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Threading.Tasks;
 
 
@@ -18,12 +19,12 @@ namespace KvizCommando.Client.Pages.Solo
 {
     public partial class SoloGame : ComponentBase
     {
-        [Inject] protected PageTitleService PageTitle { get; set; } = default!;
-       
-        [Inject] protected ILanguageService Lang { get; set; } = default!;
+        [Inject] private PageHeaderService Header { get; set; } = default!;
 
-        [Inject] protected ISoloState SoloState { get; set; } = default!;
-        [Inject] protected IApiService TeamApi { get; set; } = default!;
+        [Inject] private ILanguageService Lang { get; set; } = default!;
+
+        [Inject] private ISoloState SoloState { get; set; } = default!;
+        [Inject] private IApiService TeamApi { get; set; } = default!;
 
         private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         private bool _isLoaded = false;
@@ -80,8 +81,7 @@ namespace KvizCommando.Client.Pages.Solo
         {
             
             await SoloState.EnsureLoadedAsync();
-            PageTitle.SetTitle(Lang["mainlayout.Header.GameSolo"],3, -1);
-            //_isLoaded = true;
+            Header.SetTitle(Lang["mainlayout.Header.GameSolo"],4);
             if (_isLoaded==false)
                 {
                     BuildButtons();

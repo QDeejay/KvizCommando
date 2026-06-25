@@ -16,39 +16,23 @@ using Microsoft.AspNetCore.Components;
 using System.Globalization;
 using System.IO;
 using static System.Net.WebRequestMethods;
+using Microsoft.AspNetCore.Components;
 
 namespace KvizCommando.Client.Pages.Home;
 
 public partial class Home : ComponentBase, IDisposable
 {
    
-    [CascadingParameter] private int NavTo { get; set; } = default!;
-    // [Inject] protected NavigationManager Nav { get; set; } = default!;
-    // [Inject] protected IScreenApiService HomeApi { get; set; } = default!;
-
     [Inject] private ILanguageService Lang { get; set; } = default!;
     [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
     [Inject] private IHomeState HomeState { get; set; } = default!;
     [Inject] private IQuestionState QuestionState { get; set; } = default!;
     [Inject] private ITeamState TeamState { get; set; } = default!;
     [Inject] private ISoloState SoloState { get; set; } = default!;
-    [Inject] private PageTitleService PageTitle { get; set; } = default!;
+    [Inject] private PageHeaderService Header { get; set; } = default!;
     [Inject] private HttpClient Http { get; set; } = default!;
     [Inject] private IDisplayMessageState DisplayState { get; set; } = default!;
    
-
-    private int oldNavTo { get; set; } = -1;
-
-    protected override void OnParametersSet()
-    {
-        if (oldNavTo != NavTo)
-        {
-            oldNavTo = NavTo;
-            OnBoxClick(NavTo);
-        }
-        base.OnParametersSet();
-    }
-
 
     private readonly string Minimal = "minimalized";
     private readonly string large = "large";
@@ -58,6 +42,7 @@ public partial class Home : ComponentBase, IDisposable
 
 
     private string ActualPage = "home";
+    private int _actualPageNo = 0; 
     private MarkupString BboardHTML = new();
     private bool _isReady = false;
     private bool _isLoaded = false;
@@ -84,17 +69,18 @@ public partial class Home : ComponentBase, IDisposable
             _boxesDict![box.Key] = box.Value;
         }
         _isReady = true && _isLoaded;
+        Console.WriteLine("djfpsadjfo");
     }
     private void OnBoxClick(int boxId)
     {
-        // kattintás kezelése
         Console.WriteLine($"Box {boxId} kattintva.");
         _isReady = false;
         var title = Lang["mainlayout.Header.Home"];
         switch (boxId)
         {
             case 0: ActualPage = "home";
-                BoxOrder = BxOrdHome.Root;
+                
+            BoxOrder = BxOrdHome.Root;
                 break;
             case 1: ActualPage = "question";
                 title = Lang["mainlayout.Header.Question"];
@@ -103,19 +89,15 @@ public partial class Home : ComponentBase, IDisposable
             case 2:
                 ActualPage = "team";
                 title = Lang["mainlayout.Header.Team"];
-                //Nav.NavigateTo("/team");
                 break;
             case 3:
                 ActualPage = "vs";
-                //Nav.NavigateTo("/solo");
                 break;
             case 4:
                 ActualPage = "solo";
                 title = Lang["mainlayout.Header.GameSolo"];
                 BoxOrder = BxOrdSolo.Root;
-                //Nav.NavigateTo("/solo");
                 break;
-            //Nav.NavigateTo("/question");
             case 401: BoxOrder = BxOrdSolo.Cat;
                 title = _boxesDict![SgameBoxKeyRoot.RtBtnCategory.ToString()].Header;
                 break;
@@ -123,9 +105,12 @@ public partial class Home : ComponentBase, IDisposable
                 title = _boxesDict![SgameBoxKeyRoot.RtBtnOrient.ToString()].Header;
                 break;
         }
+       
+        
+        Header.SetTitle(title,boxId);
+        Header.SetBackBtnEna(boxId>99);
+        _actualPageNo = boxId;
         BuildButtons(ActualPage);
-        PageTitle.SetTitle(title, boxId, -1);
-
     }
     private async Task CloseBBoard()
     {
@@ -151,7 +136,8 @@ public partial class Home : ComponentBase, IDisposable
         {
             bboardSize = Minimal;
         }
-        PageTitle.SetTitle(Lang["mainlayout.Header.Home"], 0, HomeState.UserMainData!.RankEnum);
+        Header.SetTitle(Lang["mainlayout.Header.Home"],0);
+        Header.SetRank (HomeState.UserMainData!.RankEnum);
         UpdateLedDisplay();
         //await Loader.HideAsync();
         ActualPage = "home";
@@ -159,11 +145,21 @@ public partial class Home : ComponentBase, IDisposable
         _isLoaded = true;
         if (_isReady == false)
             BuildButtons(ActualPage);
+
+        Header.OnBackBtnClicked += UpdateBckClick;
+
     }
     protected override void OnInitialized()
     {
     }
-
+    private void UpdateBckClick()
+    {
+        int navigateTo = _actualPageNo < 99 ? 0 : _actualPageNo / 100;
+        Console.WriteLine($"Navigate to: {navigateTo}");
+        _isReady = false;
+        OnBoxClick(navigateTo);
+        InvokeAsync(StateHasChanged);
+    }
     private void UpdateLedDisplay()
     {
         var main = HomeState.UserMainData!;
@@ -184,8 +180,7 @@ public partial class Home : ComponentBase, IDisposable
     }
     public void Dispose()
     {
-        oldNavTo = -1;
-        _isLoaded = false;
+        Header.OnBackBtnClicked -= UpdateBckClick;
         GC.SuppressFinalize(this);
     }
 }

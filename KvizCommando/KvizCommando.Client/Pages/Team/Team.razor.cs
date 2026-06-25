@@ -16,11 +16,11 @@ namespace KvizCommando.Client.Pages.Team
 {
     public partial class Team : ComponentBase
     {
-        [Inject] protected PageTitleService PageTitle { get; set; } = default!;
+        [Inject] private PageHeaderService PageHeader{ get; set; } = default!;
       
-        [Inject] protected ILanguageService Lang { get; set; } = default!;
-        [Inject] protected ITeamState TeamState { get; set; } = default!;
-        [Inject] protected IApiService TeamApi { get; set; } = default!;
+        [Inject] private ILanguageService Lang { get; set; } = default!;
+        [Inject] private ITeamState TeamState { get; set; } = default!;
+        [Inject] private IApiService TeamApi { get; set; } = default!;
 
         private IGeneralInfo _generalInfo { get; set; } = default!;
         private TeamMemberDto SelectedMember { get; set; } = new TeamMemberDto();
@@ -46,7 +46,7 @@ namespace KvizCommando.Client.Pages.Team
         {
             
             await TeamState.EnsureLoadedAsync();
-            PageTitle.SetTitle(Lang["mainlayout.Header.Team"],1, -1);
+            PageHeader.SetTitle(Lang["mainlayout.Header.Team"],2);
             _generalInfo = TeamState.TeamInfo ?? new ExtendedInfo();
             _isLoaded = true;
             RecruitMixer.Shuffle();

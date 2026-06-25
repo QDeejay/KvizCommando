@@ -95,7 +95,7 @@ builder.Services.AddScoped<ITeamState, TeamState>();
 builder.Services.AddScoped<ISoloState, SoloState>();
 builder.Services.AddSingleton<ICategoryLookupService, StaticCategoryLookupService>();
 
-builder.Services.AddScoped<PageTitleService>();
+builder.Services.AddScoped<PageHeaderService>();
 builder.Services.AddScoped<IdentityRulesService>();
 builder.Services.AddBlazoredSessionStorage();
 

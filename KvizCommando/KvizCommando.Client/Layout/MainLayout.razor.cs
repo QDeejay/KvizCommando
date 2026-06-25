@@ -11,9 +11,11 @@ using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Services.Visual;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using System.Globalization;
 using System.Reflection.Emit;
+using System.Reflection.PortableExecutable;
 
 namespace KvizCommando.Client.Layout
 {
@@ -24,7 +26,7 @@ namespace KvizCommando.Client.Layout
         [Inject] private ISessionStorageService SessionStorage { get; set; } = default!;
         [Inject] private NavigationManager Nav { get; set; } = default!;
         [Inject] private SessionService SessionService { get; set; } = default!;
-        [Inject] private PageTitleService PageTitle { get; set; } = default!;
+        [Inject] private PageHeaderService Header { get; set; } = default!;
         [Inject] private IDisplayMessageState DisplayState { get; set; } = default!;
         [Inject] private IHomeState HomeState { get; set; } = default!;
         [Inject] private IUserService UserService { get; set; } = default!;
@@ -34,20 +36,19 @@ namespace KvizCommando.Client.Layout
         private bool _isReady = false;
         private bool _loggedIn = false;
         private bool _isMusicOn;
+        private bool _bckBtnEna = false;
         private string? _currentTitle = string.Empty;
         private bool _sidebarCollapsed = false;
         private string? _Greetings = string.Empty;
         private int NavigateTo = 0;
 
         private void ToggleSidebar() => _sidebarCollapsed = (!_sidebarCollapsed && _loggedIn);
-        private bool _backNavigationEna => _sidebarCollapsed ? PageTitle.NavPage > 0 : PageTitle.NavPage > 99;
+        private bool _backNavigationEna => (_sidebarCollapsed && Header.PageIndex!=0) || _bckBtnEna;
         private HomeScreen Hs => _loggedIn ? HomeState.HomeScreen! : new HomeScreen() {  };
         protected override async Task OnInitializedAsync()
-
         {
             _isReady = false;
             Console.WriteLine($"[{this}] has been started");
-         
             var culture = await LocalStorage.GetItemAsync<string>("userLang");
             if (string.IsNullOrWhiteSpace(culture))
             {
@@ -60,7 +61,6 @@ namespace KvizCommando.Client.Layout
             await Lang.LoadModuleAsync(_culture, "common");  // szükséges
             await Lang.LoadModuleAsync(_culture, "mainlayout");  // szükséges
             await Lang.LoadModuleAsync(_culture, "home");
-
             var sessionId = await SessionStorage.GetItemAsync<string>("SessionId");
             if (!string.IsNullOrWhiteSpace(sessionId))
             {
@@ -69,8 +69,6 @@ namespace KvizCommando.Client.Layout
                 _loggedIn = true;
             }
             else { _loggedIn = false; }
-             
-
             if (Audio.EnteredNormal)
             {
                 Console.WriteLine("Playing music because EnteredNormal is true.");
@@ -82,30 +80,29 @@ namespace KvizCommando.Client.Layout
                 Console.WriteLine("Not playing music because EnteredNormal is false.");
             }
 
-            PageTitle.OnTitleChanged += UpdateTitle;
+            Header.OnTitleChanged += UpdateTitle;
+            Header.OnRankChanged += UpdateRank;
+            Header.OnBackBtnEnaChanged += UpdateBackBtnEna;
+            
             _isReady = true;
-        }
-        protected override void OnInitialized()
-        {
-           // _currentTitle = PageTitle.Title;
-           // var rankName = PageTitle.Rank>=0 ? RankNameLocalizer.GetName(PageTitle.Rank, culture) : "";
-           // _Greetings = Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
-           // 
-
         }
         private void UpdateTitle()
         {
-            _currentTitle = PageTitle.Title;
-            var rankName = PageTitle.Rank >= 0 ? RankNameLocalizer.GetName(PageTitle.Rank, _culture) : "";
+            _currentTitle = Header.Title;
+            _ = InvokeAsync(StateHasChanged);
+        }
+        private void UpdateRank() 
+        {
+            var rankName = RankNameLocalizer.GetName(Header.Rank, _culture);
             _Greetings = Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
             _ = InvokeAsync(StateHasChanged);
         }
-        private void HeadDisplayUpdate()
+        private void UpdateBackBtnEna() 
         {
-
-            _ = InvokeAsync(StateHasChanged);
+            _bckBtnEna = Header.BackEna;
+            InvokeAsync(StateHasChanged);
         }
-        protected async Task OnMusicClick()
+        private async Task OnMusicClick()
         {
             _isMusicOn = !_isMusicOn;
             if (Audio.EnteredNormal)
@@ -119,9 +116,9 @@ namespace KvizCommando.Client.Layout
             }
 
         }
-        protected void OnBackClick()
+        private void OnBackClick()
         {
-            OnSelect(PageTitle!.PrevPage);
+            Header.SetBackBtnToPushState();
             Console.WriteLine("Back button clicked.");
         }
         private void OnSelect(int selected)
@@ -129,17 +126,38 @@ namespace KvizCommando.Client.Layout
             NavigateTo = selected;
 
         }
+
+
+
         public void Dispose()
         {
-            PageTitle.OnTitleChanged -= UpdateTitle; // <-- a helyes handlerre iratkozunk le
+            Header.OnTitleChanged -= UpdateTitle;
+            Header.OnRankChanged -= UpdateRank;
+            Header.OnBackBtnEnaChanged -= UpdateBackBtnEna; // <-- a helyes handlerre iratkozunk le
             GC.SuppressFinalize(this);
         }
-        public async void Logout()
+        public async Task Logout()
         {
-           
-            await Task.Delay(1);
             await UserService.LogoutAsync(false);
             Console.WriteLine("User logged out.");
         }
     }
 }
+/*
+ 
+
+        private void HeadDisplayUpdate()
+        {
+
+            _ = InvokeAsync(StateHasChanged);
+        }
+   protected override void OnInitialized()
+        {
+           // _currentTitle = PageTitle.Title;
+           // var rankName = PageTitle.Rank>=0 ? RankNameLocalizer.GetName(PageTitle.Rank, culture) : "";
+           // _Greetings = Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
+           // 
+
+        }
+ 
+ */

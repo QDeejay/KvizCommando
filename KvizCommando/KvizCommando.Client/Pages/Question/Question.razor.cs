@@ -19,7 +19,7 @@ namespace KvizCommando.Client.Pages.Question
 {
     public partial class Question : ComponentBase, IDisposable
     {
-        [Inject] private PageTitleService PageTitle { get; set; } = default!;
+        [Inject] private PageHeaderService Header { get; set; } = default!;
         
         [Inject] private ILanguageService Lang { get; set; } = default!;
         [Inject] private IQuestionState QuestionState { get; set; } = default!;
@@ -83,7 +83,7 @@ namespace KvizCommando.Client.Pages.Question
             }
             else renderHTML = new MarkupString(string.Empty);
 
-            PageTitle.SetTitle(Lang["mainlayout.Header.Question"],101,-1);
+            Header.SetTitle(Lang["mainlayout.Header.Question"],1);
 
             (OriginalCodes, WorkingCodes) = QuestionHelper.CloneFactorySlots(QuestionState.FactorySlots);
        

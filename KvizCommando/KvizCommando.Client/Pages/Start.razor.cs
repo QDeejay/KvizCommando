@@ -14,9 +14,7 @@ namespace KvizCommando.Client.Pages
     public partial class Start : ComponentBase, IDisposable
     {
         [Inject] private ILanguageService Lang { get; set; } = default!;
-
         [Inject] private NavigationManager Nav { get; set; } = default!;
-
         [Inject] private IUserService UserService { get; set; } = default!;
 
         private readonly string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
@@ -27,7 +25,7 @@ namespace KvizCommando.Client.Pages
             await Task.Delay(500);
             _isLoaded = true;
         }
-        protected async Task LoginUser() 
+        private async Task LoginUser() 
         {
             
             try 

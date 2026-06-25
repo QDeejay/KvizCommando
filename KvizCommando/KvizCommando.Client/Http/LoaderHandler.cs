@@ -13,9 +13,17 @@ namespace KvizCommando.Client.Http
          HttpRequestMessage request,
          CancellationToken cancellationToken)
         {
-            _loader.Trigger();
-            var response = await base.SendAsync(request, cancellationToken);
-            return response;
+           
+            try 
+            {
+                _loader.Trigger();
+                var response = await base.SendAsync(request, cancellationToken);
+                return response;
+            } 
+            finally 
+            {
+                _loader.Hide(); 
+            }
         }
 
 
