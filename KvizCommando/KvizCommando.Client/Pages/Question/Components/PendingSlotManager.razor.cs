@@ -1,4 +1,5 @@
-﻿using KvizCommando.Client.Services.Language;
+﻿using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
@@ -6,9 +7,9 @@ using System.Globalization;
 
 namespace KvizCommando.Client.Pages.Question.Components
 {
-    public partial class PendingSlotManager : ComponentBase
+    public partial class PendingSlotManager : IDisposable
     {
-        [Inject] protected ILanguageService Lang { get; set; } = default!;
+        [Inject] private ILanguageService Lang { get; set; } = default!;
 
         [Parameter] public QuestionExtendedInfo ExtInfo { get; set; } = default!;
         [Parameter] public PendingSlot[] Slots { get; set; } = default!;
@@ -46,7 +47,7 @@ namespace KvizCommando.Client.Pages.Question.Components
             await SelectedIdChanged.InvokeAsync(id);
             Console.WriteLine($"Selected:{SelectedId}");
         }
-        protected void Dispose()
+        public void Dispose()
         {
             HandleSlot = default;
             SelectedIdChanged = default;

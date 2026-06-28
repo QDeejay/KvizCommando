@@ -1,4 +1,4 @@
-﻿namespace KvizCommando.Client.Services.Language
+﻿namespace KvizCommando.Client.Services.Visual.UiService.Language
 {
     public interface ILanguageService
     {

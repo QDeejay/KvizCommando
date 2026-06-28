@@ -3,7 +3,7 @@ using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.DataModels;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Pages.Team;
-using KvizCommando.Client.Services.Language;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.Extensions.Primitives;

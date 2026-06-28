@@ -88,7 +88,6 @@ namespace KvizCommando.Client.Services.User
                 _nav.NavigateTo("/", forceLoad: true);
             }
         }
-
         public async Task<bool> ConfirmEmailAsync(string userId, string code)
         {
 
@@ -114,7 +113,6 @@ namespace KvizCommando.Client.Services.User
             }
 
         }
-
         public async Task<bool> ForgotPswAsync(ForgotPasswordRequestForm formData)
         {
             // 
@@ -267,7 +265,7 @@ namespace KvizCommando.Client.Services.User
             var resp = await _http.PostAsJsonAsync(CheckInRoute, request, cancellationToken: ct);        
             var content = await resp.Content.ReadFromJsonAsync<CheckInPostResponse>(ct);
 
-            if (resp.IsSuccessStatusCode && content.Success == true )
+            if (resp.IsSuccessStatusCode && content!.Success == true )
                 return (true, new List<string>(),"");
 
             if (content is null)
@@ -275,7 +273,7 @@ namespace KvizCommando.Client.Services.User
 
             suggestedName = content?.SuggestedDisplayName ?? string.Empty;
 
-            return (false, content.Errors ?? errors, suggestedName);
+            return (false, content!.Errors ?? errors, suggestedName);
         }
     }
 }

@@ -2,13 +2,15 @@
 using Blazored.SessionStorage;
 using CsvHelper.Configuration.Attributes;
 using KvizCommando.Client.Data;
+using KvizCommando.Client.Features.Question;
 using KvizCommando.Client.Helpers;
+using KvizCommando.Client.Pages.Shared;
 using KvizCommando.Client.Services;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
-using KvizCommando.Client.Services.Language;
 using KvizCommando.Client.Services.User;
-using KvizCommando.Client.Services.Visual;
+using KvizCommando.Client.Services.Visual.UiService;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -16,21 +18,26 @@ using Microsoft.JSInterop;
 using System.Globalization;
 using System.Reflection.Emit;
 using System.Reflection.PortableExecutable;
+using System.Security.AccessControl;
 
 namespace KvizCommando.Client.Layout
 {
-    public partial class MainLayout : LayoutComponentBase, IDisposable
+    public partial class MainLayout : KcLayoutComponentBase, IDisposable
     {
-        [Inject] private ILanguageService Lang { get; set; } = default!;
+        //[Inject] private ILanguageService Lang { get; set; } = default!;
         [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
         [Inject] private ISessionStorageService SessionStorage { get; set; } = default!;
-        [Inject] private NavigationManager Nav { get; set; } = default!;
+        //[Inject] private NavigationManager Nav { get; set; } = default!;
         [Inject] private SessionService SessionService { get; set; } = default!;
-        [Inject] private PageHeaderService Header { get; set; } = default!;
-        [Inject] private IDisplayMessageState DisplayState { get; set; } = default!;
+        //[Inject] private PageHeaderService Header { get; set; } = default!;
+        //[Inject] private ModalService Modal { get; set; } = default!;   
+        //[Inject] private IDisplayMessageState DisplayState { get; set; } = default!;
         [Inject] private IHomeState HomeState { get; set; } = default!;
-        [Inject] private IUserService UserService { get; set; } = default!;
+        //[Inject] private IUserService User { get; set; } = default!;
         [Inject] private AudioService Audio { get; set; } = default!;
+
+        private KcModal? _mainModal;
+        private ModalPar _modalPar = new();
 
         private string _culture = "hu";
         private bool _isReady = false;
@@ -43,7 +50,7 @@ namespace KvizCommando.Client.Layout
         private int NavigateTo = 0;
 
         private void ToggleSidebar() => _sidebarCollapsed = (!_sidebarCollapsed && _loggedIn);
-        private bool _backNavigationEna => (_sidebarCollapsed && Header.PageIndex!=0) || _bckBtnEna;
+        private bool _backNavigationEna => (_sidebarCollapsed && Ui.Header.PageIndex!=0) || _bckBtnEna;
         private HomeScreen Hs => _loggedIn ? HomeState.HomeScreen! : new HomeScreen() {  };
         protected override async Task OnInitializedAsync()
         {
@@ -58,9 +65,9 @@ namespace KvizCommando.Client.Layout
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(culture);
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(culture);
             _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-            await Lang.LoadModuleAsync(_culture, "common");  // szükséges
-            await Lang.LoadModuleAsync(_culture, "mainlayout");  // szükséges
-            await Lang.LoadModuleAsync(_culture, "home");
+            await Ui.Lang.LoadModuleAsync(_culture, "common");  // szükséges
+            await Ui.Lang.LoadModuleAsync(_culture, "mainlayout");  // szükséges
+            await Ui.Lang.LoadModuleAsync(_culture, "home");
             var sessionId = await SessionStorage.GetItemAsync<string>("SessionId");
             if (!string.IsNullOrWhiteSpace(sessionId))
             {
@@ -80,26 +87,32 @@ namespace KvizCommando.Client.Layout
                 Console.WriteLine("Not playing music because EnteredNormal is false.");
             }
 
-            Header.OnTitleChanged += UpdateTitle;
-            Header.OnRankChanged += UpdateRank;
-            Header.OnBackBtnEnaChanged += UpdateBackBtnEna;
             
             _isReady = true;
         }
+        protected override void OnInitialized()
+        {
+            Ui.Header.OnTitleChanged += UpdateTitle;
+            Ui.Header.OnRankChanged += UpdateRank;
+            Ui.Header.OnBackBtnEnaChanged += UpdateBackBtnEna;
+            Ui.Modal.OnModalShow += ShowModal;
+            Ui.Modal.OnModalHide += HideModal;
+
+        }
         private void UpdateTitle()
         {
-            _currentTitle = Header.Title;
+            _currentTitle = Ui.Header.Title;
             _ = InvokeAsync(StateHasChanged);
         }
         private void UpdateRank() 
         {
-            var rankName = RankNameLocalizer.GetName(Header.Rank, _culture);
-            _Greetings = Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
+            var rankName = RankNameLocalizer.GetName(Ui.Header.Rank, _culture);
+            _Greetings = Ui.Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
             _ = InvokeAsync(StateHasChanged);
         }
         private void UpdateBackBtnEna() 
         {
-            _bckBtnEna = Header.BackEna;
+            _bckBtnEna = Ui.Header.BackEna;
             InvokeAsync(StateHasChanged);
         }
         private async Task OnMusicClick()
@@ -118,27 +131,31 @@ namespace KvizCommando.Client.Layout
         }
         private void OnBackClick()
         {
-            Header.SetBackBtnToPushState();
+            Ui.Header.SetBackBtnToPushState();
             Console.WriteLine("Back button clicked.");
         }
-        private void OnSelect(int selected)
+
+        private void ShowModal()
         {
-            NavigateTo = selected;
-
+            _modalPar = Ui.Modal.Parameter!;
+            StateHasChanged();
         }
-
+        private void HideModal() 
+        { }
 
 
         public void Dispose()
         {
-            Header.OnTitleChanged -= UpdateTitle;
-            Header.OnRankChanged -= UpdateRank;
-            Header.OnBackBtnEnaChanged -= UpdateBackBtnEna; // <-- a helyes handlerre iratkozunk le
+            Ui.Header.OnTitleChanged -= UpdateTitle;
+            Ui.Header.OnRankChanged -= UpdateRank;
+            Ui.Header.OnBackBtnEnaChanged -= UpdateBackBtnEna; // <-- a helyes handlerre iratkozunk le
+            Ui.Modal.OnModalShow -= ShowModal;
+            Ui.Modal.OnModalHide -= HideModal;
             GC.SuppressFinalize(this);
         }
         public async Task Logout()
         {
-            await UserService.LogoutAsync(false);
+            await User.LogoutAsync(false);
             Console.WriteLine("User logged out.");
         }
     }

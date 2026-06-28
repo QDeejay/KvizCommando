@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace KvizCommando.Client.Pages.Team.Components
 {
-    public partial class RecruitCard : ComponentBase
+    public partial class RecruitCard
     {
 
         [Parameter] public string CardName { get; set; } = string.Empty;

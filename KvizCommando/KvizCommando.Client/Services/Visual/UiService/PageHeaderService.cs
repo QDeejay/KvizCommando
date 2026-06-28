@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace KvizCommando.Client.Services.Visual
+namespace KvizCommando.Client.Services.Visual.UiService
 {
     public class PageHeaderService
     {

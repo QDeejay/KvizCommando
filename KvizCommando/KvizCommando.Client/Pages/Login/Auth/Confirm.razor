@@ -1,26 +1,27 @@
 ﻿@page "/auth/confirm"
+@inherits Utilities.KcComponentBase
 @layout LoginLayout
 
-<LangGuard Culture=@culture Module="auth">
+<LangGuard Culture=@_culture Module="auth">
     <div class="emailconfirm-panel">
         <div class="emailconfirm-head">
-            <label class="label-title">@Lang["auth.email.Title"]</label>
+            <label class="label-title">@Ui.Lang["auth.email.Title"]</label>
         </div>
         <div class="emailconfirm-body">
             @if (isLoading)
             {
-                <label class="label-text">@Lang["auth.email.Loading"]</label>
+                <label class="label-text">@Ui.Lang["auth.email.Loading"]</label>
             }
             else if (success == true)
             {
                 <br>
-                <label style="color:limegreen; font-size: 24px;" class=" label-text">✅ @Lang["auth.email.Success"]</label>
+                <label style="color:limegreen; font-size: 24px;" class=" label-text">✅ @Ui.Lang["auth.email.Success"]</label>
               <br><br>
             }
             else
             {
                 <br>
-                <label style="color: red; font-size: 24px;" class=" label-text">❌ @Lang["auth.email.Fail"]</label>
+                <label style="color: red; font-size: 24px;" class=" label-text">❌ @Ui.Lang["auth.email.Fail"]</label>
                 <br><br>
             }
         </div>
@@ -28,7 +29,7 @@
 
         <div class="emailconfirm-footer">
             <button class="military-button--secondary" @onclick="NavigateHome">
-                @Lang["auth.button.RedirectToLogin"]
+                @Ui.Lang["auth.button.RedirectToLogin"]
             </button>
 
         </div>

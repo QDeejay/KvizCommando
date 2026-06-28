@@ -1,12 +1,14 @@
 ﻿using Blazored.SessionStorage;
 using KvizCommando.Client.Features.Home;
+using KvizCommando.Client.Features.Question;
 using KvizCommando.Client.Models.StoreModels;
 using KvizCommando.Client.Pages.Shared;
 using KvizCommando.Client.Services;
 using KvizCommando.Client.Services.Dto;
-using KvizCommando.Client.Services.Language;
 using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Services.Visual;
+using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.CheckIn;
 using KvizCommando.Shared.Options;
 using Microsoft.AspNetCore.Components;
@@ -15,54 +17,51 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 
 namespace KvizCommando.Client.Pages.Login
 {
-    public partial class CheckIn : ComponentBase, IDisposable
+    public partial class CheckIn : KcComponentBase, IDisposable
     {
-        [Inject] private NavigationManager Nav { get; set; } = default!;
-        [Inject] private ILanguageService Lang { get; set; } = default!;
-        [Inject] private IUserService Service { get; set; } = default!;
-        [Inject] private ISessionStorageService Session { get; set; } = default!;
-        [Inject] private UiHeaderState Ui { get; set; } = default!;
-        [Inject] private HttpClient Http { get; set; } = default!;
-        [Inject] private IdentityRulesService IdentityRules { get; set; } = default!;
+        //Inject] private NavigationManager Nav { get; set; } = default!;
+        //[Inject] private ILanguageService Lang { get; set; } = default!;
+        //[Inject] private IUserService Service { get; set; } = default!;
+        [Inject] private ISessionStorageService _sessionStorage { get; set; } = default!;
+        [Inject] private HttpClient _http { get; set; } = default!;
+        [Inject] private IdentityRulesService _identityRules { get; set; } = default!;
 
-        private KcModal? TermsModal;
+        private string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+        private KcModal? _termsModal;
+        private ModalPar _termsPar = ModalSpecs.Specs[1];
+        private string _fullHtml = string.Empty;
+        private MarkupString _renderHTML;
+        private MarkupString _termsHtml;
+        private MarkupString _privacyHtml;
 
-        private string fullHtml = string.Empty;
-        private MarkupString renderHTML;
-        private MarkupString TermsHtml;
-        private MarkupString PrivacyHtml;
-
-        private const string CheckInCacheKey = "checkin:status";
-
-        private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-        private CheckInSessionCache cacheData = new();
+        private const string CHEKIN_CACHE_KEY = "checkin:status";
+        private CheckInSessionCache _cacheData = new();
       
-        private RegisterOptionsResponse? Options { get; set; }
+        private RegisterOptionsResponse? _options { get; set; }
 
-        private CheckInPostRequest FormData { get; set; } = new();
+        private CheckInPostRequest _formData { get; set; } = new();
         private string ResultMessage { get; set; } = string.Empty;
 
         private string DynamicTitle { get; set; } = string.Empty; // Dinamikus oldal cím
-        private string ModalTitle { get; set; } = "PLACEHOLDER"; // Modal cím
         private string Message { get; set; } = string.Empty; // Általános üzenet a felhasználónak
         private bool DisplayNameField { get; set; } = false;
 
-      
 
         private bool isLoaded { get; set; } = false;
 
         private bool CanCheckIn =>
-           (!string.IsNullOrWhiteSpace(FormData.DisplayName) || cacheData.needsName == false)
-           && !string.IsNullOrWhiteSpace(FormData.AcceptedTermsVersion);
+           (!string.IsNullOrWhiteSpace(_formData.DisplayName) || _cacheData.needsName == false)
+           && !string.IsNullOrWhiteSpace(_formData.AcceptedTermsVersion);
       
         private bool _isAccepted;
 
-        protected bool IsAccepted
+        private bool IsAccepted
         {
             get => _isAccepted;
             set
@@ -73,13 +72,13 @@ namespace KvizCommando.Client.Pages.Login
                     if (value)
                     {
                         // ✅ amikor bepipálják
-                        FormData.AcceptedTermsVersion = cacheData.termsVersion;
+                        _formData.AcceptedTermsVersion = _cacheData.termsVersion;
                         OnAcceptedAsync();
                     }
                     else
                     {
                         // ❌ amikor kiveszik a pipát
-                        FormData.AcceptedTermsVersion = string.Empty;
+                        _formData.AcceptedTermsVersion = string.Empty;
                         OnRejectedAsync();
                     }
                 }
@@ -88,28 +87,27 @@ namespace KvizCommando.Client.Pages.Login
 
         protected override async Task OnInitializedAsync()
         {
-            culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-            Options = await IdentityRules.GetRulesAsync();
-            var uri = Nav.ToAbsoluteUri(Nav.Uri);
+            _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+            _options = await _identityRules.GetRulesAsync();
+            var uri = Ui.Nav.ToAbsoluteUri(Ui.Nav.Uri);
             var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
             var SugDispName = query["name"];
             if (!string.IsNullOrEmpty(SugDispName))
             {
-                FormData.DisplayName = !string.IsNullOrEmpty(SugDispName) && SugDispName.Length > 3
+                _formData.DisplayName = !string.IsNullOrEmpty(SugDispName) && SugDispName.Length > 3
                                         ? SugDispName
                                         : string.Empty;
-                Nav.NavigateTo(uri.GetLeftPart(UriPartial.Path), replace: true);
-                await Service.CheckInStartAsync(false);
+                Ui.Nav.NavigateTo(uri.GetLeftPart(UriPartial.Path), replace: true);
+                await User.CheckInStartAsync(false);
             }
-            cacheData = await Session.GetItemAsync<CheckInSessionCache>(CheckInCacheKey);
-            if (cacheData is not null)
+            _cacheData = await _sessionStorage.GetItemAsync<CheckInSessionCache>(CHEKIN_CACHE_KEY);
+            if (_cacheData is not null)
             {
-                fullHtml = await Http.GetStringAsync(cacheData.url);
+                _fullHtml = await _http.GetStringAsync(_cacheData.url);
             }
 
             // (opcionális) takarítsd le az URL-ből az ?error-t a címsorból:
 
-            Ui.HideLang();
             isLoaded = true;
         }
         private static Task OnAcceptedAsync()
@@ -132,52 +130,52 @@ namespace KvizCommando.Client.Pages.Login
             ResultMessage = string.Empty;
             
             DisplayNameField = false;
-            var dsp = FormData.DisplayName?.Trim() ?? string.Empty;
+            var dsp = _formData.DisplayName?.Trim() ?? string.Empty;
 
-            if (Options is not null)
+            if (_options is not null)
             {
-                if (Options.DisplayNameMinLength>dsp.Length && cacheData.needsName==true)
+                if (_options.DisplayNameMinLength>dsp.Length && _cacheData.needsName==true)
                 {
-                    ResultMessage = Lang["identityerrors.DisplayNameTooShort"];
+                    ResultMessage = Ui.Lang["identityerrors.DisplayNameTooShort"];
                     DisplayNameField = true;
                 }
-                else if (Options.DisplayNameMaxLength < dsp.Length & cacheData.needsName == true)
+                else if (_options.DisplayNameMaxLength < dsp.Length & _cacheData.needsName == true)
                 {
-                    ResultMessage = Lang["identityerrors.DisplayNameTooLong"];
+                    ResultMessage = Ui.Lang["identityerrors.DisplayNameTooLong"];
                     DisplayNameField = true;
                 }
                 else if (IsAccepted == false)
                 {
-                    ResultMessage = Lang["identityerrors.TermsNotAccepted"];
+                    ResultMessage = Ui.Lang["identityerrors.TermsNotAccepted"];
                 }
             }
-            if ((DisplayNameField && cacheData.needsName) || IsAccepted == false)
+            if ((DisplayNameField && _cacheData.needsName) || IsAccepted == false)
                 return;
-            FormData.TeamName = FormData.DisplayName + Lang["checkin.Team.Append"];
+            _formData.TeamName = _formData.DisplayName + Ui.Lang["checkin.Team.Append"];
             // Kérés a szerver felé
-            var (response, errors, suggestedname) = await Service.CheckInFinishedAsync(FormData);
+            var (response, errors, suggestedname) = await User.CheckInFinishedAsync(_formData);
 
             if (response)
             {
                 // Sikeres bejelentkezés után töröljük a cache-t
-                await Session.RemoveItemAsync(CheckInCacheKey);
-                Nav.NavigateTo("/home", true);
+                await _sessionStorage.RemoveItemAsync(CHEKIN_CACHE_KEY);
+                Ui.Nav.NavigateTo("/home", true);
                 return;
             }
             // Hibák kezelése: a szerver identityerrors.* kulcsokat ad vissza
             if (errors is { Count: > 0 })
             {
                 // csak az első hibát mutatjuk; ha több kell, join-olható
-                ResultMessage = Lang[$"identityerrors.{errors[0]}"];
+                ResultMessage = Ui.Lang[$"identityerrors.{errors[0]}"];
             }
             else
             {
-                ResultMessage = Lang["identityerrors.DefaultError"];
+                ResultMessage = Ui.Lang["identityerrors.DefaultError"];
             }
             if (suggestedname is not null && suggestedname != string.Empty)
             {
-                ResultMessage += " " + Lang["checkin.Reason.SuggestedName"] + $" '{suggestedname}'.";
-                FormData.DisplayName = suggestedname;
+                ResultMessage += " " + Ui.Lang["checkin.Reason.SuggestedName"] + $" '{suggestedname}'.";
+                _formData.DisplayName = suggestedname;
                 DisplayNameField = true;
             }
 
@@ -185,21 +183,21 @@ namespace KvizCommando.Client.Pages.Login
 
         private void BuildDynamicText()
         {
-            if (cacheData is null || (cacheData.needsName == false && cacheData.needsTerms == false))
+            if (_cacheData is null || (_cacheData.needsName == false && _cacheData.needsTerms == false))
             {
-                Message = Lang["checkin.Reason.FallBack"];
-                DynamicTitle = Lang["checkin.Title.Fallback"];
+                Message = Ui.Lang["checkin.Reason.FallBack"];
+                DynamicTitle = Ui.Lang["checkin.Title.Fallback"];
             }
-            else if (cacheData.needsName == true)
+            else if (_cacheData.needsName == true)
             {
-                cacheData.needsTerms = true;
-                Message = Lang["checkin.Reason.DisplayName"];
-                DynamicTitle = Lang["checkin.Title.DisplayName"];
+                _cacheData.needsTerms = true;
+                Message = Ui.Lang["checkin.Reason.DisplayName"];
+                DynamicTitle = Ui.Lang["checkin.Title.DisplayName"];
             }
             else
             {
-                Message = Lang["checkin.Reason.TermsUpdated"];
-                DynamicTitle = Lang["checkin.Title.TermsOutdated"];
+                Message = Ui.Lang["checkin.Reason.TermsUpdated"];
+                DynamicTitle = Ui.Lang["checkin.Title.TermsOutdated"];
 
             }
             
@@ -207,20 +205,20 @@ namespace KvizCommando.Client.Pages.Login
 
         private async Task OpenTerms()
         {
-            TermsHtml = new MarkupString(ExtractSection(fullHtml, "terms"));
-            ModalTitle = @Lang["checkin.modal.TermsTitle"];
-            renderHTML = TermsHtml;
-            if (TermsModal is not null)
-                await TermsModal.ShowAsync();
+            _termsHtml = new MarkupString(ExtractSection(_fullHtml, "terms"));
+            _termsPar = _termsPar with {Title = Ui.Lang["checkin.modal.TermsTitle"] };
+            _renderHTML = _termsHtml;
+            if (_termsModal is not null)
+                await _termsModal.ShowAsync();
         }
         private async Task OpenPrivacy()
         {
             
-            PrivacyHtml = new MarkupString(ExtractSection(fullHtml, "privacy"));
-            ModalTitle = @Lang["checkin.modal.PrivacyTitle"];
-            renderHTML = PrivacyHtml;
-            if (TermsModal is not null)
-                await TermsModal.ShowAsync();
+            _privacyHtml = new MarkupString(ExtractSection(_fullHtml, "privacy"));
+            _termsPar = _termsPar with { Title = Ui.Lang["checkin.modal.PrivacyTitle"] };
+            _renderHTML = _privacyHtml;
+            if (_termsModal is not null)
+                await _termsModal.ShowAsync();
         }
 
         private async Task AcceptTerms()
@@ -232,13 +230,12 @@ namespace KvizCommando.Client.Pages.Login
       
         private async Task NavigateHome()
         {
-            await Session.RemoveItemAsync(CheckInCacheKey);
-            await Service.LogoutAsync(true);
-            Nav.NavigateTo("/login");
+            await _sessionStorage.RemoveItemAsync(CHEKIN_CACHE_KEY);
+            await User.LogoutAsync(true);
+            Ui.Nav.NavigateTo("/login");
         }
         public void Dispose()
         {
-            Ui.ShowLang(); // komponens elhagyásakor VISSZAÁLL
             GC.SuppressFinalize(this);
         }
 

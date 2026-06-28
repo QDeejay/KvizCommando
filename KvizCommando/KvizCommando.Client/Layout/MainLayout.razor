@@ -1,18 +1,19 @@
 ﻿@using KvizCommando.Client.Services
-@inherits LayoutComponentBase
+@using KvizCommando.Client.Pages.Shared;
+@inherits Utilities.KcLayoutComponentBase
 <HeadContent>
     <link href="css/MainLayout.css" rel="stylesheet" />
 </HeadContent>
 
-<LoaderView />
+
 @if (_isReady)
 {
     if (_loggedIn)
     {
         <AppHeader DisplayName="@HomeState.UserMainData!.UserName"
-        lclRow1="@Lang["mainlayout.Bootstrap.Label.Profile"]"
-        lclRow2="@Lang["mainlayout.Bootstrap.Label.Settings"]"
-        lclLogout="@Lang["mainlayout.Bootstrap.Label.Logout"]"
+        lclRow1="@Ui.Lang["mainlayout.Bootstrap.Label.Profile"]"
+        lclRow2="@Ui.Lang["mainlayout.Bootstrap.Label.Settings"]"
+        lclLogout="@Ui.Lang["mainlayout.Bootstrap.Label.Logout"]"
         OnLogout="Logout" />
     }
     else
@@ -32,7 +33,6 @@
         <LangGuard Culture=@_culture Module="nav">
             <div class="kc-mainlayout-nav-side @(_sidebarCollapsed || !_loggedIn ? "collapsed" : "")">
                 <NavMenu Hs="@Hs"
-                         OnClickedNavButton="OnSelect"
                          OnToggleSidebar="ToggleSidebar" 
                          IsCollapsed="@(_sidebarCollapsed || !_loggedIn)" />
             </div>
@@ -73,9 +73,8 @@
                     }
                 <div class="kc-mainlayout-content-container">
                     <LoaderView />
-                    <CascadingValue Value=NavigateTo>
                         @Body
-                    </CascadingValue>
+               
                 </div>
             </section>
         </main>

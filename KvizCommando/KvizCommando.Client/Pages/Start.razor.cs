@@ -1,5 +1,6 @@
-﻿using KvizCommando.Client.Services.Language;
+﻿
 using KvizCommando.Client.Services.User;
+using KvizCommando.Client.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using System;
@@ -11,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace KvizCommando.Client.Pages
 {
-    public partial class Start : ComponentBase, IDisposable
+    public partial class Start : KcComponentBase, IDisposable
     {
-        [Inject] private ILanguageService Lang { get; set; } = default!;
-        [Inject] private NavigationManager Nav { get; set; } = default!;
-        [Inject] private IUserService UserService { get; set; } = default!;
+        //[Inject] private ILanguageService Lang { get; set; } = default!;
+        //[Inject] private NavigationManager Nav { get; set; } = default!;
+        [Inject] private IUserService _userService { get; set; } = default!;
 
         private readonly string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         private bool _isLoaded = false;
@@ -30,14 +31,14 @@ namespace KvizCommando.Client.Pages
             
             try 
             {
-                await UserService.CheckInStartAsync(true);
-                Nav.NavigateTo("/login");
+                await _userService.CheckInStartAsync(true);
+                Ui.Nav.NavigateTo("/login");
 
             }
             catch (Exception ex) 
             {
                 Console.WriteLine($"Login failed: {ex.Message}");
-                Nav.NavigateTo("/login");
+                Ui.Nav.NavigateTo("/login");
             }
             finally { }
         

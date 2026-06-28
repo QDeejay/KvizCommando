@@ -1,5 +1,5 @@
 ﻿using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Language;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,6 +7,8 @@ namespace KvizCommando.Client.Features.Home;
 
 public static class HomeButtonsBuilder
 {
+    public static readonly string[] BtnOrder = Enum.GetNames<HomeBoxKey>();
+
     public static Dictionary<string, ContentBoxVm> Build(HomeScreen hs, ILanguageService lang)
     {
         var dict = new Dictionary<string, ContentBoxVm>(HomeButtonSpecs.Specs.Count);
@@ -24,13 +26,13 @@ public static class HomeButtonsBuilder
                 FooterDisplay = spec.FooterDisplay,
                 Size = spec.Size,
                 ReSizable = string.IsNullOrEmpty(spec.Size),
-                ShowImage = !string.IsNullOrEmpty(spec.ImageSrc),
                 ImageSrc = spec.ImageSrc,
                 BgImageSrc = spec.BgImageSrc,
                 IsEnabled = btn.Enable,
                 ClickId = spec.ClickId,
                 IsClickable = spec.ClickId > 0 && btn.Enable,
-                LcdDisplay = spec.LcdBackground && string.IsNullOrEmpty(spec.ImageSrc) && spec.ClickId == 0
+                LcdDisplay = spec.LcdBackground && spec.ClickId == 0,
+                RenderContent = spec.RenderContent
             };
            
         }

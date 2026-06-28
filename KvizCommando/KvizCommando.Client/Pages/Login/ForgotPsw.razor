@@ -1,15 +1,16 @@
 ﻿@page "/forgotpsw"
+@inherits Utilities.KcComponentBase
 @layout LoginLayout
 
 <LangGuard Culture=@culture Module="forgotosw">
 <div class="forgotpsw-panel">
     <div class="forgotpsw-head">
-            <label class="label-title">@Lang["forgotosw.Title"]</label>
+            <label class="label-title">@Ui.Lang["forgotosw.Title"]</label>
     </div>
     <div class="forgotpsw-body">
             @if (Success != true)
             {
-                <label class="label-text">@Lang["forgotosw.Email"] </label>
+                <label class="label-text">@Ui.Lang["forgotosw.Email"] </label>
                 <input class="lcd-input"
                type="text"
                @bind-value="formData.email"
@@ -19,7 +20,7 @@
         
         
                 <button class="military-button" disabled="@(!CanSend)" type="button" @onclick="SendEmail">
-                        @Lang["common.Button.Send"]
+                        @Ui.Lang["common.Button.Send"]
                 </button>     
             }
             else
@@ -32,7 +33,7 @@
 
     <div class="forgotpsw-footer">
         <button class="military-button--secondary" @onclick="NavigateHome">
-                @Lang["common.Button.Back"]
+                @Ui.Lang["common.Button.Back"]
         </button>
 
     </div>

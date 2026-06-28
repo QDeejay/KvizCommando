@@ -1,15 +1,14 @@
-﻿using KvizCommando.Client.Services.Language;
-using KvizCommando.Client.Services.Visual;
+﻿using KvizCommando.Client.Services.Visual;
+using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Client.Utilities;
 using Microsoft.AspNetCore.Components;
 
 namespace KvizCommando.Client.Components
 {
-    public partial class LangGuard : ComponentBase, IDisposable
+    public partial class LangGuard : IDisposable
     {
         [Inject] private ILanguageService Lang { get; set; } = default!;
         //[Inject] private ISetLanguageService SetLang { get; set; } = default!;
-    
-
         [Parameter] public required string Culture { get; set; }
         [Parameter] public string Module { get; set; } = default!;
         [Parameter] public RenderFragment? ChildContent { get; set; }

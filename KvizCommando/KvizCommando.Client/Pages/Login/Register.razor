@@ -1,4 +1,5 @@
 ﻿@page "/register"
+@inherits Utilities.KcComponentBase
 @layout LoginLayout
 
 <LangGuard Culture=@_culture Module="register">
@@ -7,44 +8,58 @@
     </div>
 <div class="kc-regist-panel">
     <div class="kc-regist-head">
-            <label class="label-title">@Lang["register.Title"]</label>
+            <label class="label-title">@Ui.Lang["register.Title"]</label>
     </div>
     <div class="kc-regist-body">
             @if (!_registSucces)
             {
                 <div class="kc-regist-body--divider">
-                    <label class="label-text">@Lang["register.Email"]</label>
+                    <label class="label-text">@Ui.Lang["register.Email"]</label>
                     <input class="lcd-input"
-                           @bind-value="FormData.Email"
+                           @bind-value="_formData.Email"
                            @bind-value:event="oninput"
                            style="width:stretch; @((_emailFiledSW ? "border: 1px solid red;" : null))" />
                 </div>
                 <div class="kc-regist-body--divider">
-                    <label class="label-text">@Lang["common.Password"]</label>
-                    <input class="lcd-input" type="password" @bind-value="FormData.Password"
-                           @bind-value:event="oninput"
-                           style="width:stretch; @((_passwordFiledSW ? "border: 1px solid red;" : null))" />
-
+                    <label class="label-text">@Ui.Lang["common.Password"]</label>
+                    <div class="password-box">
+                        <input class="lcd-input" 
+                               type="@PasswordType1"
+                               @bind-value="_formData.Password"
+                               @bind-value:event="oninput"
+                               style="width:stretch; @((_passwordFiledSW ? "boder: 1px solid red;" : null))" />
+                                <i class="@EyeIcon1" @onclick="() => TogglePassword(0)"></i>
+                    </div>
                 </div>
+               
+
+
+
+
                 <div class="kc-regist-body--divider">
 
-                    <label class="label-text">@Lang["common.Password.Confirm"]</label>
-                    <input class="lcd-input" type="password" @bind-value="FormData.ConfirmPassword"
-                           @bind-value:event="oninput"
-                           style="width:stretch; @((_passwordFiledSW ? "border: 1px solid red;" : null))" />
+                    <label class="label-text">@Ui.Lang["common.Password.Confirm"]</label>
+                    <div class="password-box">
+                        <input class="lcd-input"
+                               type="@PasswordType2"
+                               @bind-value="_formData.ConfirmPassword"
+                               @bind-value:event="oninput"
+                               style="width:stretch; @((_passwordFiledSW ? "border: 1px solid red;" : null))" />
+                        <i class="@EyeIcon2" @onclick="() => TogglePassword(1)"></i>
+                        </div>
                 </div>
                 <div class="kc-regist-body--button-row">
                     <button class="military-button" disabled="@(!CanRegister)" type="button" @onclick="HandleValidSubmit">
-                        @Lang["register.Button"]
+                        @Ui.Lang["register.Button"]
                     </button>
                 </div>
             }
             else
             {
                 <div class="kc-regist-body--success">
-                    <label style="color:limegreen; font-size: 24px;" class=" label-text">@Lang["register.ResultMsg01"]</label>
+                    <label style="color:limegreen; font-size: 24px;" class=" label-text">@Ui.Lang["register.ResultMsg01"]</label>
                     <br>
-                    <label class="label-text">@Lang["register.ResultMsg02"]</label>
+                    <label class="label-text">@Ui.Lang["register.ResultMsg02"]</label>
                 </div>
 
             }

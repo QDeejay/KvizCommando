@@ -8,7 +8,7 @@ using System.Reflection.PortableExecutable;
 
 namespace KvizCommando.Client.Pages.Team.Components
 {
-    public partial class BottomBlockDisplay : ComponentBase
+    public partial class BottomBlockDisplay
     {
         [Inject] private BottomBlockDataBuilder Builder { get; set; } = default!;
         [Parameter] public TeamDtos InputData { get; set; } = default!;

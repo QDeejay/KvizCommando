@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
-using KvizCommando.Client.Services.Visual;
+using KvizCommando.Client.Utilities;
+using KvizCommando.Client.Services.Visual.UiService;
 
 namespace KvizCommando.Client.Components
 {
-    public partial class LCDDisplay : ComponentBase, IDisposable
+    public partial class LCDDisplay : IDisposable
     {
         [Parameter] public string Operation { get; set; } = "run"; // vagy "step"
         [Parameter] public bool Next { get; set; } = false;

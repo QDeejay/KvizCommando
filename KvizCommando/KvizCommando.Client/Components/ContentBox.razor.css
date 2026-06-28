@@ -1,15 +1,4 @@
-﻿.content-box-inner {
-    display: flex;
-    border-radius: 22px;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-    width:100%;
-    box-shadow: inset 0 4px 8px rgba(0,0,0,0.7);
-    border: inset 2px rgba(23,23,23,0.6);
-}
-
-.content-box {
+﻿.kc-content-box {
     display: flex;
     border-radius: 22px;
     background-color: #2a2a2a; /* sötétebb árnyalat */
@@ -17,55 +6,66 @@
     box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
     transition: all 0.2s ease-in-out;
     opacity: 0.95;
+    padding:2px;
+}
+
+.kc-content-box--inner {
+    display: flex;
+    border-radius: 22px;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    width:100%;
+    box-shadow: inset 0 4px 8px rgba(0,0,0,0.7);
+    border: inset 2px rgba(23,23,23,0.8);
 }
 
     /* Méretvariációk */
-    .content-box.small {
+    .kc-content-box.small {
         width: 200px;           /*180 x 140 */
         height: 200px;
     }
 
-    .content-box.medium {
+    .kc-content-box.medium {
         width: 320px;       
         height: 200px;
     }
 
-    .content-box.large {
+    .kc-content-box.large {
         width: 650px;
         height: 550px;
     }
-    .content-box.halflarge {
+    .kc-content-box.halflarge {
         width: 325px;
         height: 550px;
     }
 
-    .content-box.wide {
+    .kc-content-box.wide {
         width: 440px;       
         height: 200px;
     }
-    .content-box.tall {
+    .kc-content-box.tall {
         width: 200px;
         height: 320px;
     }
 
-    .content-box.minimalized {
+    .kc-content-box.minimalized {
         width: 650px;
-        height: 60px;
+        height: 65px;
     }
 
 /* Fejléc / Lábléc */
-.box-footer,
-.box-header {
+.kc-content-box--footer,
+.kc-content-box--header {
     display: flex;
     height: 30px;
     min-height: 30px;
     align-items: center;
     justify-content: center;
     text-align: center;
-
 }
 
-.box-header {
+.kc-content-box--header {
     border-top-right-radius: 22px;
     border-top-left-radius: 22px;
     background-color: rgba(23,23,23,0.6);
@@ -76,7 +76,7 @@
     width: 100%;
 }
 
-.box-footerActive {
+.kc-content-box--footeractive {
     background-color: rgba(210, 255, 57, 0.9);
     color: #222F16;
     font-family: 'Times New Roman', serif;
@@ -96,10 +96,9 @@
     justify-content: left;
     border-top-right-radius: 22px;
     border-bottom-left-radius: 22px;
-   
 }
 /* Tartalom */
-.box-content {
+.kc-content-box--content {
     flex-grow: 1;
     display: flex;
     align-items: center;
@@ -111,11 +110,11 @@
     border-bottom: 1px solid rgba(64, 64, 64, 0.3);
     opacity: 0.9;
 }
-    .box-content.no-content {
+    .kc-content-box--content.no-content {
         opacity: 0;
     }
 
-    .box-content img {
+    .kc-content-box--content img {
         max-height: 96%;
         border: solid;
         background: rgba(0,0,0,0.1);
@@ -130,7 +129,7 @@
 
     .clickable:hover {
         filter: brightness(1.1);
-        border: 2px solid rgb(0, 255, 255, 0.5);
+        border: 2px solid rgb(0, 255, 255, 0.4);
     }
 
     .clickable:active {
@@ -140,15 +139,15 @@
     }
 
 /* Tiltott állapot */
-.disabled-overlay {
+.kc-content-box-disabled-overlay {
     position: absolute;
     border-radius: 22px;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: -2px;
+    left: -2px;
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
     background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(1px);
+    backdrop-filter: blur(2px);
     z-index: 3;
     display: flex;
     align-items: center;
@@ -156,12 +155,12 @@
     cursor: url('/Images/cursors/disabled.cur'), not-allowed;
 }
 
-.ban-icon {
-    width: 120px;
-    height: 120px;
-    opacity: 0.3;
+.kc-disable-icon {
+    width: 110px;
+    height: 110px;
+    opacity: 0.4;
 }
-.toggle-icon {
+.kc-toggle-icon {
     display: inline-block;
     width: 0;
     height: 0;
@@ -170,17 +169,24 @@
     border-right: 6px solid transparent;
     pointer-events: none;
 }
+    .kc-toggle-icon:hover {
+        background-color: rgba(#ff,#ff,#ff,0.9);
+    }
 
 /* Lefelé mutató nyíl */
 .arrow-down {
     border-top: 6px solid #ccc; /* szürke nyílfej */
+ 
 }
 
 /* Felfelé mutató nyíl */
 .arrow-up {
     border-bottom: 6px solid #ccc;
+  
 }
-.box-header:hover .tooltip-box {
+
+
+.kc-content-box--header:hover .tooltip-box {
     display: block;
     padding-left: 10px;
     padding-right: 10px;
@@ -188,7 +194,7 @@
     font-size:0.8rem;
    
 }
-.lcd-wrapper {
+.kc-lcd-wrapper {
     height: 100%;
     width: 95%;
     /*
@@ -199,7 +205,7 @@
 }
 
 
-.lcd-display-outer {
+.kc-lcd-display--outer {
     background-color: #D2FF39;
     border: inset 2px #777;
     border-radius: 4px;
@@ -212,7 +218,7 @@
     overflow: hidden; /* nagyon fontos! */
 }
 
-.lcd-display-inner {
+.kc-lcd-display--inner {
     color: #222F16;
     font-family: 'Share Tech Mono', monospace;
     font-size: 1.5rem;
@@ -227,28 +233,41 @@
     max-height: 100%; /* itt szabályozod, mennyit látsz egyben */
     background: transparent;
 }
-
-
-    .lcd-display-inner::-webkit-scrollbar {
-        width: 10px;
+    .kc-lcd-display--inner.lcd-off,
+    .kc-lcd-display--outer.lcd-off {
+        background-color: transparent;
+        color: whitesmoke;
+        overflow: hidden;
+        scrollbar-gutter: unset;
     }
 
-    .lcd-display-inner::-webkit-scrollbar-track {
+.kc-lcd-display--inner::-webkit-scrollbar {
+    width: 15px;
+}
+
+    .kc-lcd-display--inner::-webkit-scrollbar-track {
         /*background-color: #001f3f;  háttér: katonai kék */
         background-color: #D2FF39;
         border: inset 2px #777;
         border-radius: 4px;
     }
 
-    .lcd-display-inner::-webkit-scrollbar-thumb {
+    .kc-lcd-display--inner::-webkit-scrollbar-thumb {
         background-color: #bfa800; /* halványsárga */
         border-radius: 4px;
         border: 1px solid #333;
     }
 
-        .lcd-display-inner::-webkit-scrollbar-thumb:hover {
+        .kc-lcd-display--inner::-webkit-scrollbar-thumb:hover {
             background-color: #ffe14d; /* világosabb hover */
         }
 
+.kc-btn-bar {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px;
+}
 
-   
+    .kc-bar.hidden {
+        display: none;
+    }   

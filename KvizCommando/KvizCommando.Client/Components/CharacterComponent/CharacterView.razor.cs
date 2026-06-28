@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace KvizCommando.Client.Components.CharacterComponent
 {
-    public partial class CharacterView : ComponentBase, IDisposable
+    public partial class CharacterView : IDisposable
     {
         
         [Parameter] public string PicCode { get; set; } = string.Empty;

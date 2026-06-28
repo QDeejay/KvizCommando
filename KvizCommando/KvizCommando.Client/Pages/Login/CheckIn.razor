@@ -1,27 +1,21 @@
 ﻿@page "/checkin"
+@inherits Utilities.KcComponentBase
 @layout LoginLayout
 @using KvizCommando.Client.Components
 
 @if (isLoaded==true)
 {
-    <LangGuard Culture=@culture Module="checkin" OnReady="BuildDynamicText">
-         <KcModal @ref="TermsModal"
-         Id="termsModal"
-         Title="@ModalTitle"
-         SizeClass= "modal-lg"
-         ActionText1="@Lang["checkin.modal.Button.Action"]"
-         CloseText=""
-         OnAction1="AcceptTerms"
-         CheckBottom = "true">
-         @if (!string.IsNullOrWhiteSpace(cacheData.url))
-             {
-                  @renderHTML
-             }
+    <LangGuard Culture=@_culture Module="checkin" OnReady="BuildDynamicText">
+         <KcModal @ref="_termsModal"
+             Id="termsModal"
+             Par="@_termsPar"
+             OnAction1="AcceptTerms">
+             @if (!string.IsNullOrWhiteSpace(_cacheData.url))
+                 {
+                      @_renderHTML
+                 }
         </KcModal>
-        
-        
-        
-        
+ 
         
         <div class="checkin-panel">
             <div class="checkin-head">
@@ -33,15 +27,15 @@
                     
                         <label class="label-text">@Message</label>
                      <br>
-                @if (cacheData.needsName == true)
+                @if (_cacheData.needsName == true)
                 {
-                    <label class="label-text">@Lang["checkin.Label.DisplayName"]</label>
-                     <input class="lcd-input"   @bind-value="FormData.DisplayName"
+                    <label class="label-text">@Ui.Lang["checkin.Label.DisplayName"]</label>
+                     <input class="lcd-input"   @bind-value="_formData.DisplayName"
                                     @bind-value:event="oninput"
                     style="@((DisplayNameField ? "border: 1px solid red;" : null))" />
             
                 }
-                @if (cacheData.needsTerms == true)
+                @if (_cacheData.needsTerms == true)
                 {
                     <div class="checkin-action">
                                 <div class="checkin-checkbox">                            
@@ -50,23 +44,26 @@
                                             />
                                 </div>
                          <div class="checkin-AcceptText">                             <span class="label-text" style="font-size: 10px" for="AcceptTerms">
-                                @Lang["checkin.Label.AcceptTerms"]</span>
-                              <a class="AcceptTerms-link" @onclick="OpenTerms">@Lang["checkin.ButtonLink.Terms"]</a>
+                                @Ui.Lang["checkin.Label.AcceptTerms"]
+                            </span>
+                            <a class="AcceptTerms-link" @onclick="OpenTerms">@Ui.Lang["checkin.ButtonLink.Terms"]</a>
                               <span class="label-text" style="font-size: 10px" for="AcceptTerms">
-                                @Lang["checkin.Label.AcceptTerms1"]</span>
-                              <a class="AcceptTerms-link"  @onclick="OpenPrivacy">@Lang["checkin.ButtonLink.Privacy"]</a>
+                                @Ui.Lang["checkin.Label.AcceptTerms1"]
+                            </span>
+                            <a class="AcceptTerms-link" @onclick="OpenPrivacy">@Ui.Lang["checkin.ButtonLink.Privacy"]</a>
                               <span class="label-text" style="font-size: 10px"  for="AcceptTerms">
-                                @Lang["checkin.Label.AcceptTerms2"]</span>
+                                @Ui.Lang["checkin.Label.AcceptTerms2"]
+                            </span>
                         </div>
 
                      
                      </div>
                     <div class="checkin-row">
                           <button class="military-button" disabled="@(!CanCheckIn)" type="button" @onclick="HandleValidSubmit">
-                             @Lang["checkin.button.CheckIn"]
+                            @Ui.Lang["checkin.button.CheckIn"]
                           </button>
                           <button class="military-button--secondary" @onclick="NavigateHome">
-                              @Lang["checkin.button.RedirectToLogin"]
+                            @Ui.Lang["checkin.button.RedirectToLogin"]
                           </button>
                      </div>
 
@@ -76,7 +73,7 @@
                      <div class="checkin-footer">
                         
                     <button class="military-button--secondary" @onclick="NavigateHome">
-                     @Lang["checkin.button.RedirectToLogin"]
+                            @Ui.Lang["checkin.button.RedirectToLogin"]
                      </button>
                  </div>
                 }

@@ -1,38 +1,74 @@
-﻿
+﻿@page "/question"
+@inherits Utilities.KcComponentBase
+
 @using KvizCommando.Client.Helpers
 @using KvizCommando.Client.Pages.Question
 @using KvizCommando.Client.Pages.Question.Components
 <link href="css/question-common.css" rel="stylesheet" />
 
-<LangGuard Culture=@culture Module="question" OnReady="BuildButtons">
-    @if (_isLoaded == true)
-    {
-        <Subheader Title="@SubHeaderTitle"
-                   HeadButton="OnHeadButtonClick" />
-                <KcModal @ref="questionModal"
-                         Id="questionModal"
-                         Title="@Lang[qModal.Title]"
-                         SizeClass="@qModal.Size"
-                         ActionText1="@Lang[qModal.ActionText1]"
-                         ActionText2="@Lang[qModal.ActionText2]"
-                         CloseText="@Lang[qModal.CloseText]"
-                         OnAction1="@qModal.AsyncAction1"
-                         OnAction2="@qModal.AsyncAction2"
-                         ActionButtonStyle1="@qModal.ActionStyle1"
-                         CheckBottom="@qModal.CheckBottom"
-                         CheckBoxText="@Lang[qModal.CheckBoxText]"
-                         CheckBoxKey="@qModal.CheckBoxKey"
-                         CheckBoxAction="@qModal.AsyncCheckBoxAction">
-                    @if (ModalOption != 0 && SelectedId != 100)
-                    {
-                        <ModalRender Mode="@ModalOption"
-                                     Slot="@QuestionState.PendingSlots[ModalOption==2 ? SelectedId:1]"
-                                     renderHTML="@renderHTML" />
-                    }
-                </KcModal>
-
-
+<LangGuard Culture=@_culture Module="question" OnReady="BuildBoxes">
         <PageContainer>
+            @if (_isReady == true)
+            {
+                <div class="kc-quest-selector">
+                    @foreach (string bx in _boxOrder)
+                    {
+                        var box = Box(bx);
+                 
+                        <ContentBox Vm="@box"
+                                    OnClick="OnBoxClick">
+                            
+                            <ChildContent1>
+                            <FactorySlotsBase ExtInfo="@_qState.ExtendedInfo"
+                                              WorkingCodes="@_workingCodes"
+                                              OriginalCodes="@_originalCodes"
+                                              MessageFact="@MessageFact"
+                                              isSuccess="@_isSuccess"
+                                              SaveSlots="OnFactSaveAsync" />
+                            </ChildContent1>
+                            
+                            <ChildContent2>
+                            <UserSlotManager ExtInfo="@_qState.ExtendedInfo"
+                                             Slots="@_qState.Userlots"
+                                             NotShowDel="@_locNotShowStateDel"
+                                             SelectedIdChanged="OnSelectId" />
+                            </ChildContent2>
+
+                            <ChildContent3>
+                            <PendingSlotManager ExtInfo="@_qState.ExtendedInfo"
+                                                Slots="@_qState.PendingSlots"
+                                                HandleSlot="CallPendModal" />
+                            </ChildContent3>
+                            <ChildContent4>
+                            <NewQuestionManager ExtInfo="@_qState.ExtendedInfo"
+                                                MessageUsr="@MessageUsr"
+                                                isSuccess="@_isSuccess"
+                                                SendQuestion="SaveToForm" />
+                            </ChildContent4>
+                            <ChildContent5>
+                                <button class="military-button"
+                                        disabled="@(SelectedId == 100)"
+                                        style="@_boxBtnStyle"
+                                        @onclick="_onBoxBtnClick">
+                                    @_boxBtnText
+                                </button>
+                            </ChildContent5>
+                       
+                        </ContentBox>
+                
+                    }
+                </div>
+            }
+
+
+
+
+
+
+
+
+
+
             @if (ScreenOption == 0)
             {
                 <div class="quest-selector">
@@ -65,41 +101,21 @@
                                 @switch (ScreenOption)
                                 {
                                     case 1:
-                                        <FactorySlotsBase ExtInfo="@QuestionState.ExtendedInfo"
-                                                          WorkingCodes="@WorkingCodes"
-                                                          OriginalCodes="@OriginalCodes"
-                                                          MessageFact="@MessageFact"
-                                                          isSuccess="@isSuccess"
-                                                          SaveSlots="OnFactSaveAsync" />
+                                        
                                         break;
                                     case 2:
-                                        <UserSlotManager ExtInfo="@QuestionState.ExtendedInfo"
-                                                         Slots="@QuestionState.Userlots"
-                                                         NotShowDel="@localNotShowStateDel"
-                                                         SelectedIdChanged="OnSelectId" />
+                                       
                                         break;
                                     case 3:
-                                        <PendingSlotManager ExtInfo="@QuestionState.ExtendedInfo"
-                                                            Slots="@QuestionState.PendingSlots"
-                                                            HandleSlot="CallPendModal" />
+                                       
                                         break;
                                     case 4:
-                                        <NewQuestionManager ExtInfo="@QuestionState.ExtendedInfo"
-                                                            MessageUsr="@MessageUsr"
-                                                            isSuccess="@isSuccess"
-                                                            SendQuestion="SaveToForm" />
+                                       
                                         break;
                                     default:
                                         break;
                                 }
-                                <div class="btn-bar @(ScreenOption == 4 || ScreenOption == 1 ? "hidden" : "")">
-                                    <button class="military-button"
-                                            disabled="@(SelectedId == 100)"
-                                            style="@BoxBtnStyle"
-                                            @onclick="OnBoxBtnClick">
-                                        @BoxBtnText
-                                    </button>
-                                </div>
+                               
                             </div>
                        
                     </ContentBox>
@@ -108,7 +124,7 @@
 
             } 
         </PageContainer>
-    }
+    
 </LangGuard>
 
 

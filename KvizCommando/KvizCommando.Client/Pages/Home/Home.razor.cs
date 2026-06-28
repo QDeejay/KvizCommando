@@ -10,177 +10,138 @@ using KvizCommando.Client.Pages.Home;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Dto;
-using KvizCommando.Client.Services.Language;
-using KvizCommando.Client.Services.Visual;
+using KvizCommando.Client.Services.Visual.UiService;
+using KvizCommando.Client.Utilities;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
 using System.IO;
 using static System.Net.WebRequestMethods;
 namespace KvizCommando.Client.Pages.Home;
 
-public partial class Home : ComponentBase, IDisposable
+public partial class Home : KcComponentBase, IDisposable
 {
+  
+    [Inject] private ILocalStorageService _localStorage { get; set; } = default!;
+    [Inject] private IHomeState _homeState { get; set; } = default!;
+    [Inject] private HttpClient _http { get; set; } = default!;
    
-    [Inject] private ILanguageService Lang { get; set; } = default!;
-    [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
-    [Inject] private IHomeState HomeState { get; set; } = default!;
-    [Inject] private IQuestionState QuestionState { get; set; } = default!;
-    [Inject] private ITeamState TeamState { get; set; } = default!;
-    [Inject] private ISoloState SoloState { get; set; } = default!;
-    [Inject] private PageHeaderService Header { get; set; } = default!;
-    [Inject] private HttpClient Http { get; set; } = default!;
-    [Inject] private IDisplayMessageState DisplayState { get; set; } = default!;
-   
+    private Dictionary<string, ContentBoxVm>? _boxesDict = new Dictionary<string, ContentBoxVm>();
 
-    private readonly string Minimal = "minimalized";
-    private readonly string large = "large";
-    private string bboardSize = string.Empty;
-    private string[] BoxOrder = Array.Empty<string>();
-
-
-
-    private string ActualPage = "home";
-    private int _actualPageNo = 0; 
-    private MarkupString BboardHTML = new();
+    private const string BOX_SIZE_MINIMAL = "minimalized";
+    private const string BOX_SIZE_LARGE = "large";
+    private string _bBoardSize = string.Empty;
+    private string[] _boxOrder = Array.Empty<string>();
     private bool _isReady = false;
     private bool _isLoaded = false;
-    private Dictionary<string, ContentBoxVm>? _boxesDict = new Dictionary<string, ContentBoxVm>();
+    private MarkupString _bBoardHTML = new();
     private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
     private ContentBoxVm Box(string orx) => _boxesDict![orx];
-    private void BuildButtons(string page)
+    private void BuildBoxes()
     {
         var boxes = new Dictionary<string, ContentBoxVm>();
-        switch (page)
-        {
-            case "home": boxes = HomeButtonsBuilder.Build(HomeState.HomeScreen!, Lang);
-                break;
-            case "question": boxes = QBtnBoxBuilder.BuildBoxes(QuestionState.ExtendedInfo!, Lang);
-                break;
-            case "solo": boxes = SgameBtnBuilder.BuildBoxes(SoloState.Snapshot!, culture, Lang);
-                break;
-            default: boxes = HomeButtonsBuilder.Build(HomeState.HomeScreen!, Lang);
-                break;
-        }
-
+        boxes = HomeButtonsBuilder.Build(_homeState.HomeScreen!, Ui.Lang);
+        _boxOrder = HomeButtonsBuilder.BtnOrder;
         foreach (var box in boxes)
         {
             _boxesDict![box.Key] = box.Value;
         }
-        _boxesDict![HomeBoxKey.InfoBoard.ToString()].Size = bboardSize;
-        _isReady = true && _isLoaded;
-        Console.WriteLine("djfpsadjfo");
+        _boxesDict![HomeBoxKey.InfoBoard.ToString()].Size = _bBoardSize;
+        _isReady = _isLoaded;
     }
     private void OnBoxClick(int boxId)
     {
         Console.WriteLine($"Box {boxId} kattintva.");
-        _isReady = false;
-        var title = Lang["mainlayout.Header.Home"];
         switch (boxId)
         {
-            case 0: ActualPage = "home";
-                
-            BoxOrder = BxOrdHome.Root;
+            case 0: 
                 break;
-            case 1: ActualPage = "question";
-                title = Lang["mainlayout.Header.Question"];
-                BoxOrder = BxOrdQuest.Root;
+            case 1: Ui.Nav.NavigateTo("/question");
                 break;
-            case 2:
-                ActualPage = "team";
-                title = Lang["mainlayout.Header.Team"];
+            case 2: Ui.Nav.NavigateTo("/team");
                 break;
-            case 3:
-                ActualPage = "vs";
+            case 3: Ui.Nav.NavigateTo("/vsgame");
                 break;
-            case 4:
-                ActualPage = "solo";
-                title = Lang["mainlayout.Header.GameSolo"];
-                BoxOrder = BxOrdSolo.Root;
-                break;
-            case 401: BoxOrder = BxOrdSolo.Cat;
-                title = _boxesDict![SgameBoxKeyRoot.RtBtnCategory.ToString()].Header;
-                break;
-            case 402: BoxOrder = BxOrdSolo.Ori;
-                title = _boxesDict![SgameBoxKeyRoot.RtBtnOrient.ToString()].Header;
+            case 4: Ui.Nav.NavigateTo("/sologame");
                 break;
         }
-       
-        
-        Header.SetTitle(title,boxId);
-        Header.SetBackBtnEna(boxId>99);
-        _actualPageNo = boxId;
-        BuildButtons(ActualPage);
     }
     private async Task CloseBBoard()
     {
-        bboardSize = Minimal;
-        await LocalStorage.SetItemAsync("B.B", DateTime.UtcNow);
+        Console.WriteLine("faxom1");
+        
+        await _localStorage.SetItemAsync("B.B", DateTime.UtcNow);
        
     }
     protected override async Task OnInitializedAsync()
     {
-        
-        await HomeState.EnsureLoadedAsync();
-        await QuestionState.EnsureLoadedAsync();
-        await SoloState.EnsureLoadedAsync();
-        await TeamState.EnsureLoadedAsync();
+        await _homeState.EnsureLoadedAsync();
         string url = $"/BulletinBoard/{culture}/bb.html";
-        var lastBB = await LocalStorage.GetItemAsync<DateTime>("B.B");
-        BboardHTML = new MarkupString(await Http.GetStringAsync(url));
-        if (lastBB.ToUniversalTime() < HomeState.ExtendedInfo!.LastInfo)
-        {
-            bboardSize = large;
-        }
+        var lastBB = await _localStorage.GetItemAsync<DateTime>("B.B");
+        _bBoardHTML = new MarkupString(await _http.GetStringAsync(url));
+
+        if (lastBB.ToUniversalTime() < _homeState.ExtendedInfo!.LastInfo)
+            _bBoardSize = BOX_SIZE_LARGE;
         else
-        {
-            bboardSize = Minimal;
-        }
-        Header.SetTitle(Lang["mainlayout.Header.Home"],0);
-        Header.SetRank (HomeState.UserMainData!.RankEnum);
+            _bBoardSize = BOX_SIZE_MINIMAL;
+       
+        Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Home"],0);
+        Ui.Header.SetRank (_homeState.UserMainData!.RankEnum);
+        Ui.Header.SetBackBtnEna(false);
         UpdateLedDisplay();
-        //await Loader.HideAsync();
-        ActualPage = "home";
-        BoxOrder = BxOrdHome.Root;
         _isLoaded = true;
         if (_isReady == false)
-            BuildButtons(ActualPage);
-
-        Header.OnBackBtnClicked += UpdateBckClick;
-
+            BuildBoxes();
     }
     protected override void OnInitialized()
     {
+        Ui.Header.OnBackBtnClicked += UpdateBckClick;
     }
     private void UpdateBckClick()
     {
-        int navigateTo = _actualPageNo < 99 ? 0 : _actualPageNo / 100;
-        Console.WriteLine($"Navigate to: {navigateTo}");
-        _isReady = false;
-        OnBoxClick(navigateTo);
-        InvokeAsync(StateHasChanged);
+        Console.WriteLine($"Navigate to: kurva anyád");
+        //_isReady = false;
+        //InvokeAsync(StateHasChanged);
     }
     private void UpdateLedDisplay()
     {
-        var main = HomeState.UserMainData!;
-        var next = HomeState.ExtendedInfo!.NextXp;
+        var main = _homeState.UserMainData!;
+        var next = _homeState.ExtendedInfo!.NextXp;
         int level = main.RankEnum;
         string levelStr = RankNameTable.Data[level].PublicLevel ?? "";
 
         var messages = new List<string>
             {
-                Lang["mainlayout.Text.TeamName"].FormatSafe(main.TeamName),
-                Lang["mainlayout.Text.TeamLevel"].FormatSafe(levelStr),
-                Lang["mainlayout.Text.Xp"].FormatSafe(main.XP),
-                Lang["mainlayout.Text.NextLevelXp"].FormatSafe(next),
-                Lang["mainlayout.Text.Credit"].FormatSafe(main.Credit),
-                Lang["mainlayout.Text.Voucher"].FormatSafe(main.Voucher)
+                Ui.Lang["mainlayout.Text.TeamName"].FormatSafe(main.TeamName),
+                Ui.Lang["mainlayout.Text.TeamLevel"].FormatSafe(levelStr),
+                Ui.Lang["mainlayout.Text.Xp"].FormatSafe(main.XP),
+                Ui.Lang["mainlayout.Text.NextLevelXp"].FormatSafe(next),
+                Ui.Lang["mainlayout.Text.Credit"].FormatSafe(main.Credit),
+                Ui.Lang["mainlayout.Text.Voucher"].FormatSafe(main.Voucher)
             };
-        DisplayState.SetMessages(messages);
+        Ui.HeadDisplay.SetMessages(messages);
     }
     public void Dispose()
     {
-        Header.OnBackBtnClicked -= UpdateBckClick;
+        Ui.Header.OnBackBtnClicked -= UpdateBckClick;
         GC.SuppressFinalize(this);
     }
 }
 
+/*
+ .home-selector {
+    
+}
+.question-selector {
+    width: 440px;
+}
+.solo-selector {
+    width: 860px;
+}
+.solo-selector,
+.question-selector,
+
+    // [Inject] private ILanguageService Lang { get; set; } = default!;
+    //[Inject] private NavigationManager Nav { get; set; } = default;
+    //[Inject] private PageHeaderService Header { get; set; } = default!;
+    //[Inject] private IDisplayMessageState Display { get; set; } = default!;
+ */

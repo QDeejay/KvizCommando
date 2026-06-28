@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inherits Utilities.KcComponentBase
 
 <LangGuard Culture=@_culture Module="login">
         <div class="kc-start-layout">
@@ -8,10 +9,10 @@
                 <div class="kc-start-content-body">
                     <div class="kc-start-login-panel">
                         <div class="kc-start-login-panel--head">
-                                <label class="label-title">@Lang["login.Title"]</label>
+                                <label class="label-title">@Ui.Lang["login.Title"]</label>
                             </div>
                         <div class="kc-start-login-panel--footer">
-                                <button class="military-button" disabled="@(!_isLoaded)" @onclick="LoginUser">@Lang["login.Button"]</button>
+                                <button class="military-button" disabled="@(!_isLoaded)" @onclick="LoginUser">@Ui.Lang["login.Button"]</button>
                             </div>
                     </div>
                 </div>

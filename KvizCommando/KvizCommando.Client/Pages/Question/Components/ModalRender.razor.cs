@@ -1,14 +1,15 @@
 ﻿using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Services.Language;
+using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
 
 namespace KvizCommando.Client.Pages.Question.Components
 {
-    public partial class ModalRender : ComponentBase
+    public partial class ModalRender : IDisposable
     {
-        [Inject] protected ILanguageService Lang { get; set; } = default!;
+        [Inject] private ILanguageService Lang { get; set; } = default!;
 
         [Parameter] public int Mode { get; set; } = default!;
         [Parameter] public PendingSlot Slot { get; set; } = default!;
@@ -22,6 +23,10 @@ namespace KvizCommando.Client.Pages.Question.Components
         protected override void OnInitialized()
         {
             isLoaded = true;
+        }
+        public void Dispose() 
+        { 
+            GC.SuppressFinalize(this);
         }
     }
 }

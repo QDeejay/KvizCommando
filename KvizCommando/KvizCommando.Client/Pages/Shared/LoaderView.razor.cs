@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KvizCommando.Client.Services.Visual;
+using KvizCommando.Client.Utilities;
 
 
 namespace KvizCommando.Client.Pages.Shared
 {
-    public partial class LoaderView : ComponentBase, IDisposable
+    public partial class LoaderView : KcComponentBase, IDisposable
     {
         [Inject]
         private LoaderService Loader { get; set; } = default!;

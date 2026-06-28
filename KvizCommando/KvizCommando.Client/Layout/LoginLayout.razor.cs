@@ -2,18 +2,18 @@
 using Blazored.SessionStorage;
 using KvizCommando.Client.Pages.Shared;
 using KvizCommando.Client.Services;
-using KvizCommando.Client.Services.Language;
 using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Services.Visual;
+using KvizCommando.Client.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Globalization;
 
 namespace KvizCommando.Client.Layout
 {
-    public partial class LoginLayout : LayoutComponentBase, IDisposable
+    public partial class LoginLayout : KcLayoutComponentBase, IDisposable
     {
-        [Inject] private ILanguageService _lang { get; set; } = default!;
+        //[Inject] private ILanguageService _lang { get; set; } = default!;
         [Inject] private IdentityRulesService _rules { get; set; } = default!;
 
         private bool _isReady = false;
@@ -23,10 +23,9 @@ namespace KvizCommando.Client.Layout
             Console.WriteLine("[EmptyLayout] OnInitializedAsync START");
 
             var rules = await _rules.GetRulesAsync();
-           
-            await _lang.LoadModuleAsync(_culture, "common");
-            await _lang.LoadModuleAsync(_culture, "identityerrors");
-
+            await Ui.Lang.LoadModuleAsync(_culture, "common");
+            await Ui.Lang.LoadModuleAsync(_culture, "identityerrors");
+            
            
             Console.WriteLine("[EmptyLayout] OnInitializedAsync END");
            

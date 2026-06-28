@@ -1,25 +1,28 @@
 ﻿using Blazored.LocalStorage;
+using KvizCommando.Client.Features.Question;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Threading.Tasks;
 
 namespace KvizCommando.Client.Pages.Shared
 {
-    public partial class KcModal : ComponentBase, IDisposable
+    public partial class KcModal : IDisposable
     {
         [Inject] private IJSRuntime JS { get; set; } = default!;
         [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
         [Parameter] public string Id { get; set; } = "kcModal";
-        [Parameter] public string Title { get; set; } = "Modal title";
-        [Parameter] public string ActionText1 { get; set; } = string.Empty;
-        [Parameter] public string ActionText2 { get; set; } = string.Empty;
-        [Parameter] public string ActionButtonStyle1 { get; set; } = string.Empty;
-        [Parameter] public string ActionButtonStyle2 { get; set; } = string.Empty;
-        [Parameter] public string CloseText { get; set; } = string.Empty;
-        [Parameter] public string SizeClass { get; set; } = string.Empty; // modal-sm, modal-lg, modal-xl
-        [Parameter] public string CheckBoxText { get; set; } = string.Empty;
-        [Parameter] public string CheckBoxKey { get; set; } = string.Empty;
-        [Parameter] public bool CheckBottom { get; set; } = false;
+        [Parameter] public ModalPar Par { get; set; } = default!;
+        
+        //[Parameter] public string Title { get; set; } = "Modal title";
+        //[Parameter] public string ActionText1 { get; set; } = string.Empty;
+        //[Parameter] public string ActionText2 { get; set; } = string.Empty;
+        //[Parameter] public string ActionButtonStyle1 { get; set; } = string.Empty;
+        //[Parameter] public string ActionButtonStyle2 { get; set; } = string.Empty;
+        //[Parameter] public string CloseText { get; set; } = string.Empty;
+        //[Parameter] public string SizeClass { get; set; } = string.Empty; // modal-sm, modal-lg, modal-xl
+        //[Parameter] public string CheckBoxText { get; set; } = string.Empty;
+        //[Parameter] public string CheckBoxKey { get; set; } = string.Empty;
+        //[Parameter] public bool CheckBottom { get; set; } = false;
         [Parameter] public RenderFragment? ChildContent { get; set; }
         [Parameter] public EventCallback OnAction1 { get; set; }
         [Parameter] public EventCallback OnAction2 { get; set; }
@@ -37,7 +40,7 @@ namespace KvizCommando.Client.Pages.Shared
             CheckBox = false;
             CanAccept = false;
             await JS.InvokeVoidAsync("kcModal.show", $"#{Id}");
-            if (CheckBottom == true && _bottomReached!=true)
+            if (Par.CheckBottom == true && _bottomReached!=true)
             {
                 
                 await Task.Delay(500);
@@ -60,7 +63,7 @@ namespace KvizCommando.Client.Pages.Shared
             {
                 if (CheckBox == true)
                 {
-                    await LocalStorage.SetItemAsync(CheckBoxKey ?? "ModalChkAction", true);
+                    await LocalStorage.SetItemAsync(Par.CheckBoxKey ?? "ModalChkAction", true);
                     if (CheckBoxAction.HasDelegate)
                         await CheckBoxAction.InvokeAsync();
                 }
@@ -81,7 +84,7 @@ namespace KvizCommando.Client.Pages.Shared
             if (firstRender)
             {
                 _bottomReached = false;
-                 CanAccept = CheckBottom!=true;
+                 CanAccept = Par.CheckBottom!=true;
             }
             await Task.Delay(5);
         }

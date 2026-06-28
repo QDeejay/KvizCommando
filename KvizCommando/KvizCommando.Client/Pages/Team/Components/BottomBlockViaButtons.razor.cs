@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace KvizCommando.Client.Pages.Team.Components
 {
-    public partial class BottomBlockViaButtons : ComponentBase
+    public partial class BottomBlockViaButtons
     {
         [Inject] private DevDataBuilder DevBuilder { get; set; } = default!;
         [Parameter] public IGeneralInfo DatatoProc { get; set; } = default!;

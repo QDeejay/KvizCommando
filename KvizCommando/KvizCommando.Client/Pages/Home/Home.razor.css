@@ -4,29 +4,20 @@
     align-items: center;
     height: 100vh;
 }
-.solo-selector,
-.question-selector,
-.home-selector {
+
+.kc-home-selector {
     display: flex;
     position: relative;
+    width: 680px;
     top: -50px;
     flex-wrap: wrap;
     gap: 8px;
     align-items: flex-start;
 }
 
-.home-selector {
-    width: 660px;
-}
-.question-selector {
-    width: 440px;
-}
-.solo-selector {
-    width: 840px;
-}
 
 
-.bboard-item {
+.kc-bboard-item {
     display: flex;
 }
 

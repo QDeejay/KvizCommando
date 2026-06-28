@@ -1,7 +1,8 @@
 ﻿using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services;
-using KvizCommando.Client.Services.Language;
 using KvizCommando.Client.Services.User;
+using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.Auth;
 using KvizCommando.Shared.Options;
 using Microsoft.AspNetCore.Components;
@@ -11,25 +12,37 @@ using System.Text.RegularExpressions;
 
 namespace KvizCommando.Client.Pages.Login
 {
-    public partial class Register : ComponentBase, IDisposable
+    public partial class Register : KcComponentBase, IDisposable
     {
-        [Inject] private NavigationManager Nav { get; set; } = default!;
+        //[Inject] private NavigationManager Nav { get; set; } = default!;
         [Inject] private IdentityRulesService IdentityRules { get; set; } = default!;
-        [Inject] private ILanguageService Lang { get; set; } = default!;
-        [Inject] private IUserService UserService { get; set; } = default!;
+        //[Inject] private ILanguageService Lang { get; set; } = default!;
+        //[Inject] private IUserService UserService { get; set; } = default!;
 
-        private readonly RegisterRequestForm FormData = new();
-        private RegisterOptionsResponse? Options = default!;
-        private string _resultMessage  = string.Empty;
+        private readonly RegisterRequestForm _formData = new();
+        private RegisterOptionsResponse? _options = default!;
+        private string _resultMessage = string.Empty;
         private bool _emailFiledSW = false;
         private bool _passwordFiledSW = false;
         private bool _registSucces = false;
+        private bool[] _showPassword = new bool[2];
+        private bool _showPassword2;
+        private string PasswordType1 => _showPassword[0] ? "text" : "password";
+        private string PasswordType2 => _showPassword[1] ? "text" : "password";
+        private string EyeIcon1 =>
+            _showPassword[0] ? "bi bi-eye-slash" : "bi bi-eye";
+        private string EyeIcon2 =>
+           _showPassword[1] ? "bi bi-eye-slash" : "bi bi-eye";
 
+        private void TogglePassword(int pw)
+        {
+             _showPassword[pw] = !_showPassword[pw];
+        }
         private string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         private bool CanRegister =>
-            !string.IsNullOrWhiteSpace(FormData.ConfirmPassword)
-            && !string.IsNullOrWhiteSpace(FormData.Email)
-            && !string.IsNullOrWhiteSpace(FormData.Password);
+            !string.IsNullOrWhiteSpace(_formData.ConfirmPassword)
+            && !string.IsNullOrWhiteSpace(_formData.Email)
+            && !string.IsNullOrWhiteSpace(_formData.Password);
 
         private async Task HandleValidSubmit()
         {
@@ -37,9 +50,9 @@ namespace KvizCommando.Client.Pages.Login
             _resultMessage = string.Empty;
             
             // --- Email ---
-            if (!LoginHelper.IsValidEmail(FormData.Email))
+            if (!LoginHelper.IsValidEmail(_formData.Email))
             {
-                _resultMessage = Lang["identityerrors.InvalidEmail"].FormatSafe(FormData.Email);
+                _resultMessage = Ui.Lang["identityerrors.InvalidEmail"].FormatSafe(_formData.Email);
                 _emailFiledSW = true;
             }
             else
@@ -49,43 +62,43 @@ namespace KvizCommando.Client.Pages.Login
 
             // --- Password: IdentityOptions alapján teljes ellenőrzés ---
             _passwordFiledSW = false;
-            if (Options is not null)
+            if (_options is not null)
             {
-                var pwd = FormData.Password ?? string.Empty;
+                var pwd = _formData.Password ?? string.Empty;
 
-                if (pwd.Length < Options.RequiredLength)
+                if (pwd.Length < _options.RequiredLength)
                 {
-                    _resultMessage = Lang["identityerrors.PasswordTooShort"].FormatSafe(Options.RequiredLength);
+                    _resultMessage = Ui.Lang["identityerrors.PasswordTooShort"].FormatSafe(_options.RequiredLength);
                     _passwordFiledSW = true;
                 }
-                else if (Options.RequireDigit && !pwd.Any(char.IsDigit))
+                else if (_options.RequireDigit && !pwd.Any(char.IsDigit))
                 {
-                    _resultMessage = Lang["identityerrors.PasswordRequiresDigit"];
+                    _resultMessage = Ui.Lang["identityerrors.PasswordRequiresDigit"];
                     _passwordFiledSW = true;
                 }
-                else if (Options.RequireLowercase && !pwd.Any(char.IsLower))
+                else if (_options.RequireLowercase && !pwd.Any(char.IsLower))
                 {
-                    _resultMessage = Lang["identityerrors.PasswordRequiresLower"];
+                    _resultMessage = Ui.Lang["identityerrors.PasswordRequiresLower"];
                     _passwordFiledSW = true;
                 }
-                else if (Options.RequireUppercase && !pwd.Any(char.IsUpper))
+                else if (_options.RequireUppercase && !pwd.Any(char.IsUpper))
                 {
-                    _resultMessage = Lang["identityerrors.PasswordRequiresUpper"];
+                    _resultMessage = Ui.Lang["identityerrors.PasswordRequiresUpper"];
                     _passwordFiledSW = true;
                 }
-                else if (Options.RequireNonAlphanumeric && pwd.All(char.IsLetterOrDigit))
+                else if (_options.RequireNonAlphanumeric && pwd.All(char.IsLetterOrDigit))
                 {
-                    _resultMessage = Lang["identityerrors.PasswordRequiresNonAlphanumeric"];
+                    _resultMessage = Ui.Lang["identityerrors.PasswordRequiresNonAlphanumeric"];
                     _passwordFiledSW = true;
                 }
-                else if (Options.RequiredUniqueChars > 1 && pwd.Distinct().Count() < Options.RequiredUniqueChars)
+                else if (_options.RequiredUniqueChars > 1 && pwd.Distinct().Count() < _options.RequiredUniqueChars)
                 {
-                    _resultMessage = Lang["identityerrors.PasswordRequiresUniqueChars"].FormatSafe(Options.RequiredLength);
+                    _resultMessage = Ui.Lang["identityerrors.PasswordRequiresUniqueChars"].FormatSafe(_options.RequiredLength);
                     _passwordFiledSW = true;
                 }
-                else if (FormData.Password != FormData.ConfirmPassword)
+                else if (_formData.Password != _formData.ConfirmPassword)
                 {
-                    _resultMessage = Lang["identityerrors.PasswordNotMatched"];
+                    _resultMessage = Ui.Lang["identityerrors.PasswordNotMatched"];
                     _passwordFiledSW = true;
                 }
             }
@@ -97,7 +110,7 @@ namespace KvizCommando.Client.Pages.Login
 
             
             // Kérés a szerver felé
-            var (success, errors) = await UserService.ProfileRegistAsync(FormData);
+            var (success, errors) = await User.ProfileRegistAsync(_formData);
 
             if (success)
             {
@@ -109,22 +122,22 @@ namespace KvizCommando.Client.Pages.Login
             if (errors is { Count: > 0 })
             {
                 // csak az első hibát mutatjuk; ha több kell, join-olható
-                _resultMessage = Lang[$"identityerrors.{errors[0]}"];
+                _resultMessage = Ui.Lang[$"identityerrors.{errors[0]}"];
             }
             else
             {
-                _resultMessage = Lang["identityerrors.DefaultError"];
+                _resultMessage = Ui.Lang["identityerrors.DefaultError"];
             }
         }
         private void NavigateHome()
         {
-            Nav.NavigateTo("/login");
+            Ui.Nav.NavigateTo("/login");
         }
         protected override async Task OnInitializedAsync()
         {
              _registSucces = false;
              _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-             Options = await IdentityRules.GetRulesAsync();
+             _options = await IdentityRules.GetRulesAsync();
         }
         public void Dispose() { }
     }

@@ -1,5 +1,6 @@
-﻿using KvizCommando.Client.Services.Language;
+﻿
 using KvizCommando.Client.Services.Visual;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using System;
@@ -11,11 +12,10 @@ using System.Threading.Tasks;
 
 namespace KvizCommando.Client.Pages.Shared
 {
-    public partial class LanguageSelector : ComponentBase, IDisposable
+    public partial class LanguageSelector : IDisposable
     {
         
         [Inject] private ILanguageService Lang { get; set; } = default!;
-        [Inject] private UiHeaderState Ui { get; set; } = default!;
 
         private LanguageConfirmBase? ConfirmModal;
         protected override void OnInitialized()

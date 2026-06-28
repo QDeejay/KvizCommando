@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace KvizCommando.Client.Pages.Team.Components
 {
-    public partial class TeamModalRender : ComponentBase
+    public partial class TeamModalRender
     {
         [Inject] private ITeamModalDataBuilder render { get; set; } = default!;
         [Parameter] public int mode { get; set; } = default!;

@@ -1,6 +1,6 @@
 ﻿using KvizCommando.Client.Pages.Solo;
 using KvizCommando.Client.Services.ClientCache;
-using KvizCommando.Client.Services.Language;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
@@ -10,7 +10,6 @@ namespace KvizCommando.Client.Layout
     public partial class NavMenu
     {
         [Inject] private ILanguageService Lang { get; set; } = default!;
-        [Parameter] public EventCallback<int> OnClickedNavButton { get; set; } = default!;
         [Parameter] public HomeScreen Hs { get; set; } = default!;
         [Parameter] public bool IsCollapsed { get; set; }
         [Parameter] public EventCallback OnToggleSidebar { get; set; }
@@ -44,16 +43,7 @@ namespace KvizCommando.Client.Layout
 
         protected override async Task OnInitializedAsync()
         {
-            //
-
             await Task.Delay(1);
-        }
-       
-        private async Task OnNavClick(int btn)
-        {
-            ActPageGroup = btn;
-            if (OnClickedNavButton.HasDelegate)
-               await OnClickedNavButton.InvokeAsync(btn);
         }
     }
 }

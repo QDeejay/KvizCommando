@@ -2,7 +2,7 @@
 
 namespace KvizCommando.Client.Components
 {
-    public partial class PageContainer : ComponentBase
+    public partial class PageContainer
     {
         [Parameter]
         public RenderFragment? ChildContent { get; set; }

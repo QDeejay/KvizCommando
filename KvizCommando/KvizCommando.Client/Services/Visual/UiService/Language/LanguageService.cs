@@ -3,7 +3,7 @@ using Microsoft.JSInterop;
 using System.Net.Http.Json;
 using System.Text.Json;
 
-namespace KvizCommando.Client.Services.Language
+namespace KvizCommando.Client.Services.Visual.UiService.Language
 {
     public class LanguageService : ILanguageService
     {
@@ -19,7 +19,7 @@ namespace KvizCommando.Client.Services.Language
         {
             _js = js;
             _http = http;
-            Console.WriteLine($"[DI] LanguageService created: {this.GetHashCode()}");
+            Console.WriteLine($"[DI] LanguageService created: {GetHashCode()}");
 
         }
         public string this[string key] => Get(key);

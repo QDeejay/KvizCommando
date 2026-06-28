@@ -2,8 +2,8 @@
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Dto;
-using KvizCommando.Client.Services.Language;
 using KvizCommando.Client.Services.Visual;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -17,14 +17,14 @@ using System.Threading.Tasks;
 
 namespace KvizCommando.Client.Pages.Solo
 {
-    public partial class SoloGame : ComponentBase
+    public partial class SoloGame : KcComponentBase, IDisposable
     {
-        [Inject] private PageHeaderService Header { get; set; } = default!;
+        //[Inject] private PageHeaderService Header { get; set; } = default!;
 
-        [Inject] private ILanguageService Lang { get; set; } = default!;
+        //[Inject] private ILanguageService Lang { get; set; } = default!;
 
         [Inject] private ISoloState SoloState { get; set; } = default!;
-        [Inject] private IApiService TeamApi { get; set; } = default!;
+        //[Inject] private IApiService Api { get; set; } = default!;
 
         private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         private bool _isLoaded = false;
@@ -48,7 +48,7 @@ namespace KvizCommando.Client.Pages.Solo
         {
             if (SoloState.Snapshot != null)
             {
-                _soloBtns = SgameBtnBuilder.BuildBoxes(SoloState.Snapshot!, culture, Lang);
+                _soloBtns = SgameBtnBuilder.BuildBoxes(SoloState.Snapshot!, culture, Ui.Lang);
                 _isLoaded = true;
             }
         }
@@ -81,12 +81,16 @@ namespace KvizCommando.Client.Pages.Solo
         {
             
             await SoloState.EnsureLoadedAsync();
-            Header.SetTitle(Lang["mainlayout.Header.GameSolo"],4);
+            Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.GameSolo"],4);
             if (_isLoaded==false)
                 {
                     BuildButtons();
                 }
             
+        }
+        public void Dispose() 
+        { 
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using KvizCommando.Client.Services.Language;
+﻿using KvizCommando.Client.Services.Visual.UiService.Language;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Globalization;

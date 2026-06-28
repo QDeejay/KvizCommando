@@ -1,7 +1,7 @@
 ﻿using KvizCommando.Client.Features.Question;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Language;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 
 namespace KvizCommando.Client.Features.Sologame
@@ -20,7 +20,7 @@ namespace KvizCommando.Client.Features.Sologame
     {
         internal Func<ILanguageService, SoloResults, string> BuildFooter { get; init; } = default!;
     }
-    public sealed class SgameBtnContent : SgameBtnSpecs
+    public sealed class SgameBtnSub : SgameBtnSpecs
     {
         internal int BtnQnty { get; init; }
         internal Func<int, string, string> BuildTitle { get; init; } = default!;
@@ -69,9 +69,9 @@ namespace KvizCommando.Client.Features.Sologame
                 BuildFooter = (lang, sr) => ""
             },
         };
-        public static readonly IReadOnlyList<SgameBtnContent> ContentSpecs = new[]
+        public static readonly IReadOnlyList<SgameBtnSub> SubSpecs = new[]
         {
-              new SgameBtnContent {
+              new SgameBtnSub {
                 Key = SgameBoxKeySub.BtnCat,
                 BtnQnty = CatQnty,
                 BuildTitle = (ix, cult) => CategoryNameLocalizer.GetCategory(ix,cult),
@@ -79,7 +79,7 @@ namespace KvizCommando.Client.Features.Sologame
                 BuildEnable = (se,ix) => se.EnaCat[ix],
                 BuildFooter = (lang,sr, ix) => lang["solo.Button.Footer.Games"].FormatSafe(sr.CategoryResults[ix].Points,sr.CategoryResults[ix].Time)
             },
-            new SgameBtnContent {
+            new SgameBtnSub {
                 Key = SgameBoxKeySub.BtnOri,
                 BtnQnty = OriQnty,
                 BuildTitle = (ix, cult) => OrientationLocalizer.GetOrientation(ix,cult),

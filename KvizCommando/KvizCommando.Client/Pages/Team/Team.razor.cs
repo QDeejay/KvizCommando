@@ -4,8 +4,9 @@ using KvizCommando.Client.Pages.Shared;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Dto;
-using KvizCommando.Client.Services.Language;
+
 using KvizCommando.Client.Services.Visual;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.Team;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
@@ -14,13 +15,13 @@ using System.Globalization;
 
 namespace KvizCommando.Client.Pages.Team
 {
-    public partial class Team : ComponentBase
+    public partial class Team : KcComponentBase, IDisposable
     {
-        [Inject] private PageHeaderService PageHeader{ get; set; } = default!;
+        //[Inject] private PageHeaderService Header{ get; set; } = default!;
       
-        [Inject] private ILanguageService Lang { get; set; } = default!;
-        [Inject] private ITeamState TeamState { get; set; } = default!;
-        [Inject] private IApiService TeamApi { get; set; } = default!;
+        //[Inject] private ILanguageService Lang { get; set; } = default!;
+        [Inject] private ITeamState _tState { get; set; } = default!;
+        //[Inject] private IApiService Api { get; set; } = default!;
 
         private IGeneralInfo _generalInfo { get; set; } = default!;
         private TeamMemberDto SelectedMember { get; set; } = new TeamMemberDto();
@@ -45,9 +46,9 @@ namespace KvizCommando.Client.Pages.Team
         protected override async Task OnInitializedAsync()
         {
             
-            await TeamState.EnsureLoadedAsync();
-            PageHeader.SetTitle(Lang["mainlayout.Header.Team"],2);
-            _generalInfo = TeamState.TeamInfo ?? new ExtendedInfo();
+            await _tState.EnsureLoadedAsync();
+            Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Team"],2);
+            _generalInfo = _tState.TeamInfo ?? new ExtendedInfo();
             _isLoaded = true;
             RecruitMixer.Shuffle();
            
@@ -55,17 +56,17 @@ namespace KvizCommando.Client.Pages.Team
         }
         private void BoxReady()
         {
-            tabTitle = Lang["team.tabPane.General.Title"];
+            tabTitle = Ui.Lang["team.tabPane.General.Title"];
             hTabs = new string[9];
-            hTabs[0] = Lang["team.tabPane.General"] + ".";
+            hTabs[0] = Ui.Lang["team.tabPane.General"] + ".";
             for (int i = 1; i < 9; i++)
             {
                 hTabs[i] = OrientationLocalizer.GetOrientShort(i, culture) + ".";
             }
-            vTabs[0] = Lang["team.SubBtn.OverView"];
-            vTabs[1] = Lang["team.SubBtn.Helps"];
-            vTabs[2] = Lang["team.SubBtn.Extra"];
-            vTabs[3] = Lang["team.SubBtn.Hire"];
+            vTabs[0] = Ui.Lang["team.SubBtn.OverView"];
+            vTabs[1] = Ui.Lang["team.SubBtn.Helps"];
+            vTabs[2] = Ui.Lang["team.SubBtn.Extra"];
+            vTabs[3] = Ui.Lang["team.SubBtn.Hire"];
         }
         private void OnHTabChanged(int index)
         {
@@ -74,16 +75,16 @@ namespace KvizCommando.Client.Pages.Team
             if (index == 0)
             {
                 activeVTab = 0;
-                vTabs[1] = Lang["team.SubBtn.Helps"];
+                vTabs[1] = Ui.Lang["team.SubBtn.Helps"];
                 pictureCode = string.Empty;
-                _generalInfo = TeamState.TeamInfo;
+                _generalInfo = _tState.TeamInfo;
             }
             else
             {
-                if (TeamState.Charmask[index])
+                if (_tState.Charmask[index])
                 {
                     activeVTab = 0;
-                    SelectedMember = TeamState.TeamMembers[index];
+                    SelectedMember = _tState.TeamMembers[index];
                     _generalInfo = SelectedMember;
                     pictureCode = SelectedMember.MemberPictureCode;
                 }
@@ -92,7 +93,7 @@ namespace KvizCommando.Client.Pages.Team
                     activeVTab = 3;
                     pictureCode = string.Empty;
                 }        
-                vTabs[1] = Lang["team.SubBtn.Second"];          
+                vTabs[1] = Ui.Lang["team.SubBtn.Second"];          
             }
             tabTitle = TitleManager();
         }
@@ -105,14 +106,14 @@ namespace KvizCommando.Client.Pages.Team
             try
             {
                
-                var (success, message) = await TeamApi.ModifyTeamAsync(request);
+                var (success, message) = await Api.ModifyTeamAsync(request);
                 MessageTeam = message;
                 isTeamSuccess = success;
             
                 if (isTeamSuccess)
-                    TeamState.Invalidate();
-                await TeamState.EnsureLoadedAsync();
-                _generalInfo = activeHTab == 0 ? TeamState.TeamInfo : TeamState.TeamMembers[activeHTab];
+                    _tState.Invalidate();
+                await _tState.EnsureLoadedAsync();
+                _generalInfo = activeHTab == 0 ? _tState.TeamInfo : _tState.TeamMembers[activeHTab];
                 await InvokeAsync(StateHasChanged);
                 await Task.Delay(500);
                 MessageTeam = string.Empty;
@@ -144,7 +145,7 @@ namespace KvizCommando.Client.Pages.Team
             if (actionreq > 100)
             {
                 selectedMemberId = member;
-                SelectedMember = TeamState.TeamMembers[member];
+                SelectedMember = _tState.TeamMembers[member];
                 await ModalCallAsync(action);
             }
             else 
@@ -158,14 +159,14 @@ namespace KvizCommando.Client.Pages.Team
         }
         private async Task ModalCallAsync(int btnId)
         {
-            var spec = ModalSpecs.SpecsT[btnId];
+            var spec = ModalSpecs.Specs[btnId];
             ModalOption = spec.Mode;
             tModal = spec;
             if (btnId != 3)
             {
                 tModal = tModal with
                 {
-                    AsyncAction1 = () => ExecuteModalAsync(btnId)
+                    //AsyncAction1 = () => ExecuteModalAsync(btnId)
                 };
             }
             else
@@ -173,19 +174,19 @@ namespace KvizCommando.Client.Pages.Team
                 tModal = tModal with
                 {
                     ActionText2 = SelectedMember.SkillPoints>0 ? tModal.ActionText2 : string.Empty,
-                    AsyncAction1 = () => ExecuteModalAsync(btnId),
-                    AsyncAction2 = () => ExecuteModalAsync(btnId+1)
+                    //AsyncAction1 = () => ExecuteModalAsync(btnId),
+                    //AsyncAction2 = () => ExecuteModalAsync(btnId+1)
                 };
             }
             
-            await teamModal.ShowAsync();
+            await teamModal!.ShowAsync();
         }
         private async Task ExecuteModalAsync(int mode)
         {
             try
             {
                
-                var response = await TeamApi.ManageTeamAsync(new ManageTeamRequest()
+                var response = await Api.ManageTeamAsync(new ManageTeamRequest()
                 {
                     CandidateId = selectedCandidateId,
                     ReqType = (ManageType)mode,
@@ -195,14 +196,14 @@ namespace KvizCommando.Client.Pages.Team
                 MessageTeam = response.Message;
                 if (isTeamSuccess)
                 {
-                    TeamState.Invalidate();
+                    _tState.Invalidate();
                     activeHTab = 0;
                     activeVTab = 0;
                     pictureCode = string.Empty;
                     selectedMemberId = 0;
                 }
-                await TeamState.EnsureLoadedAsync();
-                _generalInfo = TeamState.TeamInfo;
+                await _tState.EnsureLoadedAsync();
+                _generalInfo = _tState.TeamInfo;
                 await InvokeAsync(StateHasChanged);
                 await Task.Delay(500);
                 MessageTeam = string.Empty;
@@ -215,7 +216,7 @@ namespace KvizCommando.Client.Pages.Team
         private void OnCandidateSelected(int candidateId)
         {
             selectedCandidateId = candidateId;
-            pictureCode = candidateId == 0 ? string.Empty : TeamState.Candidates[activeHTab].PictureCode[candidateId - 1] ?? string.Empty;
+            pictureCode = candidateId == 0 ? string.Empty : _tState.Candidates[activeHTab].PictureCode[candidateId - 1] ?? string.Empty;
         }
         private void CloseModalAction()
         {
@@ -228,8 +229,8 @@ namespace KvizCommando.Client.Pages.Team
             result.Item1[0] = true;
             for (int i = 1; i < result.Item1.Length; i++)
             {
-                result.Item1[i] = TeamState.Charmask[i] || (TeamState.Candidates[i].CanBeHire && TeamState.TeamInfo.TotalMembers < TeamState.TeamInfo.MaxMembers) ;
-                result.Item2[i] = TeamState.TeamInfo.TotalMembers < TeamState.TeamInfo.MaxMembers ? (!TeamState.Candidates[i].CanBeHire ? Lang["team.Label.PopUp.NotHire"] : "") : Lang["team.Label.PopUp.NoFree"]; 
+                result.Item1[i] = _tState.Charmask[i] || (_tState.Candidates[i].CanBeHire && _tState.TeamInfo.TotalMembers < _tState.TeamInfo.MaxMembers) ;
+                result.Item2[i] = _tState.TeamInfo.TotalMembers < _tState.TeamInfo.MaxMembers ? (!_tState.Candidates[i].CanBeHire ? Ui.Lang["team.Label.PopUp.NotHire"] : "") : Ui.Lang["team.Label.PopUp.NoFree"]; 
             }
             return result;
         }
@@ -238,15 +239,15 @@ namespace KvizCommando.Client.Pages.Team
             string title = string.Empty;
             int att1Name = activeHTab;
             if (activeHTab == 0)
-            { title = Lang["team.tabPane.General.Title"]; }
+            { title = Ui.Lang["team.tabPane.General.Title"]; }
             else if (activeVTab == 3)
-            { title = OrientationLocalizer.GetOrientation(att1Name, culture) + " " + Lang["team.tabPane.Recruit.Title"]; }
+            { title = OrientationLocalizer.GetOrientation(att1Name, culture) + " " + Ui.Lang["team.tabPane.Recruit.Title"]; }
             else
-            { title = Lang["team.tabPane.Member.Title"]; }
+            { title = Ui.Lang["team.tabPane.Member.Title"]; }
 
             return title;
         }
-        protected void Dispose()
+        public void Dispose()
         {
             teamModal?.Dispose();
             GC.SuppressFinalize(this);

@@ -7,8 +7,8 @@ using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Pages.Shared;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Dto;
-using KvizCommando.Client.Services.Language;
 using KvizCommando.Client.Services.Visual;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.Question;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
@@ -17,90 +17,270 @@ using System.Globalization;
 
 namespace KvizCommando.Client.Pages.Question
 {
-    public partial class Question : ComponentBase, IDisposable
+    public partial class Question : KcComponentBase, IDisposable
     {
-        [Inject] private PageHeaderService Header { get; set; } = default!;
-        
-        [Inject] private ILanguageService Lang { get; set; } = default!;
-        [Inject] private IQuestionState QuestionState { get; set; } = default!;
-        [Inject] private IApiService QuestApi { get; set; } = default!;
-        [Inject] private HttpClient Http { get; set; } = default!;
-        [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
+        //[Inject] private PageHeaderService Header { get; set; } = default!;
+        //[Inject] private NavigationManager Nav { get; set; } = default!;
+        //[Inject] private ILanguageService Lang { get; set; } = default!;
+        [Inject] private IQuestionState _qState { get; set; } = default!;
+        //[Inject] private IApiService Api { get; set; } = default!;
+        [Inject] private HttpClient _http { get; set; } = default!;
+        [Inject] private ILocalStorageService _localStorage { get; set; } = default!;
 
-        private int SelectedId { get; set; }
-        private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-        private KcModal? questionModal;
-        private ModalPar qModal = new();
 
+        private string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+  
+        private Dictionary<string, ContentBoxVm>? _boxesDict = new Dictionary<string, ContentBoxVm>();
+        private string[] _boxOrder = Array.Empty<string>();
         private NewQuestionRequest formData = new();
-        private MarkupString renderHTML = new();
+        private const string LOCAL_NOT_SHOW_NEW = "notShowNew";
+        private const string LOCAL_NOT_SHOW_DEL = "notShowDel";
+        private Func<Task> _onBoxBtnClick { get; set; } = default!;
+        private int SelectedId { get; set; }
+
+        private string _boxBtnText = string.Empty;
+        private string _boxBtnStyle = string.Empty;
 
         private string MessageFact = string.Empty;
         private string MessageUsr = string.Empty;
-        private string BoxHeader = "PLACEHOLDER";
 
-        private const string localNotShowNew = "notShowNew";
-        private const string localNotShowDel = "notShowDel";
+        private int ScreenOption;
+        
+        private bool _locNotShowStateNew { get; set; }
+        private bool _locNotShowStateDel { get; set; }
 
-        private string BoxBtnText = string.Empty;
-        private string BoxBtnStyle = string.Empty;
-        private Func<Task> OnBoxBtnClick { get; set; } = default!;
-        private bool localNotShowState { get; set; }
-        private bool localNotShowStateDel { get; set; }
-
-        private bool isSuccess = false;
-        private int ScreenOption = 0;
+        private bool _isSuccess = false;
+        private int _subPageNo = 0;
         private int ModalOption = 0;
  
+        private bool _isReady = false;
         private bool _isLoaded = false;
-        private int[] OriginalCodes = new int[10];
-        private int[] WorkingCodes = Array.Empty<int>();
-        private string SubHeaderTitle = string.Empty;
-        private List<ContentBoxVm>? _qbuttons;
-
-       
-
-        private void BuildButtons()
+        private int[] _originalCodes = new int[10];
+        private int[] _workingCodes = Array.Empty<int>();
+        private ContentBoxVm Box(string orx) => _boxesDict![orx];
+        private void BuildBoxes()
         {
+
+            var boxes = new Dictionary<string, ContentBoxVm>();
+            boxes = QBtnBoxBuilder.BuildBoxes(_qState.ExtendedInfo!, Ui.Lang);
             
-            if (QuestionState.Snapshot != null)
+            foreach (var box in boxes)
             {
-                //_qbuttons = QBtnBtnBuilder.BuildButtons(QuestionState.ExtendedInfo!, Lang);
-                _isLoaded = true;
+                _boxesDict![box.Key] = box.Value;
             }
+            _isReady = _isLoaded;
+        }
+        private void OnBoxClick(int boxId)
+        {
+            SelectedId = 100;
+            _boxBtnText = string.Empty;
+            _boxBtnStyle = string.Empty;
+            _onBoxBtnClick = default!;
+            var title = string.Empty;
+            switch (boxId)
+            {
+                case 1:
+                    _boxOrder = QBtnBoxBuilder.Root;
+                    title = (Ui.Lang["mainlayout.Header.Question"]);
+                    break;
+                case 101:
+                    _boxOrder = QBtnBoxBuilder.SubFact;
+                    title = _boxesDict![QBoxKeyRoot.RtBtnFactory.ToString()].Header;
+                    break;
+                case 102:
+                    _boxOrder = QBtnBoxBuilder.SubUsr;
+                    _onBoxBtnClick = () => ModalCallAsync(0);
+                    _boxBtnText = _locNotShowStateDel ? Ui.Lang["question.Button.Delete"] : Ui.Lang["question.Button.Handle"];
+                    _boxBtnStyle = _locNotShowStateDel ? "background-color: #a64b2a" : "background-color: #4b5320";
+                    title = _boxesDict![QBoxKeyRoot.RtBtnUsr.ToString()].Header;
+                    break;
+                case 103:
+                    _boxOrder = QBtnBoxBuilder.SubPend;
+                    _onBoxBtnClick = () => ModalCallAsync(1);
+                    _boxBtnText = Ui.Lang["question.Button.Handle"];
+                    title = _boxesDict![QBoxKeyRoot.RtBtnPendig.ToString()].Header;
+                    break;
+                case 104:
+                    _boxOrder = QBtnBoxBuilder.SubNew;
+                    title = _boxesDict![QBoxKeyRoot.RtBtnNew.ToString()].Header;
+                    break;
+                default:
+                    _boxOrder = QBtnBoxBuilder.Root;
+                    title = (Ui.Lang["mainlayout.Header.Question"]);
+                    break;  
+            }
+            Ui.Header.SetTitle(title, boxId);
+            Ui.Header.SetBackBtnEna(boxId>1);
         }
         protected override async Task OnInitializedAsync()
         {
-         
-            await QuestionState.EnsureLoadedAsync();
-            localNotShowStateDel = await LocalStorage.GetItemAsync<bool>(localNotShowDel);
-            localNotShowState = await LocalStorage.GetItemAsync<bool>(localNotShowNew);
+            await _qState.EnsureLoadedAsync();
+            _locNotShowStateDel = await _localStorage.GetItemAsync<bool>(LOCAL_NOT_SHOW_DEL);
+            _locNotShowStateNew = await _localStorage.GetItemAsync<bool>(LOCAL_NOT_SHOW_NEW);
+            Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Question"],1);
 
-            if (localNotShowState == false)
+            (_originalCodes, _workingCodes) = QuestionHelper.CloneFactorySlots(_qState.FactorySlots);
+            _isLoaded= true;
+            if (_isReady==false)
+                BuildBoxes();
+        }
+        protected override void OnInitialized()
+        {
+            Ui.Header.OnBackBtnClicked += UpdateBckClick;
+        }
+        private async Task OnFactSaveAsync()
+        {
+            try
+            {
+                var (success, message) = await Api.SaveFactorySlotsAsync(new SaveFactoryRequest
+                { CategorySlots = _workingCodes });
+                MessageFact = message;
+                _isSuccess = success;
+                _qState.Invalidate();
+            }
+            catch (Exception ex) { Console.WriteLine($"Save failed: {ex.Message}"); }
+            finally { }
+            for (var i = 0; i < _workingCodes.Length; i++)
+            {
+                _originalCodes[i] = _workingCodes[i];
+            }
+            await _qState.EnsureLoadedAsync();
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(1000);
+            MessageFact = string.Empty;
+           
+        }
+        private async Task OnSelectId(int id)
+        {
+            SelectedId = id;
+            await Task.Delay(1);
+            
+        }
+        private async Task ModalCallAsync(int btnId)
+        {
+           await Task.Delay(1);
+        }
+        private async Task ExecuteModalAsync(int execute)
+        {
+            bool isSucces = false;
+            string message = string.Empty;
+            Console.WriteLine($"ScreenOption execute: {ScreenOption}");
+            if (execute < 3)
+            {
+                var (suc, msg) = await Api.ManageSlotAsync(new ManageSlotRequest
+                {
+                    SlotNo = SelectedId,
+                    ReqType = (SlotManageType)execute,
+                });
+                isSucces = suc;
+                message = msg;
+            }
+            else
+            {
+                int index = Array.FindIndex(_qState.PendingSlots!, x => x.Category == 0);
+                var (suc, msg) = await Api.SendNewQuestionAsync( new NewQuestionRequest
+                 {
+                     SlotNo = index,
+                     Category = formData.Category,
+                     Question = formData.Question,
+                     Answers = formData.Answers
+                 });
+                isSucces = suc;
+                message = msg;
+            }
+            Console.WriteLine($"ScreenOption after execute: {ScreenOption}");
+            if (isSucces)
+            {
+                (_originalCodes, _workingCodes) = QuestionHelper.CloneFactorySlots(_qState.FactorySlots);
+                _qState.Invalidate();
+                await _qState.EnsureLoadedAsync();
+                _isSuccess = true;
+            }
+            else
+            {
+                MessageUsr = message;
+            }
+            await InvokeAsync(StateHasChanged);
+
+            if (MessageUsr != string.Empty) { await Task.Delay(1000); MessageUsr = string.Empty; }
+            ModalOption = 0;
+            //OnRootBtnClick(ScreenOption+10);
+            await Task.Delay(1);
+
+        }
+        private async Task SaveToForm(NewQuestionRequest request)
+        {
+            formData = request;
+            await ModalCallAsync(2);
+        }  
+        private async Task CallPendModal(int selectedid)
+        {
+            if (selectedid != 100)
+            {
+                SelectedId = selectedid;
+                await ModalCallAsync(1);
+            }
+        }
+
+        private void UpdateBckClick()
+        {
+            Console.WriteLine($"Navigate to: kurva anyád");
+            if (Ui.Header.PageIndex == 1)
+                Ui.Nav.NavigateTo("/home");
+            else
+                OnBoxClick(1);
+            
+            //_isReady = false;
+            InvokeAsync(StateHasChanged);
+        }
+        public void Dispose()
+        {
+            //_questionModal?.Dispose();
+            GC.SuppressFinalize(this);
+        }
+    }
+}
+
+
+/*
+  <KcModal @ref="questionModal"
+                         Id="questionModal"
+                         Title="@Lang[qModal.Title]"
+                         SizeClass="@qModal.Size"
+                         ActionText1="@Lang[qModal.ActionText1]"
+                         ActionText2="@Lang[qModal.ActionText2]"
+                         CloseText="@Lang[qModal.CloseText]"
+                         OnAction1="@qModal.AsyncAction1"
+                         OnAction2="@qModal.AsyncAction2"
+                         ActionButtonStyle1="@qModal.ActionStyle1"
+                         CheckBottom="@qModal.CheckBottom"
+                         CheckBoxText="@Lang[qModal.CheckBoxText]"
+                         CheckBoxKey="@qModal.CheckBoxKey"
+                         CheckBoxAction="@qModal.AsyncCheckBoxAction">
+                    @if (ModalOption != 0 && SelectedId != 100)
+                    {
+                        <ModalRender Mode="@ModalOption"
+                                     Slot="@QuestionState.PendingSlots[ModalOption==2 ? SelectedId:1]"
+                                     renderHTML="@renderHTML" />
+                    }
+                </KcModal>
+
+
+        private KcModal? questionModal;
+        private ModalPar qModal = new();
+private MarkupString renderHTML = new();
+ if (_locNotShowStateNew == false)
             {
                 string Url = $"/Manuals/{culture}/questionsend.html";
                 renderHTML = new MarkupString(await Http.GetStringAsync(Url));
             }
             else renderHTML = new MarkupString(string.Empty);
-
-            Header.SetTitle(Lang["mainlayout.Header.Question"],1);
-
-            (OriginalCodes, WorkingCodes) = QuestionHelper.CloneFactorySlots(QuestionState.FactorySlots);
-       
-            if (_isLoaded==false)
-                BuildButtons();
-        }
-        
-        private void OnHeadButtonClick() { OnRootBtnClick(1); }
-        private void OnRootBtnClick(int btnId)
+private void OnRootBtnClick(int btnId)
         {
             Console.WriteLine($"megnyomta a paraszt következő gombot: {btnId}");
             ModalOption = 0;
-            SelectedId =100;
-            SubHeaderTitle = string.Empty;
-            BoxBtnText = string.Empty;
-            BoxBtnStyle = string.Empty;
-            OnBoxBtnClick = default!;
+            
+            
             qModal = qModal with { Mode = 0 };
             switch (btnId)
             {
@@ -118,16 +298,13 @@ namespace KvizCommando.Client.Pages.Question
                     ScreenOption = 2;
                     BoxHeader = Lang["question.Box.Title.UsrSlots"].FormatSafe(QuestionState.ExtendedInfo.OccupiedUserSlot, QuestionState.ExtendedInfo.AvailableUserSlot);
                     SubHeaderTitle = _qbuttons?[1].Header ?? string.Empty;
-                    OnBoxBtnClick = () => ModalCallAsync(0);
-                    BoxBtnText= localNotShowStateDel ? Lang["question.Button.Delete"] : Lang["question.Button.Handle"];
-                    BoxBtnStyle = localNotShowStateDel ? "background-color: #a64b2a" : "background-color: #4b5320";
+                    
                     break;
                 case 13:
                     ScreenOption = 3;
                     BoxHeader = Lang["question.Box.Title.PendingSlots"].FormatSafe(QuestionState.ExtendedInfo.OccupiedPendingSlot, QuestionState.ExtendedInfo.AvailableUserSlot >> 1);
                     SubHeaderTitle = _qbuttons?[2].Header ?? string.Empty;
-                    OnBoxBtnClick = () => ModalCallAsync(1);
-                    BoxBtnText = Lang["question.Button.Handle"];
+                   
                     break;
                 case 14:
                     ScreenOption = 4;
@@ -138,39 +315,9 @@ namespace KvizCommando.Client.Pages.Question
                     ScreenOption = 0;
                     break;
             }
-        }    
-        private async Task OnFactSaveAsync()
-        {
-            try
-            {
-                var (success, message) = await QuestApi.SaveFactorySlotsAsync(new SaveFactoryRequest
-                { CategorySlots = WorkingCodes });
-                MessageFact = message;
-                isSuccess = success;
-                QuestionState.Invalidate();
-            }
-            catch (Exception ex) { Console.WriteLine($"Save failed: {ex.Message}"); }
-            finally { }
-            for (var i = 0; i < WorkingCodes.Length; i++)
-            {
-                OriginalCodes[i] = WorkingCodes[i];
-            }
-            QuestionState.Invalidate();
-            await QuestionState.EnsureLoadedAsync();
-            await InvokeAsync(StateHasChanged);
-            await Task.Delay(1000);
-            MessageFact = string.Empty;
-            OnRootBtnClick(11);
-        }
-        private async Task OnSelectId(int id)
-        {
-            SelectedId = id;
-            await Task.Delay(1);
-            
-        }
-        private async Task ModalCallAsync(int btnId)
-        {
-            var spec = ModalSpecs.SpecsQ[btnId];
+        } 
+
+ var spec = ModalSpecs.SpecsQ[btnId];
             ModalOption = spec.Mode;
             qModal = spec;
             switch (btnId)
@@ -209,153 +356,5 @@ namespace KvizCommando.Client.Pages.Question
             Console.WriteLine($"ScreenOption before modal: {ScreenOption}");
             await questionModal.ShowAsync();
             Console.WriteLine($"ScreenOption after show: {ScreenOption}");
-        }
-        private async Task ExecuteModalAsync(int execute)
-        {
-            bool isSucces = false;
-            string message = string.Empty;
-            Console.WriteLine($"ScreenOption execute: {ScreenOption}");
-            if (execute < 3)
-            {
-                var (suc, msg) = await QuestApi.ManageSlotAsync(new ManageSlotRequest
-                {
-                    SlotNo = SelectedId,
-                    ReqType = (SlotManageType)execute,
-                });
-                isSucces = suc;
-                message = msg;
-            }
-            else
-            {
-                int index = Array.FindIndex(QuestionState.PendingSlots!, x => x.Category == 0);
-                var (suc, msg) = await QuestApi.SendNewQuestionAsync( new NewQuestionRequest
-                 {
-                     SlotNo = index,
-                     Category = formData.Category,
-                     Question = formData.Question,
-                     Answers = formData.Answers
-                 });
-                isSucces = suc;
-                message = msg;
-            }
-            Console.WriteLine($"ScreenOption after execute: {ScreenOption}");
-            if (isSucces)
-            {
-                (OriginalCodes, WorkingCodes) = QuestionHelper.CloneFactorySlots(QuestionState.FactorySlots);
-                QuestionState.Invalidate();
-                await QuestionState.EnsureLoadedAsync();
-                isSuccess = true;
-            }
-            else
-            {
-                MessageUsr = message;
-            }
-            await InvokeAsync(StateHasChanged);
 
-            if (MessageUsr != string.Empty) { await Task.Delay(1000); MessageUsr = string.Empty; }
-            ModalOption = 0;
-            OnRootBtnClick(ScreenOption+10);
-            await Task.Delay(1);
-
-        }
-        private async Task SaveToForm(NewQuestionRequest request)
-        {
-            formData = request;
-            await ModalCallAsync(2);
-        }  
-        private async Task CallPendModal(int selectedid)
-        {
-            if (selectedid != 100)
-            {
-                SelectedId = selectedid;
-                await ModalCallAsync(1);
-            }
-        }
-        public void Dispose()
-        {
-            questionModal?.Dispose();
-            GC.SuppressFinalize(this);
-        }
-    }
-}
-
-
-/*
- * 
- *   private async Task ExecuteUsrDel(int selectedid)
-        {
-            if (selectedid != 100)
-            {
-                SelectedId = selectedid;
-                await ExecuteModalAsync(0);
-            }
-        }
- *  private async Task CallUsrModal(int selectedid)
-        {
-            if (selectedid != 100)
-            {
-                SelectedId = selectedid;
-                await ModalCallAsync(0);
-            }
-        }
- BoxHeader = ScreenOption == 1
-                    ? Lang["question.Box.Title.UsrSlots"].FormatSafe(QuestionState.ExtendedInfo.OccupiedUserSlot, QuestionState.ExtendedInfo.AvailableUserSlot)
-                    : Lang["question.Box.Title.PendingSlots"].FormatSafe(QuestionState.ExtendedInfo.OccupiedPendingSlot, QuestionState.ExtendedInfo.AvailablePendingSlot);
-               
-                ScreenOption = ScreenOption == 3 ? 2 : ScreenOption; // Frissítjük a képernyőt  
-
-
-
- *  if (QuestionState.ExtendedInfo.UserSlotEnable)
-            {
-                ScreenOption = 1;
-                BoxHeader = Lang["question.Box.Title.UsrSlots"].FormatSafe(QuestionState.ExtendedInfo.OccupiedUserSlot, QuestionState.ExtendedInfo.AvailableUserSlot);
-            }
-            else
-            {
-                ScreenOption = 0;
-                BoxHeader = Lang["question.Box.Title.UsrSlots.NoData"];
-            }
-  private void GotoNextScreen(int screenno)
-        {
-            ModalOption = 0;
-            qModal = qModal with { Mode = 0 };
-            if (screenno > 2)
-            {
-                NewQuestionSlotNo = screenno - 3;
-                ScreenOption = 3;
-            }
-            else
-            {
-                ScreenOption = screenno;
-            }
-
-            switch (ScreenOption)
-            {
-                case 1:
-                    BoxHeader = Lang["question.Box.Title.UsrSlots"].FormatSafe(QuestionState.ExtendedInfo.OccupiedUserSlot, QuestionState.ExtendedInfo.AvailableUserSlot);
-                    break;
-                case 2:
-                    BoxHeader = Lang["question.Box.Title.PendingSlots"].FormatSafe(QuestionState.ExtendedInfo.OccupiedPendingSlot, QuestionState.ExtendedInfo.AvailableUserSlot >> 1);
-                    break;
-                case 3:
-                    BoxHeader = Lang["question.Modal.Title.New"];
-                    break;
-            }
-        }
- * 
- * 
- * 
-  <div class="box-row">
-                <div class="box">
-                    <ContentBox Header=@Lang["question.Box.Title.FactorySlots"] Footer="" FooterDisplay=false Size="halflarge" Resizable="false">
-                        <div class="lcd-wrapper">
-                            
-                       
-                        </div>
-                    </ContentBox>
-                </div>
-
- 
- 
  */

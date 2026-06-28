@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace KvizCommando.Client.Components.CharacterComponent
 {
-    public partial class CharachterFemale : ComponentBase
+    public partial class CharachterFemale
     {
         [Parameter] public string HairColor { get; set; } = "#000000";
         [Parameter] public string SkinColor { get; set; } = "#ffffff";

@@ -2,9 +2,9 @@
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Pages.Team;
-using KvizCommando.Client.Services.Language;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 
 namespace KvizCommando.Client.Features.Team
 {

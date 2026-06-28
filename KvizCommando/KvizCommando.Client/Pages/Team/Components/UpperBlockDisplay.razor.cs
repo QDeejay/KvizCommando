@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace KvizCommando.Client.Pages.Team.Components
 {
-    public partial class UpperBlockDisplay : ComponentBase
+    public partial class UpperBlockDisplay
     {
         [Inject] private UpperBlockDataBuilder UpperBuilder { get; set; } = default!;
         [Parameter] public IGeneralInfo DatatoProc { get; set; } = default!;

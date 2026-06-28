@@ -1,13 +1,14 @@
 ﻿@using KvizCommando.Shared.Contracts.Question
 @using KvizCommando.Client.Helpers
+@inherits Utilities.KcComponentBase
 
 <div class="lcd-display-outer">
     <div class="lcd-display-inner">
 
         <div class="list-grid">
             <div></div>
-            <div class="list-header no-cell">@Lang["question.Table.Header.No"]</div>
-            <div class="list-header category-cell">@Lang["question.Table.Header.Category"]</div>
+            <div class="list-header no-cell">@Ui.Lang["question.Table.Header.No"]</div>
+            <div class="list-header category-cell">@Ui.Lang["question.Table.Header.Category"]</div>
 
             @for (var i = 0; i < RowCount; i++)
             {
@@ -68,6 +69,6 @@
     <button class=" military-button"
             disabled="@(!IsDirty)"
             @onclick="OnSaveSlots">
-        @Lang["question.Button.Save"]
+        @Ui.Lang["question.Button.Save"]
     </button>
 </div>

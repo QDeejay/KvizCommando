@@ -1,7 +1,8 @@
 ﻿using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services;
-using KvizCommando.Client.Services.Language;
 using KvizCommando.Client.Services.User;
+using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.Auth;
 using KvizCommando.Shared.Options;
 using Microsoft.AspNetCore.Components;
@@ -10,14 +11,14 @@ using System.Globalization;
 
 namespace KvizCommando.Client.Pages.Login.Auth;
 
-public partial class ConfirmPassword : ComponentBase
+public partial class ConfirmPassword : KcComponentBase
 {
-    [Inject] private NavigationManager Nav { get; set; } = default!;
-    [Inject] private ILanguageService Lang { get; set; } = default!;
-    [Inject] private IUserService Service { get; set; } = default!;
+    //[Inject] private NavigationManager Nav { get; set; } = default!;
+    //[Inject] private ILanguageService Lang { get; set; } = default!;
+    //[Inject] private IUserService Service { get; set; } = default!;
     [Inject] private IdentityRulesService IdentityRules { get; set; } = default!;
 
-    private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+    private string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
     private bool? success = null;
     private RegisterOptionsResponse? Options { get; set; }
@@ -45,37 +46,37 @@ public partial class ConfirmPassword : ComponentBase
 
             if (pwd.Length < Options.RequiredLength)
             {
-                ResultMessage = Lang["identityerrors.PasswordTooShort"].FormatSafe(Options.RequiredLength);
+                ResultMessage = Ui.Lang["identityerrors.PasswordTooShort"].FormatSafe(Options.RequiredLength);
                 PasswordFiledSW = true;
             }
             else if (Options.RequireDigit && !pwd.Any(char.IsDigit))
             {
-                ResultMessage = Lang["identityerrors.PasswordRequiresDigit"];
+                ResultMessage = Ui.Lang["identityerrors.PasswordRequiresDigit"];
                 PasswordFiledSW = true;
             }
             else if (Options.RequireLowercase && !pwd.Any(char.IsLower))
             {
-                ResultMessage = Lang["identityerrors.PasswordRequiresLower"];
+                ResultMessage = Ui.Lang["identityerrors.PasswordRequiresLower"];
                 PasswordFiledSW = true;
             }
             else if (Options.RequireUppercase && !pwd.Any(char.IsUpper))
             {
-                ResultMessage = Lang["identityerrors.PasswordRequiresUpper"];
+                ResultMessage = Ui.Lang["identityerrors.PasswordRequiresUpper"];
                 PasswordFiledSW = true;
             }
             else if (Options.RequireNonAlphanumeric && pwd.All(char.IsLetterOrDigit))
             {
-                ResultMessage = Lang["identityerrors.PasswordRequiresNonAlphanumeric"];
+                ResultMessage = Ui.Lang["identityerrors.PasswordRequiresNonAlphanumeric"];
                 PasswordFiledSW = true;
             }
             else if (Options.RequiredUniqueChars > 1 && pwd.Distinct().Count() < Options.RequiredUniqueChars)
             {
-                ResultMessage = Lang["identityerrors.PasswordRequiresUniqueChars"].FormatSafe(Options.RequiredLength);
+                ResultMessage = Ui.Lang["identityerrors.PasswordRequiresUniqueChars"].FormatSafe(Options.RequiredLength);
                 PasswordFiledSW = true;
             }
             else if (FormData.newPassword != FormData.confirmedNewPsw)
             {
-                ResultMessage = Lang["identityerrors.PasswordNotMatched"];
+                ResultMessage = Ui.Lang["identityerrors.PasswordNotMatched"];
                 PasswordFiledSW = true;
             }
         }
@@ -85,27 +86,26 @@ public partial class ConfirmPassword : ComponentBase
             return;
 
         // Kérés a szerver felé
-        var (response, errors) = await Service.RecoverPasswordAsync(FormData);
+        var (response, errors) = await User.RecoverPasswordAsync(FormData);
 
         success = response;
         // Hibák kezelése: a szerver identityerrors.* kulcsokat ad vissza
         if (errors is { Count: > 0 })
         {
             // csak az első hibát mutatjuk; ha több kell, join-olható
-            ResultMessage = Lang[$"identityerrors.{errors[0]}"];
+            ResultMessage = Ui.Lang[$"identityerrors.{errors[0]}"];
         }
         else
         {
-            ResultMessage = Lang["identityerrors.DefaultError"];
+            ResultMessage = Ui.Lang["identityerrors.DefaultError"];
         }
     }
 
     protected override async Task OnInitializedAsync()
     {
-        culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
         Options = await IdentityRules.GetRulesAsync();
-        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var uri = Ui.Nav.ToAbsoluteUri(Ui.Nav.Uri);
         var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
 
         var email = query["email"];
@@ -116,7 +116,7 @@ public partial class ConfirmPassword : ComponentBase
     }
     private void NavigateHome()
     {
-        Nav.NavigateTo("/login");
+        Ui.Nav.NavigateTo("/login");
     }
 }
 

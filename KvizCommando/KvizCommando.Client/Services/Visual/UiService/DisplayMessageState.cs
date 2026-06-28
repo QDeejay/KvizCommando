@@ -1,4 +1,4 @@
-﻿namespace KvizCommando.Client.Services.Visual
+﻿namespace KvizCommando.Client.Services.Visual.UiService
 {
     public class DisplayMessageState : IDisplayMessageState
     {

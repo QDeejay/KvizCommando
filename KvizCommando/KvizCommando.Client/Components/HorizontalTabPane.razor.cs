@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace KvizCommando.Client.Components
 {
-    public partial class HorizontalTabPane : ComponentBase
+    public partial class HorizontalTabPane
     {
         [Parameter] public int ActiveHIndex { get; set; }
         [Parameter] public int ActiveVIndex { get; set; }

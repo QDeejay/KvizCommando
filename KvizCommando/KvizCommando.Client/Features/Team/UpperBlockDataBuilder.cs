@@ -1,7 +1,7 @@
 ﻿using KvizCommando.Client.Data;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Language;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 
 namespace KvizCommando.Client.Features.Team

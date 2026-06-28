@@ -1,6 +1,6 @@
 ﻿using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Language;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos; // itt van a HomeDTOs, HomeScreen, ScreenButtonEntity
 
 namespace KvizCommando.Client.Features.Home;
@@ -115,6 +115,7 @@ public static class HomeButtonSpecs
             TitleKey = "home.Title.BulleteinBoard",
             ImageSrc = string.Empty,
             BgImageSrc = string.Empty, Size = string.Empty,
+            RenderContent = 1,
             LcdBackground=true,
             FooterDisplay = false,
             ClickId = 0,

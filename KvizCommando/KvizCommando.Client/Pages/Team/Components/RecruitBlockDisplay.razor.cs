@@ -12,7 +12,7 @@ using System.Globalization;
 
 namespace KvizCommando.Client.Pages.Team.Components
 {
-    public partial class RecruitBlockDisplay : ComponentBase
+    public partial class RecruitBlockDisplay
     {
         [Inject] private RecruitBlockBuilder Builder { get; set; } = default!;
 

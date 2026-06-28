@@ -1,27 +1,28 @@
 ﻿@page "/home"
-@page "/solo"
+@page "/sologame"
 @page "/gamevs"
-@page "/question"
-@page "/team"
+@inherits Utilities.KcComponentBase
 
-<LangGuard Culture=@culture Module="@ActualPage" OnReady="() => BuildButtons(ActualPage)">
+
+<LangGuard Culture=@culture Module="Home" OnReady="BuildBoxes">
     <PageContainer>
         
             @if (_isReady == true)
             {
-            var style = $"{ActualPage ?? "home"}-selector"; 
-            <div class="@(style)">
-                @foreach (string bx in BoxOrder)
+            <div class="kc-home-selector">
+                @foreach (string bx in _boxOrder)
                     {
                         var box = Box(bx);
                
                     <ContentBox Vm="@box"
                                 OnClick="OnBoxClick"
                                 FooterClick="CloseBBoard">
-                                        <div class="bboard-item">
-                                            @BboardHTML
-                                        </div>    
-                            </ContentBox>
+                                <ChildContent1>
+                                    <div class="kc-bboard-item">
+                                        @_bBoardHTML
+                                    </div>
+                                </ChildContent1>    
+                    </ContentBox>
                     }
              </div>
             }

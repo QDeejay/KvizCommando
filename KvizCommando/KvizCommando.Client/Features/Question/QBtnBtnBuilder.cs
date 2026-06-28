@@ -2,7 +2,7 @@
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
-using KvizCommando.Client.Services.Language;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 using System;
 
@@ -10,7 +10,11 @@ namespace KvizCommando.Client.Features.Question
 {
     public static class QBtnBoxBuilder
     {
-
+        public static readonly string[] Root = Enum.GetNames<QBoxKeyRoot>();
+        public static readonly string[] SubFact = [QBoxKeyContent.FactSlots.ToString()];
+        public static readonly string[] SubUsr = [QBoxKeyContent.UsrSlots.ToString()];
+        public static readonly string[] SubPend = [QBoxKeyContent.PendigSlots.ToString()];
+        public static readonly string[] SubNew = [QBoxKeyContent.NewSlot.ToString()];
 
         public static Dictionary<string, ContentBoxVm> BuildBoxes(QuestionExtendedInfo qs, ILanguageService lang)
         {
@@ -27,8 +31,7 @@ namespace KvizCommando.Client.Features.Question
                     FooterDisplay = spec.FooterDisplay,
                     Size = spec.Size,
                     ImageSrc = spec.ImageSrc,
-                    ShowImage = !string.IsNullOrEmpty(spec.ImageSrc),
-                    IsClickable = true,
+                    IsClickable = spec.ClickId > 0 && btn.ClickId<1000,
                     IsEnabled = btn.CheckEnable(qs),
                     ClickId = spec.ClickId,
                     LcdDisplay = spec.LcdBackground

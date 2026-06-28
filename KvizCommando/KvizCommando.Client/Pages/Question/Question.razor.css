@@ -24,7 +24,7 @@
     font-style: italic;
     padding: 8px 0;
 }
-.quest-selector {
+.kc-quest-selector {
     display: flex;
     position:relative;
     top: -50px;
@@ -35,11 +35,3 @@
 }
 
 
-.btn-bar {
-    display:flex;
-    justify-content: center;
-    margin-top: 12px;
-}
-    .btn-bar.hidden {
-        display: none;
-    }

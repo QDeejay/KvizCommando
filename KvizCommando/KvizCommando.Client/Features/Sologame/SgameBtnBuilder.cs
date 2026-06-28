@@ -3,7 +3,7 @@ using KvizCommando.Client.Features.Question;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
-using KvizCommando.Client.Services.Language;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,9 @@ namespace KvizCommando.Client.Features.Sologame
 {
     public static class SgameBtnBuilder
     {
+        public static readonly string[] Root = Enum.GetNames<SgameBoxKeyRoot>();
+        public static readonly string[] SubCat = BuildNames(SgameBoxKeySub.BtnCat);
+        public static readonly string[] SubOri = BuildNames(SgameBoxKeySub.BtnOri);
 
         public static Dictionary<string, ContentBoxVm> BuildBoxes(SoloGameDtos ss, string cult, ILanguageService lang)
         {
@@ -27,14 +30,13 @@ namespace KvizCommando.Client.Features.Sologame
                     FooterDisplay = spec.FooterDisplay,
                     Size = spec.Size,
                     ImageSrc = spec.ImageSrc,
-                    ShowImage = !string.IsNullOrEmpty(spec.ImageSrc),
                     IsClickable = spec.BuildEnable(ss.Enables, 1),
                     IsEnabled = spec.BuildEnable(ss.Enables, 1),
                     ClickId = spec.ClickId
                 });
 
             }
-            foreach (var spec in SoloButtonSpecs.ContentSpecs)
+            foreach (var spec in SoloButtonSpecs.SubSpecs)
             {
                 for (int i = 1; i <= spec.BtnQnty; i++)
                 {
@@ -45,7 +47,6 @@ namespace KvizCommando.Client.Features.Sologame
                         FooterDisplay = spec.FooterDisplay,
                         Size = spec.Size,
                         ImageSrc = spec.BuildImageSrc(i),
-                        ShowImage = !string.IsNullOrEmpty(spec.BuildImageSrc(i)),
                         IsClickable = spec.BuildEnable(ss.Enables, i-1),
                         IsEnabled = spec.BuildEnable(ss.Enables, i-1),
                         ClickId = spec.ClickId + i
@@ -55,6 +56,16 @@ namespace KvizCommando.Client.Features.Sologame
             }
 
             return dict;
+        }
+        private static string[] BuildNames(SgameBoxKeySub name)
+        {
+            var count = (int)name;
+            string[] names = new string[count];
+            for (int i = 0; i < count; i++)
+            {
+                names[i] = $"{name.ToString()}{i + 1}";
+            }
+            return names;
         }
     }
 

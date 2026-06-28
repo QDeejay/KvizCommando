@@ -1,17 +1,18 @@
-﻿using KvizCommando.Client.Services.Language;
-using KvizCommando.Client.Services.User;
+﻿using KvizCommando.Client.Services.User;
+using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.Auth;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
 
 namespace KvizCommando.Client.Pages.Login
 {
-    partial class ForgotPsw : ComponentBase
+    partial class ForgotPsw : KcComponentBase
     {
 
-        [Inject] private NavigationManager Nav { get; set; } = default!;
-        [Inject] private ILanguageService Lang { get; set; } = default!;
-        [Inject] private IUserService Service { get; set; } = default!;
+        //[Inject] private NavigationManager Nav { get; set; } = default!;
+        //[Inject] private ILanguageService Lang { get; set; } = default!;
+        //[Inject] private IUserService Service { get; set; } = default!;
 
         readonly string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
@@ -24,18 +25,18 @@ namespace KvizCommando.Client.Pages.Login
         {
             if (!IsValidEmail(formData.email))
             {
-                ResultMessage = Lang["forgotosw.Error.Email"];
+                ResultMessage = Ui.Lang["forgotosw.Error.Email"];
                 ColorSW = true;
                 return;
             }
             else
             {
                 ColorSW = false;
-                var response = await Service.ForgotPswAsync(formData);
+                var response = await User.ForgotPswAsync(formData);
                 if (response != null)
                 {
                     Success = true;
-                    ResultMessage = Lang["forgotosw.Succes.Email"];
+                    ResultMessage = Ui.Lang["forgotosw.Succes.Email"];
                     formData.email = string.Empty;
                     return;
                 }
@@ -49,7 +50,7 @@ namespace KvizCommando.Client.Pages.Login
         }
         private void NavigateHome()
         {
-            Nav.NavigateTo("/login");
+            Ui.Nav.NavigateTo("/login");
         }
         private bool IsValidEmail(string email)
         {

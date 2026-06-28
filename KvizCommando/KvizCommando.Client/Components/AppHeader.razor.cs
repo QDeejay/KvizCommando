@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using KvizCommando.Client.Utilities;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace KvizCommando.Client.Components
 {
-    public partial class AppHeader : ComponentBase
+    public partial class AppHeader
     {
         [Parameter] public string? DisplayName { get; set; }
 

@@ -1,4 +1,4 @@
-﻿using KvizCommando.Client.Services.Language;
+﻿
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
@@ -6,9 +6,9 @@ using System.Globalization;
 
 namespace KvizCommando.Client.Pages.Question.Components
 {
-    public partial class UserSlotManager : ComponentBase, IDisposable
+    public partial class UserSlotManager : IDisposable
     {
-        [Inject] protected ILanguageService Lang { get; set; } = default!;
+        [Inject] private  ILanguageService Lang { get; set; } = default!;
         [Parameter] public QuestionExtendedInfo ExtInfo { get; set; } = default!;
         [Parameter] public bool NotShowDel { get; set; } = default;
         [Parameter] public UserSlot[] Slots { get; set; } = default!;
@@ -38,6 +38,7 @@ namespace KvizCommando.Client.Pages.Question.Components
             else SelectedId = id;
             await SelectedIdChanged.InvokeAsync(SelectedId);
             Console.WriteLine($"Selected:{SelectedId}");
+            
         }
         public void Dispose()
         {

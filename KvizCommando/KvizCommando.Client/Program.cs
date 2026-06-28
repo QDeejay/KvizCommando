@@ -8,9 +8,10 @@ using KvizCommando.Client.Services;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Dto;
-using KvizCommando.Client.Services.Language;
 using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Services.Visual;
+using KvizCommando.Client.Services.Visual.UiService;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -22,7 +23,21 @@ builder.Services.AddBlazoredSessionStorage();
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<ILanguageService, LanguageService>();
+
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IScreenApiService, ScreenApiService>();
+builder.Services.AddScoped<IApiService, ApiService>();
+
+builder.Services.AddScoped<IHomeState, HomeState>();
+builder.Services.AddScoped<IQuestionState, QuestionState>();
+builder.Services.AddScoped<ITeamState, TeamState>();
+builder.Services.AddScoped<ISoloState, SoloState>();
+
+builder.Services.AddSingleton<IDisplayMessageState, DisplayMessageState>();
+builder.Services.AddScoped<PageHeaderService>();
+builder.Services.AddScoped<ModalService>();
+builder.Services.AddScoped<UiServices>();
+
 builder.Services.AddScoped<CategoryOptionHelpers>();
 builder.Services.AddScoped<DevDataBuilder>();
 builder.Services.AddScoped<UpperBlockDataBuilder>();
@@ -32,10 +47,6 @@ builder.Services.AddSingleton<AudioService>();
 builder.Services.AddSingleton<LoaderService>();
 builder.Services.AddSingleton<SessionService>();
 builder.Services.AddScoped<ITeamModalDataBuilder, TeamModalDataBuilder>();
-
-// ...
-builder.Services.AddScoped<UiHeaderState>();
-// ...
 
 /*
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
@@ -85,17 +96,8 @@ builder.Services.AddHttpClient("DefaultWithLang", client =>
 .AddHttpMessageHandler<LoggingHandler>()
 .AddHttpMessageHandler<AuthRedirectHandler>();
 
-
-builder.Services.AddSingleton<IDisplayMessageState, DisplayMessageState>();
-builder.Services.AddScoped<IScreenApiService, ScreenApiService>();
-builder.Services.AddScoped<IApiService, ApiService>();
-builder.Services.AddScoped<IHomeState, HomeState>();
-builder.Services.AddScoped<IQuestionState, QuestionState>();
-builder.Services.AddScoped<ITeamState, TeamState>();
-builder.Services.AddScoped<ISoloState, SoloState>();
 builder.Services.AddSingleton<ICategoryLookupService, StaticCategoryLookupService>();
 
-builder.Services.AddScoped<PageHeaderService>();
 builder.Services.AddScoped<IdentityRulesService>();
 builder.Services.AddBlazoredSessionStorage();
 

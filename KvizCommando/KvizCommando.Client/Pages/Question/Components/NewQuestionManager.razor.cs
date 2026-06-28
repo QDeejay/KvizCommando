@@ -1,6 +1,7 @@
 ﻿using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Services.Language;
 using KvizCommando.Client.Services.Visual;
+using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
@@ -9,10 +10,10 @@ using System.Globalization;
 
 namespace KvizCommando.Client.Pages.Question.Components
 {
-    public partial class NewQuestionManager : ComponentBase
+    public partial class NewQuestionManager : IDisposable
     {
-        [Inject] protected ILanguageService Lang { get; set; } = default!;
-        [Inject] protected CategoryOptionHelpers CatHelper { get; set; } = default!;
+        [Inject] private ILanguageService Lang { get; set; } = default!;
+        [Inject] private CategoryOptionHelpers CatHelper { get; set; } = default!;
 
         [Parameter] public string MessageUsr { get; set; } = string.Empty;
         [Parameter] public QuestionExtendedInfo ExtInfo { get; set; } = default!;
@@ -21,12 +22,11 @@ namespace KvizCommando.Client.Pages.Question.Components
         
 
         private NewQuestionRequest formData = new();
-        protected string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+        private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
         private bool _isLoaded = false;
-
-        protected const int areaLenght = 200;
-        protected const int answerLenght = 40;
+        private const int areaLenght = 200;
+        private const int answerLenght = 40;
         private bool disabledLcd => formData.Category == 0 || isSuccess;
         private bool disabledAnswer => formData.Question.Length < 10 || formData.Category == 0 || !formData.Question.Contains('?') || isSuccess;
 
@@ -61,7 +61,7 @@ namespace KvizCommando.Client.Pages.Question.Components
                 StopEdit();
             }
         }
-        protected void Dispose()
+        public void Dispose()
         {
             SendQuestion = default;
             GC.SuppressFinalize(this);
