@@ -10,7 +10,7 @@ using KvizCommando.Client.Utilities;
 
 namespace KvizCommando.Client.Pages.Shared
 {
-    public partial class LoaderView : KcComponentBase, IDisposable
+    public partial class LoaderView : IDisposable
     {
         [Inject]
         private LoaderService Loader { get; set; } = default!;

@@ -14,15 +14,15 @@ namespace KvizCommando.Client.Layout
     public partial class LoginLayout : KcLayoutComponentBase, IDisposable
     {
         //[Inject] private ILanguageService _lang { get; set; } = default!;
-        [Inject] private IdentityRulesService _rules { get; set; } = default!;
-
+        [Inject] private IdentityRulesService Rules { get; set; } = default!;
+        private readonly string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         private bool _isReady = false;
-        private string _culture => CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+       
         protected override async Task OnInitializedAsync()
         {
             Console.WriteLine("[EmptyLayout] OnInitializedAsync START");
 
-            var rules = await _rules.GetRulesAsync();
+            var rules = await Rules.GetRulesAsync();
             await Ui.Lang.LoadModuleAsync(_culture, "common");
             await Ui.Lang.LoadModuleAsync(_culture, "identityerrors");
             

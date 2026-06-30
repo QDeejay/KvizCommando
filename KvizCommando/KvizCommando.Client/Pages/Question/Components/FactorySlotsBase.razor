@@ -10,7 +10,7 @@
             <div class="list-header no-cell">@Ui.Lang["question.Table.Header.No"]</div>
             <div class="list-header category-cell">@Ui.Lang["question.Table.Header.Category"]</div>
 
-            @for (var i = 0; i < RowCount; i++)
+            @for (var i = 0; i < ROW_COUNT; i++)
             {
                 var row = i;
                 var ownLimit = Math.Min(
@@ -20,27 +20,27 @@
 
                 if (row < ownLimit)
                 {
-                        Options = CatHelper.OptionsUpdate(CategoryOptionHelpers.optionType.Own, ExtInfo.CharCatMask);
+                        _options = CatHelper.OptionsUpdate(CategoryOptionHelpers.optionType.Own, ExtInfo.CharCatMask);
                     <div>o</div>
                 }
                 else
                 {
-                        Options = CatHelper.OptionsUpdate(CategoryOptionHelpers.optionType.Normal, ExtInfo.CharCatMask);
+                        _options = CatHelper.OptionsUpdate(CategoryOptionHelpers.optionType.Normal, ExtInfo.CharCatMask);
                     <div></div>
                 }
 
                 <div class="no-cell">@((row + 1).ToString())</div>
 
-                <div class="value-cell @(EditingRowIndex == row ? "editing" : null)">
-                    @if (EditingRowIndex == row)
+                <div class="value-cell @(_editingRowIndex == row ? "editing" : null)">
+                    @if (_editingRowIndex == row)
                     {
                         <select class="inline-editor"
-                                @bind="WorkingCodes[row]"
+                                @bind="_workingCodes[row]"
                                 @bind:event="onchange"
                                 @onclick:stopPropagation="true"
                                 @onkeydown="OnEditorKeyDown"
                                 autofocus>
-                            @foreach (var opt in Options)
+                            @foreach (var opt in _options)
                             {
                                 <option value="@opt.Code">@QuestionHelper.GetLabel(opt, culture)</option>
                             }
@@ -52,17 +52,12 @@
                                 class="value-button"
                                 @onclick="() => StartEdit(row)"
                                 @onclick:stopPropagation="true">
-                                @CatHelper.ResolveLabel(WorkingCodes[row], culture)
+                                @CatHelper.ResolveLabel(_workingCodes[row], culture)
                         </button>
                     }
                 </div>
             }
         </div>
-
-        <label class="message-label" style=" @((!isSuccess ? "color:red;" : ""))">
-            @MessageFact
-        </label>
-
     </div>
 </div>
 <div class="save-bar">

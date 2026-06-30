@@ -1,10 +1,8 @@
 ﻿@page "/home"
-@page "/sologame"
-@page "/gamevs"
 @inherits Utilities.KcComponentBase
 
 
-<LangGuard Culture=@culture Module="Home" OnReady="BuildBoxes">
+<LangGuard Culture=@Culture Module="Home" OnReady="BuildBoxes">
     <PageContainer>
         
             @if (_isReady == true)

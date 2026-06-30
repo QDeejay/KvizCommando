@@ -24,37 +24,42 @@ namespace KvizCommando.Client.Layout
 {
     public partial class MainLayout : KcLayoutComponentBase, IDisposable
     {
-        //[Inject] private ILanguageService Lang { get; set; } = default!;
         [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
         [Inject] private ISessionStorageService SessionStorage { get; set; } = default!;
-        //[Inject] private NavigationManager Nav { get; set; } = default!;
         [Inject] private SessionService SessionService { get; set; } = default!;
-        //[Inject] private PageHeaderService Header { get; set; } = default!;
-        //[Inject] private ModalService Modal { get; set; } = default!;   
-        //[Inject] private IDisplayMessageState DisplayState { get; set; } = default!;
-        [Inject] private IHomeState HomeState { get; set; } = default!;
-        //[Inject] private IUserService User { get; set; } = default!;
+        [Inject] private IHomeState HState { get; set; } = default!;
+        [Inject] private IQuestionState QState { get; set; } = default!;
+        [Inject] private ITeamState TState { get; set; } = default!;
+        [Inject] private ISoloState SState { get; set; } = default!;
         [Inject] private AudioService Audio { get; set; } = default!;
 
-        private KcModal? _mainModal;
+        private const string LOCAL_NOT_SHOW_NEW = "notShowNew";
+        private const string LOCAL_NOT_SHOW_DEL = "notShowDel";
+        private const string LOCAL_LAST_B_BOARD = "B.B";
+
+        private readonly AppState _appState = new();
+
         private ModalPar _modalPar = new();
+        private KcModal? _mainModal;
+  
 
         private string _culture = "hu";
         private bool _isReady = false;
-        private bool _loggedIn = false;
+        private bool _isLoggedIn = false;
         private bool _isMusicOn;
-        private bool _bckBtnEna = false;
+        private bool _isBckBtnEna = false;
         private string? _currentTitle = string.Empty;
-        private bool _sidebarCollapsed = false;
+        private bool _hasSidebarCollapsed = false;
         private string? _Greetings = string.Empty;
-        private int NavigateTo = 0;
+        private int _NavigateTo = 0;
 
-        private void ToggleSidebar() => _sidebarCollapsed = (!_sidebarCollapsed && _loggedIn);
-        private bool _backNavigationEna => (_sidebarCollapsed && Ui.Header.PageIndex!=0) || _bckBtnEna;
-        private HomeScreen Hs => _loggedIn ? HomeState.HomeScreen! : new HomeScreen() {  };
+        private void ToggleSidebar() => _hasSidebarCollapsed = (!_hasSidebarCollapsed && _isLoggedIn);
+        private bool BackNavigationEna => (_hasSidebarCollapsed && Ui.Header.PageIndex!=0) || _isBckBtnEna;
+        private HomeScreen Hs => _isLoggedIn ? _appState.Home!.HomeScreen : new HomeScreen() {  };
         protected override async Task OnInitializedAsync()
         {
             _isReady = false;
+          
             Console.WriteLine($"[{this}] has been started");
             var culture = await LocalStorage.GetItemAsync<string>("userLang");
             if (string.IsNullOrWhiteSpace(culture))
@@ -65,6 +70,7 @@ namespace KvizCommando.Client.Layout
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(culture);
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(culture);
             _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+            await InitStatesAsync(0);
             await Ui.Lang.LoadModuleAsync(_culture, "common");  // szükséges
             await Ui.Lang.LoadModuleAsync(_culture, "mainlayout");  // szükséges
             await Ui.Lang.LoadModuleAsync(_culture, "home");
@@ -72,10 +78,10 @@ namespace KvizCommando.Client.Layout
             if (!string.IsNullOrWhiteSpace(sessionId))
             {
                 SessionService.SessionId = sessionId;
-                await HomeState.EnsureLoadedAsync();
-                _loggedIn = true;
+                //await HomeState.EnsureLoadedAsync();
+                _isLoggedIn = true;
             }
-            else { _loggedIn = false; }
+            else { _isLoggedIn = false; }
             if (Audio.EnteredNormal)
             {
                 Console.WriteLine("Playing music because EnteredNormal is true.");
@@ -112,7 +118,7 @@ namespace KvizCommando.Client.Layout
         }
         private void UpdateBackBtnEna() 
         {
-            _bckBtnEna = Ui.Header.BackEna;
+            _isBckBtnEna = Ui.Header.BackEna;
             InvokeAsync(StateHasChanged);
         }
         private async Task OnMusicClick()
@@ -141,7 +147,8 @@ namespace KvizCommando.Client.Layout
             StateHasChanged();
         }
         private void HideModal() 
-        { }
+        { 
+        }
 
 
         public void Dispose()
@@ -158,11 +165,57 @@ namespace KvizCommando.Client.Layout
             await User.LogoutAsync(false);
             Console.WriteLine("User logged out.");
         }
+        private async Task InitStatesAsync(ReqStates state)
+        {
+            _appState.Culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName; 
+            if (state == ReqStates.All || state == ReqStates.Home)
+            {
+                await HState.EnsureLoadedAsync();
+                _appState.Home = HState.Snapshot;
+            }
+            if (state == ReqStates.All || state == ReqStates.Question)
+            {
+                await QState.EnsureLoadedAsync();
+                _appState.Question = QState.Snapshot;
+            }
+            if (state == ReqStates.All || state == ReqStates.Team)
+            {
+                await TState.EnsureLoadedAsync();
+                _appState.Team = TState.Snapshot;
+            }
+            if (state == ReqStates.All || state == ReqStates.SoloGame)
+            {
+                await SState.EnsureLoadedAsync();
+                _appState.SoloGame = SState.Snapshot;
+            }
+            if (state == ReqStates.All || state == ReqStates.LocalSotrage)
+            {
+                _appState.LocStoreStates.ChkBxNotShowDel = await LocalStorage.GetItemAsync<bool>(LOCAL_NOT_SHOW_DEL);
+                _appState.LocStoreStates.ChkBxNotShowNew = await LocalStorage.GetItemAsync<bool>(LOCAL_NOT_SHOW_NEW);
+                _appState.LocStoreStates.LastBboardChk = await LocalStorage.GetItemAsync<DateTime>(LOCAL_LAST_B_BOARD);
+            }
+
+        }
+    }
+    enum ReqStates 
+    {
+        All=0,
+        Home,
+        Question,
+        Team,
+        SoloGame,
+        LocalSotrage
     }
 }
 /*
  
+        //[Inject] private ILanguageService Lang { get; set; } = default!;
+        //[Inject] private NavigationManager Nav { get; set; } = default!;
+        //[Inject] private PageHeaderService Header { get; set; } = default!;
+        //[Inject] private ModalService Modal { get; set; } = default!;   
+        //[Inject] private IDisplayMessageState DisplayState { get; set; } = default!;
 
+        //[Inject] private IUserService User { get; set; } = default!;
         private void HeadDisplayUpdate()
         {
 

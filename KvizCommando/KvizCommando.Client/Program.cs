@@ -37,6 +37,7 @@ builder.Services.AddSingleton<IDisplayMessageState, DisplayMessageState>();
 builder.Services.AddScoped<PageHeaderService>();
 builder.Services.AddScoped<ModalService>();
 builder.Services.AddScoped<UiServices>();
+builder.Services.AddScoped<MarkupLoaderService>();
 
 builder.Services.AddScoped<CategoryOptionHelpers>();
 builder.Services.AddScoped<DevDataBuilder>();

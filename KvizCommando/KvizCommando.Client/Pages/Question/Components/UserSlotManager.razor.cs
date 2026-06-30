@@ -1,4 +1,6 @@
 ﻿
+using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
@@ -6,24 +8,25 @@ using System.Globalization;
 
 namespace KvizCommando.Client.Pages.Question.Components
 {
-    public partial class UserSlotManager : IDisposable
+    public partial class UserSlotManager : KcComponentBase, IDisposable
     {
-        [Inject] private  ILanguageService Lang { get; set; } = default!;
-        [Parameter] public QuestionExtendedInfo ExtInfo { get; set; } = default!;
-        [Parameter] public bool NotShowDel { get; set; } = default;
-        [Parameter] public UserSlot[] Slots { get; set; } = default!;
+        //[Inject] private  ILanguageService Lang { get; set; } = default!;
+        [CascadingParameter]
+        private AppState AppStates { get; set; } = default!;
+        [Parameter] public int SelectedId { get; set; }
         [Parameter] public EventCallback<int> SelectedIdChanged { get; set; } = default!;
-        private int SelectedId { get; set; } = 100;
-        
 
-        protected string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-        protected bool _isLoaded = false;
+        //private int SelectedId = 100;
+        private bool _isLoaded = false;
+
+        private string Culture => AppStates.Culture;
+        private UserSlot[] Slots => AppStates.Question!.Userlots;
+        private QuestionExtendedInfo ExtInfo => AppStates.Question!.ExtendedInfo;
+        //private bool NotShowDelete => AppStates.LocStoreStates.ChkBxNotShowDel ?? false;
 
         protected override async Task OnInitializedAsync()
         {
-
-            await Task.Delay(1);
-            SelectedId = 100;
+            await OnSelect(100);
             _isLoaded = true;
         }
 
@@ -31,24 +34,30 @@ namespace KvizCommando.Client.Pages.Question.Components
         private async Task OnSelect(int id)
         {
             if (SelectedId == id)
-            {
+            {  
                 SelectedId = 100;
                 //qModal = qModal with { Mode = 0 };
             }
             else SelectedId = id;
-            await SelectedIdChanged.InvokeAsync(SelectedId);
+            if (SelectedIdChanged.HasDelegate)
+                await SelectedIdChanged.InvokeAsync(SelectedId);
             Console.WriteLine($"Selected:{SelectedId}");
             
         }
         public void Dispose()
         {
-        
+            SelectedId = default!;
             SelectedIdChanged = default!;
             GC.SuppressFinalize(this);
         }
     }
 }
-/*        protected async Task OnUsrButton()
+/*     
+ *             //[Parameter] public QuestionExtendedInfo ExtInfo { get; set; } = default!;
+        //[Parameter] public bool NotShowDel { get; set; } = default;
+        //[Parameter] public UserSlot[] Slots { get; set; } = default!;
+ *     
+ *     protected async Task OnUsrButton()
         {
             if (HandleSlot.HasDelegate)
                 await HandleSlot.InvokeAsync(SelectedId);
@@ -75,4 +84,9 @@ namespace KvizCommando.Client.Pages.Question.Components
             if (DeleteSlot.HasDelegate)
                 await DeleteSlot.InvokeAsync(SelectedId);
         }
+    <div class="lcd-display-outer">
+        <div class="lcd-display-inner">
+        </div>
+    </div>
+    
  */

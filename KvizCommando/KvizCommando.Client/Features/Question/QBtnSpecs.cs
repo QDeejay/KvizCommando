@@ -74,7 +74,7 @@ namespace KvizCommando.Client.Features.Question
                 ImageSrc = string.Empty, Size = "halflarge", FooterDisplay = false, ClickId = 0,
                 BuildBoxText = (lang, qn) => "",
                 CheckEnable = (qn) => false,
-                LcdBackground = true,
+                LcdBackground = false,
                 RenderContent = 1,
                 ButtonBar = false
             },

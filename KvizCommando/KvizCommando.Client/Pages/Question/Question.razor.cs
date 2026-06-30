@@ -10,7 +10,9 @@ using KvizCommando.Client.Services.Dto;
 using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.Question;
+using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
+using System;
 using System.Globalization;
 
 
@@ -19,60 +21,51 @@ namespace KvizCommando.Client.Pages.Question
 {
     public partial class Question : KcComponentBase, IDisposable
     {
-        //[Inject] private PageHeaderService Header { get; set; } = default!;
-        //[Inject] private NavigationManager Nav { get; set; } = default!;
-        //[Inject] private ILanguageService Lang { get; set; } = default!;
-        [Inject] private IQuestionState _qState { get; set; } = default!;
-        //[Inject] private IApiService Api { get; set; } = default!;
-        [Inject] private HttpClient _http { get; set; } = default!;
-        [Inject] private ILocalStorageService _localStorage { get; set; } = default!;
+        [CascadingParameter]
+        private AppState AppStates { get; set; } = default!;
 
-
-        private string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-  
-        private Dictionary<string, ContentBoxVm>? _boxesDict = new Dictionary<string, ContentBoxVm>();
-        private string[] _boxOrder = Array.Empty<string>();
-        private NewQuestionRequest formData = new();
-        private const string LOCAL_NOT_SHOW_NEW = "notShowNew";
-        private const string LOCAL_NOT_SHOW_DEL = "notShowDel";
-        private Func<Task> _onBoxBtnClick { get; set; } = default!;
-        private int SelectedId { get; set; }
+        private readonly NewQuestionRequest _formData = new();
+        private readonly Dictionary<string, ContentBoxVm> _boxes = [];
+        private string[] _boxOrder = [];
+        
+        
+        private Func<Task> _onBoxBtnClick = default!;
+        private int _selectedId = 100;
 
         private string _boxBtnText = string.Empty;
         private string _boxBtnStyle = string.Empty;
-
         private string MessageFact = string.Empty;
         private string MessageUsr = string.Empty;
 
         private int ScreenOption;
-        
-        private bool _locNotShowStateNew { get; set; }
-        private bool _locNotShowStateDel { get; set; }
+
+        //private bool _locNotShowStateNew { get; set; }
+        private bool _locNotShowStateDel;
 
         private bool _isSuccess = false;
         private int _subPageNo = 0;
-        private int ModalOption = 0;
+        //private int ModalOption = 0;
  
         private bool _isReady = false;
         private bool _isLoaded = false;
         private int[] _originalCodes = new int[10];
         private int[] _workingCodes = Array.Empty<int>();
-        private ContentBoxVm Box(string orx) => _boxesDict![orx];
+        private string Culture => AppStates.Culture;
+        private QuestionDtos QState => AppStates.Question!;
+        private ContentBoxVm Box(string orx) => _boxes[orx];
         private void BuildBoxes()
         {
 
-            var boxes = new Dictionary<string, ContentBoxVm>();
-            boxes = QBtnBoxBuilder.BuildBoxes(_qState.ExtendedInfo!, Ui.Lang);
-            
+            var boxes = QBtnBoxBuilder.BuildBoxes(QState.ExtendedInfo!, Ui.Lang);
             foreach (var box in boxes)
             {
-                _boxesDict![box.Key] = box.Value;
+                _boxes[box.Key] = box.Value;
             }
             _isReady = _isLoaded;
         }
         private void OnBoxClick(int boxId)
         {
-            SelectedId = 100;
+            _selectedId = 100;
             _boxBtnText = string.Empty;
             _boxBtnStyle = string.Empty;
             _onBoxBtnClick = default!;
@@ -85,24 +78,25 @@ namespace KvizCommando.Client.Pages.Question
                     break;
                 case 101:
                     _boxOrder = QBtnBoxBuilder.SubFact;
-                    title = _boxesDict![QBoxKeyRoot.RtBtnFactory.ToString()].Header;
+                    title = _boxes[QBoxKeyRoot.RtBtnFactory.ToString()].Header;
                     break;
                 case 102:
                     _boxOrder = QBtnBoxBuilder.SubUsr;
                     _onBoxBtnClick = () => ModalCallAsync(0);
                     _boxBtnText = _locNotShowStateDel ? Ui.Lang["question.Button.Delete"] : Ui.Lang["question.Button.Handle"];
                     _boxBtnStyle = _locNotShowStateDel ? "background-color: #a64b2a" : "background-color: #4b5320";
-                    title = _boxesDict![QBoxKeyRoot.RtBtnUsr.ToString()].Header;
+                    title = _boxes[QBoxKeyRoot.RtBtnUsr.ToString()].Header;
                     break;
                 case 103:
                     _boxOrder = QBtnBoxBuilder.SubPend;
                     _onBoxBtnClick = () => ModalCallAsync(1);
                     _boxBtnText = Ui.Lang["question.Button.Handle"];
-                    title = _boxesDict![QBoxKeyRoot.RtBtnPendig.ToString()].Header;
+                    title = _boxes[QBoxKeyRoot.RtBtnPendig.ToString()].Header;
                     break;
                 case 104:
                     _boxOrder = QBtnBoxBuilder.SubNew;
-                    title = _boxesDict![QBoxKeyRoot.RtBtnNew.ToString()].Header;
+                    title = _boxes[QBoxKeyRoot.RtBtnNew.ToString()].Header;
+                    _selectedId = Array.FindIndex(QState.PendingSlots!, x => x.Category == 0);
                     break;
                 default:
                     _boxOrder = QBtnBoxBuilder.Root;
@@ -111,32 +105,29 @@ namespace KvizCommando.Client.Pages.Question
             }
             Ui.Header.SetTitle(title, boxId);
             Ui.Header.SetBackBtnEna(boxId>1);
+            StateHasChanged();
         }
         protected override async Task OnInitializedAsync()
         {
-            await _qState.EnsureLoadedAsync();
-            _locNotShowStateDel = await _localStorage.GetItemAsync<bool>(LOCAL_NOT_SHOW_DEL);
-            _locNotShowStateNew = await _localStorage.GetItemAsync<bool>(LOCAL_NOT_SHOW_NEW);
             Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Question"],1);
-
-            (_originalCodes, _workingCodes) = QuestionHelper.CloneFactorySlots(_qState.FactorySlots);
             _isLoaded= true;
             if (_isReady==false)
                 BuildBoxes();
+            await Task.Delay(1);
         }
         protected override void OnInitialized()
         {
             Ui.Header.OnBackBtnClicked += UpdateBckClick;
         }
-        private async Task OnFactSaveAsync()
+        private async Task OnFactSaveAsync(int[] workCodes)
         {
             try
             {
                 var (success, message) = await Api.SaveFactorySlotsAsync(new SaveFactoryRequest
-                { CategorySlots = _workingCodes });
+                { CategorySlots = workCodes });
                 MessageFact = message;
                 _isSuccess = success;
-                _qState.Invalidate();
+                //_qState.Invalidate();
             }
             catch (Exception ex) { Console.WriteLine($"Save failed: {ex.Message}"); }
             finally { }
@@ -144,17 +135,15 @@ namespace KvizCommando.Client.Pages.Question
             {
                 _originalCodes[i] = _workingCodes[i];
             }
-            await _qState.EnsureLoadedAsync();
-            await InvokeAsync(StateHasChanged);
-            await Task.Delay(1000);
-            MessageFact = string.Empty;
+            //await _qState.EnsureLoadedAsync();
+            //await InvokeAsync(StateHasChanged);
+            //await Task.Delay(1000);
+            //MessageFact = string.Empty;
            
         }
-        private async Task OnSelectId(int id)
+        private void OnSelectId(int id)
         {
-            SelectedId = id;
-            await Task.Delay(1);
-            
+            _selectedId = id;  
         }
         private async Task ModalCallAsync(int btnId)
         {
@@ -177,16 +166,8 @@ namespace KvizCommando.Client.Pages.Question
             }
             else
             {
-                int index = Array.FindIndex(_qState.PendingSlots!, x => x.Category == 0);
-                var (suc, msg) = await Api.SendNewQuestionAsync( new NewQuestionRequest
-                 {
-                     SlotNo = index,
-                     Category = formData.Category,
-                     Question = formData.Question,
-                     Answers = formData.Answers
-                 });
-                isSucces = suc;
-                message = msg;
+                
+                
             }
             Console.WriteLine($"ScreenOption after execute: {ScreenOption}");
             if (isSucces)
@@ -208,20 +189,13 @@ namespace KvizCommando.Client.Pages.Question
             await Task.Delay(1);
 
         }
-        private async Task SaveToForm(NewQuestionRequest request)
+        private async Task SaveToFormAsync(NewQuestionRequest request)
         {
-            formData = request;
-            await ModalCallAsync(2);
+            var (suc, msg) = await Api.SendNewQuestionAsync(request);
+            //isSucces = suc;
+            //message = msg;
+            //await ModalCallAsync(2);
         }  
-        private async Task CallPendModal(int selectedid)
-        {
-            if (selectedid != 100)
-            {
-                SelectedId = selectedid;
-                await ModalCallAsync(1);
-            }
-        }
-
         private void UpdateBckClick()
         {
             Console.WriteLine($"Navigate to: kurva anyád");
@@ -242,7 +216,108 @@ namespace KvizCommando.Client.Pages.Question
 }
 
 
-/*
+/*     
+ *     
+ 
+
+
+//private bool LocNotShowStateDel => AppStates.LocStoreStates.ChkBxNotShowDel ?? false;
+
+
+
+
+
+            @if (ScreenOption == 0)
+            {
+                <div class="quest-selector">
+                    @foreach (var btn in _qbuttons!)
+                    {
+                        <ContentBox Header="@btn.Header"
+                                    Footer="@btn.Footer"
+                                    FooterDisplay="@btn.FooterDisplay"
+                                    Size="@btn.Size"
+                                    ShowImage="true"
+                                    ImageSrc="@btn.ImageSrc"
+                                    IsClickable="@btn.IsEnabled"
+                                    IsEnabled="@btn.IsEnabled"
+                                    ClickId="@btn.ClickId"
+                                    OnClick="OnRootBtnClick" />
+                    }
+                </div>
+            }
+            else
+            {
+               
+                <div class="box-container">
+                   
+
+                    <ContentBox Header=@BoxHeader 
+                        Footer="" FooterDisplay=false 
+                        Size="@(ScreenOption == 1 ? "halflarge" : "large")" 
+                        Resizable="false">
+                            <div class="lcd-wrapper">
+                                @switch (ScreenOption)
+                                {
+                                    case 1:
+                                        
+                                        break;
+                                    case 2:
+                                       
+                                        break;
+                                    case 3:
+                                       
+                                        break;
+                                    case 4:
+                                       
+                                        break;
+                                    default:
+                                        break;
+                                }
+                               
+                            </div>
+                       
+                    </ContentBox>
+                    
+                </div>
+
+            } 
+ 
+ *      private async Task CallPendModal(int selectedid)
+        {
+            if (selectedid != 100)
+            {
+                SelectedId = selectedid;
+                await ModalCallAsync(1);
+            }
+        }
+
+ *     
+ *       ExtInfo="@_qState.ExtendedInfo"
+                                                MessageUsr="@MessageUsr"
+                                                isSuccess="@_isSuccess"
+ *       [Inject] private ILocalStorageService _localStorage { get; set; } = default!;
+ ExtInfo="@_qState.ExtendedInfo"
+                                                Slots="@_qState.PendingSlots"
+                                                HandleSlot="CallPendModal" 
+ *       
+   // 
+ *       ExtInfo="@_qState.ExtendedInfo"
+                                             Slots="@_qState.Userlots"
+                                             NotShowDel="@_locNotShowStateDel"
+ *    ExtInfo="@_qState.ExtendedInfo"
+                                              WorkingCodes="@_workingCodes"
+                                              OriginalCodes="@_originalCodes"
+                                              MessageFact="@MessageFact"
+                                              isSuccess="@_isSuccess"   
+ *       //[Inject] private PageHeaderService Header { get; set; } = default!;
+        //[Inject] private NavigationManager Nav { get; set; } = default!;
+        //[Inject] private ILanguageService Lang { get; set; } = default!;
+        //[Inject] private IQuestionState _qState { get; set; } = default!;
+        //[Inject] private IApiService Api { get; set; } = default!;
+ * 
+ *   await _qState.EnsureLoadedAsync();
+            _locNotShowStateDel = await _localStorage.GetItemAsync<bool>(LOCAL_NOT_SHOW_DEL);
+            _locNotShowStateNew = await _localStorage.GetItemAsync<bool>(LOCAL_NOT_SHOW_NEW);
   <KcModal @ref="questionModal"
                          Id="questionModal"
                          Title="@Lang[qModal.Title]"

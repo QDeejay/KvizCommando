@@ -1,51 +1,45 @@
 ﻿using Blazored.LocalStorage;
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Home;
-using KvizCommando.Client.Features.Question;
-using KvizCommando.Client.Features.Sologame;
 using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Layout;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Pages.Home;
-using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
-using KvizCommando.Client.Services.Dto;
-using KvizCommando.Client.Services.Visual.UiService;
+using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
-using System.Globalization;
-using System.IO;
-using static System.Net.WebRequestMethods;
 namespace KvizCommando.Client.Pages.Home;
 
 public partial class Home : KcComponentBase, IDisposable
 {
-  
-    [Inject] private ILocalStorageService _localStorage { get; set; } = default!;
-    [Inject] private IHomeState _homeState { get; set; } = default!;
-    [Inject] private HttpClient _http { get; set; } = default!;
-   
-    private Dictionary<string, ContentBoxVm>? _boxesDict = new Dictionary<string, ContentBoxVm>();
+    [CascadingParameter]
+    private AppState AppState { get; set; } = default!;
+    [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
+    private string Culture => AppState.Culture;
+    private readonly Dictionary<string, ContentBoxVm> _boxes = [];
+
+    private HomeDTOs HState => AppState.Home!;
 
     private const string BOX_SIZE_MINIMAL = "minimalized";
     private const string BOX_SIZE_LARGE = "large";
+
     private string _bBoardSize = string.Empty;
-    private string[] _boxOrder = Array.Empty<string>();
+    private string[] _boxOrder = [];
     private bool _isReady = false;
     private bool _isLoaded = false;
     private MarkupString _bBoardHTML = new();
-    private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-    private ContentBoxVm Box(string orx) => _boxesDict![orx];
+
+    private ContentBoxVm Box(string orx) => _boxes![orx];
+
     private void BuildBoxes()
     {
-        var boxes = new Dictionary<string, ContentBoxVm>();
-        boxes = HomeButtonsBuilder.Build(_homeState.HomeScreen!, Ui.Lang);
+        var boxes = HomeButtonsBuilder.Build(HState.HomeScreen!, Ui.Lang);
         _boxOrder = HomeButtonsBuilder.BtnOrder;
         foreach (var box in boxes)
         {
-            _boxesDict![box.Key] = box.Value;
+            _boxes[box.Key] = box.Value;
         }
-        _boxesDict![HomeBoxKey.InfoBoard.ToString()].Size = _bBoardSize;
+        _boxes[HomeBoxKey.InfoBoard.ToString()].Size = _bBoardSize;
         _isReady = _isLoaded;
     }
     private void OnBoxClick(int boxId)
@@ -53,39 +47,42 @@ public partial class Home : KcComponentBase, IDisposable
         Console.WriteLine($"Box {boxId} kattintva.");
         switch (boxId)
         {
-            case 0: 
+            case 0:
                 break;
-            case 1: Ui.Nav.NavigateTo("/question");
+            case 1:
+                Ui.Nav.NavigateTo("/question");
                 break;
-            case 2: Ui.Nav.NavigateTo("/team");
+            case 2:
+                Ui.Nav.NavigateTo("/team");
                 break;
-            case 3: Ui.Nav.NavigateTo("/vsgame");
+            case 3:
+                Ui.Nav.NavigateTo("/vsgame");
                 break;
-            case 4: Ui.Nav.NavigateTo("/sologame");
+            case 4:
+                Ui.Nav.NavigateTo("/sologame");
                 break;
         }
     }
     private async Task CloseBBoard()
     {
         Console.WriteLine("faxom1");
-        
-        await _localStorage.SetItemAsync("B.B", DateTime.UtcNow);
-       
+
+        await LocalStorage.SetItemAsync("B.B", DateTime.UtcNow);
+
     }
     protected override async Task OnInitializedAsync()
     {
-        await _homeState.EnsureLoadedAsync();
-        string url = $"/BulletinBoard/{culture}/bb.html";
-        var lastBB = await _localStorage.GetItemAsync<DateTime>("B.B");
-        _bBoardHTML = new MarkupString(await _http.GetStringAsync(url));
 
-        if (lastBB.ToUniversalTime() < _homeState.ExtendedInfo!.LastInfo)
+        var lastBB = AppState.LocStoreStates.LastBboardChk;
+        _bBoardHTML = await MarkupLoader.LoadingHtmlAsync(Culture, Html.Bboard);
+
+        if (lastBB.ToUniversalTime() < HState.ExtendedInfo!.LastInfo)
             _bBoardSize = BOX_SIZE_LARGE;
         else
             _bBoardSize = BOX_SIZE_MINIMAL;
-       
-        Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Home"],0);
-        Ui.Header.SetRank (_homeState.UserMainData!.RankEnum);
+
+        Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Home"], 0);
+        Ui.Header.SetRank(HState.UserMainData!.RankEnum);
         Ui.Header.SetBackBtnEna(false);
         UpdateLedDisplay();
         _isLoaded = true;
@@ -104,8 +101,8 @@ public partial class Home : KcComponentBase, IDisposable
     }
     private void UpdateLedDisplay()
     {
-        var main = _homeState.UserMainData!;
-        var next = _homeState.ExtendedInfo!.NextXp;
+        var main = HState.UserMainData!;
+        var next = HState.ExtendedInfo!.NextXp;
         int level = main.RankEnum;
         string levelStr = RankNameTable.Data[level].PublicLevel ?? "";
 
@@ -144,4 +141,13 @@ public partial class Home : KcComponentBase, IDisposable
     //[Inject] private NavigationManager Nav { get; set; } = default;
     //[Inject] private PageHeaderService Header { get; set; } = default!;
     //[Inject] private IDisplayMessageState Display { get; set; } = default!;
+
+        //await _hState.EnsureLoadedAsync();
+        //string url = $"/BulletinBoard/{_culture}/bb.html";
+        //_bBoardHTML = new MarkupString(await Http.GetStringAsync(url));
+        //[Inject] private IHomeState _homeState { get; set; } = default!;
+        //[Inject] private HttpClient Http { get; set; } = default!;
+
+@page "/sologame"
+@page "/gamevs"
  */
