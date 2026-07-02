@@ -26,19 +26,20 @@ namespace KvizCommando.Client.Pages.Question.Components
 
         private bool _isLoaded = false;
 
-        private NewQuestionRequest _formData = new();
+        private NewQuestionRequest _formData=new();
 
         private bool[] CharCatMask => AppStates.Question!.ExtendedInfo.CharCatMask;
         private string Culture => AppStates.Culture;
-        private bool DisabledLcd => _formData.Category == 0 || SelectedId!=100;
-        private bool DisabledAnswer => _formData.Question.Length < 10 || _formData.Category == 0 || !_formData.Question.Contains('?') || SelectedId != 100;
-        private bool DisabledSendButton => DisabledLcd || DisabledAnswer || _formData.Answers.Any(a => string.IsNullOrWhiteSpace(a)) || _formData.Answers.Distinct().Count() != _formData.Answers.Length || SelectedId != 100;
+        private bool DisabledLcd => _formData.Category == 0 || SelectedId==100;
+        private bool DisabledAnswer => _formData.Question.Length < 10 || _formData.Category == 0 || !_formData.Question.Contains('?') || SelectedId == 100;
+        private bool DisabledSendButton => DisabledLcd || DisabledAnswer || _formData.Answers.Any(a => string.IsNullOrWhiteSpace(a)) || _formData.Answers.Distinct().Count() != _formData.Answers.Length || SelectedId == 100;
         private string DisCursor => DisabledLcd ? "cursor: url('/Images/cursors/disabled.cur'), not-allowed !Important;" : "";
         private string DisBckGround => DisabledLcd ? "background-color: #2a2a2a" : "";
         private CategoryOption[] Options => CatHelper.OptionsUpdate(CategoryOptionHelpers.optionType.New, CharCatMask);
 
         protected override void OnInitialized()
         {
+          
             _isLoaded = true;
         }
         protected async Task OnSaveQuestion()

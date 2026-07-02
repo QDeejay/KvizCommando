@@ -2,8 +2,9 @@
 using Blazored.SessionStorage;
 using CsvHelper.Configuration.Attributes;
 using KvizCommando.Client.Data;
-using KvizCommando.Client.Features.Question;
+using KvizCommando.Client.Features.Modal;
 using KvizCommando.Client.Helpers;
+using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Pages.Shared;
 using KvizCommando.Client.Services;
 using KvizCommando.Client.Services.Audio;
@@ -39,7 +40,7 @@ namespace KvizCommando.Client.Layout
 
         private readonly AppState _appState = new();
 
-        private ModalPar _modalPar = new();
+        private ModalBoxVm _modalPar = new();
         private KcModal? _mainModal;
   
 
@@ -70,7 +71,7 @@ namespace KvizCommando.Client.Layout
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(culture);
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(culture);
             _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-            await InitStatesAsync(0);
+            
             await Ui.Lang.LoadModuleAsync(_culture, "common");  // szükséges
             await Ui.Lang.LoadModuleAsync(_culture, "mainlayout");  // szükséges
             await Ui.Lang.LoadModuleAsync(_culture, "home");
@@ -78,8 +79,10 @@ namespace KvizCommando.Client.Layout
             if (!string.IsNullOrWhiteSpace(sessionId))
             {
                 SessionService.SessionId = sessionId;
+                await InitStatesAsync(0);
                 //await HomeState.EnsureLoadedAsync();
                 _isLoggedIn = true;
+               
             }
             else { _isLoggedIn = false; }
             if (Audio.EnteredNormal)
@@ -96,6 +99,10 @@ namespace KvizCommando.Client.Layout
             
             _isReady = true;
         }
+        private void TestShow()
+        {
+          //  _ =  _mainModal!.ShowAsync();
+        }
         protected override void OnInitialized()
         {
             Ui.Header.OnTitleChanged += UpdateTitle;
@@ -104,17 +111,19 @@ namespace KvizCommando.Client.Layout
             Ui.Modal.OnModalShow += ShowModal;
             Ui.Modal.OnModalHide += HideModal;
 
+            Ui.ReloadRequested += OnRefreshRequired;
+
         }
         private void UpdateTitle()
         {
             _currentTitle = Ui.Header.Title;
-            _ = InvokeAsync(StateHasChanged);
+            InvokeAsync(StateHasChanged);
         }
         private void UpdateRank() 
         {
             var rankName = RankNameLocalizer.GetName(Ui.Header.Rank, _culture);
             _Greetings = Ui.Lang["mainlayout.Text.Greetings"].FormatSafe(rankName);
-            _ = InvokeAsync(StateHasChanged);
+            InvokeAsync(StateHasChanged);
         }
         private void UpdateBackBtnEna() 
         {
@@ -144,10 +153,19 @@ namespace KvizCommando.Client.Layout
         private void ShowModal()
         {
             _modalPar = Ui.Modal.Parameter!;
-            StateHasChanged();
+            _ = _mainModal!.ShowAsync(_modalPar);
+            //await InvokeAsync(async () =>
+            //{});
         }
-        private void HideModal() 
-        { 
+
+        private void HideModal()
+        {
+            _ = _mainModal!.HideAsync();
+        }
+
+        private void ModalAction(ModalResult result)
+        {
+            Ui.Modal.SendResult(result);
         }
 
 
@@ -158,14 +176,21 @@ namespace KvizCommando.Client.Layout
             Ui.Header.OnBackBtnEnaChanged -= UpdateBackBtnEna; // <-- a helyes handlerre iratkozunk le
             Ui.Modal.OnModalShow -= ShowModal;
             Ui.Modal.OnModalHide -= HideModal;
+            Ui.ReloadRequested -= OnRefreshRequired;
             GC.SuppressFinalize(this);
+
+
         }
         public async Task Logout()
         {
             await User.LogoutAsync(false);
             Console.WriteLine("User logged out.");
         }
-        private async Task InitStatesAsync(ReqStates state)
+        private async Task OnRefreshRequired()
+        {
+            await InitStatesAsync(ReqStates.All);
+        }
+        public async Task InitStatesAsync(ReqStates state)
         {
             _appState.Culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName; 
             if (state == ReqStates.All || state == ReqStates.Home)
@@ -194,10 +219,10 @@ namespace KvizCommando.Client.Layout
                 _appState.LocStoreStates.ChkBxNotShowNew = await LocalStorage.GetItemAsync<bool>(LOCAL_NOT_SHOW_NEW);
                 _appState.LocStoreStates.LastBboardChk = await LocalStorage.GetItemAsync<DateTime>(LOCAL_LAST_B_BOARD);
             }
-
+            await InvokeAsync(StateHasChanged);
         }
     }
-    enum ReqStates 
+    public enum ReqStates 
     {
         All=0,
         Home,

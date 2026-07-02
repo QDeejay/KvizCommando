@@ -73,7 +73,7 @@ namespace KvizCommando.Client.Features.Question
                 TitleKey = "question.Box.Title.FactorySlots",
                 ImageSrc = string.Empty, Size = "halflarge", FooterDisplay = false, ClickId = 0,
                 BuildBoxText = (lang, qn) => "",
-                CheckEnable = (qn) => false,
+                CheckEnable = (qn) => true,
                 LcdBackground = false,
                 RenderContent = 1,
                 ButtonBar = false
@@ -83,7 +83,7 @@ namespace KvizCommando.Client.Features.Question
                 TitleKey = string.Empty,
                 BuildBoxText = (lang, qn) => lang["question.Box.Title.UsrSlots"].FormatSafe(qn.OccupiedUserSlot, qn.AvailableUserSlot),
                 ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 0,
-                CheckEnable = (qn) => false,
+                CheckEnable = (qn) => true,
                 LcdBackground = true,
                 RenderContent = 2,
                 ButtonBar = true
@@ -94,7 +94,7 @@ namespace KvizCommando.Client.Features.Question
                 TitleKey = string.Empty,
                 BuildBoxText = (lang, qn) =>  lang["question.Box.Title.PendingSlots"].FormatSafe(qn.OccupiedPendingSlot, qn.AvailableUserSlot >> 1),
                 ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 0,
-                CheckEnable = (qn) => false,
+                CheckEnable = (qn) => true,
                 LcdBackground = true,
                 RenderContent = 3,
                 ButtonBar= true
@@ -104,7 +104,7 @@ namespace KvizCommando.Client.Features.Question
                 TitleKey = "question.Modal.Title.New",
                 ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 0,
                 BuildBoxText = (lang, qn) => "",
-                CheckEnable = (qn) => false,
+                CheckEnable = (qn) => true,
                 LcdBackground = false,
                 RenderContent = 4,
                 ButtonBar= false

@@ -8,7 +8,8 @@
         <div class="category-part" >
             <label class="label-text">@Ui.Lang["question.Table.Header.Category"]: </label>
             <select class="inline-editor"
-                    @bind="_formData.Category"
+                    disabled="@(SelectedId == 100)"
+                    @bind="@_formData.Category"
                     @bind:event="onchange"
                     @onclick:stopPropagation="true"
                     @onkeydown="OnEditorKeyDown"
@@ -88,6 +89,6 @@
         </div>
     </div>
     <div class="usr-bar">
-       
+
     </div>
 }

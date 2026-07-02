@@ -28,7 +28,7 @@ namespace KvizCommando.Client.Pages.Question.Components
         private int[] _originalCodes = [];
         private int[] _workingCodes = [];
 
-        //private string Culture => AppStates.Culture;
+        private string Culture => AppStates.Culture;
         private bool IsDirty => !QuestionHelper.ArraysEqual(_originalCodes, _workingCodes);
         private int[] FactSlots => AppStates.Question!.FactorySlots;
         private QuestionExtendedInfo ExtInfo => AppStates.Question!.ExtendedInfo;

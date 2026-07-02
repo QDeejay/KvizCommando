@@ -15,7 +15,7 @@ public class AuthRedirectHandler : DelegatingHandler
     }
     private static readonly string[] _ignore401Endpoints =
         {
-            "/start",
+            "/",
             "/login",
             "/register",
             "/checkin",

@@ -1,13 +1,11 @@
 ﻿
-.box-container {
+.kc-quest-selector2 {
+   
     width: 100%;
     max-width: 100%;
     justify-items: center;
-    z-index:101;
-}
-.lcd-wrapper {
-    height: 100%;
-    width: 95%;
+    z-index: 101;
+    gap: 8px;
 }
 
 .attention-text {
@@ -26,12 +24,13 @@
 }
 .kc-quest-selector {
     display: flex;
-    position:relative;
-    top: -50px;
+    flex-direction:column;
+    position: relative;
+    top: -30px;
     flex-wrap: wrap;
     gap: 8px;
     align-items: flex-start;
-    width: 440px;
+    width: max-content;
 }
 
 

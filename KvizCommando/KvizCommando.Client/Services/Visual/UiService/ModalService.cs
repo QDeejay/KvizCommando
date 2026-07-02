@@ -1,37 +1,51 @@
-﻿using KvizCommando.Client.Features.Question;
+﻿using KvizCommando.Client.Features.Modal;
+using KvizCommando.Client.Models.ViewModels;
 
 namespace KvizCommando.Client.Services.Visual.UiService
 {
-    public class ModalService
+    public sealed class ModalService
     {
-        public ModalPar? Parameter { get; private set; } = default!;
+        private TaskCompletionSource<ModalResult>? _tcs;
+
+        public ModalBoxVm? Parameter { get; private set; }
 
         public event Action? OnModalShow;
         public event Action? OnModalHide;
-        public event Action<ModalResult, ModalPar>? OnResult;
-        public void Show (ModalPar param) 
-        { 
-            Parameter = param;
-            OnModalShow?.Invoke();
-        }
-        public void Hide() 
+
+        public Task<ModalResult> ShowAsync(ModalBoxVm param)
         {
-            Parameter = null; 
+            Parameter = param;
+
+            _tcs = new TaskCompletionSource<ModalResult>();
+
+            OnModalShow?.Invoke();
+
+            return _tcs.Task;
+        }
+
+        public void SendResult(ModalResult result)
+        {
+            if (_tcs == null)
+                return;
+
+            _tcs.SetResult(result);
+
+            Parameter = null;
+            _tcs = null;
+
             OnModalHide?.Invoke();
         }
-        public void SendResult(ModalResult result) 
-        { 
-            if (Parameter==null)
-                return;
-            OnResult?.Invoke(result,Parameter);
-            Hide();
+
+        public void Cancel()
+        {
+            SendResult(ModalResult.Close);
         }
     }
-    public enum ModalResult 
-    { 
+
+    public enum ModalResult
+    {
         None,
         Button1,
-        Button1ViaChbox,
         Button2,
         Close
     }

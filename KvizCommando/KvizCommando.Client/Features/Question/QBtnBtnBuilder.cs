@@ -24,18 +24,19 @@ namespace KvizCommando.Client.Features.Question
             {
                 var btn = spec;
                 var footer = string.IsNullOrEmpty(spec.TitleKey);
-                dict[btn.Key.ToString()] = new ContentBoxVm 
+                dict[btn.Key.ToString()] = new ContentBoxVm
                 {
                     Header = footer ? spec.BuildBoxText(lang, qs) : lang[spec.TitleKey],
-                    Footer = !footer ?  spec.BuildBoxText(lang, qs) : string.Empty,
+                    Footer = !footer ? spec.BuildBoxText(lang, qs) : string.Empty,
                     FooterDisplay = spec.FooterDisplay,
                     Size = spec.Size,
                     ImageSrc = spec.ImageSrc,
-                    IsClickable = spec.ClickId > 0 && btn.ClickId<1000,
+                    IsClickable = spec.ClickId > 0 && btn.ClickId < 1000,
                     IsEnabled = btn.CheckEnable(qs),
                     ClickId = spec.ClickId,
-                    LcdDisplay = spec.LcdBackground
-
+                    LcdDisplay = spec.LcdBackground,
+                    RenderContent = spec.RenderContent,
+                    ButtonBarVisible = spec.ButtonBar
                 };
             }
             return dict;

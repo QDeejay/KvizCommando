@@ -30,13 +30,14 @@
                                                 SelectedIdChanged="OnSelectId"/>
                             </ChildContent3>
                             <ChildContent4>
-                            <NewQuestionManager OnSendQuestion="SaveToFormAsync" />
+                            <NewQuestionManager SelectedId="_selectedId"
+                                                OnSendQuestion="OnSaveToFormAsync" />
                             </ChildContent4>
                             <ChildContent5>
                                 <button class="military-button"
                                         disabled="@(_selectedId == 100)"
                                         style="@_boxBtnStyle"
-                                        @onclick="_onBoxBtnClick">
+                                    @onclick="_onManageSlotAsync">
                                     @_boxBtnText
                                 </button>
                             </ChildContent5>

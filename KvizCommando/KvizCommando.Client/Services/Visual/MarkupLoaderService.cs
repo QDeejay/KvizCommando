@@ -3,8 +3,6 @@
 namespace KvizCommando.Client.Services.Visual
 {
     
-
-
     public class MarkupLoaderService
     {
         private readonly HttpClient _http;
@@ -24,7 +22,7 @@ namespace KvizCommando.Client.Services.Visual
                 Html.NewQuestRules => $"/Manuals/{culture}/questionsend.html",
                 _ => string.Empty,
             };
-            if(string.IsNullOrEmpty(url))
+            if(!string.IsNullOrEmpty(url))
                 html = new MarkupString(await _http.GetStringAsync(url));
             return html;
         }

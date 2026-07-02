@@ -1,7 +1,8 @@
 ﻿using Blazored.SessionStorage;
 using KvizCommando.Client.Features.Home;
-using KvizCommando.Client.Features.Question;
+using KvizCommando.Client.Features.Modal;
 using KvizCommando.Client.Models.StoreModels;
+using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Pages.Shared;
 using KvizCommando.Client.Services;
 using KvizCommando.Client.Services.Dto;
@@ -34,7 +35,7 @@ namespace KvizCommando.Client.Pages.Login
 
         private string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         private KcModal? _termsModal;
-        private ModalPar _termsPar = ModalSpecs.Specs[1];
+        private ModalBoxVm _termsPar = new();
         private string _fullHtml = string.Empty;
         private MarkupString _renderHTML;
         private MarkupString _termsHtml;
@@ -107,7 +108,7 @@ namespace KvizCommando.Client.Pages.Login
             }
 
             // (opcionális) takarítsd le az URL-ből az ?error-t a címsorból:
-
+            //_termsPar = MBoxBuilder.BuildParam(ModalTypes.Terms, Ui.Lang);
             isLoaded = true;
         }
         private static Task OnAcceptedAsync()
@@ -200,7 +201,7 @@ namespace KvizCommando.Client.Pages.Login
                 DynamicTitle = Ui.Lang["checkin.Title.TermsOutdated"];
 
             }
-            
+            _termsPar = MBoxBuilder.BuildParam(ModalTypes.Terms, Ui.Lang);
         }
 
         private async Task OpenTerms()
@@ -209,7 +210,7 @@ namespace KvizCommando.Client.Pages.Login
             _termsPar = _termsPar with {Title = Ui.Lang["checkin.modal.TermsTitle"] };
             _renderHTML = _termsHtml;
             if (_termsModal is not null)
-                await _termsModal.ShowAsync();
+                await _termsModal.ShowAsync(_termsPar);
         }
         private async Task OpenPrivacy()
         {
@@ -218,7 +219,7 @@ namespace KvizCommando.Client.Pages.Login
             _termsPar = _termsPar with { Title = Ui.Lang["checkin.modal.PrivacyTitle"] };
             _renderHTML = _privacyHtml;
             if (_termsModal is not null)
-                await _termsModal.ShowAsync();
+                await _termsModal.ShowAsync(_termsPar);
         }
 
         private async Task AcceptTerms()

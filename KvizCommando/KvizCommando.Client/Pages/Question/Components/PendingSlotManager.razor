@@ -25,7 +25,7 @@
                     {
                         <div></div>
                     }
-                    @if (Slots[rowusr].Status != "Pending")
+            @if (Slots[rowusr].Status != "Pending" && Slots[rowusr].Status != "None")
                     {
                         <div>
                             <input type="checkbox" class="custom-radio" name="UsrRow"

@@ -1,5 +1,8 @@
-﻿using KvizCommando.Client.Features.Question;
+﻿using KvizCommando.Client.Features.Modal;
+using KvizCommando.Client.Features.Question;
 using KvizCommando.Client.Helpers;
+using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Pages.Question.Components;
 using KvizCommando.Client.Pages.Shared;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
@@ -27,7 +30,7 @@ namespace KvizCommando.Client.Pages.Team
         private TeamMemberDto SelectedMember { get; set; } = new TeamMemberDto();
         private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         private KcModal? teamModal;
-        private ModalPar tModal = new();
+        private ModalBoxVm tModal = new();
         private bool _isLoaded = false;
         private string tabTitle = string.Empty;
         private string[] hTabs { get; set; } = new string[9];
@@ -159,7 +162,7 @@ namespace KvizCommando.Client.Pages.Team
         }
         private async Task ModalCallAsync(int btnId)
         {
-            var spec = ModalSpecs.Specs[btnId];
+            var spec = MBoxBuilder.BuildParam(ModalTypes.THandle, Ui.Lang);
             ModalOption = spec.Mode;
             tModal = spec;
             if (btnId != 3)
@@ -179,7 +182,7 @@ namespace KvizCommando.Client.Pages.Team
                 };
             }
             
-            await teamModal!.ShowAsync();
+            await teamModal!.ShowAsync(tModal);
         }
         private async Task ExecuteModalAsync(int mode)
         {

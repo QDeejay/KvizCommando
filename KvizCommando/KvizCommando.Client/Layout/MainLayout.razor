@@ -8,6 +8,12 @@
      <LoaderView />
 @if (_isReady)
 {
+    <KcModal @ref="_mainModal"
+             Id="mainModal"
+             Appstates="@_appState"
+             OnModalAction="ModalAction"
+             OnCheckBoxAction="() => InitStatesAsync(ReqStates.LocalSotrage)">
+    </KcModal>
     if (_isLoggedIn)
     {
         <AppHeader DisplayName="@_appState.Home!.UserMainData.UserName"

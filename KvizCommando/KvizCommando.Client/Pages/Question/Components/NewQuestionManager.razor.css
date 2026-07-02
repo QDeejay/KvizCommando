@@ -2,11 +2,10 @@
 
 
 .newquest-body {
-    margin-top: 20px; /* Ezt állítsd, hogy milyen messze legyen a HEAD-től */
+    margin: 10px;
     display: flex;
     flex-direction: column;
-    height: 81%;
-    margin-left: 20px;
+ 
     gap: 4px; /* mezők közti térköz */
 }
 
@@ -24,7 +23,7 @@
 
 .question-wrapper {
     display: flex;
-    height: 38%;
+    height: 200px;
     justify-content: space-between;
     align-items: start;
 }

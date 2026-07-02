@@ -1,18 +1,19 @@
-﻿
+﻿@using KvizCommando.Client.Features.Modal;
+@inherits Utilities.KcComponentBase
 @if (isLoaded)
 {
     <div class="modal-display">
         @switch (Mode)
         {
-            case 1:  /// user slot törlése
+            case 101:  /// user slot törlése
                 <br>
-                @Lang["question.Modal.Text.Confirm"]
+                @Ui.Lang["question.Modal.Text.Confirm"]
                 <br>
                 <br>
                 break;
-            case 2: /// pending slot törlése vagy ha approved akkor átmozgatása
+            case 102: /// pending slot törlése vagy ha approved akkor átmozgatása
                 <div>
-                    <label class="category-label">@Lang["question.Table.Header.Category"]:</label>
+                    <label class="category-label">@Ui.Lang["question.Table.Header.Category"]:</label>
                     <span> @catName</span>
                 </div>
                     <br>
@@ -20,14 +21,14 @@
                     <br>
                 <br>
                 <div class="divider">
-                    <span style=@colorStyle>@Lang[$"question.Table.Status.{Slot.Status}"]</span>
+                    <span style=@colorStyle>@Ui.Lang[$"question.Table.Status.{Slot.Status}"]</span>
                 </div>
                 <div class="remark-label">
-                    <fn>@Lang["question.Table.Header.Remark"]</fn>
+                    <fn>@Ui.Lang["question.Table.Header.Remark"]</fn>
                     <p>@Slot.Remark</p>
                 </div>
                 break;
-            case 3: /// új kérdés felvétele
+            case 103: /// új kérdés felvétele
                 @renderHTML
                 break;
             default:

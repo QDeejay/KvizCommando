@@ -1,4 +1,5 @@
-﻿using KvizCommando.Client.Services.Visual.UiService.Language;
+﻿using KvizCommando.Client.Layout;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using Microsoft.AspNetCore.Components;
 
 namespace KvizCommando.Client.Services.Visual.UiService
@@ -13,6 +14,10 @@ namespace KvizCommando.Client.Services.Visual.UiService
         public NavigationManager Nav { get; }
         public ILanguageService Lang { get; }
 
+        public event Func<Task>? ReloadRequested;
+
+        public Task ReloadAsync()
+            => ReloadRequested?.Invoke() ?? Task.CompletedTask;
         public UiServices(
             ModalService modal,
             //ToastService toast,

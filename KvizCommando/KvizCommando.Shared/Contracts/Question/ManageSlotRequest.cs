@@ -17,6 +17,7 @@ namespace KvizCommando.Shared.Contracts.Question
         DeleteUsr =0,
         DeletePending=1,
         MovePending=2,
-        SendNew=3
+        SendNew=3,
+        Handle=4
     }
 }

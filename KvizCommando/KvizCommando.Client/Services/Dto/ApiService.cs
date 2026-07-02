@@ -42,6 +42,7 @@ namespace KvizCommando.Client.Services.Dto
                 {
                     return (false, msg ?? "");
                 }
+                _question.Invalidate();
                 return (true, msg ?? "");
             }
             catch (Exception ex)
@@ -67,7 +68,8 @@ namespace KvizCommando.Client.Services.Dto
                 {
                     return (false, msg ?? "");
                 }
-                await _home.RefreshAsync();
+                _question.Invalidate();
+                _home.Invalidate();
                 return (true, msg ?? "");
             }
             catch (Exception ex)
@@ -91,6 +93,7 @@ namespace KvizCommando.Client.Services.Dto
                 {
                     return (false, msg ?? "");
                 }
+                _question.Invalidate();
                 return (true, msg ?? "");
             }
             catch (Exception ex)
@@ -114,6 +117,7 @@ namespace KvizCommando.Client.Services.Dto
                 {
                     return (false, msg ?? "");
                 }
+                _team.Invalidate();
                 return (true, msg ?? "");
             }
             catch (Exception ex)
@@ -137,8 +141,8 @@ namespace KvizCommando.Client.Services.Dto
                 {
                     return (false, msg ?? "");
                 }
-                await _home.RefreshAsync();
-                await _question.RefreshAsync();
+                _home.Invalidate();
+                _team.Invalidate();
                 return (true, msg ?? "");
             }
             catch (Exception ex)

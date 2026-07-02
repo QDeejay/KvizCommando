@@ -1,19 +1,24 @@
 ﻿
 using Blazored.LocalStorage;
+using KvizCommando.Client.Features.Modal;
 using KvizCommando.Client.Features.Question;
 using KvizCommando.Client.Features.Sologame;
 using KvizCommando.Client.Helpers;
+using KvizCommando.Client.Layout;
 using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Pages.Question.Components;
 using KvizCommando.Client.Pages.Shared;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Dto;
 using KvizCommando.Client.Services.Visual;
+using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Globalization;
+using System.Reflection;
 
 
 
@@ -24,32 +29,24 @@ namespace KvizCommando.Client.Pages.Question
         [CascadingParameter]
         private AppState AppStates { get; set; } = default!;
 
-        private readonly NewQuestionRequest _formData = new();
         private readonly Dictionary<string, ContentBoxVm> _boxes = [];
+        //private NewQuestionRequest _formData = new();
+        private ModalBoxVm _qModalPar = new();
         private string[] _boxOrder = [];
-        
-        
-        private Func<Task> _onBoxBtnClick = default!;
+        private Func<Task> _onManageSlotAsync = default!;
         private int _selectedId = 100;
-
         private string _boxBtnText = string.Empty;
         private string _boxBtnStyle = string.Empty;
         private string MessageFact = string.Empty;
         private string MessageUsr = string.Empty;
 
-        private int ScreenOption;
+        private bool _locNotShowStateNew => AppStates.LocStoreStates.ChkBxNotShowNew ?? false;
+        private bool _locNotShowStateDel => AppStates.LocStoreStates.ChkBxNotShowDel ?? false;
 
-        //private bool _locNotShowStateNew { get; set; }
-        private bool _locNotShowStateDel;
-
-        private bool _isSuccess = false;
-        private int _subPageNo = 0;
-        //private int ModalOption = 0;
- 
         private bool _isReady = false;
         private bool _isLoaded = false;
-        private int[] _originalCodes = new int[10];
-        private int[] _workingCodes = Array.Empty<int>();
+        //private int[] _originalCodes = new int[10];
+        //private int[] _workingCodes = Array.Empty<int>();
         private string Culture => AppStates.Culture;
         private QuestionDtos QState => AppStates.Question!;
         private ContentBoxVm Box(string orx) => _boxes[orx];
@@ -68,7 +65,7 @@ namespace KvizCommando.Client.Pages.Question
             _selectedId = 100;
             _boxBtnText = string.Empty;
             _boxBtnStyle = string.Empty;
-            _onBoxBtnClick = default!;
+            _onManageSlotAsync = default!;
             var title = string.Empty;
             switch (boxId)
             {
@@ -82,14 +79,14 @@ namespace KvizCommando.Client.Pages.Question
                     break;
                 case 102:
                     _boxOrder = QBtnBoxBuilder.SubUsr;
-                    _onBoxBtnClick = () => ModalCallAsync(0);
+                    _onManageSlotAsync = OnDeleteUsrSlotAsync;
                     _boxBtnText = _locNotShowStateDel ? Ui.Lang["question.Button.Delete"] : Ui.Lang["question.Button.Handle"];
                     _boxBtnStyle = _locNotShowStateDel ? "background-color: #a64b2a" : "background-color: #4b5320";
                     title = _boxes[QBoxKeyRoot.RtBtnUsr.ToString()].Header;
                     break;
                 case 103:
                     _boxOrder = QBtnBoxBuilder.SubPend;
-                    _onBoxBtnClick = () => ModalCallAsync(1);
+                    _onManageSlotAsync = OnHandlePendSLotAsync;
                     _boxBtnText = Ui.Lang["question.Button.Handle"];
                     title = _boxes[QBoxKeyRoot.RtBtnPendig.ToString()].Header;
                     break;
@@ -110,7 +107,8 @@ namespace KvizCommando.Client.Pages.Question
         protected override async Task OnInitializedAsync()
         {
             Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Question"],1);
-            _isLoaded= true;
+            _boxOrder = QBtnBoxBuilder.Root;
+            _isLoaded = true;
             if (_isReady==false)
                 BuildBoxes();
             await Task.Delay(1);
@@ -126,41 +124,112 @@ namespace KvizCommando.Client.Pages.Question
                 var (success, message) = await Api.SaveFactorySlotsAsync(new SaveFactoryRequest
                 { CategorySlots = workCodes });
                 MessageFact = message;
-                _isSuccess = success;
-                //_qState.Invalidate();
+                await Ui.ReloadAsync();
+                BuildBoxes(); 
+
             }
             catch (Exception ex) { Console.WriteLine($"Save failed: {ex.Message}"); }
             finally { }
-            for (var i = 0; i < _workingCodes.Length; i++)
-            {
-                _originalCodes[i] = _workingCodes[i];
-            }
-            //await _qState.EnsureLoadedAsync();
-            //await InvokeAsync(StateHasChanged);
-            //await Task.Delay(1000);
-            //MessageFact = string.Empty;
+          
            
         }
+        private async Task OnSaveToFormAsync(NewQuestionRequest request)
+        {
+            if (!_locNotShowStateNew)
+            {
+                _qModalPar = MBoxBuilder.BuildParam(ModalTypes.QNewRules, Ui.Lang);
+                //_qModalPar.BodyParameters.Add(nameof(QModalRender.SlotNo), _selectedId);
+                var result = await Ui.Modal.ShowAsync(_qModalPar);
+
+                if (result != ModalResult.Button1)
+                    return;
+            }
+            
+            var (suc, msg) = await Api.SendNewQuestionAsync(request);
+            //_isSucces = suc;
+            //_message = msg;
+            await Task.Delay(2);
+        }
+        private async Task OnDeleteUsrSlotAsync()
+        {
+            if (!_locNotShowStateDel)
+            {
+                _qModalPar = MBoxBuilder.BuildParam(ModalTypes.QUsrDelet, Ui.Lang);
+                var result = await Ui.Modal.ShowAsync(_qModalPar);
+
+                if (result != ModalResult.Button1)
+                    return;
+            }
+            var (suc, msg) = await Api.ManageSlotAsync(new ManageSlotRequest
+            {
+                SlotNo = _selectedId,
+                ReqType = SlotManageType.DeleteUsr,
+            });
+
+        }
+        private async Task OnHandlePendSLotAsync()
+        {
+            _qModalPar = MBoxBuilder.BuildParam(ModalTypes.QPendHandle, Ui.Lang);
+            _qModalPar = _qModalPar with {
+                ActionText2 = QState.PendingSlots[_selectedId].Status == "Approved" ? _qModalPar.ActionText2 : string.Empty,
+            };
+            _qModalPar.BodyParameters.Add(nameof(QModalRender.SlotNo), _selectedId);
+            var result = await Ui.Modal.ShowAsync(_qModalPar);
+            var reqType = new SlotManageType();
+            
+            if (result == ModalResult.Button1)
+                reqType = SlotManageType.DeletePending;
+            else if (result == ModalResult.Button2)
+                reqType = SlotManageType.MovePending;
+            else
+                return;
+
+
+                var (suc, msg) = await Api.ManageSlotAsync(new ManageSlotRequest
+                {
+                    SlotNo = _selectedId,
+                    ReqType = (SlotManageType)reqType,
+                });
+        }
+       
         private void OnSelectId(int id)
         {
             _selectedId = id;  
         }
-        private async Task ModalCallAsync(int btnId)
+
+        private void UpdateBckClick()
+        {
+            Console.WriteLine($"Navigate to: kurva anyád");
+            if (Ui.Header.PageIndex == 1)
+                Ui.Nav.NavigateTo("/home");
+            else
+                OnBoxClick(1);
+            
+            //_isReady = false;
+            InvokeAsync(StateHasChanged);
+        }
+        public void Dispose()
+        {
+            Ui.Header.OnBackBtnClicked -= UpdateBckClick;
+            GC.SuppressFinalize(this);
+        }
+    }
+}
+
+
+/*     
+ *     
+  private async Task ModalCallAsync(int btnId)
         {
            await Task.Delay(1);
         }
         private async Task ExecuteModalAsync(int execute)
         {
-            bool isSucces = false;
-            string message = string.Empty;
+           
             Console.WriteLine($"ScreenOption execute: {ScreenOption}");
             if (execute < 3)
             {
-                var (suc, msg) = await Api.ManageSlotAsync(new ManageSlotRequest
-                {
-                    SlotNo = SelectedId,
-                    ReqType = (SlotManageType)execute,
-                });
+                
                 isSucces = suc;
                 message = msg;
             }
@@ -187,38 +256,6 @@ namespace KvizCommando.Client.Pages.Question
             ModalOption = 0;
             //OnRootBtnClick(ScreenOption+10);
             await Task.Delay(1);
-
-        }
-        private async Task SaveToFormAsync(NewQuestionRequest request)
-        {
-            var (suc, msg) = await Api.SendNewQuestionAsync(request);
-            //isSucces = suc;
-            //message = msg;
-            //await ModalCallAsync(2);
-        }  
-        private void UpdateBckClick()
-        {
-            Console.WriteLine($"Navigate to: kurva anyád");
-            if (Ui.Header.PageIndex == 1)
-                Ui.Nav.NavigateTo("/home");
-            else
-                OnBoxClick(1);
-            
-            //_isReady = false;
-            InvokeAsync(StateHasChanged);
-        }
-        public void Dispose()
-        {
-            //_questionModal?.Dispose();
-            GC.SuppressFinalize(this);
-        }
-    }
-}
-
-
-/*     
- *     
- 
 
 
 //private bool LocNotShowStateDel => AppStates.LocStoreStates.ChkBxNotShowDel ?? false;

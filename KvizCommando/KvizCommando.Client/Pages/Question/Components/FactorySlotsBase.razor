@@ -42,7 +42,7 @@
                                 autofocus>
                             @foreach (var opt in _options)
                             {
-                                <option value="@opt.Code">@QuestionHelper.GetLabel(opt, culture)</option>
+                                <option value="@opt.Code">@QuestionHelper.GetLabel(opt, Culture)</option>
                             }
                         </select>
                     }
@@ -52,16 +52,17 @@
                                 class="value-button"
                                 @onclick="() => StartEdit(row)"
                                 @onclick:stopPropagation="true">
-                                @CatHelper.ResolveLabel(_workingCodes[row], culture)
+                                @CatHelper.ResolveLabel(_workingCodes[row], Culture)
                         </button>
                     }
                 </div>
             }
         </div>
+        <br>
     </div>
 </div>
 <div class="save-bar">
-    <button class=" military-button"
+    <button class="military-button"
             disabled="@(!IsDirty)"
             @onclick="OnSaveSlots">
         @Ui.Lang["question.Button.Save"]

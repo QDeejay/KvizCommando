@@ -22,6 +22,7 @@ namespace KvizCommando.Client.Components
         {
             _vm = Vm;
             _noContent = _vm.RenderContent==0 &&  string.IsNullOrEmpty(_vm.ImageSrc);
+            Console.WriteLine("V");
         }
         private string CursorStyle { get; set; } = string.Empty;
         private string CssClass =>
