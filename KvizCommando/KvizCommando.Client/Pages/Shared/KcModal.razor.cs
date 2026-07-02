@@ -33,7 +33,7 @@ namespace KvizCommando.Client.Pages.Shared
         {
             Par = par;
             CheckBox = false;
-            CanAccept = false;
+            CanAccept = !Par.CheckBottom;
             await InvokeAsync(StateHasChanged);
             await JS.InvokeVoidAsync("kcModal.show", $"#{Id}");
             if (Par.CheckBottom == true && _bottomReached!=true)
@@ -43,10 +43,11 @@ namespace KvizCommando.Client.Pages.Shared
                 await CheckBottomAsync();
 
             }
-            else CanAccept = true;
+           //else CanAccept = true;
         }
         public async Task HideAsync() 
         {
+            Par = new ModalBoxVm() with { Mode = ModalTypes.None };
             if (OnCloseAction.HasDelegate)
                 await OnCloseAction.InvokeAsync();
             if (OnModalAction.HasDelegate)
@@ -58,20 +59,20 @@ namespace KvizCommando.Client.Pages.Shared
         }  
         private async Task OnActionClicked1()
         {
-            if (OnAction1.HasDelegate)
+            if (CheckBox == true)
             {
-                if (CheckBox == true)
-                {
-                    await LocalStorage.SetItemAsync(Par.CheckBoxKey ?? "ModalChkAction", true);
-                    if (OnCheckBoxAction.HasDelegate)
-                        await OnCheckBoxAction.InvokeAsync();
-                }
-                await OnAction1.InvokeAsync();
+                await LocalStorage.SetItemAsync(Par.CheckBoxKey ?? "ModalChkAction", true);
+                if (OnCheckBoxAction.HasDelegate)
+                    await OnCheckBoxAction.InvokeAsync();
             }
+            
+            if (OnAction1.HasDelegate) 
+                await OnAction1.InvokeAsync();
+       
             if (OnModalAction.HasDelegate)
-                await OnModalAction.InvokeAsync(ModalResult.Button1);  
+                await OnModalAction.InvokeAsync(ModalResult.Button1);
 
-
+            
             await HideAsync();
         }
         private async Task OnActionClicked2()
@@ -114,10 +115,10 @@ namespace KvizCommando.Client.Pages.Shared
         }
         public void Dispose()
         {
-            OnAction1 = default!;
-            OnAction2 = default!;
-            OnCloseAction = default!;
-            OnCheckBoxAction = default!;
+            OnAction1 = default;
+            OnAction2 = default;
+            OnCloseAction = default;
+            OnCheckBoxAction = default;
             GC.SuppressFinalize(this);
         }
     }

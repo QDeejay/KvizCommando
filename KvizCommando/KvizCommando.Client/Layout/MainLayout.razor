@@ -11,8 +11,7 @@
     <KcModal @ref="_mainModal"
              Id="mainModal"
              Appstates="@_appState"
-             OnModalAction="ModalAction"
-             OnCheckBoxAction="() => InitStatesAsync(ReqStates.LocalSotrage)">
+             OnModalAction="ModalAction">
     </KcModal>
     if (_isLoggedIn)
     {
@@ -73,11 +72,12 @@
                                 </span>
                             </div>
                             <div class="kc-mainlayout-content-header--right">
-                                <span class="kc-header-greeting">@_Greetings</span>
+                            <span class="kc-header-greeting">@Greetings</span>
                             </div>           
                         </header>
                     }
                 <div class="kc-mainlayout-content-container">
+                    <KcToast />
                <CascadingValue Value="_appState">
                         @Body
                </CascadingValue>

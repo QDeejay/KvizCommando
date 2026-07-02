@@ -36,6 +36,7 @@ builder.Services.AddScoped<ISoloState, SoloState>();
 builder.Services.AddSingleton<IDisplayMessageState, DisplayMessageState>();
 builder.Services.AddScoped<PageHeaderService>();
 builder.Services.AddScoped<ModalService>();
+builder.Services.AddScoped<ToastService>();
 builder.Services.AddScoped<UiServices>();
 builder.Services.AddScoped<MarkupLoaderService>();
 

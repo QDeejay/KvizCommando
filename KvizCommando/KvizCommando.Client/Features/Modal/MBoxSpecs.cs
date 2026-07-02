@@ -1,6 +1,6 @@
-﻿using KvizCommando.Client.Models.ViewModels;
+﻿using KvizCommando.Client.Components.Dynamic;
+using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Pages.Question.Components;
-using KvizCommando.Client.Pages.Team.Components;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 
@@ -14,6 +14,7 @@ namespace KvizCommando.Client.Features.Modal
 
     public static class ModalBox
     {
+        
         public static readonly IReadOnlyDictionary<ModalTypes, MboxSpecs> Specs =
 
             new Dictionary<ModalTypes, MboxSpecs>
@@ -28,7 +29,8 @@ namespace KvizCommando.Client.Features.Modal
                     Size = "lg",
                     CheckBoxTextKey = string.Empty,
                     CheckBoxKey = string.Empty,
-                    CheckBottom = true 
+                    CheckBottom = true,
+                    BodyComponent = null
                 },
 
                 [ModalTypes.LangConfirm] = new MboxSpecs {
@@ -43,7 +45,7 @@ namespace KvizCommando.Client.Features.Modal
                     Style2 = string.Empty,
                     Size = "lg",
                     CheckBoxTextKey = "mainlayout.CheckBox.NotShow",
-                    CheckBoxKey = string.Empty,
+                    CheckBoxKey = ModalConst.LOCAL_NOT_SHOW_DEL,
                     CheckBottom = false,
                     BodyComponent = typeof(QModalRender)
                 },
@@ -58,7 +60,7 @@ namespace KvizCommando.Client.Features.Modal
                     Size = "lg",
                     CheckBoxTextKey = string.Empty,
                     CheckBoxKey = string.Empty,
-                    CheckBottom = false,
+                    CheckBottom = true,
                     BodyComponent = typeof(QModalRender)
                 },
 
@@ -71,7 +73,7 @@ namespace KvizCommando.Client.Features.Modal
                     Style2 = string.Empty,
                     Size = "lg",
                     CheckBoxTextKey = "mainlayout.CheckBox.NotShow",
-                    CheckBoxKey = string.Empty,
+                    CheckBoxKey = ModalConst.LOCAL_NOT_SHOW_NEW,
                     CheckBottom = true,
                     BodyComponent = typeof(QModalRender)
                 },
@@ -87,7 +89,7 @@ namespace KvizCommando.Client.Features.Modal
                     CheckBoxTextKey = string.Empty,
                     CheckBoxKey = string.Empty,
                     CheckBottom = false,
-                    BodyComponent = typeof(TeamModalRender)
+                    BodyComponent = typeof(TModalRender)
                 },
 
                 [ModalTypes.TPromote] = new MboxSpecs {
@@ -101,7 +103,7 @@ namespace KvizCommando.Client.Features.Modal
                     CheckBoxTextKey = string.Empty,
                     CheckBoxKey = string.Empty,
                     CheckBottom = true,
-                    BodyComponent = typeof(TeamModalRender)
+                    BodyComponent = typeof(TModalRender)
                 },
 
                 [ModalTypes.TRetire] = new MboxSpecs {
@@ -115,7 +117,7 @@ namespace KvizCommando.Client.Features.Modal
                     CheckBoxTextKey = string.Empty,
                     CheckBoxKey = string.Empty,
                     CheckBottom = false,
-                    BodyComponent = typeof(TeamModalRender)
+                    BodyComponent = typeof(TModalRender)
                 },
 
                 [ModalTypes.THandle] = new MboxSpecs {
@@ -129,7 +131,7 @@ namespace KvizCommando.Client.Features.Modal
                     CheckBoxTextKey = string.Empty,
                     CheckBoxKey = string.Empty,
                     CheckBottom = false,
-                    BodyComponent = typeof(TeamModalRender)
+                    BodyComponent = typeof(TModalRender)
                 }
             };
     }

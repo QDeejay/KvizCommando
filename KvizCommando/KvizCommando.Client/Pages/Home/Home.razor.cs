@@ -28,7 +28,6 @@ public partial class Home : KcComponentBase, IDisposable
     private bool _isReady = false;
     private bool _isLoaded = false;
     private MarkupString _bBoardHTML = new();
-
     private ContentBoxVm Box(string orx) => _boxes![orx];
 
     private void BuildBoxes()
@@ -56,10 +55,10 @@ public partial class Home : KcComponentBase, IDisposable
                 Ui.Nav.NavigateTo("/team");
                 break;
             case 3:
-                Ui.Nav.NavigateTo("/vsgame");
+                Ui.Nav.NavigateTo("/vs-game");
                 break;
             case 4:
-                Ui.Nav.NavigateTo("/sologame");
+                Ui.Nav.NavigateTo("/solo-game");
                 break;
         }
     }
@@ -82,7 +81,6 @@ public partial class Home : KcComponentBase, IDisposable
             _bBoardSize = BOX_SIZE_MINIMAL;
 
         Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Home"], 0);
-        Ui.Header.SetRank(HState.UserMainData!.RankEnum);
         Ui.Header.SetBackBtnEna(false);
         UpdateLedDisplay();
         _isLoaded = true;

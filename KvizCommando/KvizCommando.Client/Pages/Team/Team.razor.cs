@@ -163,7 +163,7 @@ namespace KvizCommando.Client.Pages.Team
         private async Task ModalCallAsync(int btnId)
         {
             var spec = MBoxBuilder.BuildParam(ModalTypes.THandle, Ui.Lang);
-            ModalOption = spec.Mode;
+            ModalOption = (int)spec.Mode;
             tModal = spec;
             if (btnId != 3)
             {

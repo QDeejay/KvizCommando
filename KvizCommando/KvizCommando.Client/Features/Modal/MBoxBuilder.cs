@@ -12,7 +12,7 @@ namespace KvizCommando.Client.Features.Modal
 
             return new ModalBoxVm
             {
-                Mode = (int)type,
+                Mode = type,
                 Title = lang[specs.TitleKey],
                 ActionText1 = lang[specs.TextKey1],
                 ActionText2 = lang[specs.TextKey2],

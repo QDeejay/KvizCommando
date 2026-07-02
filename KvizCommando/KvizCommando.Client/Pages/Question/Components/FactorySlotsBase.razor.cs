@@ -17,7 +17,6 @@ namespace KvizCommando.Client.Pages.Question.Components
 
         [CascadingParameter]
         private AppState AppStates { get; set; } = default!;
-       
         [Inject] private CategoryOptionHelpers CatHelper { get; set; } = default!;
         [Parameter] public EventCallback<int[]> SaveSlots { get; set; } = default!;
 
@@ -37,17 +36,17 @@ namespace KvizCommando.Client.Pages.Question.Components
         {
             (_originalCodes, _workingCodes) = QuestionHelper.CloneFactorySlots(FactSlots);
         }
-        protected void StartEdit(int rowIndex)
+        private void StartEdit(int rowIndex)
         {
             _editingRowIndex = rowIndex;
             StateHasChanged();
         }
-        protected void StopEdit()
+        private void StopEdit()
         {
             _editingRowIndex = null;
             StateHasChanged();
         }
-        protected async Task OnSaveSlots()
+        private async Task OnSaveSlots()
         {
             if (!IsDirty) return;
             StopEdit();
@@ -55,7 +54,7 @@ namespace KvizCommando.Client.Pages.Question.Components
                 await SaveSlots.InvokeAsync(_workingCodes);
             (_originalCodes, _workingCodes) = QuestionHelper.CloneFactorySlots(FactSlots);
         }
-        protected void OnEditorKeyDown(KeyboardEventArgs e)
+        private void OnEditorKeyDown(KeyboardEventArgs e)
         {
             if (e.Key == "Enter" || e.Key == "Escape")
                 StopEdit();
@@ -67,11 +66,3 @@ namespace KvizCommando.Client.Pages.Question.Components
         }
     }
 }
-/*
-         //[Inject] protected ILanguageService Lang { get; set; } = default!;
-        //[Parameter] public QuestionExtendedInfo ExtInfo { get; set; } = default!;
-        //[Parameter] public int[] WorkingCodes { get; set; } = Array.Empty<int>();
-        //[Parameter] public int[] OriginalCodes { get; set; } = Array.Empty<int>();
-         //[Parameter] public string MessageFact { get; set; } = string.Empty;
-        //[Parameter] public bool isSuccess { get; set; } = false;
- */

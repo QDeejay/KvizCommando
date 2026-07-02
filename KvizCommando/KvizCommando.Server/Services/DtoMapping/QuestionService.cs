@@ -120,7 +120,7 @@ namespace KvizCommando.Server.Services.DtoMapping
             var maxPendingSlot = RankRewards.List[lvl].OwnQuestSlot >> 1;
             if (dto.SlotNo > maxPendingSlot)
             {
-                _logger.LogWarning($"DeletePending: Invalid user slot number. userId={playerId}, SlotNo={dto.SlotNo}",dto.SlotNo);
+                _logger.LogWarning($"SendNewQuestion: Invalid user slot number. userId={playerId}, SlotNo={dto.SlotNo}",dto.SlotNo);
                 return false;
             }
             var succes = await _cache.UpdatePartialNewQuestionLockedAsync(

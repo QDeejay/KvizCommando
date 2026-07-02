@@ -15,22 +15,18 @@ namespace KvizCommando.Client.Pages.Question.Components
         [Parameter] public int SelectedId { get; set; } = default!;
         [Parameter] public EventCallback<int> SelectedIdChanged { get; set; }
       
-        protected bool _isLoaded = false;
+        private bool _isLoaded = false;
 
+        private string Culture => AppStates.Culture;
         private QuestionExtendedInfo ExtInfo => AppStates.Question!.ExtendedInfo;
         private PendingSlot[] Slots => AppStates.Question!.PendingSlots;
-        private string Culture => AppStates.Culture;
-
-       
-
+      
         protected override async Task OnInitializedAsync()
         {
             await OnSelect(100);
             _isLoaded = true;
-          
         }
         
-
         private async Task OnSelect(int id)
         {
             if (SelectedId == id)
@@ -39,65 +35,13 @@ namespace KvizCommando.Client.Pages.Question.Components
             }
             else SelectedId = id;
             if (SelectedIdChanged.HasDelegate)
-                await SelectedIdChanged.InvokeAsync(id);
+                await SelectedIdChanged.InvokeAsync(SelectedId);
             Console.WriteLine($"Selected:{SelectedId}");
         }
         public void Dispose()
         {
-            
-            SelectedIdChanged = default!;
+            SelectedIdChanged = default;
             GC.SuppressFinalize(this);
         }
     }
 }
-/*
-     <div class="lcd-display-outer">
-        <div class="lcd-display-inner">
-        </div>
-    </div>
-   
- *
-         //[Parameter] public QuestionExtendedInfo ExtInfo { get; set; } = default!;
-        //[Parameter] public PendingSlot[] Slots { get; set; //} = default!;
-        //private int SelectedId { get; set; }
-        // EventCallback<int> SelectedIdChanged { get; set; }
-  protected bool btnHandleEna => SelectedId != 100 && Slots[SelectedId].Status != "Pending" && Slots[SelectedId].Category != 0 ? true : false;
-        protected bool btnNewEna => SelectedId != 100 && Slots[SelectedId].Category == 0 ? true : false;
-
-
- * HandleSlot = default;
- *         protected async Task OnHandButton(int selectedId)
-        {
-            if (HandleSlot.HasDelegate)
-                await HandleSlot.InvokeAsync(selectedId);
-        }
- 
-
- * NextScreen = default;
- * [Parameter] public EventCallback<int> NextScreen { get; set; }
- protected async Task OnNextScreen(int screenId)
-        {
-            if (NextScreen.HasDelegate)
-                await NextScreen.InvokeAsync(screenId);
-        }
- <button class="military-button--secondary"
-                @onclick="@(() => OnNextScreen(1))">
-            @Lang["question.Button.ToUsr"]
-        </button>
-        <button class="military-button"
-                disabled="@(!btnNewEna)"
-                @onclick="@(() => OnNextScreen(3 + SelectedId))">
-            @Lang["question.Button.New"]
-        </button>
- 
-  <div class="usr-bar"> 
-        
-        
-        <button class="military-button"
-                disabled="@(!btnHandleEna)"
-                @onclick="@(() => OnHandButton(SelectedId))">
-            @Lang["question.Button.Handle"]
-        </button>
-       
-    </div>
- */

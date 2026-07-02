@@ -487,7 +487,7 @@ namespace KvizCommando.Server.Services.PlayerCache
                 entry.CachedQ.DirtyMask |= (1u << slotReq.SlotNo + 16);
                 entry.LastAccessUtc = DateTime.UtcNow;
 
-                return false;
+                return true;
             }
             finally
             {

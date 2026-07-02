@@ -48,7 +48,6 @@
 
         </div>
 
-
         <div class="answer-table">
             <div class="answer-row">
                 <label class="label-text">@Ui.Lang["question.Label.AnswerOk"]</label>
@@ -62,12 +61,11 @@
                 <input class="lcd-input"
                        type="text"
                        maxlength="@LENGHT_ANSWER_BOX"
-                       disabled="@(_formData.Question.Length < 10 || _formData.Category == 0 || !_formData.Question.Contains('?'))"
+                       disabled="@DisabledAnswer"
                        @bind-value="@_formData.Answers[1]"
                        @bind-value:event="oninput" />
                 <br>
             </div>
-
             <div class="answer-row" style="margin-right:10px">
                 <label class="label-text">@Ui.Lang["question.Label.AnswerNg"]</label>
                 <input class="lcd-input"
@@ -84,11 +82,7 @@
                        @bind-value="@_formData.Answers[3]"
                        @bind-value:event="oninput" />
             </div>
-
-            
         </div>
-    </div>
-    <div class="usr-bar">
 
     </div>
 }

@@ -19,15 +19,17 @@ namespace KvizCommando.Client.Pages.Solo
 {
     public partial class SoloGame : KcComponentBase, IDisposable
     {
-        //[Inject] private PageHeaderService Header { get; set; } = default!;
+        [CascadingParameter]
+        private AppState AppStates { get; set; } = default!;
 
-        //[Inject] private ILanguageService Lang { get; set; } = default!;
-
-        [Inject] private ISoloState SoloState { get; set; } = default!;
-        //[Inject] private IApiService Api { get; set; } = default!;
-
-        private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+        private readonly Dictionary<string, ContentBoxVm> _boxes = [];
+        private string[] _boxOrder = [];
+        private bool _isReady = false;
         private bool _isLoaded = false;
+
+        private string Culture => AppStates.Culture;
+        private SoloGameDtos SState => AppStates.SoloGame!;
+        private ContentBoxVm Box(string orx) => _boxes[orx];
 
         /// <summary>
         /// Játék típusok gombjai 24-26-ig vannak indexelve  

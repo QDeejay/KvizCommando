@@ -59,6 +59,7 @@ content-row {
     gap: 24px;
     padding: 4px;
     flex-wrap: wrap;
+   
 }
 
 
@@ -76,18 +77,20 @@ content-row {
 .list-header {
     font-weight: 600;
     opacity: 0.75;
+    align-content: center;
 }
 
 /* NO oszlop: jobbra igazítva, a saját celláján belül is a jobb szélre ül */
 .no-cell {
     justify-self: end; /* <<< a cella tartalma a jobb szélre kerül */
     text-align: right;
+    align-content: center;
     padding-right: 1px;
     border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+    
 }
 
 .category-cell {
-    min-height: 16px;
     display: flex;
     min-width: 0; /* grid/flex shrink engedélyezés */
     justify-self: stretch;
@@ -96,16 +99,20 @@ content-row {
 
 /* Kategória oszlop: balra igazítva (alapértelmezett), border változatlan */
 .value-cell {
-    min-height: 16px;
     display: table-column;
     min-width: 0; /* grid/flex shrink engedélyezés */
     justify-self: stretch;
     border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
 }
-
+.no-cell,
+.category-cell,
+.value-cell,
+.ratio-cell{
+    min-height: 30px;
+}
 
 .ratio-cell {
-    min-height: 16px;
+  
     display: flex;
     display: table-column;
     justify-self: stretch;

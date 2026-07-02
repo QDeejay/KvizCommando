@@ -8,22 +8,23 @@ using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
 
-namespace KvizCommando.Client.Pages.Question.Components
+namespace KvizCommando.Client.Components.Dynamic
 {
-    public partial class QModalRender : KcComponentBase, IDisposable
+    public partial class QModalRender : IDisposable
     {
-        //[Inject] private ILanguageService Lang { get; set; } = default!;
+        [Inject] private ILanguageService Lang { get; set; } = default!;
+
         [CascadingParameter] 
         public AppState Appstates { get; set; } = default!; 
         
         [CascadingParameter] 
-        public int Mode { get; set; } = 0;
+        public ModalTypes Mode { get; set; } = ModalTypes.None;
 
         [Parameter] public int  SlotNo { get; set; } = default!;
-        //private MarkupString renderHTML { get; set; } = default;
+        [Parameter] public MarkupString RenderHTML { get; set; } = default!;
 
         private bool isLoaded = false;
-        private MarkupString renderHTML = new();
+        //private MarkupString renderHTML = new();
         private PendingSlot Slot => Appstates.Question!.PendingSlots[SlotNo] ?? new PendingSlot();
         private string culture => Appstates.Culture;
         private string? catName => CategoryNameLocalizer.GetCategory(Slot.Category, culture);
@@ -31,8 +32,9 @@ namespace KvizCommando.Client.Pages.Question.Components
 
         protected override async Task OnInitializedAsync()
         {
-            if(!Appstates.LocStoreStates.ChkBxNotShowNew ?? false)
-                renderHTML = await MarkupLoader.LoadingHtmlAsync(culture, Html.NewQuestRules);
+            //if(!Appstates.LocStoreStates.ChkBxNotShowNew ?? false)
+            //    renderHTML = await MarkupLoader.LoadingHtmlAsync(culture, Html.NewQuestRules);
+            await Task.Delay(1);
             isLoaded = true;
         }
         public void Dispose() 

@@ -1,16 +1,10 @@
 ﻿using KvizCommando.Server.Authorization;
-using KvizCommando.Server.Domain.Entities.Players;
 using KvizCommando.Server.Services.DtoMapping;
-using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.UserPlayerIdCache;
-using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Contracts.Team;
-using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
-using Microsoft.SqlServer.Server;
 using System.Security.Claims;
 
 namespace KvizCommando.Server.Controllers
@@ -36,7 +30,7 @@ namespace KvizCommando.Server.Controllers
             _localizer = localizer;
             _idCache = userPlayerId;
         }
-       
+
         [HttpPost("modify")] // POST /api/team/modify
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -56,7 +50,7 @@ namespace KvizCommando.Server.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            if  (dto.SkillType>2 || dto.SkillType<1 || dto.MemberId>8)
+            if (dto.SkillType > 2 || dto.SkillType < 1 || dto.MemberId > 8)
                 return BadRequest(ApiResponse.Fail(_localizer["Resp.Error.InValidData"].Value));
 
             var playerId = await _idCache.GetPlayerIdAsync(userId, ct);
@@ -65,7 +59,7 @@ namespace KvizCommando.Server.Controllers
                 return NotFound("No Player record found for this user.");
 
             var success = await _teamService.SaveModifiedSkillAsync(playerId.Value, dto, ct);
-            
+
             if (success == null)
             {
                 _logger.LogWarning($"Session ID probléma user:{userId} sessionId:", dto.SessionId);
@@ -98,11 +92,11 @@ namespace KvizCommando.Server.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            if ((int)dto.ReqType>4 || (int)dto.ReqType<0)
+            if ((int)dto.ReqType > 4 || (int)dto.ReqType < 0)
                 return BadRequest(ApiResponse.Fail(_localizer["Resp.Error.InvalidRequest"].Value));
 
-            if (dto.MemberNo < 1 || dto.MemberNo > 8) 
-                return BadRequest(ApiResponse.Fail(_localizer["Resp.Error.InvalidMember"].Value)); 
+            if (dto.MemberNo < 1 || dto.MemberNo > 8)
+                return BadRequest(ApiResponse.Fail(_localizer["Resp.Error.InvalidMember"].Value));
 
             if ((int)dto.ReqType == 0 && (dto.CandidateId < 1 || dto.CandidateId > 8))
                 return BadRequest(ApiResponse.Fail(_localizer["Resp.Error.InvalidCandidate"].Value));
@@ -114,8 +108,8 @@ namespace KvizCommando.Server.Controllers
 
 
             var success = await _teamService.ManageTeamAsync(playerId.Value, dto, ct);
-           
-           
+
+
             if (success == null)
             {
                 _logger.LogWarning($"Session ID probléma user:{userId} sessionId:", dto.SessionId);

@@ -7,3 +7,10 @@ public enum QuestionStatus
     Approved,
     Rejected
 }
+public enum ToastType
+{
+    Error,
+    Success,
+    Warning,
+    Info
+}

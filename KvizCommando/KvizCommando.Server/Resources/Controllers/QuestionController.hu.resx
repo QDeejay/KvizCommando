@@ -141,6 +141,12 @@
   <data name="Resp.Answer.Notdifferent" xml:space="preserve">
     <value>2 vagy több válasz egyezik</value>
   </data>
+  <data name="Resp.DeleteOk" xml:space="preserve">
+    <value>&lt; Törlés sikerült! &gt;</value>
+  </data>
+  <data name="Resp.MoveOk" xml:space="preserve">
+    <value>&lt; Mozgatás sikeres volt! &gt;</value>
+  </data>
   <data name="Resp.Question.TooLong" xml:space="preserve">
     <value>Kérdés hossz nem megfelelő (min10 max200 karakter)</value>
   </data>
@@ -149,5 +155,8 @@
   </data>
   <data name="Resp.SaveOk" xml:space="preserve">
     <value>&lt; Sikeres mentés! &gt;</value>
+  </data>
+  <data name="Resp.SendOk" xml:space="preserve">
+    <value>&lt; Beküldés sikeres! &gt;</value>
   </data>
 </root>

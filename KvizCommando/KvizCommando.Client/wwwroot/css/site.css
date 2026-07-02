@@ -202,7 +202,7 @@
         cursor: url('/Images/cursors/disabled.cur'), not-allowed;
     }
 
-@media (min-height: 900px) and (min-width: 1200px) {
+@media (min-height: 800px)  {
     .navigation-button {
         flex-direction: column;
         justify-content: center;
@@ -218,13 +218,13 @@
             text-align: center;
         }
 }
-@media(max-width: 1000px) {
+@media (max-width: 1400px)  {
     .navigation-button {
         justify-content: center;
         gap: 0;
     }
-    .navigation-button span
-    {
-        display:none;
-    }
+
+        .navigation-button span {
+            display: none;
+        }
 }

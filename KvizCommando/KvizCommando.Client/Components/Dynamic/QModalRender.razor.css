@@ -12,6 +12,12 @@
 .remark-label {
     font-size: 1.1rem
 }
+.answer-label {
+    font-size:0.9rem;
+}
+    .answer-label.correct {
+        font-weight: bold;
+    }
 
 .divider {
     display: flex;

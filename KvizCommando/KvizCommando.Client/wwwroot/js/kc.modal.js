@@ -15,6 +15,7 @@
             if (inst) inst.show();
         },
         hide: function (sel) {
+            document.activeElement?.blur();
             const el = q(sel);
             const inst = bootstrap.Modal.getInstance(el);
             if (inst) inst.hide();

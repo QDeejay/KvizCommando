@@ -1,5 +1,10 @@
 ﻿namespace KvizCommando.Client.Features.Modal
 {
+    public static class ModalConst
+    {
+        public const string LOCAL_NOT_SHOW_NEW = "notShowNew";
+        public const string LOCAL_NOT_SHOW_DEL = "notShowDel";
+    }
     public enum ModalTypes
     {
         None = 0,
@@ -13,4 +18,5 @@
         TRetire = 203,
         THandle = 204
     }
+    
 }

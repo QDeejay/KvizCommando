@@ -57,14 +57,19 @@
         z-index: 0;
     }
 
+
+/*
 @media(max-width: 1080px) {
     .solo-selector {
         width: 420px;
     }
 }
-/* Mobil: 1 oszlop */
+/* Mobil: 1 oszlop 
 @media(max-width: 320px) {
     .solo-selector {
         width: 210px;
     }
 }
+
+
+*/

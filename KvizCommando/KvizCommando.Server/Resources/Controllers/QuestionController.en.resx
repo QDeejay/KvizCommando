@@ -141,6 +141,12 @@
   <data name="Resp.Answer.Notdifferent" xml:space="preserve">
     <value>Two or more answer matched</value>
   </data>
+  <data name="Resp.DeleteOk" xml:space="preserve">
+    <value>&lt; Deletion is successed! &gt;</value>
+  </data>
+  <data name="Resp.MoveOk" xml:space="preserve">
+    <value>&lt; Move to user slot successed! &gt;</value>
+  </data>
   <data name="Resp.Question.TooLong" xml:space="preserve">
     <value>The question is too long</value>
   </data>
@@ -149,5 +155,8 @@
   </data>
   <data name="Resp.SaveOk" xml:space="preserve">
     <value>&lt; Successed save! &gt;</value>
+  </data>
+  <data name="Resp.SendOk" xml:space="preserve">
+    <value>&lt; Sending is successed! &gt;</value>
   </data>
 </root>

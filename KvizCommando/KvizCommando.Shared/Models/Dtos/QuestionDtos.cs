@@ -39,7 +39,7 @@ namespace KvizCommando.Shared.Models.Dtos
 
         public string Question { get; set; } = string.Empty;
         public int Category { get; set; } = 0;
-
+        public string[] Answer { get; set; } = new string[4] { string.Empty, string.Empty, string.Empty, string.Empty };
         public string Ratio { get; set; } = string.Empty;
     }
     public class PendingSlot : UserSlot

@@ -5,6 +5,7 @@ using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.UserPlayerIdCache;
 using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Models.Dtos;
+using KvizCommando.Shared.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -88,7 +89,7 @@ namespace KvizCommando.Server.Controllers
                 return StatusCode(500, ApiResponse.Fail(_localizer["Error.Internal"].Value));
             }
             else
-                return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value));
+                return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value, ToastType.Success));
 
 
         }
@@ -120,7 +121,13 @@ namespace KvizCommando.Server.Controllers
                 return NotFound("No Player record found for this user.");
 
             var success = await _questionService.ManageSlotsAsync(playerId.Value, dto, ct);
-
+            string action = dto.ReqType switch
+            {
+                SlotManageType.DeleteUsr => "DeleteOk",
+                SlotManageType.DeletePending => "DeleteOk",
+                SlotManageType.MovePending => "MoveOk",
+                _ => "SaveOk"
+            };
             if (success == null)
             {
                 _logger.LogWarning($"Session ID probléma user:{userId} sessionId:", dto.SessionId);
@@ -132,7 +139,7 @@ namespace KvizCommando.Server.Controllers
                 return StatusCode(500, ApiResponse.Fail(_localizer["Error.Internal"].Value));
             }
             else
-                return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value));
+                return Ok(ApiResponse.Ok(_localizer[$"Resp.{action}"].Value, action=="MoveOk" ? ToastType.Info : ToastType.Warning));
 
 
         }
@@ -185,15 +192,15 @@ namespace KvizCommando.Server.Controllers
                 return StatusCode(500, ApiResponse.Fail(_localizer["Error.Internal"].Value));
             }
             else
-                return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value));
+                return Ok(ApiResponse.Ok(_localizer["Resp.SendOk"].Value, ToastType.Info));
             
         }
 
         // Egységes API válasz
-        public sealed record ApiResponse(bool Success, string Message, string? ServerVersion = null)
+        public sealed record ApiResponse(bool Success, string Message, string Type  ,string? ServerVersion = null)
         {
-            public static ApiResponse Ok(string msg) => new(true, msg);
-            public static ApiResponse Fail(string msg) => new(false, msg);
+            public static ApiResponse Ok(string msg, ToastType mtype) => new(true, msg, mtype.ToString());
+            public static ApiResponse Fail(string msg) => new(false, msg, ToastType.Error.ToString());
         }
     }
 }

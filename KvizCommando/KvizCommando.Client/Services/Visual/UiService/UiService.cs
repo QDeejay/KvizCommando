@@ -7,7 +7,7 @@ namespace KvizCommando.Client.Services.Visual.UiService
     public sealed class UiServices
     {
         public ModalService Modal { get; }
-        //public ToastService Toast { get; }
+        public ToastService Toast { get; }
         //public LoaderService Loader { get; }
         public PageHeaderService Header { get; }
         public IDisplayMessageState HeadDisplay { get; }
@@ -20,7 +20,7 @@ namespace KvizCommando.Client.Services.Visual.UiService
             => ReloadRequested?.Invoke() ?? Task.CompletedTask;
         public UiServices(
             ModalService modal,
-            //ToastService toast,
+            ToastService toast,
             //LoaderService loader,
             PageHeaderService header,
             IDisplayMessageState headDisplay,
@@ -28,7 +28,7 @@ namespace KvizCommando.Client.Services.Visual.UiService
             ILanguageService lang)
         {
             Modal = modal;
-            //Toast = toast;
+            Toast = toast;
             //Loader = loader;
             Header = header;
             HeadDisplay = headDisplay;

@@ -1,9 +1,11 @@
-﻿namespace KvizCommando.Client.Models.ViewModels
+﻿using KvizCommando.Client.Features.Modal;
+
+namespace KvizCommando.Client.Models.ViewModels
 {
     public sealed record ModalBoxVm
     {
    
-            public int Mode { get; init; } = 0;
+            public ModalTypes Mode { get; init; } = ModalTypes.None;
             public string Title { get; init; } = string.Empty;
             public string ActionText1 { get; init; } = string.Empty;
             public string ActionText2 { get; init; } = string.Empty;

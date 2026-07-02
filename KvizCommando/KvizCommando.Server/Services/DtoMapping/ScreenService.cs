@@ -302,10 +302,14 @@ namespace KvizCommando.Server.Services.DtoMapping
 
             foreach (var uq in slot.uSlots)
             {
+                var answers = string.IsNullOrEmpty(uq.AnswersJson)
+                ? Array.Empty<string>()
+                 : JsonSerializer.Deserialize<string[]>(uq.AnswersJson) ?? Array.Empty<string>();
 
                 userSlotsDtoList.Add(new UserSlot
                 {
                     Question = uq?.Question ?? string.Empty,
+                    Answer = answers,
                     Category = uq?.CategoryNo ?? 0,
                     Ratio = uq.Ask > 40 ? $"{(Math.Truncate(uq.Ratio * 1000) / 10):0.0}%" : "N/A"
                 });
@@ -313,9 +317,14 @@ namespace KvizCommando.Server.Services.DtoMapping
             }
             foreach (var pq in slot.pSlots)
             {
+                var answers = string.IsNullOrEmpty(pq.AnswersJson)
+                ? Array.Empty<string>()
+                 : JsonSerializer.Deserialize<string[]>(pq.AnswersJson) ?? Array.Empty<string>();
+
                 pendingSlotDtoList.Add(new PendingSlot
                 {
                     Question = pq?.Question ?? string.Empty,
+                    Answer = answers,
                     Category = pq?.CategoryNo ?? 0,
                     Status = pq?.Status.ToString() ?? "None",
                     Remark = pq?.Remark,

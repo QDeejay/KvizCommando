@@ -13,9 +13,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 
-namespace KvizCommando.Client.Pages.Team.Components
+namespace KvizCommando.Client.Components.Dynamic
 {
-    public partial class TeamModalRender
+    public partial class TModalRender
     {
         [Inject] private ITeamModalDataBuilder render { get; set; } = default!;
         [Parameter] public int mode { get; set; } = default!;
