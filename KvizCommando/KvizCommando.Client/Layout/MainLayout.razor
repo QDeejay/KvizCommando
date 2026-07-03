@@ -1,11 +1,13 @@
 ﻿@using KvizCommando.Client.Services
 @using KvizCommando.Client.Pages.Shared;
+
+
 @inherits Utilities.KcLayoutComponentBase
 <HeadContent>
     <link href="css/MainLayout.css" rel="stylesheet" />
 </HeadContent>
-
      <LoaderView />
+<KcToast />
 @if (_isReady)
 {
     <KcModal @ref="_mainModal"
@@ -77,7 +79,8 @@
                         </header>
                     }
                 <div class="kc-mainlayout-content-container">
-                    <KcToast />
+                    
+               
                <CascadingValue Value="_appState">
                         @Body
                </CascadingValue>

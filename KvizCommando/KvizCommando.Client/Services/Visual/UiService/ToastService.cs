@@ -27,18 +27,19 @@ namespace KvizCommando.Client.Services.Visual.UiService
             => Show(text, ToastType.Warning);
 
         public void Complete(string text)
-            => Show(text, ToastType.Info);
+            =>  Show(text, ToastType.Info);
 
         //----------------------------------------------------
 
-        public void Show(string text, ToastType type)
+        public void  Show(string text, ToastType type)
         {
+            Console.WriteLine(GetHashCode());
             var toast = new ToastMessage
             {
                 Text = text,
                 Type = type
             };
-
+             
             if (!IsVisible)
             {
                 ShowInternal(toast);
@@ -81,9 +82,9 @@ namespace KvizCommando.Client.Services.Visual.UiService
         {
             Current = toast;
             IsVisible = true;
-
+            Console.WriteLine($"Subscribers: {OnChanged?.GetInvocationList().Length ?? 0}");
             OnChanged?.Invoke();
-
+           
             _ = AutoCloseAsync();
         }
 

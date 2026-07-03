@@ -48,9 +48,9 @@ namespace KvizCommando.Client.Pages.Solo
 
         private void BuildButtons() 
         {
-            if (SoloState.Snapshot != null)
+            if (SState != null)
             {
-                _soloBtns = SgameBtnBuilder.BuildBoxes(SoloState.Snapshot!, culture, Ui.Lang);
+                //_soloBtns = SgameBtnBuilder.BuildBoxes(SState.Snapshot!, Culture, Ui.Lang);
                 _isLoaded = true;
             }
         }
@@ -82,7 +82,7 @@ namespace KvizCommando.Client.Pages.Solo
         protected override async Task OnInitializedAsync()
         {
             
-            await SoloState.EnsureLoadedAsync();
+
             Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.GameSolo"],4);
             if (_isLoaded==false)
                 {

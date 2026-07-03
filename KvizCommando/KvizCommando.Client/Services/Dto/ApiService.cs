@@ -35,16 +35,11 @@ namespace KvizCommando.Client.Services.Dto
         }
         public async Task<bool> SaveFactorySlotsAsync(SaveFactoryRequest dto)
         {
-            string? msg = string.Empty;
-            string? tst;
-            var type = new ToastType();
+
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
                 var response = await _http.PostAsJsonAsync("/api/question/factory", dto);
-                msg = await ServerRespManager.GetValueAsync(response, "message");
-                tst = await ServerRespManager.GetValueAsync(response, "type") ?? "Info";
-                type = Enum.Parse<ToastType>(tst);
 
                 if (!response.IsSuccessStatusCode)
                     return false;
@@ -55,28 +50,20 @@ namespace KvizCommando.Client.Services.Dto
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
-                msg = ex.Message;
-                type = ToastType.Error;
                 return false;
             }
             finally
             {
-                _toastService.Show(msg ?? "", type);
                 Console.WriteLine("SaveFinished");
             }
         }
         public async Task<bool> ManageSlotAsync(ManageSlotRequest dto)
         {
-            string? msg = string.Empty; 
-            string? tst;
-            var type = new ToastType();
+
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
                 var response = await _http.PostAsJsonAsync($"/api/question/manageslot", dto);
-                msg = await ServerRespManager.GetValueAsync(response, "message");
-                tst = await ServerRespManager.GetValueAsync(response, "type") ?? "Info";
-                type = Enum.Parse<ToastType>(tst);
 
                 if (!response.IsSuccessStatusCode)
                     return false;
@@ -89,28 +76,20 @@ namespace KvizCommando.Client.Services.Dto
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
-                msg = ex.Message;
-                type = ToastType.Error;
                 return false;
             }
             finally
             {
-                _toastService.Show(msg ?? "", type);
                 Console.WriteLine("Slot managment finished"); 
             }
         }
         public async Task<bool> SendNewQuestionAsync(NewQuestionRequest dto)
         {
-            string? msg = string.Empty;
-            string? tst;
-            var type = new ToastType();
+
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
                 var response = await _http.PostAsJsonAsync($"/api/question/sendnew", dto);
-                msg = await ServerRespManager.GetValueAsync(response, "message");
-                tst = await ServerRespManager.GetValueAsync(response, "type") ?? "Info";
-                type = Enum.Parse<ToastType>(tst);
 
                 if (!response.IsSuccessStatusCode)
                     return false;
@@ -122,13 +101,10 @@ namespace KvizCommando.Client.Services.Dto
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
-                msg = ex.Message;
-                type = ToastType.Error;
                 return false;
             }
             finally
             {
-                _toastService.Show(msg ?? "", type);
                 Console.WriteLine("Send new question finished"); 
             }
         }

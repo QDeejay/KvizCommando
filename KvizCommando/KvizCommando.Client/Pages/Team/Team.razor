@@ -2,6 +2,7 @@
 @using KvizCommando.Client.Components.CharacterComponent
 @using KvizCommando.Client.Pages.Team
 @using KvizCommando.Client.Pages.Team.Components
+@using KvizCommando.Client.Components.Dynamic;
 @inherits Utilities.KcComponentBase
 
 <link href="css/team-common.css" rel="stylesheet" />
@@ -15,7 +16,7 @@
                  OnCloseAction="CloseModalAction"
                  @if (ModalOption>0)
                  {
-                 <TeamModalRender mode="@ModalOption"
+                 <TModalRender mode="@ModalOption"
                                   tabPosH="@activeHTab"
                                   canNo="@selectedCandidateId"
                                   Candidate="@_tState.Candidates![activeHTab]"

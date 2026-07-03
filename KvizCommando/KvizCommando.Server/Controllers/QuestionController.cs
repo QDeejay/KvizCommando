@@ -12,6 +12,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.SqlServer.Server;
 using System.Security.Claims;
+using KvizCommando.Server.Extensions;
 
 namespace KvizCommando.Server.Controllers
 {
@@ -64,10 +65,10 @@ namespace KvizCommando.Server.Controllers
 
             // alap validáció
             if (dto?.CategorySlots is null || dto.CategorySlots.Length == 0)
-                return BadRequest(ApiResponse.Fail(_localizer["Error.MustOneSlot"].Value));
+                return FailToast(400, _localizer["Error.MustOneSlot"].Value);
 
             if (dto.CategorySlots.Any(x => x < 0))
-                return BadRequest(ApiResponse.Fail(_localizer["Error.InValidData"].Value));
+                return FailToast(400, _localizer["Error.InValidData"].Value);
 
 
             var playerId = await _idCache.GetPlayerIdAsync(userId, ct);
@@ -81,15 +82,17 @@ namespace KvizCommando.Server.Controllers
             if (success == null)
             {
                 _logger.LogWarning($"Session ID probléma user:{userId} sessionId:", dto.SessionId);
-                return StatusCode(501, ApiResponse.Fail(_localizer["Error.Session"].Value));
+                return FailToast(501, _localizer["Error.Session"].Value);
             }
             else if (success == false)
             {
                 _logger.LogWarning("Factory slot mentés sikertelen. userId={UserId}", userId);
-                return StatusCode(500, ApiResponse.Fail(_localizer["Error.Internal"].Value));
+                return FailToast(500, _localizer["Error.Internal"].Value);
             }
             else
-                return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value, ToastType.Success));
+                return OkToast(_localizer["Resp.SaveOk"].Value, ToastType.Success);
+            
+                
 
 
         }
@@ -114,7 +117,7 @@ namespace KvizCommando.Server.Controllers
                 return Unauthorized();
 
             if (dto == null || dto.ReqType.ToString()=="")
-                return BadRequest(ApiResponse.Fail(_localizer["Error.InValidData"].Value));
+                return FailToast(400, _localizer["Error.InValidData"].Value);
 
             var playerId = await _idCache.GetPlayerIdAsync(userId, ct);
             if (playerId is null or 0)
@@ -131,15 +134,15 @@ namespace KvizCommando.Server.Controllers
             if (success == null)
             {
                 _logger.LogWarning($"Session ID probléma user:{userId} sessionId:", dto.SessionId);
-                return StatusCode(501, ApiResponse.Fail(_localizer["Error.Session"].Value));
+                return FailToast(501, _localizer["Error.Session"].Value);
             }
             else if (success == false)
             {
                 _logger.LogWarning($"Slot művelet: ({dto.ReqType.ToString()}) sikertelen. userId={userId}", userId);
-                return StatusCode(500, ApiResponse.Fail(_localizer["Error.Internal"].Value));
+                return FailToast(500, _localizer["Error.Internal"].Value);
             }
             else
-                return Ok(ApiResponse.Ok(_localizer[$"Resp.{action}"].Value, action=="MoveOk" ? ToastType.Info : ToastType.Warning));
+                return OkToast(_localizer[$"Resp.{action}"].Value, action=="MoveOk" ? ToastType.Info : ToastType.Warning);
 
 
         }
@@ -164,16 +167,16 @@ namespace KvizCommando.Server.Controllers
                 return Unauthorized();
 
             if (dto==null || dto.Category==0 || !dto.Question.Contains('?') || dto.Question.Length<10 || dto.Question.Length >200)
-                return BadRequest(ApiResponse.Fail(_localizer["Resp.Qustion.BadData"].Value));
+                return FailToast(400, _localizer["Resp.Qustion.BadData"].Value);
 
             if ( dto.Question.Length < 10 || dto.Question.Length > 200)
-                return BadRequest(ApiResponse.Fail(_localizer["Resp.Question.TooLong"].Value));
+                return FailToast(400, _localizer["Resp.Question.TooLong"].Value);
 
             if (dto.Answers.Any(a => string.IsNullOrWhiteSpace(a)))
-                return BadRequest(ApiResponse.Fail(_localizer["Resp.Answer.BadData"].Value));
+                return FailToast(400, _localizer["Resp.Answer.BadData"].Value);
 
             if (dto.Answers.Distinct().Count() != dto.Answers.Length)
-                return BadRequest(ApiResponse.Fail(_localizer["Resp.Answer.Notdifferent"].Value));
+                return FailToast(400, _localizer["Resp.Answer.Notdifferent"].Value);
 
             var playerId = await _idCache.GetPlayerIdAsync(userId, ct);
             if (playerId is null or 0)
@@ -184,25 +187,38 @@ namespace KvizCommando.Server.Controllers
             if (success == null)
             {
                 _logger.LogWarning($"Session ID probléma user:{userId} sessionId:", dto.SessionId);
-                return StatusCode(501, ApiResponse.Fail(_localizer["Error.Session"].Value));
+                return FailToast(501, _localizer["Error.Session"].Value);
             }
             else if (success == false)
             {
                 _logger.LogWarning($"Új kérdés mentés sikertelen. userId={userId}", userId);
-                return StatusCode(500, ApiResponse.Fail(_localizer["Error.Internal"].Value));
+                return FailToast(500, _localizer["Error.Internal"].Value);
             }
             else
-                return Ok(ApiResponse.Ok(_localizer["Resp.SendOk"].Value, ToastType.Info));
-            
+                return OkToast(_localizer["Resp.SendOk"].Value, ToastType.Info);
+
         }
 
         // Egységes API válasz
-        public sealed record ApiResponse(bool Success, string Message, string Type  ,string? ServerVersion = null)
+        public sealed record ApiResponse(bool Success, string? ServerVersion = null)
         {
-            public static ApiResponse Ok(string msg, ToastType mtype) => new(true, msg, mtype.ToString());
-            public static ApiResponse Fail(string msg) => new(false, msg, ToastType.Error.ToString());
+            public static ApiResponse Ok() => new(true);
+            public static ApiResponse Fail() => new(false);
+        }
+
+        private ActionResult<ApiResponse> OkToast(string text, ToastType type)
+        {
+            Response.AddToast(text, type);
+            return Ok(ApiResponse.Ok());
+        }
+
+        private ActionResult<ApiResponse> FailToast(int statusCode, string text)
+        {
+            Response.AddToast(text, ToastType.Error);
+            return StatusCode(statusCode, ApiResponse.Fail());
         }
     }
+   
 }
 
 

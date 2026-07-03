@@ -36,7 +36,7 @@ builder.Services.AddScoped<ISoloState, SoloState>();
 builder.Services.AddSingleton<IDisplayMessageState, DisplayMessageState>();
 builder.Services.AddScoped<PageHeaderService>();
 builder.Services.AddScoped<ModalService>();
-builder.Services.AddScoped<ToastService>();
+builder.Services.AddSingleton<ToastService>();
 builder.Services.AddScoped<UiServices>();
 builder.Services.AddScoped<MarkupLoaderService>();
 
@@ -80,6 +80,7 @@ builder.Services.AddScoped(sp =>
 builder.Services.AddTransient<LoaderHandler>();
 builder.Services.AddTransient<LanguageHandler>();
 builder.Services.AddTransient<AuthRedirectHandler>();
+builder.Services.AddTransient<ToastHandler>();
 builder.Services.AddTransient<LoggingHandler>();
 
 builder.Services.AddScoped(sp =>
@@ -95,8 +96,10 @@ builder.Services.AddHttpClient("DefaultWithLang", client =>
 })
 .AddHttpMessageHandler<LoaderHandler>()
 .AddHttpMessageHandler<LanguageHandler>()
-.AddHttpMessageHandler<LoggingHandler>()
-.AddHttpMessageHandler<AuthRedirectHandler>();
+.AddHttpMessageHandler<AuthRedirectHandler>()
+.AddHttpMessageHandler<ToastHandler>()
+.AddHttpMessageHandler<LoggingHandler>();
+
 
 builder.Services.AddSingleton<ICategoryLookupService, StaticCategoryLookupService>();
 

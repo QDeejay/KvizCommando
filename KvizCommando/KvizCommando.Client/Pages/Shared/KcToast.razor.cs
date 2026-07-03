@@ -1,5 +1,6 @@
 ﻿using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.Visual.UiService;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Enums;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -11,16 +12,16 @@ using System.Threading.Tasks;
 
 namespace KvizCommando.Client.Pages.Shared
 {
-    public partial class KcToast : ComponentBase, IDisposable
+    public partial class KcToast : IDisposable
     {
         [Inject]
-        protected ToastService Toast { get; set; } = default!;
+        private ToastService Toast { get; set; } = default!;
 
         //------------------------------------------------------
 
         protected override void OnInitialized()
         {
-            Toast.OnChanged += ToastChanged;
+           Toast.OnChanged += ToastChanged;
         }
 
         //------------------------------------------------------
