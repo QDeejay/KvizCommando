@@ -1,5 +1,6 @@
 ﻿using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Shared.Models.Enums;
+using System.Threading.Tasks;
 
 namespace KvizCommando.Client.Services.Visual.UiService
 {
@@ -18,20 +19,20 @@ namespace KvizCommando.Client.Services.Visual.UiService
         //----------------------------------------------------
 
         public void Success(string text)
-            => Show(text, ToastType.Success);
+            => _ = Show(text, ToastType.Success);
 
         public void Error(string text)
-            => Show(text, ToastType.Error);
+            => _ = Show(text, ToastType.Error);
 
         public void Brief(string text)
-            => Show(text, ToastType.Warning);
+            => _ = Show(text, ToastType.Warning);
 
         public void Complete(string text)
-            =>  Show(text, ToastType.Info);
+            => _ = Show(text, ToastType.Info);
 
         //----------------------------------------------------
 
-        public void  Show(string text, ToastType type)
+        public async Task Show(string text, ToastType type)
         {
             Console.WriteLine(GetHashCode());
             var toast = new ToastMessage
@@ -39,7 +40,7 @@ namespace KvizCommando.Client.Services.Visual.UiService
                 Text = text,
                 Type = type
             };
-             
+            await Task.Delay(1000);
             if (!IsVisible)
             {
                 ShowInternal(toast);

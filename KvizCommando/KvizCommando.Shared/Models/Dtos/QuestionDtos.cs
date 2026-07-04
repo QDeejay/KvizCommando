@@ -34,23 +34,27 @@ namespace KvizCommando.Shared.Models.Dtos
         public bool[] CharCatMask { get; set; } = new bool[8];
 
     }
-    public class UserSlot
+    public class UserSlot : SlotBase
     {
+        public string NoOfUse { get; set; } = string.Empty;
 
-        public string Question { get; set; } = string.Empty;
-        public int Category { get; set; } = 0;
-        public string[] Answer { get; set; } = new string[4] { string.Empty, string.Empty, string.Empty, string.Empty };
+        public string NofOfCorrect { get; set; } = string.Empty;
+
         public string Ratio { get; set; } = string.Empty;
     }
-    public class PendingSlot : UserSlot
+    public class PendingSlot : SlotBase
     {
-
         public string Status { get; set; } = string.Empty;
-
         public string? Remark { get; set; }
         public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
     }
-
+    public abstract class SlotBase
+    {
+        public string Question { get; set; } = string.Empty;
+        public int Category { get; set; } = 0;
+        public string[] Answer { get; set; } = new string[4] { string.Empty, string.Empty, string.Empty, string.Empty };
+        
+    }
     /*
     //public class QuestionButtons
     {

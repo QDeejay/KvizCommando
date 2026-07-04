@@ -17,21 +17,18 @@ namespace KvizCommando.Client.Services.Dto
         private readonly IQuestionState _question;
         private readonly ITeamState _team;
         private readonly SessionService _sessionCache;
-        private readonly ToastService _toastService;
         public ApiService(
             HttpClient http,
             IHomeState home,
             IQuestionState questionstate, 
             ITeamState teamstate,
-            SessionService sessioncache,
-            ToastService toastService)
+            SessionService sessioncache)
         {
             _http = http;
             _home = home;
             _question = questionstate;
             _team = teamstate;
             _sessionCache = sessioncache;
-            _toastService = toastService;
         }
         public async Task<bool> SaveFactorySlotsAsync(SaveFactoryRequest dto)
         {

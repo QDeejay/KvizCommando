@@ -106,36 +106,4 @@
     font-size: 0.95rem;
     color: #cccccc;
 }
-/* alap checkbox kinézet kikapcsolása */
-input[type="checkbox"].custom-checkbox {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    width: 14px;
-    height: 14px;
-    border: 2px solid #777; /* keret színe */
-    border-radius: 4px; /* lekerekítés (opcionális) */
-    background-color: #fff; /* háttérszín alapból */
-    cursor: url('/Images/cursors/active.cur'), pointer;
-    display: inline-block;
-    vertical-align: middle;
-    position: relative;
-}
-input[type=checkbox]:focus {
-    outline: none;
-    box-shadow: none;
-}
-/* pipa állapot */
-input[type="checkbox"].custom-checkbox:checked {
-    background-color: #bbb; /* marad a háttér ugyanaz */
-    border-color: #777;
-    color: #777; /* ez lesz a pipa színe */
-}
-    /* pipa megjelenítése */
-    input[type="checkbox"].custom-checkbox:checked::after {
-        position: absolute;
-        top: -2px;
-        left: 2px;
-        font-size: 16px;
-        color: #000; /* pipa színe */
-    }
+

@@ -26,6 +26,8 @@ namespace KvizCommando.Client.Pages.Shared
         private bool CanAccept { get; set; } = false;
         private bool _bottomReached;
         private bool CheckBox { get; set; }  = false;
+        private string? BodyStyle =>
+                Par.CheckBottom ? "overflow-y: auto;" : null;
         private sealed record ScrollMetrics(
             double ScrollTop, double ScrollHeight, double ClientHeight,
             double OffsetHeight, double BoxHeight);
@@ -95,6 +97,13 @@ namespace KvizCommando.Client.Pages.Shared
             await Task.Delay(5);
            
         }
+        private Task OnBodyScroll()
+        {
+            if (!Par.CheckBottom)
+                return Task.CompletedTask;
+
+            return OnTermsScroll();
+        }
         private async Task OnTermsScroll()
         {
             if (_bottomReached) return;       // ne pörögjünk feleslegesen
@@ -125,6 +134,6 @@ namespace KvizCommando.Client.Pages.Shared
 }
 /*
  
-                            data-bs-dismiss="modal"
+      
  
  */

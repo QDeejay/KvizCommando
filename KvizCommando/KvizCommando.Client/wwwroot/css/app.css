@@ -31,8 +31,6 @@ textarea:disabled {
 label {
     cursor: url('/Images/cursors/normal.cur'), default;
 }
-
-
 .company-logo {
     position:absolute;
     top:4px;
@@ -40,7 +38,6 @@ label {
     height:4%;
     width:auto;
 }
-
 *, *::before, *::after {
     box-sizing: inherit;
 }
@@ -142,10 +139,6 @@ header {
         letter-spacing: 0.5px;
     }
 
-
-
-
-
 /* === KÓD SZÍNEZÉS === */
 code {
     color: #c02d76;
@@ -164,15 +157,12 @@ footer {
     z-index: 999;
     backdrop-filter:blur(2px);
 }
-
-
 img {
     user-select: none; /* ne lehessen kijelölni */
     pointer-events: none; /* ne lehessen ráklikkelni vagy húzni */
     -webkit-user-drag: none; /* Safari / Chrome – ne lehessen húzni */
 }
 /* ===== Loader Overlay ===== */
-
 .loader-wrapper {
     position: fixed;
     width: 100%;
@@ -185,7 +175,6 @@ img {
     color: #cccccc;
     z-index: 9999;
 }
-
 .loader-percent::after {
     content: var(--blazor-load-percentage-text, "0%");
     display: block;
@@ -193,7 +182,6 @@ img {
     font-weight: bold;
     margin-bottom: 8px;
 }
-
 .loader-bar {
     width: 90%;
     height: 20px;
@@ -203,7 +191,6 @@ img {
     overflow: hidden;
     box-shadow: 0 0 10px #000 inset, 0 0 5px #ccc;
 }
-
 .loader-fill {
     height: 100%;
     width: var(--blazor-load-percentage, 0%);
@@ -211,6 +198,41 @@ img {
     box-shadow: inset 0 0 5px #000;
     transition: width 0.05s ease-in-out;
 }
+
+/* alap checkbox kinézet kikapcsolása */
+input[type="checkbox"].custom-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #777; /* keret színe */
+    border-radius: 4px; /* lekerekítés (opcionális) */
+    background-color: #fff; /* háttérszín alapból */
+    cursor: url('/Images/cursors/active.cur'), pointer;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+}
+
+input[type=checkbox]:focus {
+    outline: none;
+    box-shadow: none;
+}
+/* pipa állapot */
+input[type="checkbox"].custom-checkbox:checked {
+    background-color: darkslategrey; /* marad a háttér ugyanaz */
+    border-color: #777;
+    color: #777; /* ez lesz a pipa színe */
+}
+    /* pipa megjelenítése */
+    input[type="checkbox"].custom-checkbox:checked::after {
+        position: absolute;
+        top: -2px;
+        left: 2px;
+        font-size: 16px;
+        color: #000; /* pipa színe */
+    }
 
 
 

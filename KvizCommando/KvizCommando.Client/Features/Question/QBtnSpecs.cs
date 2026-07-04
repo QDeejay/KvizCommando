@@ -2,6 +2,7 @@
 using KvizCommando.Client.Features.Home;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Pages.Question.Components;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
@@ -35,7 +36,8 @@ namespace KvizCommando.Client.Features.Question
                 CheckEnable = (qn) => true,
                 LcdBackground = false,
                 RenderContent = 0,
-                ButtonBar = false
+                ButtonBar = false,
+                BodyComponent = null
 
             },
             new QBoxSpecs {
@@ -47,6 +49,7 @@ namespace KvizCommando.Client.Features.Question
                 LcdBackground = false,
                 RenderContent = 0,
                 ButtonBar = false,
+                BodyComponent = null
             },
             new QBoxSpecs {
                 Key = QBoxKeyRoot.RtBtnPendig,
@@ -56,7 +59,8 @@ namespace KvizCommando.Client.Features.Question
                 CheckEnable = (qn) => qn.AvailablePendingSlot>0,
                 LcdBackground = false,
                 RenderContent = 0,
-                ButtonBar = false
+                ButtonBar = false,
+                BodyComponent = null
             },
             new QBoxSpecs {
                 Key = QBoxKeyRoot.RtBtnNew,
@@ -67,6 +71,7 @@ namespace KvizCommando.Client.Features.Question
                 LcdBackground = false,
                 RenderContent = 0,
                 ButtonBar = false,
+                BodyComponent = null
             },
             new QBoxSpecs {
                 Key = QBoxKeyContent.FactSlots,
@@ -74,9 +79,10 @@ namespace KvizCommando.Client.Features.Question
                 ImageSrc = string.Empty, Size = "halflarge", FooterDisplay = false, ClickId = 0,
                 BuildBoxText = (lang, qn) => "",
                 CheckEnable = (qn) => true,
-                LcdBackground = false,
+                LcdBackground = true,
                 RenderContent = 1,
-                ButtonBar = false
+                ButtonBar = false,
+                BodyComponent = typeof(FactorySlotsBase)
             },
             new QBoxSpecs {
                 Key = QBoxKeyContent.UsrSlots,
@@ -85,8 +91,9 @@ namespace KvizCommando.Client.Features.Question
                 ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 0,
                 CheckEnable = (qn) => true,
                 LcdBackground = true,
-                RenderContent = 2,
-                ButtonBar = true
+                RenderContent = 1,
+                ButtonBar = false,
+                BodyComponent = typeof(UserSlotManager)
 
             },
             new QBoxSpecs {
@@ -96,8 +103,9 @@ namespace KvizCommando.Client.Features.Question
                 ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 0,
                 CheckEnable = (qn) => true,
                 LcdBackground = true,
-                RenderContent = 3,
-                ButtonBar= true
+                RenderContent = 1,
+                ButtonBar= false,
+                BodyComponent = typeof(PendingSlotManager)
             },
             new QBoxSpecs {
                 Key = QBoxKeyContent.NewSlot,
@@ -106,8 +114,9 @@ namespace KvizCommando.Client.Features.Question
                 BuildBoxText = (lang, qn) => "",
                 CheckEnable = (qn) => true,
                 LcdBackground = false,
-                RenderContent = 4,
-                ButtonBar= false
+                RenderContent = 1,
+                ButtonBar= false,
+                BodyComponent = typeof(NewQuestionManager)
              }
         };
     }

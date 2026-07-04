@@ -1,4 +1,6 @@
-﻿@using KvizCommando.Client.Data;
+﻿@page "/team"
+
+@using KvizCommando.Client.Data;
 @using KvizCommando.Client.Components.CharacterComponent
 @using KvizCommando.Client.Pages.Team
 @using KvizCommando.Client.Pages.Team.Components
@@ -12,7 +14,7 @@
 {
         <KcModal @ref="teamModal"
                  Id="teamModal"
-                 Par="@tModal"
+          
                  OnCloseAction="CloseModalAction"
                  @if (ModalOption>0)
                  {

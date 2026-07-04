@@ -46,7 +46,7 @@ namespace KvizCommando.Client.Pages.Question.Components
             _editingRowIndex = null;
             StateHasChanged();
         }
-        private async Task OnSaveSlots()
+        private async Task OnSaveSlotsAsync()
         {
             if (!IsDirty) return;
             StopEdit();

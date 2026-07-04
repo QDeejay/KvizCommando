@@ -7,6 +7,7 @@ using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace KvizCommando.Client.Components.Dynamic
 {
@@ -26,17 +27,18 @@ namespace KvizCommando.Client.Components.Dynamic
         private bool isLoaded = false;
         //private MarkupString renderHTML = new();
         private PendingSlot Slot => Appstates.Question!.PendingSlots[SlotNo] ?? new PendingSlot();
-        private string culture => Appstates.Culture;
-        private string? catName => CategoryNameLocalizer.GetCategory(Slot.Category, culture);
-        private string? colorStyle => Slot.Status == "Approved" ? "color:lime" : "color:red";
+        private UserSlot UsrSlot => Appstates.Question!.Userlots[SlotNo] ?? new UserSlot();
+        private string Culture => Appstates.Culture;
+        private string? CatNamePend => CategoryNameLocalizer.GetCategory(Slot.Category, Culture);
+        private string? CatNameUsr => CategoryNameLocalizer.GetCategory(UsrSlot.Category, Culture);
+        private string? ColorStyle => Slot.Status == "Approved" ? "color:lime" : "color:red";
 
         protected override async Task OnInitializedAsync()
         {
-            //if(!Appstates.LocStoreStates.ChkBxNotShowNew ?? false)
-            //    renderHTML = await MarkupLoader.LoadingHtmlAsync(culture, Html.NewQuestRules);
-            await Task.Delay(1);
             isLoaded = true;
+            await Task.Delay(1);
         }
+    
         public void Dispose() 
         { 
             GC.SuppressFinalize(this);

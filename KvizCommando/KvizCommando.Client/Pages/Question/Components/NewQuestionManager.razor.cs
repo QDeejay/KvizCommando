@@ -15,8 +15,10 @@ namespace KvizCommando.Client.Pages.Question.Components
     {
         [CascadingParameter]
         private AppState AppStates { get; set; } = default!;
+        [CascadingParameter]
+        private int SelectedId { get; set; }
+
         [Inject] private CategoryOptionHelpers CatHelper { get; set; } = default!;
-        [Parameter] public int SelectedId { get; set; } 
         [Parameter] public EventCallback<NewQuestionRequest> OnSendQuestion { get; set; }
 
         private const int LENGHT_AREA_BOX = 200;
@@ -38,7 +40,7 @@ namespace KvizCommando.Client.Pages.Question.Components
         {
             _isLoaded = true;
         }
-        private async Task OnSaveQuestion()
+        private async Task OnSaveQuestionAsync()
         {
             _formData.SlotNo = SelectedId;
             if (OnSendQuestion.HasDelegate)

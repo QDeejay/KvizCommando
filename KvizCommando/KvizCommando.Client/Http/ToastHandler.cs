@@ -25,8 +25,7 @@ namespace KvizCommando.Client.Http
             {
                 if (Enum.TryParse<ToastType>(types.First(), out var type))
                 {
-                    Console.WriteLine(_toast.GetHashCode());
-                    _toast.Show(WebUtility.UrlDecode(texts.First()), type);
+                    _ = _toast.Show(WebUtility.UrlDecode(texts.First()), type);
                 }
             }
 

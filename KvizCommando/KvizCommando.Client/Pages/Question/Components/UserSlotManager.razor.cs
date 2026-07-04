@@ -12,15 +12,20 @@ namespace KvizCommando.Client.Pages.Question.Components
     {
         [CascadingParameter]
         private AppState AppStates { get; set; } = default!;
-        [Parameter] public int SelectedId { get; set; }
-        [Parameter] public EventCallback<int> SelectedIdChanged { get; set; } = default!;
 
-        //private int SelectedId = 100;
+        [CascadingParameter] 
+        private int SelectedId { get; set; }
+
+        [Parameter] public EventCallback<int> SelectedIdChanged { get; set; } = default!;
+        [Parameter] public EventCallback OnWatchButtonPushed { get; set; } = default!;
+        [Parameter] public EventCallback OnHandleButtonPushed { get; set; } = default!;
+
         private bool _isLoaded = false;
 
         private string Culture => AppStates.Culture;
         private UserSlot[] Slots => AppStates.Question!.Userlots;
         private QuestionExtendedInfo ExtInfo => AppStates.Question!.ExtendedInfo;
+        private bool NotShowStat => AppStates.LocStoreStates.ChkBxNotShowDel ?? false;
 
         protected override async Task OnInitializedAsync()
         {
@@ -37,13 +42,25 @@ namespace KvizCommando.Client.Pages.Question.Components
             else SelectedId = id;
             if (SelectedIdChanged.HasDelegate)
                 await SelectedIdChanged.InvokeAsync(SelectedId);
-            Console.WriteLine($"Selected:{SelectedId}");
             
+        }
+
+        private async Task OnWatchButtonAsync()
+        {
+            if (OnWatchButtonPushed.HasDelegate)
+                await OnWatchButtonPushed.InvokeAsync();
+        }
+        private async Task OnHandleButtonAsync()
+        {
+            if (OnHandleButtonPushed.HasDelegate)
+                await OnHandleButtonPushed.InvokeAsync();
         }
 
         public void Dispose()
         {
             SelectedIdChanged = default;
+            OnWatchButtonPushed = default;
+            OnHandleButtonPushed = default;
             GC.SuppressFinalize(this);
         }
     }

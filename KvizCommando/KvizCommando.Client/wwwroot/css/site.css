@@ -196,14 +196,17 @@
     .navigation-button.disabled {
         background-color: #666666;
         color: #d3d3d3;
-        pointer-events: none;
+
         border: 1px solid #004400;
         border-right: 4px solid #004400;
         cursor: url('/Images/cursors/disabled.cur'), not-allowed;
     }
+        .navigation-button.disabled i {
+            transform: none ;
+        }
 
-@media (min-height: 800px)  {
-    .navigation-button {
+        @media (min-height: 800px) {
+            .navigation-button {
         flex-direction: column;
         justify-content: center;
         text-align: center;
@@ -227,4 +230,54 @@
         .navigation-button span {
             display: none;
         }
+}
+
+.button-on-lcd {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 50px;
+    padding: 0 10px;
+    font-family: Arial, sans-serif;
+    color: #d3d3d3;
+    background-color: #0c1f17;
+    border-radius: 8px;
+    text-decoration: none;
+    opacity: 0.6;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+    .button-on-lcd i {
+        flex-shrink: 0;
+        font-size: 30px;
+        color: inherit;
+    }
+
+    .button-on-lcd:hover,
+    .button-on-lcd:hover i {
+        transform: scale(1.01);
+        opacity: 0.7;
+    }
+
+    .button-on-lcd:disabled {
+        background-color: #666666;
+        color: #d3d3d3;
+        transform: none;
+        opacity: 0.7;
+        cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+    }
+
+        .button-on-lcd:disabled i {
+            transform: none;
+            opacity: 0.7;
+        }
+
+.component-button-row {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    padding: 8px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
 }

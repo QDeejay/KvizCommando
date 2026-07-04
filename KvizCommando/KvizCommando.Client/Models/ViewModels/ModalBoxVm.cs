@@ -15,9 +15,11 @@ namespace KvizCommando.Client.Models.ViewModels
             public string Size { get; init; } = string.Empty;
             public string CheckBoxText { get; init; } = string.Empty;
             public string CheckBoxKey { get; init; } = string.Empty;
-            public bool CheckBottom { get; init; } = false;
+            public bool CheckBottom { get; init; } = new();
+           
             public Type? BodyComponent { get; set; }
             public Dictionary<string, object?> BodyParameters { get; } = new();
+
         //public Func<Task> AsyncAction1 { get; init; } = () => Task.CompletedTask;
         //public Func<Task> AsyncAction2 { get; init; } = () => Task.CompletedTask;
         //public Action? AsyncCheckBoxAction { get; init; } = default!;

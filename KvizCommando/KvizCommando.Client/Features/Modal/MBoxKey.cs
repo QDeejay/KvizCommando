@@ -13,6 +13,7 @@
         QUsrDelet = 101,
         QPendHandle = 102,
         QNewRules = 103,
+        QCheckQuestion = 104,
         THire = 201,
         TPromote = 202,
         TRetire = 203,

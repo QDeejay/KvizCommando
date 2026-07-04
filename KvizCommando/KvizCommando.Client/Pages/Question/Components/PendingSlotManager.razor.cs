@@ -12,9 +12,12 @@ namespace KvizCommando.Client.Pages.Question.Components
     {
         [CascadingParameter]
         private AppState AppStates { get; set; } = default!;
-        [Parameter] public int SelectedId { get; set; } = default!;
+
+        [CascadingParameter]
+        private int SelectedId { get; set; }
+
         [Parameter] public EventCallback<int> SelectedIdChanged { get; set; }
-      
+        [Parameter] public EventCallback OnHandleButtonPushed { get; set; } = default!;
         private bool _isLoaded = false;
 
         private string Culture => AppStates.Culture;
@@ -36,10 +39,15 @@ namespace KvizCommando.Client.Pages.Question.Components
             else SelectedId = id;
             if (SelectedIdChanged.HasDelegate)
                 await SelectedIdChanged.InvokeAsync(SelectedId);
-            Console.WriteLine($"Selected:{SelectedId}");
+        }
+        private async Task OnHandleButtonAsync()
+        {
+            if (OnHandleButtonPushed.HasDelegate)
+                await OnHandleButtonPushed.InvokeAsync();
         }
         public void Dispose()
         {
+            OnHandleButtonPushed = default;
             SelectedIdChanged = default;
             GC.SuppressFinalize(this);
         }

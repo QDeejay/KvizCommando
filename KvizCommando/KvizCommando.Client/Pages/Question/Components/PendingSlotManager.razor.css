@@ -25,6 +25,8 @@
     text-align: center;
     animation: blink 1s step-start infinite;
 }
+
+
 @keyframes blink {
     0%, 49% {
         visibility: visible;

@@ -3,12 +3,18 @@
 
 @if (_isLoaded)
 {
+                
             <div class="list-grid">
-                <div></div>
+                <div>
+                
+                </div>
                 <div></div>
                 <div class="list-header no-cell">@Ui.Lang["question.Table.Header.No"]</div>
                 <div class="list-header category-cell">@Ui.Lang["question.Table.Header.ShortCat"]</div>
-                <div class="list-header value-cell">@Ui.Lang["question.Table.Header.Question"]</div>
+                <div class="list-header value-cell">@Ui.Lang["question.Table.Header.Question"]
+                  
+                  
+                </div>
                 <div class="list-header ratio-cell">@Ui.Lang["question.Table.Header.Ratio"]</div>
                 @for (var j = 0; j < ExtInfo.AvailableUserSlot; j++)
                 {
@@ -34,4 +40,13 @@
                     <div class="ratio-cell ratio-cellext">@Slots[rowusr].Ratio</div>
                 }
             </div>
+    <div class="component-button-row">
+        <button class="button-on-lcd" @onclick="OnWatchButtonAsync" disabled="@(SelectedId == 100)">
+            <i class="bi bi-binoculars-fill"></i>
+        </button>
+
+        <button class="button-on-lcd" @onclick="OnHandleButtonAsync" disabled="@(SelectedId == 100)">
+            <i class="@(!NotShowStat ? "bi bi-tools" : "bi bi-trash3-fill")"></i>
+        </button>
+    </div>
 }

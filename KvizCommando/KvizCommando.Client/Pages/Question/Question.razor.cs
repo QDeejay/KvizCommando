@@ -3,6 +3,7 @@ using KvizCommando.Client.Components.Dynamic;
 using KvizCommando.Client.Features.Modal;
 using KvizCommando.Client.Features.Question;
 using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Pages.Question.Components;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Services.Visual.UiService;
@@ -11,6 +12,8 @@ using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Enums;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using System.Runtime.CompilerServices;
 
 namespace KvizCommando.Client.Pages.Question
 {
@@ -20,12 +23,11 @@ namespace KvizCommando.Client.Pages.Question
         private AppState AppStates { get; set; } = default!;
 
         private readonly Dictionary<string, ContentBoxVm> _boxes = [];
+        private Dictionary<string, object?> _bodyParams { get; } = [];
         private string[] _boxOrder = [];
-        private Func<Task> _onManageSlotAsync = default!;
 
         private int _selectedId = 100;
-        private string _boxBtnText = string.Empty;
-        private string _boxBtnStyle = string.Empty;
+
         private bool _isReady = false;
         private bool _isLoaded = false;
         private string Culture => AppStates.Culture;
@@ -47,41 +49,38 @@ namespace KvizCommando.Client.Pages.Question
         }
         private void OnBoxClick(int boxId)
         {
-            _selectedId = 100;
-            _boxBtnText = string.Empty;
-            _boxBtnStyle = string.Empty;
-            _onManageSlotAsync = default!;
+            InitBoxes();
             var title = string.Empty;
             switch (boxId)
             {
                 case 1:
-                    _boxOrder = QBtnBoxBuilder.Root;
                     title = (Ui.Lang["mainlayout.Header.Question"]);
                     break;
                 case 101:
                     _boxOrder = QBtnBoxBuilder.SubFact;
                     title = _boxes[QBoxKeyRoot.RtBtnFactory.ToString()].Header;
+                    _bodyParams["SaveSlots"] = EventCallback.Factory.Create<int[]>(this, OnFactSaveAsync);
                     break;
                 case 102:
                     _boxOrder = QBtnBoxBuilder.SubUsr;
-                    _onManageSlotAsync = OnDeleteUsrSlotAsync;
-                    _boxBtnText = LocNotShowStateDel ? Ui.Lang["question.Button.Delete"] : Ui.Lang["question.Button.Handle"];
-                    _boxBtnStyle = LocNotShowStateDel ? "background-color: #a64b2a" : "background-color: #4b5320";
                     title = _boxes[QBoxKeyRoot.RtBtnUsr.ToString()].Header;
+                    _bodyParams["SelectedIdChanged"] = EventCallback.Factory.Create<int>(this, OnSelectId);
+                    _bodyParams["OnWatchButtonPushed"] = EventCallback.Factory.Create(this, OnWatchQuestionAsync);
+                    _bodyParams["OnHandleButtonPushed"] = EventCallback.Factory.Create(this, OnDeleteUsrSlotAsync);
                     break;
                 case 103:
                     _boxOrder = QBtnBoxBuilder.SubPend;
-                    _onManageSlotAsync = OnHandlePendSLotAsync;
-                    _boxBtnText = Ui.Lang["question.Button.Handle"];
                     title = _boxes[QBoxKeyRoot.RtBtnPendig.ToString()].Header;
+                    _bodyParams["SelectedIdChanged"] = EventCallback.Factory.Create<int>(this, OnSelectId);
+                    _bodyParams["OnHandleButtonPushed"] = EventCallback.Factory.Create(this, OnHandlePendSLotAsync);
                     break;
                 case 104:
                     _boxOrder = QBtnBoxBuilder.SubNew;
-                    title = _boxes[QBoxKeyRoot.RtBtnNew.ToString()].Header;
                     _selectedId = Array.FindIndex(QState.PendingSlots!, x => x.Category == 0);
+                    title = _boxes[QBoxKeyRoot.RtBtnNew.ToString()].Header;
+                    _bodyParams["OnSendQuestion"] = EventCallback.Factory.Create<NewQuestionRequest>(this, OnSaveToFormAsync);
                     break;
                 default:
-                    _boxOrder = QBtnBoxBuilder.Root;
                     title = (Ui.Lang["mainlayout.Header.Question"]);
                     break;
             }
@@ -104,17 +103,23 @@ namespace KvizCommando.Client.Pages.Question
             Ui.Header.OnBackBtnClicked += UpdateBckClick;
         }
 
+        private async Task OnWatchQuestionAsync()
+        {
+            var vm = MBoxBuilder.BuildParam(ModalTypes.QCheckQuestion, Ui.Lang);
+            vm.BodyParameters.Add(nameof(QModalRender.SlotNo), _selectedId);
+            await Ui.Modal.ShowAsync(vm);
+        }
         private async Task OnFactSaveAsync(int[] workCodes)
         {
             var success = await Api.SaveFactorySlotsAsync(new SaveFactoryRequest
-                { CategorySlots = workCodes });
+            { CategorySlots = workCodes });
 
             if (!success)
                 return;
 
             await Ui.ReloadAsync();
             BuildBoxes();
-            
+
         }
         private async Task OnSaveToFormAsync(NewQuestionRequest request)
         {
@@ -131,7 +136,7 @@ namespace KvizCommando.Client.Pages.Question
             var success = await Api.SendNewQuestionAsync(request);
             if (!success)
                 return;
-            _selectedId = 100;
+            _selectedId=100;
             await Ui.ReloadAsync();
             BuildBoxes();
             StateHasChanged();
@@ -146,7 +151,7 @@ namespace KvizCommando.Client.Pages.Question
                 if (result != ModalResult.Button1)
                     return;
             }
-            
+
             var success = await Api.ManageSlotAsync(new ManageSlotRequest
             {
                 SlotNo = _selectedId,
@@ -179,18 +184,23 @@ namespace KvizCommando.Client.Pages.Question
                 return;
 
             var success = await Api.ManageSlotAsync(new ManageSlotRequest
-                {
-                    SlotNo = _selectedId,
-                    ReqType = (SlotManageType)reqType,
-                });
+            {
+                SlotNo = _selectedId,
+                ReqType = (SlotManageType)reqType,
+            });
 
             if (!success)
                 return;
-                
+
             await Ui.ReloadAsync();
             BuildBoxes();
         }
-
+        private void InitBoxes()
+        {
+            _selectedId = 100;
+            _boxOrder = QBtnBoxBuilder.Root;
+            _bodyParams.Clear();
+        }
         private void UpdateBckClick()
         {
             if (Ui.Header.PageIndex == 1)
@@ -204,6 +214,6 @@ namespace KvizCommando.Client.Pages.Question
             Ui.Header.OnBackBtnClicked -= UpdateBckClick;
             GC.SuppressFinalize(this);
         }
-    }
-}
 
+    }  
+}

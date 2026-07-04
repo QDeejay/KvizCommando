@@ -19,6 +19,7 @@ namespace KvizCommando.Client.Models.ViewModels
         public bool IsEnabled { get; init; } 
         public int ClickId { get; init; }
         public bool ButtonBarVisible { get; init; } = false;
+        public Type? BodyComponent { get; set; }
     }
     public abstract class ButtonVm
     {   
@@ -32,5 +33,6 @@ namespace KvizCommando.Client.Models.ViewModels
         public bool FooterDisplay { get; init; } = false;
         public bool ButtonBar { get; init; } = false;
         public int ClickId { get; init; } = 0;
+        public Type? BodyComponent { get; set; }
     }
 }

@@ -36,7 +36,8 @@ namespace KvizCommando.Client.Features.Question
                     ClickId = spec.ClickId,
                     LcdDisplay = spec.LcdBackground,
                     RenderContent = spec.RenderContent,
-                    ButtonBarVisible = spec.ButtonBar
+                    ButtonBarVisible = spec.ButtonBar,
+                    BodyComponent = spec.BodyComponent
                 };
             }
             return dict;

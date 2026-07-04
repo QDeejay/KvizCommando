@@ -180,6 +180,18 @@
   <data name="Label.AnswerOk" xml:space="preserve">
     <value>Good answer</value>
   </data>
+  <data name="Modal.Content.QuestAsked" xml:space="preserve">
+    <value>Question asked:</value>
+  </data>
+  <data name="Modal.Content.QuestCorrect" xml:space="preserve">
+    <value>Good Answers:</value>
+  </data>
+  <data name="Modal.Content.Ratio" xml:space="preserve">
+    <value>Ratio:</value>
+  </data>
+  <data name="Modal.Content.Statistic" xml:space="preserve">
+    <value>Statistics</value>
+  </data>
   <data name="Modal.Text.Confirm" xml:space="preserve">
     <value>Are You sure? This operation is not reversable. Your question will be deleted, no longer available for your loadout!</value>
   </data>
@@ -188,6 +200,9 @@
   </data>
   <data name="Modal.Text.Remark" xml:space="preserve">
     <value>Remark</value>
+  </data>
+  <data name="Modal.Title.CheckQuestion" xml:space="preserve">
+    <value>Watch Question</value>
   </data>
   <data name="Modal.Title.Confirm" xml:space="preserve">
     <value>Confirm your request</value>

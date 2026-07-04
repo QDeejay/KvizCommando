@@ -221,6 +221,7 @@
 }
 
 .kc-lcd-display--inner {
+    margin-top:10px;
     color: #222F16;
     font-family: 'Share Tech Mono', monospace;
     font-size: 1.2rem;

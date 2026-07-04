@@ -1,27 +1,4 @@
 ﻿
-.kc-quest-selector2 {
-   
-    width: 100%;
-    max-width: 100%;
-    justify-items: center;
-    z-index: 101;
-    gap: 8px;
-}
-
-.attention-text {
-    margin: 30px 30px; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
-}
-
-.placeholder {
-    opacity: 0.6;
-    font-style: italic;
-    padding: 8px 0;
-}
 .kc-quest-selector {
     display: flex;
     flex-direction:column;

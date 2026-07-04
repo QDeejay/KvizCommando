@@ -19,28 +19,11 @@
                         <ContentBox Vm="@box"
                                     OnClick="OnBoxClick">
                             <ChildContent1>
-                            <FactorySlotsBase SaveSlots="OnFactSaveAsync" />
-                            </ChildContent1>                         
-                            <ChildContent2>
-                            <UserSlotManager SelectedId="_selectedId"
-                                             SelectedIdChanged="OnSelectId" />
-                            </ChildContent2>
-                            <ChildContent3>
-                            <PendingSlotManager SelectedId="_selectedId"
-                                                SelectedIdChanged="OnSelectId"/>
-                            </ChildContent3>
-                            <ChildContent4>
-                            <NewQuestionManager SelectedId="_selectedId"
-                                                OnSendQuestion="OnSaveToFormAsync" />
-                            </ChildContent4>
-                            <ChildContent5>
-                                <button class="military-button"
-                                        disabled="@(_selectedId == 100)"
-                                        style="@_boxBtnStyle"
-                                    @onclick="_onManageSlotAsync">
-                                    @_boxBtnText
-                                </button>
-                            </ChildContent5>
+                                <CascadingValue Value="_selectedId">
+                                        <DynamicComponent Type="@box.BodyComponent"
+                                                          Parameters="_bodyParams" />
+                                </CascadingValue>
+                            </ChildContent1>
                         </ContentBox>
                     }
                 </div>

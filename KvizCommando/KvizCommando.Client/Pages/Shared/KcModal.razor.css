@@ -82,48 +82,21 @@
     scrollbar-width: thin;
     scrollbar-color: #555 rgba(30, 30, 30, 0.9);
 }
-input[type="checkbox"].notshow-checkbox {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    width: 10px;
-    height: 10px;
-    border: 2px solid #777; /* keret színe */
-    border-radius: 4px; /* lekerekítés (opcionális) */
-    background-color: #fff; /* háttérszín alapból */
-    cursor: url('/Images/cursors/active.cur'), pointer !important;
-    display: inline-block;
+
+
+
+.modal-checkbox {
+    display: flex;
+    margin-left: 16px;
+    justify-content: left;
+   
     
 }
-
-input[type=checkbox]:focus {
-    outline: none;
-    box-shadow: none;
-}
-/* pipa állapot */
-input[type="checkbox"].notshow-checkbox:checked {
-    background-color: #bbb; /* marad a háttér ugyanaz */
-    border-color: #777;
-    color: #777; /* ez lesz a pipa színe */
-}
-
-    /* pipa megjelenítése */
-    input[type="checkbox"].notshow:checked::after {
-        position: absolute;
-        top: -2px;
-        left: 2px;
-        font-size: 8px;
-        color: #000; /* pipa színe */
-    }
 .notshow-label {
+    display:flex;
     font-family: 'Courier New', monospace;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: #cccccc;
-}
-.modal-checkbox {
-    display: block;
-    margin-left: 16px;
-    gap: 4px;
-    justify-content: left;
-    align-items: center;
+    align-content: center;
+    margin-left:4px;
 }

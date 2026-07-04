@@ -180,6 +180,18 @@
   <data name="Label.AnswerOk" xml:space="preserve">
     <value>Jó válasz</value>
   </data>
+  <data name="Modal.Content.QuestAsked" xml:space="preserve">
+    <value>Kérdés feltéve:</value>
+  </data>
+  <data name="Modal.Content.QuestCorrect" xml:space="preserve">
+    <value>Jól megválaszolva:</value>
+  </data>
+  <data name="Modal.Content.Ratio" xml:space="preserve">
+    <value>Arány:</value>
+  </data>
+  <data name="Modal.Content.Statistic" xml:space="preserve">
+    <value>Statisztika</value>
+  </data>
   <data name="Modal.Text.Confirm" xml:space="preserve">
     <value>Biztos benne? Ez a művelet nem visszavonható. A kérdésed törölve lesz és többet nem adhatod a felszerelésedhez!</value>
   </data>
@@ -188,6 +200,9 @@
   </data>
   <data name="Modal.Text.Remark" xml:space="preserve">
     <value>Visszajelzés</value>
+  </data>
+  <data name="Modal.Title.CheckQuestion" xml:space="preserve">
+    <value>Kérdés megtekintése</value>
   </data>
   <data name="Modal.Title.Confirm" xml:space="preserve">
     <value>Kérelem megerősítése</value>

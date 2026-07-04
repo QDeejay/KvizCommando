@@ -63,6 +63,20 @@ namespace KvizCommando.Client.Features.Modal
                     CheckBottom = true,
                     BodyComponent = typeof(QModalRender)
                 },
+                [ModalTypes.QCheckQuestion] = new MboxSpecs
+                {
+                    TitleKey = "question.Modal.Title.CheckQuestion",
+                    TextKey1 = string.Empty,
+                    TextKey2 = string.Empty,
+                    CloseTextKey = "question.Button.Close",
+                    Style1 = string.Empty,
+                    Style2 = string.Empty,
+                    Size = "lg",
+                    CheckBoxTextKey = string.Empty,
+                    CheckBoxKey = string.Empty,
+                    CheckBottom = true,
+                    BodyComponent = typeof(QModalRender)
+                },
 
                 [ModalTypes.QNewRules] = new MboxSpecs {
                     TitleKey = "question.Modal.Title.New",

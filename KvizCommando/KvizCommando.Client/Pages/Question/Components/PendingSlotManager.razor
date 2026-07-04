@@ -45,5 +45,11 @@
                     <div class="value-cell value-cellext" >@Slots[rowusr].Question</div>
                     <div class="ratio-cell ratio-cellext" >@Ui.Lang[$"question.Table.Status.{rowStat}"]</div>
                 }
+            
             </div>
+    <div class="component-button-row">
+        <button class="button-on-lcd" @onclick="OnHandleButtonAsync" disabled="@(SelectedId == 100)">
+            <i class="bi bi-tools"></i>
+        </button>
+    </div>
 }

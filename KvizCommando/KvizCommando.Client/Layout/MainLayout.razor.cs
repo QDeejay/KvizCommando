@@ -102,7 +102,6 @@ namespace KvizCommando.Client.Layout
         private void OnBackClick()
         {
             Ui.Header.SetBackBtnToPushState();
-            Console.WriteLine("Back button clicked.");
         }
 
         private void ShowModal()

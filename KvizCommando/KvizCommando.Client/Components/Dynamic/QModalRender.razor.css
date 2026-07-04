@@ -10,7 +10,12 @@
     font-weight: bold
 }
 .remark-label {
-    font-size: 1.1rem
+    font-size: 0.9rem;
+ 
+    
+}
+.remark-title {
+    text-decoration:underline;
 }
 .answer-label {
     font-size:0.9rem;
@@ -24,8 +29,14 @@
     align-items: center;
     text-align: center;
     color: #666;
-    font-weight: bold;
+    
     margin: 2px 0;
+}
+.status-row {
+    font-weight: bold;
+}
+.submited-at {
+    font-size:0.7rem;
 }
 
     .divider::before,
@@ -42,3 +53,17 @@
     .divider:not(:empty)::after {
         margin-left: .75em;
     }
+
+.statistic-row {
+    display: flex;
+    flex-direction:column;
+}
+.label-statistic {
+    font-size:0.9rem;
+    min-width:160px;
+}
+
+.label-result {
+    font-weight:bold;
+    font-size:1rem;
+}

@@ -8,26 +8,14 @@
                         @onclick="HideAsync"
                         aria-label="Close"></button>
             </div>
-            <CascadingValue Value="Appstates">
-                <CascadingValue Value="Par.Mode">
-            @if (Par.CheckBottom==true)
-            {
-                <div id="termsBody" class="modal-body kc-modal-body" style="overflow-y: auto;" @onscroll="OnTermsScroll">
-                            @if (Par.BodyComponent != null)
-                            {
-                                <DynamicComponent Type="@Par.BodyComponent"
-                                                  Parameters="@Par.BodyParameters" />
-                            }
-                            else
-                            {
-                                @ChildContent
-                            }
-                </div>
-            }
-            else
-            {
-                <div id="termsBody" class="modal-body kc-modal-body">
-                   
+
+            <div id="termsBody"
+                 class="modal-body kc-modal-body"
+                 style="@BodyStyle"
+                 @onscroll="OnBodyScroll">
+                    
+                <CascadingValue Value="Appstates">
+                    <CascadingValue Value="Par.Mode">
                         @if (Par.BodyComponent != null)
                         {
                             <DynamicComponent Type="@Par.BodyComponent"
@@ -37,15 +25,15 @@
                         {
                             @ChildContent
                         }
-                       
-                </div>
-            }
-             </CascadingValue>
                     </CascadingValue>
+                 </CascadingValue>
+            </div>
+               
+            
             <div class="modal-checkbox">
                 @if (!string.IsNullOrWhiteSpace(Par.CheckBoxText) && Par.CheckBoxText!="#")
                 {
-                    <input class="form-check-input notshow-checkbox" type="checkbox" id="notshow" @bind="CheckBox" />
+                    <input class="form-check-input custom-checkbox" type="checkbox" id="notshow" @bind="CheckBox" />
                     <label class="form-check-label notshow-label" for="notshow">
                         @Par.CheckBoxText
                     </label>
@@ -81,3 +69,41 @@
         </div>
     </div>
 </div>
+
+
+                            <!--
+@if (Par.CheckBottom == true)
+{
+        <div id="termsBody" class="modal-body kc-modal-body" style="overflow-y: auto;" @onscroll="OnTermsScroll">
+                    @if (Par.BodyComponent != null)
+                    {
+                            <DynamicComponent Type="@Par.BodyComponent"
+                                              Parameters="@Par.BodyParameters" />
+                    }
+                    else
+                    {
+                            @ChildContent
+                    }
+        </div>
+}
+else
+{
+        <div id="termsBody" class="modal-body kc-modal-body">
+
+                @if (Par.BodyComponent != null)
+                {
+                        <DynamicComponent Type="@Par.BodyComponent"
+                                          Parameters="@Par.BodyParameters" />
+                }
+                else
+                {
+                        @ChildContent
+                }
+
+        </div>
+}
+
+
+
+
+                            -->

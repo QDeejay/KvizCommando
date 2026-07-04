@@ -311,6 +311,8 @@ namespace KvizCommando.Server.Services.DtoMapping
                     Question = uq?.Question ?? string.Empty,
                     Answer = answers,
                     Category = uq?.CategoryNo ?? 0,
+                    NoOfUse = uq.Ask>0 ? uq.Ask.ToString() : "N/A",
+                    NofOfCorrect = uq.Ask > 0  ? uq.OkAnswer.ToString() : "N/A",
                     Ratio = uq.Ask > 40 ? $"{(Math.Truncate(uq.Ratio * 1000) / 10):0.0}%" : "N/A"
                 });
 

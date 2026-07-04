@@ -23,7 +23,8 @@ namespace KvizCommando.Client.Features.Modal
                 CheckBoxText = lang[specs.CheckBoxTextKey],
                 CheckBoxKey = specs.CheckBoxKey,
                 CheckBottom = specs.CheckBottom,
-                BodyComponent = specs.BodyComponent,
+                BodyComponent = specs.BodyComponent
+                
             };
         }
     }
