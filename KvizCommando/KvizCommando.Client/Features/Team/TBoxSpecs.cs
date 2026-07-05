@@ -10,8 +10,8 @@ namespace KvizCommando.Client.Features.Team
     public class TBoxSpecs :VmSpecs
     {
         internal Enum Key { get; init; } = default!;
-        internal Func<ExtendedInfo, bool> CheckEnable { get; init; } = default!;
-        internal Func<ILanguageService, ExtendedInfo, string> BuildBoxText { get; init; } = default!;
+        internal Func<TeamExtendedInfo, bool> CheckEnable { get; init; } = default!;
+        internal Func<ILanguageService, TeamExtendedInfo, string> BuildBoxText { get; init; } = default!;
     }
     public static class TeamBoxSpecs
     {

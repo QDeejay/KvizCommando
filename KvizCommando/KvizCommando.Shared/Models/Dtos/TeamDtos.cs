@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KvizCommando.Shared.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,16 +10,15 @@ namespace KvizCommando.Shared.Models.Dtos
     public sealed class TeamDtos
     {
         public bool AccessDenied { get; set; } = false;
-        public ExtendedInfo TeamInfo { get; set; } = new ExtendedInfo();
+        public TeamExtendedInfo TeamInfo { get; set; } = new();
         public TeamMemberDto[]? TeamMembers { get; set; } = new TeamMemberDto[9];
-
         public CandidateDto[]? Candidates { get; set; } = new CandidateDto[8];
-
+        public TeamFooterInfo FooterInfo { get; set; } = new();
         public bool[] CharCatMask { get; set; } = new bool[9];
         public HelpDto Help { get; set; } = new HelpDto();
        
     }
-    public  interface IGeneralInfo 
+    public interface IGeneralInfo 
     {
         string Name { get; }
         string PictureCode { get; }
@@ -27,7 +27,7 @@ namespace KvizCommando.Shared.Models.Dtos
         int NextXpPts { get; }
         int DevPts { get; }
     }
-    public class ExtendedInfo : IGeneralInfo
+    public class TeamExtendedInfo : IGeneralInfo
     {
         public string TeamName { get; set; } = string.Empty;
         public int TeamLevel { get; set; } = 0;
@@ -39,6 +39,7 @@ namespace KvizCommando.Shared.Models.Dtos
         public int Credits { get; set; } = 0;
         public int TotalMembers { get; set; } = 0;
         public int MaxMembers { get; set; } = 0;
+        public MembRemark[] MembRemarks { get; set; } = new MembRemark[9];
 
         public string Name => TeamName;
         public string PictureCode => TeamPictureCode;
@@ -62,7 +63,7 @@ namespace KvizCommando.Shared.Models.Dtos
         public int Pension { get; set; } = 0;
         public int EnergyPoints { get; set; } = 0;
         public int SkillPoints { get; set; } = 0;
-        
+        public MembRemark Remark { get; set; } = MembRemark.None;
 
 
 
@@ -79,6 +80,7 @@ namespace KvizCommando.Shared.Models.Dtos
     }
     public class AttidtudeDto
     {
+        public bool CanDev { get; set; } = false;
         public byte[] Category { get; set; } = new byte[4];
         public SkillPartial[] Skill { get; set; } = new SkillPartial[4];
     }
@@ -89,9 +91,10 @@ namespace KvizCommando.Shared.Models.Dtos
     }
     public class SkillPartial
     {
-        public byte lvlCurrent { get; set; } = 0;
-        public byte lvlCurMax { get; set; } = 0;
-        public byte lvlOvrMax { get; set; } = 0;
+        public byte LvlCurrent { get; set; } = 0;
+        public byte LvlCurMax { get; set; } = 0;
+        public byte LvlOvrMax { get; set; } = 0;
+        public bool SkillCanDev = false;
     }
     public sealed class CandidateDto
     {
@@ -100,4 +103,17 @@ namespace KvizCommando.Shared.Models.Dtos
         public string[]? Name { get; set; } = new string[8];
         public string[]? PictureCode { get; set; } = new string[8];
     }
+
+    public sealed class TeamFooterInfo
+    { 
+        public int TeamOpRequired { get; set; } = 0;
+        public int MemberOpRequired { get; set; } = 0;
+
+        public int FreePositions { get; set; } = 0;
+
+    }
+    
+    
+        
+    
 }

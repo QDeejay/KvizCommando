@@ -9,7 +9,7 @@ namespace KvizCommando.Client.Features.Team
     public class UpperBlockDataBuilder
     {
  
-        public static UpperBlockViewModel BuildTeamHeader(ExtendedInfo info, int usedSkillPoints, ILanguageService lang)
+        public static UpperBlockViewModel BuildTeamHeader(TeamExtendedInfo info, int usedSkillPoints, ILanguageService lang)
         {
             var vm = new UpperBlockViewModel();
 

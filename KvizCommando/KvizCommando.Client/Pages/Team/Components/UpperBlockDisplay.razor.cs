@@ -23,7 +23,7 @@ namespace KvizCommando.Client.Pages.Team.Components
         private UpperBlockViewModel vm = new();
         private bool _shouldBeShow = false;
         private string Culture => AppStates.Culture;
-        private ExtendedInfo Info => AppStates.Team!.TeamInfo;
+        private TeamExtendedInfo Info => AppStates.Team!.TeamInfo;
         private TeamMemberDto Member => AppStates.Team!.TeamMembers![Selected] ?? new TeamMemberDto();
 
 

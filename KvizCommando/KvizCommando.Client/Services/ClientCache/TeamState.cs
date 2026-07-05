@@ -19,7 +19,7 @@ namespace KvizCommando.Client.Services.ClientCache
         public TeamMemberDto[]? TeamMembers => _snapshot?.TeamMembers;
         public CandidateDto[]? Candidates => _snapshot?.Candidates;
         public bool[]? Charmask => _snapshot?.CharCatMask;
-        public ExtendedInfo? TeamInfo => _snapshot?.TeamInfo;
+        public TeamExtendedInfo? TeamInfo => _snapshot?.TeamInfo;
         public HelpDto? Help => _snapshot?.Help;
         public async Task EnsureLoadedAsync()
         {

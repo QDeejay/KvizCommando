@@ -219,9 +219,9 @@ namespace KvizCommando.Client.Features.Team
                 {
                     vm.Rows.Add(new ModalRow(
                      CategoryName: CategoryNameLocalizer.GetCategory(att.Category[i], culture),
-                     ValueDisplay: slevel[i] != 0 ? $"{att.Skill[i].lvlCurrent}/{att.Skill[i].lvlCurMax}" :pref + (TeamHelper.FormatOneDecimal(valC, false)),
+                     ValueDisplay: slevel[i] != 0 ? $"{att.Skill[i].LvlCurrent}/{att.Skill[i].LvlCurMax}" :pref + (TeamHelper.FormatOneDecimal(valC, false)),
                      separator: UNLOCK_SEP,
-                     ValueChangeDisplay: slevel[i] != 0 ? $"{att.Skill[i].lvlCurrent}/{att.Skill[i].lvlCurMax+1}" : pref + (TeamHelper.FormatOneDecimal(valN, false)),
+                     ValueChangeDisplay: slevel[i] != 0 ? $"{att.Skill[i].LvlCurrent}/{att.Skill[i].LvlCurMax+1}" : pref + (TeamHelper.FormatOneDecimal(valN, false)),
                      color: slevel[i] == 0 ? pref == "+" ? "red" : "green" : ""
                     ));
                 }

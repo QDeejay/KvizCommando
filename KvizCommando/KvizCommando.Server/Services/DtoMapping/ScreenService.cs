@@ -7,6 +7,7 @@ using KvizCommando.Server.Models;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
+using KvizCommando.Shared.Models.Enums;
 using KvizCommando.Shared.Models.User;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Identity;
@@ -169,19 +170,22 @@ namespace KvizCommando.Server.Services.DtoMapping
             }
             if (player.SessionId == "denied")
                 return new TeamDtos() { AccessDenied = true };
+
             TeamMemberDto?[] teamMembers = new TeamMemberDto[9];
             CandidateDto?[] candidates = new CandidateDto[9];
+            MembRemark[] membRemarks = new MembRemark[9];
+
             bool[] tempCharmask = new bool[9];
             var numberOfCharacters = 0;
             teamMembers[0] = null;
             candidates[0] = null;
             tempCharmask[0] = true;
+
             for (int i = 1; i < 9; i++)
             {
                 var character = player.Characters[i - 1];
                 if (character != null)
                 {
-
                     int tempRank = player.Characters[i - 1] != null ? character.Rank : 0;
                     int nextRank = Math.Min(21, character.Rank + 1);
                     teamMembers[i] = new TeamMemberDto
@@ -196,10 +200,12 @@ namespace KvizCommando.Server.Services.DtoMapping
                         NextXp = RankRewards.List[tempRank].NextLevel,
                         NextDevPoints = tempRank != nextRank ? RankRewards.List[nextRank].NextLevel : 0,
                         NextUnlock = tempRank != nextRank ? RankRewards.List[nextRank].NextLevel : null,
-                        MaintAttitude = ConvertAttitude(character.Attitude.Main, tempRank, 21, 21),
-                        SecondAttitude = ConvertAttitude(character.Attitude.Secondary, tempRank, RankConstants.maxLevels[4], RankConstants.maxLevels[6]),
-                        GenderAttitude = ConvertAttitude(character.Attitude.Gender, tempRank, RankConstants.maxLevels[8], RankConstants.maxLevels[10])
+                        MaintAttitude = AttitudeResolver(character.Attitude.Main, tempRank, RankConstants.maxLevels[0..3], RankConstants.startLevels[0..3],0),
+                        SecondAttitude = AttitudeResolver(character.Attitude.Secondary, tempRank, RankConstants.maxLevels[4..7], RankConstants.startLevels[4..7], character.DevPoints),
+                        GenderAttitude = AttitudeResolver(character.Attitude.Gender, tempRank, RankConstants.maxLevels[8..11], RankConstants.startLevels[8..11], character.DevPoints)
                     };
+                    membRemarks[i] = RemarkResolver(teamMembers[i]!, player.Core.DevPoint, player.Core.RankEnum);
+                    teamMembers[i]!.Remark = membRemarks[i];
                     tempCharmask[i] = true;
                     numberOfCharacters++;
                 }
@@ -208,6 +214,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                     teamMembers[i] = null;
                     tempCharmask[i] = false;
                 }
+
                 var candidate = player.CandidateCharacters[i - 1];
                 if (candidate != null)
                 {
@@ -228,11 +235,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                 }
             }
 
-            var helpDatas = string.IsNullOrEmpty(player.Loadout?.HelpLevelsJson)
-                ? Array.Empty<int>()
-                 : JsonSerializer.Deserialize<int[]>(player.Loadout.HelpLevelsJson) ?? Array.Empty<int>();
-
-            var teamInfo = new ExtendedInfo
+            var teamInfo = new TeamExtendedInfo
             {
                 TeamName = player.Core.TeamName,
                 TeamLevel = player.Core.RankEnum,
@@ -242,8 +245,14 @@ namespace KvizCommando.Server.Services.DtoMapping
                 TotalMembers = numberOfCharacters,
                 MaxMembers = RankRewards.List[player.Core.RankEnum].MaxCharacters,
                 TeamBonus = RankRewards.List[player.Core.RankEnum].WinBonus,
-                Credits = player.Core.Credit
+                Credits = player.Core.Credit,
+                MembRemarks = membRemarks
+                
             };
+           
+            var help = HelpResolver(player.Loadout?.HelpLevelsJson, teamInfo.Level, teamInfo.DevPoints);
+
+            var footer = TeamFooterResolver(teamInfo, help.CanDev); 
 
             var teamDto = new TeamDtos
             {
@@ -251,18 +260,8 @@ namespace KvizCommando.Server.Services.DtoMapping
                 TeamMembers = teamMembers,
                 Candidates = candidates,
                 CharCatMask = tempCharmask,
-                Help = new HelpDto
-                {
-                    Skill = new SkillPartial[4]
-                    {
-                        ConvertSkillPartial(helpDatas[0], player.Core.RankEnum, RankConstants.maxLevels[12], RankConstants.startLevels[12] - 1),
-                        ConvertSkillPartial(helpDatas[1], player.Core.RankEnum, RankConstants.maxLevels[13], RankConstants.startLevels[13] - 1),
-                        ConvertSkillPartial(helpDatas[2], player.Core.RankEnum, RankConstants.maxLevels[14], RankConstants.startLevels[14] - 1),
-                        ConvertSkillPartial(helpDatas[3], player.Core.RankEnum, RankConstants.maxLevels[15], RankConstants.startLevels[15] - 1)
-                    },
-                    HelpVolumes = helpDatas.Skip(4).Take(4).ToArray(),
-                    Category = new byte[4] { 101, 102, 103, 104 }
-                }
+                Help = help,
+                FooterInfo = footer
             };
 
             return teamDto;
@@ -441,36 +440,7 @@ namespace KvizCommando.Server.Services.DtoMapping
         /// <summary>
         /// Itt vanna az osztály privát helperei
         /// </summary>
-     
-        private AttidtudeDto ConvertAttitude(AttitudeBranch attitude, int rank, int max1, int max2)
-        {
-            int modifier1 = 21 - max1;
-            int modifier2 = 21 - max2;
-            return new AttidtudeDto
-            {
-                Category = attitude.CatNo.Take(4).Select(x => (byte)x).ToArray(),
-                Skill = new SkillPartial[4]
-                {
-                    ConvertSkillPartial(attitude.Level[0], rank, max1,modifier1),
-                    ConvertSkillPartial(attitude.Level[1], rank, max1,modifier1),
-                    ConvertSkillPartial(attitude.Level[2], rank, max2,modifier2),
-                    ConvertSkillPartial(attitude.Level[3], rank, max2,modifier2)
-                },
-            };
-        }
-        private SkillPartial ConvertSkillPartial(int currentLevel, int actualRank, int maxLevel, int startmodifier)
-        {
-            int maxmodify = Math.Max(0, actualRank - startmodifier);
-            int maxlevel = Math.Min(maxLevel, maxmodify);
-            maxlevel = Math.Max(0, maxlevel);
-            return new SkillPartial
-            {
-                lvlCurrent = (byte)currentLevel,
-                lvlCurMax = (byte)maxlevel,
-                lvlOvrMax = (byte)maxLevel,
-            };
-        }
-        private ResultDto[] GetCatResultFromCache(List<PlayerCategoryStat> data)
+        private static ResultDto[] GetCatResultFromCache(List<PlayerCategoryStat> data)
         {
             int ix;
             var result = new ResultDto[data.Count + 1];
@@ -488,7 +458,7 @@ namespace KvizCommando.Server.Services.DtoMapping
             }
             return result;
         }
-        private ResultDto[] GetOriResultFromCache(List<PlayerOrientStat> data)
+        private static ResultDto[] GetOriResultFromCache(List<PlayerOrientStat> data)
         {
             int ix;
             var result = new ResultDto[data.Count + 1];
@@ -506,7 +476,96 @@ namespace KvizCommando.Server.Services.DtoMapping
             }
             return result;
         }
+        private static AttidtudeDto AttitudeResolver(AttitudeBranch attitude, int rank, int[] maxLevels, int[] startLevels, int devPoints)
+        {
+            var skill = SkillResolver(attitude.Level, rank, maxLevels, startLevels);
+            return new AttidtudeDto
+            {
+                Category = attitude.CatNo.Take(4).Select(x => (byte)x).ToArray(),
+                Skill = skill,
+                CanDev = skill.Any(x => x.SkillCanDev) && devPoints > 0
+            };
+        }
+        private static SkillPartial[] SkillResolver(int[] data, int mainActLevel, int[] constMaxLev, int[] constStartLev)
+        {
+            var sp = new SkillPartial[data.Length];
+            for (int i = 0; i < data.Length; i++)
+            {
+                sp[i] = SkillPartialResolver(data[i], mainActLevel, constMaxLev[i], constStartLev[i] - 1);
+            }
+            return sp;
+        }
+        private static SkillPartial SkillPartialResolver(int currentLevel, int actualRank, int maxLevel, int startmodifier)
+        {
+            int maxmodify = Math.Max(0, actualRank - startmodifier);
+            int maxlevel = Math.Min(maxLevel, maxmodify);
+            maxlevel = Math.Max(0, maxlevel);
+            return new SkillPartial
+            {
+                LvlCurrent =(byte)currentLevel,
+                LvlCurMax = (byte)maxlevel,
+                LvlOvrMax = (byte)maxLevel,
+                SkillCanDev = (byte)currentLevel< (byte)maxlevel
+            };
+        }
+        private static MembRemark RemarkResolver(TeamMemberDto mem, int teamPoints, int teamLevel)
+        {
+            if (mem.EnergyPoints <= 0)
+                return mem.SkillPoints > 0 ? MembRemark.Heal : MembRemark.Fire;
 
+            if (mem.NextXp <= mem.MemberXp && mem.Level < teamLevel)
+                if (mem.MemberLvl == 21)
+                    return MembRemark.Retire;
+                else if (teamPoints > 0)
+                    return MembRemark.Promote;
 
+            if (mem.SkillPoints > 0 && (mem.SecondAttitude.CanDev || mem.GenderAttitude.CanDev))
+                return MembRemark.Develop;
+
+            return MembRemark.None;
+        }
+        private static HelpDto HelpResolver (string helpDatasJson, int rank, int teamDevPoints ) 
+        {
+            var helpDatas = string.IsNullOrEmpty(helpDatasJson)
+               ? [0,0,0,0,0,0,0,0]
+               : JsonSerializer.Deserialize<int[]>(helpDatasJson) ?? [0, 0, 0, 0, 0, 0, 0, 0];
+
+            var helpSkill = SkillResolver(helpDatas[0..3],rank, RankConstants.maxLevels[12..15], RankConstants.startLevels[12..15]);
+
+            return new HelpDto 
+            {
+                Skill = helpSkill,
+                CanDev = helpSkill.Any(x => x.SkillCanDev) && teamDevPoints > 0,
+                HelpVolumes = [.. helpDatas.Skip(4).Take(4)],
+                Category = [101, 102, 103, 104]
+            }; 
+        }
+        private static TeamFooterInfo TeamFooterResolver(TeamExtendedInfo info, bool helpDev) 
+        {
+            var retire = info.MembRemarks.Count(x => x == MembRemark.Retire);
+            var fire = info.MembRemarks.Count(x => x == MembRemark.Fire);
+            var promote = info.MembRemarks.Count(x => x == MembRemark.Promote);
+            var heal = info.MembRemarks.Count(x => x == MembRemark.Heal);
+            var help = helpDev ? 1 : 0;
+
+            return new TeamFooterInfo 
+                {
+                    TeamOpRequired=retire+fire+promote+heal+help,
+                    MemberOpRequired=info.MembRemarks.Count(x => x== MembRemark.Develop),
+                    FreePositions=Math.Max(info.MaxMembers-info.TotalMembers,0),
+                };
+        }
     }
 }
+
+/*
+ bool isHelpDevelope;
+            var helpSkill = new SkillPartial[]
+                {
+                        ConvertSkillPartial(helpDatas[0], player.Core.RankEnum, RankConstants.maxLevels[12], RankConstants.startLevels[12] - 1),
+                        ConvertSkillPartial(helpDatas[1], player.Core.RankEnum, RankConstants.maxLevels[13], RankConstants.startLevels[13] - 1),
+                        ConvertSkillPartial(helpDatas[2], player.Core.RankEnum, RankConstants.maxLevels[14], RankConstants.startLevels[14] - 1),
+                        ConvertSkillPartial(helpDatas[3], player.Core.RankEnum, RankConstants.maxLevels[15], RankConstants.startLevels[15] - 1)
+                };
+ 
+ */

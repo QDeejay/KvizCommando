@@ -1,7 +1,7 @@
 ﻿@inherits Utilities.KcComponentBase
 
 <div class="title">@vm.Rows[0].Label</div>
-<div class="list-grid bottom-extend @(TabPos==0 ? "gapped-rows" : "")">
+<div class="list-grid bottom-extend @(Selected==0 ? "gapped-rows" : "")">
     
     
     @for (int i = 1; i < vm.Rows.Count; i++)
@@ -14,15 +14,15 @@
         
         @if (vm.Rows[0].Column1 == "False")
         {
-            colorColumn = row < 7 ? "color: green;" : "color: red;";
+            _colorColumn = row < 7 ? "color: green;" : "color: red;";
         }
         else
         {
-            colorColumn = string.Empty;
+            _colorColumn = string.Empty;
         }
         <div class="datacol-1">@vm.Rows[row].Label</div>
         <div class="datacol-2">@vm.Rows[row].Column1</div>
-        <div class="datacol-3" style="@colorColumn">@vm.Rows[row].Column2</div>
+        <div class="datacol-3" style="@_colorColumn">@vm.Rows[row].Column2</div>
         <div class="datacol-4">
             @if (vm.Rows[row].action > 100)
             {

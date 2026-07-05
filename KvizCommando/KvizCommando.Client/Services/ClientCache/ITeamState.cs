@@ -9,7 +9,7 @@ namespace KvizCommando.Client.Services.ClientCache
         TeamMemberDto[]? TeamMembers { get; }
         CandidateDto[]? Candidates { get; }
         bool[]? Charmask { get; }
-        ExtendedInfo? TeamInfo { get; }
+        TeamExtendedInfo? TeamInfo { get; }
         HelpDto? Help { get; }
         Task EnsureLoadedAsync();
         Task RefreshAsync();
