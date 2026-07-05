@@ -18,7 +18,7 @@ namespace KvizCommando.Client.Pages.Question.Components
         [CascadingParameter]
         private AppState AppStates { get; set; } = default!;
         [Inject] private CategoryOptionHelpers CatHelper { get; set; } = default!;
-        [Parameter] public EventCallback<int[]> SaveSlots { get; set; } = default!;
+        [Parameter] public Func<int[], Task>? SaveSlots { get; set; }
 
         private const int ROW_COUNT = 10;
 
@@ -50,8 +50,8 @@ namespace KvizCommando.Client.Pages.Question.Components
         {
             if (!IsDirty) return;
             StopEdit();
-            if (SaveSlots.HasDelegate)
-                await SaveSlots.InvokeAsync(_workingCodes);
+            if (SaveSlots is not null)
+                await SaveSlots.Invoke(_workingCodes);
             (_originalCodes, _workingCodes) = QuestionHelper.CloneFactorySlots(FactSlots);
         }
         private void OnEditorKeyDown(KeyboardEventArgs e)
@@ -66,3 +66,8 @@ namespace KvizCommando.Client.Pages.Question.Components
         }
     }
 }
+
+//(_originalCodes, _workingCodes) = QuestionHelper.CloneFactorySlots(FactSlots);
+//[Parameter] public EventCallback<int[]> SaveSlots { get; set; } = default!;
+//if (SaveSlots.HasDelegate)
+//  await SaveSlots.InvokeAsync(_workingCodes);

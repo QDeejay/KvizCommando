@@ -12,19 +12,7 @@
 <LangGuard Culture=@culture Module="team" OnReady="BoxReady">
      @if (_isLoaded == true)
 {
-        <KcModal @ref="teamModal"
-                 Id="teamModal"
-          
-                 OnCloseAction="CloseModalAction"
-                 @if (ModalOption>0)
-                 {
-                 <TModalRender mode="@ModalOption"
-                                  tabPosH="@activeHTab"
-                                  canNo="@selectedCandidateId"
-                                  Candidate="@_tState.Candidates![activeHTab]"
-                                  TeamMember="@SelectedMember" />
-                 }
-                 </KcModal>
+       
       <PageContainer>
 
 
@@ -40,7 +28,9 @@
                                   
 
                     <Content1>
-                        <UpperBlockDisplay DatatoProc="@_generalInfo"/>    
+                    <CascadingValue Value="@Selected">
+                        <UpperBlockDisplay />
+                    </CascadingValue>
                     </Content1>
                     <Content2>
                         <BottomBlockDisplay InputData="@_tState.Snapshot"

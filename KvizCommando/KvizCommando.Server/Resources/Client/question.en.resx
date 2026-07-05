@@ -153,9 +153,6 @@
   <data name="Button.Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
-  <data name="Button.Handle" xml:space="preserve">
-    <value>Manage</value>
-  </data>
   <data name="Button.Move" xml:space="preserve">
     <value>Move</value>
   </data>
@@ -167,12 +164,6 @@
   </data>
   <data name="Button.Send" xml:space="preserve">
     <value>Send</value>
-  </data>
-  <data name="Button.ToPending" xml:space="preserve">
-    <value>&gt;&gt;</value>
-  </data>
-  <data name="Button.ToUsr" xml:space="preserve">
-    <value>&lt;&lt;</value>
   </data>
   <data name="Label.AnswerNg" xml:space="preserve">
     <value>Bad answer</value>

@@ -39,8 +39,25 @@ namespace KvizCommando.Client.Features.Team
 
             return vm;
         }
+        /*
+        public static  BottomBlockViewModel BuildTeamBottom(TeamDtos teamDto, string culture)
+        {
+            var vm = new BottomBlockViewModel();
+            vm.Rows.Add(
+                new BottomBlockRow(
+                     lang["team.Label.TeamName"] + ":", true.ToString(), "", "", 0
+                )
+            );
 
-        private void BuildTeamRows(TeamDtos input, BottomBlockViewModel vm, string culture)
+            BuildTeamRows(teamDto, vm, culture, lang);
+
+
+            return vm;
+        }
+        */
+
+
+        private  void BuildTeamRows(TeamDtos input, BottomBlockViewModel vm, string culture)
         {
             foreach (int j in Enumerable.Range(1, 8))
             {
@@ -103,7 +120,7 @@ namespace KvizCommando.Client.Features.Team
                 modifier+1
             );
         }
-        private BottomBlockRow BuildMainSkillRow(int skillno,int cat, int level, string levelshort, string culture)
+        private static BottomBlockRow BuildMainSkillRow(int skillno,int cat, int level, string levelshort, string culture)
         {
             double val = ModifierTable.DataMainSkill[skillno].StartValue + (level-1) * ModifierTable.DataMainSkill[skillno].StepValue;
             string prefix = val > 0 ? "+" : "";
@@ -115,7 +132,7 @@ namespace KvizCommando.Client.Features.Team
                 0
                 );
         }
-        private (string, int) GetRemark(TeamMemberDto mem, int teampoints, int teamlevel)
+        private  (string, int) GetRemark(TeamMemberDto mem, int teampoints, int teamlevel)
         {
             if (mem.EnergyPoints <= 0)
                 return (mem.SkillPoints>0 ? (_lang["team.modal.Button.Heal"],400) : (_lang["team.modal.Button.Fire"],300));

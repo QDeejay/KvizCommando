@@ -199,7 +199,7 @@ namespace KvizCommando.Client.Features.Team
                 _orient2 = member.SecondAttitude.Category[0] > 8 ? member.SecondAttitude.Category[2] : member.SecondAttitude.Category[0]
             }; 
         }
-        private void AttitudeLineResolver(AttidtudeDto att, PromoteModalView vm, int[] slevel, int level, string culture)
+        private static void AttitudeLineResolver(AttidtudeDto att, PromoteModalView vm, int[] slevel, int level, string culture)
         {
             int actL = level-1;
             int newL = level;
@@ -228,7 +228,7 @@ namespace KvizCommando.Client.Features.Team
                 
             }
         }
-        private string GenreColorResolver(string pictureCode)
+        private static string GenreColorResolver(string pictureCode)
         {
             if (string.IsNullOrEmpty(pictureCode))
                 return "unknown";

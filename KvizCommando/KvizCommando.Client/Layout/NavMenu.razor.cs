@@ -16,7 +16,6 @@ namespace KvizCommando.Client.Layout
 
 
         private bool _isReady ;
-        private int ActPageGroup;
         private string[] btnNavClass = new string[16];
         private const string btnNavClassDef = "navigation-button";
         private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
@@ -24,7 +23,6 @@ namespace KvizCommando.Client.Layout
         {
             if (Hs != null)
             {
-                ActPageGroup = 0;
                 btnNavClass[0] = btnNavClassDef; // Home Allways on
                 btnNavClass[1] = btnNavClassDef + (!Hs.Team.Enable ? " disabled" : "");     // Team 
                 btnNavClass[2] = btnNavClassDef + (!Hs.Question.Enable ? " disabled" : ""); // Question

@@ -65,7 +65,17 @@ namespace KvizCommando.Client.Layout
                 await InitStatesAsync(0);
                 _isLoggedIn = true;
             }
-            else { _isLoggedIn = false; }
+            else { 
+                _isLoggedIn = false;
+                var page = Ui.Nav.ToBaseRelativePath(Ui.Nav.Uri);
+
+                if (!string.IsNullOrEmpty(page))
+                {
+                    Ui.Nav.NavigateTo("/", true);
+                    return;
+                }
+
+            }
             if (Audio.EnteredNormal)
             {
                 Console.WriteLine("Playing music because EnteredNormal is true.");
@@ -114,7 +124,6 @@ namespace KvizCommando.Client.Layout
         {
             _ = _mainModal!.HideAsync();
         }
-
         private void ModalAction(ModalResult result)
         {
             Ui.Modal.SendResult(result);

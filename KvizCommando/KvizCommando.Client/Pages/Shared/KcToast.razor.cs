@@ -1,13 +1,6 @@
-﻿using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService;
-using KvizCommando.Client.Utilities;
+﻿using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Shared.Models.Enums;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 
 namespace KvizCommando.Client.Pages.Shared
@@ -21,7 +14,7 @@ namespace KvizCommando.Client.Pages.Shared
 
         protected override void OnInitialized()
         {
-           Toast.OnChanged += ToastChanged;
+            Toast.OnChanged += ToastChanged;
         }
 
         //------------------------------------------------------
@@ -51,12 +44,36 @@ namespace KvizCommando.Client.Pages.Shared
                 _ => string.Empty
             };
         }
+        protected string GetBiIcon()
+        {
+            return Toast.Current?.Type switch
+            {
+                ToastType.Error => "bi bi-x-circle-fill",
+                ToastType.Success => "bi bi-check-circle-fill",
+                ToastType.Warning => "bi bi-exclamation-triangle-fill",
+                ToastType.Info => "bi bi-info-circle-fill",
+                _ => string.Empty
+            };
+
+        }
+
 
         //------------------------------------------------------
 
         public void Dispose()
         {
             Toast.OnChanged -= ToastChanged;
+            GC.SuppressFinalize(this);
         }
     }
 }
+/*
+ @if (Toast.IsVisible && Toast.Current is not null)
+{GC.SuppressFinalize(this);
+    <div class="kc-toast @GetCssClass()">
+       
+    </div>
+}
+
+ 
+ */

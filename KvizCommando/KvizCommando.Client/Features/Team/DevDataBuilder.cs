@@ -52,7 +52,7 @@ namespace KvizCommando.Client.Features.Team
             return model;
         }
 
-        private (string, int) ResolveHeaderType(int tabPos, IGeneralInfo info)
+        private static  (string, int) ResolveHeaderType(int tabPos, IGeneralInfo info)
         {
             if (info is ExtendedInfo) 
             {
@@ -69,7 +69,7 @@ namespace KvizCommando.Client.Features.Team
             return ("Help", 12);
         }
 
-        private AttidtudeDto ResolveAttitude(IGeneralInfo info, int tabPos, HelpDto help)
+        private static AttidtudeDto ResolveAttitude(IGeneralInfo info, int tabPos, HelpDto help)
         {
             if (info is ExtendedInfo)
                 return help;

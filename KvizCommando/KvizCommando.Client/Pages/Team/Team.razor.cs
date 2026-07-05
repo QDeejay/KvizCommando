@@ -44,6 +44,9 @@ namespace KvizCommando.Client.Pages.Team
         private int selectedMemberId = 0;
         private string MessageTeam = string.Empty;
         private bool isTeamSuccess = false;
+
+        private int Selected => activeHTab;
+
         private (bool[], string[]) tabHEnabled => BuildTabHEnabled();
         private bool picTabEnable => pictureCode != string.Empty;
         protected override async Task OnInitializedAsync()
@@ -257,3 +260,20 @@ namespace KvizCommando.Client.Pages.Team
         }
     }
 }
+/*
+ 
+ <KcModal @ref="teamModal"
+                 Id="teamModal"
+          
+                 OnCloseAction="CloseModalAction"
+                 @if (ModalOption>0)
+                 {
+                 <TModalRender mode="@ModalOption"
+                                  tabPosH="@activeHTab"
+                                  canNo="@selectedCandidateId"
+                                  Candidate="@_tState.Candidates![activeHTab]"
+                                  TeamMember="@SelectedMember" />
+                 }
+                 </KcModal>
+ 
+ */

@@ -57,5 +57,11 @@
   "Label.Class": "Osztály",
   "Button.Modify": "Módosít",
   "modal.Text.Promote2": "Az elöléptetés ingyenes, mert változik  a rang osztálya is!",
-  "Label.PopUp.NoFree": "Jelenleg nincs szabad pozició!"
+  "Label.PopUp.NoFree": "Jelenleg nincs szabad pozició!",
+  "Box.Footer.Team": "Művelet szükséges: {0}",
+  "Box.Footer.Member": "Művelet szükséges: {0}",
+  "Box.Footer.Recruit": "Szabad hely: {0}",
+  "Box.Title.TeamOverview": "Csapat áttekintés",
+  "Box.Title.Members": "Csapat tagok",
+  "Box.Title.Recruit": "Toborzás"
 }

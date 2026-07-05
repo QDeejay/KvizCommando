@@ -156,8 +156,15 @@ main {
     display: flex;
     flex-direction: column;
     overflow-y: auto; /* <<< GÖRGETÉS engedélyezése */
+    /* Firefox */
+    scrollbar-width: none;
+    /* IE / régi Edge */
+    -ms-overflow-style: none;
 }
-
+    /* Chrome / Edge / Safari */
+    .kc-mainlayout-content-container::-webkit-scrollbar {
+        display: none;
+    }
 .kc-collapse-btn {
     background-color: transparent;
     border: none;

@@ -1,5 +1,6 @@
 ﻿using KvizCommando.Client.Features.Team;
 using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
@@ -8,7 +9,7 @@ using System.Reflection.PortableExecutable;
 
 namespace KvizCommando.Client.Pages.Team.Components
 {
-    public partial class BottomBlockDisplay
+    public partial class BottomBlockDisplay: KcComponentBase
     {
         [Inject] private BottomBlockDataBuilder Builder { get; set; } = default!;
         [Parameter] public TeamDtos InputData { get; set; } = default!;

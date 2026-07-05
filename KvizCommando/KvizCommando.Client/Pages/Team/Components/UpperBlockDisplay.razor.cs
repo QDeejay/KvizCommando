@@ -1,22 +1,45 @@
 ﻿using KvizCommando.Client.Features.Team;
 using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Pages.Question.Components;
+using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
 
 namespace KvizCommando.Client.Pages.Team.Components
 {
-    public partial class UpperBlockDisplay
+    public partial class UpperBlockDisplay 
     {
-        [Inject] private UpperBlockDataBuilder UpperBuilder { get; set; } = default!;
-        [Parameter] public IGeneralInfo DatatoProc { get; set; } = default!;
-        [Parameter] public int UsedSkillPoints { get; set; } = 0;
+        [CascadingParameter]
+        private AppState AppStates { get; set; } = default!;
+
+        [CascadingParameter]
+        private int Selected { get; set; }
+        [Inject] private  ILanguageService Lang { get; set; } = default!;
+        //[Parameter] public int UsedSkillPoints { get; set; } = 0;
 
         private UpperBlockViewModel vm = new();
-        private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+        private bool _shouldBeShow = false;
+        private string Culture => AppStates.Culture;
+        private ExtendedInfo Info => AppStates.Team!.TeamInfo;
+        private TeamMemberDto Member => AppStates.Team!.TeamMembers![Selected] ?? new TeamMemberDto();
+
+
         protected override void OnParametersSet()
         {
-            vm = UpperBuilder.Build(DatatoProc, UsedSkillPoints, culture);
+            _shouldBeShow = true;
+            if (Selected == 0)
+                vm = UpperBlockDataBuilder.BuildTeamHeader(Info, 0, Lang);
+            else
+            {
+                if (AppStates.Team!.CharCatMask[Selected - 1])
+                    vm = UpperBlockDataBuilder.BuildMemberHeader(Member, 0, Culture, Lang);
+                else
+                    _shouldBeShow = false;
+            }
+               
         }
     }
 }

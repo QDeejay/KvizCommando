@@ -294,4 +294,22 @@
   <data name="Label.PopUp.NoFree" xml:space="preserve">
     <value>Jelenleg nincs szabad pozició!</value>
   </data>
+  <data name="Box.Footer.Team" xml:space="preserve">
+    <value>Művelet szükséges: {0}</value>
+  </data>
+  <data name="Box.Footer.Member" xml:space="preserve">
+    <value>Művelet szükséges: {0}</value>
+  </data>
+  <data name="Box.Footer.Recruit" xml:space="preserve">
+    <value>Szabad hely: {0}</value>
+  </data>
+  <data name="Box.Title.TeamOverview" xml:space="preserve">
+    <value>Csapat áttekintés</value>
+  </data>
+  <data name="Box.Title.Members" xml:space="preserve">
+    <value>Csapat tagok</value>
+  </data>
+  <data name="Box.Title.Recruit" xml:space="preserve">
+    <value>Toborzás</value>
+  </data>
 </root>

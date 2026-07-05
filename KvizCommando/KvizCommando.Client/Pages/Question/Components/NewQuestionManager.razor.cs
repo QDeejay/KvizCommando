@@ -19,7 +19,7 @@ namespace KvizCommando.Client.Pages.Question.Components
         private int SelectedId { get; set; }
 
         [Inject] private CategoryOptionHelpers CatHelper { get; set; } = default!;
-        [Parameter] public EventCallback<NewQuestionRequest> OnSendQuestion { get; set; }
+        [Parameter] public Func<NewQuestionRequest, Task>? OnSendQuestion { get; set; }
 
         private const int LENGHT_AREA_BOX = 200;
         private const int LENGHT_ANSWER_BOX = 40;
@@ -43,8 +43,8 @@ namespace KvizCommando.Client.Pages.Question.Components
         private async Task OnSaveQuestionAsync()
         {
             _formData.SlotNo = SelectedId;
-            if (OnSendQuestion.HasDelegate)
-                await OnSendQuestion.InvokeAsync(_formData);
+            if (OnSendQuestion is not null)
+                await OnSendQuestion.Invoke(_formData);
         }
         private void StopEdit()
         {
@@ -66,5 +66,9 @@ namespace KvizCommando.Client.Pages.Question.Components
         }
     }
 }
+//[Parameter] public EventCallback<NewQuestionRequest> OnSendQuestion { get; set; }
+
+//if (OnSendQuestion.HasDelegate)
+//    await OnSendQuestion.InvokeAsync(_formData);
 
 

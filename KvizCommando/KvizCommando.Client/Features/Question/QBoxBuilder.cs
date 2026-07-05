@@ -8,7 +8,7 @@ using System;
 
 namespace KvizCommando.Client.Features.Question
 {
-    public static class QBtnBoxBuilder
+    public static class QBoxBuilder
     {
         public static readonly string[] Root = Enum.GetNames<QBoxKeyRoot>();
         public static readonly string[] SubFact = [QBoxKeyContent.FactSlots.ToString()];
@@ -16,14 +16,16 @@ namespace KvizCommando.Client.Features.Question
         public static readonly string[] SubPend = [QBoxKeyContent.PendigSlots.ToString()];
         public static readonly string[] SubNew = [QBoxKeyContent.NewSlot.ToString()];
 
-        public static Dictionary<string, ContentBoxVm> BuildBoxes(QuestionExtendedInfo qs, ILanguageService lang)
+        public static Dictionary<string, ContentBoxVm> BuildBoxes(QuestionExtendedInfo qs, QuestionCallbacks qCallBacks , ILanguageService lang)
         {
-            var dict = new Dictionary<string, ContentBoxVm>(QuestionButtonSpecs.Specs.Count);
+            var dict = new Dictionary<string, ContentBoxVm>(QuestionBoxSpecs.Specs.Count);
 
-            foreach (var spec in QuestionButtonSpecs.Specs)
+            foreach (var spec in QuestionBoxSpecs.Specs)
             {
                 var btn = spec;
                 var footer = string.IsNullOrEmpty(spec.TitleKey);
+                var bodyParams = spec.BodyComp is not null ? spec.BuildParams(qCallBacks) : [];
+                Console.WriteLine(spec.Key);
                 dict[btn.Key.ToString()] = new ContentBoxVm
                 {
                     Header = footer ? spec.BuildBoxText(lang, qs) : lang[spec.TitleKey],
@@ -36,22 +38,13 @@ namespace KvizCommando.Client.Features.Question
                     ClickId = spec.ClickId,
                     LcdDisplay = spec.LcdBackground,
                     RenderContent = spec.RenderContent,
-                    ButtonBarVisible = spec.ButtonBar,
-                    BodyComponent = spec.BodyComponent
+                    BodyComponent = spec.BodyComp,
+                    BodyParameters= bodyParams
                 };
             }
+            
             return dict;
         }
        
-    }
-    public static class BxOrdQuest
-    {
-        public static readonly string[] Root = Enum.GetNames<QBoxKeyRoot>();
-       
-        public static readonly string[] Fact = [QBoxKeyContent.FactSlots.ToString()];
-        public static readonly string[] Usr =  [QBoxKeyContent.UsrSlots.ToString()];
-        public static readonly string[] Pend = [QBoxKeyContent.PendigSlots.ToString()];
-        public static readonly string[] New =  [QBoxKeyContent.NewSlot.ToString()];
-
     }
 }

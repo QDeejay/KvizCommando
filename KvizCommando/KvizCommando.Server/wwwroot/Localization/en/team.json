@@ -57,5 +57,11 @@
   "Label.Class": "Class",
   "Button.Modify": "Modify",
   "modal.Text.Promote2": "The promotion is free, because of rank class changing!",
-  "Label.PopUp.NoFree": "Curremtly there is no vaccant position!"
+  "Label.PopUp.NoFree": "Curremtly there is no vaccant position!",
+  "Box.Footer.Team": "Operation required: {0}",
+  "Box.Footer.Member": "Operation required: {0}",
+  "Box.Footer.Recruit": "Free position:{0}",
+  "Box.Title.TeamOverview": "Team overview",
+  "Box.Title.Members": "Team members",
+  "Box.Title.Recruit": "Recruiting"
 }

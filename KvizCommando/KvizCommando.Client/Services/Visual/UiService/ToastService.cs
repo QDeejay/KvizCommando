@@ -34,7 +34,6 @@ namespace KvizCommando.Client.Services.Visual.UiService
 
         public async Task Show(string text, ToastType type)
         {
-            Console.WriteLine(GetHashCode());
             var toast = new ToastMessage
             {
                 Text = text,
@@ -60,12 +59,11 @@ namespace KvizCommando.Client.Services.Visual.UiService
             _version++;
 
             IsVisible = false;
-            Current = null;
-
             OnChanged?.Invoke();
 
-            ShowNext();
+            _ = FinishCloseAsync();
         }
+
 
         //----------------------------------------------------
 
@@ -93,6 +91,7 @@ namespace KvizCommando.Client.Services.Visual.UiService
 
         private async Task AutoCloseAsync()
         {
+           
             int version = ++_version;
 
             await Task.Delay(3000);
@@ -101,6 +100,16 @@ namespace KvizCommando.Client.Services.Visual.UiService
                 return;
 
             Close();
+        }
+        private async Task FinishCloseAsync()
+        {
+            await Task.Delay(250);   // ugyanannyi mint a CSS hide animation
+
+            Current = null;
+
+            OnChanged?.Invoke();
+
+            ShowNext();
         }
     }
 }

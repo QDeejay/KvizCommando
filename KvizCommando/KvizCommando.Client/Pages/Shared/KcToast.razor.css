@@ -1,7 +1,7 @@
 ﻿.kc-toast {
     position: fixed;
-    bottom: 70px;
-    right: 10px;
+    top: 180px;
+    right: 15px;
     width: 320px;
     min-height: 40px;
     display: flex;
@@ -9,17 +9,18 @@
     justify-content: space-between;
     gap: 8px;
     padding: 7px 16px;
-    background: #2d2d2d;
-    opacity:0.9;
-    border-left: 6px solid;
-    border-top: 3px solid;
-    border-bottom: 3px solid;
+    background: #0c1f17;
+    opacity: 0.85;
+    border-left: 8px solid;
+    border-top: 2px solid;
+    border-bottom: 2px solid;
     border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.75);
+    /* box-shadow: 0 8px 24px rgba(0,0,0,.75); animation: kcToastShow .25s ease;*/
     z-index: 3000;
-    animation: kcToastShow .25s ease;
 }
-
+.kc-toast-icon {
+    font-size:1.3rem
+}
 .kc-toast-message {
     flex: 1;
     font-size: .95rem;
@@ -37,44 +38,69 @@
     padding: 0;
     opacity: .6;
 }
-
+    .kc-toast-close:hover i,
     .kc-toast-close:hover {
         opacity: 1;
+        cursor: url('/Images/cursors/active.cur'), pointer;
     }
+
 
 /*---------------------------*/
 
 .kc-toast-error {
-    color: #ff9098;
+    color: #FF1744;
     border-color: #dc3545;
+    box-shadow: 0 8px 24px rgba(255, 23, 68,.65);
 }
 
 .kc-toast-success {
-    color: #74d89c;
-    border-color: #198754;
-}
-
-.kc-toast-warning {
-    color: #ffe38d;
-    border-color: #ffc107;
+    color: #00E676;
+    border-color: green;
+    box-shadow: 0 8px 24px rgba(0, 230, 118,.65);
 }
 
 .kc-toast-info {
-    color: #93bcff;
-    border-color: #0d6efd;
+    color: #00BFFF;
+    border-color: #0dcaf0;
+    box-shadow: 0 8px 24px rgba(0, 191, 255,.65);
+}
+
+.kc-toast-warning {
+    color: #FFD600;
+    border-color: #ffc107;
+    box-shadow: 0 8px 24px rgba(255, 214, 0,.65);
 }
 
 /*---------------------------*/
+.kc-toast.show {
+    animation: kcToastShow .25s ease forwards;
+}
+
+.kc-toast.hide {
+    animation: kcToastHide .25s ease forwards;
+}
 
 @keyframes kcToastShow {
 
     from {
         opacity: 0;
-        transform: translateX(40px);
+        transform: translateX(100px);
     }
 
     to {
-        opacity:1;
+        opacity:0.85;
         transform: translateX(0);
+    }
+}
+@keyframes kcToastHide {
+
+    from {
+        opacity: 85;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(50px);
     }
 }

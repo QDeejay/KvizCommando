@@ -5,15 +5,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace KvizCommando.Client.Features.Home;
 
-public static class HomeButtonsBuilder
+public static class HomeBoxBuilder
 {
     public static readonly string[] BtnOrder = Enum.GetNames<HomeBoxKey>();
 
     public static Dictionary<string, ContentBoxVm> Build(HomeScreen hs, ILanguageService lang)
     {
-        var dict = new Dictionary<string, ContentBoxVm>(HomeButtonSpecs.Specs.Count);
+        var dict = new Dictionary<string, ContentBoxVm>(HomeBoxSpecs.Specs.Count);
 
-        foreach (var spec in HomeButtonSpecs.Specs)
+        foreach (var spec in HomeBoxSpecs.Specs)
         {
             var dictKey = spec.Key.ToString();
             var btn = spec.Pick(hs); // ScreenButtonEntity a DTO-ból

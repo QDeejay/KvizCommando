@@ -16,14 +16,15 @@ namespace KvizCommando.Client.Features.Question
 { 
 
    
-    public sealed class QBoxSpecs : ButtonVm
+    public sealed class QBoxSpecs : VmSpecs
     {
         internal Enum Key { get; init; } = default!;
         internal Func <QuestionExtendedInfo,bool> CheckEnable { get; init; } = default!;
         internal Func<ILanguageService, QuestionExtendedInfo, string> BuildBoxText { get; init; } = default!;
+        internal Func<QuestionCallbacks, Dictionary<string, object?>> BuildParams { get; init; } = default!;
     }
 
-    public static class QuestionButtonSpecs
+    public static class QuestionBoxSpecs
     {
 
         public static readonly IReadOnlyList<QBoxSpecs> Specs = new[]
@@ -36,9 +37,7 @@ namespace KvizCommando.Client.Features.Question
                 CheckEnable = (qn) => true,
                 LcdBackground = false,
                 RenderContent = 0,
-                ButtonBar = false,
-                BodyComponent = null
-
+                BodyComp = null
             },
             new QBoxSpecs {
                 Key = QBoxKeyRoot.RtBtnUsr,
@@ -48,8 +47,7 @@ namespace KvizCommando.Client.Features.Question
                 CheckEnable = (qn) => qn.AvailableUserSlot>0,
                 LcdBackground = false,
                 RenderContent = 0,
-                ButtonBar = false,
-                BodyComponent = null
+                BodyComp = null
             },
             new QBoxSpecs {
                 Key = QBoxKeyRoot.RtBtnPendig,
@@ -59,8 +57,7 @@ namespace KvizCommando.Client.Features.Question
                 CheckEnable = (qn) => qn.AvailablePendingSlot>0,
                 LcdBackground = false,
                 RenderContent = 0,
-                ButtonBar = false,
-                BodyComponent = null
+                BodyComp = null
             },
             new QBoxSpecs {
                 Key = QBoxKeyRoot.RtBtnNew,
@@ -70,8 +67,7 @@ namespace KvizCommando.Client.Features.Question
                 CheckEnable = (qn) => qn.FreePendingSlot > 0,
                 LcdBackground = false,
                 RenderContent = 0,
-                ButtonBar = false,
-                BodyComponent = null
+                BodyComp = null
             },
             new QBoxSpecs {
                 Key = QBoxKeyContent.FactSlots,
@@ -81,8 +77,10 @@ namespace KvizCommando.Client.Features.Question
                 CheckEnable = (qn) => true,
                 LcdBackground = true,
                 RenderContent = 1,
-                ButtonBar = false,
-                BodyComponent = typeof(FactorySlotsBase)
+                BodyComp = typeof(FactorySlotsBase),
+                BuildParams = (cb) => new Dictionary<string, object?> {
+                    { ParamNames.SaveSlots.ToString(), cb.OnFactSave }
+                }
             },
             new QBoxSpecs {
                 Key = QBoxKeyContent.UsrSlots,
@@ -92,8 +90,12 @@ namespace KvizCommando.Client.Features.Question
                 CheckEnable = (qn) => true,
                 LcdBackground = true,
                 RenderContent = 1,
-                ButtonBar = false,
-                BodyComponent = typeof(UserSlotManager)
+                BodyComp = typeof(UserSlotManager),
+                BuildParams = (cb) => new Dictionary<string, object?> {
+                    { ParamNames.SelectedIdChanged.ToString(), cb.OnSelectId },
+                    { ParamNames.OnWatchButtonPushed.ToString(), cb.OnWatch },
+                    { ParamNames.OnHandleButtonPushed.ToString(), cb.OnDelete }
+                }
 
             },
             new QBoxSpecs {
@@ -104,8 +106,11 @@ namespace KvizCommando.Client.Features.Question
                 CheckEnable = (qn) => true,
                 LcdBackground = true,
                 RenderContent = 1,
-                ButtonBar= false,
-                BodyComponent = typeof(PendingSlotManager)
+                BodyComp = typeof(PendingSlotManager),
+                BuildParams = (cb) => new Dictionary<string, object?> {
+                    { ParamNames.SelectedIdChanged.ToString(), cb.OnSelectId },
+                    { ParamNames.OnHandleButtonPushed.ToString(), cb.OnHandle }
+                }
             },
             new QBoxSpecs {
                 Key = QBoxKeyContent.NewSlot,
@@ -115,8 +120,10 @@ namespace KvizCommando.Client.Features.Question
                 CheckEnable = (qn) => true,
                 LcdBackground = false,
                 RenderContent = 1,
-                ButtonBar= false,
-                BodyComponent = typeof(NewQuestionManager)
+                BodyComp = typeof(NewQuestionManager),
+                BuildParams = (cb) => new Dictionary<string, object?> {
+                    { ParamNames.OnSendQuestion.ToString(), cb.OnSend }
+                }
              }
         };
     }

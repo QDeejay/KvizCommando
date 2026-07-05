@@ -20,27 +20,8 @@
                 <div class="kc-lcd-wrapper">
                     <div class="kc-lcd-display--outer @(_vm.LcdDisplay ? "" : "lcd-off")">
                         <div class="kc-lcd-display--inner @(_vm.LcdDisplay ? "" : "lcd-off")">
-                            @switch (_vm.RenderContent)
-                            {
-                                case 1:
-                                    @ChildContent1
-                                    break;
-                                case 2:
-                                    @ChildContent2
-                                    break;
-                                case 3:
-                                    @ChildContent3
-                                    break;
-                                case 4:
-                                    @ChildContent4
-                                    break;
-                                default:
-                                    break;
-                            }
+                            @ContentBody
                         </div>
-                    </div>
-                    <div class="kc-btn-bar @(!_vm.ButtonBarVisible ? "hidden" : "")">
-                        @ChildContent5
                     </div>
                 </div>
                 

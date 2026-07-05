@@ -7,8 +7,7 @@ using KvizCommando.Shared.Models.Dtos;
 namespace KvizCommando.Client.Features.Sologame
 { 
 
-   
-    public abstract class SgameBtnSpecs : ButtonVm
+    public abstract class SgameBoxSpecs : VmSpecs
     {
 
         internal Enum Key { get; init; } = default!;
@@ -16,11 +15,11 @@ namespace KvizCommando.Client.Features.Sologame
         internal Func<SoloEnables,int, bool> BuildEnable { get; init; } = default!;
     }
 
-    public sealed class SgameBtnRoot : SgameBtnSpecs
+    public sealed class SgameBoxRoot : SgameBoxSpecs
     {
         internal Func<ILanguageService, SoloResults, string> BuildFooter { get; init; } = default!;
     }
-    public sealed class SgameBtnSub : SgameBtnSpecs
+    public sealed class SgameBoxSub : SgameBoxSpecs
     {
         internal int BtnQnty { get; init; }
         internal Func<int, string, string> BuildTitle { get; init; } = default!;
@@ -30,7 +29,7 @@ namespace KvizCommando.Client.Features.Sologame
 
     
 
-    public static class SoloButtonSpecs
+    public static class SoloBoxSpecs
     {
      
         private const int CatQnty = 16;
@@ -45,23 +44,23 @@ namespace KvizCommando.Client.Features.Sologame
            {
                 "","teologist","historian","artist","gamer","engineer","scientist","trendy","educated"
             };
-        public static readonly IReadOnlyList<SgameBtnRoot> RootSpecs = new[]
+        public static readonly IReadOnlyList<SgameBoxRoot> RootSpecs = new[]
         {
-            new SgameBtnRoot {
+            new SgameBoxRoot {
                 Key = SgameBoxKeyRoot.RtBtnCategory,
                 TitleKey = "solo.Button.Title.Categories",
                 ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = true, ClickId = 401,
                 BuildEnable = (se,ix) => se.EnaCategory,
                 BuildFooter = (lang, sr) => lang["solo.Button.Footer.Catandori"].FormatSafe(sr.CategoryResults[0].Points)
             },
-            new SgameBtnRoot {
+            new SgameBoxRoot {
                 Key = SgameBoxKeyRoot.RtBtnOrient,
                 TitleKey = "solo.Button.Title.Orients",
                 ImageSrc = "images/solo/orients.webp", Size = "wide", FooterDisplay = true, ClickId = 402,
                 BuildEnable = (se,ix) => se.EnaOrient,
                 BuildFooter =(lang, sr) => lang["solo.Button.Footer.Catandori"].FormatSafe(sr.OrientResults[0].Points)
             },
-            new SgameBtnRoot {
+            new SgameBoxRoot {
                 Key = SgameBoxKeyRoot.RtBtnCampaign,
                 TitleKey = "solo.Button.Title.Campaign",
                 ImageSrc = "images/solo/campaign.webp", Size = "wide", FooterDisplay = false, ClickId = 403,
@@ -69,9 +68,9 @@ namespace KvizCommando.Client.Features.Sologame
                 BuildFooter = (lang, sr) => ""
             },
         };
-        public static readonly IReadOnlyList<SgameBtnSub> SubSpecs = new[]
+        public static readonly IReadOnlyList<SgameBoxSub> SubSpecs = new[]
         {
-              new SgameBtnSub {
+              new SgameBoxSub {
                 Key = SgameBoxKeySub.BtnCat,
                 BtnQnty = CatQnty,
                 BuildTitle = (ix, cult) => CategoryNameLocalizer.GetCategory(ix,cult),
@@ -79,7 +78,7 @@ namespace KvizCommando.Client.Features.Sologame
                 BuildEnable = (se,ix) => se.EnaCat[ix],
                 BuildFooter = (lang,sr, ix) => lang["solo.Button.Footer.Games"].FormatSafe(sr.CategoryResults[ix].Points,sr.CategoryResults[ix].Time)
             },
-            new SgameBtnSub {
+            new SgameBoxSub {
                 Key = SgameBoxKeySub.BtnOri,
                 BtnQnty = OriQnty,
                 BuildTitle = (ix, cult) => OrientationLocalizer.GetOrientation(ix,cult),

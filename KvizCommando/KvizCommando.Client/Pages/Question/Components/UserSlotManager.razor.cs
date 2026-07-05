@@ -15,10 +15,9 @@ namespace KvizCommando.Client.Pages.Question.Components
 
         [CascadingParameter] 
         private int SelectedId { get; set; }
-
-        [Parameter] public EventCallback<int> SelectedIdChanged { get; set; } = default!;
-        [Parameter] public EventCallback OnWatchButtonPushed { get; set; } = default!;
-        [Parameter] public EventCallback OnHandleButtonPushed { get; set; } = default!;
+        [Parameter] public Action<int>? SelectedIdChanged { get; set; }
+        [Parameter] public Func<Task>? OnHandleButtonPushed { get; set; }
+        [Parameter] public Func<Task>? OnWatchButtonPushed { get; set; }
 
         private bool _isLoaded = false;
 
@@ -29,31 +28,30 @@ namespace KvizCommando.Client.Pages.Question.Components
 
         protected override async Task OnInitializedAsync()
         {
-            await OnSelect(100);
+            OnSelect(100);
+            await Task.Delay(1);
             _isLoaded = true;
         }
-
-        private async Task OnSelect(int id)
+        private void OnSelect(int id)
         {
             if (SelectedId == id)
-            {  
+            {
                 SelectedId = 100;
             }
             else SelectedId = id;
-            if (SelectedIdChanged.HasDelegate)
-                await SelectedIdChanged.InvokeAsync(SelectedId);
-            
+            if (SelectedIdChanged is not null)
+                SelectedIdChanged?.Invoke(SelectedId);
         }
 
         private async Task OnWatchButtonAsync()
         {
-            if (OnWatchButtonPushed.HasDelegate)
-                await OnWatchButtonPushed.InvokeAsync();
+            if (OnWatchButtonPushed is not null)
+                await OnWatchButtonPushed.Invoke();
         }
         private async Task OnHandleButtonAsync()
         {
-            if (OnHandleButtonPushed.HasDelegate)
-                await OnHandleButtonPushed.InvokeAsync();
+            if (OnHandleButtonPushed is not null)
+                await OnHandleButtonPushed.Invoke();
         }
 
         public void Dispose()
@@ -65,3 +63,17 @@ namespace KvizCommando.Client.Pages.Question.Components
         }
     }
 }
+
+
+
+//[Parameter] public EventCallback<int> SelectedIdChanged { get; set; } = default!;
+//[Parameter] public EventCallback OnWatchButtonPushed { get; set; } = default!;
+//[Parameter] public EventCallback OnHandleButtonPushed { get; set; } = default!;
+
+
+//if (OnHandleButtonPushed.HasDelegate)
+//  await OnHandleButtonPushed.InvokeAsync();
+//if (SelectedIdChanged.HasDelegate)
+//  await SelectedIdChanged.InvokeAsync(SelectedId);
+//if (OnWatchButtonPushed.HasDelegate)
+//  await OnWatchButtonPushed.InvokeAsync();

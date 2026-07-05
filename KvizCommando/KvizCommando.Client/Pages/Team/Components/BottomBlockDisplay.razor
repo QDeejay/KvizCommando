@@ -1,4 +1,6 @@
-﻿<div class="title">@vm.Rows[0].Label</div>
+﻿@inherits Utilities.KcComponentBase
+
+<div class="title">@vm.Rows[0].Label</div>
 <div class="list-grid bottom-extend @(TabPos==0 ? "gapped-rows" : "")">
     
     
@@ -42,7 +44,8 @@
             {
                 <div class="action-label"
                        @onclick="@(() => OnActionButtonPushed(row))">
-                       @vm.Rows[row].Remark</div>
+                    @Ui.Lang[vm.Rows[row].Remark]
+                </div>
             }
         </div>
 

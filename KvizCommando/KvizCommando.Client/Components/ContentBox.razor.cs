@@ -11,12 +11,9 @@ namespace KvizCommando.Client.Components
         [Parameter] public ContentBoxVm Vm { get; set; } = default!;
         [Parameter] public EventCallback<int> OnClick { get; set; }
         [Parameter] public EventCallback FooterClick { get; set; }
-        [Parameter] public RenderFragment? ChildContent1 { get; set; }
-        [Parameter] public RenderFragment? ChildContent2 { get; set; }
-        [Parameter] public RenderFragment? ChildContent3 { get; set; }
-        [Parameter] public RenderFragment? ChildContent4 { get; set; }
-        [Parameter] public RenderFragment? ChildContent5 { get; set; }
-        private ContentBoxVm _vm = new ContentBoxVm();
+        [Parameter] public RenderFragment? ContentBody { get; set; }
+    
+        private ContentBoxVm _vm = new();
         private bool _noContent = true;
         protected override void OnParametersSet()
         {

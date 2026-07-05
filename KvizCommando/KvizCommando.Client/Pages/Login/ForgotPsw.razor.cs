@@ -9,11 +9,6 @@ namespace KvizCommando.Client.Pages.Login
 {
     partial class ForgotPsw : KcComponentBase
     {
-
-        //[Inject] private NavigationManager Nav { get; set; } = default!;
-        //[Inject] private ILanguageService Lang { get; set; } = default!;
-        //[Inject] private IUserService Service { get; set; } = default!;
-
         readonly string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
         private ForgotPasswordRequestForm formData { get; set; } = new();
@@ -32,19 +27,11 @@ namespace KvizCommando.Client.Pages.Login
             else
             {
                 ColorSW = false;
-                var response = await User.ForgotPswAsync(formData);
-                if (response != null)
-                {
+                await User.ForgotPswAsync(formData);
                     Success = true;
                     ResultMessage = Ui.Lang["forgotosw.Succes.Email"];
                     formData.email = string.Empty;
-                    return;
-                }
-                else 
-                {
-                    return;
-                }
-                    
+                    return;  
             }
 
         }

@@ -19,12 +19,13 @@ namespace KvizCommando.Client.Services.Visual.UiService.Language
         {
             _js = js;
             _http = http;
-            Console.WriteLine($"[DI] LanguageService created: {GetHashCode()}");
-
         }
         public string this[string key] => Get(key);
         public string Get(string key)
         {
+            if (string.IsNullOrEmpty(key))
+                return string.Empty;
+
             return _translations.TryGetValue(key, out var value) ? value : $"#{key}";
         }
         public string GetFormatted(string key, params object[] args)

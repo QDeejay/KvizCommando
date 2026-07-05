@@ -294,4 +294,22 @@
   <data name="Label.PopUp.NoFree" xml:space="preserve">
     <value>Curremtly there is no vaccant position!</value>
   </data>
+  <data name="Box.Footer.Team" xml:space="preserve">
+    <value>Operation required: {0}</value>
+  </data>
+  <data name="Box.Footer.Member" xml:space="preserve">
+    <value>Operation required: {0}</value>
+  </data>
+  <data name="Box.Footer.Recruit" xml:space="preserve">
+    <value>Free position:{0}</value>
+  </data>
+  <data name="Box.Title.TeamOverview" xml:space="preserve">
+    <value>Team overview</value>
+  </data>
+  <data name="Box.Title.Members" xml:space="preserve">
+    <value>Team members</value>
+  </data>
+  <data name="Box.Title.Recruit" xml:space="preserve">
+    <value>Recruiting</value>
+  </data>
 </root>

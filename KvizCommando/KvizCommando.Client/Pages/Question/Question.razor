@@ -18,12 +18,12 @@
                  
                         <ContentBox Vm="@box"
                                     OnClick="OnBoxClick">
-                            <ChildContent1>
+                            <ContentBody>
                                 <CascadingValue Value="_selectedId">
                                         <DynamicComponent Type="@box.BodyComponent"
-                                                          Parameters="_bodyParams" />
+                                                  Parameters="@box.BodyParameters" />
                                 </CascadingValue>
-                            </ChildContent1>
+                            </ContentBody>
                         </ContentBox>
                     }
                 </div>

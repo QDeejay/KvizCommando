@@ -23,7 +23,7 @@ namespace KvizCommando.Client.Pages.Question
         private AppState AppStates { get; set; } = default!;
 
         private readonly Dictionary<string, ContentBoxVm> _boxes = [];
-        private Dictionary<string, object?> _bodyParams { get; } = [];
+        
         private string[] _boxOrder = [];
 
         private int _selectedId = 100;
@@ -35,12 +35,17 @@ namespace KvizCommando.Client.Pages.Question
         private bool LocNotShowStateDel => AppStates.LocStoreStates.ChkBxNotShowDel ?? false;
         private QuestionDtos QState => AppStates.Question!;
         private ContentBoxVm Box(string orx) => _boxes[orx];
-        private void OnSelectId(int id) => _selectedId = id;
-
         private void BuildBoxes()
         {
-
-            var boxes = QBtnBoxBuilder.BuildBoxes(QState.ExtendedInfo!, Ui.Lang);
+            var callback = new QuestionCallbacks {
+                OnFactSave = OnFactSaveAsync,
+                OnSelectId = OnSelectIdAsync,
+                OnDelete = OnDeleteUsrSlotAsync,
+                OnHandle = OnHandlePendSLotAsync,
+                OnWatch = OnWatchQuestionAsync,
+                OnSend = OnSaveToFormAsync
+            };
+            var boxes = QBoxBuilder.BuildBoxes(QState.ExtendedInfo!, callback, Ui.Lang);
             foreach (var box in boxes)
             {
                 _boxes[box.Key] = box.Value;
@@ -49,42 +54,34 @@ namespace KvizCommando.Client.Pages.Question
         }
         private void OnBoxClick(int boxId)
         {
-            InitBoxes();
-            var title = string.Empty;
+            _selectedId = 100;
+            _boxOrder = QBoxBuilder.Root;
+            var headerTitle = string.Empty;
             switch (boxId)
             {
                 case 1:
-                    title = (Ui.Lang["mainlayout.Header.Question"]);
+                    headerTitle = (Ui.Lang["mainlayout.Header.Question"]);
                     break;
                 case 101:
-                    _boxOrder = QBtnBoxBuilder.SubFact;
-                    title = _boxes[QBoxKeyRoot.RtBtnFactory.ToString()].Header;
-                    _bodyParams["SaveSlots"] = EventCallback.Factory.Create<int[]>(this, OnFactSaveAsync);
+                    _boxOrder = QBoxBuilder.SubFact;
+                    headerTitle = _boxes[QBoxKeyRoot.RtBtnFactory.ToString()].Header;
                     break;
                 case 102:
-                    _boxOrder = QBtnBoxBuilder.SubUsr;
-                    title = _boxes[QBoxKeyRoot.RtBtnUsr.ToString()].Header;
-                    _bodyParams["SelectedIdChanged"] = EventCallback.Factory.Create<int>(this, OnSelectId);
-                    _bodyParams["OnWatchButtonPushed"] = EventCallback.Factory.Create(this, OnWatchQuestionAsync);
-                    _bodyParams["OnHandleButtonPushed"] = EventCallback.Factory.Create(this, OnDeleteUsrSlotAsync);
+                    _boxOrder = QBoxBuilder.SubUsr;
+                    headerTitle = _boxes[QBoxKeyRoot.RtBtnUsr.ToString()].Header;
                     break;
                 case 103:
-                    _boxOrder = QBtnBoxBuilder.SubPend;
-                    title = _boxes[QBoxKeyRoot.RtBtnPendig.ToString()].Header;
-                    _bodyParams["SelectedIdChanged"] = EventCallback.Factory.Create<int>(this, OnSelectId);
-                    _bodyParams["OnHandleButtonPushed"] = EventCallback.Factory.Create(this, OnHandlePendSLotAsync);
-                    break;
+                    _boxOrder = QBoxBuilder.SubPend;
+                    headerTitle = _boxes[QBoxKeyRoot.RtBtnPendig.ToString()].Header; break;
                 case 104:
-                    _boxOrder = QBtnBoxBuilder.SubNew;
+                    _boxOrder = QBoxBuilder.SubNew;
                     _selectedId = Array.FindIndex(QState.PendingSlots!, x => x.Category == 0);
-                    title = _boxes[QBoxKeyRoot.RtBtnNew.ToString()].Header;
-                    _bodyParams["OnSendQuestion"] = EventCallback.Factory.Create<NewQuestionRequest>(this, OnSaveToFormAsync);
-                    break;
+                    headerTitle = _boxes[QBoxKeyRoot.RtBtnNew.ToString()].Header;break;
                 default:
-                    title = (Ui.Lang["mainlayout.Header.Question"]);
+                    headerTitle = (Ui.Lang["mainlayout.Header.Question"]);
                     break;
             }
-            Ui.Header.SetTitle(title, boxId);
+            Ui.Header.SetTitle(headerTitle, boxId);
             Ui.Header.SetBackBtnEna(boxId > 1);
             StateHasChanged();
         }
@@ -92,7 +89,7 @@ namespace KvizCommando.Client.Pages.Question
         protected override async Task OnInitializedAsync()
         {
             Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Question"], 1);
-            _boxOrder = QBtnBoxBuilder.Root;
+            _boxOrder = QBoxBuilder.Root;
             _isLoaded = true;
             if (_isReady == false)
                 BuildBoxes();
@@ -102,7 +99,7 @@ namespace KvizCommando.Client.Pages.Question
         {
             Ui.Header.OnBackBtnClicked += UpdateBckClick;
         }
-
+        private void OnSelectIdAsync(int id) => _selectedId = id;
         private async Task OnWatchQuestionAsync()
         {
             var vm = MBoxBuilder.BuildParam(ModalTypes.QCheckQuestion, Ui.Lang);
@@ -195,12 +192,6 @@ namespace KvizCommando.Client.Pages.Question
             await Ui.ReloadAsync();
             BuildBoxes();
         }
-        private void InitBoxes()
-        {
-            _selectedId = 100;
-            _boxOrder = QBtnBoxBuilder.Root;
-            _bodyParams.Clear();
-        }
         private void UpdateBckClick()
         {
             if (Ui.Header.PageIndex == 1)
@@ -217,3 +208,31 @@ namespace KvizCommando.Client.Pages.Question
 
     }  
 }
+/*
+ 
+
+
+            _bodyParams.Clear();
+                    //private Dictionary<string, object?> _bodyParams { get; } = [];
+                    //_bodyParams["SaveSlots"] = (Func<int[], Task>)OnFactSaveAsync;
+                    //_bodyParams["SelectedIdChanged"] = (Func<int, Task>)OnSelectId;
+                    //_bodyParams["OnWatchButtonPushed"] = (Func<Task>)OnWatchQuestionAsync;
+                    //_bodyParams["OnHandleButtonPushed"] = (Func<Task>)OnDeleteUsrSlotAsync;
+                    //_bodyParams["SelectedIdChanged"] = (Func<int, Task>)OnSelectId;
+                    //_bodyParams["OnHandleButtonPushed"] = (Func<Task>)OnHandlePendSLotAsync;
+
+
+
+                    //_bodyParams["OnSendQuestion"] = (Func<NewQuestionRequest, Task>)OnSaveToFormAsync;
+                    
+ * 
+ * ó
+ //_bodyParams["SaveSlots"] = EventCallback.Factory.Create<int[]>(this, OnFactSaveAsync);
+                    //_bodyParams["SelectedIdChanged"] = EventCallback.Factory.Create<int>(this, OnSelectId);
+                    //_bodyParams["OnWatchButtonPushed"] = EventCallback.Factory.Create(this, OnWatchQuestionAsync);
+                    //_bodyParams["OnHandleButtonPushed"] = EventCallback.Factory.Create(this, OnDeleteUsrSlotAsync);
+                    //_bodyParams["SelectedIdChanged"] = EventCallback.Factory.Create<int>(this, OnSelectId);
+                    //_bodyParams["OnHandleButtonPushed"] = EventCallback.Factory.Create(this, OnHandlePendSLotAsync);
+                    //_bodyParams["OnSendQuestion"] = EventCallback.Factory.Create<NewQuestionRequest>(this, OnSaveToFormAsync);
+ 
+ */

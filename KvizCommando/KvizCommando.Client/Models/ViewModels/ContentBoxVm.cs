@@ -18,10 +18,10 @@ namespace KvizCommando.Client.Models.ViewModels
         public bool IsClickable { get; init; } = true;
         public bool IsEnabled { get; init; } 
         public int ClickId { get; init; }
-        public bool ButtonBarVisible { get; init; } = false;
         public Type? BodyComponent { get; set; }
+        public Dictionary<string, object?> BodyParameters { get; init; } = new();
     }
-    public abstract class ButtonVm
+    public abstract class VmSpecs
     {   
       
         public string TitleKey { get; init; } = default!;
@@ -31,8 +31,7 @@ namespace KvizCommando.Client.Models.ViewModels
         public bool LcdBackground { get; init; } = false;
         public string Size { get; init; } = "medium";
         public bool FooterDisplay { get; init; } = false;
-        public bool ButtonBar { get; init; } = false;
         public int ClickId { get; init; } = 0;
-        public Type? BodyComponent { get; set; }
+        public Type? BodyComp { get; init; }
     }
 }

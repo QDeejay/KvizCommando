@@ -5,18 +5,18 @@ using KvizCommando.Shared.Models.Dtos; // itt van a HomeDTOs, HomeScreen, Screen
 
 namespace KvizCommando.Client.Features.Home;
 
-public sealed class ButtonSpec : ButtonVm
+public sealed class HomeSpecs : VmSpecs
 {
     internal HomeBoxKey Key { get; init; }
     internal Func<HomeScreen, ScreenButtonEntity> Pick { get; init; } = default!;
     internal Func<ILanguageService, ScreenButtonEntity, string> BuildFooter { get; init; } = default!;
 }
 
-public static class HomeButtonSpecs
+public static class HomeBoxSpecs
 {
-    public static readonly IReadOnlyList<ButtonSpec> Specs = new[]
+    public static readonly IReadOnlyList<HomeSpecs> Specs = new[]
     {
-        new ButtonSpec {
+        new HomeSpecs {
             Key = HomeBoxKey.GameVs, 
             TitleKey = "home.Box.Title.GameVs",
             ImageSrc = string.Empty,
@@ -25,7 +25,7 @@ public static class HomeButtonSpecs
             Pick = s => s.VsGame,
             BuildFooter = (lang, b) => lang["home.Box.Footer.GameVs"].FormatSafe(b.FooterData1)
         },
-        new ButtonSpec {
+        new HomeSpecs {
             Key = HomeBoxKey.GameSolo,
             TitleKey = "home.Box.Title.GameSolo",
             ImageSrc = string.Empty,
@@ -34,7 +34,7 @@ public static class HomeButtonSpecs
             Pick = s => s.SoloGame,
             BuildFooter = (lang, b) => ""
         },
-        new ButtonSpec {
+        new HomeSpecs {
             Key = HomeBoxKey.Shop, 
             TitleKey = "home.Box.Title.Shop",
             ImageSrc = string.Empty,
@@ -42,7 +42,7 @@ public static class HomeButtonSpecs
             Pick = s => s.Shop,
             BuildFooter = (lang, b) => ""
         },
-        new ButtonSpec {
+        new HomeSpecs {
             Key = HomeBoxKey.Rankings, 
             TitleKey = "home.Box.Title.Rankings",
             ImageSrc = string.Empty,
@@ -53,7 +53,7 @@ public static class HomeButtonSpecs
                 ? lang["home.Box.Footer.Rankings2"]
                 : lang["home.Box.Footer.Rankings1"].FormatSafe(b.FooterData1)
         },
-        new ButtonSpec {
+        new HomeSpecs {
             Key = HomeBoxKey.Statistic, 
             TitleKey = "home.Box.Title.Statistic",
             BgImageSrc = "images/buttons/statistic.webp",
@@ -62,7 +62,7 @@ public static class HomeButtonSpecs
             Pick = s => s.Statistic,
             BuildFooter = (lang, b) => ""
         },
-        new ButtonSpec {
+        new HomeSpecs {
             Key = HomeBoxKey.Events, 
             TitleKey = "home.Box.Title.Events",
             ImageSrc = string.Empty,
@@ -76,7 +76,7 @@ public static class HomeButtonSpecs
                 _   => $"#{b.FooterData1}"
             }
         },
-        new ButtonSpec {
+        new HomeSpecs {
             Key = HomeBoxKey.Community, 
             TitleKey = "home.Box.Title.Community",
             ImageSrc = string.Empty,
@@ -84,7 +84,7 @@ public static class HomeButtonSpecs
             Pick = s => s.Community,
             BuildFooter = (lang, b) => lang["home.Box.Footer.Community"].FormatSafe(b.FooterData1, b.FooterData2)
         },
-        new ButtonSpec {
+        new HomeSpecs {
             Key = HomeBoxKey.Messages, 
             TitleKey = "home.Box.Title.Messages",
             ImageSrc = string.Empty,
@@ -92,7 +92,7 @@ public static class HomeButtonSpecs
             Pick = s => s.Messages,
             BuildFooter = (lang, b) => lang["home.Box.Footer.Messages"].FormatSafe(b.FooterData1)
         },
-        new ButtonSpec {
+        new HomeSpecs {
             Key = HomeBoxKey.Team, 
             TitleKey = "home.Box.Title.Team",
             ImageSrc = string.Empty,
@@ -100,7 +100,7 @@ public static class HomeButtonSpecs
             Pick = s => s.Team,
             BuildFooter = (lang, b) => lang["home.Box.Footer.Team"].FormatSafe(b.FooterData1, b.FooterData2)
         },
-        new ButtonSpec {
+        new HomeSpecs {
             Key = HomeBoxKey.Question, 
             TitleKey = "home.Box.Title.Question",
             ImageSrc = string.Empty,
@@ -110,7 +110,7 @@ public static class HomeButtonSpecs
             Pick = s => s.Question,
             BuildFooter = (lang, b) => ""
         },
-        new ButtonSpec {
+        new HomeSpecs {
             Key = HomeBoxKey.InfoBoard, 
             TitleKey = "home.Title.BulleteinBoard",
             ImageSrc = string.Empty,

@@ -26,7 +26,6 @@ namespace KvizCommando.Client.Pages.Login
         private bool _passwordFiledSW = false;
         private bool _registSucces = false;
         private bool[] _showPassword = new bool[2];
-        private bool _showPassword2;
         private string PasswordType1 => _showPassword[0] ? "text" : "password";
         private string PasswordType2 => _showPassword[1] ? "text" : "password";
         private string EyeIcon1 =>
