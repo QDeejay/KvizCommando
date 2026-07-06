@@ -1,7 +1,7 @@
 ﻿@page "/team"
 
 @using KvizCommando.Client.Data;
-@using KvizCommando.Client.Components.CharacterComponent
+
 @using KvizCommando.Client.Pages.Team
 @using KvizCommando.Client.Pages.Team.Components
 @using KvizCommando.Client.Components.Dynamic;
@@ -30,10 +30,11 @@
                     <Content1>
                     <CascadingValue Value="@Selected">
                         <UpperBlockDisplay />
+                        <BottomBlockDisplay ActionButtonPushed="OnTeamManagerButtonPressed" />
                     </CascadingValue>
                     </Content1>
                     <Content2>
-                        <BottomBlockDisplay ActionButtonPushed="OnTeamManagerButtonPressed" />
+                       
                     </Content2>
                     <Content3>
                         <BottomBlockViaButtons DatatoProc="@_generalInfo"
@@ -41,9 +42,6 @@
                                                TabPosH="@activeHTab"
                                                TabPosV="@activeVTab"
                                                ModifySkill="OnSaveButtonPressed" />
-                    <label class="message-label" style="@((!isTeamSuccess ? "color:red;" : ""))">
-                        @MessageTeam
-                    </label>
                     </Content3>
                     <Content4>
                         <RecruitBlockDisplay RecruitData="@_tState.Candidates![activeHTab]"
@@ -53,7 +51,7 @@
                     </Content4>
 
                      <Content5>
-                        <CharacterView PicCode="@pictureCode" />
+                        
                     </Content5>
                     <ButtonRow>
                     @if (activeVTab == 3)

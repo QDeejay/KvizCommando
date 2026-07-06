@@ -22,6 +22,7 @@ namespace KvizCommando.Client.Pages.Team.Components
 
         private UpperBlockViewModel vm = new();
         private bool _shouldBeShow = false;
+        private string _picCode = string.Empty;
         private string Culture => AppStates.Culture;
         private TeamExtendedInfo Info => AppStates.Team!.TeamInfo;
         private TeamMemberDto Member => AppStates.Team!.TeamMembers![Selected] ?? new TeamMemberDto();
@@ -30,12 +31,16 @@ namespace KvizCommando.Client.Pages.Team.Components
         protected override void OnParametersSet()
         {
             _shouldBeShow = true;
+            _picCode = string.Empty;
             if (Selected == 0)
                 vm = UpperBlockDataBuilder.BuildTeamHeader(Info, 0, Lang);
             else
             {
                 if (AppStates.Team!.CharCatMask[Selected - 1])
+                {
                     vm = UpperBlockDataBuilder.BuildMemberHeader(Member, 0, Culture, Lang);
+                    _picCode = Member.PictureCode;
+                }
                 else
                     _shouldBeShow = false;
             }

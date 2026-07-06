@@ -1,20 +1,12 @@
-﻿.pic-display {
-    border: inset 2px #777;
-    border-radius: 4px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.4), inset 0 4px 8px rgba(0,0,0,0.7);
-    width: 100%;
-    height: 100%; /* vagy amit szeretnél */
-    position: relative;
-    
-    background-color: rgba(210, 255, 57, 1);
-}
-
+﻿
 .picture {
     position: absolute;
     top: 0;
     left: 0;
     height: 100%;
     width: 100%;
+    z-index:-1;
+    border:red 1px solid;
 }
 
 .display-layer {
@@ -24,5 +16,25 @@
     height: 100%;
     width: 100%;
     background-color: rgba(210, 255, 57, 0.2);
-    z-index: 2;
+    z-index:2;
 }
+
+.pic-display {
+    display:flex;
+    padding:20px;
+    border: inset 2px #777;
+    border-radius: 4px;
+    box-shadow:inset 0 4px 8px rgba(0,0,0,0.7);
+    width: 100%;
+    height: 100%; /* vagy amit szeretnél */
+    z-index:0;
+   
+    
+    
+}
+/**
+
+position: relative;
+background-color: rgba(210, 255, 57, 0.9);
+
+*/

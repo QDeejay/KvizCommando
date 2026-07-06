@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Rendering;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -79,3 +80,16 @@ namespace KvizCommando.Client.Components.CharacterComponent
         }
     }
 }
+/*
+.pic-display {
+border: inset 2px #777;
+border-radius: 4px;
+box-shadow: 0 4px 16px rgba(0,0,0,0.4), inset 0 4px 8px rgba(0,0,0,0.7);
+width: 100%;
+height: 100%; /* vagy amit szeretnél *
+position: relative;
+background - color: rgba(210, 255, 57, 0.9);
+}
+
+ 
+ */

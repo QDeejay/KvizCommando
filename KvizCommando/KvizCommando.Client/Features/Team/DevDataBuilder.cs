@@ -54,7 +54,7 @@ namespace KvizCommando.Client.Features.Team
 
         private static  (string, int) ResolveHeaderType(int tabPos, IGeneralInfo info)
         {
-            if (info is ExtendedInfo) 
+            if (info is TeamExtendedInfo) 
             {
                 return ("Help", 12);
             }
@@ -71,7 +71,7 @@ namespace KvizCommando.Client.Features.Team
 
         private static AttidtudeDto ResolveAttitude(IGeneralInfo info, int tabPos, HelpDto help)
         {
-            if (info is ExtendedInfo)
+            if (info is TeamExtendedInfo)
                 return help;
 
             if (info is TeamMemberDto m)
@@ -90,8 +90,8 @@ namespace KvizCommando.Client.Features.Team
             string culture
         )
         {
-            double actVal = ModifierTable.Data[skill.lvlCurrent].Modifier[modifier-4] ?? 0.0;
-            double devVal = ModifierTable.Data[Math.Min(skill.lvlCurrent + developed, skill.lvlCurMax)].Modifier[modifier-4] ?? 0.0;
+            double actVal = ModifierTable.Data[skill.LvlCurrent].Modifier[modifier-4] ?? 0.0;
+            double devVal = ModifierTable.Data[Math.Min(skill.LvlCurrent + developed, skill.LvlCurMax)].Modifier[modifier-4] ?? 0.0;
 
             string pre = devVal > 4 && modifier<12 ? "+" : string.Empty;
 
@@ -99,13 +99,13 @@ namespace KvizCommando.Client.Features.Team
 
             return new DevRow(
                 CategoryNameLocalizer.GetCategory(category, culture),
-                $"{skill.lvlCurrent + developed}/{skill.lvlCurMax}",
+                $"{skill.LvlCurrent + developed}/{skill.LvlCurMax}",
                 category != 101 && category != 103 ? pre + TeamHelper.FormatOneDecimal(devVal, category > 100) : string.Empty,
                 actVal != devVal,
-                availableDevPoints > 0 && skill.lvlCurrent + developed < skill.lvlCurMax,
+                availableDevPoints > 0 && skill.LvlCurrent + developed < skill.LvlCurMax,
                 (actLevel < startLevel 
                 ? RankNameTable.Data[startLevel].PublicLevel 
-                : skill.lvlCurrent == skill.lvlOvrMax 
+                : skill.LvlCurrent == skill.LvlOvrMax 
                 ? _lang["team.Label.Remark.AtMaximum"] 
                 :string.Empty) ?? ""
             );

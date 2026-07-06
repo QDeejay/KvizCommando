@@ -200,9 +200,9 @@ namespace KvizCommando.Server.Services.DtoMapping
                         NextXp = RankRewards.List[tempRank].NextLevel,
                         NextDevPoints = tempRank != nextRank ? RankRewards.List[nextRank].NextLevel : 0,
                         NextUnlock = tempRank != nextRank ? RankRewards.List[nextRank].NextLevel : null,
-                        MaintAttitude = AttitudeResolver(character.Attitude.Main, tempRank, RankConstants.maxLevels[0..3], RankConstants.startLevels[0..3],0),
-                        SecondAttitude = AttitudeResolver(character.Attitude.Secondary, tempRank, RankConstants.maxLevels[4..7], RankConstants.startLevels[4..7], character.DevPoints),
-                        GenderAttitude = AttitudeResolver(character.Attitude.Gender, tempRank, RankConstants.maxLevels[8..11], RankConstants.startLevels[8..11], character.DevPoints)
+                        MaintAttitude = AttitudeResolver(character.Attitude.Main, tempRank, RankConstants.maxLevels[0..4], RankConstants.startLevels[0..4],0),
+                        SecondAttitude = AttitudeResolver(character.Attitude.Secondary, tempRank, RankConstants.maxLevels[4..8], RankConstants.startLevels[4..8], character.DevPoints),
+                        GenderAttitude = AttitudeResolver(character.Attitude.Gender, tempRank, RankConstants.maxLevels[8..12], RankConstants.startLevels[8..12], character.DevPoints)
                     };
                     membRemarks[i] = RemarkResolver(teamMembers[i]!, player.Core.DevPoint, player.Core.RankEnum);
                     teamMembers[i]!.Remark = membRemarks[i];
@@ -530,7 +530,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                ? [0,0,0,0,0,0,0,0]
                : JsonSerializer.Deserialize<int[]>(helpDatasJson) ?? [0, 0, 0, 0, 0, 0, 0, 0];
 
-            var helpSkill = SkillResolver(helpDatas[0..3],rank, RankConstants.maxLevels[12..15], RankConstants.startLevels[12..15]);
+            var helpSkill = SkillResolver(helpDatas[0..3],rank, RankConstants.maxLevels[12..16], RankConstants.startLevels[12..16]);
 
             return new HelpDto 
             {
