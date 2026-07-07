@@ -20,7 +20,7 @@
             
         }
     </div>
-    <div class="picture-side">
+    <div class="picture-side @(string.IsNullOrEmpty(_picCode) ? "hide" : "")">
         <CharacterView PicCode="@_picCode" />
     </div>
     <hr class="separator">

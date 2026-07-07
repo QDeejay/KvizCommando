@@ -41,7 +41,7 @@ builder.Services.AddScoped<UiServices>();
 builder.Services.AddScoped<MarkupLoaderService>();
 
 builder.Services.AddScoped<CategoryOptionHelpers>();
-builder.Services.AddScoped<DevDataBuilder>();
+//builder.Services.AddScoped<DevDataBuilder>();
 //builder.Services.AddScoped<UpperBlockDataBuilder>();
 //builder.Services.AddScoped<BottomBlockDataBuilder>();
 builder.Services.AddScoped<RecruitBlockBuilder>();

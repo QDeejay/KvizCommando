@@ -54,7 +54,7 @@
   "modal.Text.Retire1": "The team member will be retired, the collected pension will be added to  your credit pot!",
   "Label.Attitude.Mai": "Main modifiers:",
   "label.TeamDevPoint": "Team development points:",
-  "Label.Class": "Class",
+  "Label.Class": "Class:",
   "Button.Modify": "Modify",
   "modal.Text.Promote2": "The promotion is free, because of rank class changing!",
   "Label.PopUp.NoFree": "Curremtly there is no vaccant position!",
@@ -63,5 +63,6 @@
   "Box.Footer.Recruit": "Free position:{0}",
   "Box.Title.TeamOverview": "Team overview",
   "Box.Title.Members": "Team members",
-  "Box.Title.Recruit": "Recruiting"
+  "Box.Title.Recruit": "Recruiting",
+  "Label.Org": "Organisation:"
 }

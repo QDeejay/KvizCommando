@@ -43,5 +43,18 @@ namespace KvizCommando.Client.Helpers
                 _ => throw new ArgumentOutOfRangeException(nameof(lang))
             };
         }
+        public static string GetTeam(int index, string culture)
+        {
+            var lang = LocationNormalizer.CultFormat(culture);
+            var row = TeamRankNameTable.Data[index];
+            return lang switch
+            {
+                "hu" => row.TeamHu,
+                "en" => row.TeamEn,
+                //"de" => row.TeamDe,
+                _ => throw new ArgumentOutOfRangeException(nameof(lang))
+            };
+        }
+
     }
 }

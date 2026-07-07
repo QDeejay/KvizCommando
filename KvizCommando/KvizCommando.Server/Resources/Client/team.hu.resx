@@ -283,7 +283,7 @@
     <value>Csapat fejlesztési pontok:</value>
   </data>
   <data name="Label.Class" xml:space="preserve">
-    <value>Osztály</value>
+    <value>Osztály:</value>
   </data>
   <data name="Button.Modify" xml:space="preserve">
     <value>Módosít</value>
@@ -311,5 +311,8 @@
   </data>
   <data name="Box.Title.Recruit" xml:space="preserve">
     <value>Toborzás</value>
+  </data>
+  <data name="Label.Org" xml:space="preserve">
+    <value>Szervezet:</value>
   </data>
 </root>

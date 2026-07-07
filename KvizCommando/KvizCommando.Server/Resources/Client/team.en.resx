@@ -283,7 +283,7 @@
     <value>Team development points:</value>
   </data>
   <data name="Label.Class" xml:space="preserve">
-    <value>Class</value>
+    <value>Class:</value>
   </data>
   <data name="Button.Modify" xml:space="preserve">
     <value>Modify</value>
@@ -311,5 +311,8 @@
   </data>
   <data name="Box.Title.Recruit" xml:space="preserve">
     <value>Recruiting</value>
+  </data>
+  <data name="Label.Org" xml:space="preserve">
+    <value>Organisation:</value>
   </data>
 </root>

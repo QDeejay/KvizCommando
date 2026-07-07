@@ -1,6 +1,6 @@
 ﻿namespace KvizCommando.Client.Models.DataModels
 {
-    public class RankNamesRow
+    public sealed class RankNamesRow
     {
         public int EnumLevel { get; set; }
         public string? PublicLevel { get; set; }
@@ -27,7 +27,7 @@
         }
     }
 
-    public class RankClassNameRow
+    public sealed class RankClassNameRow
     {
         public int RankClass { get; set; }
         public string RankClassNameHu { get; set; }
@@ -45,6 +45,22 @@
             RankClassNameEn = rankclassnameen;
         }
     }
+
+    public sealed class TeamNameRow 
+    {
+        public int EnumLevel { get; set; }
+        public string TeamHu { get; set; }
+        public string TeamEn { get; set; }
+
+        public TeamNameRow(int enumLevel, string teamHu, string teamEn)
+        {
+            EnumLevel = enumLevel;
+            TeamHu = teamHu;
+            TeamEn = teamEn;
+        }
+    }
+
+
     public enum LanguageCode
     {
         hu,

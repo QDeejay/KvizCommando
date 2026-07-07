@@ -1,11 +1,11 @@
 ﻿using KvizCommando.Client.Models.DataModels;
 
-namespace KvizCommando.Client.Data
+namespace KvizCommando.Client.Data  
 {
     public static class RankNameTable
     {
-        public static readonly List<RankNamesRow> Data = new()
-        {
+        public static readonly List<RankNamesRow> Data =
+        [
             new(0,  "Lvl-NA",              "Közlegény", "kk.",                  "Private", "PVT"),
             new(1,  "Lvl-00",               "Örvezető", "őrv.",               "Private 2", "PV2"),
             new(2,  "Lvl-01",                "Tizedes", "tiz.",              "Private FC", "PFC"),
@@ -33,19 +33,19 @@ namespace KvizCommando.Client.Data
             new(24, "Lvl-MX2",    "Kvíz Miniszterelnök", "kme.",      "Quiz Primeminister", "PRM"),
             new(25, "Lvl-MX3",             "Kvíz elnök", "ke.",            "Quiz president", "QP"),
             new(26, "Lvl-MX4",    "Kontinentális elnök", "kke.",   "Continental president", "COP"),
-            new(27, "Lvl-MX5",   "Bolygó kvízek elnöke", "bke.",    "Planet prez. of Quiz", "POQ"),
+            new(27, "Lvl-MX5",   "Kvízek bolygó elnöke", "bke.",    "Planet prez. of Quiz", "POQ"),
             new(28, "Lvl-MX6",      "Kvízek védangyala", "kva.",           "Angel of Quiz", "AOQ"),
             new(29, "Lvl-MX7",       "Kvízek istensége", "kvi.",             "God of Quiz", "GOQ"),
             new(30, "Lvl-MX8","Kvízek Mészáros Lőrince", "ml.", "Lawrence Butcher of Quiz", "LBQ"),
 
             new(31, "Lvl-MX",   "Nyugalmazott veterán", "nyv.",         "Retired veteran", "REV")
-        };
+        ];
     }
 
     public static class RankClassNameTable
     {
-        public static readonly List<RankClassNameRow> Data = new()
-        {
+        public static readonly List<RankClassNameRow> Data =
+        [
             new(0, "Rang nélkül", "No Rank"),
             new(1, "Tisztesek", "Enlisted"),
             new(2, "Altisztek", "Non-Commissioned Officers"),
@@ -58,6 +58,48 @@ namespace KvizCommando.Client.Data
             new(9, "Elnökök","Presidents"),
             new(10, "Istenségek","Gods"),
             new(11, "Nyugdíjas klub","Retired club")
-        };
+        ];
     }
+
+    public static class TeamRankNameTable
+    {
+        public static readonly List<TeamNameRow> Data =
+        [
+            new(0,  "Újonc Csapat",        "Recruit Team"),
+            new(1,  "Járőr",               "Patrol"),
+            new(2,  "Tűzcsoport",          "Fire Team"),
+            new(3,  "Raj",                 "Squad"),
+            new(4,  "Erősített Raj",       "Heavy Squad"),
+            new(5,  "Harci Raj",           "Combat Squad"),
+            new(6,  "Különítmény",         "Detachment"),
+            new(7,  "Szakasz",             "Platoon"),
+            new(8,  "Harci Szakasz",       "Combat Platoon"),
+            new(9,  "Bevetési Egység",     "Task Force"),
+            new(10, "Század",              "Company"),
+            new(11, "Harci Század",        "Combat Company"),
+            new(12, "Elit Század",         "Elite Company" ),
+            new(13, "Zászlóalj",           "Battalion" ),
+            new(14, "Harci Zászlóalj",     "Combat Battalion"),
+            new(15, "Ezred",               "Regiment"),
+            new(16, "Dandár",              "Brigade"),
+            new(17, "Hadosztály",          "Division"),
+            new(18, "Hadtest",             "Corps"),
+            new(19, "Hadsereg",            "Army"),
+            new(20, "Hadseregcsoport",     "Army Group"),
+            new(21, "Főparancsnokság",     "High Command"),
+
+            new(22, "Kvíz Minisztérium",   "Quiz Ministry"),
+            new(23, "Kvíz Kormány",        "Quiz Government"),
+            new(24, "Kvíz Állam",          "Quiz State"),
+            new(25, "Kvíz Köztársaság",    "Quiz Republic"),
+            new(26, "Kontinentális Unió",  "Continental Union"),
+            new(27, "Bolygó Szövetség",    "Planetary Alliance"),
+            new(28, "Galaktikus Birodalom","Galactic Empire"),
+            new(29, "Kvíz Pantheon",       "Quiz Pantheon"),
+            new(30, "Kvíz Multiverzum",    "Quiz Multiverse"),
+
+            new(31, "Kvíz Multiverzum",    "Quiz Multiverse"),
+        ];
+    }
+
 }

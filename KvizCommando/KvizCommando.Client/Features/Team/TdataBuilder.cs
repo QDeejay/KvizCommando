@@ -6,10 +6,9 @@ using KvizCommando.Shared.Models.Dtos;
 
 namespace KvizCommando.Client.Features.Team
 {
-    public class UpperBlockDataBuilder
+    public class TdataBuilder
     {
- 
-        public static UpperBlockViewModel BuildTeamHeader(TeamExtendedInfo info, int usedSkillPoints, string culture, ILanguageService lang)
+        public static UpperBlockViewModel BuildTeamHeader(TeamExtendedInfo info, int usedSkillPoints, string culture)
         {
             var vm = new UpperBlockViewModel();
 
@@ -20,23 +19,22 @@ namespace KvizCommando.Client.Features.Team
             string devPointsDisplay = (info.DevPts - usedSkillPoints).ToString();
 
             var t = info;
-            string xp = info.Level < 22 ? $"{t.TeamXp}/{t.NextXpPts}" : lang["team.Label.Remark.AtMaximum"];
-            vm.Rows.Add(new(lang["team.Label.TeamName"] + " " + lang["team.Label.Name"], name));
-            vm.Rows.Add(new(lang["team.Label.Org"], rank));
-            vm.Rows.Add(new(lang["team.Label.Level"], publicLevel));
-            vm.Rows.Add(new(lang["team.Label.TeamName"] + " Xp:", xp));
-            vm.Rows.Add(new(lang["team.Label.Menbers"], $"{t.TotalMembers}/{t.MaxMembers}"));
-            
+            string xp = info.Level < 22 ? $"{t.TeamXp}/{t.NextXpPts}" : "team.Label.Remark.AtMaximum";
+            vm.Rows.Add(new("team.Label.Name", name));
+            vm.Rows.Add(new("team.Label.Org", rank));
+            vm.Rows.Add(new("team.Label.Level", publicLevel));
+            vm.Rows.Add(new("team.Label.TeamName" + " Xp:", xp));
+            vm.Rows.Add(new("team.Label.Menbers", $"{t.TotalMembers}/{t.MaxMembers}"));
 
-            vm.Rows.Add(new(lang["team.Label.Credit"], t.Credits.ToString()));
-            vm.Rows.Add(new(lang["team.label.TeamDevPointShort"], devPointsDisplay));
-            vm.Rows.Add(new(lang["team.Label.Bonus"], $"{t.TeamBonus}%"));
+
+            vm.Rows.Add(new("team.Label.Credit", t.Credits.ToString()));
+            vm.Rows.Add(new("team.label.TeamDevPointShort", devPointsDisplay));
+            vm.Rows.Add(new("team.Label.Bonus", $"{t.TeamBonus}%"));
             vm.Rows.Add(new("", ""));
             vm.Rows.Add(new("", ""));
 
             return vm;
         }
-
         public static UpperBlockViewModel BuildMemberHeader(TeamMemberDto info, int usedSkillPoints, string culture, ILanguageService lang)
         {
             var vm = new UpperBlockViewModel();
@@ -72,6 +70,9 @@ namespace KvizCommando.Client.Features.Team
 
             return vm;
         }
+        
+        
+        
         private static int NormalizeCategory(int cat)
         {
             return cat > 8 ? cat - 8 : cat;
