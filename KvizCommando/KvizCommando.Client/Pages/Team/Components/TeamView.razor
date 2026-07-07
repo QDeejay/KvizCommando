@@ -1,3 +1,114 @@
-﻿<div>
+﻿@using KvizCommando.Client.Components.CharacterComponent
 
-</div>
+@if (_isReady)
+{
+    <div class="upper-list-grid">
+        @for (int i = 0; i < 5; i++)
+        {
+            <div>@_vmUp.Rows[i].Label</div>
+            <div class="upper-left-value">@_vmUp.Rows[i].Value</div>
+            <div></div>
+            <div></div>
+            <div class="upper-right-type">@_vmUp.Rows[i + 5].Label</div>
+            <div class="upper-right-value">@_vmUp.Rows[i + 5].Value</div>
+        }
+    </div>
+    <hr class="upper-separator">
+
+    @if (_currentSubPage == 0)
+    {
+        <div class="teampage-title">@_vmBot.Rows[0].Label</div>
+        <div class="teampage-list-grid bottom-extend gapped-rows">
+            @for (int i = 1; i < _vmBot.Rows.Count; i++)
+            {
+                var row = i;
+                var bgColorBtn = "";
+                <div class="bottom-row-marker">
+                    <label>@(_vmBot.Rows[row].Remark != "" ? "!" : string.Empty)</label>
+                </div>
+                <div class="teampage-datacol-1">@_vmBot.Rows[row].Label</div>
+                <div class="teampage-datacol-2">@_vmBot.Rows[row].Column1</div>
+                <div class="teampage-datacol-3">@_vmBot.Rows[row].Column2</div>
+                <div class="teampage-datacol-4">
+                    @if (_vmBot.Rows[row].Action > 100)
+                    {
+                        if (_vmBot.Rows[row].Action > 400)
+                            bgColorBtn = "background-color: darkslateblue;";
+                        else if (_vmBot.Rows[row].Action > 300)
+                            bgColorBtn = "background-color: #a64b2a;";
+                        else if (_vmBot.Rows[row].Action > 200)
+                            bgColorBtn = "background-color: forestgreen;";
+                        else
+                            bgColorBtn = "background-color: darkolivegreen;";
+                        <button class="bottom-action-button"
+                                style="@bgColorBtn"
+                                @onclick="@(() => OnActionButtonPushed(row))">
+                            @_vmBot.Rows[row].Remark
+                        </button>
+                    }
+                    else
+                    {
+                        <div class="bottom-action-label"
+                             @onclick="@(() => OnActionButtonPushed(row))">
+                            @Lang[_vmBot.Rows[row].Remark]
+                        </div>
+                    }
+                </div>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="teampage-title">@_vmDev.HeaderText</div>
+        <div class="teampage-list-grid extend">
+            @for (int i = 0; i < _vmDev.Rows.Count; i++)
+            {
+                var row = i + 1;
+                <div></div>
+                <div class="teampage-datacol-1" style="@(_vmDev.Rows[i].HasChanged ? "color:blue;" : "")">@_vmDev.Rows[i].CategoryName</div>
+                <div class="teampage-datacol-2" style="@(_vmDev.Rows[i].HasChanged ? "color:blue; font-weight:bold;" : "")">@_vmDev.Rows[i].LevelDisplay</div>
+                <div class="teampage-datacol-3"
+                     style="@(i == 0 || i == 2 ? "color: green;" : "")">
+                    @_vmDev.Rows[i].ValueDisplay
+                </div>
+                <div class="dev-button-section">
+                    @if (@_vmDev.Rows[i].StatusText == "")
+                    {
+                        <button class="dev-modifier-button"
+                                @onclick="@(() => OnDecButtonPushed(row))"
+                                disabled="@(_vmDev.Rows[i].HasChanged == false)">
+                            -
+                        </button>
+                        <button class="dev-modifier-button"
+                                @onclick="@(() => OnIncButtonPushed(row))"
+                                disabled="@(_vmDev.Rows[i].CanDevelop == false)">
+                            +
+                        </button>
+                    }
+                    else
+                    {
+                        <div class="teampage-datacol-4">@_vmDev.Rows[i].StatusText</div>
+                    }
+                </div>
+            }
+
+            <div></div><div></div><div></div><div></div>
+            <div class="dev-button-section">
+                <button class="military-button" disabled="@(_usedPoints.Sum() == 0)" @onclick="OnSaveButtonPushed">@_vmDev.SaveButtonText</button>
+            </div>
+        </div>
+    }
+    <div class="component-button-row">
+        <button class="button-on-lcd" @onclick="OnSaveButtonPushed" disabled="@(_usedPoints.Sum() == 0)">
+            <i class="bi bi-floppy"></i>
+        </button>
+
+        <button class="button-on-lcd" @onclick="() => ShowSubPage(1)" disabled="@(_currentSubPage==1)">
+            <i class="bi bi-life-preserver"></i>
+        </button>
+        <button class="button-on-lcd" @onclick="() => ShowSubPage(0)" disabled="@(_currentSubPage == 0)">
+            <i class="bi bi-people"></i>
+        </button>
+    </div>
+}

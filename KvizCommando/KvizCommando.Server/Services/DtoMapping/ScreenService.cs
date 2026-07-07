@@ -1,25 +1,14 @@
-﻿using KvizCommando.Server.Data.StaticData;
-using KvizCommando.Server.Domain.Entities.Players;
+﻿using KvizCommando.Server.Domain.Entities.Players;
 using KvizCommando.Server.Domain.Entities.Statistics;
-using KvizCommando.Server.Identity;
-using KvizCommando.Server.Infrastructure.Persistence;
 using KvizCommando.Server.Models;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Enums;
 using KvizCommando.Shared.Models.User;
-using Microsoft.AspNetCore.Http.Connections;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing;
 using System.Globalization;
-using System.IO;
-using System.Numerics;
 using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace KvizCommando.Server.Services.DtoMapping
 {
@@ -30,7 +19,7 @@ namespace KvizCommando.Server.Services.DtoMapping
         private readonly IWebHostEnvironment _env;
 
         public ScreenService(
-            IPlayerCacheService cache, 
+            IPlayerCacheService cache,
             ILogger<ScreenService> logger,
             IWebHostEnvironment env)
         {
@@ -50,10 +39,10 @@ namespace KvizCommando.Server.Services.DtoMapping
                 return null;
             }
             if (player.SessionId == "denied")
-                return new HomeDTOs() { AccessDenied=true };
+                return new HomeDTOs() { AccessDenied = true };
             var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
-            var url = Path.Combine(_env.WebRootPath, "BulletinBoard",culture,"bb.html");
-           
+            var url = Path.Combine(_env.WebRootPath, "BulletinBoard", culture, "bb.html");
+
             var dt = File.GetLastWriteTimeUtc(url);
             // --- Karakterek számlálása egy passzban, null-safe ---
             int activeChars = 0;
@@ -65,7 +54,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                 foreach (var ch in charValues)
                 {
                     if (ch is null) continue;
-                   
+
                     if (ch.EnergyPoints > 0) activeChars++;
                 }
             }
@@ -162,7 +151,7 @@ namespace KvizCommando.Server.Services.DtoMapping
         {
             //sessionId = "Teszt";
             var (player, slot) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
-           
+
             if (player is null)
             {
                 _logger.LogWarning("Player not found in cache. userId={UserId}", playerId);
@@ -190,17 +179,17 @@ namespace KvizCommando.Server.Services.DtoMapping
                     int nextRank = Math.Min(21, character.Rank + 1);
                     teamMembers[i] = new TeamMemberDto
                     {
-                        MemberName = character.Name,
-                        MemberLvl = tempRank,
-                        MemberPictureCode = character.PictureCode,
-                        MemberXp = character.XP,
+                        Name = character.Name,
+                        Level = tempRank,
+                        PictureCode = character.PictureCode,
+                        Xp = character.XP,
                         Pension = character.Pension,
                         SkillPoints = character.DevPoints,
                         EnergyPoints = character.EnergyPoints,
                         NextXp = RankRewards.List[tempRank].NextLevel,
                         NextDevPoints = tempRank != nextRank ? RankRewards.List[nextRank].NextLevel : 0,
                         NextUnlock = tempRank != nextRank ? RankRewards.List[nextRank].NextLevel : null,
-                        MaintAttitude = AttitudeResolver(character.Attitude.Main, tempRank, RankConstants.maxLevels[0..4], RankConstants.startLevels[0..4],0),
+                        MaintAttitude = AttitudeResolver(character.Attitude.Main, tempRank, RankConstants.maxLevels[0..4], RankConstants.startLevels[0..4], 0),
                         SecondAttitude = AttitudeResolver(character.Attitude.Secondary, tempRank, RankConstants.maxLevels[4..8], RankConstants.startLevels[4..8], character.DevPoints),
                         GenderAttitude = AttitudeResolver(character.Attitude.Gender, tempRank, RankConstants.maxLevels[8..12], RankConstants.startLevels[8..12], character.DevPoints)
                     };
@@ -237,22 +226,22 @@ namespace KvizCommando.Server.Services.DtoMapping
 
             var teamInfo = new TeamExtendedInfo
             {
-                TeamName = player.Core.TeamName,
-                TeamLevel = player.Core.RankEnum,
-                TeamXp = player.Core.XP,
+                Name = player.Core.TeamName,
+                Level = player.Core.RankEnum,
+                Xp = player.Core.XP,
                 NextXp = RankRewards.List[player.Core.RankEnum].NextLevel,
                 DevPoints = player.Core.DevPoint,
                 TotalMembers = numberOfCharacters,
                 MaxMembers = RankRewards.List[player.Core.RankEnum].MaxCharacters,
-                TeamBonus = RankRewards.List[player.Core.RankEnum].WinBonus,
+                Bonus = RankRewards.List[player.Core.RankEnum].WinBonus,
                 Credits = player.Core.Credit,
                 MembRemarks = membRemarks
-                
+
             };
-           
+
             var help = HelpResolver(player.Loadout?.HelpLevelsJson, teamInfo.Level, teamInfo.DevPoints);
 
-            var footer = TeamFooterResolver(teamInfo, help.CanDev); 
+            var rootBoxInfo = TeamRootBoxInfoResolver(teamInfo, help.CanDev);
 
             var teamDto = new TeamDtos
             {
@@ -261,12 +250,12 @@ namespace KvizCommando.Server.Services.DtoMapping
                 Candidates = candidates,
                 CharCatMask = tempCharmask,
                 Help = help,
-                FooterInfo = footer
+                RootBoxInfo = rootBoxInfo
             };
 
             return teamDto;
         }
-        public async Task<QuestionDtos?> GetQuestionScreenAsync(int playerId, string sessionId,CancellationToken ct = default)
+        public async Task<QuestionDtos?> GetQuestionScreenAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
             //var sessionId = "Teszt";
 
@@ -310,8 +299,8 @@ namespace KvizCommando.Server.Services.DtoMapping
                     Question = uq?.Question ?? string.Empty,
                     Answer = answers,
                     Category = uq?.CategoryNo ?? 0,
-                    NoOfUse = uq.Ask>0 ? uq.Ask.ToString() : "N/A",
-                    NofOfCorrect = uq.Ask > 0  ? uq.OkAnswer.ToString() : "N/A",
+                    NoOfUse = uq.Ask > 0 ? uq.Ask.ToString() : "N/A",
+                    NofOfCorrect = uq.Ask > 0 ? uq.OkAnswer.ToString() : "N/A",
                     Ratio = uq.Ask > 40 ? $"{(Math.Truncate(uq.Ratio * 1000) / 10):0.0}%" : "N/A"
                 });
 
@@ -319,8 +308,8 @@ namespace KvizCommando.Server.Services.DtoMapping
             foreach (var pq in slot.pSlots)
             {
                 var answers = string.IsNullOrEmpty(pq.AnswersJson)
-                ? Array.Empty<string>()
-                 : JsonSerializer.Deserialize<string[]>(pq.AnswersJson) ?? Array.Empty<string>();
+                 ? []
+                 : JsonSerializer.Deserialize<string[]>(pq.AnswersJson) ?? [];
 
                 pendingSlotDtoList.Add(new PendingSlot
                 {
@@ -404,7 +393,7 @@ namespace KvizCommando.Server.Services.DtoMapping
         {
             //sessionId = "Teszt";
             var (player, slot) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
-            
+
             if (player is null)
             {
                 _logger.LogWarning("Player not found in cache. userId={UserId}", playerId);
@@ -413,12 +402,12 @@ namespace KvizCommando.Server.Services.DtoMapping
             if (player.SessionId == "denied")
                 return new SoloGameDtos() { AccessDenied = true };
             var mask = player.CharCatMask;
-            var results = new SoloResults 
-                {
-                    OrientResults = GetOriResultFromCache(player.OrientStats),
-                    CategoryResults = GetCatResultFromCache(player.CategoryStats)
+            var results = new SoloResults
+            {
+                OrientResults = GetOriResultFromCache(player.OrientStats),
+                CategoryResults = GetCatResultFromCache(player.CategoryStats)
 
-                 };
+            };
             var enables = new SoloEnables
             {
                 EnaCampaign = false,
@@ -444,17 +433,17 @@ namespace KvizCommando.Server.Services.DtoMapping
         {
             int ix;
             var result = new ResultDto[data.Count + 1];
-            result[0] = new ResultDto { Points=0, Time=0.0 };
+            result[0] = new ResultDto { Points = 0, Time = 0.0 };
             foreach (var d in data)
-            { 
-                ix=Math.Min((int)d.CategoryId,16);
-                result[ix] = new ResultDto 
+            {
+                ix = Math.Min((int)d.CategoryId, 16);
+                result[ix] = new ResultDto
                 {
                     Points = d.HighScore,
                     Time = d.HighScoreTime
                 };
-                result[0].Points=+ d.HighScore;
-                result[0].Time  =+ d.HighScoreTime;
+                result[0].Points = +d.HighScore;
+                result[0].Time = +d.HighScoreTime;
             }
             return result;
         }
@@ -502,10 +491,10 @@ namespace KvizCommando.Server.Services.DtoMapping
             maxlevel = Math.Max(0, maxlevel);
             return new SkillPartial
             {
-                LvlCurrent =(byte)currentLevel,
+                LvlCurrent = (byte)currentLevel,
                 LvlCurMax = (byte)maxlevel,
                 LvlOvrMax = (byte)maxLevel,
-                SkillCanDev = (byte)currentLevel< (byte)maxlevel
+                SkillCanDev = (byte)currentLevel < (byte)maxlevel
             };
         }
         private static MembRemark RemarkResolver(TeamMemberDto mem, int teamPoints, int teamLevel)
@@ -513,8 +502,8 @@ namespace KvizCommando.Server.Services.DtoMapping
             if (mem.EnergyPoints <= 0)
                 return mem.SkillPoints > 0 ? MembRemark.Heal : MembRemark.Fire;
 
-            if (mem.NextXp <= mem.MemberXp && mem.Level < teamLevel)
-                if (mem.MemberLvl == 21)
+            if (mem.NextXp <= mem.Xp && mem.Level < teamLevel)
+                if (mem.Level == 21)
                     return MembRemark.Retire;
                 else if (teamPoints > 0)
                     return MembRemark.Promote;
@@ -524,36 +513,40 @@ namespace KvizCommando.Server.Services.DtoMapping
 
             return MembRemark.None;
         }
-        private static HelpDto HelpResolver (string helpDatasJson, int rank, int teamDevPoints ) 
+        private static HelpDto HelpResolver(string helpDatasJson, int rank, int teamDevPoints)
         {
             var helpDatas = string.IsNullOrEmpty(helpDatasJson)
-               ? [0,0,0,0,0,0,0,0]
+               ? [0, 0, 0, 0, 0, 0, 0, 0]
                : JsonSerializer.Deserialize<int[]>(helpDatasJson) ?? [0, 0, 0, 0, 0, 0, 0, 0];
 
-            var helpSkill = SkillResolver(helpDatas[0..3],rank, RankConstants.maxLevels[12..16], RankConstants.startLevels[12..16]);
+            var helpSkill = SkillResolver(helpDatas[0..3], rank, RankConstants.maxLevels[12..16], RankConstants.startLevels[12..16]);
 
-            return new HelpDto 
+            return new HelpDto
             {
                 Skill = helpSkill,
                 CanDev = helpSkill.Any(x => x.SkillCanDev) && teamDevPoints > 0,
                 HelpVolumes = [.. helpDatas.Skip(4).Take(4)],
                 Category = [101, 102, 103, 104]
-            }; 
+            };
         }
-        private static TeamFooterInfo TeamFooterResolver(TeamExtendedInfo info, bool helpDev) 
+        private static TeamRootBoxInfo TeamRootBoxInfoResolver(TeamExtendedInfo info, bool helpDev)
         {
             var retire = info.MembRemarks.Count(x => x == MembRemark.Retire);
             var fire = info.MembRemarks.Count(x => x == MembRemark.Fire);
             var promote = info.MembRemarks.Count(x => x == MembRemark.Promote);
             var heal = info.MembRemarks.Count(x => x == MembRemark.Heal);
             var help = helpDev ? 1 : 0;
+            int freePositions = Math.Max(info.MaxMembers - info.TotalMembers, 0);
 
-            return new TeamFooterInfo 
-                {
-                    TeamOpRequired=retire+fire+promote+heal+help,
-                    MemberOpRequired=info.MembRemarks.Count(x => x== MembRemark.Develop),
-                    FreePositions=Math.Max(info.MaxMembers-info.TotalMembers,0),
-                };
+            return new TeamRootBoxInfo
+            {
+                IsTeamEnable = true,
+                IsRecruitEnable = freePositions > 0,
+                IsMemberEnable = info.TotalMembers > 0,
+                TeamOpRequired = retire + fire + promote + heal + help,
+                MemberOpRequired = info.MembRemarks.Count(x => x == MembRemark.Develop),
+                FreePositions = freePositions
+            };
         }
     }
 }

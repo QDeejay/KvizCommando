@@ -72,11 +72,13 @@ namespace KvizCommando.Client.Pages.Question
                     break;
                 case 103:
                     _boxOrder = QBoxBuilder.SubPend;
-                    headerTitle = _boxes[QBoxKeyRoot.RtBtnPendig.ToString()].Header; break;
+                    headerTitle = _boxes[QBoxKeyRoot.RtBtnPendig.ToString()].Header; 
+                    break;
                 case 104:
                     _boxOrder = QBoxBuilder.SubNew;
                     _selectedId = Array.FindIndex(QState.PendingSlots!, x => x.Category == 0);
-                    headerTitle = _boxes[QBoxKeyRoot.RtBtnNew.ToString()].Header;break;
+                    headerTitle = _boxes[QBoxKeyRoot.RtBtnNew.ToString()].Header;
+                    break;
                 default:
                     headerTitle = (Ui.Lang["mainlayout.Header.Question"]);
                     break;

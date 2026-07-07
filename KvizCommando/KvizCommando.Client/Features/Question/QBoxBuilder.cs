@@ -25,7 +25,7 @@ namespace KvizCommando.Client.Features.Question
                 var btn = spec;
                 var footer = string.IsNullOrEmpty(spec.TitleKey);
                 var bodyParams = spec.BodyComp is not null ? spec.BuildParams(qCallBacks) : [];
-                Console.WriteLine(spec.Key);
+
                 dict[btn.Key.ToString()] = new ContentBoxVm
                 {
                     Header = footer ? spec.BuildBoxText(lang, qs) : lang[spec.TitleKey],

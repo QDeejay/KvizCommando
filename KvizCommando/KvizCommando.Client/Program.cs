@@ -44,11 +44,11 @@ builder.Services.AddScoped<CategoryOptionHelpers>();
 //builder.Services.AddScoped<DevDataBuilder>();
 //builder.Services.AddScoped<UpperBlockDataBuilder>();
 //builder.Services.AddScoped<BottomBlockDataBuilder>();
-builder.Services.AddScoped<RecruitBlockBuilder>();
+//builder.Services.AddScoped<RecruitBlockBuilder>();
 builder.Services.AddSingleton<AudioService>();
 builder.Services.AddSingleton<LoaderService>();
 builder.Services.AddSingleton<SessionService>();
-builder.Services.AddScoped<ITeamModalDataBuilder, TeamModalDataBuilder>();
+//builder.Services.AddScoped<ITeamModalDataBuilder, TeamModalDataBuilder>();
 
 /*
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });

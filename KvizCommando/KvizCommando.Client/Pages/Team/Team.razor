@@ -1,7 +1,6 @@
 ﻿@page "/team"
 
 @using KvizCommando.Client.Data;
-
 @using KvizCommando.Client.Pages.Team
 @using KvizCommando.Client.Pages.Team.Components
 @using KvizCommando.Client.Components.Dynamic;
@@ -9,58 +8,28 @@
 
 <link href="css/team-common.css" rel="stylesheet" />
 
-<LangGuard Culture=@culture Module="team" OnReady="BoxReady">
-     @if (_isLoaded == true)
-{
-       
-      <PageContainer>
+<LangGuard Culture=@Culture Module="team" OnReady="BuildBoxes">
+  <PageContainer>
+        @if (_isLoaded == true)
+        {
+            <SubHeader id="_subHeader"
+                       ActiveIndexChanged="OnSelectMember"
+                        />
+            <div class="kc-team-selector">
+                @foreach (string bx in _boxOrder)
+                {
+                    var box = Box(bx);
 
-
-                <HorizontalTabPane ActiveHIndex="@activeHTab" 
-                                   ActiveHIndexChanged="@OnHTabChanged"
-                                   TabHEnabled="@tabHEnabled"
-                                   ActiveVIndex="@activeVTab"
-                                   ActiveVIndexChanged="@OnVTabChanged"
-                                   TabTitle="@tabTitle"
-                                   HTabs="@hTabs"
-                                   VTabs="@vTabs"
-                                   PicTabEnabled="@picTabEnable">
-                                  
-
-                    <Content1>
-                    <CascadingValue Value="@Selected">
-                        <UpperBlockDisplay />
-                        <BottomBlockDisplay ActionButtonPushed="OnTeamManagerButtonPressed" />
-                    </CascadingValue>
-                    </Content1>
-                    <Content2>
-                       
-                    </Content2>
-                    <Content3>
-                        <BottomBlockViaButtons DatatoProc="@_generalInfo"
-                                               DataHelp="@_tState.Help"
-                                               TabPosH="@activeHTab"
-                                               TabPosV="@activeVTab"
-                                               ModifySkill="OnSaveButtonPressed" />
-                    </Content3>
-                    <Content4>
-                        <RecruitBlockDisplay RecruitData="@_tState.Candidates![activeHTab]"
-                                            TabPos="@activeHTab"
-                                            candidateOrder="@RecruitMixer"
-                                            SelectedCandidate="OnCandidateSelected" />
-                    </Content4>
-
-                     <Content5>
-                        
-                    </Content5>
-                    <ButtonRow>
-                    @if (activeVTab == 3)
-                    {
-                        <button class="military-button" disabled="@(selectedCandidateId == 0)" @onclick="OnHireButtonPressed">@(Ui.Lang["team.Button.Hire"])</button>
-                    }
-                    </ButtonRow>
-                </HorizontalTabPane>
-            
-     </PageContainer>
-    }
+                    <ContentBox Vm="@box"
+                                OnClick="OnBoxClick">
+                        <ContentBody>
+                            <CascadingValue Value="_teamNav">
+                              
+                            </CascadingValue>
+                        </ContentBody>
+                    </ContentBox>
+                }
+            </div>
+        }
+    </PageContainer>
 </LangGuard>

@@ -1,0 +1,57 @@
+﻿
+.htp-tabbar {
+    position: absolute;
+    gap: 1px;
+    user-select: none;
+    top: -30px;
+    left: 20px;
+    height: 30px;
+    width: 650px;
+    display: flex;
+}
+
+
+.htp-tab {
+    flex: 1;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    background: rgba(10, 10, 10, 0.1);
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    color: #cccccc;
+    letter-spacing: 0.2px;
+    transition: 0.15s;
+    cursor: url('/Images/cursors/normal.cur'), default;
+    border-radius: 8px 8px 0 0;
+}
+
+    .htp-tab.disabled:hover .tooltip-box {
+        display: block;
+        padding-left: 10px;
+        padding-right: 10px;
+        top: -20px;
+    }
+
+    .htp-tab:hover {
+        background: rgba(99, 99, 99, 0.4);
+        cursor: url('/Images/cursors/active.cur'), pointer;
+    }
+
+    .htp-tab.active {
+        background: #2a2a2a;
+        font-weight: bold;
+        border: 2px solid rgba(64, 64, 64, 0.4);
+        cursor: url('/Images/cursors/normal.cur'), default;
+    }
+
+.htp-tab.active {
+    border-bottom: none;
+}
+
+
+.htp-tab.disabled {
+    background: rgba(255,45,45,0.15);
+    color: #cccccc;
+    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+}

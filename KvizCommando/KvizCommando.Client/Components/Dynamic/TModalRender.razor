@@ -29,21 +29,22 @@
             </div>
         
         }
+        
         @switch (mode)
         {
         case 1:
             <div class="hire-skillblock">
-            <div class="modal-subtitle">@vmHir.Labelpros</div>
+            <div class="modal-subtitle">@_vmHir.Labelpros</div>
             <div></div>
-                @for (int i = 0; i < vmHir.Rows.Count; i++)
+                @for (int i = 0; i < _vmHir.Rows.Count; i++)
                 {
                     @if (i == 3)
                     {
-                        <div class="modal-subtitle">@vmHir.Labelcons</div>
+                        <div class="modal-subtitle">@_vmHir.Labelcons</div>
                         <div></div>
                     }
-                    <div>@vmHir.Rows[i].CategoryName</div>
-                    <div class="modal-value times" style="color: @(vmHir.Rows[i].color)">@vmHir.Rows[i].ValueDisplay</div>
+                    <div>@_vmHir.Rows[i].CategoryName</div>
+                    <div class="modal-value times" style="color: @(_vmHir.Rows[i].color)">@_vmHir.Rows[i].ValueDisplay</div>
                 }
                 </div>
                 break;
@@ -51,52 +52,52 @@
                 var label =string.Empty;
                 var color = "color: ";
                 <div class="promote-block">
-                    @for (int i = 0; i < vmPro.Rows.Count; i++)
+                    @for (int i = 0; i < _vmPro.Rows.Count; i++)
                     {
                         @if (i == 2 || i == 6 || i == 10)
                         {
                             if (i == 2)
-                                label = vmPro.Unlocks;
+                                label = _vmPro.Unlocks;
                             else if (i == 6)
-                                label = vmPro.UnlockMaxLevels1;
+                                label = _vmPro.UnlockMaxLevels1;
                             else
-                                label = vmPro.UnlockMaxLevels2;
+                                label = _vmPro.UnlockMaxLevels2;
                             <div class="modal-subtitle"> @label </div>
                             <div></div>
                             <div></div>
                             <div></div>
                         }
-                        color = $"color: {vmPro.Rows[i].color};";
-                        <div >@vmPro.Rows[i].CategoryName</div>
-                        <div class="modal-value right" style="@color">@vmPro.Rows[i].ValueDisplay</div>
-                        <div class="modal-separator">@vmPro.Rows[i].separator</div>
-                        <div class="modal-value right" style="@color">@vmPro.Rows[i].ValueChangeDisplay</div>
+                        color = $"color: {_vmPro.Rows[i].color};";
+                        <div >@_vmPro.Rows[i].CategoryName</div>
+                        <div class="modal-value right" style="@color">@_vmPro.Rows[i].ValueDisplay</div>
+                        <div class="modal-separator">@_vmPro.Rows[i].separator</div>
+                        <div class="modal-value right" style="@color">@_vmPro.Rows[i].ValueChangeDisplay</div>
                     }
             </div>
-                <div class="info-row4">(@vmPro.Infotext1)</div>
+                <div class="info-row4">(@_vmPro.Infotext1)</div>
                 break;
             case 3:
                 <div class="promote-block">
-                    <div class="modal-subtitle"> @vmRet.Unlocks </div>
+                    <div class="modal-subtitle"> @_vmRet.Unlocks </div>
                     <div></div>
                     <div></div>
                     <div></div>
-                    @for (int i = 0; i < vmRet.Rows.Count; i++)
+                    @for (int i = 0; i < _vmRet.Rows.Count; i++)
                     {
-                        <div>@vmRet.Rows[i].CategoryName</div>
-                        <div class="modal-value right">@vmRet.Rows[i].ValueDisplay</div>
-                        <div class="modal-separator">@vmRet.Rows[i].separator</div>
-                        <div class="modal-value right" style="@(vmRet.Rows[i].color)">@vmRet.Rows[i].ValueChangeDisplay</div>
+                        <div>@_vmRet.Rows[i].CategoryName</div>
+                        <div class="modal-value right">@_vmRet.Rows[i].ValueDisplay</div>
+                        <div class="modal-separator">@_vmRet.Rows[i].separator</div>
+                        <div class="modal-value right" style="@(_vmRet.Rows[i].color)">@_vmRet.Rows[i].ValueChangeDisplay</div>
                     }
                 </div>
-                <div class="info-row4">@vmRet.Infotext1</div>
+                <div class="info-row4">@_vmRet.Infotext1</div>
                 break;
             case 4:
             <div class="handle-block">
-                <div class="info-row1">@vmHan.Infotext1</div>
-                <div class="info-row2">@vmHan.Infotext2</div>
-                <div class="info-row3">@vmHan.Infotext3</div>
-                <div class="info-row4">@vmHan.Infotext4</div>
+                <div class="info-row1">@_vmHan.Infotext1</div>
+                <div class="info-row2">@_vmHan.Infotext2</div>
+                <div class="info-row3">@_vmHan.Infotext3</div>
+                <div class="info-row4">@_vmHan.Infotext4</div>
             </div>
                 break;
 

@@ -33,12 +33,13 @@ namespace KvizCommando.Client.Pages.Team.Components
             _shouldBeShow = true;
             _picCode = string.Empty;
             if (Selected == 0)
-                vm = UpperBlockDataBuilder.BuildTeamHeader(Info, 0, Culture, Lang);
+                Console.WriteLine("");
+            //vm = UpperBlockDataBuilder.BuildTeamHeader(Info, 0, Culture, Lang);
             else
             {
                 if (AppStates.Team!.CharCatMask[Selected - 1])
                 {
-                    vm = UpperBlockDataBuilder.BuildMemberHeader(Member, 0, Culture, Lang);
+                    //  vm = UpperBlockDataBuilder.BuildMemberHeader(Member, 0, Culture, Lang);
                     _picCode = Member.PictureCode;
                 }
                 else

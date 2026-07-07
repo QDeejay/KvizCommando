@@ -8,22 +8,22 @@ using KvizCommando.Shared.Models.Dtos;
 
 namespace KvizCommando.Client.Features.Team
 {
-    public class TDataBuilderMember
+    public class TBuilderMember
     {
         private readonly ILanguageService _lang;
 
-        public TDataBuilderMember(ILanguageService lang)
+        public TBuilderMember(ILanguageService lang)
         {
             _lang = lang;
         }
-        public UpperBlockVm BuildMemberHeader(TeamMemberDto info, int usedSkillPoints, string culture)
+        public UpperBlockVm BuildMemberUpperVm(TeamMemberDto info, int usedSkillPoints, string culture)
         {
             var vm = new UpperBlockVm();
 
             // Közös adatok
             string name = info.Name;
             string publicLevel = RankNameTable.Data[info.Level].PublicLevel ?? "";
-            string devPointsDisplay = (info.DevPts - usedSkillPoints).ToString();
+            string devPointsDisplay = (info.SkillPoints - usedSkillPoints).ToString();
 
             var m = info;
             int c1 = THelpers.NormalizeCategory(m.MaintAttitude.Category[0]);
@@ -44,14 +44,14 @@ namespace KvizCommando.Client.Features.Team
 
             vm.Rows.Add(new(_lang["team.Label.Level"], publicLevel));
             vm.Rows.Add(new(_lang["team.Label.Vitality"], $"{vitAct}/{vitMax}"));
-            vm.Rows.Add(new(_lang["team.Label.Next"], (info.NextXpPts - info.Xp).ToString()));
+            vm.Rows.Add(new(_lang["team.Label.Next"], (info.NextXp - info.Xp).ToString()));
             vm.Rows.Add(new(_lang["team.Label.SkillPointShort"].FormatSafe(oShort), devPointsDisplay));
             vm.Rows.Add(new(_lang["team.Label.Pension"], m.Pension.ToString()));
 
 
             return vm;
         }
-        public BottomBlockVm Build(TeamMemberDto member, int tabPos, string culture)
+        public BottomBlockVm BuildMemberBottomVm(TeamMemberDto member, int tabPos, string culture)
         {
             var vm = new BottomBlockVm();
 
@@ -66,15 +66,14 @@ namespace KvizCommando.Client.Features.Team
             BuildMemberRows(member, vm, culture);
             return vm;
         }
-
-        public BottomDevVm BuildMember(int subPos, TeamMemberDto info, int[] usedPoints, string culture)
+        public BottomDevVm BuildMemberBottomDevVm(int subPos, TeamMemberDto info, int[] usedPoints, string culture)
         {
             (string headerType, int skilltype) = subPos == 1 ? ("Sec", 4) : ("3rd", 8);
 
             var vm = new BottomDevVm
             {
                 UsedPoints = usedPoints,
-                AvailableDevPoints = info.DevPts - usedPoints.Sum(),
+                AvailableDevPoints = info.SkillPoints - usedPoints.Sum(),
                 HeaderText = _lang[$"team.Label.Attitude.{headerType}"],
                 ListType = headerType,
                 SaveButtonText = usedPoints.Sum() > 0 ? $" ({usedPoints.Sum()})" : ""
@@ -105,7 +104,7 @@ namespace KvizCommando.Client.Features.Team
 
         private static void BuildMemberRows(TeamMemberDto mem, BottomBlockVm vm, string culture)
         {
-            int lvl = mem.MemberLvl;
+            int lvl = mem.Level;
             //int skill = mem.SkillPoints;
             string levelShort = THelpers.Right(RankNameTable.Data[lvl].PublicLevel ?? "", 2);
             var mainAt = mem.MaintAttitude;

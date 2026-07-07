@@ -36,7 +36,7 @@ namespace KvizCommando.Client.Pages.Team.Components
                 {
                     SelectedId = 0;
                     _prevTabPosH = TabPos;
-                    vm = RecruitBlockBuilder.Build(RecruitData, candidateOrder, TabPos, culture, Ui.Lang);
+                   // vm = RecruitBlockBuilder.Build(RecruitData, candidateOrder, TabPos, culture, Ui.Lang);
                 }
                
             }

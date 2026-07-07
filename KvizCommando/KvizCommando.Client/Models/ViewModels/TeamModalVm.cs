@@ -33,12 +33,12 @@ namespace KvizCommando.Client.Models.ViewModels
         string DevPointsValue,
         string AddedDevPoints
         );
-    public sealed class HireModalViewModel : TeamModalVm
+    public sealed class ModalHireVm : TeamModalVm
     {
         public string Labelpros { get; set; } = string.Empty;
         public string Labelcons { get; set; } = string.Empty;
     }
-    public class RetireModalView : TeamModalVm
+    public class ModalRetireVm : TeamModalVm
     {
         public string Unlocks { get; set; } = string.Empty;
         public string UnlocksLevel { get; set; } = string.Empty;
@@ -46,13 +46,13 @@ namespace KvizCommando.Client.Models.ViewModels
         public string RankClass { get; set; } = string.Empty;
         public bool RankClassChanged { get; set; } = false;
     }
-    public sealed class PromoteModalView : RetireModalView
+    public sealed class ModalPromoteVm: ModalRetireVm
     {
         
         public string UnlockMaxLevels1 { get; set; } = string.Empty;
         public string UnlockMaxLevels2 { get; set; } = string.Empty;
     }
-    public sealed class HandleModalView : TeamModalVm
+    public sealed class ModalHandleVm : TeamModalVm
     {
         
         public string Infotext2 { get; set;} =string.Empty;

@@ -51,7 +51,8 @@
             background-color: #ffe14d; /* világosabb hover */
         }
 
-.list-grid {
+
+.teampage-list-grid {
     display: grid;
     column-gap: 2px;
     row-gap: 0;
@@ -61,27 +62,27 @@
     align-items: center;
     text-align: left;
 }
-.title {
+.teampage-title {
     text-decoration: underline;
     padding-left: 10px;
 }
 
-.datacol-1 {
+.teampage-datacol-1 {
     font-weight: bold;
     opacity: 0.9;
     text-overflow: ellipsis;
 }
 
-.datacol-2 {
+.teampage-datacol-2 {
     text-align: right;
 }
 
-.datacol-3 {
+.teampage-datacol-3 {
     font-weight: bold;
     opacity: 0.9;
     text-align: right;
 }
 
-.datacol-4 {
+.teampage-datacol-4 {
     margin-left: 10px;
 }

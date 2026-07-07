@@ -10,8 +10,8 @@ namespace KvizCommando.Client.Pages.Team.Components
 {
     public partial class BottomBlockViaButtons
     {
-        [Inject] private DevDataBuilder DevBuilder { get; set; } = default!;
-        [Parameter] public IGeneralInfo DatatoProc { get; set; } = default!;
+        //[Inject] private DevDataBuilder DevBuilder { get; set; } = default!;
+        //[Parameter] public IGeneralInfo DatatoProc { get; set; } = default!;
         [Parameter] public HelpDto DataHelp { get; set; } = default!;
         [Parameter] public int DevPointsUsed { get; set; }
         [Parameter] public EventCallback<ModifySkillRequest> ModifySkill { get; set; } = default!;
@@ -46,24 +46,25 @@ namespace KvizCommando.Client.Pages.Team.Components
             else
             {
                 if (TabPosV == 1 || TabPosV == 2)
-                    vm = DevBuilder(TabPosV, DatatoProc, usedPoints, DataHelp, culture);
+                    Console.WriteLine("");
+                //vm = DevBuilder(TabPosV, DatatoProc, usedPoints, DataHelp, culture);
             }
         }
         protected void OnIncButtonPushed(int rowId)
         {
             int[] usdPnts = usedPoints;
-            if (usdPnts.Sum() >= DatatoProc.DevPts || rowId == 0) return;
+            //if (usdPnts.Sum() >= DatatoProc.DevPts || rowId == 0) return;
             usedPoints[rowId - 1]++;
             usdPnts = usedPoints;
-            vm = DevBuilder.Build(TabPosV, DatatoProc, usdPnts, DataHelp, culture);
+            //vm = DevBuilder.Build(TabPosV, DatatoProc, usdPnts, DataHelp, culture);
         }
         protected void OnDecButtonPushed(int rowId)
         {
             int[] usdPnts = usedPoints;
-            if (DatatoProc.DevPts == 0 || rowId == 0) return;
+           // if (DatatoProc.DevPts == 0 || rowId == 0) return;
             if (usedPoints[rowId - 1] > 0) usedPoints[rowId - 1]--;
             usdPnts = usedPoints;
-            vm = DevBuilder.Build(TabPosV, DatatoProc, usdPnts, DataHelp, culture);
+            //vm = DevBuilder.Build(TabPosV, DatatoProc, usdPnts, DataHelp, culture);
         }
         protected async Task OnSaveButtonPushed()
         {

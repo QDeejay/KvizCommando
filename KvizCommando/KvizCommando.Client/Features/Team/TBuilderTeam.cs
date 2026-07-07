@@ -8,15 +8,15 @@ using KvizCommando.Shared.Models.Dtos;
 
 namespace KvizCommando.Client.Features.Team
 {
-    public class TDataBuilderTeam
+    public class TBuilderTeam
     {
         private readonly ILanguageService _lang;
 
-        public TDataBuilderTeam(ILanguageService lang)
+        public TBuilderTeam(ILanguageService lang)
         {
             _lang = lang;
         }
-        public UpperBlockVm BuildTeamHeaderView(TeamExtendedInfo info, int usedSkillPoints, string culture)
+        public UpperBlockVm BuildTeamUpperVm(TeamExtendedInfo info, int usedSkillPoints, string culture)
         {
             var vm = new UpperBlockVm();
 
@@ -24,10 +24,10 @@ namespace KvizCommando.Client.Features.Team
             string name = info.Name;
             string rank = RankNameLocalizer.GetTeam(info.Level, culture);
             string publicLevel = RankNameTable.Data[info.Level].PublicLevel ?? "";
-            string devPointsDisplay = (info.DevPts - usedSkillPoints).ToString();
+            string devPointsDisplay = (info.DevPoints - usedSkillPoints).ToString();
 
             var t = info;
-            string xp = info.Level < 22 ? $"{t.TeamXp}/{t.NextXpPts}" : _lang["team.Label.Remark.AtMaximum"];
+            string xp = info.Level < 22 ? $"{t.Xp}/{t.NextXp}" : _lang["team.Label.Remark.AtMaximum"];
             vm.Rows.Add(new(_lang["team.Label.Name"], name));
             vm.Rows.Add(new(_lang["team.Label.Org"], rank));
             vm.Rows.Add(new(_lang["team.Label.Level"], publicLevel));
@@ -37,13 +37,13 @@ namespace KvizCommando.Client.Features.Team
 
             vm.Rows.Add(new(_lang["team.Label.Credit"], t.Credits.ToString()));
             vm.Rows.Add(new(_lang["team.label.TeamDevPointShort"], devPointsDisplay));
-            vm.Rows.Add(new(_lang["team.Label.Bonus"], $"{t.TeamBonus}%"));
+            vm.Rows.Add(new(_lang["team.Label.Bonus"], $"{t.Bonus}%"));
             vm.Rows.Add(new("", ""));
             vm.Rows.Add(new("", ""));
 
             return vm;
         }
-        public BottomBlockVm BuildTeamView(TeamDtos team, string culture)
+        public BottomBlockVm BuildTeamBottomVm(TeamDtos team, string culture)
         {
             var vm = new BottomBlockVm();
 
@@ -57,14 +57,14 @@ namespace KvizCommando.Client.Features.Team
             BuildTeamRows(team, vm, culture);
             return vm;
         }
-        public BottomDevVm BuildDevTeamView(TeamExtendedInfo info, int[] usedPoints, HelpDto help, string culture)
+        public BottomDevVm BuildTeamBottomDevVm(TeamExtendedInfo info, int[] usedPoints, HelpDto help, string culture)
         {
             string headerType = "Help";
             int skilltype = 12;
             var vm = new BottomDevVm
             {
                 UsedPoints = usedPoints,
-                AvailableDevPoints = info.DevPts - usedPoints.Sum(),
+                AvailableDevPoints = info.DevPoints - usedPoints.Sum(),
                 HeaderText = _lang["team.Label.Attitude.Help"],
                 ListType = headerType,
                 SaveButtonText = _lang["team.Button.Modify"] + (usedPoints.Sum() > 0 ? $" ({usedPoints.Sum()})" : "")
@@ -98,9 +98,9 @@ namespace KvizCommando.Client.Features.Team
                     var mem = input.TeamMembers[j] ?? new TeamMemberDto();
 
                     vm.Rows.Add(new BottomRow(
-                        mem.MemberName,
+                        mem.Name,
                         "<" + OrientationLocalizer.GetOrientShort(j, culture) + ">",
-                        RankNameTable.Data[mem.MemberLvl].PublicLevel ?? "",
+                        RankNameTable.Data[mem.Level].PublicLevel ?? "",
                         (int)mem.Remark == 0 ? string.Empty : _lang[$"team.modal.Button.{mem.Remark}"],
                         (int)mem.Remark > 10 ? (int)mem.Remark + j : j
                     ));

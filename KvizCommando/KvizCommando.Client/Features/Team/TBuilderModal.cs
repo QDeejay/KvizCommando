@@ -15,19 +15,20 @@ using System.Xml.Linq;
 
 namespace KvizCommando.Client.Features.Team
 {
-    public class TeamModalDataBuilder
+    public sealed class TBuilderModal
     {
         private readonly ILanguageService _lang;
-        public TeamModalDataBuilder(ILanguageService lang)
+        public TBuilderModal(ILanguageService lang)
         {
             _lang = lang;
         }
+
         private const string UNLOCK_SEP = " => ";
 
-        public HireModalViewModel BuildHire(CandidateDto candidate, int hpos, int candno, string culture)
+        public ModalHireVm BuildHireVm(CandidateDto candidate, int hpos, int candno, string culture)
 
         {
-            var vm = new HireModalViewModel();
+            var vm = new ModalHireVm();
             var oriData = TeamHelper.RecruitResolver(hpos, candno);
             string orientkeys = RecruitData.OrientKeys[hpos - 1];
             var bi = new BasicInfo()
@@ -69,9 +70,9 @@ namespace KvizCommando.Client.Features.Team
             }
             return vm;
         }
-        public PromoteModalView BuildPromote(TeamMemberDto member, string culture)
+        public ModalPromoteVm BuildPromoteVm(TeamMemberDto member, string culture)
         { 
-            var vm = new PromoteModalView();
+            var vm = new ModalPromoteVm();
             var bi = BasicInfoResolver(member);
             int rc = bi._level==0 ? 0 : (bi._level - 1) / 3 + 1;
             int newLevel = Math.Min(bi._level+1, 21);
@@ -103,7 +104,7 @@ namespace KvizCommando.Client.Features.Team
                     ));
             vm.Rows.Add(new ModalRow(
                 CategoryName: _lang["team.Label.Vitality"][0..(_lang["team.Label.Vitality"].Length - 1)] + " maximum",
-                ValueDisplay: $"{member.EnergyPoints}/{36 + member.MemberLvl * 3}",
+                ValueDisplay: $"{member.EnergyPoints}/{36 + member.Level * 3}",
                 separator: UNLOCK_SEP,
                 ValueChangeDisplay: $"{36 + newLevel * 3}/{36 + newLevel * 3}",
                 color: ""
@@ -113,9 +114,9 @@ namespace KvizCommando.Client.Features.Team
             AttitudeLineResolver(member.GenderAttitude, vm, RankConstants.startLevels[8..12], newLevel, culture);
             return vm; 
         }
-        public RetireModalView BuildRetire(TeamMemberDto member,string culture)
+        public ModalRetireVm BuildRetireVm(TeamMemberDto member,string culture)
         {
-            var vm = new RetireModalView();
+            var vm = new ModalRetireVm();
             var bi = BasicInfoResolver(member);
             
             
@@ -145,9 +146,9 @@ namespace KvizCommando.Client.Features.Team
 
             return vm; 
         }
-        public HandleModalView BuildHandle(TeamMemberDto member, string culture)
+        public ModalHandleVm BuildHandleVm(TeamMemberDto member, string culture)
         { 
-            var vm = new HandleModalView();
+            var vm = new ModalHandleVm();
             var bi = BasicInfoResolver(member);
             
             vm.Info = BuildInfoRow(bi,0, culture, _lang);
@@ -188,13 +189,13 @@ namespace KvizCommando.Client.Features.Team
             { 
                 _name = member.Name,
                 _piccode = member.PictureCode,
-                _devpoints = member.DevPts.ToString(),
+                _devpoints = member.SkillPoints.ToString(),
                 _level = member.Level,
                 _orient1 = member.MaintAttitude.Category[0] > 8 ? member.MaintAttitude.Category[2] : member.MaintAttitude.Category[0],
                 _orient2 = member.SecondAttitude.Category[0] > 8 ? member.SecondAttitude.Category[2] : member.SecondAttitude.Category[0]
             }; 
         }
-        private static void AttitudeLineResolver(AttidtudeDto att, PromoteModalView vm, int[] slevel, int level, string culture)
+        private static void AttitudeLineResolver(AttidtudeDto att, ModalPromoteVm vm, int[] slevel, int level, string culture)
         {
             int actL = level-1;
             int newL = level;

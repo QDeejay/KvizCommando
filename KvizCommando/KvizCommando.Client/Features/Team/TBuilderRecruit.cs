@@ -9,11 +9,11 @@ using System.Reflection.Emit;
 
 namespace KvizCommando.Client.Features.Team
 {
-    public class RecruitBlockBuilder
+    public class TBuilderRecruit
     {
         
         private static readonly int[] que = [1, 2, 3, 4, 5, 6, 7, 8];
-        public static RecruitVm Build(CandidateDto candidate, int[] order, int tabpos, string culture, ILanguageService lang)
+        public static RecruitVm BuildRecruitVm(CandidateDto candidate, int[] order, int tabpos, string culture, ILanguageService lang)
         {
             var vm = new RecruitVm() { Info= lang["team.Label.NoMember"] };
             if (tabpos < 1 || tabpos > 8)

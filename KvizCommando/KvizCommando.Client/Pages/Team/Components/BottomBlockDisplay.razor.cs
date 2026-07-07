@@ -33,9 +33,11 @@ namespace KvizCommando.Client.Pages.Team.Components
         protected override void OnParametersSet()
         {
             if (Selected == 0)
-                vm = BottomBlockDataBuilder.BuildTeamView(Team, Culture);
-           else if(Team.CharCatMask[Selected])
-                vm = BottomBlockDataBuilder.BuildMemberView(Team.TeamMembers[Selected], Culture);
+                Console.WriteLine("");
+            //vm = BottomBlockDataBuilder.BuildTeamView(Team, Culture);
+            else if (Team.CharCatMask[Selected])
+                Console.WriteLine("");
+            //vm = BottomBlockDataBuilder.BuildMemberView(Team.TeamMembers[Selected], Culture);
         }
         protected async Task OnActionButtonPushed(int rowId)
         {

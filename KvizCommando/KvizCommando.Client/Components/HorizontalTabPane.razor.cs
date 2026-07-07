@@ -13,8 +13,8 @@ namespace KvizCommando.Client.Components
         [Parameter] public (bool[]?, string[]?) TabHEnabled { get; set; }
         [Parameter] public string? TabTitle { get; set; }
         [Parameter] public bool PicTabEnabled { get; set; } 
-        [Parameter] public EventCallback<int> ActiveHIndexChanged { get; set; }
         [Parameter] public EventCallback<int> ActiveVIndexChanged { get; set; }
+        [Parameter] public EventCallback<int> ActiveHIndexChanged { get; set; }
         [Parameter] public string[]? HTabs { get; set; }
         [Parameter] public string[]? VTabs { get; set; }
         [Parameter] public RenderFragment? Content1 { get; set; }

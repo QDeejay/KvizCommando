@@ -1,5 +1,6 @@
 ﻿using KvizCommando.Client.Features.Team;
 using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -17,7 +18,8 @@ namespace KvizCommando.Client.Components.Dynamic
 {
     public partial class TModalRender
     {
-        [Inject] private ITeamModalDataBuilder render { get; set; } = default!;
+        // [Inject] private ITeamModalDataBuilder render { get; set; } = default!;
+        [Inject] private ILanguageService Lang { get; set; } = default!;
         [Parameter] public int mode { get; set; } = default!;
 
         [Parameter] public CandidateDto Candidate { get; set; } = default!;
@@ -30,10 +32,12 @@ namespace KvizCommando.Client.Components.Dynamic
         private bool isLoaded = false;
         private InfoBlock Info = default!;
         private RankHeader rh = default!;
-        HireModalViewModel vmHir = new();
-        PromoteModalView vmPro = new();
-        RetireModalView vmRet = new();
-        HandleModalView vmHan = new();
+
+        private TBuilderModal? _builder;
+        ModalHireVm _vmHir = new();
+        ModalPromoteVm _vmPro = new();
+        ModalRetireVm _vmRet = new();
+        ModalHandleVm _vmHan = new();
         protected override void OnParametersSet()
         {
             switch (mode) 
@@ -41,42 +45,43 @@ namespace KvizCommando.Client.Components.Dynamic
                 case 1:
                     if (canNo > 0 && tabPosH>0)
                     {
-                        vmHir = render.BuildHire(Candidate, tabPosH, canNo, culture);
-                        Info = vmHir.Info;
+                        _vmHir = _builder!.BuildHireVm(Candidate, tabPosH, canNo, culture);
+                        Info = _vmHir.Info;
                         rh = new RankHeader();
                     }
                     break;
                 case 2:
-                    vmPro = render.BuildPromote(TeamMember, culture);
-                    Info = vmPro.Info;
+                    _vmPro = _builder!.BuildPromoteVm(TeamMember, culture);
+                    Info = _vmPro.Info;
                     rh = new RankHeader()
                     {
-                        Rank = vmPro.UnlocksRank,
-                        RankClass = vmPro.RankClass,
-                        Level = vmPro.UnlocksLevel,
-                        NewClass = vmPro.RankClassChanged
+                        Rank = _vmPro.UnlocksRank,
+                        RankClass = _vmPro.RankClass,
+                        Level = _vmPro.UnlocksLevel,
+                        NewClass = _vmPro.RankClassChanged
                     };
                     break;
                 case 3:
-                    vmRet = render.BuildRetire(TeamMember, culture);
-                    Info = vmRet.Info;
+                    _vmRet = _builder!.BuildRetireVm(TeamMember, culture);
+                    Info = _vmRet.Info;
                     rh = new RankHeader()
                     {
-                        Rank = vmRet.UnlocksRank,
-                        RankClass = vmRet.RankClass,
-                        Level = vmRet.UnlocksLevel,
-                        NewClass = vmRet.RankClassChanged
+                        Rank = _vmRet.UnlocksRank,
+                        RankClass = _vmRet.RankClass,
+                        Level = _vmRet.UnlocksLevel,
+                        NewClass = _vmRet.RankClassChanged
                     };
                     break;
                 case 4:
-                    vmHan = render.BuildHandle(TeamMember,culture);
-                    Info= vmHan.Info;
+                    _vmHan = _builder!.BuildHandleVm(TeamMember,culture);
+                    Info= _vmHan.Info;
                     rh = new RankHeader();
                     break;
             }
         }
         protected override void OnInitialized()
         {
+            _builder = new TBuilderModal(Lang);
             isLoaded = true;
         }
         private class RankHeader
