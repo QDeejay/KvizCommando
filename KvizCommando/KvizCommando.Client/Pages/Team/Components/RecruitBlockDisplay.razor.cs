@@ -9,18 +9,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Globalization;
+using KvizCommando.Client.Utilities;
 
 namespace KvizCommando.Client.Pages.Team.Components
 {
-    public partial class RecruitBlockDisplay
+    public partial class RecruitBlockDisplay : KcComponentBase
     {
-        [Inject] private RecruitBlockBuilder Builder { get; set; } = default!;
+        //[Inject] private RecruitBlockBuilder Builder { get; set; } = default!;
 
         [Parameter] public CandidateDto RecruitData { get; set; } = default!;
         [Parameter] public int TabPos { get; set; } = default!;
         [Parameter] public EventCallback<int> SelectedCandidate { get; set; } = default!;
         [Parameter] public int[] candidateOrder { get; set; } = default!;
-        private RecruitViewModel vm = new();
+        private RecruitVm vm = new();
         private int SelectedId = 0;
         private int _prevTabPosH = -1;
         private bool _couldBeHire = false;
@@ -35,7 +36,7 @@ namespace KvizCommando.Client.Pages.Team.Components
                 {
                     SelectedId = 0;
                     _prevTabPosH = TabPos;
-                    vm = Builder.Build(RecruitData, candidateOrder, TabPos, culture);
+                    vm = RecruitBlockBuilder.Build(RecruitData, candidateOrder, TabPos, culture, Ui.Lang);
                 }
                
             }

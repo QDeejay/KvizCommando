@@ -24,8 +24,8 @@ namespace KvizCommando.Client.Pages.Team.Components
         //private TeamExtendedInfo Info => AppStates.Team!.TeamInfo;
         private TeamDtos Team => AppStates.Team!;
 
-        private UpperBlockViewModel _vmUp = new();
-        private BottomBlockViewModel _vmBot = new();
+        private UpperBlockVm _vmUp = new();
+        private BottomBlockVm _vmBot = new();
 
         protected override void OnParametersSet()
         {
@@ -36,7 +36,7 @@ namespace KvizCommando.Client.Pages.Team.Components
 
         private async Task OnActionButtonPushed(int rowId)
         {
-            int delegateItem = vm.Rows[rowId].action > 400 ? vm.Rows[rowId].action - 100 : vm.Rows[rowId].action;
+            int delegateItem = _vmBot.Rows[rowId].Action > 400 ? _vmBot.Rows[rowId].Action - 100 : _vmBot.Rows[rowId].Action;
             if (ActionButtonPushed.HasDelegate)
                 await ActionButtonPushed.InvokeAsync(delegateItem);
         }

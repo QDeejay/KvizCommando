@@ -1,6 +1,6 @@
 {
-  "Email": "",
-  "Error.Email": "",
-  "Succes.Email": "",
-  "Title": ""
+  "Email": "Please give your e-mail address!",
+  "Error.Email": "Invalid e-mail address!",
+  "Succes.Email": "Please follow the instructions in the e-mail to reset your password!",
+  "Title": "Forgot password request"
 }

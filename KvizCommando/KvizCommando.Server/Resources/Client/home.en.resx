@@ -124,63 +124,63 @@
     <value>To Next: {0} day(s)</value>
   </data>
   <data name="Box.Footer.Events2" xml:space="preserve">
-    <value />
+    <value>No events in soon</value>
   </data>
   <data name="Box.Footer.Events3" xml:space="preserve">
-    <value />
+    <value>Events in {0} day(s)</value>
   </data>
   <data name="Box.Footer.GameVs" xml:space="preserve">
-    <value />
+    <value>Online {0}</value>
   </data>
   <data name="Box.Footer.Messages" xml:space="preserve">
-    <value />
+    <value>New: {0}</value>
   </data>
   <data name="Box.Footer.Question" xml:space="preserve">
-    <value />
+    <value>Operation needed: {0}</value>
   </data>
   <data name="Box.Footer.Rankings1" xml:space="preserve">
-    <value />
+    <value>Weekly rank: {0}</value>
   </data>
   <data name="Box.Footer.Rankings2" xml:space="preserve">
-    <value />
+    <value>No rank</value>
   </data>
   <data name="Box.Footer.Team" xml:space="preserve">
-    <value />
+    <value>Active: {0}/{1}</value>
   </data>
   <data name="Box.Title.Community" xml:space="preserve">
-    <value />
+    <value>Community</value>
   </data>
   <data name="Box.Title.Events" xml:space="preserve">
-    <value />
+    <value>Events</value>
   </data>
   <data name="Box.Title.GameSolo" xml:space="preserve">
-    <value />
+    <value>Game - Solo</value>
   </data>
   <data name="Box.Title.GameVs" xml:space="preserve">
-    <value />
+    <value>Game - Vs</value>
   </data>
   <data name="Box.Title.Messages" xml:space="preserve">
-    <value />
+    <value>Messages</value>
   </data>
   <data name="Box.Title.Question" xml:space="preserve">
-    <value />
+    <value>Questions</value>
   </data>
   <data name="Box.Title.Rankings" xml:space="preserve">
-    <value />
+    <value>Rankings</value>
   </data>
   <data name="Box.Title.Shop" xml:space="preserve">
-    <value />
+    <value>Shop</value>
   </data>
   <data name="Box.Title.Statistic" xml:space="preserve">
-    <value />
+    <value>Statistic</value>
   </data>
   <data name="Box.Title.Team" xml:space="preserve">
-    <value />
+    <value>Your team</value>
   </data>
   <data name="Title.BulleteinBoard" xml:space="preserve">
-    <value />
+    <value>Buletein board</value>
   </data>
   <data name="Title.Page" xml:space="preserve">
-    <value />
+    <value>Main page</value>
   </data>
 </root>

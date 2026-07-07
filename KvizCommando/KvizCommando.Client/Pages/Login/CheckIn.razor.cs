@@ -26,12 +26,9 @@ namespace KvizCommando.Client.Pages.Login
 {
     public partial class CheckIn : KcComponentBase, IDisposable
     {
-        //Inject] private NavigationManager Nav { get; set; } = default!;
-        //[Inject] private ILanguageService Lang { get; set; } = default!;
-        //[Inject] private IUserService Service { get; set; } = default!;
-        [Inject] private ISessionStorageService _sessionStorage { get; set; } = default!;
-        [Inject] private HttpClient _http { get; set; } = default!;
-        [Inject] private IdentityRulesService _identityRules { get; set; } = default!;
+        [Inject] private ISessionStorageService SessionStorage { get; set; } = default!;
+        [Inject] private HttpClient Http { get; set; } = default!;
+        [Inject] private IdentityRulesService IdentityRules { get; set; } = default!;
 
         private string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         private KcModal? _termsModal;
@@ -43,10 +40,10 @@ namespace KvizCommando.Client.Pages.Login
 
         private const string CHEKIN_CACHE_KEY = "checkin:status";
         private CheckInSessionCache _cacheData = new();
-      
-        private RegisterOptionsResponse? _options { get; set; }
 
-        private CheckInPostRequest _formData { get; set; } = new();
+        private RegisterOptionsResponse? _options;
+
+        private CheckInPostRequest _formData = new();
         private string ResultMessage { get; set; } = string.Empty;
 
         private string DynamicTitle { get; set; } = string.Empty; // Dinamikus oldal cím
@@ -54,7 +51,7 @@ namespace KvizCommando.Client.Pages.Login
         private bool DisplayNameField { get; set; } = false;
 
 
-        private bool isLoaded { get; set; } = false;
+        private bool _isLoaded = false;
 
         private bool CanCheckIn =>
            (!string.IsNullOrWhiteSpace(_formData.DisplayName) || _cacheData.needsName == false)
@@ -89,7 +86,7 @@ namespace KvizCommando.Client.Pages.Login
         protected override async Task OnInitializedAsync()
         {
             _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-            _options = await _identityRules.GetRulesAsync();
+            _options = await IdentityRules.GetRulesAsync();
             var uri = Ui.Nav.ToAbsoluteUri(Ui.Nav.Uri);
             var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
             var SugDispName = query["name"];
@@ -101,15 +98,15 @@ namespace KvizCommando.Client.Pages.Login
                 Ui.Nav.NavigateTo(uri.GetLeftPart(UriPartial.Path), replace: true);
                 await User.CheckInStartAsync(false);
             }
-            _cacheData = await _sessionStorage.GetItemAsync<CheckInSessionCache>(CHEKIN_CACHE_KEY);
+            _cacheData = await SessionStorage.GetItemAsync<CheckInSessionCache>(CHEKIN_CACHE_KEY);
             if (_cacheData is not null)
             {
-                _fullHtml = await _http.GetStringAsync(_cacheData.url);
+                _fullHtml = await Http.GetStringAsync(_cacheData.url);
             }
 
             // (opcionális) takarítsd le az URL-ből az ?error-t a címsorból:
             //_termsPar = MBoxBuilder.BuildParam(ModalTypes.Terms, Ui.Lang);
-            isLoaded = true;
+            _isLoaded = true;
         }
         private static Task OnAcceptedAsync()
         {
@@ -159,7 +156,7 @@ namespace KvizCommando.Client.Pages.Login
             if (response)
             {
                 // Sikeres bejelentkezés után töröljük a cache-t
-                await _sessionStorage.RemoveItemAsync(CHEKIN_CACHE_KEY);
+                await SessionStorage.RemoveItemAsync(CHEKIN_CACHE_KEY);
                 Ui.Nav.NavigateTo("/home", true);
                 return;
             }
@@ -231,7 +228,7 @@ namespace KvizCommando.Client.Pages.Login
       
         private async Task NavigateHome()
         {
-            await _sessionStorage.RemoveItemAsync(CHEKIN_CACHE_KEY);
+            await SessionStorage.RemoveItemAsync(CHEKIN_CACHE_KEY);
             await User.LogoutAsync(true);
             Ui.Nav.NavigateTo("/login");
         }

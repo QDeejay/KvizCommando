@@ -1,4 +1,5 @@
-﻿using KvizCommando.Client.Data;
+﻿/*
+ using KvizCommando.Client.Data;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Pages.Team;
@@ -12,11 +13,11 @@ namespace KvizCommando.Client.Features.Team
     public static class BottomBlockDataBuilder
     {
       
-        public static BottomBlockViewModel BuildTeamView(TeamDtos team, string culture)
+        public static BottomBlockVm BuildTeamView(TeamDtos team, string culture)
         {
-            var vm = new BottomBlockViewModel();
+            var vm = new BottomBlockVm();
             vm.Rows.Add(
-                new BottomBlockRow(
+                new BottomRow(
                     "team.Label.TeamName",
                     true.ToString(), "", "", 0
                 )
@@ -24,11 +25,11 @@ namespace KvizCommando.Client.Features.Team
             BuildTeamRows(team, vm, culture);
             return vm;
         }
-        public static BottomBlockViewModel BuildMemberView(TeamMemberDto member, string culture)
+        public static BottomBlockVm BuildMemberView(TeamMemberDto member, string culture)
         {
-            var vm = new BottomBlockViewModel();
+            var vm = new BottomBlockVm();
             vm.Rows.Add(
-                new BottomBlockRow(
+                new BottomRow(
                     "team.Label.Modifiers",
                     false.ToString(), "", "", 0
                 )
@@ -37,7 +38,7 @@ namespace KvizCommando.Client.Features.Team
             return vm;
         }
 
-        private static void BuildTeamRows(TeamDtos input, BottomBlockViewModel vm, string culture)
+        private static void BuildTeamRows(TeamDtos input, BottomBlockVm vm, string culture)
         {
             foreach (int j in Enumerable.Range(1, 8))
             {
@@ -45,7 +46,7 @@ namespace KvizCommando.Client.Features.Team
                 {
                     var mem = input.TeamMembers[j] ?? new TeamMemberDto();
 
-                    vm.Rows.Add(new BottomBlockRow(
+                    vm.Rows.Add(new BottomRow(
                         mem.MemberName,
                         "<" + OrientationLocalizer.GetOrientShort(j, culture) + ">",
                         RankNameTable.Data[mem.MemberLvl].PublicLevel ?? "",
@@ -55,7 +56,7 @@ namespace KvizCommando.Client.Features.Team
                 }
             }
         }
-        private static void BuildMemberRows(TeamMemberDto mem, BottomBlockViewModel vm, string culture)
+        private static void BuildMemberRows(TeamMemberDto mem, BottomBlockVm vm, string culture)
         {
             int lvl = mem.MemberLvl;
             int skill = mem.SkillPoints;
@@ -82,12 +83,12 @@ namespace KvizCommando.Client.Features.Team
             vm.Rows.Add(BuildSkillRow(genAt.Skill[1], genAt.Category[1], 5, culture));
             vm.Rows.Add(BuildSkillRow(genAt.Skill[3], genAt.Category[3], 7, culture));
         }
-        private static BottomBlockRow BuildSkillRow(SkillPartial skill, int category, int modifier, string culture)
+        private static BottomRow BuildSkillRow(SkillPartial skill, int category, int modifier, string culture)
         {
             double val = ModifierTable.Data[skill.LvlCurrent].Modifier[modifier] ?? 0.0;
             string prefix = val > 0 ? "+" : "";
 
-            return new BottomBlockRow(
+            return new BottomRow(
                 CategoryNameLocalizer.GetCategory(category, culture),
                 "",
                 prefix + TeamHelper.FormatOneDecimal(val, false),
@@ -95,11 +96,11 @@ namespace KvizCommando.Client.Features.Team
                 modifier+1
             );
         }
-        private static BottomBlockRow BuildMainSkillRow(int skillno,int cat, int level, string levelshort, string culture)
+        private static BottomRow BuildMainSkillRow(int skillno,int cat, int level, string levelshort, string culture)
         {
             double val = ModifierTable.DataMainSkill[skillno].StartValue + (level-1) * ModifierTable.DataMainSkill[skillno].StepValue;
             string prefix = val > 0 ? "+" : "";
-            return new BottomBlockRow(
+            return new BottomRow(
                 CategoryNameLocalizer.GetCategory(cat, culture),
                 levelshort,
                 prefix + TeamHelper.FormatOneDecimal(val, false),
@@ -107,6 +108,8 @@ namespace KvizCommando.Client.Features.Team
                 0
                 );
         }
+
+
 
         /*
             readonly ILanguageService _lang;
@@ -184,12 +187,16 @@ namespace KvizCommando.Client.Features.Team
 
             return ("",0);
         }
-        */
-        private static string Right(string s, int count)
-        {
-            if (string.IsNullOrEmpty(s)) return s;
-            if (s.Length <= count) return s;
-            return "<" + s.Substring(s.Length - count) + ">";
-        }
+private static string Right(string s, int count)
+{
+    if (string.IsNullOrEmpty(s)) return s;
+    if (s.Length <= count) return s;
+    return "<" + s.Substring(s.Length - count) + ">";
+}
     }
 }
+
+ 
+ 
+        */
+

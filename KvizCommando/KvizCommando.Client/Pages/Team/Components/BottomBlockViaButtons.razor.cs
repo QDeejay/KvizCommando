@@ -19,7 +19,7 @@ namespace KvizCommando.Client.Pages.Team.Components
         [Parameter] public int TabPosH { get; set; } = default!;
 
         private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-        private DevViewModel vm = new();
+        private BottomDevVm vm = new();
         private int[] usedPoints { get; set; } = default!;
         private int _prevTabPosV = -1;
         private int _prevTabPosH = -1;
@@ -46,7 +46,7 @@ namespace KvizCommando.Client.Pages.Team.Components
             else
             {
                 if (TabPosV == 1 || TabPosV == 2)
-                    vm = DevBuilder.Build(TabPosV, DatatoProc, usedPoints, DataHelp, culture);
+                    vm = DevBuilder(TabPosV, DatatoProc, usedPoints, DataHelp, culture);
             }
         }
         protected void OnIncButtonPushed(int rowId)

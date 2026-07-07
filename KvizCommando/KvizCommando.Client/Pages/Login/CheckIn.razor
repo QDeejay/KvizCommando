@@ -3,7 +3,7 @@
 @layout LoginLayout
 @using KvizCommando.Client.Components
 
-@if (isLoaded==true)
+@if (_isLoaded==true)
 {
     <LangGuard Culture=@_culture Module="checkin" OnReady="BuildDynamicText">
          <KcModal @ref="_termsModal"

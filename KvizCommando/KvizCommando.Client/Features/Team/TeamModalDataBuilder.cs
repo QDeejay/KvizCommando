@@ -15,14 +15,7 @@ using System.Xml.Linq;
 
 namespace KvizCommando.Client.Features.Team
 {
-    public interface ITeamModalDataBuilder
-    {
-        HireModalViewModel BuildHire(CandidateDto candidate,int hpos, int candno,string culture);
-        PromoteModalView BuildPromote(TeamMemberDto member, string culture);
-        RetireModalView BuildRetire(TeamMemberDto member,string culture);
-        HandleModalView BuildHandle(TeamMemberDto member,string culture);
-    }
-    public class TeamModalDataBuilder : ITeamModalDataBuilder
+    public class TeamModalDataBuilder
     {
         private readonly ILanguageService _lang;
         public TeamModalDataBuilder(ILanguageService lang)
@@ -30,6 +23,7 @@ namespace KvizCommando.Client.Features.Team
             _lang = lang;
         }
         private const string UNLOCK_SEP = " => ";
+
         public HireModalViewModel BuildHire(CandidateDto candidate, int hpos, int candno, string culture)
 
         {
@@ -47,9 +41,9 @@ namespace KvizCommando.Client.Features.Team
             };
             int[] orientcats = oriData.Item3;
             
-            vm.Info = BuildInfoRow(bi,0, culture);
-            vm.labelpros = _lang["team.modal.Label.Pros"];
-            vm.labelcons = _lang["team.modal.Label.Cons"];
+            vm.Info = BuildInfoRow(bi,0, culture, _lang);
+            vm.Labelpros = _lang["team.modal.Label.Pros"];
+            vm.Labelcons = _lang["team.modal.Label.Cons"];
             int index = -1;
             double val;
             string pref = string.Empty;
@@ -83,14 +77,14 @@ namespace KvizCommando.Client.Features.Team
             int newLevel = Math.Min(bi._level+1, 21);
             int newRc = (newLevel - 1) / 3 + 1;
             int addDevPoints = RankRewards.List[newLevel].DevPointRevard;
-            vm.Info = BuildInfoRow(bi, addDevPoints,culture);
+            vm.Info = BuildInfoRow(bi, addDevPoints,culture, _lang);
            
             vm.Unlocks = _lang["team.Label.Attitude.Mai"] ;
             vm.UnlocksLevel = (RankNameTable.Data[newLevel].PublicLevel ?? "") + ": ";
             vm.UnlocksRank = RankNameLocalizer.GetName(newLevel, culture);
             vm.RankClass = RankNameLocalizer.GetClass(newRc, culture);
             vm.RankClassChanged = newRc > rc;
-            vm.infotext1 = newRc > rc ? _lang["team.modal.Text.Promote2"] : _lang["team.modal.Text.Promote1"];
+            vm.Infotext1 = newRc > rc ? _lang["team.modal.Text.Promote2"] : _lang["team.modal.Text.Promote1"];
             vm.UnlockMaxLevels1 = _lang["team.Label.Attitude.Sec"] + " (max)";
             vm.UnlockMaxLevels2 = _lang["team.Label.Attitude.3rd"] + " (max)";
             vm.Rows.Add(newRc > rc ? new ModalRow(
@@ -127,8 +121,8 @@ namespace KvizCommando.Client.Features.Team
             
             int newLevel = 31;
             int newRc = 11;
-            vm.Info = BuildInfoRow(bi,0, culture);
-            vm.infotext1 = _lang["team.modal.Text.Retire1"];
+            vm.Info = BuildInfoRow(bi,0, culture, _lang);
+            vm.Infotext1 = _lang["team.modal.Text.Retire1"];
             vm.Unlocks = _lang["team.modal.Label.Unlocks"];
             vm.UnlocksLevel = (RankNameTable.Data[newLevel].PublicLevel ?? "") + ": ";
             vm.UnlocksRank = RankNameLocalizer.GetName(newLevel, culture);
@@ -156,37 +150,38 @@ namespace KvizCommando.Client.Features.Team
             var vm = new HandleModalView();
             var bi = BasicInfoResolver(member);
             
-            vm.Info = BuildInfoRow(bi,0, culture);
-            vm.infotext1 = _lang["team.modal.Text.Handle2"];
-            vm.infotext2 = _lang["team.modal.Text.Handle1"];
-            vm.infotext3 = _lang["team.modal.Text.Handle3"];
+            vm.Info = BuildInfoRow(bi,0, culture, _lang);
+            vm.Infotext1 = _lang["team.modal.Text.Handle2"];
+            vm.Infotext2 = _lang["team.modal.Text.Handle1"];
+            vm.Infotext3 = _lang["team.modal.Text.Handle3"];
             if (member.SkillPoints == 0)
-                vm.infotext4 = _lang["team.modal.Text.Handle4"].FormatSafe(vm.Info.Devpoints[0..7]);
+                vm.Infotext4 = _lang["team.modal.Text.Handle4"].FormatSafe(vm.Info.Devpoints[0..7]);
             else 
-                vm.infotext4=string.Empty;
+                vm.Infotext4=string.Empty;
             return vm; 
         }
-        private InfoBlock BuildInfoRow(BasicInfo inforowdata, int adddevpoints,  string culture)
+
+        private static InfoBlock BuildInfoRow(BasicInfo inforowdata, int adddevpoints,  string culture, ILanguageService lang)
         {
 
             return new InfoBlock(
-                Name: _lang["team.Label.Name"],
+                Name: lang["team.Label.Name"],
                 Color: GenreColorResolver(inforowdata._piccode),
                 NameValue: inforowdata._name,
-                Rank: _lang["team.Label.Rank"],
+                Rank: lang["team.Label.Rank"],
                 RankValue: RankNameLocalizer.GetName(inforowdata._level, culture),
-                Level: _lang["team.Label.Level"],
+                Level: lang["team.Label.Level"],
                 LevelValue: RankNameTable.Data[inforowdata._level].PublicLevel ?? "",
-                Orient1: _lang["team.modal.Label.Orient1"],
-                Orient2: _lang["team.modal.Label.Orient2"],
+                Orient1: lang["team.modal.Label.Orient1"],
+                Orient2: lang["team.modal.Label.Orient2"],
                 Orient1Value: OrientationLocalizer.GetOrientation(inforowdata._orient1, culture),
                 Orient2Value: OrientationLocalizer.GetOrientation(inforowdata._orient2, culture),
-                Devpoints: _lang["team.Label.SkillPointShort"].FormatSafe(OrientationLocalizer.GetOrientShort(inforowdata._orient1, culture)),
+                Devpoints: lang["team.Label.SkillPointShort"].FormatSafe(OrientationLocalizer.GetOrientShort(inforowdata._orient1, culture)),
                 DevPointsValue: inforowdata._devpoints,
                 AddedDevPoints: adddevpoints > 0 ? "+" + adddevpoints.ToString() : ""
                 );
         }
-        private BasicInfo BasicInfoResolver(TeamMemberDto member)
+        private static BasicInfo BasicInfoResolver(TeamMemberDto member)
         { 
            
             return new BasicInfo() 
@@ -235,7 +230,7 @@ namespace KvizCommando.Client.Features.Team
             return pictureCode.StartsWith
                     ("M") ? "lightblue" : "pink";
         }
-        private class BasicInfo
+        private sealed class BasicInfo
         { 
             public string _name = string.Empty;
             public string _piccode = string.Empty;

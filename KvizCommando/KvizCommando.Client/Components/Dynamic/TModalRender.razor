@@ -33,13 +33,13 @@
         {
         case 1:
             <div class="hire-skillblock">
-            <div class="modal-subtitle">@vmHir.labelpros</div>
+            <div class="modal-subtitle">@vmHir.Labelpros</div>
             <div></div>
                 @for (int i = 0; i < vmHir.Rows.Count; i++)
                 {
                     @if (i == 3)
                     {
-                        <div class="modal-subtitle">@vmHir.labelcons</div>
+                        <div class="modal-subtitle">@vmHir.Labelcons</div>
                         <div></div>
                     }
                     <div>@vmHir.Rows[i].CategoryName</div>
@@ -73,7 +73,7 @@
                         <div class="modal-value right" style="@color">@vmPro.Rows[i].ValueChangeDisplay</div>
                     }
             </div>
-                <div class="info-row4">(@vmPro.infotext1)</div>
+                <div class="info-row4">(@vmPro.Infotext1)</div>
                 break;
             case 3:
                 <div class="promote-block">
@@ -89,14 +89,14 @@
                         <div class="modal-value right" style="@(vmRet.Rows[i].color)">@vmRet.Rows[i].ValueChangeDisplay</div>
                     }
                 </div>
-                <div class="info-row4">@vmRet.infotext1</div>
+                <div class="info-row4">@vmRet.Infotext1</div>
                 break;
             case 4:
             <div class="handle-block">
-                <div class="info-row1">@vmHan.infotext1</div>
-                <div class="info-row2">@vmHan.infotext2</div>
-                <div class="info-row3">@vmHan.infotext3</div>
-                <div class="info-row4">@vmHan.infotext4</div>
+                <div class="info-row1">@vmHan.Infotext1</div>
+                <div class="info-row2">@vmHan.Infotext2</div>
+                <div class="info-row3">@vmHan.Infotext3</div>
+                <div class="info-row4">@vmHan.Infotext4</div>
             </div>
                 break;
 

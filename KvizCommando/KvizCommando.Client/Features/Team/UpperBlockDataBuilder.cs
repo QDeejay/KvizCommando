@@ -1,4 +1,6 @@
-﻿using KvizCommando.Client.Data;
+﻿
+/*
+using KvizCommando.Client.Data;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.Visual.UiService.Language;
@@ -9,9 +11,9 @@ namespace KvizCommando.Client.Features.Team
     public class UpperBlockDataBuilder
     {
  
-        public static UpperBlockViewModel BuildTeamHeader(TeamExtendedInfo info, int usedSkillPoints, string culture, ILanguageService lang)
+        public static UpperBlockVm BuildTeamHeader(TeamExtendedInfo info, int usedSkillPoints, string culture, ILanguageService lang)
         {
-            var vm = new UpperBlockViewModel();
+            var vm = new UpperBlockVm();
 
             // Közös adatok
             string name = info.Name;
@@ -37,9 +39,9 @@ namespace KvizCommando.Client.Features.Team
             return vm;
         }
 
-        public static UpperBlockViewModel BuildMemberHeader(TeamMemberDto info, int usedSkillPoints, string culture, ILanguageService lang)
+        public static UpperBlockVm BuildMemberHeader(TeamMemberDto info, int usedSkillPoints, string culture, ILanguageService lang)
         {
-            var vm = new UpperBlockViewModel();
+            var vm = new UpperBlockVm();
 
             // Közös adatok
             string name = info.Name;
@@ -77,4 +79,5 @@ namespace KvizCommando.Client.Features.Team
             return cat > 8 ? cat - 8 : cat;
         }
     }
-}
+} 
+ */

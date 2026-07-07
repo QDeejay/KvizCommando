@@ -25,14 +25,14 @@
         <div class="datacol-2">@vm.Rows[row].Column1</div>
         <div class="datacol-3" style="@_colorColumn">@vm.Rows[row].Column2</div>
         <div class="datacol-4">
-            @if (vm.Rows[row].action > 100)
+            @if (vm.Rows[row].Action > 100)
             {
               
-                if (vm.Rows[row].action > 400)
+                if (vm.Rows[row].Action > 400)
                     bgColorBtn = "background-color: darkslateblue;";
-                else if (vm.Rows[row].action > 300)
+                else if (vm.Rows[row].Action > 300)
                     bgColorBtn = "background-color: #a64b2a;";
-                else if (vm.Rows[row].action > 200)
+                else if (vm.Rows[row].Action > 200)
                     bgColorBtn = "background-color: forestgreen;";
                     else
                     bgColorBtn = "background-color: darkolivegreen;";

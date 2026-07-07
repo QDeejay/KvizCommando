@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Email" xml:space="preserve">
-    <value />
+    <value>Please give your e-mail address!</value>
   </data>
   <data name="Error.Email" xml:space="preserve">
-    <value />
+    <value>Invalid e-mail address!</value>
   </data>
   <data name="Succes.Email" xml:space="preserve">
-    <value />
+    <value>Please follow the instructions in the e-mail to reset your password!</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value />
+    <value>Forgot password request</value>
   </data>
 </root>

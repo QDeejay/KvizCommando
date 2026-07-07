@@ -1,4 +1,6 @@
-﻿<div class="recruit-tab">
+﻿@inherits Utilities.KcComponentBase
+
+<div class="recruit-tab">
     @if (_couldBeHire)
     {
         @for (int i = 1; i < vm.Cards.Count / 2 + 1; i++)

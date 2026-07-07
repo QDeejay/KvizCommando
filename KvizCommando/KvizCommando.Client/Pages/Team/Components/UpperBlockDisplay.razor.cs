@@ -20,7 +20,7 @@ namespace KvizCommando.Client.Pages.Team.Components
         [Inject] private  ILanguageService Lang { get; set; } = default!;
         //[Parameter] public int UsedSkillPoints { get; set; } = 0;
 
-        private UpperBlockViewModel vm = new();
+        private UpperBlockVm vm = new();
         private bool _shouldBeShow = false;
         private string _picCode = string.Empty;
         private string Culture => AppStates.Culture;

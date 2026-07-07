@@ -1,4 +1,8 @@
-﻿using KvizCommando.Client.Data;
+﻿
+/*
+ *
+ *
+ using KvizCommando.Client.Data;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Pages.Team;
 using KvizCommando.Shared.Models.Dtos;
@@ -10,11 +14,11 @@ namespace KvizCommando.Client.Features.Team
 {
     public class DevDataBuilder
     {
-        public static DevViewModel BuildTeam(TeamExtendedInfo info, int[] usedPoints, HelpDto help, string culture)
+        public static BottomDevVm BuildTeam(TeamExtendedInfo info, int[] usedPoints, HelpDto help, string culture)
         {
             string headerType = "Help";
             int skilltype = 12;
-            var model = new DevViewModel
+            var vm = new BottomDevVm
             {
                 UsedPoints = usedPoints,
                 AvailableDevPoints = info.DevPts - usedPoints.Sum(),
@@ -25,27 +29,27 @@ namespace KvizCommando.Client.Features.Team
 
             for (int i = 0; i < help.Skill.Length; i++)
             {
-                model.Rows.Add(
+                vm.Rows.Add(
                     BuildDevRow(
                         help.Skill[i],
                         help.Category[i],
                         skilltype+i,
                         info.Level,
                         usedPoints[i],
-                        model.AvailableDevPoints,
+                        vm.AvailableDevPoints,
                         culture
                     )
                 );
             }
 
-            return model;
+            return vm;
         }
 
-        public static DevViewModel BuildMember(int subPos, TeamMemberDto info, int[] usedPoints, string culture, ILanguageService lang)
+        public static BottomDevVm BuildMember(int subPos, TeamMemberDto info, int[] usedPoints, string culture, ILanguageService lang)
         {
             (string headerType, int skilltype) = subPos == 1 ? ("Sec", 4) : ("3rd", 8);
 
-            var model = new DevViewModel
+            var vm = new BottomDevVm
             {
                 UsedPoints = usedPoints,
                 AvailableDevPoints = info.DevPts - usedPoints.Sum(),
@@ -59,56 +63,26 @@ namespace KvizCommando.Client.Features.Team
             // 3) sorok létrehozása
             for (int i = 0; i < attitude.Skill.Length; i++)
             {
-                model.Rows.Add(
+                vm.Rows.Add(
                     BuildDevRow(
                         attitude.Skill[i],
                         attitude.Category[i],
                         skilltype + i,
                         info.Level,
                         usedPoints[i],
-                        model.AvailableDevPoints,
+                        vm.AvailableDevPoints,
                         culture
                     )
                 );
             }
 
-            return model;
+            return vm;
         }
        
-        private static DevRow BuildDevRow(
-            SkillPartial skill,
-            int category,
-            int modifier,
-            int actLevel,
-            int developed,
-            int availableDevPoints,
-            string culture
-        )
-        {
-            double actVal = ModifierTable.Data[skill.LvlCurrent].Modifier[modifier-4] ?? 0.0;
-            double devVal = ModifierTable.Data[Math.Min(skill.LvlCurrent + developed, skill.LvlCurMax)].Modifier[modifier-4] ?? 0.0;
-
-            string pre = devVal > 4 && modifier<12 ? "+" : string.Empty;
-
-            int startLevel = RankConstants.startLevels[modifier]; // sLevels refaktorálva
-
-            return new DevRow(
-                CategoryNameLocalizer.GetCategory(category, culture),
-                $"{skill.LvlCurrent + developed}/{skill.LvlCurMax}",
-                category != 101 && category != 103 ? pre + TeamHelper.FormatOneDecimal(devVal, category > 100) : string.Empty,
-                actVal != devVal,
-                availableDevPoints > 0 && skill.LvlCurrent + developed < skill.LvlCurMax,
-                (actLevel < startLevel 
-                ? RankNameTable.Data[startLevel].PublicLevel 
-                : skill.LvlCurrent == skill.LvlOvrMax 
-                ? "team.Label.Remark.AtMaximum" 
-                :string.Empty) ?? ""
-            );
-        }
+        
     }
 
 }
-/*
  *
   private static  (string, int) ResolveHeaderType(int tabPos, IGeneralInfo info)
         {

@@ -126,39 +126,6 @@
   <data name="Email" xml:space="preserve">
     <value>E-mail cím</value>
   </data>
-  <data name="Error.ClientSide" xml:space="preserve">
-    <value>Kliens oldali hiba!</value>
-  </data>
-  <data name="Error.DataBase" xml:space="preserve">
-    <value>Hiba a regisztráció során!</value>
-  </data>
-  <data name="Error.EmailExists" xml:space="preserve">
-    <value>Ez az e-mail már foglalt!</value>
-  </data>
-  <data name="Error.EmailInvalid" xml:space="preserve">
-    <value>Érvénytelen e-mail cím!</value>
-  </data>
-  <data name="Error.PasswordMismatch" xml:space="preserve">
-    <value>A két jelszó nem egyezik.</value>
-  </data>
-  <data name="Error.PasswordTooShort" xml:space="preserve">
-    <value>"A jelszónak legalább 6 karakterből kell állnia.</value>
-  </data>
-  <data name="Error.RequiredFields" xml:space="preserve">
-    <value>Töltsd ki az összes kötelező mezőt!</value>
-  </data>
-  <data name="Error.UsernameExists" xml:space="preserve">
-    <value>Ez a felhasználónév már foglalt.</value>
-  </data>
-  <data name="Error.UsernameLong" xml:space="preserve">
-    <value>Maximum 20 karakter!</value>
-  </data>
-  <data name="Error.UsernameShort" xml:space="preserve">
-    <value>Minimum 3 karakter!</value>
-  </data>
-  <data name="Error.UsernameTypeFail" xml:space="preserve">
-    <value>Nem tartalmazhat speciális karakter!</value>
-  </data>
   <data name="ResultMsg01" xml:space="preserve">
     <value>Sikeres regisztráció!</value>
   </data>

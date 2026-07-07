@@ -41,6 +41,10 @@
     <Folder Include="wwwroot\Data\" />
     <Folder Include="wwwroot\Images\question\" /> 
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Models\ViewModels\TeamModalVm.cs" />
+  </ItemGroup>
 	
 
 

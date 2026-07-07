@@ -126,39 +126,6 @@
   <data name="Email" xml:space="preserve">
     <value>E-mail address</value>
   </data>
-  <data name="Error.ClientSide" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Error.DataBase" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Error.EmailExists" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Error.EmailInvalid" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Error.PasswordMismatch" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Error.PasswordTooShort" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Error.RequiredFields" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Error.UsernameExists" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Error.UsernameLong" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Error.UsernameShort" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Error.UsernameTypeFail" xml:space="preserve">
-    <value />
-  </data>
   <data name="ResultMsg01" xml:space="preserve">
     <value>Registration Succesful!</value>
   </data>

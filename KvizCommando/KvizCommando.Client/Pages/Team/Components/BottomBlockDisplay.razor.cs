@@ -29,7 +29,7 @@ namespace KvizCommando.Client.Pages.Team.Components
 
         private string _colorColumn = string.Empty;
         
-        private BottomBlockViewModel vm = new();
+        private BottomBlockVm vm = new();
         protected override void OnParametersSet()
         {
             if (Selected == 0)
@@ -39,7 +39,7 @@ namespace KvizCommando.Client.Pages.Team.Components
         }
         protected async Task OnActionButtonPushed(int rowId)
         {
-            int delegateItem = vm.Rows[rowId].action > 400 ? vm.Rows[rowId].action - 100 : vm.Rows[rowId].action;
+            int delegateItem = vm.Rows[rowId].Action > 400 ? vm.Rows[rowId].Action - 100 : vm.Rows[rowId].Action;
             if (ActionButtonPushed.HasDelegate)
                 await ActionButtonPushed.InvokeAsync(delegateItem);
         }

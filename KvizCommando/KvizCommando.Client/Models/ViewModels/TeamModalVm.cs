@@ -3,11 +3,11 @@ using System.ComponentModel;
 
 namespace KvizCommando.Client.Models.ViewModels
 {
-    public abstract class TeamModalViewModel
+    public abstract class TeamModalVm
     {
         public List<ModalRow> Rows { get; set; } = new();
-        public InfoBlock Info { get; set; }
-        public string infotext1 { get; set; } = string.Empty;
+        public InfoBlock Info { get; set; } = default!;
+        public string Infotext1 { get; set; } = string.Empty;
 
     }
     public sealed record ModalRow(
@@ -33,13 +33,12 @@ namespace KvizCommando.Client.Models.ViewModels
         string DevPointsValue,
         string AddedDevPoints
         );
-
-    public sealed class HireModalViewModel : TeamModalViewModel
+    public sealed class HireModalViewModel : TeamModalVm
     {
-        public string labelpros { get; set; } = string.Empty;
-        public string labelcons { get; set; } = string.Empty;
+        public string Labelpros { get; set; } = string.Empty;
+        public string Labelcons { get; set; } = string.Empty;
     }
-    public class RetireModalView : TeamModalViewModel
+    public class RetireModalView : TeamModalVm
     {
         public string Unlocks { get; set; } = string.Empty;
         public string UnlocksLevel { get; set; } = string.Empty;
@@ -53,12 +52,12 @@ namespace KvizCommando.Client.Models.ViewModels
         public string UnlockMaxLevels1 { get; set; } = string.Empty;
         public string UnlockMaxLevels2 { get; set; } = string.Empty;
     }
-    public sealed class HandleModalView : TeamModalViewModel
+    public sealed class HandleModalView : TeamModalVm
     {
         
-        public string infotext2 { get; set;} =string.Empty;
-        public string infotext3 { get; set;} = string.Empty;
-        public string infotext4 { get; set; } = string.Empty;
+        public string Infotext2 { get; set;} =string.Empty;
+        public string Infotext3 { get; set;} = string.Empty;
+        public string Infotext4 { get; set; } = string.Empty;
     }
     public static class ModalConstants
     {
