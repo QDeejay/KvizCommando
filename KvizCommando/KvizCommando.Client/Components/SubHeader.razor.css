@@ -1,29 +1,36 @@
 ﻿
+
+
 .htp-tabbar {
-    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
     gap: 1px;
     user-select: none;
-    top: -30px;
-    left: 20px;
     height: 30px;
-    width: 650px;
-    display: flex;
+    color: #cccccc;
 }
 
-
+.htp-tab > span {
+    display: block;
+    padding: 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .htp-tab {
-    flex: 1;
-    text-align: center;
-    height: 30px;
-    line-height: 30px;
-    background: rgba(10, 10, 10, 0.1);
+    width: 70px;
+    overflow: hidden;
+    white-space: nowrap;
     font-family: 'Courier New', monospace;
-    font-size: 0.95rem;
-    color: #cccccc;
-    letter-spacing: 0.2px;
-    transition: 0.15s;
+    background: rgba(10, 10, 10, 0.1);
+    transition: 0.3s;
     cursor: url('/Images/cursors/normal.cur'), default;
-    border-radius: 8px 8px 0 0;
+    border-radius: 0 0 8px 8px;
+    font-size: 1.05rem;
+    letter-spacing: 0.2px;
+    text-align: center;
+    line-height: 30px;
 }
 
     .htp-tab.disabled:hover .tooltip-box {
@@ -39,10 +46,14 @@
     }
 
     .htp-tab.active {
-        background: #2a2a2a;
+        background: #0c1f17;
         font-weight: bold;
+ 
         border: 2px solid rgba(64, 64, 64, 0.4);
+        box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.6);
         cursor: url('/Images/cursors/normal.cur'), default;
+        width: max-content;
+        max-width: 100%;
     }
 
 .htp-tab.active {

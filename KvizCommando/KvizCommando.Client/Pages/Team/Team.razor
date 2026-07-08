@@ -9,12 +9,14 @@
 <link href="css/team-common.css" rel="stylesheet" />
 
 <LangGuard Culture=@Culture Module="team" OnReady="BuildBoxes">
+    <SubHeader Params="@_subHead"
+               ActiveIndexChanged="OnSelectMember" />
   <PageContainer>
+     
         @if (_isLoaded == true)
         {
-            <SubHeader id="_subHeader"
-                       ActiveIndexChanged="OnSelectMember"
-                        />
+            
+                        
             <div class="kc-team-selector">
                 @foreach (string bx in _boxOrder)
                 {

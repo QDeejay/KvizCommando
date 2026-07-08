@@ -1,15 +1,14 @@
-﻿@if (_isActive && SubHeaderPar.EnabledTabs.Length>0)
+﻿@if (_isActive && Params.EnabledTabs.Length > 0)
 {
     <div class="htp-tabbar">
-        @foreach (int et in SubHeaderPar.EnabledTabs)
+        @foreach (int et in Params.EnabledTabs)
         {
             var index = et;
-            <div class="htp-tab @(SubHeaderPar.ActiveIndex == et ? "active" : "") @(SubHeaderPar.TabEnable[et] ? "" : "disabled")" @onclick="() => SetTab(et)" disabled="@(!SubHeaderPar.TabEnable[et])">
-                @SubHeaderPar.HTabs[et]
-                <span class="tooltip-box">@SubHeaderPar.TabDisableText[et]</span>
+            <div class="htp-tab @(Params.ActiveIndex == index ? "active" : "") @(Params.TabEnable[index] ? "" : "disabled")" @onclick="() => SetTab(index)" disabled="@(!Params.TabEnable[index])">
+                <span>@Params.HTabs[et]</span>
+                <!-- <span class="tooltip-box">@Params.TabDisableText[et]</span>   -->
             </div>
 
         }
     </div>
-
 }

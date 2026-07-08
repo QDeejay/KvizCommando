@@ -22,7 +22,7 @@ namespace KvizCommando.Client.Features.Team
             new TBoxSpecs {
                 Key = TBoxKeyRoot.RtBtnTeam,
                 TitleKey = "team.Box.Title.TeamOverview",
-                ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = false, ClickId = 201,
+                ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = true, ClickId = 201,
                 BuildBoxText = (lang, rb) => lang["team.Box.Footer.Team"].FormatSafe(rb.TeamOpRequired),
                 CheckEnable = (rb) => rb.IsTeamEnable,                
                 LcdBackground = false,
@@ -32,7 +32,7 @@ namespace KvizCommando.Client.Features.Team
             new TBoxSpecs {
                 Key = TBoxKeyRoot.RtBtnMembers,
                 TitleKey = "team.Box.Title.Members",
-                ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = false, ClickId = 202,
+                ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = true, ClickId = 202,
                 BuildBoxText = (lang, rb) => lang["team.Box.Footer.Member"].FormatSafe(rb.MemberOpRequired),
                 CheckEnable = (rb) => rb.IsMemberEnable,
                 LcdBackground = false,
@@ -42,7 +42,7 @@ namespace KvizCommando.Client.Features.Team
             new TBoxSpecs {
                 Key = TBoxKeyRoot.RtBtnRecruit,
                 TitleKey = "team.Box.Title.Recruit",
-                ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = false, ClickId = 203,
+                ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = true, ClickId = 203,
                 BuildBoxText = (lang, rb) => lang["team.Box.Footer.Recruit"].FormatSafe(rb.FreePositions),
                 CheckEnable = (rb) => rb.IsRecruitEnable,
                 LcdBackground = false,

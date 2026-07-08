@@ -23,7 +23,7 @@ namespace KvizCommando.Client.Features.Team
                 dict[btn.Key.ToString()] = new ContentBoxVm
                 {
                     Header = lang[spec.TitleKey],
-                    Footer = !spec.FooterDisplay ? spec.BuildBoxText(lang, rb) : string.Empty,
+                    Footer = spec.FooterDisplay ? spec.BuildBoxText(lang, rb) : string.Empty,
                     FooterDisplay = spec.FooterDisplay,
                     Size = spec.Size,
                     ImageSrc = spec.ImageSrc,

@@ -29,7 +29,7 @@ namespace KvizCommando.Client.Pages.Team
         private string[] _boxOrder = [];
         private bool _isReady = false;
         private bool _isLoaded = false;
-        private SubHeader _subHeader;
+        private SubHeaderParams _subHead = new();
         private string Culture => AppStates.Culture;
 
         private int _selectedMember =0;
@@ -50,6 +50,17 @@ namespace KvizCommando.Client.Pages.Team
                 OnWatch = OnWatchQuestionAsync,
                 OnSend = OnSaveToFormAsync
             };*/
+            for (int i = 0; i < 9; i++)
+            {
+
+                _subHead.HTabs[i] = OrientationLocalizer.GetOrientation(i, Culture); // + ".";
+                _subHead.TabEnable[i] = TState.CharCatMask[i] || true; 
+                _subHead.TabDisableText[i] = "";
+                //_subHead.TabEnable[i] = TState.CharCatMask[i] || (TState.Candidates[i].CanBeHire && TState.TeamInfo.TotalMembers < TState.TeamInfo.MaxMembers);
+                //_subHead.TabDisableText[i] = TState.TeamInfo.TotalMembers < TState.TeamInfo.MaxMembers ? (!TState.Candidates[i].CanBeHire ? Ui.Lang["team.Label.PopUp.NotHire"] : "") : Ui.Lang["team.Label.PopUp.NoFree"];
+            }
+                 
+            
             var boxes = TBoxBuilder.BuildBoxes(TState.RootBoxInfo!, Ui.Lang);
             foreach (var box in boxes)
             {
@@ -74,20 +85,20 @@ namespace KvizCommando.Client.Pages.Team
                     headerTitle = (Ui.Lang["mainlayout.Header.Team"]);
                     break;
                 case 201:
-                    _boxOrder = QBoxBuilder.SubFact;
+                    _boxOrder = TBoxBuilder.SubTeam;
                     headerTitle = _boxes[TBoxKeyContent.Team.ToString()].Header;
                     break;
                 case 202:
-                    _boxOrder = QBoxBuilder.SubUsr;
+                    _boxOrder = TBoxBuilder.SubMember;
                     headerTitle = _boxes[TBoxKeyContent.Member.ToString()].Header;
-                    _subHeader.SubHeaderPar.EnabledTabs = CheckEnable(TState.CharCatMask, true);
-                    _subHeader.SubHeaderPar.ActiveIndex = _subHeader.SubHeaderPar.EnabledTabs[0];
+                    _subHead.EnabledTabs = CheckEnable(TState.CharCatMask, true);
+                    _subHead.ActiveIndex = _subHead.EnabledTabs[0];
                     break;
                 case 203:
-                    _boxOrder = QBoxBuilder.SubPend;
+                    _boxOrder = TBoxBuilder.SubRecruit;
                     headerTitle = _boxes[TBoxKeyContent.Recruit.ToString()].Header;
-                    _subHeader.SubHeaderPar.EnabledTabs = CheckEnable(TState.CharCatMask, false);
-                    _subHeader.SubHeaderPar.ActiveIndex = _subHeader.SubHeaderPar.EnabledTabs[0];
+                    _subHead.EnabledTabs = CheckEnable(TState.CharCatMask, false);
+                    _subHead.ActiveIndex = _subHead.EnabledTabs[0];
                     break;
                 default:
                     headerTitle = (Ui.Lang["mainlayout.Header.Team"]);
@@ -103,7 +114,7 @@ namespace KvizCommando.Client.Pages.Team
             Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Team"], 2);
             _boxOrder = TBoxBuilder.Root;
             _recruitMixer.Shuffle();
-            _subHeader = new();
+
             await Task.Delay(1);
             _isLoaded = true;
             if (_isReady == false)
@@ -144,18 +155,18 @@ namespace KvizCommando.Client.Pages.Team
             internal int SelectedMember { get; set; } = 0;
             internal int SelectedSkill { get; set; } = 0;
         }
-        private int[] CheckEnable(bool[] bools, bool reference)
+        private static int[] CheckEnable(bool[] bools, bool reference)
         {
             int[] result;
             var indexes = new List<int>();
 
-            for (int i = 0; i < bools.Length; i++)
+            for (int i = 1; i < bools.Length; i++)
             {
-                if (bools[i]==reference)
-                    indexes.Add(i+1);
+                if (bools[i]==reference || !reference)
+                    indexes.Add(i);
             }
 
-            result = indexes.ToArray();
+            result = [.. indexes];
             return result;
         }
     }

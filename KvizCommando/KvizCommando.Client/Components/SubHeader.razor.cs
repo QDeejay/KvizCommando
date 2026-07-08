@@ -14,19 +14,19 @@ namespace KvizCommando.Client.Components
 
 
         [Parameter] public EventCallback<int> ActiveIndexChanged { get; set; }
-        [Parameter] public SubHeaderParams SubHeaderPar { get; set; } = default!;
+        [Parameter] public SubHeaderParams Params { get; set; } = default!;
         
         private bool _isActive = false;
  
         protected override void OnParametersSet()
         {
-            _isActive = SubHeaderPar != null && SubHeaderPar.ActiveIndex > 0 && SubHeaderPar.ActiveIndex < 9 ? true : false;
+            _isActive = Params != null && Params.ActiveIndex > 0 && Params.ActiveIndex < 9;
         }
         private async Task SetTab(int index)
         {
-            if (!SubHeaderPar.TabEnable[index])
+            if (!Params.TabEnable[index])
                 return;
-            SubHeaderPar.ActiveIndex = index;
+            Params.ActiveIndex = index;
             await ActiveIndexChanged.InvokeAsync(index);
         }
 
@@ -35,11 +35,11 @@ namespace KvizCommando.Client.Components
 
     public sealed class SubHeaderParams
     {
-        public int[] EnabledTabs { get; set; } = [];
-        public string[] HTabs { get; set; } = [];
+        public int[] EnabledTabs { get; set; } = new int[9];
+        public string[] HTabs { get; set; } = new string[9];
         public int ActiveIndex { get; set; } = 0;
-        public bool[] TabEnable { get; set; } = [];
-        public string[] TabDisableText { get; set; } = [];
+        public bool[] TabEnable { get; set; } = new bool[9];
+        public string[] TabDisableText { get; set; } = new string[9];
     }
 }
 /*
