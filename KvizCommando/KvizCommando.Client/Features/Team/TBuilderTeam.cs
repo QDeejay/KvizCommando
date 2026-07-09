@@ -31,15 +31,16 @@ namespace KvizCommando.Client.Features.Team
             vm.Rows.Add(new(_lang["team.Label.Name"], name));
             vm.Rows.Add(new(_lang["team.Label.Org"], rank));
             vm.Rows.Add(new(_lang["team.Label.Level"], publicLevel));
-            vm.Rows.Add(new(_lang["team.Label.TeamName"] + _lang[" Xp:"], xp));
-            vm.Rows.Add(new(_lang["team.Label.Menbers"], $"{t.TotalMembers}/{t.MaxMembers}"));
+            vm.Rows.Add(new(_lang["team.Label.TeamName"] + " Xp:", xp));
+            vm.Rows.Add(new("", ""));
 
 
             vm.Rows.Add(new(_lang["team.Label.Credit"], t.Credits.ToString()));
             vm.Rows.Add(new(_lang["team.label.TeamDevPointShort"], devPointsDisplay));
             vm.Rows.Add(new(_lang["team.Label.Bonus"], $"{t.Bonus}%"));
+            vm.Rows.Add(new(_lang["team.Label.Menbers"], $"{t.TotalMembers}/{t.MaxMembers}"));
             vm.Rows.Add(new("", ""));
-            vm.Rows.Add(new("", ""));
+
 
             return vm;
         }
@@ -67,7 +68,8 @@ namespace KvizCommando.Client.Features.Team
                 AvailableDevPoints = info.DevPoints - usedPoints.Sum(),
                 HeaderText = _lang["team.Label.Attitude.Help"],
                 ListType = headerType,
-                SaveButtonText = _lang["team.Button.Modify"] + (usedPoints.Sum() > 0 ? $" ({usedPoints.Sum()})" : "")
+                // SaveButtonText = _lang["team.Button.Modify"] + (usedPoints.Sum() > 0 ? $" ({usedPoints.Sum()})" : "")
+               SaveButtonText=string.Empty
             };
 
             for (int i = 0; i < help.Skill.Length; i++)

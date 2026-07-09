@@ -13,6 +13,7 @@ namespace KvizCommando.Client.Models.ViewModels
         public bool ReSizable { get; init; } = false;
         public string ImageSrc { get; init; } = string.Empty;
         public string BgImageSrc { get; init; } = string.Empty;
+        public string DisableTextTp { get; init; } = string.Empty;
         public int RenderContent { get; init; } = 0;
         public bool LcdDisplay { get; init; } = false;
         public bool IsClickable { get; init; } = true;

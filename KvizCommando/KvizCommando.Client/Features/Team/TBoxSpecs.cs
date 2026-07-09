@@ -1,9 +1,10 @@
 ﻿using KvizCommando.Client.Features.Question;
+using KvizCommando.Client.Features.Sologame;
+using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Pages.Question.Components;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
-using KvizCommando.Client.Helpers;
 
 namespace KvizCommando.Client.Features.Team
 {
@@ -13,10 +14,23 @@ namespace KvizCommando.Client.Features.Team
         internal Func<TeamRootBoxInfo, bool> CheckEnable { get; init; } = default!;
         internal Func<ILanguageService, TeamRootBoxInfo, string> BuildBoxText { get; init; } = default!;
     }
+    public class TBoxSubSpecs : VmSpecs 
+    {
+        internal Enum Key { get; init; } = default!;
+        internal int BtnQty { get; init; } = default!;
+        internal Func<int, string> BuildImageSrc { get; init; } = default!;
+        internal Func<CandidateDto, bool> CheckEnable { get; init; } = default!;
+        internal Func<int, string, string> BuildTitle { get; init; } = default!;
+        internal string DisableText { get; init; } = default!;
+    }
  
 
     public static class TeamBoxSpecs
     {
+        private static readonly string[] OriFileName =
+            {
+                "","teologist","historian","artist","gamer","engineer","scientist","trendy","educated"
+            };
         public static readonly IReadOnlyList<TBoxSpecs> Specs =
         [
             new TBoxSpecs {
@@ -53,7 +67,7 @@ namespace KvizCommando.Client.Features.Team
             new TBoxSpecs {
                 Key = TBoxKeyContent.Team,
                 TitleKey = "team.Box.Title.TeamOverview",
-                ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 0,
+                ImageSrc = string.Empty, Size = "extra-large", FooterDisplay = false, ClickId = 0,
                 BuildBoxText = (lang, inf) => "",
                 CheckEnable = (inf) => true,
                 LcdBackground = true,
@@ -83,6 +97,19 @@ namespace KvizCommando.Client.Features.Team
 
 
         ];
+        public static readonly IReadOnlyList<TBoxSubSpecs> SubSpecs = new[]
+        {
+
+            new TBoxSubSpecs {
+                Key = SgameBoxKeySub.BtnOri,
+                BtnQty = (int)SgameBoxKeySub.BtnOri,
+                BuildTitle = (ix, cult) => OrientationLocalizer.GetOrientation(ix,cult),
+                BuildImageSrc = (ix) => $"images/orients/{OriFileName[ix]}.webp", Size ="tall", FooterDisplay=true, ClickId=250,
+                CheckEnable = (cd) => cd!=null && cd.CanBeHire,
+                DisableText = "team.Label.PopUp.NotHire"
+            }
+
+        };
     }
 }
 

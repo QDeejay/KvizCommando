@@ -1,9 +1,9 @@
 ﻿.upper-list-grid {
     display: grid;
-    grid-template-columns: 140px 300px 100px 80px;
+    grid-template-columns: 110px 320px 80px 80px;
     column-gap: 2px;
     row-gap: 0;
-    padding: 2px 0;
+    padding: 1px 0;
     padding-left: 1px; /* <<< 10px balról */
     user-select: none;
     align-items: center;
@@ -31,8 +31,8 @@
     text-overflow: ellipsis;
 }
 
-.bottom-extend {
-    grid-template-columns: 10px 300px 60px 80px 150px;
+.teampage-list-grid.bottom-extend {
+    grid-template-columns: 10px 270px 60px 80px 140px;
 }
 
 .gapped-rows {
@@ -73,7 +73,7 @@
     }
 
 .extend {
-    grid-template-columns: 10px 280px 60px 70px 200px;
+    grid-template-columns: 10px 270px 60px 70px 180px;
     grid-template-rows: 40px 40px 40px 40px 40px;
 }
 

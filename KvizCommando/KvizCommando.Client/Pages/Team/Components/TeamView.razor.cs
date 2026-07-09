@@ -26,6 +26,7 @@ namespace KvizCommando.Client.Pages.Team.Components
 
         private bool _isReady = false;
         private int _currentSubPage = 0;
+        
         private int[] _usedPoints;
         private string Culture => AppStates.Culture;
         private TeamDtos Team => AppStates.Team!;
@@ -33,7 +34,7 @@ namespace KvizCommando.Client.Pages.Team.Components
         protected override void OnParametersSet()
         {
             if (!_isReady) return;
-            _vmUp = _builder!.BuildTeamUpperVm(Team.TeamInfo, _usedPoints.Sum(), Culture);
+                _vmUp = _builder!.BuildTeamUpperVm(Team.TeamInfo, _usedPoints.Sum(), Culture);
             ShowSubPage(_currentSubPage);
         }
         private void ShowSubPage(int page)
@@ -43,28 +44,31 @@ namespace KvizCommando.Client.Pages.Team.Components
                 _vmBot = _builder.BuildTeamBottomVm(Team, Culture);
             else
                 _vmDev = _builder.BuildTeamBottomDevVm(Team.TeamInfo, _usedPoints, Team.Help, Culture);
+            _currentSubPage = page;
         }
         private void OnIncButtonPushed(int rowId)
         {
             int[] usdPnts = _usedPoints;
-            if (usdPnts.Sum() >= Team.TeamInfo.DevPoints || rowId == 0) return;
-            _usedPoints[rowId - 1]++;
-            usdPnts = _usedPoints;
+            if (usdPnts.Sum() >= Team.TeamInfo.DevPoints) return;
+            _usedPoints[rowId]++;
+            //usdPnts = _usedPoints;
             _vmDev = _builder.BuildTeamBottomDevVm(Team.TeamInfo, _usedPoints, Team.Help, Culture);
+            _vmUp = _builder!.BuildTeamUpperVm(Team.TeamInfo, _usedPoints.Sum(), Culture);
         }
         private void OnDecButtonPushed(int rowId)
         {
             int[] usdPnts = _usedPoints;
-            if (Team.TeamInfo.DevPoints == 0 || rowId == 0) return;
-            if (_usedPoints[rowId - 1] > 0) _usedPoints[rowId - 1]--;
-            usdPnts = _usedPoints;
+            if (usdPnts.Sum() >= Team.TeamInfo.DevPoints) return;
+            if (_usedPoints[rowId] > 0) _usedPoints[rowId]--;
+            //usdPnts = _usedPoints;
             _vmDev = _builder.BuildTeamBottomDevVm(Team.TeamInfo, _usedPoints, Team.Help, Culture);
+            _vmUp = _builder!.BuildTeamUpperVm(Team.TeamInfo, _usedPoints.Sum(), Culture);
         }
         private void ResetUsedPoints()
         {
             _usedPoints = [0, 0, 0, 0];
         }
-        protected async Task OnSaveButtonPushed()
+        private async Task OnSaveButtonPushed()
         {
             if (_usedPoints.Sum() == 0) return;
             ModifySkillRequest request = new()
@@ -99,3 +103,11 @@ namespace KvizCommando.Client.Pages.Team.Components
         }
     }
 }
+/*
+ 
+            <div></div><div></div><div></div><div></div>
+            <div class="dev-button-section">
+                <button class="military-button" disabled="@(_usedPoints.Sum() == 0)" @onclick="OnSaveButtonPushed">@_vmDev.SaveButtonText</button>
+            </div>
+ 
+ */

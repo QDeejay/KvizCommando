@@ -42,7 +42,7 @@ namespace KvizCommando.Client.Features.Sologame
                 {
                     dict.Add($"{spec.Key.ToString()}{i}", new ContentBoxVm
                     {
-                        Header = CategoryNameLocalizer.GetCategory(i, cult),
+                        Header = spec.BuildTitle(i,cult),
                         Footer = spec.BuildFooter(lang, ss.Results, i),
                         FooterDisplay = spec.FooterDisplay,
                         Size = spec.Size,

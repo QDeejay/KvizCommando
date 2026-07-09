@@ -12,14 +12,15 @@ namespace KvizCommando.Client.Components
         [Parameter] public EventCallback<int> OnClick { get; set; }
         [Parameter] public EventCallback FooterClick { get; set; }
         [Parameter] public RenderFragment? ContentBody { get; set; }
-    
         private ContentBoxVm _vm = new();
         private bool _noContent = true;
+        private readonly string[] _content = ["content1","valami","tete","défldf","lajos","vaszom","kika","togai","kloi"];
         protected override void OnParametersSet()
         {
             _vm = Vm;
-            _noContent = _vm.RenderContent==0 &&  string.IsNullOrEmpty(_vm.ImageSrc);
+            _noContent = _vm.RenderContent == 0 && string.IsNullOrEmpty(_vm.ImageSrc);
         }
+
         private string CursorStyle { get; set; } = string.Empty;
         private string CssClass =>
             $"kc-content-box {_vm.Size}" + (_vm.IsClickable ? " clickable" : "");

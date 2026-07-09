@@ -32,8 +32,6 @@ namespace KvizCommando.Client.Features.Sologame
     public static class SoloBoxSpecs
     {
      
-        private const int CatQnty = 16;
-        private const int OriQnty = 8;
 
         private static readonly string[] CatFileName = 
             {
@@ -72,7 +70,7 @@ namespace KvizCommando.Client.Features.Sologame
         {
               new SgameBoxSub {
                 Key = SgameBoxKeySub.BtnCat,
-                BtnQnty = CatQnty,
+                BtnQnty = (int)SgameBoxKeySub.BtnCat,
                 BuildTitle = (ix, cult) => CategoryNameLocalizer.GetCategory(ix,cult),
                 BuildImageSrc = (ix) => $"images/categories/{CatFileName[ix]}.webp", Size ="small", FooterDisplay=true, ClickId=420,
                 BuildEnable = (se,ix) => se.EnaCat[ix],
@@ -80,7 +78,7 @@ namespace KvizCommando.Client.Features.Sologame
             },
             new SgameBoxSub {
                 Key = SgameBoxKeySub.BtnOri,
-                BtnQnty = OriQnty,
+                BtnQnty = (int)SgameBoxKeySub.BtnOri,
                 BuildTitle = (ix, cult) => OrientationLocalizer.GetOrientation(ix,cult),
                 BuildImageSrc = (ix) => $"images/orients/{OriFileName[ix]}.webp", Size ="tall", FooterDisplay=true, ClickId=450,
                 BuildEnable = (se,ix) => se.EnaOri[ix],

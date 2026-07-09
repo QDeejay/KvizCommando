@@ -52,23 +52,16 @@ namespace KvizCommando.Client.Pages.Team
             };*/
             for (int i = 0; i < 9; i++)
             {
-
                 _subHead.HTabs[i] = OrientationLocalizer.GetOrientation(i, Culture); // + ".";
                 _subHead.TabEnable[i] = TState.CharCatMask[i] || true; 
                 _subHead.TabDisableText[i] = "";
                 //_subHead.TabEnable[i] = TState.CharCatMask[i] || (TState.Candidates[i].CanBeHire && TState.TeamInfo.TotalMembers < TState.TeamInfo.MaxMembers);
                 //_subHead.TabDisableText[i] = TState.TeamInfo.TotalMembers < TState.TeamInfo.MaxMembers ? (!TState.Candidates[i].CanBeHire ? Ui.Lang["team.Label.PopUp.NotHire"] : "") : Ui.Lang["team.Label.PopUp.NoFree"];
             }
-                 
-            
             var boxes = TBoxBuilder.BuildBoxes(TState.RootBoxInfo!, Ui.Lang);
             foreach (var box in boxes)
             {
                 _boxes[box.Key] = box.Value;
-            }
-            for (int i = 1; i < 9; i++)
-            {
-                //_subHeader.SubHeaderPar.HTabs[i] = OrientationLocalizer.GetOrientShort(i, Culture) + ".";
             }
             _isReady = _isLoaded;
         }

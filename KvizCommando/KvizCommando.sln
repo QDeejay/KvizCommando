@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 18
-VisualStudioVersion = 18.0.11205.157
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36705.20 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KvizCommando.Server", "KvizCommando.Server\KvizCommando.Server.csproj", "{D7D5AB3E-35B7-41AE-A7D1-EF1BCAF7F0C2}"
 EndProject
@@ -42,15 +42,12 @@ Global
 		{4D03EE89-2887-4811-B816-E757BBE9B88B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D03EE89-2887-4811-B816-E757BBE9B88B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F037C947-5334-81B7-4C25-CB7D6B6878BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F037C947-5334-81B7-4C25-CB7D6B6878BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F037C947-5334-81B7-4C25-CB7D6B6878BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F037C947-5334-81B7-4C25-CB7D6B6878BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FC8F5145-88B4-4E79-8F20-68F8A9513200}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC8F5145-88B4-4E79-8F20-68F8A9513200}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC8F5145-88B4-4E79-8F20-68F8A9513200}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC8F5145-88B4-4E79-8F20-68F8A9513200}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A20861A9-411E-6150-BF5C-69E8196E5D22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A20861A9-411E-6150-BF5C-69E8196E5D22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A20861A9-411E-6150-BF5C-69E8196E5D22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A20861A9-411E-6150-BF5C-69E8196E5D22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

@@ -3,6 +3,7 @@
 
 .htp-tabbar {
     display: flex;
+   
     justify-content: center;
     align-items: stretch;
     gap: 1px;
@@ -48,7 +49,6 @@
     .htp-tab.active {
         background: #0c1f17;
         font-weight: bold;
- 
         border: 2px solid rgba(64, 64, 64, 0.4);
         box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.6);
         cursor: url('/Images/cursors/normal.cur'), default;

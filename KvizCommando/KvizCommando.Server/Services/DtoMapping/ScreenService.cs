@@ -519,7 +519,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                ? [0, 0, 0, 0, 0, 0, 0, 0]
                : JsonSerializer.Deserialize<int[]>(helpDatasJson) ?? [0, 0, 0, 0, 0, 0, 0, 0];
 
-            var helpSkill = SkillResolver(helpDatas[0..3], rank, RankConstants.maxLevels[12..16], RankConstants.startLevels[12..16]);
+            var helpSkill = SkillResolver(helpDatas[0..4], rank, RankConstants.maxLevels[12..16], RankConstants.startLevels[12..16]);
 
             return new HelpDto
             {
