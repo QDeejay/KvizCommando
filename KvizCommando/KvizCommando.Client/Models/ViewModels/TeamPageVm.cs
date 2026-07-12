@@ -14,8 +14,8 @@
         public int[] UsedPoints { get; set; } = [0, 0, 0, 0];
         public int AvailableDevPoints { get; set; }
         public string HeaderText { get; set; } = string.Empty;
-        public string ListType { get; set; } = string.Empty;
-        public string SaveButtonText { get; set; } = string.Empty;
+        //public string ListType { get; set; } = string.Empty;
+        public string ResetButtonText { get; set; } = string.Empty;
     }
     public sealed class RecruitVm
     {
@@ -34,7 +34,7 @@
     }
 
     public sealed record UpperRow(
-        string Label, 
+        string Label,
         string Value
         );
     public sealed record BottomRow(

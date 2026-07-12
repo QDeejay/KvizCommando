@@ -58,9 +58,11 @@
         </div>
         <br>
         <div class="component-button-row">
-    <button class="button-on-lcd" @onclick="OnSaveSlotsAsync" disabled="@(!IsDirty)">
-                <i class="bi bi-floppy"></i>
-            </button>
+            <div class="component-button-group right">
+            <button class="button-on-lcd" @onclick="OnSaveSlotsAsync" disabled="@(!IsDirty)">
+                        <i class="bi bi-floppy"></i>
+                    </button>
+            </div>
         </div>
 
 

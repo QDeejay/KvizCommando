@@ -6,12 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Donor\AuthController.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Donor\" />
-  </ItemGroup>
-
 </Project>

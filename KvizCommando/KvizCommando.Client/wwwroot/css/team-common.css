@@ -1,55 +1,42 @@
-﻿
-.lcd-display-outer {
-    background-color: rgba(210, 255, 57, 0.9);
-   
-    border: inset 2px #777;
-    border-radius: 4px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.4), inset 0 4px 8px rgba(0,0,0,0.7);
-    padding: 0;
-    width: 100%;
-    height: 96%; /* vagy amit szeretnél */
-    box-sizing: border-box;
-    position: relative;
-    overflow: hidden; /* nagyon fontos! */
-}
-
-.lcd-display-inner {
-    color: #222F16;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 1.2rem;
-    padding: 4px 6px;
-    display: block;
-    width: 100%;
-    /* itt szabályozod, mennyit látsz egyben */
-    min-height: 100%;
-    scrollbar-gutter: stable;
-    overflow: auto;
-    /* itt szabályozod, mennyit látsz egyben */
+﻿.upper-list-grid {
+    display: grid;
+    grid-template-columns: 120px 280px 110px 80px;
+    column-gap: 2px;
+    row-gap: 0;
+    padding: 1px 0;
+    padding-left: 1px; /* <<< 10px balról */
+    user-select: none;
+    align-items: center;
     text-align: left;
-    max-height: 100%; /* itt szabályozod, mennyit látsz egyben */
-    background: transparent;
 }
 
-    .lcd-display-inner::-webkit-scrollbar {
-        width: 10px;
-    }
+.upper-separator {
+    border-top: 2px solid #333;
+    width: 102%;
+    opacity: 0.5;
+}
 
-    .lcd-display-inner::-webkit-scrollbar-track {
-        /*background-color: #001f3f;  háttér: katonai kék */
-        background-color: #D2FF39;
-        border: inset 2px #777;
-        border-radius: 4px;
-    }
+.upper-left-value,
+.upper-right-value {
+    font-weight: bold;
+    opacity: 0.9;
+}
 
-    .lcd-display-inner::-webkit-scrollbar-thumb {
-        background-color: #bfa800; /* halványsárga */
-        border-radius: 4px;
-        border: 1px solid #333;
-    }
+.upper-right-type,
+.upper-right-value {
+    text-align: right;
+}
 
-        .lcd-display-inner::-webkit-scrollbar-thumb:hover {
-            background-color: #ffe14d; /* világosabb hover */
-        }
+.upper-left-value {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+
+
+
 
 
 .teampage-list-grid {
@@ -64,7 +51,6 @@
 }
 .teampage-title {
     text-decoration: underline;
-    padding-left: 10px;
 }
 
 .teampage-datacol-1 {
@@ -85,4 +71,77 @@
 
 .teampage-datacol-4 {
     margin-left: 10px;
+}
+
+.teampage-list-grid.bottom-extend {
+    grid-template-columns: 10px 270px 60px 80px 150px;
+}
+
+.bottom-row-marker {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    animation: fadeBlink 1s ease-in-out infinite;
+}
+
+.bottom-action-button {
+    width: 140px;
+    color: lightgrey;
+    opacity: 0.8;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+    .bottom-action-button:hover {
+        opacity: 0.7;
+    }
+
+.bottom-action-label {
+    width: 140px;
+    text-align: center;
+    font-size: 0.9rem;
+    text-decoration: none;
+    animation: fadeBlink 1s ease-in-out infinite;
+}
+
+    .bottom-action-label:hover {
+        color: blue;
+        font-weight: bold;
+        cursor: url('/Images/cursors/active.cur'), pointer;
+        animation: none;
+    }
+
+.extend {
+    grid-template-columns: 10px 270px 60px 70px 180px;
+    grid-template-rows: 40px 40px 40px 40px 40px;
+}
+
+
+.dev-button-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    gap: 20px;
+    padding: 2px 0;
+    font-weight: bold;
+    opacity: 0.9;
+}
+
+.used-points-label {
+    text-align: center;
+}
+
+@keyframes fadeBlink {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }

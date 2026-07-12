@@ -5,17 +5,18 @@ using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.Team;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
-using System.Reflection.PortableExecutable;
-using System.Text.RegularExpressions;
 
 
 namespace KvizCommando.Client.Pages.Team.Components
 {
     public partial class TeamView : IDisposable
     {
+        [Inject] private ILanguageService Lang { get; set; } = default!;
+
         [CascadingParameter]
         private AppState AppStates { get; set; } = default!;
-        [Inject] private ILanguageService Lang { get; set; } = default!;
+
+
         [Parameter] public EventCallback<int> ActionButtonPushed { get; set; } = default!;
         [Parameter] public EventCallback<ModifySkillRequest> ModifySkill { get; set; } = default!;
 
@@ -26,48 +27,55 @@ namespace KvizCommando.Client.Pages.Team.Components
 
         private bool _isReady = false;
         private int _currentSubPage = 0;
-        
-        private int[] _usedPoints;
+
+        private int[] _usedPoints = new int[4];
+
         private string Culture => AppStates.Culture;
         private TeamDtos Team => AppStates.Team!;
+        private TeamDtos _oldTeam = new();
+        private TeamMemberDto[] Memebers => Team.TeamMembers!;
+        private TeamExtendedInfo Info => Team.TeamInfo;
+        private HelpDto Help => Team.Help;
 
         protected override void OnParametersSet()
         {
             if (!_isReady) return;
-                _vmUp = _builder!.BuildTeamUpperVm(Team.TeamInfo, _usedPoints.Sum(), Culture);
-            ShowSubPage(_currentSubPage);
+            if (_oldTeam != Team)
+            {
+                _vmUp = _builder!.BuildTeamUpperVm(Info, Culture);
+                ShowSubPage(_currentSubPage);
+                _oldTeam = Team;
+            }
         }
         private void ShowSubPage(int page)
         {
-            ResetUsedPoints();
             if (page == 0)
-                _vmBot = _builder.BuildTeamBottomVm(Team, Culture);
+                _vmBot = _builder!.BuildTeamBottomVm(Memebers, Culture);
             else
-                _vmDev = _builder.BuildTeamBottomDevVm(Team.TeamInfo, _usedPoints, Team.Help, Culture);
+                _vmDev = _builder!.BuildTeamBottomDevVm(Info, _usedPoints, Help, Culture);
+            if (page != _currentSubPage)
+                ResetUsedPoints();
             _currentSubPage = page;
         }
         private void OnIncButtonPushed(int rowId)
         {
             int[] usdPnts = _usedPoints;
             if (usdPnts.Sum() >= Team.TeamInfo.DevPoints) return;
-            _usedPoints[rowId]++;
-            //usdPnts = _usedPoints;
-            _vmDev = _builder.BuildTeamBottomDevVm(Team.TeamInfo, _usedPoints, Team.Help, Culture);
-            _vmUp = _builder!.BuildTeamUpperVm(Team.TeamInfo, _usedPoints.Sum(), Culture);
+            usdPnts[rowId]++;
+            _vmDev = _builder!.BuildTeamBottomDevVm(Info, usdPnts, Help, Culture);
+            _usedPoints = usdPnts;
+            StateHasChanged();
         }
         private void OnDecButtonPushed(int rowId)
         {
             int[] usdPnts = _usedPoints;
-            if (usdPnts.Sum() >= Team.TeamInfo.DevPoints) return;
-            if (_usedPoints[rowId] > 0) _usedPoints[rowId]--;
-            //usdPnts = _usedPoints;
-            _vmDev = _builder.BuildTeamBottomDevVm(Team.TeamInfo, _usedPoints, Team.Help, Culture);
-            _vmUp = _builder!.BuildTeamUpperVm(Team.TeamInfo, _usedPoints.Sum(), Culture);
+            if (usdPnts.Sum() <= 0 || usdPnts[rowId] <= 0) return;
+            usdPnts[rowId]--;
+            _vmDev = _builder!.BuildTeamBottomDevVm(Info, usdPnts, Help, Culture);
+            _usedPoints = usdPnts;
+            StateHasChanged();
         }
-        private void ResetUsedPoints()
-        {
-            _usedPoints = [0, 0, 0, 0];
-        }
+
         private async Task OnSaveButtonPushed()
         {
             if (_usedPoints.Sum() == 0) return;
@@ -84,21 +92,24 @@ namespace KvizCommando.Client.Pages.Team.Components
         }
         private async Task OnActionButtonPushed(int rowId)
         {
-            int delegateItem = _vmBot.Rows[rowId].Action > 400 ? _vmBot.Rows[rowId].Action - 100 : _vmBot.Rows[rowId].Action;
+            int delegateItem = _vmBot.Rows[rowId].Action;
             if (ActionButtonPushed.HasDelegate)
                 await ActionButtonPushed.InvokeAsync(delegateItem);
         }
         protected override void OnInitialized()
         {
             _builder = new TBuilderTeam(Lang);
-            ResetUsedPoints();
             _isReady = true;
         }
-
-
+        private void ResetUsedPoints()
+        {
+            _usedPoints = [0, 0, 0, 0];
+            _vmDev = _builder!.BuildTeamBottomDevVm(Team.TeamInfo, _usedPoints, Team.Help, Culture);
+        }
         public void Dispose()
         {
             ActionButtonPushed = default;
+            ModifySkill = default;
             GC.SuppressFinalize(this);
         }
     }

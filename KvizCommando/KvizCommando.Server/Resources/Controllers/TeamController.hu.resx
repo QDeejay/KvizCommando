@@ -132,7 +132,25 @@
   <data name="Error.InvalidRequest" xml:space="preserve">
     <value>&lt; Sikertelen (8201)&gt;</value>
   </data>
-  <data name="Resp.SaveOk" xml:space="preserve">
-    <value>&lt; Sikeres mentés! &gt;</value>
+  <data name="Error.Session" xml:space="preserve">
+    <value>Másik eszközön be lett jelentkezve!</value>
+  </data>
+  <data name="Resp.Fire" xml:space="preserve">
+    <value>&lt; Csapattag kirúgva!&gt;</value>
+  </data>
+  <data name="Resp.Heal" xml:space="preserve">
+    <value>&lt;Csapattag vitalitása visszaállítva! &gt;</value>
+  </data>
+  <data name="Resp.Promote" xml:space="preserve">
+    <value>&lt;Csapattag előléptetve! &gt;</value>
+  </data>
+  <data name="Resp.Hire" xml:space="preserve">
+    <value>&lt; Sikeres toborzás! &gt;</value>
+  </data>
+  <data name="Resp.Retire" xml:space="preserve">
+    <value>&lt; Csapattag visszavonult! &gt;</value>
+  </data>
+  <data name="Resp.SaveSkill" xml:space="preserve">
+    <value>&lt; Mentve {0} pont! &gt;</value>
   </data>
 </root>

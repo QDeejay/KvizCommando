@@ -16,9 +16,9 @@ public enum ToastType
 }
 
 public enum MembRemark
-{ 
+{
     None = 0,
-    Develop =10,
+    Develop = 50,
     Promote = 100,
     Retire = 200,
     Fire = 300,

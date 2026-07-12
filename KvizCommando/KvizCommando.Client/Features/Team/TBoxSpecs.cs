@@ -1,20 +1,18 @@
 ﻿using KvizCommando.Client.Features.Question;
-using KvizCommando.Client.Features.Sologame;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Pages.Question.Components;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 
 namespace KvizCommando.Client.Features.Team
 {
-    public class TBoxSpecs :VmSpecs
+    public class TBoxSpecs : VmSpecs
     {
         internal Enum Key { get; init; } = default!;
         internal Func<TeamRootBoxInfo, bool> CheckEnable { get; init; } = default!;
         internal Func<ILanguageService, TeamRootBoxInfo, string> BuildBoxText { get; init; } = default!;
     }
-    public class TBoxSubSpecs : VmSpecs 
+    public class TBoxSubSpecs : VmSpecs
     {
         internal Enum Key { get; init; } = default!;
         internal int BtnQty { get; init; } = default!;
@@ -23,7 +21,7 @@ namespace KvizCommando.Client.Features.Team
         internal Func<int, string, string> BuildTitle { get; init; } = default!;
         internal string DisableText { get; init; } = default!;
     }
- 
+
 
     public static class TeamBoxSpecs
     {
@@ -38,7 +36,7 @@ namespace KvizCommando.Client.Features.Team
                 TitleKey = "team.Box.Title.TeamOverview",
                 ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = true, ClickId = 201,
                 BuildBoxText = (lang, rb) => lang["team.Box.Footer.Team"].FormatSafe(rb.TeamOpRequired),
-                CheckEnable = (rb) => rb.IsTeamEnable,                
+                CheckEnable = (rb) => rb.IsTeamEnable,
                 LcdBackground = false,
                 RenderContent = 0,
                 BodyComp = null
@@ -72,12 +70,12 @@ namespace KvizCommando.Client.Features.Team
                 CheckEnable = (inf) => true,
                 LcdBackground = true,
                 RenderContent = 1,
-               
+
                 },
             new TBoxSpecs {
                 Key = TBoxKeyContent.Member,
                 TitleKey = "team.Box.Title.Members",
-                ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 0,
+                ImageSrc = string.Empty, Size = "extra-large", FooterDisplay = false, ClickId = 0,
                 BuildBoxText = (lang, inf) => "",
                 CheckEnable = (inf) => true,
                 LcdBackground = true,
@@ -117,7 +115,7 @@ namespace KvizCommando.Client.Features.Team
 
 
 
- 
+
 
 /*
             new QBoxSpecs {

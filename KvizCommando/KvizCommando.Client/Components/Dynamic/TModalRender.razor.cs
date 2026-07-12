@@ -1,35 +1,31 @@
-﻿using KvizCommando.Client.Features.Team;
+﻿using KvizCommando.Client.Features.Modal;
+using KvizCommando.Client.Features.Team;
 using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 
 namespace KvizCommando.Client.Components.Dynamic
 {
     public partial class TModalRender
     {
-        // [Inject] private ITeamModalDataBuilder render { get; set; } = default!;
         [Inject] private ILanguageService Lang { get; set; } = default!;
-        [Parameter] public int mode { get; set; } = default!;
 
-        [Parameter] public CandidateDto Candidate { get; set; } = default!;
+        [CascadingParameter]
+        public AppState AppStates { get; set; } = default!;
 
-        [Parameter] public TeamMemberDto TeamMember { get; set; } = default!;
+        [CascadingParameter]
+        public ModalTypes Mode { get; set; } = ModalTypes.None;
 
-        [Parameter] public int canNo { get; set; } = default!;
-        [Parameter] public int tabPosH { get; set; } = default!;
-        private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-        private bool isLoaded = false;
+        [Parameter] public int CanDidateNo { get; set; } = default!;
+        [Parameter] public int SelectedMember { get; set; } = default!;
+        private bool _isLoaded = false;
+        private string Culture => AppStates.Culture;
+        private TeamMemberDto Member => SelectedMember > 0 && SelectedMember <= 8 ? AppStates.Team.TeamMembers[SelectedMember] : new();
+        private CandidateDto Candidate => CanDidateNo > 0 && CanDidateNo <= 8 ? AppStates.Team.Candidates[CanDidateNo] : new();
+
         private InfoBlock Info = default!;
         private RankHeader rh = default!;
 
@@ -40,18 +36,18 @@ namespace KvizCommando.Client.Components.Dynamic
         ModalHandleVm _vmHan = new();
         protected override void OnParametersSet()
         {
-            switch (mode) 
+            switch (Mode)
             {
-                case 1:
-                    if (canNo > 0 && tabPosH>0)
+                case ModalTypes.THire:
+                    if (CanDidateNo > 0 && SelectedMember > 0)
                     {
-                        _vmHir = _builder!.BuildHireVm(Candidate, tabPosH, canNo, culture);
+                        _vmHir = _builder!.BuildHireVm(Candidate, SelectedMember, CanDidateNo, Culture);
                         Info = _vmHir.Info;
                         rh = new RankHeader();
                     }
                     break;
-                case 2:
-                    _vmPro = _builder!.BuildPromoteVm(TeamMember, culture);
+                case ModalTypes.TPromote:
+                    _vmPro = _builder!.BuildPromoteVm(Member, Culture);
                     Info = _vmPro.Info;
                     rh = new RankHeader()
                     {
@@ -61,8 +57,8 @@ namespace KvizCommando.Client.Components.Dynamic
                         NewClass = _vmPro.RankClassChanged
                     };
                     break;
-                case 3:
-                    _vmRet = _builder!.BuildRetireVm(TeamMember, culture);
+                case ModalTypes.TRetire:
+                    _vmRet = _builder!.BuildRetireVm(Member, Culture);
                     Info = _vmRet.Info;
                     rh = new RankHeader()
                     {
@@ -72,9 +68,9 @@ namespace KvizCommando.Client.Components.Dynamic
                         NewClass = _vmRet.RankClassChanged
                     };
                     break;
-                case 4:
-                    _vmHan = _builder!.BuildHandleVm(TeamMember,culture);
-                    Info= _vmHan.Info;
+                case ModalTypes.THandle:
+                    _vmHan = _builder!.BuildHandleVm(Member, Culture);
+                    Info = _vmHan.Info;
                     rh = new RankHeader();
                     break;
             }
@@ -82,7 +78,7 @@ namespace KvizCommando.Client.Components.Dynamic
         protected override void OnInitialized()
         {
             _builder = new TBuilderModal(Lang);
-            isLoaded = true;
+            _isLoaded = true;
         }
         private class RankHeader
         {

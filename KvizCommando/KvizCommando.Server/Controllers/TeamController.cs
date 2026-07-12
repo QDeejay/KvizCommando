@@ -1,7 +1,9 @@
 ﻿using KvizCommando.Server.Authorization;
+using KvizCommando.Server.Extensions;
 using KvizCommando.Server.Services.DtoMapping;
 using KvizCommando.Server.Services.UserPlayerIdCache;
 using KvizCommando.Shared.Contracts.Team;
+using KvizCommando.Shared.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -51,27 +53,28 @@ namespace KvizCommando.Server.Controllers
                 return Unauthorized();
 
             if (dto.SkillType > 2 || dto.SkillType < 1 || dto.MemberId > 8)
-                return BadRequest(ApiResponse.Fail(_localizer["Resp.Error.InValidData"].Value));
+                return FailToast(400, _localizer["Resp.Error.InValidData"].Value);
 
             var playerId = await _idCache.GetPlayerIdAsync(userId, ct);
 
             if (playerId is null or 0)
                 return NotFound("No Player record found for this user.");
 
+
             var success = await _teamService.SaveModifiedSkillAsync(playerId.Value, dto, ct);
 
             if (success == null)
             {
                 _logger.LogWarning($"Session ID probléma user:{userId} sessionId:", dto.SessionId);
-                return StatusCode(501, ApiResponse.Fail(_localizer["Error.Session"].Value));
+                return FailToast(501, _localizer["Error.Session"].Value);
             }
             else if (success == false)
             {
                 _logger.LogWarning($"Skill modosítás sikertelen. userId={userId}", userId);
-                return StatusCode(500, ApiResponse.Fail(_localizer["Error.Internal"].Value));
+                return FailToast(500, _localizer["Error.Internal"].Value);
             }
             else
-                return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value));
+                return OkToast(_localizer["Resp.SaveSkill", dto.SkillChanges.Sum()].Value, ToastType.Success);
         }
 
         [HttpPost("manage")] // POST /api/team/manage
@@ -93,14 +96,14 @@ namespace KvizCommando.Server.Controllers
                 return Unauthorized();
 
             if ((int)dto.ReqType > 4 || (int)dto.ReqType < 0)
-                return BadRequest(ApiResponse.Fail(_localizer["Resp.Error.InvalidRequest"].Value));
+                return FailToast(400, _localizer["Resp.Error.InvalidRequest"].Value);
+
 
             if (dto.MemberNo < 1 || dto.MemberNo > 8)
-                return BadRequest(ApiResponse.Fail(_localizer["Resp.Error.InvalidMember"].Value));
+                return FailToast(400, _localizer["Resp.Error.InvalidMember"].Value);
 
             if ((int)dto.ReqType == 0 && (dto.CandidateId < 1 || dto.CandidateId > 8))
-                return BadRequest(ApiResponse.Fail(_localizer["Resp.Error.InvalidCandidate"].Value));
-
+                return FailToast(400, _localizer["Resp.Error.InvalidCandidate"].Value);
 
             var playerId = await _idCache.GetPlayerIdAsync(userId, ct);
             if (playerId is null or 0)
@@ -113,25 +116,56 @@ namespace KvizCommando.Server.Controllers
             if (success == null)
             {
                 _logger.LogWarning($"Session ID probléma user:{userId} sessionId:", dto.SessionId);
-                return StatusCode(501, ApiResponse.Fail(_localizer["Error.Session"].Value));
+                return FailToast(501, _localizer["Error.Session"].Value);
             }
             else if (success == false)
             {
                 _logger.LogWarning($"Csapatmodositás sikertelen ({dto.ReqType.ToString()}) sikertelen. userId={userId}", userId);
-                return StatusCode(500, ApiResponse.Fail(_localizer["Error.Internal"].Value));
+                return FailToast(500, _localizer["Error.Internal"].Value);
             }
             else
-                return Ok(ApiResponse.Ok(_localizer["Resp.SaveOk"].Value));
+            {
+                var respToast = dto.ReqType switch
+                {
+                    ManageType.Fire => ToastType.Warning,
+                    ManageType.Heal => ToastType.Info,
+                    ManageType.Hire => ToastType.Success,
+                    ManageType.Promote => ToastType.Info,
+                    ManageType.Retire => ToastType.Warning,
+                    _ => ToastType.Error,
+                };
+                return OkToast(_localizer[$"Resp.{dto.ReqType}"].Value, respToast);
+            }
 
         }
 
+        public sealed record ApiResponse(bool Success, string? ServerVersion = null)
+        {
+            public static ApiResponse Ok() => new(true);
+            public static ApiResponse Fail() => new(false);
+        }
+
+        private ActionResult<ApiResponse> OkToast(string text, ToastType type)
+        {
+            Response.AddToast(text, type);
+            return Ok(ApiResponse.Ok());
+        }
+
+        private ActionResult<ApiResponse> FailToast(int statusCode, string text)
+        {
+            Response.AddToast(text, ToastType.Error);
+            return StatusCode(statusCode, ApiResponse.Fail());
+        }
 
 
-        public sealed record ApiResponse(bool Success, string Message, string? ServerVersion = null)
+    }
+
+}
+/*
+ public sealed record ApiResponse(bool Success, string Message, string? ServerVersion = null)
         {
             public static ApiResponse Ok(string msg) => new(true, msg);
             public static ApiResponse Fail(string msg) => new(false, msg);
         }
-    }
-
-}
+ 
+ */

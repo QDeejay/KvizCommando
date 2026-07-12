@@ -26,8 +26,8 @@
                                 OnClick="OnBoxClick">
                         <ContentBody>
                             
-                            <CascadingValue Value="_teamNav">
-                              <TeamView></TeamView>
+                            <CascadingValue Value="_selectedPos">
+                                <MemberView ModifySkill="OnSaveButtonPressedAsync" />
                             </CascadingValue>
                         </ContentBody>
                     </ContentBox>
@@ -36,3 +36,10 @@
         }
     </PageContainer>
 </LangGuard>
+
+                    <!-- 
+
+                     <TeamView ActionButtonPushed="OnTeamManageButtonPressedAsync"
+                                          ModifySkill="OnSaveButtonPressedAsync"/>
+
+                    -->

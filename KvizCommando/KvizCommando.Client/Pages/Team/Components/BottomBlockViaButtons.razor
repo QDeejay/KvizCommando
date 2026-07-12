@@ -6,7 +6,7 @@
         <div></div>
         <div class="datacol-1" style="@(vm.Rows[i].HasChanged ? "color:blue;" : "")">@vm.Rows[i].CategoryName</div>
         <div class="datacol-2" style="@(vm.Rows[i].HasChanged ? "color:blue; font-weight:bold;" : "")">@vm.Rows[i].LevelDisplay</div>
-        <div class="datacol-3" style="@(i == 0 || i == 2 ? "color: green;" : vm.ListType == "Help" ? "" : "color:red;")">@vm.Rows[i].ValueDisplay</div>
+        <div class="datacol-3" style="@(i == 0 || i == 2 ? "color: green;" : "color:red;")">@vm.Rows[i].ValueDisplay</div>
         <div class="button-section">
             @if (@vm.Rows[i].StatusText == "")
             {
@@ -25,6 +25,11 @@
     }
     <div></div><div></div><div></div><div></div>
     <div class="button-section">
-        <button class="military-button" disabled="@(usedPoints.Sum() == 0)" @onclick="OnSaveButtonPushed">@vm.SaveButtonText</button>
+       
     </div>
 </div>
+<!--
+     <button class="military-button" disabled="@(usedPoints.Sum() == 0)" @onclick="OnSaveButtonPushed">@vm.SaveButtonText</button>
+
+
+-->

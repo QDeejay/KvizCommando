@@ -15,8 +15,14 @@
 
     @if (_currentSubPage == 0)
     {
-        <div class="teampage-title">@_vmBot.Rows[0].Label</div>
+
         <div class="teampage-list-grid bottom-extend gapped-rows">
+            <div></div>
+            <div class="teampage-title">@_vmBot.Rows[0].Label</div>
+            <div></div>
+            <div></div>
+            <div></div>
+
             @for (int i = 1; i < _vmBot.Rows.Count; i++)
             {
                 var row = i;
@@ -48,7 +54,7 @@
                     {
                         <div class="bottom-action-label"
                              @onclick="@(() => OnActionButtonPushed(row))">
-                            @Lang[_vmBot.Rows[row].Remark]
+                            @_vmBot.Rows[row].Remark
                         </div>
                     }
                 </div>
@@ -58,30 +64,31 @@
     }
     else
     {
-        <div class="teampage-title">@_vmDev.HeaderText</div>
         <div class="teampage-list-grid extend">
+            <div></div>
+            <div class="teampage-title">@_vmDev.HeaderText</div>
+            <div></div>
+            <div></div>
+            <div class="used-points-label">@_vmDev.ResetButtonText</div>
             @for (int i = 0; i < _vmDev.Rows.Count; i++)
             {
-                var row = i ;
+                var row = i;
                 <div></div>
                 <div class="teampage-datacol-1" style="@(_vmDev.Rows[i].HasChanged ? "color:blue;" : "")">@_vmDev.Rows[i].CategoryName</div>
                 <div class="teampage-datacol-2" style="@(_vmDev.Rows[i].HasChanged ? "color:blue; font-weight:bold;" : "")">@_vmDev.Rows[i].LevelDisplay</div>
-                <div class="teampage-datacol-3"
-                     style="@(i == 0 || i == 2 ? "color: green;" : "")">
-                    @_vmDev.Rows[i].ValueDisplay
-                </div>
+                <div class="teampage-datacol-3">@_vmDev.Rows[i].ValueDisplay </div>
                 <div class="dev-button-section">
                     @if (@_vmDev.Rows[i].StatusText == "")
                     {
-                        <button class="dev-modifier-button"
+                        <button class="button-on-lcd"
                                 @onclick="@(() => OnDecButtonPushed(row))"
                                 disabled="@(_vmDev.Rows[i].HasChanged == false)">
-                            -
+                            <i class="bi bi-dash-lg"></i>
                         </button>
-                        <button class="dev-modifier-button"
+                        <button class="button-on-lcd"
                                 @onclick="@(() => OnIncButtonPushed(row))"
                                 disabled="@(_vmDev.Rows[i].CanDevelop == false)">
-                            +
+                            <i class="bi bi-plus-lg"></i>
                         </button>
                     }
                     else
@@ -92,16 +99,50 @@
             }
         </div>
     }
-    <div class="component-button-row">
-        <button class="button-on-lcd" @onclick="OnSaveButtonPushed" disabled="@(_usedPoints.Sum() == 0)">
-            <i class="bi bi-floppy"></i>
-        </button>
 
-        <button class="button-on-lcd" @onclick="() => ShowSubPage(1)" disabled="@(_currentSubPage==1)">
-            <i class="bi bi-life-preserver"></i>
-        </button>
-        <button class="button-on-lcd" @onclick="() => ShowSubPage(0)" disabled="@(_currentSubPage == 0)">
-            <i class="bi bi-people"></i>
-        </button>
+
+
+
+
+    <div class="component-button-row">
+        <div class="component-button-group">
+            <button class="button-on-lcd" @onclick="() => ShowSubPage(0)" disabled="@(_currentSubPage == 0)">
+                <i class="bi bi-people"></i>
+            </button>
+            <button class="button-on-lcd" @onclick="() => ShowSubPage(1)" disabled="@(_currentSubPage == 1)">
+                <i class="bi bi-life-preserver"></i>
+            </button>
+        </div>
+        @if (_currentSubPage == 1)
+        {
+            <div class="component-button-group right">
+                <button class="button-on-lcd" @onclick="ResetUsedPoints" disabled="@(_usedPoints.Sum() == 0)">
+                    <i class="bi bi-trash3-fill"></i>
+                </button>
+                <button class="button-on-lcd" @onclick="OnSaveButtonPushed" disabled="@(_usedPoints.Sum() == 0)">
+                    <i class="bi bi-floppy"></i>
+                </button>
+            </div>
+        }
     </div>
+
+
+
+
+
 }
+
+        
+
+<!--
+
+
+   
+
+-->
+
+
+<!--
+
+
+-->

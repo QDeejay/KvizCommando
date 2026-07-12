@@ -1,12 +1,7 @@
-﻿using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Models.StoreModels;
-using KvizCommando.Client.Services.ClientCache;
-using KvizCommando.Client.Services.Visual.UiService;
+﻿using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Contracts.Team;
-using KvizCommando.Shared.Models.Enums;
 using System.Net.Http.Json;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace KvizCommando.Client.Services.Dto
 {
@@ -20,7 +15,7 @@ namespace KvizCommando.Client.Services.Dto
         public ApiService(
             HttpClient http,
             IHomeState home,
-            IQuestionState questionstate, 
+            IQuestionState questionstate,
             ITeamState teamstate,
             SessionService sessioncache)
         {
@@ -77,7 +72,7 @@ namespace KvizCommando.Client.Services.Dto
             }
             finally
             {
-                Console.WriteLine("Slot managment finished"); 
+                Console.WriteLine("Slot managment finished");
             }
         }
         public async Task<bool> SendNewQuestionAsync(NewQuestionRequest dto)
@@ -90,7 +85,7 @@ namespace KvizCommando.Client.Services.Dto
 
                 if (!response.IsSuccessStatusCode)
                     return false;
-                
+
                 _question.Invalidate();
 
                 return true;
@@ -102,58 +97,56 @@ namespace KvizCommando.Client.Services.Dto
             }
             finally
             {
-                Console.WriteLine("Send new question finished"); 
+                Console.WriteLine("Send new question finished");
             }
         }
-        public async Task<(bool Success, string Message)> ModifyTeamAsync(ModifySkillRequest dto)
+        public async Task<bool> ModifyTeamAsync(ModifySkillRequest dto)
         {
-            string? msg = string.Empty;
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
                 var response = await _http.PostAsJsonAsync($"/api/team/modify", dto);
-                msg = await ServerRespManager.GetValueAsync(response, "message");
+
 
                 if (!response.IsSuccessStatusCode)
-                    return (false, msg ?? "");
+                    return false;
 
                 _team.Invalidate();
-                return (true, msg ?? "");
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
-                return (false, ex.Message);
+                return false;
             }
             finally
-            { 
-                Console.WriteLine("Modify teamskill finished"); 
+            {
+                Console.WriteLine("Modify teamskill finished");
             }
         }
-        public async Task<(bool Success, string Message)> ManageTeamAsync(ManageTeamRequest dto)
+        public async Task<bool> ManageTeamAsync(ManageTeamRequest dto)
         {
-            string? msg = string.Empty;
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
                 var response = await _http.PostAsJsonAsync($"/api/team/manage", dto);
-                msg = await ServerRespManager.GetValueAsync(response, "message");
 
                 if (!response.IsSuccessStatusCode)
-                {
-                    return (false, msg ?? "");
-                }
+                    return false;
+
                 _home.Invalidate();
                 _team.Invalidate();
-                return (true, msg ?? "");
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
-                return (false, msg ?? "");
+                return false;
             }
             finally
-            { Console.WriteLine("Manage  finished"); }
+            {
+                Console.WriteLine("Modify teamskill finished");
+            }
         }
     }
 }

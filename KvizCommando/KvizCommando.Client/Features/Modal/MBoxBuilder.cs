@@ -6,8 +6,11 @@ namespace KvizCommando.Client.Features.Modal
     public static class MBoxBuilder
     {
         private const string BUTTON_STYLE = "background-color: ";
-        public static ModalBoxVm BuildParam(ModalTypes type, ILanguageService lang )
-        { 
+        public static ModalBoxVm BuildParam(ModalTypes type, ILanguageService lang)
+        {
+            if ((int)type == 0)
+                return new ModalBoxVm();
+
             var specs = ModalBox.Specs[type];
 
             return new ModalBoxVm
@@ -24,7 +27,6 @@ namespace KvizCommando.Client.Features.Modal
                 CheckBoxKey = specs.CheckBoxKey,
                 CheckBottom = specs.CheckBottom,
                 BodyComponent = specs.BodyComponent
-                
             };
         }
     }

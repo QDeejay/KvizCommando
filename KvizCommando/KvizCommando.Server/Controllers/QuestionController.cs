@@ -1,18 +1,13 @@
 ﻿using KvizCommando.Server.Authorization;
-using KvizCommando.Server.Domain.Entities.Players;
+using KvizCommando.Server.Extensions;
 using KvizCommando.Server.Services.DtoMapping;
-using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.UserPlayerIdCache;
 using KvizCommando.Shared.Contracts.Question;
-using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
-using Microsoft.SqlServer.Server;
 using System.Security.Claims;
-using KvizCommando.Server.Extensions;
 
 namespace KvizCommando.Server.Controllers
 {
@@ -75,9 +70,9 @@ namespace KvizCommando.Server.Controllers
             if (playerId is null or 0)
                 return NotFound("No Player record found for this user.");
 
-          
+
             // write-through frissítés a cache-ben + store-ban
-            var success = await _questionService.SaveFactorySlotsAsync(playerId.Value, dto,ct);
+            var success = await _questionService.SaveFactorySlotsAsync(playerId.Value, dto, ct);
 
             if (success == null)
             {
@@ -91,8 +86,8 @@ namespace KvizCommando.Server.Controllers
             }
             else
                 return OkToast(_localizer["Resp.SaveOk"].Value, ToastType.Success);
-            
-                
+
+
 
 
         }
@@ -116,7 +111,7 @@ namespace KvizCommando.Server.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            if (dto == null || dto.ReqType.ToString()=="")
+            if (dto == null || dto.ReqType.ToString() == "")
                 return FailToast(400, _localizer["Error.InValidData"].Value);
 
             var playerId = await _idCache.GetPlayerIdAsync(userId, ct);
@@ -142,7 +137,7 @@ namespace KvizCommando.Server.Controllers
                 return FailToast(500, _localizer["Error.Internal"].Value);
             }
             else
-                return OkToast(_localizer[$"Resp.{action}"].Value, action=="MoveOk" ? ToastType.Info : ToastType.Warning);
+                return OkToast(_localizer[$"Resp.{action}"].Value, action == "MoveOk" ? ToastType.Info : ToastType.Warning);
 
 
         }
@@ -166,10 +161,10 @@ namespace KvizCommando.Server.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            if (dto==null || dto.Category==0 || !dto.Question.Contains('?') || dto.Question.Length<10 || dto.Question.Length >200)
+            if (dto == null || dto.Category == 0 || !dto.Question.Contains('?') || dto.Question.Length < 10 || dto.Question.Length > 200)
                 return FailToast(400, _localizer["Resp.Qustion.BadData"].Value);
 
-            if ( dto.Question.Length < 10 || dto.Question.Length > 200)
+            if (dto.Question.Length < 10 || dto.Question.Length > 200)
                 return FailToast(400, _localizer["Resp.Question.TooLong"].Value);
 
             if (dto.Answers.Any(a => string.IsNullOrWhiteSpace(a)))
@@ -183,7 +178,7 @@ namespace KvizCommando.Server.Controllers
                 return NotFound("No Player record found for this user.");
 
             var success = await _questionService.SendNewQuestionAsync(playerId.Value, dto, ct);
-           
+
             if (success == null)
             {
                 _logger.LogWarning($"Session ID probléma user:{userId} sessionId:", dto.SessionId);
@@ -196,6 +191,8 @@ namespace KvizCommando.Server.Controllers
             }
             else
                 return OkToast(_localizer["Resp.SendOk"].Value, ToastType.Info);
+
+
 
         }
 
@@ -218,7 +215,7 @@ namespace KvizCommando.Server.Controllers
             return StatusCode(statusCode, ApiResponse.Fail());
         }
     }
-   
+
 }
 
 

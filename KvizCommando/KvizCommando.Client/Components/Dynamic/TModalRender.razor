@@ -1,4 +1,7 @@
-﻿@if (isLoaded && mode>0)
+﻿@using KvizCommando.Client.Features.Modal;
+
+
+@if (_isLoaded && (int)Mode > 200 && (int)Mode < 205)
 {
     <div class="modal-display">
         <div class="info-block">
@@ -18,7 +21,7 @@
             <div class="modal-value">@Info.Orient2Value</div>
            
         </div>
-        @if (mode == 2 || mode == 3)
+        @if (Mode == ModalTypes.TPromote || Mode == ModalTypes.TRetire)
         {
             <div class="divider">
                 <span class="modal-@(rh.NewClass ? "promrank" : "promlevel")">@rh.RankClass</span>
@@ -30,9 +33,9 @@
         
         }
         
-        @switch (mode)
+        @switch (Mode)
         {
-        case 1:
+            case ModalTypes.THire:
             <div class="hire-skillblock">
             <div class="modal-subtitle">@_vmHir.Labelpros</div>
             <div></div>
@@ -48,7 +51,7 @@
                 }
                 </div>
                 break;
-            case 2:
+            case ModalTypes.TPromote:
                 var label =string.Empty;
                 var color = "color: ";
                 <div class="promote-block">
@@ -76,7 +79,7 @@
             </div>
                 <div class="info-row4">(@_vmPro.Infotext1)</div>
                 break;
-            case 3:
+            case ModalTypes.TRetire:
                 <div class="promote-block">
                     <div class="modal-subtitle"> @_vmRet.Unlocks </div>
                     <div></div>
@@ -92,7 +95,7 @@
                 </div>
                 <div class="info-row4">@_vmRet.Infotext1</div>
                 break;
-            case 4:
+            case ModalTypes.THandle:
             <div class="handle-block">
                 <div class="info-row1">@_vmHan.Infotext1</div>
                 <div class="info-row2">@_vmHan.Infotext2</div>

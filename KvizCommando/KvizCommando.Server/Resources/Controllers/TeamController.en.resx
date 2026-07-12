@@ -132,7 +132,25 @@
   <data name="Error.InvalidRequest" xml:space="preserve">
     <value>&lt; UnSuccessed (8201)&gt;</value>
   </data>
-  <data name="Resp.SaveOk" xml:space="preserve">
-    <value>&lt; Successed save! &gt;</value>
+  <data name="Error.Session" xml:space="preserve">
+    <value>Re-Logined on other device!</value>
+  </data>
+  <data name="Resp.Fire" xml:space="preserve">
+    <value>&lt; Team member fired! &gt;</value>
+  </data>
+  <data name="Resp.Heal" xml:space="preserve">
+    <value>&lt;Team member healed! &gt;</value>
+  </data>
+  <data name="Resp.Promote" xml:space="preserve">
+    <value>&lt; Team member promoted! &gt;</value>
+  </data>
+  <data name="Resp.Hire" xml:space="preserve">
+    <value>&lt; Successed recruit! &gt;</value>
+  </data>
+  <data name="Resp.Retire" xml:space="preserve">
+    <value>&lt; Team member retired! &gt;</value>
+  </data>
+  <data name="Resp.SaveSkill" xml:space="preserve">
+    <value>&lt; Saved {0} points! &gt;</value>
   </data>
 </root>

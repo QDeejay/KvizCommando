@@ -144,12 +144,6 @@
   <data name="Label.TeamName" xml:space="preserve">
     <value>Team</value>
   </data>
-  <data name="tabPane.General" xml:space="preserve">
-    <value>Gen</value>
-  </data>
-  <data name="tabPane.General.Title" xml:space="preserve">
-    <value>Team information</value>
-  </data>
   <data name="Button.Upgrade" xml:space="preserve">
     <value>Promote</value>
   </data>
@@ -171,9 +165,6 @@
   <data name="SubBtn.Hire" xml:space="preserve">
     <value>Recruit</value>
   </data>
-  <data name="tabPane.Recruit.Title" xml:space="preserve">
-    <value>teammate recruitment</value>
-  </data>
   <data name="label.TeamDevPointShort" xml:space="preserve">
     <value>Tp:</value>
   </data>
@@ -188,9 +179,6 @@
   </data>
   <data name="Label.Bonus" xml:space="preserve">
     <value>Bonus:</value>
-  </data>
-  <data name="tabPane.Member.Title" xml:space="preserve">
-    <value>Teammate information</value>
   </data>
   <data name="Label.Pension" xml:space="preserve">
     <value>Pension:</value>
@@ -286,7 +274,7 @@
     <value>Class:</value>
   </data>
   <data name="Button.Modify" xml:space="preserve">
-    <value>Modify</value>
+    <value>Modify ({0})</value>
   </data>
   <data name="modal.Text.Promote2" xml:space="preserve">
     <value>The promotion is free, because of rank class changing!</value>

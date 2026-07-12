@@ -1,19 +1,12 @@
-﻿using KvizCommando.Client.Features.Team;
-using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Shared.Contracts.Team;
+﻿using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Globalization;
-using KvizCommando.Client.Utilities;
 
 namespace KvizCommando.Client.Pages.Team.Components
 {
-    public partial class RecruitBlockDisplay : KcComponentBase
+    public partial class RecruitBlockDisplay : KcComponentBase, IDisposable
     {
         //[Inject] private RecruitBlockBuilder Builder { get; set; } = default!;
 
@@ -28,7 +21,7 @@ namespace KvizCommando.Client.Pages.Team.Components
         private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         protected override void OnParametersSet()
         {
-            _couldBeHire=false;
+            _couldBeHire = false;
             if (TabPos >= 1 && TabPos <= 8 && RecruitData.CanBeHire)
             {
                 _couldBeHire = RecruitData.CanBeHire;
@@ -36,11 +29,11 @@ namespace KvizCommando.Client.Pages.Team.Components
                 {
                     SelectedId = 0;
                     _prevTabPosH = TabPos;
-                   // vm = RecruitBlockBuilder.Build(RecruitData, candidateOrder, TabPos, culture, Ui.Lang);
+                    // vm = RecruitBlockBuilder.Build(RecruitData, candidateOrder, TabPos, culture, Ui.Lang);
                 }
-               
+
             }
-            
+
         }
         protected async Task OnCandidateSelected(int candidateId)
         {

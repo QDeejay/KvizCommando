@@ -144,12 +144,6 @@
   <data name="Label.TeamName" xml:space="preserve">
     <value>Csapat</value>
   </data>
-  <data name="tabPane.General" xml:space="preserve">
-    <value>Ált</value>
-  </data>
-  <data name="tabPane.General.Title" xml:space="preserve">
-    <value>Csapat információ</value>
-  </data>
   <data name="Button.Upgrade" xml:space="preserve">
     <value>Előléptet</value>
   </data>
@@ -171,9 +165,6 @@
   <data name="SubBtn.Hire" xml:space="preserve">
     <value>Toborzás</value>
   </data>
-  <data name="tabPane.Recruit.Title" xml:space="preserve">
-    <value>csapattag toborzása</value>
-  </data>
   <data name="label.TeamDevPointShort" xml:space="preserve">
     <value>Csp:</value>
   </data>
@@ -188,9 +179,6 @@
   </data>
   <data name="Label.Bonus" xml:space="preserve">
     <value>Bonusz:</value>
-  </data>
-  <data name="tabPane.Member.Title" xml:space="preserve">
-    <value>Csapattag információ</value>
   </data>
   <data name="Label.Pension" xml:space="preserve">
     <value>Nyugdíj:</value>
@@ -286,7 +274,7 @@
     <value>Osztály:</value>
   </data>
   <data name="Button.Modify" xml:space="preserve">
-    <value>Módosít</value>
+    <value>Módosít ({0})</value>
   </data>
   <data name="modal.Text.Promote2" xml:space="preserve">
     <value>Az elöléptetés ingyenes, mert változik  a rang osztálya is!</value>

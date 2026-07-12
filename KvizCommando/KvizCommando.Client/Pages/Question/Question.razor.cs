@@ -3,17 +3,13 @@ using KvizCommando.Client.Components.Dynamic;
 using KvizCommando.Client.Features.Modal;
 using KvizCommando.Client.Features.Question;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Pages.Question.Components;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Models.Dtos;
-using KvizCommando.Shared.Models.Enums;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using System.Runtime.CompilerServices;
 
 namespace KvizCommando.Client.Pages.Question
 {
@@ -23,7 +19,7 @@ namespace KvizCommando.Client.Pages.Question
         private AppState AppStates { get; set; } = default!;
 
         private readonly Dictionary<string, ContentBoxVm> _boxes = [];
-        
+
         private string[] _boxOrder = [];
 
         private int _selectedId = 100;
@@ -37,7 +33,8 @@ namespace KvizCommando.Client.Pages.Question
         private ContentBoxVm Box(string orx) => _boxes[orx];
         private void BuildBoxes()
         {
-            var callback = new QuestionCallbacks {
+            var callback = new QuestionCallbacks
+            {
                 OnFactSave = OnFactSaveAsync,
                 OnSelectId = OnSelectIdAsync,
                 OnDelete = OnDeleteUsrSlotAsync,
@@ -72,7 +69,7 @@ namespace KvizCommando.Client.Pages.Question
                     break;
                 case 103:
                     _boxOrder = QBoxBuilder.SubPend;
-                    headerTitle = _boxes[QBoxKeyRoot.RtBtnPendig.ToString()].Header; 
+                    headerTitle = _boxes[QBoxKeyRoot.RtBtnPendig.ToString()].Header;
                     break;
                 case 104:
                     _boxOrder = QBoxBuilder.SubNew;
@@ -135,7 +132,7 @@ namespace KvizCommando.Client.Pages.Question
             var success = await Api.SendNewQuestionAsync(request);
             if (!success)
                 return;
-            _selectedId=100;
+            _selectedId = 100;
             await Ui.ReloadAsync();
             BuildBoxes();
             StateHasChanged();
@@ -173,7 +170,7 @@ namespace KvizCommando.Client.Pages.Question
             };
             vm.BodyParameters.Add(nameof(QModalRender.SlotNo), _selectedId);
             var result = await Ui.Modal.ShowAsync(vm);
-            var reqType = new SlotManageType();
+            SlotManageType reqType;
 
             if (result == ModalResult.Button1)
                 reqType = SlotManageType.DeletePending;
@@ -208,7 +205,7 @@ namespace KvizCommando.Client.Pages.Question
             GC.SuppressFinalize(this);
         }
 
-    }  
+    }
 }
 /*
  

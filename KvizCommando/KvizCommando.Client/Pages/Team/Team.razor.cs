@@ -1,22 +1,15 @@
 ﻿using KvizCommando.Client.Components;
+using KvizCommando.Client.Components.Dynamic;
 using KvizCommando.Client.Features.Modal;
-using KvizCommando.Client.Features.Question;
 using KvizCommando.Client.Features.Team;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Pages.Question.Components;
-using KvizCommando.Client.Pages.Shared;
-using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
-using KvizCommando.Client.Services.Dto;
-using KvizCommando.Client.Services.Visual;
+using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.Team;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
-using System.ComponentModel.Design;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace KvizCommando.Client.Pages.Team
 {
@@ -32,8 +25,8 @@ namespace KvizCommando.Client.Pages.Team
         private SubHeaderParams _subHead = new();
         private string Culture => AppStates.Culture;
 
-        private int _selectedMember =0;
-        private int[] _recruitMixer = { 1, 2, 3, 4, 5, 6, 7, 8 };
+        private int _selectedPos = 0;
+        private static readonly int[] _recruitMixer = [1, 2, 3, 4, 5, 6, 7, 8];
         private TeamNavigator _teamNav = new();
         private TeamDtos TState => AppStates.Team!;
         private ContentBoxVm Box(string orx) => _boxes[orx];
@@ -53,7 +46,7 @@ namespace KvizCommando.Client.Pages.Team
             for (int i = 0; i < 9; i++)
             {
                 _subHead.HTabs[i] = OrientationLocalizer.GetOrientation(i, Culture); // + ".";
-                _subHead.TabEnable[i] = TState.CharCatMask[i] || true; 
+                _subHead.TabEnable[i] = TState.CharCatMask[i] || true;
                 _subHead.TabDisableText[i] = "";
                 //_subHead.TabEnable[i] = TState.CharCatMask[i] || (TState.Candidates[i].CanBeHire && TState.TeamInfo.TotalMembers < TState.TeamInfo.MaxMembers);
                 //_subHead.TabDisableText[i] = TState.TeamInfo.TotalMembers < TState.TeamInfo.MaxMembers ? (!TState.Candidates[i].CanBeHire ? Ui.Lang["team.Label.PopUp.NotHire"] : "") : Ui.Lang["team.Label.PopUp.NoFree"];
@@ -80,18 +73,16 @@ namespace KvizCommando.Client.Pages.Team
                 case 201:
                     _boxOrder = TBoxBuilder.SubTeam;
                     headerTitle = _boxes[TBoxKeyContent.Team.ToString()].Header;
+                    _selectedPos = Array.FindIndex(TState.CharCatMask, 1, x => x);
                     break;
                 case 202:
                     _boxOrder = TBoxBuilder.SubMember;
                     headerTitle = _boxes[TBoxKeyContent.Member.ToString()].Header;
-                    _subHead.EnabledTabs = CheckEnable(TState.CharCatMask, true);
-                    _subHead.ActiveIndex = _subHead.EnabledTabs[0];
+                    _selectedPos = Array.FindIndex(TState.CharCatMask, 1, x => x);
                     break;
                 case 203:
                     _boxOrder = TBoxBuilder.SubRecruit;
                     headerTitle = _boxes[TBoxKeyContent.Recruit.ToString()].Header;
-                    _subHead.EnabledTabs = CheckEnable(TState.CharCatMask, false);
-                    _subHead.ActiveIndex = _subHead.EnabledTabs[0];
                     break;
                 default:
                     headerTitle = (Ui.Lang["mainlayout.Header.Team"]);
@@ -112,21 +103,94 @@ namespace KvizCommando.Client.Pages.Team
             _isLoaded = true;
             if (_isReady == false)
                 BuildBoxes();
-            
+
         }
         protected override void OnInitialized()
         {
             Ui.Header.OnBackBtnClicked += UpdateBckClick;
         }
 
-        private async Task OnSaveButtonPressed(ModifySkillRequest modReq) 
-        { 
+        private async Task OnSaveButtonPressedAsync(ModifySkillRequest modReq)
+        {
+
+            var success = await Api.ModifyTeamAsync(modReq);
+
+            if (!success)
+                return;
+
+            await Ui.ReloadAsync();
+            BuildBoxes();
         }
         private async Task OnHireButtonPressed(int hireCoord)
-        { 
+        {
+            var selectedPos = hireCoord / 100;
+            var selectedCandidate = hireCoord % 100;
+
+            var mVm = MBoxBuilder.BuildParam(ModalTypes.THire, Ui.Lang);
+
+            mVm.BodyParameters.Add(nameof(TModalRender.SelectedMember), selectedPos);
+            mVm.BodyParameters.Add(nameof(TModalRender.CanDidateNo), selectedCandidate);
+
+            var result = await Ui.Modal.ShowAsync(mVm);
+
+            if (result != ModalResult.Button1)
+                return;
+
+            var success = await Api.ManageTeamAsync(
+                new ManageTeamRequest
+                {
+                    ReqType = ManageType.Hire,
+                    MemberNo = selectedPos,
+                    CandidateId = selectedCandidate
+                });
+
+            if (!success)
+                return;
+
+            await Ui.ReloadAsync();
+            BuildBoxes();
         }
-        private async Task OnTeamManageButtonPressed(int actionReq)
-        { }
+        private async Task OnTeamManageButtonPressedAsync(int actionReq)
+        {
+            var modalAction = actionReq / 100;
+            var selectedMember = actionReq % 100;
+            var modalType = modalAction switch
+            {
+                1 => ModalTypes.TPromote,
+                2 => ModalTypes.TRetire,
+                3 => ModalTypes.THandle,
+                4 => ModalTypes.THandle,
+                _ => ModalTypes.None
+            };
+            var mVm = MBoxBuilder.BuildParam(modalType, Ui.Lang);
+            if (modalAction == 3)
+                mVm = mVm with { ActionText2 = string.Empty };
+
+            mVm.BodyParameters.Add(nameof(TModalRender.SelectedMember), selectedMember);
+            mVm.BodyParameters.Add(nameof(TModalRender.CanDidateNo), 0);
+
+            var result = await Ui.Modal.ShowAsync(mVm);
+
+            if (result != ModalResult.Button1 || result != ModalResult.Button2)
+                return;
+
+            if (modalAction == 4 && result != ModalResult.Button1)
+                modalAction = 3; // ha button 1-et nyomja meg akkor is kiruja a tagot ha meg tudná gyógyítani
+
+            var success = await Api.ManageTeamAsync(
+                new ManageTeamRequest
+                {
+                    ReqType = (ManageType)modalAction,
+                    MemberNo = selectedMember,
+                    CandidateId = 0
+                });
+
+            if (!success)
+                return;
+
+            await Ui.ReloadAsync();
+            BuildBoxes();
+        }
 
         private void UpdateBckClick()
         {
@@ -155,7 +219,7 @@ namespace KvizCommando.Client.Pages.Team
 
             for (int i = 1; i < bools.Length; i++)
             {
-                if (bools[i]==reference || !reference)
+                if (bools[i] == reference || !reference)
                     indexes.Add(i);
             }
 
@@ -339,7 +403,7 @@ namespace KvizCommando.Client.Pages.Team
             {
                 tModal = tModal with
                 {
-                    ActionText2 = SelectedMember.SkillPoints>0 ? tModal.ActionText2 : string.Empty,
+                    //ActionText2 = SelectedMember.SkillPoints>0 ? tModal.ActionText2 : string.Empty,
                     //AsyncAction1 = () => ExecuteModalAsync(btnId),
                     //AsyncAction2 = () => ExecuteModalAsync(btnId+1)
                 };

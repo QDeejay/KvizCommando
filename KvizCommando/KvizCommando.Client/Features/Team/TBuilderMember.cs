@@ -16,42 +16,42 @@ namespace KvizCommando.Client.Features.Team
         {
             _lang = lang;
         }
-        public UpperBlockVm BuildMemberUpperVm(TeamMemberDto info, int usedSkillPoints, string culture)
+        public UpperBlockVm BuildMemberUpperVm(TeamMemberDto member, string culture)
         {
             var vm = new UpperBlockVm();
 
             // Közös adatok
-            string name = info.Name;
-            string publicLevel = RankNameTable.Data[info.Level].PublicLevel ?? "";
-            string devPointsDisplay = (info.SkillPoints - usedSkillPoints).ToString();
+            string name = member.Name;
+            string publicLevel = RankNameTable.Data[member.Level].PublicLevel ?? "";
+            string devPointsDisplay = member.SkillPoints.ToString();
 
-            var m = info;
+            var m = member;
             int c1 = THelpers.NormalizeCategory(m.MaintAttitude.Category[0]);
             int c2 = THelpers.NormalizeCategory(m.SecondAttitude.Category[0]);
-            int vitMax = 36 + info.Level * 3;
+            int vitMax = 36 + m.Level * 3;
             int vitAct = Math.Min(m.EnergyPoints, vitMax);
-            int rankClass = info.Level == 0 ? 0 : (info.Level - 1) / 3 + 1;
+            int rankClass = m.Level == 0 ? 0 : (m.Level - 1) / 3 + 1;
             string o1 = OrientationLocalizer.GetOrientation(c1, culture);
             string o2 = OrientationLocalizer.GetOrientation(c2, culture);
             string oShort = OrientationLocalizer.GetOrientShort(c1, culture);
 
             vm.Rows.Add(new(_lang["team.Label.Name"], name));
-            vm.Rows.Add(new(_lang["team.Label.Rank"], RankNameLocalizer.GetName(info.Level, culture)));
-            vm.Rows.Add(new(_lang["team.Label.Class"] + ":", RankNameLocalizer.GetClass(rankClass, culture)));
+            vm.Rows.Add(new(_lang["team.Label.Rank"], RankNameLocalizer.GetName(m.Level, culture)));
+            vm.Rows.Add(new(_lang["team.Label.Class"], RankNameLocalizer.GetClass(rankClass, culture)));
             vm.Rows.Add(new(_lang["team.SubBtn.Main"] + ":", o1));
             vm.Rows.Add(new(_lang["team.SubBtn.Second"] + ":", o2));
 
 
             vm.Rows.Add(new(_lang["team.Label.Level"], publicLevel));
             vm.Rows.Add(new(_lang["team.Label.Vitality"], $"{vitAct}/{vitMax}"));
-            vm.Rows.Add(new(_lang["team.Label.Next"], (info.NextXp - info.Xp).ToString()));
+            vm.Rows.Add(new(_lang["team.Label.Next"], (m.NextXp - m.Xp).ToString()));
             vm.Rows.Add(new(_lang["team.Label.SkillPointShort"].FormatSafe(oShort), devPointsDisplay));
             vm.Rows.Add(new(_lang["team.Label.Pension"], m.Pension.ToString()));
 
 
             return vm;
         }
-        public BottomBlockVm BuildMemberBottomVm(TeamMemberDto member, int tabPos, string culture)
+        public BottomBlockVm BuildMemberBottomVm(TeamMemberDto member, string culture)
         {
             var vm = new BottomBlockVm();
 
@@ -66,20 +66,20 @@ namespace KvizCommando.Client.Features.Team
             BuildMemberRows(member, vm, culture);
             return vm;
         }
-        public BottomDevVm BuildMemberBottomDevVm(int subPos, TeamMemberDto info, int[] usedPoints, string culture)
+        public BottomDevVm BuildMemberBottomDevVm(int subPos, TeamMemberDto member, int[] usedPoints, string culture)
         {
             (string headerType, int skilltype) = subPos == 1 ? ("Sec", 4) : ("3rd", 8);
 
             var vm = new BottomDevVm
             {
                 UsedPoints = usedPoints,
-                AvailableDevPoints = info.SkillPoints - usedPoints.Sum(),
+                AvailableDevPoints = member.SkillPoints - usedPoints.Sum(),
                 HeaderText = _lang[$"team.Label.Attitude.{headerType}"],
-                ListType = headerType,
-                SaveButtonText = usedPoints.Sum() > 0 ? $" ({usedPoints.Sum()})" : ""
+                //ListType = headerType,
+                ResetButtonText = usedPoints.Sum() > 0 ? _lang["team.Button.Modify"].FormatSafe(usedPoints.Sum()) : ""
             };
             // 2) a megfelelő attitude DTO-t kiválasztjuk
-            var attitude = subPos == 1 ? info.SecondAttitude : info.GenderAttitude;
+            var attitude = subPos == 1 ? member.SecondAttitude : member.GenderAttitude;
 
             // 3) sorok létrehozása
             for (int i = 0; i < attitude.Skill.Length; i++)
@@ -89,7 +89,7 @@ namespace KvizCommando.Client.Features.Team
                         attitude.Skill[i],
                         attitude.Category[i],
                         skilltype + i,
-                        info.Level,
+                        member.Level,
                         usedPoints[i],
                         vm.AvailableDevPoints,
                         culture,
@@ -100,7 +100,6 @@ namespace KvizCommando.Client.Features.Team
 
             return vm;
         }
-
 
         private static void BuildMemberRows(TeamMemberDto mem, BottomBlockVm vm, string culture)
         {
@@ -154,6 +153,5 @@ namespace KvizCommando.Client.Features.Team
                 0
                 );
         }
-
     }
 }

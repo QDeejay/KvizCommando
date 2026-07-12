@@ -1,3 +1,140 @@
-﻿<div>
+﻿@using KvizCommando.Client.Components.CharacterComponent
 
-</div>
+@if (_isReady)
+{
+    <div class="upper-list-grid">
+        @for (int i = 0; i < 5; i++)
+        {
+            <div>@_vmUp.Rows[i].Label</div>
+            <div class="upper-left-value">@_vmUp.Rows[i].Value</div>
+            <div class="upper-right-type">@_vmUp.Rows[i + 5].Label</div>
+            <div class="upper-right-value">@_vmUp.Rows[i + 5].Value</div>
+        }
+    </div>
+    <hr class="upper-separator">
+
+
+
+    @if (_currentSubPage == 0)
+    {
+
+        <div class="teampage-list-grid bottom-extend">
+            <div></div>
+            <div class="teampage-title">@_vmBot.Rows[0].Label</div>
+            <div></div>
+            <div></div>
+            <div></div>
+
+            @for (int i = 1; i < _vmBot.Rows.Count; i++)
+            {
+                var row = i;
+                var colorColumn = row < 7 ? "color: green;" : "color: red;";
+
+                <div class="bottom-row-marker">
+                    <label>@(_vmBot.Rows[row].Remark != "" ? "!" : string.Empty)</label>
+                </div>
+                <div class="teampage-datacol-1">@_vmBot.Rows[row].Label</div>
+                <div class="teampage-datacol-2">@_vmBot.Rows[row].Column1</div>
+                <div class="teampage-datacol-3" style="@colorColumn">@_vmBot.Rows[row].Column2</div>
+                <div class="teampage-datacol-4">
+                    <div class="bottom-action-label"
+                         @onclick="@(() => OnActionButtonPushed(row))">
+                        @_vmBot.Rows[row].Remark
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="teampage-list-grid extend">
+            <div></div>
+            <div class="teampage-title">@_vmDev.HeaderText</div>
+            <div></div>
+            <div></div>
+            <div class="used-points-label">@_vmDev.ResetButtonText</div>
+            @for (int i = 0; i < _vmDev.Rows.Count; i++)
+            {
+                var row = i;
+                <div></div>
+                <div class="teampage-datacol-1" style="@(_vmDev.Rows[i].HasChanged ? "color:blue;" : "")">@_vmDev.Rows[i].CategoryName</div>
+                <div class="teampage-datacol-2" style="@(_vmDev.Rows[i].HasChanged ? "color:blue; font-weight:bold;" : "")">@_vmDev.Rows[i].LevelDisplay</div>
+                <div class="teampage-datacol-3" style="@(i == 0 || i == 2 ? "color: green;" : "color:red;")">@_vmDev.Rows[i].ValueDisplay</div>
+                <div class="dev-button-section">
+                    @if (@_vmDev.Rows[i].StatusText == "")
+                    {
+                        <button class="button-on-lcd"
+                                @onclick="@(() => OnDecButtonPushed(row))"
+                                disabled="@(_vmDev.Rows[i].HasChanged == false)">
+                            <i class="bi bi-dash-lg"></i>
+                        </button>
+                        <button class="button-on-lcd"
+                                @onclick="@(() => OnIncButtonPushed(row))"
+                                disabled="@(_vmDev.Rows[i].CanDevelop == false)">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    }
+                    else
+                    {
+                        <div class="teampage-datacol-4">@_vmDev.Rows[i].StatusText</div>
+                    }
+                </div>
+            }
+        </div>
+    }
+
+
+    <div class="component-button-row">
+        <div class="component-button-group">
+            <button class="button-on-lcd" @onclick="() => ShowSubPage(0)" disabled="@(_currentSubPage == 0)">
+                <i class="bi bi-person-vcard"></i>
+            </button>
+            <button class="button-on-lcd" @onclick="() => ShowSubPage(1)" disabled="@(_currentSubPage == 1)">
+                <i class="bi bi-layers"></i>
+            </button>
+            <button class="button-on-lcd" @onclick="() => ShowSubPage(2)" disabled="@(_currentSubPage == 2)">
+                <i class="bi bi-stars"></i>
+            </button>
+        </div>
+        @if (_currentSubPage > 0)
+        {
+            <div class="component-button-group right">
+                <button class="button-on-lcd" @onclick="OnResetButtonPushed" disabled="@(_usedPoints.Sum() == 0)">
+                    <i class="bi bi-trash3-fill"></i>
+                </button>
+                <button class="button-on-lcd" @onclick="OnSaveButtonPushed" disabled="@(_usedPoints.Sum() == 0)">
+                    <i class="bi bi-floppy"></i>
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="component-button-group right">
+                <button class="button-on-lcd" @onclick="() => _proConSw = false" disabled="@(!_proConSw)">
+                    <i class="bi bi-plus-circle"></i>
+                </button>
+                <button class="button-on-lcd" @onclick="() => _proConSw = true" disabled="@(_proConSw)">
+                    <i class="bi bi-dash-circle"></i>
+                </button>
+            </div>
+        
+        }
+    </div>
+}
+
+
+        <!--
+
+        
+    
+   
+
+        -->
+
+
+            <!--
+
+
+            -->

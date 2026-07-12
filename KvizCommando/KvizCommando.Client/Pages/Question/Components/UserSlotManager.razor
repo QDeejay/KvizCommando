@@ -41,12 +41,14 @@
                 }
             </div>
     <div class="component-button-row">
-        <button class="button-on-lcd" @onclick="OnWatchButtonAsync" disabled="@(SelectedId == 100)">
-            <i class="bi bi-binoculars-fill"></i>
-        </button>
+        <div class="component-button-group right">
+            <button class="button-on-lcd" @onclick="OnWatchButtonAsync" disabled="@(SelectedId == 100)">
+                <i class="bi bi-binoculars-fill"></i>
+            </button>
 
-        <button class="button-on-lcd" @onclick="OnHandleButtonAsync" disabled="@(SelectedId == 100)">
-            <i class="@(!NotShowStat ? "bi bi-tools" : "bi bi-trash3-fill")"></i>
-        </button>
+            <button class="button-on-lcd" @onclick="OnHandleButtonAsync" disabled="@(SelectedId == 100)">
+                <i class="@(!NotShowStat ? "bi bi-tools" : "bi bi-trash3-fill")"></i>
+            </button>
+        </div>
     </div>
 }
