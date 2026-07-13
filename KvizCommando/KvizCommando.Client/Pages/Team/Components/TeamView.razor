@@ -14,6 +14,8 @@
 
     @if (_currentSubPage == 0)
     {
+        var listStart = 1 + (_listHalfSw ? NUMBER_OF_BOTTOM_ROWS : 0);
+        var listEnd = _listHalfSw ? _vmBot.Rows.Count : Math.Min(NUMBER_OF_BOTTOM_ROWS+1, _vmBot.Rows.Count);
         <div class="teampage-list-grid bottom-extend gapped-rows">
             <div></div>
             <div class="teampage-title">@_vmBot.Rows[0].Label</div>
@@ -21,7 +23,7 @@
             <div></div>
             <div></div>
 
-            @for (int i = 1; i < _vmBot.Rows.Count; i++)
+            @for (int i = listStart; i < listEnd; i++)
             {
                 var row = i;
                 var bgColorBtn = "";
@@ -107,16 +109,28 @@
                 <i class="bi bi-life-preserver"></i>
             </button>
         </div>
-        @if (_currentSubPage == 1)
-        {
+        
             <div class="component-button-group right">
-                <button class="button-on-lcd" @onclick="OnResetButtonPushed" disabled="@(_usedPoints.Sum() == 0)">
-                    <i class="bi bi-trash3-fill"></i>
-                </button>
-                <button class="button-on-lcd" @onclick="OnSaveButtonPushed" disabled="@(_usedPoints.Sum() == 0)">
-                    <i class="bi bi-floppy"></i>
-                </button>
+                @if (_currentSubPage == 1)
+                {
+                    <button class="button-on-lcd" @onclick="OnResetButtonPushed" disabled="@(_usedPoints.Sum() == 0)">
+                        <i class="bi bi-trash3-fill"></i>
+                    </button>
+                    <button class="button-on-lcd" @onclick="OnSaveButtonPushed" disabled="@(_usedPoints.Sum() == 0)">
+                        <i class="bi bi-floppy"></i>
+                    </button>
+                }
+                else if (_vmBot.Rows.Count > 5)
+                {
+                <button class="button-on-lcd" @onclick="() => _listHalfSw = false" disabled="@(!_listHalfSw)">
+                    <i class="bi bi-chevron-left"></i>
+                    </button>
+                <button class="button-on-lcd" @onclick="() => _listHalfSw = true" disabled="@(_listHalfSw)">
+                    <i class="bi bi-chevron-right"></i>
+                    </button>
+                }
             </div>
-        }
+       
+       
     </div>
 }

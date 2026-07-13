@@ -1,5 +1,4 @@
-﻿using KvizCommando.Client.Components;
-using KvizCommando.Client.Components.Dynamic;
+﻿using KvizCommando.Client.Components.Dynamic;
 using KvizCommando.Client.Features.Modal;
 using KvizCommando.Client.Features.Team;
 using KvizCommando.Client.Helpers;
@@ -22,15 +21,14 @@ namespace KvizCommando.Client.Pages.Team
         private string[] _boxOrder = [];
         private bool _isReady = false;
         private bool _isLoaded = false;
-        private SubHeaderParams _subHead = new();
         private string Culture => AppStates.Culture;
 
         private int _selectedPos = 0;
         private static readonly int[] _recruitMixer = [1, 2, 3, 4, 5, 6, 7, 8];
-       
+
         private TeamDtos TState => AppStates.Team!;
         private ContentBoxVm Box(string orx) => _boxes[orx];
-        private void OnSelectMember(int id) => _teamNav.SelectedMember = id;
+        //private void OnSelectMember(int id) => _teamNav.SelectedMember = id;
         private void BuildBoxes()
         {
             /*
@@ -43,14 +41,6 @@ namespace KvizCommando.Client.Pages.Team
                 OnWatch = OnWatchQuestionAsync,
                 OnSend = OnSaveToFormAsync
             };*/
-            for (int i = 0; i < 9; i++)
-            {
-                _subHead.HTabs[i] = OrientationLocalizer.GetOrientation(i, Culture); // + ".";
-                _subHead.TabEnable[i] = TState.CharCatMask[i] || true;
-                _subHead.TabDisableText[i] = "";
-                //_subHead.TabEnable[i] = TState.CharCatMask[i] || (TState.Candidates[i].CanBeHire && TState.TeamInfo.TotalMembers < TState.TeamInfo.MaxMembers);
-                //_subHead.TabDisableText[i] = TState.TeamInfo.TotalMembers < TState.TeamInfo.MaxMembers ? (!TState.Candidates[i].CanBeHire ? Ui.Lang["team.Label.PopUp.NotHire"] : "") : Ui.Lang["team.Label.PopUp.NoFree"];
-            }
             var boxes = TBoxBuilder.BuildBoxes(TState.RootBoxInfo!, Ui.Lang);
             foreach (var box in boxes)
             {
@@ -60,43 +50,45 @@ namespace KvizCommando.Client.Pages.Team
         }
         private void OnBoxClick(int boxId)
         {
-            _boxOrder = TBoxBuilder.Root;
+            var list = new List<SubHeaderVm>();
             string headerTitle;
-            if (Ui.Header.PageIndex == 2)
-                _teamNav.SelectedSkill = 0;
-
+            string[] boxOrder;
+            int selectedPos = 0;
             switch (boxId)
             {
                 case 2:
                     headerTitle = (Ui.Lang["mainlayout.Header.Team"]);
+                    boxOrder = TBoxBuilder.Root;
                     break;
                 case 201:
-                    _boxOrder = TBoxBuilder.SubTeam;
+                    boxOrder = TBoxBuilder.SubTeam;
                     headerTitle = _boxes[TBoxKeyContent.Team.ToString()].Header;
-                    _selectedPos = Array.FindIndex(TState.CharCatMask, 1, x => x);
                     break;
                 case 202:
-                    _boxOrder = TBoxBuilder.SubMember;
+                    boxOrder = TBoxBuilder.SubMember;
                     headerTitle = _boxes[TBoxKeyContent.Member.ToString()].Header;
-                    _selectedPos = Array.FindIndex(TState.CharCatMask, 1, x => x);
+                    selectedPos = Array.FindIndex(TState.CharCatMask, 1, x => x);
+                    list = BuildTeamSubHeader(TState.CharCatMask[1..9], Culture);
                     break;
                 case 203:
-                    _boxOrder = TBoxBuilder.SubRecruit;
+                    boxOrder = TBoxBuilder.SubRecruit;
                     headerTitle = _boxes[TBoxKeyContent.Recruit.ToString()].Header;
                     break;
                 default:
+                    boxOrder = TBoxBuilder.Root;
                     headerTitle = (Ui.Lang["mainlayout.Header.Team"]);
                     break;
 
             }
-            Ui.Header.SetTitle(headerTitle, boxId);
-            Ui.Header.SetBackBtnEna(boxId > 2);
-            StateHasChanged();
+            ShowBoxes(headerTitle, boxId, selectedPos, boxOrder, list);
         }
+
+
         protected override async Task OnInitializedAsync()
         {
             Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Team"], 2);
             _boxOrder = TBoxBuilder.Root;
+            _selectedPos = 0;
             _recruitMixer.Shuffle();
 
             await Task.Delay(1);
@@ -108,6 +100,7 @@ namespace KvizCommando.Client.Pages.Team
         protected override void OnInitialized()
         {
             Ui.Header.OnBackBtnClicked += UpdateBckClick;
+            Ui.SubHeader.OnButtonClicked += OnSubHeaderClicked;
         }
 
         private async Task OnSaveButtonPressedAsync(ModifySkillRequest modReq)
@@ -152,6 +145,17 @@ namespace KvizCommando.Client.Pages.Team
         }
         private async Task OnTeamManageButtonPressedAsync(int actionReq)
         {
+            if (actionReq > 50 && actionReq < 100)
+            {
+                ShowBoxes(
+                    _boxes[TBoxKeyContent.Member.ToString()].Header,
+                     203,
+                     actionReq % 50,
+                     TBoxBuilder.SubMember,
+                     BuildTeamSubHeader(TState.CharCatMask[1..9], Culture)
+                    );
+                return;
+            }
             var modalAction = actionReq / 100;
             var selectedMember = actionReq % 100;
             var modalType = modalAction switch
@@ -163,6 +167,7 @@ namespace KvizCommando.Client.Pages.Team
                 _ => ModalTypes.None
             };
             var mVm = MBoxBuilder.BuildParam(modalType, Ui.Lang);
+
             if (modalAction == 3)
                 mVm = mVm with { ActionText2 = string.Empty };
 
@@ -200,17 +205,42 @@ namespace KvizCommando.Client.Pages.Team
                 OnBoxClick(2);
             InvokeAsync(StateHasChanged);
         }
+        private void OnSubHeaderClicked(int index) => _selectedPos = index;
+        private void ShowBoxes(string title, int bxId, int startPos, string[] order, List<SubHeaderVm> list)
+        {
+            _selectedPos = startPos;
+            _boxOrder = order;
+            Ui.Header.SetTitle(title, bxId);
+            Ui.Header.SetBackBtnEna(bxId > 2);
+            Ui.SubHeader.Show(list, _selectedPos);
+            StateHasChanged();
+        }
         public void Dispose()
         {
             //teamModal?.Dispose();
+            Ui.SubHeader.OnButtonClicked -= OnSubHeaderClicked;
+            Ui.SubHeader.Hide();
             Ui.Header.OnBackBtnClicked -= UpdateBckClick;
             GC.SuppressFinalize(this);
         }
 
-        internal class TeamNavigator
+
+        private static List<SubHeaderVm> BuildTeamSubHeader(bool[] masks, string cult)
         {
-            internal int SelectedMember { get; set; } = 0;
-            internal int SelectedSkill { get; set; } = 0;
+            var list = new List<SubHeaderVm>();
+            int index = 0;
+            foreach (var mask in masks)
+            {
+                index++;
+                list.Add(new SubHeaderVm
+                {
+                    Text = OrientationLocalizer.GetOrientation(index, cult),
+                    Enable = mask,
+                    Visible = mask,
+                    ClickId = index,
+                });
+            }
+            return list;
         }
         private static int[] CheckEnable(bool[] bools, bool reference)
         {
@@ -229,19 +259,7 @@ namespace KvizCommando.Client.Pages.Team
     }
 }
 /*
- .label-title {
-    align-items: center;
-}
-.lcd-wrapper {
-    height: 100%;
-    width: 95%;
-}
-.message-label {
-    display: block;
-    text-align: center;
-    font-size: 16px;
-    margin-top: 20px;
-}
+
 
  *
   //[Inject] private PageHeaderService Header{ get; set; } = default!;

@@ -1,15 +1,15 @@
 ﻿
-
-
 .htp-tabbar {
     display: flex;
-   
+    position: relative;
+    top:-1px;
     justify-content: center;
     align-items: stretch;
     gap: 1px;
     user-select: none;
-    height: 30px;
+    height: 35px;
     color: #cccccc;
+    z-index:101;
 }
 
 .htp-tab > span {
@@ -20,6 +20,9 @@
     white-space: nowrap;
 }
 .htp-tab {
+    display: flex;
+    align-items: center; /* függőlegesen középre */
+    justify-content: center;
     width: 70px;
     overflow: hidden;
     white-space: nowrap;
@@ -28,7 +31,7 @@
     transition: 0.3s;
     cursor: url('/Images/cursors/normal.cur'), default;
     border-radius: 0 0 8px 8px;
-    font-size: 1.05rem;
+    font-size: 1.2rem;
     letter-spacing: 0.2px;
     text-align: center;
     line-height: 30px;
@@ -49,16 +52,13 @@
     .htp-tab.active {
         background: #0c1f17;
         font-weight: bold;
-        border: 2px solid rgba(64, 64, 64, 0.4);
+        border: 1px  solid #004400;
         box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.6);
         cursor: url('/Images/cursors/normal.cur'), default;
         width: max-content;
         max-width: 100%;
+        border-top:none;
     }
-
-.htp-tab.active {
-    border-bottom: none;
-}
 
 
 .htp-tab.disabled {

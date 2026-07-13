@@ -65,7 +65,7 @@ namespace KvizCommando.Client.Features.Team
             new TBoxSpecs {
                 Key = TBoxKeyContent.Team,
                 TitleKey = "team.Box.Title.TeamOverview",
-                ImageSrc = string.Empty, Size = "extra-large", FooterDisplay = false, ClickId = 0,
+                ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 0,
                 BuildBoxText = (lang, inf) => "",
                 CheckEnable = (inf) => true,
                 LcdBackground = true,

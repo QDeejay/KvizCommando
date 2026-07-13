@@ -1,7 +1,6 @@
 using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using KvizCommando.Client;
-using KvizCommando.Client.Features.Team;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Http;
 using KvizCommando.Client.Services;
@@ -12,7 +11,6 @@ using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Services.Visual.UiService.Language;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -37,6 +35,7 @@ builder.Services.AddSingleton<IDisplayMessageState, DisplayMessageState>();
 builder.Services.AddScoped<PageHeaderService>();
 builder.Services.AddScoped<ModalService>();
 builder.Services.AddSingleton<ToastService>();
+builder.Services.AddSingleton<SubHeaderService>();
 builder.Services.AddScoped<UiServices>();
 builder.Services.AddScoped<MarkupLoaderService>();
 

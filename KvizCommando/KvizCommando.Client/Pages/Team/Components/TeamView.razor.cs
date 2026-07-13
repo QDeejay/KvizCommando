@@ -20,6 +20,8 @@ namespace KvizCommando.Client.Pages.Team.Components
         [Parameter] public EventCallback<int> ActionButtonPushed { get; set; } = default!;
         [Parameter] public EventCallback<ModifySkillRequest> ModifySkill { get; set; } = default!;
 
+        private const int NUMBER_OF_BOTTOM_ROWS = 4;
+
         private TBuilderTeam? _builder;
         private UpperBlockVm _vmUp = new();
         private BottomBlockVm _vmBot = new();
@@ -27,7 +29,7 @@ namespace KvizCommando.Client.Pages.Team.Components
 
         private bool _isReady = false;
         private int _currentSubPage = 0;
-
+        private bool _listHalfSw = false;
         private int[] _usedPoints = new int[4];
 
         private string Culture => AppStates.Culture;
@@ -45,7 +47,6 @@ namespace KvizCommando.Client.Pages.Team.Components
             if (_oldInfo != Info)
             {
                 _vmUp = _builder!.BuildTeamUpperVm(Info, Culture);
-                ResetUsedPoints();
                 ShowSubPage(_currentSubPage);
                 _oldInfo = Info;
             }
@@ -53,13 +54,14 @@ namespace KvizCommando.Client.Pages.Team.Components
 
         private void ShowSubPage(int page)
         {
+            ResetUsedPoints();
             if (page == 0)
+            {
                 _vmBot = _builder!.BuildTeamBottomVm(Memebers, Culture);
+                _listHalfSw = false;
+            }
             else
                 _vmDev = _builder!.BuildTeamBottomDevVm(Info, _usedPoints, Help, Culture);
-            
-            if (page != _currentSubPage)
-                ResetUsedPoints();
 
             _currentSubPage = page;
         }

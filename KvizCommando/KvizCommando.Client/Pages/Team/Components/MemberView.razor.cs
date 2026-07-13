@@ -31,26 +31,32 @@ namespace KvizCommando.Client.Pages.Team.Components
 
         private int[] _usedPoints = new int[4];
         private TeamMemberDto _oldMember = new();
+        private int _oldSelectedPos = 0;
         private string Culture => AppStates.Culture;
         private TeamMemberDto Member => SelectedPos > 0 ? AppStates.Team!.TeamMembers![SelectedPos] : new();
-        private string PicCode => _currentSubPage==0 ? Member.PictureCode ?? string.Empty : string.Empty;
+        private string PicCode => _currentSubPage == 0 ? Member.PictureCode ?? string.Empty : string.Empty;
         private void ResetUsedPoints() => _usedPoints = [0, 0, 0, 0];
 
         protected override void OnParametersSet()
         {
-            if (!_isReady) return;
-
+            if (!_isReady || SelectedPos == 0) return;
             if (_oldMember != Member)
             {
                 _vmUp = _builder!.BuildMemberUpperVm(Member, Culture);
-                ResetUsedPoints();
                 ShowSubPage(_currentSubPage);
                 _oldMember = Member;
             }
+            if (_oldSelectedPos != SelectedPos)
+            {
+                ShowSubPage(0);
+                _oldSelectedPos = SelectedPos;
+            }
+
         }
 
         private void ShowSubPage(int page)
         {
+            ResetUsedPoints();
             if (page == 0)
             {
                 _vmBot = _builder!.BuildMemberBottomVm(Member, Culture);
@@ -58,12 +64,7 @@ namespace KvizCommando.Client.Pages.Team.Components
             }
             else
                 _vmDev = _builder!.BuildMemberBottomDevVm(page, Member, _usedPoints, Culture);
-
-            if (page != _currentSubPage)
-                ResetUsedPoints();
-
             _currentSubPage = page;
-
         }
         private void OnIncButtonPushed(int rowId)
         {

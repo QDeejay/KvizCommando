@@ -65,7 +65,8 @@ namespace KvizCommando.Client.Layout
                 await InitStatesAsync(0);
                 _isLoggedIn = true;
             }
-            else { 
+            else
+            {
                 _isLoggedIn = false;
                 var page = Ui.Nav.ToBaseRelativePath(Ui.Nav.Uri);
 
@@ -96,6 +97,7 @@ namespace KvizCommando.Client.Layout
             Ui.Modal.OnModalShow += ShowModal;
             Ui.Modal.OnModalHide += HideModal;
             Ui.ReloadRequested += OnRefreshRequired;
+            Ui.SubHeader.OnButtonsChanged += Refresh;
         }
 
         private void UpdateTitle()
@@ -108,9 +110,13 @@ namespace KvizCommando.Client.Layout
             _isBckBtnEna = Ui.Header.BackEna;
             InvokeAsync(StateHasChanged);
         }
-
+        private void Refresh()
+        {
+            InvokeAsync(StateHasChanged);
+        }
         private void OnBackClick()
         {
+            Ui.SubHeader.Hide();
             Ui.Header.SetBackBtnToPushState();
         }
 
@@ -202,6 +208,7 @@ namespace KvizCommando.Client.Layout
             Ui.Modal.OnModalShow -= ShowModal;
             Ui.Modal.OnModalHide -= HideModal;
             Ui.ReloadRequested -= OnRefreshRequired;
+            Ui.SubHeader.OnButtonsChanged -= Refresh;
             _mainModal?.Dispose();
             GC.SuppressFinalize(this);
         }

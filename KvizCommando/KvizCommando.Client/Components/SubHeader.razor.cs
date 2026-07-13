@@ -1,45 +1,38 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using KvizCommando.Client.Models.ViewModels;
+using Microsoft.AspNetCore.Components;
 
 
 namespace KvizCommando.Client.Components
 {
     public partial class SubHeader
     {
-
+        //[Parameter] public string[] Tabs { get; set; } = default!;
+        [Parameter] public IReadOnlyList<SubHeaderVm> Tabs { get; set; } = default!;
+        [Parameter] public int StartIndex { get; set; } = 0;
+        [Parameter] public bool IsVisible { get; set; } = false;
 
         [Parameter] public EventCallback<int> ActiveIndexChanged { get; set; }
-        [Parameter] public SubHeaderParams Params { get; set; } = default!;
-        
-        private bool _isActive = false;
- 
+
+        private bool _isActive => IsVisible;
+        private int _activeIndex = 0;
+        private int _previousStartIndex = 0;
         protected override void OnParametersSet()
         {
-            _isActive = Params != null && Params.ActiveIndex > 0 && Params.ActiveIndex < 9;
+            if (_previousStartIndex != StartIndex)
+            {
+                _activeIndex = StartIndex;
+                _previousStartIndex = StartIndex;
+            }
         }
         private async Task SetTab(int index)
         {
-            if (!Params.TabEnable[index])
+            if (!ActiveIndexChanged.HasDelegate)
                 return;
-            Params.ActiveIndex = index;
+            _activeIndex = index;
             await ActiveIndexChanged.InvokeAsync(index);
         }
 
 
-    }
-
-    public sealed class SubHeaderParams
-    {
-        public int[] EnabledTabs { get; set; } = new int[9];
-        public string[] HTabs { get; set; } = new string[9];
-        public int ActiveIndex { get; set; } = 0;
-        public bool[] TabEnable { get; set; } = new bool[9];
-        public string[] TabDisableText { get; set; } = new string[9];
     }
 }
 /*

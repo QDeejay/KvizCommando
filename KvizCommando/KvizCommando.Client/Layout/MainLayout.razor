@@ -6,7 +6,8 @@
 <HeadContent>
     <link href="css/MainLayout.css" rel="stylesheet" />
 </HeadContent>
-     <LoaderView />
+
+<LoaderView />
 <KcToast />
 
 @if (_isReady)
@@ -78,6 +79,10 @@
                             <span class="kc-header-greeting">@Greetings</span>
                             </div>           
                         </header>
+                    <SubHeader Tabs="Ui.SubHeader.Tabs"
+                               StartIndex="Ui.SubHeader.Index"
+                               IsVisible="Ui.SubHeader.IsVisible"
+                               ActiveIndexChanged="Ui.SubHeader.Click" />
                     }
                 <div class="kc-mainlayout-content-container">
                     

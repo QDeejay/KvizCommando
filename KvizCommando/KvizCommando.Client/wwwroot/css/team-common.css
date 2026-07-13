@@ -1,15 +1,19 @@
-﻿.upper-list-grid {
+﻿.upper-list-grid,
+.teampage-list-grid
+{
     display: grid;
-    grid-template-columns: 120px 280px 110px 80px;
+    grid-template-columns: 120px 265px 110px 80px;
     column-gap: 2px;
     row-gap: 0;
-    padding: 1px 0;
     padding-left: 1px; /* <<< 10px balról */
     user-select: none;
     align-items: center;
     text-align: left;
 }
 
+.upper-list-grid {
+    padding-left: 11px;
+}
 .upper-separator {
     border-top: 2px solid #333;
     width: 102%;
@@ -35,20 +39,6 @@
 
 
 
-
-
-
-
-.teampage-list-grid {
-    display: grid;
-    column-gap: 2px;
-    row-gap: 0;
-    padding: 2px 0;
-    padding-left: 1px;
-    user-select: none;
-    align-items: center;
-    text-align: left;
-}
 .teampage-title {
     text-decoration: underline;
 }

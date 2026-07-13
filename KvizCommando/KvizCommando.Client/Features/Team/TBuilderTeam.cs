@@ -54,6 +54,7 @@ namespace KvizCommando.Client.Features.Team
             );
 
             BuildTeamRows(members, vm, culture);
+
             return vm;
         }
         public BottomDevVm BuildTeamBottomDevVm(TeamExtendedInfo info, int[] usedPoints, HelpDto help, string culture)
@@ -109,5 +110,4 @@ namespace KvizCommando.Client.Features.Team
             }
         }
     }
-
 }
