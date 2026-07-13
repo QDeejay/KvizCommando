@@ -1,7 +1,7 @@
-﻿
+﻿ <div class="@CssClass" @onclick="HandleClick" >
 
-    <div class="@CssClass" @onclick="HandleClick" >
     <div class="kc-content-box--inner" style="@BackgroundStyle">
+
         <div class="kc-content-box--header">
             <label class="label-title">@_vm.Header</label>
         
@@ -9,8 +9,11 @@
             {
                 <span class="tooltip-box">@_vm.Header</span>
             }
+
         </div>
+
         <div class="kc-content-box--content @(_noContent ? "no-content" : "")">
+
             @if (!string.IsNullOrEmpty(_vm.ImageSrc))
             {
                 <img src="@_vm.ImageSrc" alt="logo" />
@@ -24,8 +27,8 @@
                         </div>
                     </div>
                 </div>
-                
             }
+
         </div>
         @if (_vm.ReSizable == true)
         {
@@ -52,4 +55,4 @@
         }
     </div>
     
-    </div>
+</div>

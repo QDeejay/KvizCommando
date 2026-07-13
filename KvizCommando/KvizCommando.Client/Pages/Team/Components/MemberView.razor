@@ -7,28 +7,31 @@
         {
             <div>@_vmUp.Rows[i].Label</div>
             <div class="upper-left-value">@_vmUp.Rows[i].Value</div>
-            <div class="upper-right-type">@_vmUp.Rows[i + 5].Label</div>
-            <div class="upper-right-value">@_vmUp.Rows[i + 5].Value</div>
+            <div class="upper-right-type">@(string.IsNullOrEmpty(PicCode) ? _vmUp.Rows[i + 5].Label : string.Empty)</div>
+            <div class="upper-right-value">@(string.IsNullOrEmpty(PicCode) ? _vmUp.Rows[i + 5].Value : string.Empty)</div>
         }
     </div>
+    <div class="picture-side @(string.IsNullOrEmpty(PicCode) ? "hide" : "")">
+        <CharacterView PicCode="@PicCode" />
+    </div>
+
     <hr class="upper-separator">
-
-
 
     @if (_currentSubPage == 0)
     {
-
+        var listStart = _proConSw ? 7 : 1;
+        var listEnd = _proConSw ? 12 : 6;
         <div class="teampage-list-grid bottom-extend">
             <div></div>
             <div class="teampage-title">@_vmBot.Rows[0].Label</div>
             <div></div>
             <div></div>
             <div></div>
-
-            @for (int i = 1; i < _vmBot.Rows.Count; i++)
+            
+            @for (int i = listStart; i <= listEnd; i++)
             {
                 var row = i;
-                var colorColumn = row < 7 ? "color: green;" : "color: red;";
+                var colorColumn = row <= 6 ? "color: green;" : "color: red;";
 
                 <div class="bottom-row-marker">
                     <label>@(_vmBot.Rows[row].Remark != "" ? "!" : string.Empty)</label>
@@ -85,7 +88,6 @@
         </div>
     }
 
-
     <div class="component-button-row">
         <div class="component-button-group">
             <button class="button-on-lcd" @onclick="() => ShowSubPage(0)" disabled="@(_currentSubPage == 0)">
@@ -123,18 +125,3 @@
         }
     </div>
 }
-
-
-        <!--
-
-        
-    
-   
-
-        -->
-
-
-            <!--
-
-
-            -->

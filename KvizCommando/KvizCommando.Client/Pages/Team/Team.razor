@@ -1,7 +1,5 @@
 ﻿@page "/team"
 
-@using KvizCommando.Client.Data;
-@using KvizCommando.Client.Pages.Team
 @using KvizCommando.Client.Pages.Team.Components
 @using KvizCommando.Client.Components.Dynamic;
 @inherits Utilities.KcComponentBase
@@ -9,14 +7,10 @@
 <link href="css/team-common.css" rel="stylesheet" />
 
 <LangGuard Culture=@Culture Module="team" OnReady="BuildBoxes">
-    <SubHeader Params="@_subHead"
-               ActiveIndexChanged="OnSelectMember" />
   <PageContainer>
      
         @if (_isLoaded == true)
-        {
-            
-                        
+        {        
             <div class="kc-team-selector">
                 @foreach (string bx in _boxOrder)
                 {
@@ -24,20 +18,26 @@
 
                     <ContentBox Vm="@box"
                                 OnClick="OnBoxClick">
+
                         <ContentBody>
-                            
+
                             <CascadingValue Value="_selectedPos">
                                 <MemberView ModifySkill="OnSaveButtonPressedAsync" />
                             </CascadingValue>
+
                         </ContentBody>
                     </ContentBox>
                 }
             </div>
         }
+
     </PageContainer>
 </LangGuard>
 
                     <!-- 
+
+                         <SubHeader Params="@_subHead"
+                       ActiveIndexChanged="OnSelectMember" />
 
                      <TeamView ActionButtonPushed="OnTeamManageButtonPressedAsync"
                                           ModifySkill="OnSaveButtonPressedAsync"/>

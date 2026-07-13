@@ -32,29 +32,35 @@ namespace KvizCommando.Client.Pages.Team.Components
 
         private string Culture => AppStates.Culture;
         private TeamDtos Team => AppStates.Team!;
-        private TeamDtos _oldTeam = new();
+        private TeamExtendedInfo _oldInfo = new();
         private TeamMemberDto[] Memebers => Team.TeamMembers!;
         private TeamExtendedInfo Info => Team.TeamInfo;
         private HelpDto Help => Team.Help;
+        private void ResetUsedPoints() => _usedPoints = [0, 0, 0, 0];
 
         protected override void OnParametersSet()
         {
             if (!_isReady) return;
-            if (_oldTeam != Team)
+
+            if (_oldInfo != Info)
             {
                 _vmUp = _builder!.BuildTeamUpperVm(Info, Culture);
+                ResetUsedPoints();
                 ShowSubPage(_currentSubPage);
-                _oldTeam = Team;
+                _oldInfo = Info;
             }
         }
+
         private void ShowSubPage(int page)
         {
             if (page == 0)
                 _vmBot = _builder!.BuildTeamBottomVm(Memebers, Culture);
             else
                 _vmDev = _builder!.BuildTeamBottomDevVm(Info, _usedPoints, Help, Culture);
+            
             if (page != _currentSubPage)
                 ResetUsedPoints();
+
             _currentSubPage = page;
         }
         private void OnIncButtonPushed(int rowId)
@@ -96,15 +102,16 @@ namespace KvizCommando.Client.Pages.Team.Components
             if (ActionButtonPushed.HasDelegate)
                 await ActionButtonPushed.InvokeAsync(delegateItem);
         }
+
         protected override void OnInitialized()
         {
             _builder = new TBuilderTeam(Lang);
             _isReady = true;
         }
-        private void ResetUsedPoints()
+        private void OnResetButtonPushed()
         {
-            _usedPoints = [0, 0, 0, 0];
-            _vmDev = _builder!.BuildTeamBottomDevVm(Team.TeamInfo, _usedPoints, Team.Help, Culture);
+            ResetUsedPoints();
+            _vmDev = _builder!.BuildTeamBottomDevVm(Info, _usedPoints, Help, Culture);
         }
         public void Dispose()
         {

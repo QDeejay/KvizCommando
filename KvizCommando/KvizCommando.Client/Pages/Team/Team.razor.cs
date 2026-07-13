@@ -27,7 +27,7 @@ namespace KvizCommando.Client.Pages.Team
 
         private int _selectedPos = 0;
         private static readonly int[] _recruitMixer = [1, 2, 3, 4, 5, 6, 7, 8];
-        private TeamNavigator _teamNav = new();
+       
         private TeamDtos TState => AppStates.Team!;
         private ContentBoxVm Box(string orx) => _boxes[orx];
         private void OnSelectMember(int id) => _teamNav.SelectedMember = id;

@@ -15,6 +15,7 @@ namespace KvizCommando.Client.Pages.Team.Components
 
         [CascadingParameter]
         private AppState AppStates { get; set; } = default!;
+
         [CascadingParameter]
         public int SelectedPos { get; set; } = default!;
         [Parameter] public EventCallback<ModifySkillRequest> ModifySkill { get; set; } = default!;
@@ -29,21 +30,25 @@ namespace KvizCommando.Client.Pages.Team.Components
         private bool _proConSw = false;
 
         private int[] _usedPoints = new int[4];
-        private string Culture => AppStates.Culture;
-
-        private TeamMemberDto Member => SelectedPos > 0 ? AppStates.Team.TeamMembers[SelectedPos] : new();
         private TeamMemberDto _oldMember = new();
+        private string Culture => AppStates.Culture;
+        private TeamMemberDto Member => SelectedPos > 0 ? AppStates.Team!.TeamMembers![SelectedPos] : new();
+        private string PicCode => _currentSubPage==0 ? Member.PictureCode ?? string.Empty : string.Empty;
         private void ResetUsedPoints() => _usedPoints = [0, 0, 0, 0];
+
         protected override void OnParametersSet()
         {
             if (!_isReady) return;
+
             if (_oldMember != Member)
             {
                 _vmUp = _builder!.BuildMemberUpperVm(Member, Culture);
+                ResetUsedPoints();
                 ShowSubPage(_currentSubPage);
                 _oldMember = Member;
             }
         }
+
         private void ShowSubPage(int page)
         {
             if (page == 0)
@@ -65,7 +70,7 @@ namespace KvizCommando.Client.Pages.Team.Components
             int[] usdPnts = _usedPoints;
             if (usdPnts.Sum() >= Member.SkillPoints) return;
             usdPnts[rowId]++;
-            _vmDev = _builder!.BuildMemberBottomDevVm(_currentSubPage, Member, _usedPoints, Culture);
+            _vmDev = _builder!.BuildMemberBottomDevVm(_currentSubPage, Member, usdPnts, Culture);
             _usedPoints = usdPnts;
             StateHasChanged();
         }
@@ -74,11 +79,10 @@ namespace KvizCommando.Client.Pages.Team.Components
             int[] usdPnts = _usedPoints;
             if (usdPnts.Sum() <= 0 || usdPnts[rowId] <= 0) return;
             usdPnts[rowId]--;
-            _vmDev = _builder!.BuildMemberBottomDevVm(_currentSubPage, Member, _usedPoints, Culture);
+            _vmDev = _builder!.BuildMemberBottomDevVm(_currentSubPage, Member, usdPnts, Culture);
             _usedPoints = usdPnts;
             StateHasChanged();
         }
-
         private async Task OnSaveButtonPushed()
         {
             if (_usedPoints.Sum() == 0) return;
@@ -102,18 +106,16 @@ namespace KvizCommando.Client.Pages.Team.Components
             else
                 ShowSubPage(2);
         }
-
-        private void OnResetButtonPushed()
-        {
-            ResetUsedPoints();
-            _vmDev = _builder!.BuildMemberBottomDevVm(_currentSubPage, Member, _usedPoints, Culture);
-        }
         protected override void OnInitialized()
         {
             _builder = new TBuilderMember(Lang);
             _isReady = true;
         }
-
+        private void OnResetButtonPushed()
+        {
+            ResetUsedPoints();
+            _vmDev = _builder!.BuildMemberBottomDevVm(_currentSubPage, Member, _usedPoints, Culture);
+        }
         public void Dispose()
         {
             ModifySkill = default;

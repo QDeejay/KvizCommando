@@ -1,1 +1,18 @@
-﻿
+﻿.picture-side {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    height: 175px;
+    width: 135px;
+    border-left: none;
+    z-index: 0;
+    background: rgba(23,23,255,0.5);
+    border-left: 3px #333 solid;
+    border-bottom: 3px #333 solid;
+}
+
+    .picture-side.hide {
+        display: none;
+        height: 0;
+        width: 0;
+    }
