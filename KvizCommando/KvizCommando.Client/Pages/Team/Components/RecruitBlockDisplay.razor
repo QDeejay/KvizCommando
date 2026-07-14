@@ -3,32 +3,25 @@
 <div class="recruit-tab">
     @if (_couldBeHire)
     {
-        @for (int i = 1; i < vm.Cards.Count / 2 + 1; i++)
+        @for (int i = 0; i < vm.Cards.Count; i++)
         {
-            var indL = i - 1;
-            var indR = i + 3;
-            <div class="recruit-row">
 
-                <RecruitCard CardNo="@(vm.Cards[indL].ClickId)"
-                CardName="@(vm.Cards[indL].Name)"
-                CardInfo1="@(vm.Cards[indL].MainCat)"
-                CardInfo2="@(vm.Cards[indL].SubCat)"
-                CardInfo3="@(vm.Cards[indL].ExtCat)"
-                SecOrient="@(vm.Cards[indL].SubOrientSh)"
-                Sex="@(vm.Cards[indL].Sex)"
-                SelectedCardNo="SelectedId"
-                Selected="OnCandidateSelected" />
-
-                <RecruitCard CardNo="@(vm.Cards[indR].ClickId)"
-                CardName="@(vm.Cards[indR].Name)"
-                CardInfo1="@(vm.Cards[indR].MainCat)"
-                CardInfo2="@(vm.Cards[indR].SubCat)"
-                CardInfo3="@(vm.Cards[indR].ExtCat)"
-                SecOrient="@(vm.Cards[indR].SubOrientSh)"
-                Sex="@(vm.Cards[indR].Sex)"
-                SelectedCardNo="SelectedId"
-                Selected="OnCandidateSelected"/>
-            </div>
+            @if (vm.Cards[i].Show)
+            {
+                <RecruitCard CardNo="@(vm.Cards[i].ClickId)"
+                             CardName="@(vm.Cards[i].Name)"
+                             CardInfo1="@(vm.Cards[i].MainCat)"
+                             CardInfo2="@(vm.Cards[i].SubCat)"
+                             CardInfo3="@(vm.Cards[i].ExtCat)"
+                             SecOrient="@(vm.Cards[i].SubOrientSh)"
+                             Sex="@(vm.Cards[i].Sex)"
+                             SelectedCardNo="SelectedId"
+                             Selected="OnCandidateSelect" />
+            }
+            else
+            {
+                <div></div>
+            }
         }
 
     }

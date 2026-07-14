@@ -23,23 +23,29 @@ namespace KvizCommando.Client.Features.Team
             if (candidate==null)
                 return vm;
             ;
-            var orderedQue = order ?? que;     
+            var orderedQue = order ?? que;
+            int index=0;
             foreach (int i in orderedQue)
             {
                 var datas = TeamHelper.RecruitResolver(tabpos,i);
                 int ori2 = datas.Item2;
                 int[] cats = datas.Item3;
                 string oriShort = OrientationLocalizer.GetOrientShort(ori2, culture);
+                index++;
+                
                 vm.Cards.Add(new RecruitBlock(
-                    Name: candidate.Name[i-1] ?? string.Empty,
-                    Sex: i<5,
-                    ImageCode: candidate.PictureCode[i-1] ?? string.Empty,
+                    Name: candidate.Name[i - 1] ?? string.Empty,
+                    Sex: i < 5,
+                    Show:true,
+                    ImageCode: candidate.PictureCode[i - 1] ?? string.Empty,
                     SubOrientSh: $"<{oriShort}>",
                     MainCat: CategoryNameLocalizer.GetCategory(cats[0], culture),
                     SubCat: CategoryNameLocalizer.GetCategory(cats[1], culture),
                     ExtCat: CategoryNameLocalizer.GetCategory(cats[2], culture),
                     ClickId: i
-                    )); 
+                    ));
+                if (index == 1 || index == 2)  // üres kártyák az első két sorba hogy legyen helye a képnek
+                    vm.Cards.Add(new RecruitBlock(string.Empty, false,  false, string.Empty, string.Empty,string.Empty,string.Empty,string.Empty,0) );
             }
             return vm;
         }

@@ -1,9 +1,11 @@
-﻿using KvizCommando.Shared.Models;
+﻿using KvizCommando.Client.Helpers;
+using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Shared.Models;
 using System.Globalization;
 
 namespace KvizCommando.Client.Pages.Team
 {
-    public sealed class TeamHelper
+    internal sealed class TeamHelper
     {
        
         internal static string FormatOneDecimal(double value, bool percent)
@@ -48,6 +50,24 @@ namespace KvizCommando.Client.Pages.Team
                     (c ? idx[3] : idx[5]) + (mask[1] ? 8:0),
                     idx[6] + (mask[5] ? 8:0)
                 });
+        }
+
+        internal static List<SubHeaderVm> SubHeaderResolver(bool[] masks, string cult)
+        {
+            var list = new List<SubHeaderVm>();
+            int index = 0;
+            foreach (var mask in masks)
+            {
+                index++;
+                list.Add(new SubHeaderVm
+                {
+                    Text = OrientationLocalizer.GetOrientation(index, cult),
+                    Enable = mask,
+                    Visible = mask,
+                    ClickId = index,
+                });
+            }
+            return list;
         }
     }
 }

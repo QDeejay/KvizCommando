@@ -18,8 +18,8 @@ namespace KvizCommando.Client.Pages.Team.Components
 
         [CascadingParameter]
         public int SelectedPos { get; set; } = default!;
-        [Parameter] public EventCallback<ModifySkillRequest> OnModifySkillPushed { get; set; } = default!;
-
+        //[Parameter] public EventCallback<ModifySkillRequest> OnModifySkillPushed { get; set; } = default!;
+        [Parameter] public Func<ModifySkillRequest, Task>? OnModifySkillPushed { get; set; }
         private TBuilderMember? _builder;
         private UpperBlockVm _vmUp = new();
         private BottomBlockVm _vmBot = new();
@@ -115,8 +115,11 @@ namespace KvizCommando.Client.Pages.Team.Components
                 MemberId = SelectedPos
             };
 
-            if (OnModifySkillPushed.HasDelegate)
-                await OnModifySkillPushed.InvokeAsync(request);
+            if (OnModifySkillPushed is not null)
+                await OnModifySkillPushed.Invoke(request);
+
+            //if (OnModifySkillPushed.HasDelegate)
+             //   await OnModifySkillPushed.InvokeAsync(request);
         }
         public void Dispose()
         {

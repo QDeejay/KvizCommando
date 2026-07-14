@@ -36,6 +36,8 @@ namespace KvizCommando.Client.Features.Team
         public required Func<ModifySkillRequest, Task> OnModify { get; init; }
         public required Func<int, Task> OnHire { get; init; }
         public required Func<int, Task> OnManage { get; init; }
+
+        public required int[] OnShuffledIds { get; init; }
         // public required Action<int[]> OnShuffledIds { get; init; }
     }
 }

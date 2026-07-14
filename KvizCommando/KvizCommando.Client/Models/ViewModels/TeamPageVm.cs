@@ -14,7 +14,6 @@
         public int[] UsedPoints { get; set; } = [0, 0, 0, 0];
         public int AvailableDevPoints { get; set; }
         public string HeaderText { get; set; } = string.Empty;
-        //public string ListType { get; set; } = string.Empty;
         public string ResetButtonText { get; set; } = string.Empty;
     }
     public sealed class RecruitVm
@@ -55,6 +54,7 @@
     public sealed record RecruitBlock(
         string Name,
         bool Sex,
+        bool Show,
         string ImageCode,
         string SubOrientSh,
         string MainCat,

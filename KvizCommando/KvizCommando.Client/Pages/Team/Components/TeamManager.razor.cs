@@ -2,6 +2,7 @@
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Contracts.Team;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
@@ -17,8 +18,10 @@ namespace KvizCommando.Client.Pages.Team.Components
         private AppState AppStates { get; set; } = default!;
 
 
-        [Parameter] public EventCallback<int> OnManagePushed { get; set; } = default!;
-        [Parameter] public EventCallback<ModifySkillRequest> OnModifySkillPushed { get; set; } = default!;
+        //[Parameter] public EventCallback<int> OnManagePushed { get; set; } = default!;
+        //[Parameter] public EventCallback<ModifySkillRequest> OnModifySkillPushed { get; set; } = default!;
+        [Parameter] public Func<int, Task>? OnManagePushed { get; set; }
+        [Parameter] public Func<ModifySkillRequest, Task>? OnModifySkillPushed { get; set; }
 
         private const int NUMBER_OF_BOTTOM_ROWS = 4;
 
@@ -103,16 +106,23 @@ namespace KvizCommando.Client.Pages.Team.Components
                 SkillType = 1,
                 MemberId = 0
             };
+            if (OnModifySkillPushed is not null)
+                await OnModifySkillPushed.Invoke(request);
 
-            if (OnModifySkillPushed.HasDelegate)
-                await OnModifySkillPushed.InvokeAsync(request);
+
+           // if (OnModifySkillPushed.HasDelegate)
+            //    await OnModifySkillPushed.InvokeAsync(request);
 
         }
         private async Task OnManageButtonAsync(int rowId)
         {
             int delegateItem = _vmBot.Rows[rowId].Action;
-            if (OnManagePushed.HasDelegate)
-                await OnManagePushed.InvokeAsync(delegateItem);
+
+            if (OnManagePushed is not null)
+                await OnManagePushed.Invoke(delegateItem);
+
+           // if (OnManagePushed.HasDelegate)
+             //   await OnManagePushed.InvokeAsync(delegateItem);
         }
       
         public void Dispose()

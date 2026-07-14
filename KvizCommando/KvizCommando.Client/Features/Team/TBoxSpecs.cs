@@ -81,12 +81,16 @@ namespace KvizCommando.Client.Features.Team
             new TBoxSpecs {
                 Key = TBoxKeyContent.Recruit,
                 TitleKey = "team.Box.Title.Recruit",
-                ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 0,
+                ImageSrc = string.Empty, Size = "extra-large", FooterDisplay = false, ClickId = 0,
                 BuildBoxText = (lang, inf) => "",
                 CheckEnable = (inf) => true,
-                LcdBackground = true,
+                LcdBackground = false,
                 RenderContent = 1,
+                BuildParams = (cb) => new Dictionary<string, object?> {
+                    { TParamNames.OnCandidateSelected.ToString(), cb.OnHire },
+                    { TParamNames.CandidateOrder.ToString(), cb.OnShuffledIds}
                 }
+            }
         ];
     }
 }

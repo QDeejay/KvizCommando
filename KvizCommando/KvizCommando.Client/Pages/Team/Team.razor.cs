@@ -28,12 +28,14 @@ namespace KvizCommando.Client.Pages.Team
 
         private TeamDtos TState => AppStates.Team!;
         private ContentBoxVm Box(string orx) => _boxes[orx];
-        //private void OnSelectMember(int id) => _teamNav.SelectedMember = id;
         private void BuildBoxes()
         {
             var callback = new TeamCallbacks
             {
                 OnHire = OnHireAsync,
+                OnManage = OnTeamManagedAsync,
+                OnModify = OnSavedAsync,
+                OnShuffledIds = _recruitMixer
             };
             var boxes = TBoxBuilder.BuildBoxes(TState.RootBoxInfo!, callback, Ui.Lang);
             foreach (var box in boxes)
@@ -62,11 +64,12 @@ namespace KvizCommando.Client.Pages.Team
                     boxOrder = TBoxBuilder.SubMember;
                     headerTitle = _boxes[TBoxKeyContent.Member.ToString()].Header;
                     selectedPos = Array.FindIndex(TState.CharCatMask, 1, x => x);
-                    list = BuildTeamSubHeader(TState.CharCatMask[1..9], Culture);
+                    list = TeamHelper.SubHeaderResolver(TState.CharCatMask[1..9], Culture);
                     break;
                 case 203:
                     boxOrder = TBoxBuilder.SubRecruit;
                     headerTitle = _boxes[TBoxKeyContent.Recruit.ToString()].Header;
+                    selectedPos = Array.FindIndex(TState.CharCatMask, 1, x => !x);
                     break;
                 default:
                     boxOrder = TBoxBuilder.Root;
@@ -76,7 +79,15 @@ namespace KvizCommando.Client.Pages.Team
             }
             ShowBoxes(headerTitle, boxId, selectedPos, boxOrder, list);
         }
-
+        private void ShowBoxes(string title, int bxId, int startPos, string[] order, List<SubHeaderVm> list)
+        {
+            _selectedPos = startPos;
+            _boxOrder = order;
+            Ui.Header.SetTitle(title, bxId);
+            Ui.Header.SetBackBtnEna(bxId > 2);
+            Ui.SubHeader.Show(list, _selectedPos);
+            StateHasChanged();
+        }
 
         protected override async Task OnInitializedAsync()
         {
@@ -84,7 +95,6 @@ namespace KvizCommando.Client.Pages.Team
             _boxOrder = TBoxBuilder.Root;
             _selectedPos = 0;
             _recruitMixer.Shuffle();
-
             await Task.Delay(1);
             _isLoaded = true;
             if (_isReady == false)
@@ -146,7 +156,7 @@ namespace KvizCommando.Client.Pages.Team
                      203,
                      actionReq % 50,
                      TBoxBuilder.SubMember,
-                     BuildTeamSubHeader(TState.CharCatMask[1..9], Culture)
+                     TeamHelper.SubHeaderResolver(TState.CharCatMask[1..9], Culture)
                     );
                 return;
             }
@@ -190,7 +200,6 @@ namespace KvizCommando.Client.Pages.Team
             await Ui.ReloadAsync();
             BuildBoxes();
         }
-
         private void UpdateBckClick()
         {
             if (Ui.Header.PageIndex == 2)
@@ -200,15 +209,7 @@ namespace KvizCommando.Client.Pages.Team
             InvokeAsync(StateHasChanged);
         }
         private void OnSubHeaderClicked(int index) => _selectedPos = index;
-        private void ShowBoxes(string title, int bxId, int startPos, string[] order, List<SubHeaderVm> list)
-        {
-            _selectedPos = startPos;
-            _boxOrder = order;
-            Ui.Header.SetTitle(title, bxId);
-            Ui.Header.SetBackBtnEna(bxId > 2);
-            Ui.SubHeader.Show(list, _selectedPos);
-            StateHasChanged();
-        }
+       
         public void Dispose()
         {
             //teamModal?.Dispose();
@@ -218,24 +219,6 @@ namespace KvizCommando.Client.Pages.Team
             GC.SuppressFinalize(this);
         }
 
-
-        private static List<SubHeaderVm> BuildTeamSubHeader(bool[] masks, string cult)
-        {
-            var list = new List<SubHeaderVm>();
-            int index = 0;
-            foreach (var mask in masks)
-            {
-                index++;
-                list.Add(new SubHeaderVm
-                {
-                    Text = OrientationLocalizer.GetOrientation(index, cult),
-                    Enable = mask,
-                    Visible = mask,
-                    ClickId = index,
-                });
-            }
-            return list;
-        }
         private static int[] CheckEnable(bool[] bools, bool reference)
         {
             int[] result;

@@ -1,13 +1,11 @@
 ﻿.recruit-tab {
     width: 100%;
-    height: 87%;
-    border-top:dashed;
-    border-bottom:dashed;
-    border-color: rgba(10,10,10,0.5) ;
+    border-top: dashed;
+    border-bottom: dashed;
+    border-color: rgba(10,10,10,0.5);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 4px;
+    row-gap: 8px;
 }
-.recruit-row {
-    margin-top: 10px;
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-}
+

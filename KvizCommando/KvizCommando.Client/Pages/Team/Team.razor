@@ -23,8 +23,10 @@
 
                             <CascadingValue Value="_selectedPos">
 
-                            
-                                <MemberManager ModifySkill="OnSaveButtonPressedAsync" />
+                                <RecruitBlockDisplay CandidateOrder="_recruitMixer"
+                                                     OnCandidateHired="OnHireAsync"/>
+                               
+                                                        
                             </CascadingValue>
 
                         </ContentBody>
@@ -36,13 +38,9 @@
     </PageContainer>
 </LangGuard>
 
-                    <!-- 
+     <!--
 
-                    
-                             <TeamView ActionButtonPushed="OnTeamManageButtonPressedAsync"
-                                          ModifySkill="OnSaveButtonPressedAsync" />
-                   
+      <DynamicComponent Type="@box.BodyComponent"
+                                                  Parameters="@box.BodyParameters" />
 
-                                            
-
-                    -->
+     -->

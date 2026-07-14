@@ -1,10 +1,6 @@
-﻿using KvizCommando.Client.Features.Question;
-using KvizCommando.Client.Features.Sologame;
-using KvizCommando.Client.Features.Team;
-using KvizCommando.Client.Models.ViewModels;
+﻿using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
-using Microsoft.AspNetCore.Components.Routing;
 
 namespace KvizCommando.Client.Features.Team
 {
@@ -38,11 +34,9 @@ namespace KvizCommando.Client.Features.Team
                     BodyParameters = bodyParams
                 };
             }
-           
+
             return dict;
         }
     }
 
 }
-
-

@@ -29,7 +29,7 @@ namespace KvizCommando.Client.Models.ViewModels
 
 
 
-    public abstract class ModalVm
+    public abstract class ModalVmSpecs
     {
         public string TitleKey { get; init; } = string.Empty;
         public string TextKey1 { get; init; } = string.Empty;

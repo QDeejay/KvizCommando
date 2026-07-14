@@ -3,7 +3,7 @@ using KvizCommando.Client.Models.ViewModels;
 
 namespace KvizCommando.Client.Features.Modal
 {
-    public sealed class MboxSpecs : ModalVm
+    public sealed class MboxSpecs : ModalVmSpecs
     {
         //internal Func<ILanguageService, string> BuidText { get; init; } = default!;
     }
