@@ -36,7 +36,7 @@ namespace KvizCommando.Client.Pages.Question
             var callback = new QuestionCallbacks
             {
                 OnFactSave = OnFactSaveAsync,
-                OnSelectId = OnSelectIdAsync,
+                OnSelectId = OnSelectId,
                 OnDelete = OnDeleteUsrSlotAsync,
                 OnHandle = OnHandlePendSLotAsync,
                 OnWatch = OnWatchQuestionAsync,
@@ -98,7 +98,7 @@ namespace KvizCommando.Client.Pages.Question
         {
             Ui.Header.OnBackBtnClicked += UpdateBckClick;
         }
-        private void OnSelectIdAsync(int id) => _selectedId = id;
+        private void OnSelectId(int id) => _selectedId = id;
         private async Task OnWatchQuestionAsync()
         {
             var vm = MBoxBuilder.BuildParam(ModalTypes.QCheckQuestion, Ui.Lang);

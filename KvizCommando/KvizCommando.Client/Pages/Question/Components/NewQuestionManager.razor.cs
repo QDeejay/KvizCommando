@@ -15,6 +15,7 @@ namespace KvizCommando.Client.Pages.Question.Components
     {
         [CascadingParameter]
         private AppState AppStates { get; set; } = default!;
+
         [CascadingParameter]
         private int SelectedId { get; set; }
 

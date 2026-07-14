@@ -12,8 +12,9 @@ namespace KvizCommando.Client.Pages.Team.Components
 
         [Parameter] public CandidateDto RecruitData { get; set; } = default!;
         [Parameter] public int TabPos { get; set; } = default!;
-        [Parameter] public EventCallback<int> SelectedCandidate { get; set; } = default!;
-        [Parameter] public int[] candidateOrder { get; set; } = default!;
+        [Parameter] public EventCallback<int> OnCandidateSelected { get; set; } = default!;
+        [Parameter] public int[] CandidateOrder { get; set; } = default!;
+
         private RecruitVm vm = new();
         private int SelectedId = 0;
         private int _prevTabPosH = -1;
@@ -35,17 +36,17 @@ namespace KvizCommando.Client.Pages.Team.Components
             }
 
         }
-        protected async Task OnCandidateSelected(int candidateId)
+        protected async Task OnCandidateSelectedAsync(int candidateId)
         {
             if (SelectedId == candidateId) return;
             SelectedId = candidateId;
-            if (SelectedCandidate.HasDelegate)
-                await SelectedCandidate.InvokeAsync(candidateId);
+            if (OnCandidateSelected.HasDelegate)
+                await OnCandidateSelected.InvokeAsync(candidateId);
         }
 
         public void Dispose()
         {
-            SelectedCandidate = default;
+            OnCandidateSelected = default;
             GC.SuppressFinalize(this);
         }
     }

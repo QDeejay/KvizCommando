@@ -1,4 +1,5 @@
 ﻿using KvizCommando.Shared.Contracts.Question;
+using KvizCommando.Shared.Contracts.Team;
 using System.Security.Cryptography.X509Certificates;
 
 namespace KvizCommando.Client.Features.Question
@@ -26,11 +27,11 @@ namespace KvizCommando.Client.Features.Question
         NewSlot
         // ------------------
     }
-    internal enum ParamNames
+    internal enum QParamNames
     {
        SaveSlots,
        SelectedIdChanged,
-       OnWatchButtonPushed,
+       OnWatchButtonPushed, 
        OnHandleButtonPushed,
        OnSendQuestion
     }
@@ -44,4 +45,5 @@ namespace KvizCommando.Client.Features.Question
         public required Func<NewQuestionRequest, Task> OnSend { get; init; }
         public required Action<int> OnSelectId { get; init; }
     }
+
 }

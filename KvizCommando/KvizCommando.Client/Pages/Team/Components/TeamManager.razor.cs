@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace KvizCommando.Client.Pages.Team.Components
 {
-    public partial class TeamView : IDisposable
+    public partial class TeamManager : IDisposable
     {
         [Inject] private ILanguageService Lang { get; set; } = default!;
 
@@ -17,8 +17,8 @@ namespace KvizCommando.Client.Pages.Team.Components
         private AppState AppStates { get; set; } = default!;
 
 
-        [Parameter] public EventCallback<int> ActionButtonPushed { get; set; } = default!;
-        [Parameter] public EventCallback<ModifySkillRequest> ModifySkill { get; set; } = default!;
+        [Parameter] public EventCallback<int> OnManagePushed { get; set; } = default!;
+        [Parameter] public EventCallback<ModifySkillRequest> OnModifySkillPushed { get; set; } = default!;
 
         private const int NUMBER_OF_BOTTOM_ROWS = 4;
 
@@ -83,8 +83,18 @@ namespace KvizCommando.Client.Pages.Team.Components
             _usedPoints = usdPnts;
             StateHasChanged();
         }
+        private void OnResetButtonPushed()
+        {
+            ResetUsedPoints();
+            _vmDev = _builder!.BuildTeamBottomDevVm(Info, _usedPoints, Help, Culture);
+        }
 
-        private async Task OnSaveButtonPushed()
+        protected override void OnInitialized()
+        {
+            _builder = new TBuilderTeam(Lang);
+            _isReady = true;
+        }
+        private async Task OnSaveButtonAsync()
         {
             if (_usedPoints.Sum() == 0) return;
             ModifySkillRequest request = new()
@@ -94,31 +104,21 @@ namespace KvizCommando.Client.Pages.Team.Components
                 MemberId = 0
             };
 
-            if (ModifySkill.HasDelegate)
-                await ModifySkill.InvokeAsync(request);
+            if (OnModifySkillPushed.HasDelegate)
+                await OnModifySkillPushed.InvokeAsync(request);
 
         }
-        private async Task OnActionButtonPushed(int rowId)
+        private async Task OnManageButtonAsync(int rowId)
         {
             int delegateItem = _vmBot.Rows[rowId].Action;
-            if (ActionButtonPushed.HasDelegate)
-                await ActionButtonPushed.InvokeAsync(delegateItem);
+            if (OnManagePushed.HasDelegate)
+                await OnManagePushed.InvokeAsync(delegateItem);
         }
-
-        protected override void OnInitialized()
-        {
-            _builder = new TBuilderTeam(Lang);
-            _isReady = true;
-        }
-        private void OnResetButtonPushed()
-        {
-            ResetUsedPoints();
-            _vmDev = _builder!.BuildTeamBottomDevVm(Info, _usedPoints, Help, Culture);
-        }
+      
         public void Dispose()
         {
-            ActionButtonPushed = default;
-            ModifySkill = default;
+            OnManagePushed = default;
+            OnModifySkillPushed = default;
             GC.SuppressFinalize(this);
         }
     }

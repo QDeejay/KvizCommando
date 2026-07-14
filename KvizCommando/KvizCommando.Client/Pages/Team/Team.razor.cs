@@ -31,17 +31,11 @@ namespace KvizCommando.Client.Pages.Team
         //private void OnSelectMember(int id) => _teamNav.SelectedMember = id;
         private void BuildBoxes()
         {
-            /*
-            var callback = new QuestionCallbacks
+            var callback = new TeamCallbacks
             {
-                OnFactSave = OnFactSaveAsync,
-                OnSelectId = OnSelectIdAsync,
-                OnDelete = OnDeleteUsrSlotAsync,
-                OnHandle = OnHandlePendSLotAsync,
-                OnWatch = OnWatchQuestionAsync,
-                OnSend = OnSaveToFormAsync
-            };*/
-            var boxes = TBoxBuilder.BuildBoxes(TState.RootBoxInfo!, Ui.Lang);
+                OnHire = OnHireAsync,
+            };
+            var boxes = TBoxBuilder.BuildBoxes(TState.RootBoxInfo!, callback, Ui.Lang);
             foreach (var box in boxes)
             {
                 _boxes[box.Key] = box.Value;
@@ -103,7 +97,7 @@ namespace KvizCommando.Client.Pages.Team
             Ui.SubHeader.OnButtonClicked += OnSubHeaderClicked;
         }
 
-        private async Task OnSaveButtonPressedAsync(ModifySkillRequest modReq)
+        private async Task OnSavedAsync(ModifySkillRequest modReq)
         {
 
             var success = await Api.ModifyTeamAsync(modReq);
@@ -114,7 +108,7 @@ namespace KvizCommando.Client.Pages.Team
             await Ui.ReloadAsync();
             BuildBoxes();
         }
-        private async Task OnHireButtonPressed(int hireCoord)
+        private async Task OnHireAsync(int hireCoord)
         {
             var selectedPos = hireCoord / 100;
             var selectedCandidate = hireCoord % 100;
@@ -143,7 +137,7 @@ namespace KvizCommando.Client.Pages.Team
             await Ui.ReloadAsync();
             BuildBoxes();
         }
-        private async Task OnTeamManageButtonPressedAsync(int actionReq)
+        private async Task OnTeamManagedAsync(int actionReq)
         {
             if (actionReq > 50 && actionReq < 100)
             {

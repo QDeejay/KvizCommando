@@ -79,7 +79,7 @@ namespace KvizCommando.Client.Features.Question
                 RenderContent = 1,
                 BodyComp = typeof(FactorySlotsBase),
                 BuildParams = (cb) => new Dictionary<string, object?> {
-                    { ParamNames.SaveSlots.ToString(), cb.OnFactSave }
+                    { QParamNames.SaveSlots.ToString(), cb.OnFactSave }
                 }
             },
             new QBoxSpecs {
@@ -92,9 +92,9 @@ namespace KvizCommando.Client.Features.Question
                 RenderContent = 1,
                 BodyComp = typeof(UserSlotManager),
                 BuildParams = (cb) => new Dictionary<string, object?> {
-                    { ParamNames.SelectedIdChanged.ToString(), cb.OnSelectId },
-                    { ParamNames.OnWatchButtonPushed.ToString(), cb.OnWatch },
-                    { ParamNames.OnHandleButtonPushed.ToString(), cb.OnDelete }
+                    { QParamNames.SelectedIdChanged.ToString(), cb.OnSelectId },
+                    { QParamNames.OnWatchButtonPushed.ToString(), cb.OnWatch },
+                    { QParamNames.OnHandleButtonPushed.ToString(), cb.OnDelete }
                 }
 
             },
@@ -108,8 +108,8 @@ namespace KvizCommando.Client.Features.Question
                 RenderContent = 1,
                 BodyComp = typeof(PendingSlotManager),
                 BuildParams = (cb) => new Dictionary<string, object?> {
-                    { ParamNames.SelectedIdChanged.ToString(), cb.OnSelectId },
-                    { ParamNames.OnHandleButtonPushed.ToString(), cb.OnHandle }
+                    { QParamNames.SelectedIdChanged.ToString(), cb.OnSelectId },
+                    { QParamNames.OnHandleButtonPushed.ToString(), cb.OnHandle }
                 }
             },
             new QBoxSpecs {
@@ -122,7 +122,7 @@ namespace KvizCommando.Client.Features.Question
                 RenderContent = 1,
                 BodyComp = typeof(NewQuestionManager),
                 BuildParams = (cb) => new Dictionary<string, object?> {
-                    { ParamNames.OnSendQuestion.ToString(), cb.OnSend }
+                    { QParamNames.OnSendQuestion.ToString(), cb.OnSend }
                 }
              }
         };

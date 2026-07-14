@@ -17,12 +17,12 @@ namespace KvizCommando.Client.Layout
     {
         [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
         [Inject] private ISessionStorageService SessionStorage { get; set; } = default!;
-        [Inject] private SessionService SessionService { get; set; } = default!;
         [Inject] private IHomeState HState { get; set; } = default!;
         [Inject] private IQuestionState QState { get; set; } = default!;
         [Inject] private ITeamState TState { get; set; } = default!;
         [Inject] private ISoloState SState { get; set; } = default!;
         [Inject] private AudioService Audio { get; set; } = default!;
+        [Inject] private SessionService SessionService { get; set; } = default!;
 
         private static readonly string _localNotShowNew = ModalConst.LOCAL_NOT_SHOW_NEW;
         private static readonly string _localNotShowDel = ModalConst.LOCAL_NOT_SHOW_DEL;
@@ -58,7 +58,9 @@ namespace KvizCommando.Client.Layout
             await Ui.Lang.LoadModuleAsync(_culture, "common");  // szükséges
             await Ui.Lang.LoadModuleAsync(_culture, "mainlayout");  // szükséges
             await Ui.Lang.LoadModuleAsync(_culture, "home");
+
             var sessionId = await SessionStorage.GetItemAsync<string>("SessionId");
+
             if (!string.IsNullOrWhiteSpace(sessionId))
             {
                 SessionService.SessionId = sessionId;
@@ -77,6 +79,7 @@ namespace KvizCommando.Client.Layout
                 }
 
             }
+
             if (Audio.EnteredNormal)
             {
                 Console.WriteLine("Playing music because EnteredNormal is true.");

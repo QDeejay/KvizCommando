@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace KvizCommando.Client.Pages.Team.Components
 {
-    public partial class MemberView : IDisposable
+    public partial class MemberManager : IDisposable
     {
         [Inject] private ILanguageService Lang { get; set; } = default!;
 
@@ -18,7 +18,7 @@ namespace KvizCommando.Client.Pages.Team.Components
 
         [CascadingParameter]
         public int SelectedPos { get; set; } = default!;
-        [Parameter] public EventCallback<ModifySkillRequest> ModifySkill { get; set; } = default!;
+        [Parameter] public EventCallback<ModifySkillRequest> OnModifySkillPushed { get; set; } = default!;
 
         private TBuilderMember? _builder;
         private UpperBlockVm _vmUp = new();
@@ -84,7 +84,25 @@ namespace KvizCommando.Client.Pages.Team.Components
             _usedPoints = usdPnts;
             StateHasChanged();
         }
-        private async Task OnSaveButtonPushed()
+        private void OnActionButtonPushed(int rowId)
+        {
+            if (rowId < 7)
+                ShowSubPage(1);
+            else
+                ShowSubPage(2);
+        }
+        private void OnResetButtonPushed()
+        {
+            ResetUsedPoints();
+            _vmDev = _builder!.BuildMemberBottomDevVm(_currentSubPage, Member, _usedPoints, Culture);
+        }
+
+        protected override void OnInitialized()
+        {
+            _builder = new TBuilderMember(Lang);
+            _isReady = true;
+        }
+        private async Task OnSaveButtonAsync()
         {
             if (_usedPoints.Sum() == 0) return;
 
@@ -97,30 +115,12 @@ namespace KvizCommando.Client.Pages.Team.Components
                 MemberId = SelectedPos
             };
 
-            if (ModifySkill.HasDelegate)
-                await ModifySkill.InvokeAsync(request);
-        }
-        private void OnActionButtonPushed(int rowId)
-        {
-            if (rowId < 7)
-                ShowSubPage(1);
-            else
-                ShowSubPage(2);
-        }
-        protected override void OnInitialized()
-        {
-            _builder = new TBuilderMember(Lang);
-            _isReady = true;
-        }
-        private void OnResetButtonPushed()
-        {
-            ResetUsedPoints();
-            _vmDev = _builder!.BuildMemberBottomDevVm(_currentSubPage, Member, _usedPoints, Culture);
+            if (OnModifySkillPushed.HasDelegate)
+                await OnModifySkillPushed.InvokeAsync(request);
         }
         public void Dispose()
         {
-            ModifySkill = default;
-            SelectedPos = default;
+            OnModifySkillPushed = default;
             GC.SuppressFinalize(this);
         }
     }
