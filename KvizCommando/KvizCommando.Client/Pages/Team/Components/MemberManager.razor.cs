@@ -1,5 +1,5 @@
 ﻿using KvizCommando.Client.Features.Team;
-using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Models.ViewModels.Team;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.Team;

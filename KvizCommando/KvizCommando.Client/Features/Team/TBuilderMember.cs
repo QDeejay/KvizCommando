@@ -1,6 +1,6 @@
 ﻿using KvizCommando.Client.Data;
 using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Models.ViewModels.Team;
 using KvizCommando.Client.Pages.Team;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models;
@@ -75,7 +75,6 @@ namespace KvizCommando.Client.Features.Team
                 UsedPoints = usedPoints,
                 AvailableDevPoints = member.SkillPoints - usedPoints.Sum(),
                 HeaderText = _lang[$"team.Label.Attitude.{headerType}"],
-                //ListType = headerType,
                 ResetButtonText = usedPoints.Sum() > 0 ? _lang["team.Button.Modify"].FormatSafe(usedPoints.Sum()) : ""
             };
             // 2) a megfelelő attitude DTO-t kiválasztjuk

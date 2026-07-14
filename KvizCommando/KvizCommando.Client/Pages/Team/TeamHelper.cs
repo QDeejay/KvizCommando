@@ -1,5 +1,5 @@
 ﻿using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Models.ViewModels.Ui;
 using KvizCommando.Shared.Models;
 using System.Globalization;
 

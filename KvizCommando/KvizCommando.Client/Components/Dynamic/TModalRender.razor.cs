@@ -24,7 +24,7 @@ namespace KvizCommando.Client.Components.Dynamic
         private bool _isLoaded = false;
         private string Culture => AppStates.Culture;
         private TeamMemberDto Member => SelectedMember > 0 && SelectedMember <= 8 ? AppStates.Team.TeamMembers[SelectedMember] : new();
-        private CandidateDto Candidate => CanDidateNo > 0 && CanDidateNo <= 8 ? AppStates.Team.Candidates[CanDidateNo] : new();
+        private CandidateDto Candidate => CanDidateNo > 0 && CanDidateNo <= 8 ? AppStates.Team.Candidates[SelectedMember] : new();
 
         private InfoBlock Info = default!;
         private RankHeader rh = default!;

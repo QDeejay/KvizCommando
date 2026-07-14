@@ -1,9 +1,4 @@
 ﻿using KvizCommando.Shared.Models.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KvizCommando.Shared.Models.Dtos
 {
@@ -15,10 +10,11 @@ namespace KvizCommando.Shared.Models.Dtos
         public CandidateDto[]? Candidates { get; set; } = new CandidateDto[8];
         public TeamRootBoxInfo RootBoxInfo { get; set; } = new();
         public bool[] CharCatMask { get; set; } = new bool[9];
+
         public HelpDto Help { get; set; } = new HelpDto();
-       
+
     }
-   
+
     public class TeamExtendedInfo
     {
         public string Name { get; set; } = string.Empty;
@@ -30,10 +26,12 @@ namespace KvizCommando.Shared.Models.Dtos
         public int Bonus { get; set; } = 0;
         public int Credits { get; set; } = 0;
         public int TotalMembers { get; set; } = 0;
+        public int AbleToHire { get; set; } = 0;
         public int MaxMembers { get; set; } = 0;
+        public bool[] AbleToHireMask = new bool[9];
         public MembRemark[] MembRemarks { get; set; } = new MembRemark[9];
     }
-    public sealed class TeamMemberDto 
+    public sealed class TeamMemberDto
     {
         public string Name { get; set; } = string.Empty;
         public string PictureCode { get; set; } = string.Empty;
@@ -60,7 +58,7 @@ namespace KvizCommando.Shared.Models.Dtos
     }
     public sealed class HelpDto : AttidtudeDto
     {
-        
+
         public int[] HelpVolumes = new int[4];
     }
     public class SkillPartial
@@ -78,18 +76,19 @@ namespace KvizCommando.Shared.Models.Dtos
         public string[]? PictureCode { get; set; } = new string[8];
     }
     public sealed class TeamRootBoxInfo
-    { 
+    {
         public int TeamOpRequired { get; set; } = 0;
         public int MemberOpRequired { get; set; } = 0;
         public int FreePositions { get; set; } = 0;
+        public int AbleToHire { get; set; } = 0;
         public bool IsTeamEnable { get; set; } = false;
         public bool IsMemberEnable { get; set; } = false;
         public bool IsRecruitEnable { get; set; } = false;
     }
-    
-    
-        
-    
+
+
+
+
 }
 /*
  * 

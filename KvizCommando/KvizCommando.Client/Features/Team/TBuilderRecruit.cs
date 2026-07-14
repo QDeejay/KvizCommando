@@ -1,53 +1,57 @@
 ﻿using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Models.ViewModels.Team;
 using KvizCommando.Client.Pages.Team;
-using KvizCommando.Client.Services.Dto;
 using KvizCommando.Client.Services.Visual.UiService.Language;
-using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
-using System.Reflection.Emit;
 
 namespace KvizCommando.Client.Features.Team
 {
     public class TBuilderRecruit
     {
-        
         private static readonly int[] que = [1, 2, 3, 4, 5, 6, 7, 8];
         public static RecruitVm BuildRecruitVm(CandidateDto candidate, int[] order, int tabpos, string culture, ILanguageService lang)
         {
-            var vm = new RecruitVm() { Info= lang["team.Label.NoMember"] };
+            var vm = new RecruitVm() { Info = lang["team.Label.NoMember"] };
             if (tabpos < 1 || tabpos > 8)
                 return vm;
             if (!candidate.CanBeHire)
                 return vm;
-            if (candidate==null)
+            if (candidate == null)
                 return vm;
             ;
             var orderedQue = order ?? que;
-            int index=0;
+            int index = 0;
             foreach (int i in orderedQue)
             {
-                var datas = TeamHelper.RecruitResolver(tabpos,i);
-                int ori2 = datas.Item2;
-                int[] cats = datas.Item3;
-                string oriShort = OrientationLocalizer.GetOrientShort(ori2, culture);
                 index++;
-                
-                vm.Cards.Add(new RecruitBlock(
-                    Name: candidate.Name[i - 1] ?? string.Empty,
-                    Sex: i < 5,
-                    Show:true,
-                    ImageCode: candidate.PictureCode[i - 1] ?? string.Empty,
-                    SubOrientSh: $"<{oriShort}>",
-                    MainCat: CategoryNameLocalizer.GetCategory(cats[0], culture),
-                    SubCat: CategoryNameLocalizer.GetCategory(cats[1], culture),
-                    ExtCat: CategoryNameLocalizer.GetCategory(cats[2], culture),
-                    ClickId: i
-                    ));
                 if (index == 1 || index == 2)  // üres kártyák az első két sorba hogy legyen helye a képnek
-                    vm.Cards.Add(new RecruitBlock(string.Empty, false,  false, string.Empty, string.Empty,string.Empty,string.Empty,string.Empty,0) );
+                    vm.Cards.Add(new RecruitBlock(false, 0, new RecruitCardVm()));
+                vm.Cards.Add(new RecruitBlock(
+                    Show: true,
+                    ClickId: i,
+                    Card: RecCardResolver(candidate, i, tabpos, culture)
+                     ));
+                // ImageCode: candidate.PictureCode[i - 1] ?? string.Empty,
+
+
             }
             return vm;
+        }
+        private static RecruitCardVm RecCardResolver(CandidateDto cand, int cardNo, int pos, string cult)
+        {
+            var datas = TeamHelper.RecruitResolver(pos, cardNo);
+            int ori2 = datas.Item2;
+            int[] cats = datas.Item3;
+            string oriShort = OrientationLocalizer.GetOrientShort(ori2, cult);
+            return new RecruitCardVm
+            {
+                Name = cand.Name[cardNo - 1] ?? string.Empty,
+                Sex = cardNo < 5,
+                SecOrient = $"<{oriShort}>",
+                MainCat = CategoryNameLocalizer.GetCategory(cats[0], cult),
+                SubCat = CategoryNameLocalizer.GetCategory(cats[1], cult),
+                ExtCat = CategoryNameLocalizer.GetCategory(cats[2], cult),
+            };
         }
     }
 }

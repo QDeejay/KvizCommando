@@ -1,4 +1,4 @@
-﻿using KvizCommando.Client.Models.ViewModels;
+﻿using KvizCommando.Client.Models.ViewModels.Ui;
 using KvizCommando.Shared.Models.Enums;
 using System.Threading.Tasks;
 

@@ -3,6 +3,7 @@ using KvizCommando.Client.Features.Modal;
 using KvizCommando.Client.Features.Team;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Models.ViewModels.Ui;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Utilities;
@@ -146,6 +147,14 @@ namespace KvizCommando.Client.Pages.Team
 
             await Ui.ReloadAsync();
             BuildBoxes();
+
+            ShowBoxes(
+              _boxes[TBoxKeyContent.Team.ToString()].Header,
+                     201,
+                     0,
+                     TBoxBuilder.SubTeam,
+                     []
+                    );
         }
         private async Task OnTeamManagedAsync(int actionReq)
         {
@@ -209,7 +218,7 @@ namespace KvizCommando.Client.Pages.Team
             InvokeAsync(StateHasChanged);
         }
         private void OnSubHeaderClicked(int index) => _selectedPos = index;
-       
+
         public void Dispose()
         {
             //teamModal?.Dispose();

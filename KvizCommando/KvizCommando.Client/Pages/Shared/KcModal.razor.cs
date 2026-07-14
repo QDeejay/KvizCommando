@@ -1,6 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using KvizCommando.Client.Features.Modal;
-using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Models.ViewModels.Ui;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
 using Microsoft.AspNetCore.Components;

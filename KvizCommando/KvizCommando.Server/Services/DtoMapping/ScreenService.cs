@@ -165,10 +165,13 @@ namespace KvizCommando.Server.Services.DtoMapping
             MembRemark[] membRemarks = new MembRemark[9];
 
             bool[] tempCharmask = new bool[9];
-            var numberOfCharacters = 0;
+            bool[] tempAbleToHiremask = new bool[9];
+            int numberOfCharacters = 0;
+            int numberOfAbleToHire = 0;
             teamMembers[0] = null;
             candidates[0] = null;
             tempCharmask[0] = true;
+            tempAbleToHiremask[0] = false;
 
             for (int i = 1; i < 9; i++)
             {
@@ -221,7 +224,10 @@ namespace KvizCommando.Server.Services.DtoMapping
                     {
                         CanBeHire = false,
                     };
+
                 }
+                tempAbleToHiremask[i] = candidates[i].CanBeHire;
+
             }
 
             var teamInfo = new TeamExtendedInfo
@@ -233,6 +239,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                 DevPoints = player.Core.DevPoint,
                 TotalMembers = numberOfCharacters,
                 MaxMembers = RankRewards.List[player.Core.RankEnum].MaxCharacters,
+                AbleToHireMask = tempAbleToHiremask,
                 Bonus = RankRewards.List[player.Core.RankEnum].WinBonus,
                 Credits = player.Core.Credit,
                 MembRemarks = membRemarks
@@ -536,29 +543,19 @@ namespace KvizCommando.Server.Services.DtoMapping
             var promote = info.MembRemarks.Count(x => x == MembRemark.Promote);
             var heal = info.MembRemarks.Count(x => x == MembRemark.Heal);
             var help = helpDev ? 1 : 0;
-            int freePositions = Math.Max(info.MaxMembers - info.TotalMembers, 0);
+            var freePositions = Math.Max(info.MaxMembers - info.TotalMembers, 0);
+            var ableToHire = info.AbleToHireMask.Count(x => x);
 
             return new TeamRootBoxInfo
             {
                 IsTeamEnable = true,
-                IsRecruitEnable = freePositions > 0,
+                IsRecruitEnable = freePositions > 0 && ableToHire >= freePositions,
                 IsMemberEnable = info.TotalMembers > 0,
                 TeamOpRequired = retire + fire + promote + heal + help,
                 MemberOpRequired = info.MembRemarks.Count(x => x == MembRemark.Develop),
-                FreePositions = freePositions
+                FreePositions = freePositions,
+                AbleToHire = ableToHire
             };
         }
     }
 }
-
-/*
- bool isHelpDevelope;
-            var helpSkill = new SkillPartial[]
-                {
-                        ConvertSkillPartial(helpDatas[0], player.Core.RankEnum, RankConstants.maxLevels[12], RankConstants.startLevels[12] - 1),
-                        ConvertSkillPartial(helpDatas[1], player.Core.RankEnum, RankConstants.maxLevels[13], RankConstants.startLevels[13] - 1),
-                        ConvertSkillPartial(helpDatas[2], player.Core.RankEnum, RankConstants.maxLevels[14], RankConstants.startLevels[14] - 1),
-                        ConvertSkillPartial(helpDatas[3], player.Core.RankEnum, RankConstants.maxLevels[15], RankConstants.startLevels[15] - 1)
-                };
- 
- */

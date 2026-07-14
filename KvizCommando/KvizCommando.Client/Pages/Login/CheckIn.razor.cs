@@ -2,7 +2,7 @@
 using KvizCommando.Client.Features.Home;
 using KvizCommando.Client.Features.Modal;
 using KvizCommando.Client.Models.StoreModels;
-using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Models.ViewModels.Ui;
 using KvizCommando.Client.Pages.Shared;
 using KvizCommando.Client.Services;
 using KvizCommando.Client.Services.Dto;

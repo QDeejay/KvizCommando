@@ -1,5 +1,5 @@
 ﻿using KvizCommando.Client.Components.Dynamic;
-using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Models.ViewModels.Ui;
 
 namespace KvizCommando.Client.Features.Modal
 {

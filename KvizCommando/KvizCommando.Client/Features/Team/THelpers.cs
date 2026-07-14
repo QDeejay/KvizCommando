@@ -1,6 +1,6 @@
 ﻿using KvizCommando.Client.Data;
 using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Models.ViewModels.Team;
 using KvizCommando.Client.Pages.Team;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models;

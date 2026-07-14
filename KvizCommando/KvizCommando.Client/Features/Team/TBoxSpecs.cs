@@ -1,7 +1,5 @@
-﻿using KvizCommando.Client.Features.Question;
-using KvizCommando.Client.Helpers;
+﻿using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Pages.Question.Components;
 using KvizCommando.Client.Pages.Team.Components;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
@@ -86,6 +84,7 @@ namespace KvizCommando.Client.Features.Team
                 CheckEnable = (inf) => true,
                 LcdBackground = false,
                 RenderContent = 1,
+                BodyComp = typeof(RecruitManager),
                 BuildParams = (cb) => new Dictionary<string, object?> {
                     { TParamNames.OnCandidateSelected.ToString(), cb.OnHire },
                     { TParamNames.CandidateOrder.ToString(), cb.OnShuffledIds}

@@ -1,6 +1,6 @@
 ﻿using KvizCommando.Client.Features.Modal;
 
-namespace KvizCommando.Client.Models.ViewModels
+namespace KvizCommando.Client.Models.ViewModels.Ui
 {
     public sealed record ModalBoxVm
     {

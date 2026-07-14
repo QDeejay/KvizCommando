@@ -1,4 +1,4 @@
-﻿using KvizCommando.Client.Models.ViewModels;
+﻿using KvizCommando.Client.Models.ViewModels.Ui;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 
 namespace KvizCommando.Client.Features.Modal

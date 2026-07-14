@@ -19,13 +19,10 @@ namespace KvizCommando.Client.Features.Team
         private const string UNLOCK_SEP = " => ";
 
         public ModalHireVm BuildHireVm(CandidateDto candidate, int hpos, int candno, string culture)
-
         {
-
-
             var vm = new ModalHireVm();
             var oriData = TeamHelper.RecruitResolver(hpos, candno);
-            string orientkeys = RecruitData.OrientKeys[hpos - 1];
+            //string orientkeys = RecruitData.OrientKeys[hpos - 1];
             var bi = new BasicInfo()
             {
                 _name = candidate.Name[candno - 1] ?? string.Empty,

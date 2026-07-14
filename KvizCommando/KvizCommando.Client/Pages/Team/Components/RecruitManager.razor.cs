@@ -1,16 +1,16 @@
 ﻿using KvizCommando.Client.Features.Team;
-using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Models.ViewModels.Team;
 using KvizCommando.Client.Services.ClientCache;
-using KvizCommando.Client.Utilities;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
-using System.Globalization;
-using System.Runtime.CompilerServices;
 
 namespace KvizCommando.Client.Pages.Team.Components
 {
-    public partial class RecruitBlockDisplay : KcComponentBase, IDisposable
+    public partial class RecruitManager : IDisposable
     {
+        [Inject] ILanguageService Lang { get; set; } = default!;
+
         [CascadingParameter]
         private AppState AppStates { get; set; } = default!;
 
@@ -20,10 +20,11 @@ namespace KvizCommando.Client.Pages.Team.Components
         [Parameter] public EventCallback<int> OnCandidateHired { get; set; } = default!;
         [Parameter] public int[] CandidateOrder { get; set; } = default!;
 
-        private RecruitVm vm = new();
-        private int SelectedId = 0;
+        private RecruitVm _vm = new();
+        private int _selectedId = 0;
         private int _prevTabPosH = -1;
         private bool _couldBeHire = false;
+        private string _picCode = string.Empty;
         private string Culture => AppStates.Culture;
 
         private CandidateDto RecruitData => SelectedPos > 0 ? AppStates.Team.Candidates[SelectedPos] : new();
@@ -35,27 +36,29 @@ namespace KvizCommando.Client.Pages.Team.Components
                 _couldBeHire = RecruitData.CanBeHire;
                 if (SelectedPos != _prevTabPosH)
                 {
-                    SelectedId = 0;
+                    _selectedId = 0;
+                    _picCode = string.Empty;
                     _prevTabPosH = SelectedPos;
-                    vm = TBuilderRecruit.BuildRecruitVm(RecruitData, CandidateOrder, SelectedPos, Culture, Ui.Lang);
+                    _vm = TBuilderRecruit.BuildRecruitVm(RecruitData, CandidateOrder, SelectedPos, Culture, Lang);
                 }
 
             }
 
         }
-        private async Task OnHireButtnnAsync()
+        private async Task OnHireButtonAsync()
         {
-            int delegateitem = SelectedPos*100+ SelectedId;
- 
+            int delegateitem = SelectedPos * 100 + _selectedId;
+
             if (OnCandidateHired.HasDelegate)
                 await OnCandidateHired.InvokeAsync(delegateitem);
         }
         private void OnCandidateSelect(int id)
         {
-            if (SelectedId == id) return;
-            SelectedId = id;
-        }
+            if (_selectedId == id) return;
+            _selectedId = id;
+            _picCode = RecruitData.PictureCode[id - 1];
 
+        }
 
         public void Dispose()
         {

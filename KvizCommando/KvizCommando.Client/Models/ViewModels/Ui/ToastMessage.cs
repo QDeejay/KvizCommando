@@ -1,7 +1,6 @@
-﻿
-using KvizCommando.Shared.Models.Enums;
+﻿using KvizCommando.Shared.Models.Enums;
 
-namespace KvizCommando.Client.Models.ViewModels
+namespace KvizCommando.Client.Models.ViewModels.Ui
 {
     public sealed record ToastMessage
     {
