@@ -1,0 +1,58 @@
+﻿.recruit-tab {
+    width: 100%;
+    border-top: dashed;
+    border-bottom: dashed;
+    border-color: rgba(10,10,10,0.5);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 4px;
+    row-gap: 8px;
+   
+}
+.picture-block {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    left: 8px;
+    top: 14px;
+    width: 290px;
+    height: 230px;
+    background-color: transparent;
+    border: inset 2px #777;
+    border-radius: 4px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4), inset 0 4px 8px rgba(0,0,0,0.7);
+    border-radius: 20px;
+}
+
+
+.picture-side {
+    position: relative;
+    display: flex;
+    height: 176px;
+    width: 138px;
+    z-index: 1;
+    background: rgba(23,23,255,0.7);
+    border: inset 2px #777;
+    border-radius: 4px;
+    box-shadow: inset 0 4px 8px rgba(0,0,0,0.7);
+    font-size: 6rem;
+    color: lightblue;
+    justify-content: center;
+    align-items: center;
+
+}
+    .picture-side.hide {
+       
+    }
+    .picture-side i {
+        opacity: 0.3;
+    }
+.button-side {
+    display: flex;
+    flex: 1; /* kitölti a maradék helyet */
+    height:50px;
+    justify-content: center; /* a saját területének közepe */
+    
+}
+
+ 

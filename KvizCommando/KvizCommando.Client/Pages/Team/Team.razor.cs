@@ -1,9 +1,9 @@
-﻿using KvizCommando.Client.Components.Dynamic;
-using KvizCommando.Client.Features.Modal;
-using KvizCommando.Client.Features.Team;
-using KvizCommando.Client.Helpers;
+﻿using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Models.ViewModels.Ui;
+using KvizCommando.Client.Pages.Shared.Modal.Dynamic;
+using KvizCommando.Client.Pages.Shared.Modal.Features;
+using KvizCommando.Client.Pages.Team.Features;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Utilities;
@@ -22,12 +22,15 @@ namespace KvizCommando.Client.Pages.Team
         private string[] _boxOrder = [];
         private bool _isReady = false;
         private bool _isLoaded = false;
-        private string Culture => AppStates.Culture;
 
         private int _selectedPos = 0;
         private static readonly int[] _recruitMixer = [1, 2, 3, 4, 5, 6, 7, 8];
 
-        private TeamDtos TState => AppStates.Team!;
+        private string Culture => AppStates.Culture;
+        private bool[] TCharmask => AppStates.Team!.CharCatMask;
+        private TeamExtendedInfo TInfo => AppStates.Team!.TeamInfo;
+        private TeamRootBoxInfo TRootBoxInfo => AppStates.Team!.RootBoxInfo;
+
         private ContentBoxVm Box(string orx) => _boxes[orx];
         private void BuildBoxes()
         {
@@ -38,7 +41,7 @@ namespace KvizCommando.Client.Pages.Team
                 OnModify = OnSavedAsync,
                 OnShuffledIds = _recruitMixer
             };
-            var boxes = TBoxBuilder.BuildBoxes(TState.RootBoxInfo!, callback, Ui.Lang);
+            var boxes = TBoxBuilder.BuildBoxes(TRootBoxInfo, callback, Ui.Lang);
             foreach (var box in boxes)
             {
                 _boxes[box.Key] = box.Value;
@@ -64,13 +67,14 @@ namespace KvizCommando.Client.Pages.Team
                 case 202:
                     boxOrder = TBoxBuilder.SubMember;
                     headerTitle = _boxes[TBoxKeyContent.Member.ToString()].Header;
-                    selectedPos = Array.FindIndex(TState.CharCatMask, 1, x => x);
-                    list = TeamHelper.SubHeaderResolver(TState.CharCatMask[1..9], Culture);
+                    selectedPos = Array.FindIndex(TCharmask, 1, x => x);
+                    list = THelpers.SubHeaderResolver(TCharmask[1..9], Culture);
                     break;
                 case 203:
                     boxOrder = TBoxBuilder.SubRecruit;
                     headerTitle = _boxes[TBoxKeyContent.Recruit.ToString()].Header;
-                    selectedPos = Array.FindIndex(TState.CharCatMask, 1, x => !x);
+                    selectedPos = Array.FindIndex(TInfo.AbleToHireMask, 1, x => x);
+                    list = THelpers.SubHeaderResolver(TInfo.AbleToHireMask[1..9], Culture);
                     break;
                 default:
                     boxOrder = TBoxBuilder.Root;
@@ -165,7 +169,7 @@ namespace KvizCommando.Client.Pages.Team
                      203,
                      actionReq % 50,
                      TBoxBuilder.SubMember,
-                     TeamHelper.SubHeaderResolver(TState.CharCatMask[1..9], Culture)
+                     THelpers.SubHeaderResolver(TCharmask[1..9], Culture)
                     );
                 return;
             }
@@ -189,7 +193,7 @@ namespace KvizCommando.Client.Pages.Team
 
             var result = await Ui.Modal.ShowAsync(mVm);
 
-            if (result != ModalResult.Button1 || result != ModalResult.Button2)
+            if (result != ModalResult.Button1 && result != ModalResult.Button2)
                 return;
 
             if (modalAction == 4 && result != ModalResult.Button1)

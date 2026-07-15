@@ -1,12 +1,7 @@
-﻿using KvizCommando.Client.Features.Home;
-using KvizCommando.Client.Features.Question;
-using KvizCommando.Client.Helpers;
+﻿using KvizCommando.Client.Features.Question;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
-using System;
-using System.Collections.Generic;
 
 namespace KvizCommando.Client.Features.Sologame
 {
@@ -42,17 +37,17 @@ namespace KvizCommando.Client.Features.Sologame
                 {
                     dict.Add($"{spec.Key.ToString()}{i}", new ContentBoxVm
                     {
-                        Header = spec.BuildTitle(i,cult),
+                        Header = spec.BuildTitle(i, cult),
                         Footer = spec.BuildFooter(lang, ss.Results, i),
                         FooterDisplay = spec.FooterDisplay,
                         Size = spec.Size,
                         ImageSrc = spec.BuildImageSrc(i),
-                        IsClickable = spec.BuildEnable(ss.Enables, i-1),
-                        IsEnabled = spec.BuildEnable(ss.Enables, i-1),
+                        IsClickable = spec.BuildEnable(ss.Enables, i - 1),
+                        IsEnabled = spec.BuildEnable(ss.Enables, i - 1),
                         ClickId = spec.ClickId + i
                     });
 
-                } 
+                }
             }
 
             return dict;

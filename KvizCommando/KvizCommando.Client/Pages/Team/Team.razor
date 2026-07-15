@@ -1,7 +1,6 @@
 ﻿@page "/team"
 
-@using KvizCommando.Client.Pages.Team.Components
-@using KvizCommando.Client.Components.Dynamic;
+@using KvizCommando.Client.Pages.Team.Dynamic;
 @inherits Utilities.KcComponentBase
 
 <link href="css/team-common.css" rel="stylesheet" />
@@ -18,18 +17,14 @@
 
                     <ContentBox Vm="@box"
                                 OnClick="OnBoxClick">
+                                <ContentBody>
 
-                        <ContentBody>
+                                    <CascadingValue Value="_selectedPos">
+                                        <DynamicComponent Type="@box.BodyComponent"
+                                                          Parameters="@box.BodyParameters" />         
+                                    </CascadingValue>
 
-                            <CascadingValue Value="_selectedPos">
-
-                                <RecruitManager CandidateOrder="_recruitMixer"
-                                                     OnCandidateHired="OnHireAsync"/>
-                               
-                                                        
-                            </CascadingValue>
-
-                        </ContentBody>
+                               </ContentBody>
                     </ContentBox>
                 }
             </div>
@@ -39,8 +34,9 @@
 </LangGuard>
 
      <!--
+          <RecruitManager CandidateOrder="_recruitMixer"
+                                                OnCandidateHired="OnHireAsync"/>
 
-      <DynamicComponent Type="@box.BodyComponent"
-                                                  Parameters="@box.BodyParameters" />
+     
 
      -->

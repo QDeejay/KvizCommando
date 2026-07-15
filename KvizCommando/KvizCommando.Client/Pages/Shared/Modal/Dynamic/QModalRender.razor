@@ -1,0 +1,82 @@
+﻿@using KvizCommando.Client.Pages.Shared.Modal.Features;
+
+@if (isLoaded)
+{
+    <div class="modal-display">
+        @switch (Mode)
+        {
+            case ModalTypes.QUsrDelet:  /// user slot törlése
+                <br>
+                @Lang["question.Modal.Text.Confirm"]
+                <br>
+                <br>
+                break;
+            case ModalTypes.QPendHandle: /// pending slot törlése vagy ha approved akkor átmozgatása
+                <div>
+                    <label class="category-label">@Lang["question.Table.Header.Category"]:</label>
+                    <span> @CatNamePend</span>
+                </div>
+                    <br>
+                    <p class="question-label">@Slot.Question</p>
+                    <br>
+                    <p class="answer-label correct">1.) @Slot.Answer[0]</p>
+                    <p class="answer-label">2.) @Slot.Answer[1]</p>
+                    <p class="answer-label">3.) @Slot.Answer[2]</p>
+                    <p class="answer-label">4.) @Slot.Answer[3]</p>
+                <br>
+                <div class="divider submited-at">
+                    <span>@Slot.SubmittedAt</span>
+                </div>
+                <div class="divider status-row">
+                    <span style=@ColorStyle>@Lang[$"question.Table.Status.{Slot.Status}"]</span>
+                </div>
+                <br>
+                <div class="remark-label remark-title">
+                    <fn>@Lang["question.Table.Header.Remark"]</fn>
+                </div>
+                <div class="remark-label">
+                    <p>@Slot.Remark</p>
+                </div>
+                break;
+            case ModalTypes.QCheckQuestion: /// kérdés ellenőrzése
+                <div>
+                    <label class="category-label">@Lang["question.Table.Header.Category"]:</label>
+                    <span> @CatNameUsr</span>
+                </div>
+                    <br>
+                <p class="question-label">@UsrSlot.Question</p>
+                    <br>
+                    <p class="answer-label correct">1.) @UsrSlot.Answer[0]</p>
+                    <p class="answer-label">2.) @UsrSlot.Answer[1]</p>
+                    <p class="answer-label">3.) @UsrSlot.Answer[2]</p>
+                    <p class="answer-label">4.) @UsrSlot.Answer[3]</p>
+                <br>
+                <div class="divider">
+                    <span>@Lang[$"question.Modal.Content.Statistic"]</span>
+                </div>
+           
+                <div class="statistic-row">
+                    <div>
+                        <label class="label-statistic">@Lang["question.Modal.Content.QuestAsked"] </label>
+                        <span class="label-result">@UsrSlot.NoOfUse</span>
+                    </div>
+                    <div>
+                        <label class="label-statistic">@Lang["question.Modal.Content.QuestCorrect"] </label>
+                        <span class="label-result">@UsrSlot.NofOfCorrect</span>
+                    </div>
+                    <div>
+                        <label class="label-statistic">@Lang["question.Modal.Content.Ratio"] </label>
+                        <span class="label-result">@UsrSlot.Ratio</span>
+                    </div>
+                </div>
+                break;
+
+            case ModalTypes.QNewRules: /// új kérdés felvétele
+                @RenderHTML
+                break;
+            default:
+                <p></p>
+                break; 
+         }
+    </div>
+}

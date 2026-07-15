@@ -1,8 +1,8 @@
 ﻿using Blazored.LocalStorage;
 using Blazored.SessionStorage;
-using KvizCommando.Client.Features.Modal;
 using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Pages.Shared;
+using KvizCommando.Client.Pages.Shared.Modal;
+using KvizCommando.Client.Pages.Shared.Modal.Features;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;

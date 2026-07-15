@@ -1,0 +1,86 @@
+﻿
+
+@if (_isLoaded)
+{
+    <div class="newquest-body">
+        <div class="category-part" >
+            <label class="label-text">@Lang["question.Table.Header.Category"]: </label>
+            <select class="inline-editor"
+                    disabled="@(SelectedId == 100)"
+                    @bind="@_formData.Category"
+                    @bind:event="onchange"
+                    @onclick:stopPropagation="true"
+                    @onkeydown="OnEditorKeyDown"
+                    autofocus>
+                <option value="0"
+                        disabled="@(_formData.Category != 0 || SelectedId!=100)"
+                        selected="@(_formData.Category == 0)">
+                    @Lang["mainlayout.Option.Default"]
+                </option>
+                @foreach (var opt in Options)
+                {
+                    <option value="@opt.Code">@QuestionHelper.GetLabel(opt, Culture)</option>
+                }
+            </select>
+        </div>
+
+        <div class="question-lettercounter">
+            <label class="label-text">@Lang["question.Table.Header.Question"]</label>
+            <label class="label-text">@($"{_formData.Question?.Length ?? 0}/{LENGHT_AREA_BOX}")</label>
+        </div>
+        <div class="question-wrapper">
+            <textarea class="lcd-input lcd-area"
+                      maxlength="@LENGHT_AREA_BOX"
+                      disabled="@DisabledLcd"
+                      @bind-value="_formData.Question"
+                      @bind-value:event="oninput"
+                      style="@DisCursor
+                             @DisBckGround " />
+            <div class="question-wrapper-right">
+                <button class="military-button" id="0"
+                        disabled="@DisabledSendButton"
+                        @onclick="@OnSaveQuestionAsync">
+                    @Lang["question.Button.Send"]
+                </button>
+            </div>
+
+        </div>
+
+        <div class="answer-table">
+            <div class="answer-row">
+                <label class="label-text">@Lang["question.Label.AnswerOk"]</label>
+                <input class="lcd-input"
+                       type="text"
+                       maxlength="@LENGHT_ANSWER_BOX"
+                       disabled="@DisabledAnswer"
+                       @bind-value="@_formData.Answers[0]"
+                       @bind-value:event="oninput" />
+                <label class="label-text">@Lang["question.Label.AnswerNg"]</label>
+                <input class="lcd-input"
+                       type="text"
+                       maxlength="@LENGHT_ANSWER_BOX"
+                       disabled="@DisabledAnswer"
+                       @bind-value="@_formData.Answers[1]"
+                       @bind-value:event="oninput" />
+                <br>
+            </div>
+            <div class="answer-row" style="margin-right:10px">
+                <label class="label-text">@Lang["question.Label.AnswerNg"]</label>
+                <input class="lcd-input"
+                       type="text"
+                       maxlength="@LENGHT_ANSWER_BOX"
+                       disabled="@DisabledAnswer"
+                       @bind-value="@_formData.Answers[2]"
+                       @bind-value:event="oninput" />
+                <label class="label-text">@Lang["question.Label.AnswerNg"]</label>
+                <input class="lcd-input"
+                       type="text"
+                       maxlength="@LENGHT_ANSWER_BOX"
+                       disabled="@DisabledAnswer"
+                       @bind-value="@_formData.Answers[3]"
+                       @bind-value:event="oninput" />
+            </div>
+        </div>
+
+    </div>
+}

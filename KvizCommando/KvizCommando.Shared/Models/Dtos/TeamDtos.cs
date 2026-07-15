@@ -28,7 +28,7 @@ namespace KvizCommando.Shared.Models.Dtos
         public int TotalMembers { get; set; } = 0;
         public int AbleToHire { get; set; } = 0;
         public int MaxMembers { get; set; } = 0;
-        public bool[] AbleToHireMask = new bool[9];
+        public bool[] AbleToHireMask { get; set; } = new bool[9];
         public MembRemark[] MembRemarks { get; set; } = new MembRemark[9];
     }
     public sealed class TeamMemberDto

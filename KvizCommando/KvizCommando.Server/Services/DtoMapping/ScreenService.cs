@@ -549,11 +549,11 @@ namespace KvizCommando.Server.Services.DtoMapping
             return new TeamRootBoxInfo
             {
                 IsTeamEnable = true,
-                IsRecruitEnable = freePositions > 0 && ableToHire >= freePositions,
+                IsRecruitEnable = freePositions > 0 && ableToHire > 0,
                 IsMemberEnable = info.TotalMembers > 0,
                 TeamOpRequired = retire + fire + promote + heal + help,
                 MemberOpRequired = info.MembRemarks.Count(x => x == MembRemark.Develop),
-                FreePositions = freePositions,
+                FreePositions = Math.Min(freePositions, ableToHire),
                 AbleToHire = ableToHire
             };
         }

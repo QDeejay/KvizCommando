@@ -1,25 +1,14 @@
 ﻿using Blazored.SessionStorage;
-using KvizCommando.Client.Features.Home;
-using KvizCommando.Client.Features.Modal;
 using KvizCommando.Client.Models.StoreModels;
-using KvizCommando.Client.Models.ViewModels.Ui;
-using KvizCommando.Client.Pages.Shared;
+using KvizCommando.Client.Pages.Shared.Modal;
+using KvizCommando.Client.Pages.Shared.Modal.Features;
+using KvizCommando.Client.Pages.Shared.Modal.ViewModels;
 using KvizCommando.Client.Services;
-using KvizCommando.Client.Services.Dto;
-using KvizCommando.Client.Services.User;
-using KvizCommando.Client.Services.Visual;
-using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.CheckIn;
 using KvizCommando.Shared.Options;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 
 namespace KvizCommando.Client.Pages.Login
@@ -56,7 +45,7 @@ namespace KvizCommando.Client.Pages.Login
         private bool CanCheckIn =>
            (!string.IsNullOrWhiteSpace(_formData.DisplayName) || _cacheData.needsName == false)
            && !string.IsNullOrWhiteSpace(_formData.AcceptedTermsVersion);
-      
+
         private bool _isAccepted;
 
         private bool IsAccepted
@@ -126,13 +115,13 @@ namespace KvizCommando.Client.Pages.Login
 
         {
             ResultMessage = string.Empty;
-            
+
             DisplayNameField = false;
             var dsp = _formData.DisplayName?.Trim() ?? string.Empty;
 
             if (_options is not null)
             {
-                if (_options.DisplayNameMinLength>dsp.Length && _cacheData.needsName==true)
+                if (_options.DisplayNameMinLength > dsp.Length && _cacheData.needsName == true)
                 {
                     ResultMessage = Ui.Lang["identityerrors.DisplayNameTooShort"];
                     DisplayNameField = true;
@@ -204,14 +193,14 @@ namespace KvizCommando.Client.Pages.Login
         private async Task OpenTerms()
         {
             _termsHtml = new MarkupString(ExtractSection(_fullHtml, "terms"));
-            _termsPar = _termsPar with {Title = Ui.Lang["checkin.modal.TermsTitle"] };
+            _termsPar = _termsPar with { Title = Ui.Lang["checkin.modal.TermsTitle"] };
             _renderHTML = _termsHtml;
             if (_termsModal is not null)
                 await _termsModal.ShowAsync(_termsPar);
         }
         private async Task OpenPrivacy()
         {
-            
+
             _privacyHtml = new MarkupString(ExtractSection(_fullHtml, "privacy"));
             _termsPar = _termsPar with { Title = Ui.Lang["checkin.modal.PrivacyTitle"] };
             _renderHTML = _privacyHtml;
@@ -225,7 +214,7 @@ namespace KvizCommando.Client.Pages.Login
             //await InvokeAsync(StateHasChanged);
             await Task.Delay(5);
         }
-      
+
         private async Task NavigateHome()
         {
             await SessionStorage.RemoveItemAsync(CHEKIN_CACHE_KEY);

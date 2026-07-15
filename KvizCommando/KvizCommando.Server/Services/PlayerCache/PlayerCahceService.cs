@@ -1,22 +1,16 @@
-﻿using KvizCommando.Client.Pages.Question;
-using KvizCommando.Server.Data.StaticData;
-using KvizCommando.Server.Domain.Entities.Players;
+﻿using KvizCommando.Server.Domain.Entities.Players;
 using KvizCommando.Server.Domain.Entities.Questions;
 using KvizCommando.Server.Domain.Entities.Statistics;
-using KvizCommando.Server.Infrastructure.Persistence;
 using KvizCommando.Server.Models;
+using KvizCommando.Server.Services.Db;
 using KvizCommando.Server.Utilities;
 using KvizCommando.Server.Utilities.Recruit;
 using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Contracts.Team;
-using KvizCommando.Shared.Models.Dtos;
-using KvizCommando.Shared.Models.Enums;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Concurrent;
-using System.Linq;
-using System.Text.Json;
 using KvizCommando.Shared.Models;
-using KvizCommando.Server.Services.Db;
+using KvizCommando.Shared.Models.Enums;
+using System.Collections.Concurrent;
+using System.Text.Json;
 
 
 namespace KvizCommando.Server.Services.PlayerCache
@@ -176,7 +170,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             }
 
             //if (cp.CandidateChanged)
-              //  entry.Dirty = DirtyFlags.Characters;
+            //  entry.Dirty = DirtyFlags.Characters;
             _entries[playerId] = entry;
             return entry;
         }
@@ -196,7 +190,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             try
             {
                 if (entry.Player.SessionId != sessionId)
-                    return (new CachedPlayer 
+                    return (new CachedPlayer
                     {
                         SessionId = "denied"
                     }, null);
@@ -222,7 +216,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             {
                 ///
                 var Entry = await GetOrCreateEntryAsync(playerId, sessionId, ct); /// Ideiglenes
-                                                                                 
+
                 return false;
             }
 
@@ -239,19 +233,19 @@ namespace KvizCommando.Server.Services.PlayerCache
                 entry.Lock.Release();
             }
         }
-       
+
         public async Task<bool?> UpdatePartialCharachters(
             int playerId,
             string sessionId,
             ManageTeamRequest teamReq,
             CancellationToken ct = default
-            ) 
+            )
         {
             var entry = await GetOrCreateEntryAsync(playerId, sessionId, ct);
             if (entry is null) return false;
 
             await entry.Lock.WaitAsync(ct);
-            try 
+            try
             {
                 if (entry.Player.SessionId != sessionId)
                     return null;
@@ -296,10 +290,10 @@ namespace KvizCommando.Server.Services.PlayerCache
                         }
                     case ManageType.Promote:
                         {
-                            var rankClassChanged = ((member.Rank - 1) / 3 + 1) != ((member.Rank) / 3 + 1) || member.Rank==0;
+                            var rankClassChanged = ((member.Rank - 1) / 3 + 1) != ((member.Rank) / 3 + 1) || member.Rank == 0;
                             member.Rank += 1;
                             member.Rank = Math.Min(member.Rank, 21);
-                            entry.Player.Core.DevPoint -= rankClassChanged ? 0 :1;
+                            entry.Player.Core.DevPoint -= rankClassChanged ? 0 : 1;
                             member.DevPoints += RankRewards.List[member.Rank].DevPointRevard;
                             member.EnergyPoints = 36 + member.Rank * 3;
                             entry.Player.Core.DevPoint += RankRewards.List[member.Rank].DevPointToStore;
@@ -312,7 +306,7 @@ namespace KvizCommando.Server.Services.PlayerCache
                             member.Rank = Math.Min(member.Rank, 21);
                             candidate = _recruit.Generate(8);
                             candidate.ExpirationTime = DateTime.UtcNow.AddDays(7);
-                            entry.Player.Core.DevPoint += RankRewards.List[member.Rank].DevPointToStore; 
+                            entry.Player.Core.DevPoint += RankRewards.List[member.Rank].DevPointToStore;
                             entry.Player.Core.Credit += member.Pension;
                             member = null;
                             break;
@@ -335,21 +329,21 @@ namespace KvizCommando.Server.Services.PlayerCache
                     default:
                         return false;
                 }
-                entry.Player.Characters[teamReq.MemberNo - 1]=member;
+                entry.Player.Characters[teamReq.MemberNo - 1] = member;
                 entry.Player.CharCatMask[teamReq.MemberNo - 1] = member != null;
-                entry.Player.CandidateCharacters[teamReq.MemberNo - 1]=candidate;
+                entry.Player.CandidateCharacters[teamReq.MemberNo - 1] = candidate;
                 entry.Dirty |= DirtyFlags.Characters;
                 entry.LastAccessUtc = DateTime.UtcNow;
                 return true;
             }
-           
+
             finally
             {
                 entry.Lock.Release();
             }
 
         }
-        
+
         public async Task<bool?> UpdatePartialModifySillsLockedAsync(
            int playerId,
            string sessionId,
@@ -407,23 +401,24 @@ namespace KvizCommando.Server.Services.PlayerCache
                 {
                     case SlotManageType.DeleteUsr:
                         {
-                                var tempId = entry.CachedQ.uSlots[slotReq.SlotNo].Id;
-                                entry.CachedQ.fSlots.Add(new FactoryQuestion()
-                                {
-                                    Id = 0,
-                                    Question = entry.CachedQ.uSlots[slotReq.SlotNo].Question,
-                                    AnswersJson = entry.CachedQ.uSlots[slotReq.SlotNo].AnswersJson,
-                                    CategoryNo = entry.CachedQ.uSlots[slotReq.SlotNo].CategoryNo,
-                                });
-                                entry.CachedQ.uSlots[slotReq.SlotNo] = new UserQuestion { Id = tempId, PlayerId = playerId };
-                                entry.CachedQ.DirtyMask |= (1u << slotReq.SlotNo);
-                                break;
+                            var tempId = entry.CachedQ.uSlots[slotReq.SlotNo].Id;
+                            entry.CachedQ.fSlots.Add(new FactoryQuestion()
+                            {
+                                Id = 0,
+                                Question = entry.CachedQ.uSlots[slotReq.SlotNo].Question,
+                                AnswersJson = entry.CachedQ.uSlots[slotReq.SlotNo].AnswersJson,
+                                CategoryNo = entry.CachedQ.uSlots[slotReq.SlotNo].CategoryNo,
+                            });
+                            entry.CachedQ.uSlots[slotReq.SlotNo] = new UserQuestion { Id = tempId, PlayerId = playerId };
+                            entry.CachedQ.DirtyMask |= (1u << slotReq.SlotNo);
+                            break;
                         }
                     case SlotManageType.DeletePending:
-                        {       var tempId = entry.CachedQ.pSlots[slotReq.SlotNo].Id;
-                                entry.CachedQ.pSlots[slotReq.SlotNo] = new PendingQuestion { Id = tempId, PlayerId = playerId };
-                                entry.CachedQ.DirtyMask |= (1u << (slotReq.SlotNo + 16));
-                                break;
+                        {
+                            var tempId = entry.CachedQ.pSlots[slotReq.SlotNo].Id;
+                            entry.CachedQ.pSlots[slotReq.SlotNo] = new PendingQuestion { Id = tempId, PlayerId = playerId };
+                            entry.CachedQ.DirtyMask |= (1u << (slotReq.SlotNo + 16));
+                            break;
                         }
                     case SlotManageType.MovePending:
                         {
@@ -718,7 +713,7 @@ namespace KvizCommando.Server.Services.PlayerCache
                     return (SaveResult.None, entry.CachedQ.DirtyMask != 0);
 
                 await _playerDb.SavePlayerToDbAsync(entry.Player, entry.Dirty, playerId, ct);
-                
+
                 entry.Dirty &= ~(DirtyFlags.Core
                                | DirtyFlags.Loadout
                                | DirtyFlags.Characters

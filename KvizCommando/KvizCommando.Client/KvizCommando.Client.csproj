@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Models\ViewModels\Team\TeamModalVm.cs" />
+    <None Include="Pages\Shared\Modal\ViewModels\TeamModalVm.cs" />
   </ItemGroup>
 	
 

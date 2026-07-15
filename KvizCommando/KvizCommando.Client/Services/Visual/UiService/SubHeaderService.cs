@@ -11,7 +11,7 @@ namespace KvizCommando.Client.Services.Visual.UiService
         public int Index => _index;
 
 
-        public bool IsVisible => _tabs.Length > 1;
+        public bool IsVisible => _tabs.Length > 0;
 
         public event Action? OnButtonsChanged;
 
@@ -31,7 +31,7 @@ namespace KvizCommando.Client.Services.Visual.UiService
 
         public void Click(int index)
         {
-            if ((uint)index >= (uint)_tabs.Length)
+            if ((uint)index > (uint)_tabs.Length)
                 return;
 
             OnButtonClicked?.Invoke(index);

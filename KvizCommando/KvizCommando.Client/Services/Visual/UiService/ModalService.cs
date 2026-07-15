@@ -1,5 +1,4 @@
-﻿using KvizCommando.Client.Features.Modal;
-using KvizCommando.Client.Models.ViewModels.Ui;
+﻿using KvizCommando.Client.Pages.Shared.Modal.ViewModels;
 
 namespace KvizCommando.Client.Services.Visual.UiService
 {

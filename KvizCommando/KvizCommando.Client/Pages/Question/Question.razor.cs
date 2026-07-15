@@ -1,8 +1,7 @@
-﻿
-using KvizCommando.Client.Components.Dynamic;
-using KvizCommando.Client.Features.Modal;
-using KvizCommando.Client.Features.Question;
-using KvizCommando.Client.Models.ViewModels;
+﻿using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Pages.Question.Features;
+using KvizCommando.Client.Pages.Shared.Modal.Dynamic;
+using KvizCommando.Client.Pages.Shared.Modal.Features;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Services.Visual.UiService;
@@ -207,31 +206,3 @@ namespace KvizCommando.Client.Pages.Question
 
     }
 }
-/*
- 
-
-
-            _bodyParams.Clear();
-                    //private Dictionary<string, object?> _bodyParams { get; } = [];
-                    //_bodyParams["SaveSlots"] = (Func<int[], Task>)OnFactSaveAsync;
-                    //_bodyParams["SelectedIdChanged"] = (Func<int, Task>)OnSelectId;
-                    //_bodyParams["OnWatchButtonPushed"] = (Func<Task>)OnWatchQuestionAsync;
-                    //_bodyParams["OnHandleButtonPushed"] = (Func<Task>)OnDeleteUsrSlotAsync;
-                    //_bodyParams["SelectedIdChanged"] = (Func<int, Task>)OnSelectId;
-                    //_bodyParams["OnHandleButtonPushed"] = (Func<Task>)OnHandlePendSLotAsync;
-
-
-
-                    //_bodyParams["OnSendQuestion"] = (Func<NewQuestionRequest, Task>)OnSaveToFormAsync;
-                    
- * 
- * ó
- //_bodyParams["SaveSlots"] = EventCallback.Factory.Create<int[]>(this, OnFactSaveAsync);
-                    //_bodyParams["SelectedIdChanged"] = EventCallback.Factory.Create<int>(this, OnSelectId);
-                    //_bodyParams["OnWatchButtonPushed"] = EventCallback.Factory.Create(this, OnWatchQuestionAsync);
-                    //_bodyParams["OnHandleButtonPushed"] = EventCallback.Factory.Create(this, OnDeleteUsrSlotAsync);
-                    //_bodyParams["SelectedIdChanged"] = EventCallback.Factory.Create<int>(this, OnSelectId);
-                    //_bodyParams["OnHandleButtonPushed"] = EventCallback.Factory.Create(this, OnHandlePendSLotAsync);
-                    //_bodyParams["OnSendQuestion"] = EventCallback.Factory.Create<NewQuestionRequest>(this, OnSaveToFormAsync);
- 
- */
