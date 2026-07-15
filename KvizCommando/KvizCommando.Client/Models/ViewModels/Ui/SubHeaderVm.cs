@@ -5,6 +5,7 @@
         bool Enable = true,
         bool Visible = true,
         int ClickId = 0,
+        string ToolTip = "",
         string Icon = "");
 
 }

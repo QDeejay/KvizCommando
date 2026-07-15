@@ -167,7 +167,6 @@ namespace KvizCommando.Server.Services.DtoMapping
             bool[] tempCharmask = new bool[9];
             bool[] tempAbleToHiremask = new bool[9];
             int numberOfCharacters = 0;
-            int numberOfAbleToHire = 0;
             teamMembers[0] = null;
             candidates[0] = null;
             tempCharmask[0] = true;
@@ -214,7 +213,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                     {
                         Name = candidate.Names,
                         PictureCode = candidate.PictureCodes,
-                        CanBeHire = candidate.Names == null || candidate.PictureCodes == null ? false : true,
+                        CanBeHire = candidate.Names != null && candidate.PictureCodes != null,
                         ExpirationTime = candidate.ExpirationTime
                     };
                 }
@@ -226,7 +225,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                     };
 
                 }
-                tempAbleToHiremask[i] = candidates[i].CanBeHire;
+                tempAbleToHiremask[i] = candidates[i]!.CanBeHire;
 
             }
 
@@ -246,7 +245,7 @@ namespace KvizCommando.Server.Services.DtoMapping
 
             };
 
-            var help = HelpResolver(player.Loadout?.HelpLevelsJson, teamInfo.Level, teamInfo.DevPoints);
+            var help = HelpResolver(player.Loadout.HelpLevelsJson, teamInfo.Level, teamInfo.DevPoints);
 
             var rootBoxInfo = TeamRootBoxInfoResolver(teamInfo, help.CanDev);
 

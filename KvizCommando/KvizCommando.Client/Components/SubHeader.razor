@@ -7,11 +7,11 @@
             @if (tb.Visible)
             {
                 <div class="htp-tab @(_activeIndex == tb.ClickId ? "active" : "") @(tb.Enable ? "" : "disabled")"
-                     disabled="@(!tb.Enable)"
                      @onclick="() => SetTab(tb.ClickId)">
-                    <span>@tb.Text</span>
-                    <!-- <span class="tooltip-box">@tb.ToolTip</span>   -->
+                    <span class="tab-text">@tb.Text</span>
+                    <span class="tooltip-box">@(Lang[tb.ToolTip])</span>
                 </div>
+                
             }           
         }
     </div>

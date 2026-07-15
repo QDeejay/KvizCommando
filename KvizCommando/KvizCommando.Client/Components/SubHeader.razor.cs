@@ -1,4 +1,5 @@
 ﻿using KvizCommando.Client.Models.ViewModels.Ui;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using Microsoft.AspNetCore.Components;
 
 
@@ -6,6 +7,7 @@ namespace KvizCommando.Client.Components
 {
     public partial class SubHeader
     {
+        [Inject] ILanguageService Lang { get; set; } = default!;
         //[Parameter] public string[] Tabs { get; set; } = default!;
         [Parameter] public IReadOnlyList<SubHeaderVm> Tabs { get; set; } = default!;
         [Parameter] public int StartIndex { get; set; } = 0;
@@ -26,6 +28,8 @@ namespace KvizCommando.Client.Components
         }
         private async Task SetTab(int index)
         {
+            if (!Tabs[index - 1].Enable)
+                return;
             if (!ActiveIndexChanged.HasDelegate)
                 return;
             _activeIndex = index;

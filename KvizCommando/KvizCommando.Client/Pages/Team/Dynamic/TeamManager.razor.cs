@@ -60,10 +60,14 @@ namespace KvizCommando.Client.Pages.Team.Dynamic
             if (page == 0)
             {
                 _vmBot = _builder!.BuildTeamBottomVm(Memebers, Culture);
-                _listHalfSw = false;
+
             }
             else
+            {
                 _vmDev = _builder!.BuildTeamBottomDevVm(Info, _usedPoints, Help, Culture);
+                _listHalfSw = false;
+            }
+
 
             _currentSubPage = page;
         }

@@ -25,7 +25,7 @@ namespace KvizCommando.Client.Pages.Team.Features
                     FooterDisplay = spec.FooterDisplay,
                     Size = spec.Size,
                     ImageSrc = spec.ImageSrc,
-                    IsClickable = spec.ClickId > 0 && btn.ClickId < 1000,
+                    IsClickable = btn.CheckEnable(rb) && spec.ClickId > 0 && spec.ClickId < 1000,
                     IsEnabled = btn.CheckEnable(rb),
                     ClickId = spec.ClickId,
                     LcdDisplay = spec.LcdBackground,

@@ -12,16 +12,9 @@
     z-index:101;
 }
 
-.htp-tab > span {
-    display: block;
-    padding: 0 10px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
 .htp-tab {
     display: flex;
-    align-items: center; /* függőlegesen középre */
+    align-items: center;
     justify-content: center;
     width: 70px;
     overflow: hidden;
@@ -37,32 +30,54 @@
     line-height: 30px;
 }
 
-    .htp-tab.disabled:hover .tooltip-box {
-        display: block;
-        padding-left: 10px;
-        padding-right: 10px;
-        top: -20px;
-    }
-
+.htp-tab.disabled:hover .tooltip-box {
+    display: block;
+    padding-left: 10px;
+    padding-right: 10px;
+    top: -20px;
+}
     .htp-tab:hover {
         background: rgba(99, 99, 99, 0.4);
         cursor: url('/Images/cursors/active.cur'), pointer;
     }
 
-    .htp-tab.active {
-        background: #0c1f17;
-        font-weight: bold;
-        border: 1px  solid #004400;
-        box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.6);
-        cursor: url('/Images/cursors/normal.cur'), default;
-        width: max-content;
-        max-width: 100%;
-        border-top:none;
-    }
-
+.htp-tab.active {
+    background: #0c1f17;
+    font-weight: bold;
+    border: 1px solid #004400;
+    box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.6);
+    cursor: url('/Images/cursors/normal.cur'), default;
+    width: max-content;
+    max-width: 100%;
+    border-top: none;
+}
 
 .htp-tab.disabled {
     background: rgba(255,45,45,0.15);
     color: #cccccc;
     cursor: url('/Images/cursors/disabled.cur'), not-allowed;
 }
+
+.tab-text {
+    display: block;
+    padding: 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tooltip-box {
+    position:fixed;
+    width: 400px;
+    text-wrap: wrap;
+    top:-300px;
+
+}
+
+/**
+
+    .htp-tab > .tooltip-box {
+    display: none;
+}
+*/
+

@@ -85,29 +85,29 @@ namespace KvizCommando.Client.Pages.Team
             };
 
             return (idx[0], c ? idx[2] : idx[4],
-                new int[]
-                {
+                [
                     idx[0] + (mask[0] ? 8:0),
                     (c ? idx[2] : idx[4]) + (mask[0] ? 8:0),
                     idx[6] + (mask[4] ? 8:0),
                     idx[1] + (mask[1] ? 8:0),
                     (c ? idx[3] : idx[5]) + (mask[1] ? 8:0),
                     idx[6] + (mask[5] ? 8:0)
-                });
+                ]);
         }
-        internal static List<SubHeaderVm> SubHeaderResolver(bool[] masks, string cult)
+        internal static List<SubHeaderVm> SubHeaderResolver(bool[] visibilities, bool[] enables, string cult)
         {
             var list = new List<SubHeaderVm>();
-            int index = 0;
-            foreach (var mask in masks)
+            int index;
+            for (int i = 0; i < Math.Min(visibilities.Length, enables.Length); i++)
             {
-                index++;
+                index = i + 1;
                 list.Add(new SubHeaderVm
                 {
                     Text = OrientationLocalizer.GetOrientation(index, cult),
-                    Enable = mask,
-                    Visible = mask,
+                    Enable = enables[i],
+                    Visible = visibilities[i],
                     ClickId = index,
+                    ToolTip = visibilities[i] && !enables[i] ? "team.Label.PopUp.NotHire" : string.Empty
                 });
             }
             return list;
@@ -115,3 +115,4 @@ namespace KvizCommando.Client.Pages.Team
 
     }
 }
+// Ui.Lang["team.Label.PopUp.NotHire"] : "") : Ui.Lang["team.Label.PopUp.NoFree"]; 

@@ -68,13 +68,14 @@ namespace KvizCommando.Client.Pages.Team
                     boxOrder = TBoxBuilder.SubMember;
                     headerTitle = _boxes[TBoxKeyContent.Member.ToString()].Header;
                     selectedPos = Array.FindIndex(TCharmask, 1, x => x);
-                    list = THelpers.SubHeaderResolver(TCharmask[1..9], Culture);
+                    list = THelpers.SubHeaderResolver(TCharmask[1..9], TCharmask[1..9], Culture);
                     break;
                 case 203:
                     boxOrder = TBoxBuilder.SubRecruit;
                     headerTitle = _boxes[TBoxKeyContent.Recruit.ToString()].Header;
                     selectedPos = Array.FindIndex(TInfo.AbleToHireMask, 1, x => x);
-                    list = THelpers.SubHeaderResolver(TInfo.AbleToHireMask[1..9], Culture);
+                    bool[] invertedMask = [.. TCharmask.Select(x => !x)];
+                    list = THelpers.SubHeaderResolver(invertedMask[1..9], TInfo.AbleToHireMask[1..9], Culture);
                     break;
                 default:
                     boxOrder = TBoxBuilder.Root;
@@ -169,7 +170,7 @@ namespace KvizCommando.Client.Pages.Team
                      203,
                      actionReq % 50,
                      TBoxBuilder.SubMember,
-                     THelpers.SubHeaderResolver(TCharmask[1..9], Culture)
+                     THelpers.SubHeaderResolver(TCharmask[1..9], TCharmask[1..9], Culture)
                     );
                 return;
             }

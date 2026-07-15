@@ -1,15 +1,12 @@
 ﻿using KvizCommando.Server.Domain.Entities.Compliance;
 using KvizCommando.Server.Domain.Entities.Players;
-using KvizCommando.Server.Domain.Entities.Security;
 using KvizCommando.Server.Domain.Entities.Statistics;
 using KvizCommando.Server.Identity;
 using KvizCommando.Server.Infrastructure.Persistence;
 using KvizCommando.Server.Models;
 using KvizCommando.Server.Services.PlayerCache;
-using KvizCommando.Server.Utilities.Recruit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
@@ -26,12 +23,12 @@ namespace KvizCommando.Server.Services.Db
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _config;
         public PlayerDbService(
-            ApplicationDbContext db, 
+            ApplicationDbContext db,
             UserManager<ApplicationUser> userManager,
             ILogger<PlayerDbService> logger,
             ILookupNormalizer normalizer,
             IHttpContextAccessor httpcontextaccessor,
-            IConfiguration config) 
+            IConfiguration config)
         {
             _db = db;
             _userManager = userManager;
@@ -93,7 +90,7 @@ namespace KvizCommando.Server.Services.Db
                         .Deserialize<RecruitSlot?[]>(characters.CandidatesJson)!;
 
             bool[] tempCharMask = tempChars.Select(x => x != null).ToArray();
-           
+
             return new CachedPlayer
             {
                 Core = player,
@@ -106,6 +103,7 @@ namespace KvizCommando.Server.Services.Db
                     UpdatedUtc = DateTime.UtcNow
                 },
                 Characters = tempChars,
+                CandidateCharacters = tempCandidates,
                 CharCatMask = tempCharMask,
                 AskStats = askStats ?? new PlayerAskStats
                 {
@@ -134,7 +132,7 @@ namespace KvizCommando.Server.Services.Db
             int playerId,
             CancellationToken ct)
         {
-            try 
+            try
             {
                 // --- Core Player ---
                 if ((flags & DirtyFlags.Core) != 0)
@@ -194,12 +192,12 @@ namespace KvizCommando.Server.Services.Db
                 await _db.SaveChangesAsync(ct);
                 return false;
             }
-            catch 
-            { 
+            catch
+            {
                 return false;
             }
             finally { }
-            
+
         }
 
         /// <summary>
@@ -220,7 +218,7 @@ namespace KvizCommando.Server.Services.Db
                 .Where(p => p.UserId == userId)
                 .Select(p => p.PlayerId)
                 .FirstOrDefaultAsync(ct);
-          
+
 
             var lastAcceptedVersion = await _db.Set<TermsConsent>()
                 .AsNoTracking()
@@ -250,7 +248,7 @@ namespace KvizCommando.Server.Services.Db
             if (!updateResult.Succeeded)
             {
                 // az Identity a saját kódjait adja – továbbítjuk
-                 errorKeys.AddRange(updateResult.Errors.Select(e => e.Code));
+                errorKeys.AddRange(updateResult.Errors.Select(e => e.Code));
                 return (errorKeys, false);
             }
             return (Array.Empty<string>(), true);
@@ -289,7 +287,7 @@ namespace KvizCommando.Server.Services.Db
                     try { secretKey = Convert.FromBase64String(secretB64); } catch { /* marad null */ }
                 }
                 // --- időbélyeg egységesen a DB és a claim számára ---
-                
+
 
                 _db.Add(new TermsConsent
                 {
@@ -316,9 +314,9 @@ namespace KvizCommando.Server.Services.Db
         /// <param name="ct"></param>
         /// <returns></returns>
         public async Task CreatePlayerToDbAsync(
-            string userId, 
-            string displayname, 
-            string teamname, 
+            string userId,
+            string displayname,
+            string teamname,
             CancellationToken ct)
         {
             var has = await _db.Set<Player>()
@@ -481,5 +479,5 @@ namespace KvizCommando.Server.Services.Db
             return h.ComputeHash(Encoding.UTF8.GetBytes(value));
         }
     }
-     
+
 }
