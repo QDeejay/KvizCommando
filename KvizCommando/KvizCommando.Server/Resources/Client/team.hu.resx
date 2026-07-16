@@ -288,4 +288,10 @@
   <data name="Label.Org" xml:space="preserve">
     <value>Szervezet:</value>
   </data>
+  <data name="Label.Main" xml:space="preserve">
+    <value>Orientáció:</value>
+  </data>
+  <data name="Label.Second" xml:space="preserve">
+    <value>Másodlagos:</value>
+  </data>
 </root>

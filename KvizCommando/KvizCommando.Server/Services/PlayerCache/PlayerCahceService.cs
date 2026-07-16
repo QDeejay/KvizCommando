@@ -20,20 +20,20 @@ namespace KvizCommando.Server.Services.PlayerCache
         //private readonly ApplicationDbContext _db;
         private readonly IPlayerDbService _playerDb;
         private readonly IQuestionDbService _questionDb;
-        private readonly IRecruitService _recruit;
+        //private readonly IRecruitService _recruit;
         private static readonly ConcurrentDictionary<int, CacheEntry> _entries = new();
 
 
         public PlayerCacheService(//ApplicationDbContext db,
             IPlayerDbService playerdb,
-            IQuestionDbService questiondb,
-            IRecruitService recruit
+            IQuestionDbService questiondb
+            //IRecruitService recruit
             )
         {
             //_db = db;
             _playerDb = playerdb;
             _questionDb = questiondb;
-            _recruit = recruit;
+            // _recruit = recruit;
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace KvizCommando.Server.Services.PlayerCache
                 {
                     if (cp.CandidateCharacters[i] == null || DateTime.UtcNow > cp.CandidateCharacters[i].ExpirationTime)
                     {
-                        cp.CandidateCharacters[i] = _recruit.Generate(8) ?? new RecruitSlot();
+                        cp.CandidateCharacters[i] = RecruitService.Generate(8) ?? new RecruitSlot();
                         cp.CandidateCharacters[i].ExpirationTime = DateTime.UtcNow.AddDays(7);
                         entry.Dirty = DirtyFlags.Characters;
                     }
@@ -256,7 +256,7 @@ namespace KvizCommando.Server.Services.PlayerCache
                 {
                     case ManageType.Hire:
                         {
-                            var rl = _recruit.RecruitResolver(teamReq.MemberNo, teamReq.CandidateId);
+                            var rl = RecruitService.RecruitResolver(teamReq.MemberNo, teamReq.CandidateId);
                             var sl = new int[4] { 0, 0, 0, 0 };
                             member = new CharachterSlot()
                             {
@@ -304,7 +304,7 @@ namespace KvizCommando.Server.Services.PlayerCache
                         {
                             member.Rank += 1;
                             member.Rank = Math.Min(member.Rank, 21);
-                            candidate = _recruit.Generate(8);
+                            candidate = RecruitService.Generate(8);
                             candidate.ExpirationTime = DateTime.UtcNow.AddDays(7);
                             entry.Player.Core.DevPoint += RankRewards.List[member.Rank].DevPointToStore;
                             entry.Player.Core.Credit += member.Pension;

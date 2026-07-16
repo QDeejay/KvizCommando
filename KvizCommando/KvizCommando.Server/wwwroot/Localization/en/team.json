@@ -55,5 +55,7 @@
   "Box.Title.TeamOverview": "Team overview",
   "Box.Title.Members": "Team members",
   "Box.Title.Recruit": "Recruiting",
-  "Label.Org": "Organisation:"
+  "Label.Org": "Command:",
+  "Label.Main": "Orient:",
+  "Label.Second": "Secondary:"
 }

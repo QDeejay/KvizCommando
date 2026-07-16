@@ -48,7 +48,7 @@ namespace KvizCommando.Client.Pages.Team.Dynamic.Builders
 
             vm.Rows.Add(
                 new BottomRow(
-                    _lang["team.Label.TeamName"],
+                    _lang["team.Label.TeamName"] + ":",
                     true.ToString(), "", "", 0
                 )
             );

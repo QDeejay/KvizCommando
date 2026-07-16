@@ -165,21 +165,25 @@ namespace KvizCommando.Client.Layout
             _appState.Culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
             if (state == ReqStates.All || state == ReqStates.Home)
             {
+                HState.Invalidate();
                 await HState.EnsureLoadedAsync();
                 _appState.Home = HState.Snapshot;
             }
             if (state == ReqStates.All || state == ReqStates.Question)
             {
+                QState.Invalidate();
                 await QState.EnsureLoadedAsync();
                 _appState.Question = QState.Snapshot;
             }
             if (state == ReqStates.All || state == ReqStates.Team)
             {
+                TState.Invalidate();
                 await TState.EnsureLoadedAsync();
                 _appState.Team = TState.Snapshot;
             }
             if (state == ReqStates.All || state == ReqStates.SoloGame)
             {
+                SState.Invalidate();
                 await SState.EnsureLoadedAsync();
                 _appState.SoloGame = SState.Snapshot;
             }

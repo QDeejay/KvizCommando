@@ -8,21 +8,11 @@ namespace KvizCommando.Client.Services.Dto
     public class ApiService : IApiService
     {
         private readonly HttpClient _http;
-        private readonly IHomeState _home;
-        private readonly IQuestionState _question;
-        private readonly ITeamState _team;
         private readonly SessionService _sessionCache;
-        public ApiService(
-            HttpClient http,
-            IHomeState home,
-            IQuestionState questionstate,
-            ITeamState teamstate,
-            SessionService sessioncache)
+
+        public ApiService(HttpClient http, SessionService sessioncache)
         {
             _http = http;
-            _home = home;
-            _question = questionstate;
-            _team = teamstate;
             _sessionCache = sessioncache;
         }
         public async Task<bool> SaveFactorySlotsAsync(SaveFactoryRequest dto)
@@ -36,7 +26,6 @@ namespace KvizCommando.Client.Services.Dto
                 if (!response.IsSuccessStatusCode)
                     return false;
 
-                _question.Invalidate();
                 return true;
             }
             catch (Exception ex)
@@ -60,8 +49,6 @@ namespace KvizCommando.Client.Services.Dto
                 if (!response.IsSuccessStatusCode)
                     return false;
 
-                _question.Invalidate();
-                _home.Invalidate();
 
                 return true;
             }
@@ -86,8 +73,6 @@ namespace KvizCommando.Client.Services.Dto
                 if (!response.IsSuccessStatusCode)
                     return false;
 
-                _question.Invalidate();
-
                 return true;
             }
             catch (Exception ex)
@@ -111,7 +96,6 @@ namespace KvizCommando.Client.Services.Dto
                 if (!response.IsSuccessStatusCode)
                     return false;
 
-                _team.Invalidate();
                 return true;
             }
             catch (Exception ex)
@@ -134,8 +118,6 @@ namespace KvizCommando.Client.Services.Dto
                 if (!response.IsSuccessStatusCode)
                     return false;
 
-                _home.Invalidate();
-                _team.Invalidate();
                 return true;
             }
             catch (Exception ex)

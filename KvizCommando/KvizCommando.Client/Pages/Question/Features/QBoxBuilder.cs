@@ -29,7 +29,7 @@ namespace KvizCommando.Client.Pages.Question.Features
                     FooterDisplay = spec.FooterDisplay,
                     Size = spec.Size,
                     ImageSrc = spec.ImageSrc,
-                    IsClickable = btn.CheckEnable(qs),
+                    IsClickable = btn.CheckEnable(qs) && spec.ClickId > 0 && spec.ClickId < 1000,
                     IsEnabled = btn.CheckEnable(qs),
                     ClickId = spec.ClickId,
                     LcdDisplay = spec.LcdBackground,

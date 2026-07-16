@@ -286,6 +286,12 @@
     <value>Recruiting</value>
   </data>
   <data name="Label.Org" xml:space="preserve">
-    <value>Organisation:</value>
+    <value>Command:</value>
+  </data>
+  <data name="Label.Main" xml:space="preserve">
+    <value>Orient:</value>
+  </data>
+  <data name="Label.Second" xml:space="preserve">
+    <value>Secondary:</value>
   </data>
 </root>

@@ -11,9 +11,7 @@ using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.Players;
 using KvizCommando.Server.Services.Security;
 using KvizCommando.Server.Services.UserPlayerIdCache;
-using KvizCommando.Server.Utilities.Recruit;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Forms;
 
 
 namespace KvizCommando.Server.Extensions;
@@ -25,16 +23,16 @@ public static class ServiceCollectionExtensions
         ///
         /// Player
         /// 
-       
+
         services.AddScoped<IPlayerService, PlayerService>();
         services.AddSingleton<ISessionService, SessionService>();
         services.AddScoped<IPlayerCacheService, PlayerCacheService>();
         services.AddScoped<IUserPlayerIdCacheService, UserPlayerIdCacheService>();
 
-        services.AddSingleton<INameGenerator, NameGenerator>();
-        services.AddSingleton<IPicCodeGenerator, PicCodeGenerator>();
+        //services.AddSingleton<INameGenerator, NameGenerator>();
+        //services.AddSingleton<IPicCodeGenerator, PicCodeGenerator>();
 
-        services.AddScoped<IRecruitService, RecruitService>();
+        //services.AddScoped<IRecruitService, RecruitService>();
 
         ///
         /// Dto services

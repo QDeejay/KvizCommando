@@ -55,5 +55,7 @@
   "Box.Title.TeamOverview": "Csapat áttekintés",
   "Box.Title.Members": "Csapat tagok",
   "Box.Title.Recruit": "Toborzás",
-  "Label.Org": "Szervezet:"
+  "Label.Org": "Szervezet:",
+  "Label.Main": "Orientáció:",
+  "Label.Second": "Másodlagos:"
 }
