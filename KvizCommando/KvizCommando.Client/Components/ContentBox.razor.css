@@ -39,6 +39,10 @@
     width: 650px;
     height: 685px;
 }
+.kc-content-box.closed-large {
+    width: 650px;
+    height: 130px;
+}
     .kc-content-box.halflarge {
         width: 325px;
         height: 550px;

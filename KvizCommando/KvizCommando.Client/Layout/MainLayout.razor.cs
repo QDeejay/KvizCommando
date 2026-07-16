@@ -156,9 +156,9 @@ namespace KvizCommando.Client.Layout
             await User.LogoutAsync(false);
             Console.WriteLine("User logged out.");
         }
-        private async Task OnRefreshRequired()
+        private async Task OnRefreshRequired(ReqStates reqType)
         {
-            await InitStatesAsync(ReqStates.All);
+            await InitStatesAsync(reqType);
         }
         private async Task InitStatesAsync(ReqStates state)
         {

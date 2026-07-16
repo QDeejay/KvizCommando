@@ -94,7 +94,7 @@ namespace KvizCommando.Client.Pages.Team
                     idx[6] + (mask[5] ? 8:0)
                 ]);
         }
-        internal static List<SubHeaderVm> SubHeaderResolver(bool[] visibilities, bool[] enables, string cult)
+        internal static List<SubHeaderVm> SubHeaderResolver(bool[] visibilities, bool[] enables, string[] toolTip, string cult)
         {
             var list = new List<SubHeaderVm>();
             int index;
@@ -107,12 +107,34 @@ namespace KvizCommando.Client.Pages.Team
                     Enable = enables[i],
                     Visible = visibilities[i],
                     ClickId = index,
-                    ToolTip = visibilities[i] && !enables[i] ? "team.Label.PopUp.NotHire" : string.Empty
+                    ToolTip = visibilities[i] && !enables[i] ? toolTip[i] : string.Empty
                 });
             }
             return list;
         }
+        internal static string[] RecruitToolTipResolver(bool[] charmask, CandidateDto[] candidate, ILanguageService lang)
+        {
+            var tooltips = new List<string>();
+
+            for (int i = 0; i < Math.Min(charmask.Length, candidate.Length); i++)
+            {
+                if (!charmask[i] && !candidate[i].CanBeHire)
+                {
+                    DateTimeHelpers.GetTimeLeft(candidate[i].ExpirationTime, out int hours, out int minutes);
+                    if (hours + minutes > 0)
+                        tooltips.Add(lang["team.Label.ToolTip.NotHire"].FormatSafe(hours, minutes));
+                    else
+                    {
+                        tooltips.Add(lang["team.Label.ToolTip.NotHireNext"]);
+                    }
+
+                }
+                else
+                    tooltips.Add(string.Empty);
+            }
+
+            return [.. tooltips];
+        }
 
     }
 }
-// Ui.Lang["team.Label.PopUp.NotHire"] : "") : Ui.Lang["team.Label.PopUp.NoFree"]; 

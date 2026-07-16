@@ -15,10 +15,6 @@ namespace KvizCommando.Client.Pages.Team.Dynamic
 
         [CascadingParameter]
         private AppState AppStates { get; set; } = default!;
-
-
-        //[Parameter] public EventCallback<int> OnManagePushed { get; set; } = default!;
-        //[Parameter] public EventCallback<ModifySkillRequest> OnModifySkillPushed { get; set; } = default!;
         [Parameter] public Func<int, Task>? OnManagePushed { get; set; }
         [Parameter] public Func<ModifySkillRequest, Task>? OnModifySkillPushed { get; set; }
 
@@ -60,7 +56,8 @@ namespace KvizCommando.Client.Pages.Team.Dynamic
             if (page == 0)
             {
                 _vmBot = _builder!.BuildTeamBottomVm(Memebers, Culture);
-
+                if (_vmBot.Rows.Count() <= NUMBER_OF_BOTTOM_ROWS + 1)
+                    _listHalfSw = false;
             }
             else
             {

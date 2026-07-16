@@ -1,4 +1,5 @@
-﻿using KvizCommando.Client.Models.ViewModels;
+﻿using KvizCommando.Client.Layout;
+using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Pages.Question.Features;
 using KvizCommando.Client.Pages.Shared.Modal.Dynamic;
 using KvizCommando.Client.Pages.Shared.Modal.Features;
@@ -112,7 +113,7 @@ namespace KvizCommando.Client.Pages.Question
             if (!success)
                 return;
 
-            await Ui.ReloadAsync();
+            await Ui.ReloadAsync(ReqStates.Question);
             BuildBoxes();
 
         }
@@ -132,7 +133,7 @@ namespace KvizCommando.Client.Pages.Question
             if (!success)
                 return;
             _selectedId = 100;
-            await Ui.ReloadAsync();
+            await Ui.ReloadAsync(ReqStates.All);
             BuildBoxes();
             StateHasChanged();
         }
@@ -156,7 +157,7 @@ namespace KvizCommando.Client.Pages.Question
             if (!success)
                 return;
 
-            await Ui.ReloadAsync();
+            await Ui.ReloadAsync(ReqStates.All);
             BuildBoxes();
             OnBoxClick(102);
         }
@@ -187,7 +188,7 @@ namespace KvizCommando.Client.Pages.Question
             if (!success)
                 return;
 
-            await Ui.ReloadAsync();
+            await Ui.ReloadAsync(ReqStates.Question);
             BuildBoxes();
         }
         private void UpdateBckClick()

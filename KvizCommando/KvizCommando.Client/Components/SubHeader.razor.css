@@ -67,11 +67,7 @@
 }
 
 .tooltip-box {
-    position:fixed;
-    width: 400px;
-    text-wrap: wrap;
-    top:-300px;
-
+    border: 1px darkgrey dotted;
 }
 
 /**

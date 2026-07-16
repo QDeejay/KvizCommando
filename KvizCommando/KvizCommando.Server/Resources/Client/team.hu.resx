@@ -135,8 +135,11 @@
   <data name="Label.Name" xml:space="preserve">
     <value>Név: </value>
   </data>
-  <data name="Label.PopUp.NotHire" xml:space="preserve">
-    <value>Jelenleg ez egy üres pozíció, sajnos nem tudsz hívni új tagot, mert nem telt el 24 óra azóta hogy kirúgtál valakit innen!</value>
+  <data name="Label.ToolTip.NotHire" xml:space="preserve">
+    <value>Újra nyit: {0}ó {1}p</value>
+  </data>
+  <data name="Label.ToolTip.NotHireNext" xml:space="preserve">
+    <value>Újra nyit: Köv.Belépés</value>
   </data>
   <data name="Label.Rank" xml:space="preserve">
     <value>Rang:</value>
@@ -149,21 +152,6 @@
   </data>
   <data name="Label.Attitude.3rd" xml:space="preserve">
     <value>Extra módosítók:</value>
-  </data>
-  <data name="SubBtn.OverView" xml:space="preserve">
-    <value>Áttekintés</value>
-  </data>
-  <data name="SubBtn.Main" xml:space="preserve">
-    <value>Elsődleges</value>
-  </data>
-  <data name="SubBtn.Second" xml:space="preserve">
-    <value>Másodlagos</value>
-  </data>
-  <data name="SubBtn.Helps" xml:space="preserve">
-    <value>Segítségek</value>
-  </data>
-  <data name="SubBtn.Hire" xml:space="preserve">
-    <value>Toborzás</value>
   </data>
   <data name="label.TeamDevPointShort" xml:space="preserve">
     <value>Csp:</value>
@@ -191,9 +179,6 @@
   </data>
   <data name="Label.Modifiers" xml:space="preserve">
     <value>Módosítók:</value>
-  </data>
-  <data name="SubBtn.Extra" xml:space="preserve">
-    <value>Extrák</value>
   </data>
   <data name="Label.Remark.AtMaximum" xml:space="preserve">
     <value>Maximalizálva</value>
@@ -279,8 +264,8 @@
   <data name="modal.Text.Promote2" xml:space="preserve">
     <value>Az elöléptetés ingyenes, mert változik  a rang osztálya is!</value>
   </data>
-  <data name="Label.PopUp.NoFree" xml:space="preserve">
-    <value>Jelenleg nincs szabad pozició!</value>
+  <data name="Label.Recruit.Suspended" xml:space="preserve">
+    <value>Toborzás átmenetileg szünetel!</value>
   </data>
   <data name="Box.Footer.Team" xml:space="preserve">
     <value>Művelet szükséges: {0}</value>

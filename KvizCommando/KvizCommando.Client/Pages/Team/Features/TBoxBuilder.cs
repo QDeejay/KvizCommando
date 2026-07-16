@@ -23,7 +23,7 @@ namespace KvizCommando.Client.Pages.Team.Features
                     Header = lang[spec.TitleKey],
                     Footer = spec.FooterDisplay ? spec.BuildBoxText(lang, rb) : string.Empty,
                     FooterDisplay = spec.FooterDisplay,
-                    Size = spec.Size,
+                    Size = string.IsNullOrEmpty(spec.Size) ? spec.SizeBuilder(rb) : spec.Size,
                     ImageSrc = spec.ImageSrc,
                     IsClickable = btn.CheckEnable(rb) && spec.ClickId > 0 && spec.ClickId < 1000,
                     IsEnabled = btn.CheckEnable(rb),

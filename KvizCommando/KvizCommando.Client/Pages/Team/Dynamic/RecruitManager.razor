@@ -1,7 +1,7 @@
 ﻿
 @using KvizCommando.Client.Components.CharacterComponent
 
-<div class="recruit-tab">
+<div class="recruit-tab @(_couldBeHire ? "" : "closed")">
     @if (_couldBeHire)
     {
         @for (int i = 0; i < _vm.Cards.Count; i++)
@@ -44,7 +44,7 @@
     else
     {
         <div class="hire-info">
-
+            @Lang["team.Label.Recruit.Suspended"]
         </div>    
     }
 </div>

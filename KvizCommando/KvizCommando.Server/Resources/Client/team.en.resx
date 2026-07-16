@@ -135,8 +135,11 @@
   <data name="Label.Name" xml:space="preserve">
     <value>Name: </value>
   </data>
-  <data name="Label.PopUp.NotHire" xml:space="preserve">
-    <value>Currently it is an open position,  but unfortunately, you do not able to hire a teammember, because you fired somebody in the past 24 hour!</value>
+  <data name="Label.ToolTip.NotHire" xml:space="preserve">
+    <value>Re-open : {0}h {1}m</value>
+  </data>
+  <data name="Label.ToolTip.NotHireNext" xml:space="preserve">
+    <value>Re-open : Next login.</value>
   </data>
   <data name="Label.Rank" xml:space="preserve">
     <value>Rank:</value>
@@ -149,21 +152,6 @@
   </data>
   <data name="Label.Attitude.3rd" xml:space="preserve">
     <value>Extra modifiers:</value>
-  </data>
-  <data name="SubBtn.OverView" xml:space="preserve">
-    <value>Overview</value>
-  </data>
-  <data name="SubBtn.Main" xml:space="preserve">
-    <value>Primary</value>
-  </data>
-  <data name="SubBtn.Second" xml:space="preserve">
-    <value>Secondary</value>
-  </data>
-  <data name="SubBtn.Helps" xml:space="preserve">
-    <value>Helps</value>
-  </data>
-  <data name="SubBtn.Hire" xml:space="preserve">
-    <value>Recruit</value>
   </data>
   <data name="label.TeamDevPointShort" xml:space="preserve">
     <value>Tp:</value>
@@ -191,9 +179,6 @@
   </data>
   <data name="Label.Modifiers" xml:space="preserve">
     <value>Modifiers:</value>
-  </data>
-  <data name="SubBtn.Extra" xml:space="preserve">
-    <value>Extra mods</value>
   </data>
   <data name="Label.Remark.AtMaximum" xml:space="preserve">
     <value>On Maximum</value>
@@ -279,8 +264,8 @@
   <data name="modal.Text.Promote2" xml:space="preserve">
     <value>The promotion is free, because of rank class changing!</value>
   </data>
-  <data name="Label.PopUp.NoFree" xml:space="preserve">
-    <value>Curremtly there is no vaccant position!</value>
+  <data name="Label.Recruit.Suspended" xml:space="preserve">
+    <value>Recruit process temporary disabled!</value>
   </data>
   <data name="Box.Footer.Team" xml:space="preserve">
     <value>Operation required: {0}</value>

@@ -1,4 +1,5 @@
-﻿using KvizCommando.Client.Services.Visual.UiService.Language;
+﻿using KvizCommando.Client.Layout;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using Microsoft.AspNetCore.Components;
 
 namespace KvizCommando.Client.Services.Visual.UiService
@@ -16,10 +17,10 @@ namespace KvizCommando.Client.Services.Visual.UiService
 
 
 
-        public event Func<Task>? ReloadRequested;
+        public event Func<ReqStates, Task>? ReloadRequested;
 
-        public Task ReloadAsync()
-            => ReloadRequested?.Invoke() ?? Task.CompletedTask;
+        public Task ReloadAsync(ReqStates reqType)
+            => ReloadRequested?.Invoke(reqType) ?? Task.CompletedTask;
         public UiServices(
             ModalService modal,
             ToastService toast,

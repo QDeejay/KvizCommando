@@ -91,12 +91,7 @@ public partial class Home : KcComponentBase, IDisposable
     {
         Ui.Header.OnBackBtnClicked += UpdateBckClick;
     }
-    private void UpdateBckClick()
-    {
-        Console.WriteLine($"Navigate to: kurva anyád");
-        //_isReady = false;
-        //InvokeAsync(StateHasChanged);
-    }
+
     private void UpdateLedDisplay()
     {
         var main = HState.UserMainData!;
@@ -115,37 +110,14 @@ public partial class Home : KcComponentBase, IDisposable
             };
         Ui.HeadDisplay.SetMessages(messages);
     }
+
     public void Dispose()
     {
         Ui.Header.OnBackBtnClicked -= UpdateBckClick;
         GC.SuppressFinalize(this);
     }
-}
 
-/*
- .home-selector {
-    
+    private void UpdateBckClick()
+    {
+    }
 }
-.question-selector {
-    width: 440px;
-}
-.solo-selector {
-    width: 860px;
-}
-.solo-selector,
-.question-selector,
-
-    // [Inject] private ILanguageService Lang { get; set; } = default!;
-    //[Inject] private NavigationManager Nav { get; set; } = default;
-    //[Inject] private PageHeaderService Header { get; set; } = default!;
-    //[Inject] private IDisplayMessageState Display { get; set; } = default!;
-
-        //await _hState.EnsureLoadedAsync();
-        //string url = $"/BulletinBoard/{_culture}/bb.html";
-        //_bBoardHTML = new MarkupString(await Http.GetStringAsync(url));
-        //[Inject] private IHomeState _homeState { get; set; } = default!;
-        //[Inject] private HttpClient Http { get; set; } = default!;
-
-@page "/sologame"
-@page "/gamevs"
- */

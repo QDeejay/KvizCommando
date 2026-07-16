@@ -9,15 +9,10 @@
                 <div class="htp-tab @(_activeIndex == tb.ClickId ? "active" : "") @(tb.Enable ? "" : "disabled")"
                      @onclick="() => SetTab(tb.ClickId)">
                     <span class="tab-text">@tb.Text</span>
-                    <span class="tooltip-box">@(Lang[tb.ToolTip])</span>
+                    <span class="tooltip-box">@tb.ToolTip</span>
                 </div>
                 
             }           
         }
     </div>
 }
-<!--
-
-    disabled="@(!Params.TabEnable[index])"
-    @(Params.TabEnable[index] ? "" : "disabled")
--->

@@ -1,6 +1,8 @@
-﻿using KvizCommando.Client.Models.ViewModels;
+﻿using KvizCommando.Client.Layout;
+using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Pages.Team.Dynamic.Builders;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
@@ -10,6 +12,7 @@ namespace KvizCommando.Client.Pages.Team.Dynamic
     public partial class RecruitManager : IDisposable
     {
         [Inject] ILanguageService Lang { get; set; } = default!;
+        [Inject] UiServices Ui { get; set; } = default!;
 
         [CascadingParameter]
         private AppState AppStates { get; set; } = default!;
@@ -27,6 +30,7 @@ namespace KvizCommando.Client.Pages.Team.Dynamic
         private bool _couldBeHire = false;
         private string _picCode = string.Empty;
         private string Culture => AppStates.Culture;
+
 
         private CandidateDto RecruitData => SelectedPos > 0 ? AppStates.Team.Candidates[SelectedPos] : new();
         protected override void OnParametersSet()
@@ -46,6 +50,10 @@ namespace KvizCommando.Client.Pages.Team.Dynamic
             }
 
         }
+        protected override async Task OnInitializedAsync()
+        {
+            await CheckedCandidateSlots(AppStates.Team.Candidates[1..9]);
+        }
         private async Task OnHireButtonAsync()
         {
             int delegateitem = SelectedPos * 100 + _selectedId;
@@ -63,7 +71,13 @@ namespace KvizCommando.Client.Pages.Team.Dynamic
             _picCode = RecruitData.PictureCode[id - 1];
 
         }
-
+        private async Task CheckedCandidateSlots(CandidateDto[] candidates)
+        {
+            foreach (var c in candidates)
+                if (c.ExpirationTime < DateTime.UtcNow)
+                    await Ui.ReloadAsync(ReqStates.Team);
+            return;
+        }
         public void Dispose()
         {
             OnCandidateHired = default;

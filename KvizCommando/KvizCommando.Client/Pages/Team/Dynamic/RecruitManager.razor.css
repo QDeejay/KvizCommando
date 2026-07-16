@@ -9,6 +9,9 @@
     row-gap: 8px;
    
 }
+    .recruit-tab.closed {
+        grid-template-columns: 1fr;
+    }
 .picture-block {
     position: absolute;
     display: flex;
@@ -55,4 +58,8 @@
     
 }
 
- 
+.hire-info {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
