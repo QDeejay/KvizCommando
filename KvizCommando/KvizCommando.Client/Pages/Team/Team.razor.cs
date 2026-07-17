@@ -156,7 +156,7 @@ namespace KvizCommando.Client.Pages.Team
             if (!success)
                 return;
 
-            await Ui.ReloadAsync(ReqStates.Team);
+            await Ui.ReloadAsync(ReqStates.All);
             BuildBoxes();
 
             ShowBoxes(
@@ -217,7 +217,8 @@ namespace KvizCommando.Client.Pages.Team
             if (!success)
                 return;
 
-            await Ui.ReloadAsync(ReqStates.Team);
+            var reqState = modalAction == 2 || modalAction == 3 ? ReqStates.All : ReqStates.Team;
+            await Ui.ReloadAsync(reqState);
             BuildBoxes();
         }
 

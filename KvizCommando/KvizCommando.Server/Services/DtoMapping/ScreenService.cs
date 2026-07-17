@@ -1,5 +1,4 @@
-﻿using KvizCommando.Server.Domain.Entities.Players;
-using KvizCommando.Server.Domain.Entities.Statistics;
+﻿using KvizCommando.Server.Domain.Entities.Statistics;
 using KvizCommando.Server.Models;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Shared.Models;
@@ -31,7 +30,7 @@ namespace KvizCommando.Server.Services.DtoMapping
         public async Task<HomeDTOs?> GetHomeScreenAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
 
-            var (player, question) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
+            var (player, _) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
 
             if (player == null)
             {
@@ -131,14 +130,16 @@ namespace KvizCommando.Server.Services.DtoMapping
 
             // FIGYELEM: ha nem akarod visszaadni a cache-ben lévő referenciát,
             // másold át külön DTO-ba a UserMainData-t.
-            var userMain = new UserMainData();
-            userMain.PlayerId = playerId;
-            userMain.UserName = player.Core.DisplayName;
-            userMain.TeamName = player.Core.TeamName;
-            userMain.RankEnum = player.Core.RankEnum;
-            userMain.XP = player.Core.XP;
-            userMain.Credit = player.Core.Credit;
-            userMain.Voucher = player.Core.Voucher;
+            var userMain = new UserMainData
+            {
+                PlayerId = playerId,
+                UserName = player.Core.DisplayName,
+                TeamName = player.Core.TeamName,
+                RankEnum = player.Core.RankEnum,
+                XP = player.Core.XP,
+                Credit = player.Core.Credit,
+                Voucher = player.Core.Voucher
+            };
 
             return new HomeDTOs
             {
@@ -149,8 +150,8 @@ namespace KvizCommando.Server.Services.DtoMapping
         }
         public async Task<TeamDtos?> GetTeamScreenDataAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
-            //sessionId = "Teszt";
-            var (player, slot) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
+
+            var (player, _) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
 
             if (player is null)
             {
@@ -215,7 +216,9 @@ namespace KvizCommando.Server.Services.DtoMapping
                         PictureCode = candidate.PictureCodes,
                         CanBeHire = candidate.Names != null && candidate.PictureCodes != null,
                         ExpirationTime = candidate.ExpirationTime
+
                     };
+
                 }
                 else
                 {
@@ -261,144 +264,12 @@ namespace KvizCommando.Server.Services.DtoMapping
 
             return teamDto;
         }
-        public async Task<QuestionDtos?> GetQuestionScreenAsync(int playerId, string sessionId, CancellationToken ct = default)
-        {
-            //var sessionId = "Teszt";
-
-            var (player, slot) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
-            if (player is null)
-            {
-                _logger.LogWarning("Player not found in cache. userId={UserId}", playerId);
-                return null;
-            }
-            if (player.SessionId == "denied")
-                return new QuestionDtos() { AccessDenied = true };
-            // ----- Rank / slot kapacitások -----
-            var level = player.Core.RankEnum; // invariáns tábla szerint létezik
-            var rewards = RankRewards.List[level];
-            var availableUserSlot = rewards.OwnQuestSlot;
-            var availablePendingSlot = availableUserSlot >> 1;
-            ///
-            /// ----- Jelenlegi foglaltság -----
-            ///
-            var loadout = player.Loadout;
-            var charmask = player.CharCatMask;
-
-            var userSlotEnable = level > 0;
-
-            var factorySlots = string.IsNullOrEmpty(loadout?.FactorySlotsJson)
-                ? Array.Empty<int>()
-                 : JsonSerializer.Deserialize<int[]>(loadout.FactorySlotsJson) ?? Array.Empty<int>();
-            var chkOwnCount = factorySlots.Count(c => c == 17);
-
-            var userSlotsDtoList = new List<UserSlot>();
-            var pendingSlotDtoList = new List<PendingSlot>();
-
-            foreach (var uq in slot.uSlots)
-            {
-                var answers = string.IsNullOrEmpty(uq.AnswersJson)
-                ? Array.Empty<string>()
-                 : JsonSerializer.Deserialize<string[]>(uq.AnswersJson) ?? Array.Empty<string>();
-
-                userSlotsDtoList.Add(new UserSlot
-                {
-                    Question = uq?.Question ?? string.Empty,
-                    Answer = answers,
-                    Category = uq?.CategoryNo ?? 0,
-                    NoOfUse = uq.Ask > 0 ? uq.Ask.ToString() : "N/A",
-                    NofOfCorrect = uq.Ask > 0 ? uq.OkAnswer.ToString() : "N/A",
-                    Ratio = uq.Ask > 40 ? $"{(Math.Truncate(uq.Ratio * 1000) / 10):0.0}%" : "N/A"
-                });
-
-            }
-            foreach (var pq in slot.pSlots)
-            {
-                var answers = string.IsNullOrEmpty(pq.AnswersJson)
-                 ? []
-                 : JsonSerializer.Deserialize<string[]>(pq.AnswersJson) ?? [];
-
-                pendingSlotDtoList.Add(new PendingSlot
-                {
-                    Question = pq?.Question ?? string.Empty,
-                    Answer = answers,
-                    Category = pq?.CategoryNo ?? 0,
-                    Status = pq?.Status.ToString() ?? "None",
-                    Remark = pq?.Remark,
-                    SubmittedAt = pq?.SubmittedAt ?? DateTime.UtcNow
-                });
-            }
-            var userSlotsDto = userSlotsDtoList.ToArray();
-            var pendingSlotsDto = pendingSlotDtoList.ToArray();
-            // Mozgathatóság/akciók feltételei
-
-            var freeUserSlot = userSlotsDto.Take(10).Count(v => v.Category == 0);
-            var freePendingSlot = pendingSlotsDto.Take(5).Count(v => v.Category == 0);
-            var occupiedUserSlots = availableUserSlot - freeUserSlot;
-            var occupiedPendingSlots = availablePendingSlot - freePendingSlot;
 
 
-            var movablePendingCount = pendingSlotsDto.Take(5).Count(v => v is { Status: "Approved" });
-            var rejectedPendingCount = pendingSlotsDto.Take(5).Count(v => v is { Status: "Rejected" });
-            var isPendingCount = pendingSlotsDto.Take(5).Count(v => v is { Status: "Pending" });
-            if (occupiedUserSlots < chkOwnCount) // ha a gyári közt van saját kérdés nem lehet belöle több mint a user slot
-            {
-                var j = 0;
-                for (var i = 0; i < factorySlots.Length; i++)
-                {
-                    if (factorySlots[i] == 17) j++;
-                    Console.WriteLine("------------------------------------------------------");
-                    Console.WriteLine($"Slot:{i} Category:{factorySlots[i]} a j értéke:{j}");
-                    factorySlots[i] = factorySlots[i] == 17 && j > occupiedUserSlots ? 0 : factorySlots[i];
-                    Console.WriteLine($"Slot:{i} Category:{factorySlots[i]} a j értéke:{j}");
-                }
-                await _cache.UpdatePartialLoadoutLockedAsync(
-                    playerId,
-                    sessionId,
-                    new PlayerLoadout
-                    {
-                        FactorySlotsJson = JsonSerializer.Serialize(factorySlots)
-                    },
-                    ct);
-            }
-
-
-            var extendedInfo = new QuestionExtendedInfo
-            {
-                AvailablePendingSlot = availablePendingSlot,
-                AvailableUserSlot = availableUserSlot,
-                FreeUserSlot = freeUserSlot,
-                FreePendingSlot = freePendingSlot,
-                OccupiedUserSlot = occupiedUserSlots,
-                OccupiedPendingSlot = occupiedPendingSlots,
-                HandlePendingSlot = movablePendingCount + rejectedPendingCount,
-                UserSlotEnable = userSlotEnable,
-                NoFownQuestion = chkOwnCount,
-                CharCatMask = charmask
-            };
-            /*
-            var buttons = new QuestionButtons
-            {
-                btnFactorySave = true,
-                btnUsrSave = userSlotEnable,
-                btnUsrDelete = userSlotEnable,
-                btnPendigMoveUsr = userSlotEnable && movablePendingCount > 0,
-                btnPendingDelete = userSlotEnable && (movablePendingCount + rejectedPendingCount) > 0,
-               
-            };*/
-
-            return new QuestionDtos
-            {
-                FactorySlots = factorySlots,
-                Userlots = userSlotsDto,
-                PendingSlots = pendingSlotsDto,
-                ExtendedInfo = extendedInfo
-                //QuestionButtons = buttons
-            };
-        }
         public async Task<SoloGameDtos?> GetSoloGameScreenAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
             //sessionId = "Teszt";
-            var (player, slot) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
+            var (player, _) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
 
             if (player is null)
             {
@@ -432,6 +303,7 @@ namespace KvizCommando.Server.Services.DtoMapping
             };
 
         }
+
         /// <summary>
         /// Itt vanna az osztály privát helperei
         /// </summary>
@@ -448,8 +320,8 @@ namespace KvizCommando.Server.Services.DtoMapping
                     Points = d.HighScore,
                     Time = d.HighScoreTime
                 };
-                result[0].Points = +d.HighScore;
-                result[0].Time = +d.HighScoreTime;
+                result[0].Points += d.HighScore;
+                result[0].Time += d.HighScoreTime;
             }
             return result;
         }
@@ -466,14 +338,14 @@ namespace KvizCommando.Server.Services.DtoMapping
                     Points = d.HighScore,
                     Time = d.HighScoreTime
                 };
-                result[0].Points = +d.HighScore;
-                result[0].Time = +d.HighScoreTime;
+                result[0].Points += d.HighScore;
+                result[0].Time += d.HighScoreTime;
             }
             return result;
         }
         private static AttidtudeDto AttitudeResolver(AttitudeBranch attitude, int rank, int[] maxLevels, int[] startLevels, int devPoints)
         {
-            var skill = SkillResolver(attitude.Level, rank, maxLevels, startLevels);
+            var skill = SkillResolver(attitude.Level, rank, maxLevels, startLevels, [0, 1, 0, 1]);
             return new AttidtudeDto
             {
                 Category = attitude.CatNo.Take(4).Select(x => (byte)x).ToArray(),
@@ -481,16 +353,17 @@ namespace KvizCommando.Server.Services.DtoMapping
                 CanDev = skill.Any(x => x.SkillCanDev) && devPoints > 0
             };
         }
-        private static SkillPartial[] SkillResolver(int[] data, int mainActLevel, int[] constMaxLev, int[] constStartLev)
+        private static SkillPartial[] SkillResolver(int[] data, int mainActLevel, int[] constMaxLev, int[] constStartLev, int[]? correctors = null)
         {
+            correctors ??= [0, 0, 0, 0];
             var sp = new SkillPartial[data.Length];
+
             for (int i = 0; i < data.Length; i++)
-            {
-                sp[i] = SkillPartialResolver(data[i], mainActLevel, constMaxLev[i], constStartLev[i] - 1);
-            }
+                sp[i] = SkillPartialResolver(data[i], mainActLevel, constMaxLev[i], constStartLev[i] - 1, correctors[i]);
+
             return sp;
         }
-        private static SkillPartial SkillPartialResolver(int currentLevel, int actualRank, int maxLevel, int startmodifier)
+        private static SkillPartial SkillPartialResolver(int currentLevel, int actualRank, int maxLevel, int startmodifier, int corrector)
         {
             int maxmodify = Math.Max(0, actualRank - startmodifier);
             int maxlevel = Math.Min(maxLevel, maxmodify);
@@ -498,8 +371,8 @@ namespace KvizCommando.Server.Services.DtoMapping
             return new SkillPartial
             {
                 LvlCurrent = (byte)currentLevel,
-                LvlCurMax = (byte)maxlevel,
-                LvlOvrMax = (byte)maxLevel,
+                LvlCurMax = maxlevel > 0 ? (byte)(maxlevel + corrector) : (byte)maxlevel,
+                LvlOvrMax = maxlevel > 0 ? (byte)(maxlevel + corrector) : (byte)maxlevel,
                 SkillCanDev = (byte)currentLevel < (byte)maxlevel
             };
         }
@@ -556,5 +429,9 @@ namespace KvizCommando.Server.Services.DtoMapping
                 AbleToHire = ableToHire
             };
         }
+
+
+
+
     }
 }

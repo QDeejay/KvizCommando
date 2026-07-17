@@ -3,10 +3,8 @@ using KvizCommando.Server.Services.DtoMapping;
 using KvizCommando.Server.Services.UserPlayerIdCache;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Text.RegularExpressions;
 
 namespace KvizCommando.Server.Controllers.ScreenControllers
 {
@@ -32,7 +30,7 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
 
         {
             //var sessionId = "Teszt";
-            
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
                      ?? User.FindFirstValue("sub")
                      ?? throw new InvalidOperationException("Missing user id");
@@ -52,30 +50,6 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
             return Ok(dto);
         }
 
-
-        /// <summary>Kérdés képernyő komponált DTO.</summary>
-        [HttpGet("question")] // GET /api/screen/questions
-        [ProducesResponseType(typeof(QuestionDtos), 200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<QuestionDtos>> GetQuestionScreenAsync([FromQuery] string sessionId, CancellationToken ct)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
-                     ?? User.FindFirstValue("sub")
-                     ?? throw new InvalidOperationException("Missing user id");
-
-            if (userId == null)
-                return Unauthorized();
-            var playerId = await _idCache.GetPlayerIdAsync(userId, ct);
-            if (playerId is null or 0)
-                return NotFound("No Player record found for this user.");
-
-            var dto = await _screenService.GetQuestionScreenAsync(playerId.Value, sessionId, ct);
-            if (dto is null)
-                return NotFound();
-
-            return Ok(dto);
-        }
 
         [HttpGet("team")]
         [ProducesResponseType(typeof(TeamDtos), 200)]

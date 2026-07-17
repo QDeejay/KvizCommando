@@ -1,18 +1,8 @@
-﻿using KvizCommando.Client.Features.Sologame;
-using KvizCommando.Client.Models.ViewModels;
+﻿using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
-using KvizCommando.Client.Services.Dto;
-using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Reflection.PortableExecutable;
-using System.Threading.Tasks;
 
 
 namespace KvizCommando.Client.Pages.Solo
@@ -39,14 +29,14 @@ namespace KvizCommando.Client.Pages.Solo
         private const int RootButtonCount = 3;
         private const int CatBtnCount = 16;
         private const int OriBtnCount = 8;
-        private int _buttonAryStart = CatBtnCount+ OriBtnCount;
+        private int _buttonAryStart = CatBtnCount + OriBtnCount;
         private int _buttonAryEnd = CatBtnCount + OriBtnCount + RootButtonCount;
         private string SubHeaderTitle = string.Empty;
-        private Dictionary<string,ContentBoxVm>? _soloBtns;
+        private Dictionary<string, ContentBoxVm>? _soloBtns;
 
         //private ContentBoxVm soloBtn(int idx) => _soloBtns![idx];
 
-        private void BuildButtons() 
+        private void BuildButtons()
         {
             if (SState != null)
             {
@@ -81,17 +71,17 @@ namespace KvizCommando.Client.Pages.Solo
         }
         protected override async Task OnInitializedAsync()
         {
-            
 
-            Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.GameSolo"],4);
-            if (_isLoaded==false)
-                {
-                    BuildButtons();
-                }
-            
+
+            Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.GameSolo"], 4);
+            if (_isLoaded == false)
+            {
+                BuildButtons();
+            }
+
         }
-        public void Dispose() 
-        { 
+        public void Dispose()
+        {
             GC.SuppressFinalize(this);
         }
     }

@@ -3,6 +3,7 @@ using KvizCommando.Server.Extensions;
 using KvizCommando.Server.Services.DtoMapping;
 using KvizCommando.Server.Services.UserPlayerIdCache;
 using KvizCommando.Shared.Contracts.Question;
+using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,35 @@ namespace KvizCommando.Server.Controllers
             _localizer = localizer;
             _idCache = userPlayerId;
         }
+
+        /// <summary>Kérdés képernyő komponált DTO.</summary>
+        [HttpGet("screen")] // GET /api/questions/screen
+        [ProducesResponseType(typeof(QuestionDtos), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<QuestionDtos>> GetQuestionScreenAsync([FromQuery] string sessionId, CancellationToken ct)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                     ?? User.FindFirstValue("sub")
+                     ?? throw new InvalidOperationException("Missing user id");
+
+            if (userId == null)
+                return Unauthorized();
+
+            var playerId = await _idCache.GetPlayerIdAsync(userId, ct);
+
+            if (playerId is null or 0)
+                return NotFound("No Player record found for this user.");
+
+            var dto = await _questionService.GetQuestionScreenAsync(playerId.Value, sessionId, ct);
+            if (dto is null)
+                return NotFound();
+
+            return Ok(dto);
+        }
+
+
+
 
         /// <summary>Factory slotok mentése az aktuális játékoshoz.</summary>
         /// <remarks>Elvárt body: <see cref="UpdateFactorySlotsDto"/>.</remarks>

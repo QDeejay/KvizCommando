@@ -102,8 +102,8 @@ namespace KvizCommando.Client.Pages.Shared.Modal.Dynamic.Builders
                 color: ""
                 ));
             AttitudeLineResolver(member.MaintAttitude, vm, RankConstants.startLevels[0..4], newLevel, culture);
-            AttitudeLineResolver(member.SecondAttitude, vm, RankConstants.startLevels[4..8], newLevel, culture);
-            AttitudeLineResolver(member.GenderAttitude, vm, RankConstants.startLevels[8..12], newLevel, culture);
+            AttitudeLineResolver(member.SecondAttitude, vm, RankConstants.startLevels[4..8], newLevel, culture, [0, 1, 0, 1]);
+            AttitudeLineResolver(member.GenderAttitude, vm, RankConstants.startLevels[8..12], newLevel, culture, [0, 1, 0, 1]);
             return vm;
         }
         public ModalRetireVm BuildRetireVm(TeamMemberDto member, string culture)
@@ -187,8 +187,9 @@ namespace KvizCommando.Client.Pages.Shared.Modal.Dynamic.Builders
                 _orient2 = member.SecondAttitude.Category[0] > 8 ? member.SecondAttitude.Category[2] : member.SecondAttitude.Category[0]
             };
         }
-        private static void AttitudeLineResolver(AttidtudeDto att, ModalPromoteVm vm, int[] slevel, int level, string culture)
+        private static void AttitudeLineResolver(AttidtudeDto att, ModalPromoteVm vm, int[] slevel, int level, string culture, int[]? correctors = null)
         {
+            correctors ??= [0, 0, 0, 0];
             int actL = level - 1;
             int newL = level;
             double valC = 0.0;
@@ -205,11 +206,12 @@ namespace KvizCommando.Client.Pages.Shared.Modal.Dynamic.Builders
                 }
                 if (newL >= slevel[i])
                 {
+                    int correct = att.Skill[i].LvlCurMax == 0 ? correctors[i] : 0;
                     vm.Rows.Add(new ModalRow(
                      CategoryName: CategoryNameLocalizer.GetCategory(att.Category[i], culture),
                      ValueDisplay: slevel[i] != 0 ? $"{att.Skill[i].LvlCurrent}/{att.Skill[i].LvlCurMax}" : pref + (THelpers.FormatOneDecimal(valC, false)),
                      separator: UNLOCK_SEP,
-                     ValueChangeDisplay: slevel[i] != 0 ? $"{att.Skill[i].LvlCurrent}/{att.Skill[i].LvlCurMax + 1}" : pref + (THelpers.FormatOneDecimal(valN, false)),
+                     ValueChangeDisplay: slevel[i] != 0 ? $"{att.Skill[i].LvlCurrent}/{att.Skill[i].LvlCurMax + 1 + correct}" : pref + (THelpers.FormatOneDecimal(valN, false)),
                      color: slevel[i] == 0 ? pref == "+" ? "red" : "green" : ""
                     ));
                 }

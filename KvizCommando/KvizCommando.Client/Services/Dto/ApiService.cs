@@ -10,6 +10,9 @@ namespace KvizCommando.Client.Services.Dto
         private readonly HttpClient _http;
         private readonly SessionService _sessionCache;
 
+        private const string SCREEN_ROUTE_QUESTION = "/api/question";
+        private const string SCREEN_ROUTE_TEAM = "/api/team";
+        private const string SCREEN_ROUTE_SOLO = "/api/sologame";
         public ApiService(HttpClient http, SessionService sessioncache)
         {
             _http = http;
@@ -21,7 +24,7 @@ namespace KvizCommando.Client.Services.Dto
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
-                var response = await _http.PostAsJsonAsync("/api/question/factory", dto);
+                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_QUESTION}/factory", dto);
 
                 if (!response.IsSuccessStatusCode)
                     return false;
@@ -44,7 +47,7 @@ namespace KvizCommando.Client.Services.Dto
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
-                var response = await _http.PostAsJsonAsync($"/api/question/manageslot", dto);
+                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_QUESTION}/manageslot", dto);
 
                 if (!response.IsSuccessStatusCode)
                     return false;
@@ -68,7 +71,7 @@ namespace KvizCommando.Client.Services.Dto
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
-                var response = await _http.PostAsJsonAsync($"/api/question/sendnew", dto);
+                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_QUESTION}/sendnew", dto);
 
                 if (!response.IsSuccessStatusCode)
                     return false;
@@ -90,7 +93,7 @@ namespace KvizCommando.Client.Services.Dto
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
-                var response = await _http.PostAsJsonAsync($"/api/team/modify", dto);
+                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_TEAM}/modify", dto);
 
 
                 if (!response.IsSuccessStatusCode)
@@ -113,7 +116,7 @@ namespace KvizCommando.Client.Services.Dto
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
-                var response = await _http.PostAsJsonAsync($"/api/team/manage", dto);
+                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_TEAM}/manage", dto);
 
                 if (!response.IsSuccessStatusCode)
                     return false;
