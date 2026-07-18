@@ -23,7 +23,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<ILanguageService, LanguageService>();
 
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IScreenApiService, ScreenApiService>();
+builder.Services.AddScoped<ICacheApiService, CacheApiService>();
 builder.Services.AddScoped<IApiService, ApiService>();
 
 builder.Services.AddScoped<IHomeState, HomeState>();

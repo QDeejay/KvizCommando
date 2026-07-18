@@ -18,13 +18,13 @@ namespace KvizCommando.Client.Services.Dto
             _http = http;
             _sessionCache = sessioncache;
         }
-        public async Task<bool> SaveFactorySlotsAsync(SaveFactoryRequest dto)
+        public async Task<bool> SaveFactorySlotsAsync(SaveFactoryRequest dto, CancellationToken ct = default)
         {
 
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
-                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_QUESTION}/factory", dto);
+                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_QUESTION}/factory", dto, ct);
 
                 if (!response.IsSuccessStatusCode)
                     return false;
@@ -41,13 +41,13 @@ namespace KvizCommando.Client.Services.Dto
                 Console.WriteLine("SaveFinished");
             }
         }
-        public async Task<bool> ManageSlotAsync(ManageSlotRequest dto)
+        public async Task<bool> ManageSlotAsync(ManageSlotRequest dto, CancellationToken ct = default)
         {
 
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
-                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_QUESTION}/manageslot", dto);
+                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_QUESTION}/manageslot", dto, ct);
 
                 if (!response.IsSuccessStatusCode)
                     return false;
@@ -65,13 +65,13 @@ namespace KvizCommando.Client.Services.Dto
                 Console.WriteLine("Slot managment finished");
             }
         }
-        public async Task<bool> SendNewQuestionAsync(NewQuestionRequest dto)
+        public async Task<bool> SendNewQuestionAsync(NewQuestionRequest dto, CancellationToken ct = default)
         {
 
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
-                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_QUESTION}/sendnew", dto);
+                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_QUESTION}/sendnew", dto, ct);
 
                 if (!response.IsSuccessStatusCode)
                     return false;
@@ -88,12 +88,12 @@ namespace KvizCommando.Client.Services.Dto
                 Console.WriteLine("Send new question finished");
             }
         }
-        public async Task<bool> ModifyTeamAsync(ModifySkillRequest dto)
+        public async Task<bool> ModifyTeamAsync(ModifySkillRequest dto, CancellationToken ct = default)
         {
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
-                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_TEAM}/modify", dto);
+                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_TEAM}/modify", dto, ct);
 
 
                 if (!response.IsSuccessStatusCode)
@@ -111,12 +111,12 @@ namespace KvizCommando.Client.Services.Dto
                 Console.WriteLine("Modify teamskill finished");
             }
         }
-        public async Task<bool> ManageTeamAsync(ManageTeamRequest dto)
+        public async Task<bool> ManageTeamAsync(ManageTeamRequest dto, CancellationToken ct = default)
         {
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
             try
             {
-                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_TEAM}/manage", dto);
+                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_TEAM}/manage", dto, ct);
 
                 if (!response.IsSuccessStatusCode)
                     return false;

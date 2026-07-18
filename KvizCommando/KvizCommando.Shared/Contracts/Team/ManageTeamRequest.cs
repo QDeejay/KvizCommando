@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace KvizCommando.Shared.Contracts.Team
+﻿namespace KvizCommando.Shared.Contracts.Team
 {
     public sealed class ManageTeamRequest
     {
@@ -12,7 +6,7 @@ namespace KvizCommando.Shared.Contracts.Team
         public int MemberNo { get; set; } = 0;
         public int CandidateId { get; set; } = 0;
         public ManageType ReqType { get; set; }
-        
+
     }
     public enum ManageType
     {
@@ -20,7 +14,8 @@ namespace KvizCommando.Shared.Contracts.Team
         Promote = 1,
         Retire = 2,
         Fire = 3,
-        Heal = 4
+        Heal = 4,
+        UpdateCan = 10
     }
 }
 

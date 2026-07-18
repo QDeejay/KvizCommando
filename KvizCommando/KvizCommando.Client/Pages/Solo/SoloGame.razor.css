@@ -1,30 +1,36 @@
-﻿.root-buttons {
+﻿.kc-solo-selector-root,
+.kc-solo-selector-sub {
+    display: grid;
+    gap: 10px;
+    margin: 0 auto;
+}
+
+.kc-solo-selector-root {
     grid-template-columns: 1fr;
     max-width: 440px;
+  
 }
-.main-selector {
-    display: grid;
+.kc-solo-selector-sub {
     grid-template-columns: repeat(4, 1fr); /* mindig 4 oszlop */
-    gap: 10px;
     max-width: 900px; /* 4x140px + 3x12px gap ≈ 600px */
-    margin: 0 auto; /* ez rakja középre az egész blokkot */
     width: 100%;
 }
 
 
 
 
+
 /* Tablet: 2 oszlop */
-@media (max-width: 620px) {
-    .main-selector {
+@media (max-width: 1000px) {
+    .kc-solo-selector-sub {
         grid-template-columns: repeat(2, 1fr);
-        max-width: 300px; /* 2x140px + 1x12px gap ≈ 300px */
+        max-width: 440px; /* 2x140px + 1x12px gap ≈ 300px */
     }
 }
 
 /* Mobil: 1 oszlop */
 @media (max-width: 320px) {
-    .main-selector {
+    .kc-solo-selector-sub {
         grid-template-columns: 1fr;
         max-width: 140px;
     }

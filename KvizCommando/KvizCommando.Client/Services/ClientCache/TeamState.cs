@@ -5,12 +5,12 @@ namespace KvizCommando.Client.Services.ClientCache
 {
     public sealed class TeamState : ITeamState
     {
-        private readonly IScreenApiService _api;
+        private readonly ICacheApiService _api;
 
         private TeamDtos? _snapshot;
         private bool _dirty = true;
         private readonly SemaphoreSlim _gate = new(1, 1);
-        public TeamState( IScreenApiService api) => _api = api;
+        public TeamState( ICacheApiService api) => _api = api;
 
        
         public bool IsLoaded => _snapshot is not null && !_dirty;

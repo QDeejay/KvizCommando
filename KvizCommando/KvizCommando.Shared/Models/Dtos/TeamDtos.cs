@@ -7,7 +7,7 @@ namespace KvizCommando.Shared.Models.Dtos
         public bool AccessDenied { get; set; } = false;
         public TeamExtendedInfo TeamInfo { get; set; } = new();
         public TeamMemberDto[]? TeamMembers { get; set; } = new TeamMemberDto[9];
-        public CandidateDto[]? Candidates { get; set; } = new CandidateDto[8];
+        public CandidateDto[]? Candidates { get; set; } = new CandidateDto[9];
         public TeamRootBoxInfo RootBoxInfo { get; set; } = new();
         public bool[] CharCatMask { get; set; } = new bool[9];
 

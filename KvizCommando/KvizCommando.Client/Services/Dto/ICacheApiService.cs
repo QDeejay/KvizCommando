@@ -2,7 +2,7 @@
 
 namespace KvizCommando.Client.Services.Dto
 {
-    public interface IScreenApiService
+    public interface ICacheApiService
     {
         Task<HomeDTOs?> GetHomeScreenAsync(CancellationToken ct = default);
         Task<QuestionDtos?> GetQuestionAsync(CancellationToken ct = default);

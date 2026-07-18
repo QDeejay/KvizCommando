@@ -39,7 +39,7 @@ namespace KvizCommando.Server.Controllers
         }
 
         /// <summary>Kérdés képernyő komponált DTO.</summary>
-        [HttpGet("screen")] // GET /api/questions/screen
+        [HttpGet("qscreen")] // GET /api/questions/screen
         [ProducesResponseType(typeof(QuestionDtos), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]

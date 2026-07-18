@@ -21,7 +21,6 @@ namespace KvizCommando.Client.Pages.Team.Dynamic
         public int SelectedPos { get; set; } = default!;
 
         [Parameter] public Func<int, Task>? OnCandidateHired { get; set; }
-        //[Parameter] public EventCallback<int> OnCandidateHired { get; set; } = default!;
         [Parameter] public int[] CandidateOrder { get; set; } = default!;
 
         private RecruitVm _vm = new();
@@ -74,7 +73,7 @@ namespace KvizCommando.Client.Pages.Team.Dynamic
         private async Task CheckedCandidateSlots(CandidateDto[] candidates)
         {
             foreach (var c in candidates)
-                if (c.ExpirationTime < DateTime.UtcNow)
+                if (c.ExpirationTime < DateTime.UtcNow && c.CanBeHire == false)
                     await Ui.ReloadAsync(ReqStates.Team);
             return;
         }

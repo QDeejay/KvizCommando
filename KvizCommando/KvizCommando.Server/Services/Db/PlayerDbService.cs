@@ -5,6 +5,7 @@ using KvizCommando.Server.Identity;
 using KvizCommando.Server.Infrastructure.Persistence;
 using KvizCommando.Server.Models;
 using KvizCommando.Server.Services.PlayerCache;
+using KvizCommando.Server.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
@@ -79,17 +80,24 @@ namespace KvizCommando.Server.Services.Db
                 .Where(cs => cs.PlayerId == playerId)
                 .ToListAsync(ct);
 
-
-            CharachterSlot?[] tempChars = characters is null
+            /*
+             CharachterSlot?[] tempChars = characters is null
                         ? new CharachterSlot?[8]
                          : System.Text.Json.JsonSerializer
                         .Deserialize<CharachterSlot?[]>(characters.CharactersJson)!;
-            RecruitSlot?[] tempCandidates = characters is null
+                        RecruitSlot?[] tempCandidates = characters is null
                         ? new RecruitSlot?[8]
                          : System.Text.Json.JsonSerializer
                         .Deserialize<RecruitSlot?[]>(characters.CandidatesJson)!;
 
-            bool[] tempCharMask = tempChars.Select(x => x != null).ToArray();
+             */
+
+
+            var tempChars = characters.CharactersJson.ConvertToArray<CharachterSlot>();
+            var tempCand = characters.CandidatesJson.ConvertToArray<RecruitSlot>();
+
+
+            bool[] tempCharMask = [.. tempChars.Select(x => x != null)];
 
             return new CachedPlayer
             {
@@ -103,7 +111,7 @@ namespace KvizCommando.Server.Services.Db
                     UpdatedUtc = DateTime.UtcNow
                 },
                 Characters = tempChars,
-                CandidateCharacters = tempCandidates,
+                CandidateCharacters = tempCand,
                 CharCatMask = tempCharMask,
                 AskStats = askStats ?? new PlayerAskStats
                 {

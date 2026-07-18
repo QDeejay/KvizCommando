@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 
-namespace KvizCommando.Client.Features.Question
+namespace KvizCommando.Client.Pages.Solo.Features
 
 {
     internal enum SgameBoxKeyRoot

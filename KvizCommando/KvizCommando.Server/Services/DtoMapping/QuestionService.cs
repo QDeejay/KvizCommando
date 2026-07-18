@@ -305,7 +305,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                         ? 0
                         : context.FactorySlots[i];
                 if (context.FactorySlots[i] > 0 && context.FactorySlots[i] < 17)
-                    context.FactorySlots[i] = !context.CategoryMask[context.FactorySlots[i]]
+                    context.FactorySlots[i] = !context.CategoryMask[context.FactorySlots[i] - 1]
                                                    ? 0
                                                    : context.FactorySlots[i];
 

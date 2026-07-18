@@ -36,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Sologame\" />
     <Folder Include="Services\Logic\" />
     <Folder Include="wwwroot\audio\sfx\" />
     <Folder Include="wwwroot\Data\" />

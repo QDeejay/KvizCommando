@@ -1,5 +1,6 @@
 ﻿using KvizCommando.Server.Domain.Entities.Players;
 using KvizCommando.Server.Domain.Entities.Statistics;
+using KvizCommando.Server.Models;
 using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Contracts.Team;
 
@@ -7,7 +8,7 @@ namespace KvizCommando.Server.Services.PlayerCache
 {
     public interface IPlayerCacheService
     {
-     
+
         IReadOnlyCollection<int> GetActivePlayerIds();
         Task<(CachedPlayer?, CachedQuestion?)> GetOrLoadLockedAsync(
             int playerId,
@@ -18,10 +19,11 @@ namespace KvizCommando.Server.Services.PlayerCache
             int playerId,
             string sessionId,
             CancellationToken ct = default);
-        Task<bool?> UpdatePartialCharachters(
+        Task<bool?> UpdatePartialCharachtersAsync(
             int playerId,
             string sessionId,
             ManageTeamRequest teamReq,
+            RecruitSlot[]? recruitSlots = null,
             CancellationToken ct = default
             );
         Task<bool?> UpdatePartialModifySillsLockedAsync(
@@ -30,22 +32,22 @@ namespace KvizCommando.Server.Services.PlayerCache
            string newhelpdata,
            ModifySkillRequest newskilldata,
            CancellationToken ct = default);
-       Task<bool?> UpdatePartialQuestionsLockedAsync(
-           int playerId,
-           string sessionId,
-           ManageSlotRequest slotReq,
-           CancellationToken ct = default);
-       Task<bool?> UpdatePartialNewQuestionLockedAsync(
-           int playerId,
-           string sessionId,
-           NewQuestionRequest slotReq,
-           CancellationToken ct = default);
+        Task<bool?> UpdatePartialQuestionsLockedAsync(
+            int playerId,
+            string sessionId,
+            ManageSlotRequest slotReq,
+            CancellationToken ct = default);
+        Task<bool?> UpdatePartialNewQuestionLockedAsync(
+            int playerId,
+            string sessionId,
+            NewQuestionRequest slotReq,
+            CancellationToken ct = default);
         Task<bool?> UpdatePartialLoadoutLockedAsync(
            int playerId,
            string sessionId,
            PlayerLoadout newLoadout,
            CancellationToken ct = default);
-         
+
         Task<bool?> UpdatePartialAskStatsLockedAsync(
             int playerId,
             string sessionId,

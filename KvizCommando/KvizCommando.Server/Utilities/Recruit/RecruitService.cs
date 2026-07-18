@@ -8,12 +8,13 @@ namespace KvizCommando.Server.Utilities.Recruit
     public static class RecruitService
     {
 
-        public static RecruitSlot Generate(int count)
+        public static RecruitSlot Generate(int count, int expDays)
         {
             return new RecruitSlot
             {
                 Names = GenerateNames(count),
-                PictureCodes = GeneratePicCodes(count)
+                PictureCodes = GeneratePicCodes(count),
+                ExpirationTime = DateTime.UtcNow.AddDays(expDays)
             };
         }
         public static (int[], int[], int[]) RecruitResolver(int member, int candidate)

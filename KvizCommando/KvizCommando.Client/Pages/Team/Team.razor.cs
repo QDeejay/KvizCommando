@@ -233,6 +233,7 @@ namespace KvizCommando.Client.Pages.Team
 
         private void UpdateBckClick()
         {
+            BuildBoxes();
             if (Ui.Header.PageIndex == 2)
                 Ui.Nav.NavigateTo("/home");
             else

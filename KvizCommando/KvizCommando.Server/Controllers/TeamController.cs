@@ -3,6 +3,7 @@ using KvizCommando.Server.Extensions;
 using KvizCommando.Server.Services.DtoMapping;
 using KvizCommando.Server.Services.UserPlayerIdCache;
 using KvizCommando.Shared.Contracts.Team;
+using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,31 @@ namespace KvizCommando.Server.Controllers
             _localizer = localizer;
             _idCache = userPlayerId;
         }
+
+
+        [HttpGet("tscreen")]
+        [ProducesResponseType(typeof(TeamDtos), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<TeamDtos>> GetTeamScreenAsync([FromQuery] string sessionId, CancellationToken ct)
+        {
+            //var sessionId = "Teszt";
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                     ?? User.FindFirstValue("sub")
+                     ?? throw new InvalidOperationException("Missing user id");
+            if (userId == null)
+                return Unauthorized();
+            var playerId = await _idCache.GetPlayerIdAsync(userId, ct);
+            if (playerId is null or 0)
+                return NotFound("No Player record found for this user.");
+
+            var dto = await _teamService.GetTeamScreenDataAsync(playerId.Value, sessionId, ct);
+            if (dto == null)
+                return NotFound();
+            return Ok(dto);
+        }
+
+
 
         [HttpPost("modify")] // POST /api/team/modify
         [Consumes("application/json")]

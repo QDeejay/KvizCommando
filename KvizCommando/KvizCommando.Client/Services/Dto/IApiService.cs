@@ -5,10 +5,10 @@ namespace KvizCommando.Client.Services.Dto
 {
     public interface IApiService
     {
-        Task<bool> SaveFactorySlotsAsync(SaveFactoryRequest dto);
-        Task<bool> ManageSlotAsync(ManageSlotRequest dto);
-        Task<bool> SendNewQuestionAsync(NewQuestionRequest dto);
-        Task<bool> ModifyTeamAsync(ModifySkillRequest dto);
-        Task<bool> ManageTeamAsync(ManageTeamRequest dto);
+        Task<bool> SaveFactorySlotsAsync(SaveFactoryRequest dto, CancellationToken ct = default);
+        Task<bool> ManageSlotAsync(ManageSlotRequest dto, CancellationToken ct = default);
+        Task<bool> SendNewQuestionAsync(NewQuestionRequest dto, CancellationToken ct = default);
+        Task<bool> ModifyTeamAsync(ModifySkillRequest dto, CancellationToken ct = default);
+        Task<bool> ManageTeamAsync(ManageTeamRequest dto, CancellationToken ct = default);
     }
 }

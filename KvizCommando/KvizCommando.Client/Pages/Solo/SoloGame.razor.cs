@@ -1,4 +1,5 @@
 ﻿using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Pages.Solo.Features;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;
@@ -13,76 +14,103 @@ namespace KvizCommando.Client.Pages.Solo
         private AppState AppStates { get; set; } = default!;
 
         private readonly Dictionary<string, ContentBoxVm> _boxes = [];
+
         private string[] _boxOrder = [];
+
         private bool _isReady = false;
         private bool _isLoaded = false;
 
+        private string SelectorCSS => _boxOrder != SgameBoxBuilder.Root ? "kc-solo-selector-sub" : "kc-solo-selector-root";
+
         private string Culture => AppStates.Culture;
         private SoloGameDtos SState => AppStates.SoloGame!;
+
         private ContentBoxVm Box(string orx) => _boxes[orx];
 
-        /// <summary>
-        /// Játék típusok gombjai 24-26-ig vannak indexelve  
-        /// Kategoriák gombjai 0-15-ig vannak indexelve
-        /// Orientáció gombjai 16-23-ig vannak indexelve
-        /// </summary>
-        private const int RootButtonCount = 3;
-        private const int CatBtnCount = 16;
-        private const int OriBtnCount = 8;
-        private int _buttonAryStart = CatBtnCount + OriBtnCount;
-        private int _buttonAryEnd = CatBtnCount + OriBtnCount + RootButtonCount;
-        private string SubHeaderTitle = string.Empty;
-        private Dictionary<string, ContentBoxVm>? _soloBtns;
 
-        //private ContentBoxVm soloBtn(int idx) => _soloBtns![idx];
-
-        private void BuildButtons()
+        private void BuildBoxes()
         {
-            if (SState != null)
-            {
-                //_soloBtns = SgameBtnBuilder.BuildBoxes(SState.Snapshot!, Culture, Ui.Lang);
-                _isLoaded = true;
-            }
-        }
-
-        private void OnBtnClick(int btnId)
-        {
-            Console.WriteLine($"megnyomta a paraszt következő gombot: {btnId}");
             /*
-                switch (btnId) 
+            var callback = new SoloCallbacks
             {
-                case  1: _buttonAryStart = CatBtnCount + OriBtnCount; _buttonAryEnd = CatBtnCount + OriBtnCount + RootButtonCount; 
-                        SubHeaderTitle=string.Empty; 
+
+            };*/
+            var boxes = SgameBoxBuilder.BuildBoxes(SState, Culture, Ui.Lang);
+
+            foreach (var box in boxes)
+            {
+                _boxes[box.Key] = box.Value;
+            }
+            _isReady = _isLoaded;
+        }
+
+        private void OnBoxClick(int boxId)
+        {
+            _boxOrder = SgameBoxBuilder.Root;
+            var headerTitle = string.Empty;
+            switch (boxId)
+            {
+                case 4:
+                    headerTitle = Ui.Lang["mainlayout.Header.GameSolo"];
                     break;
-                case 10: _buttonAryStart =  0; _buttonAryEnd = CatBtnCount;
-                    SubHeaderTitle = _soloBtns[CatBtnCount + OriBtnCount].Header ?? "";
+                case 401:
+                    _boxOrder = SgameBoxBuilder.SubCat;
+                    headerTitle = _boxes[SgameBoxKeyRoot.RtBtnCategory.ToString()].Header;
                     break;
-                case 11: _buttonAryStart = CatBtnCount; _buttonAryEnd = CatBtnCount+OriBtnCount;
-                    SubHeaderTitle = _soloBtns[CatBtnCount + OriBtnCount+1].Header ?? "";
+                case 402:
+                    _boxOrder = SgameBoxBuilder.SubOri;
+                    headerTitle = _boxes[SgameBoxKeyRoot.RtBtnOrient.ToString()].Header;
+                    break;
+                case 403:
+                    headerTitle = _boxes[SgameBoxKeyRoot.RtBtnCampaign.ToString()].Header;
+                    break;
+                default:
+                    headerTitle = Ui.Lang["mainlayout.Header.GameSolo"];
                     break;
             }
-             */
+            Ui.Header.SetTitle(headerTitle, boxId);
+            Ui.Header.SetBackBtnEna(boxId > 4);
+            StateHasChanged();
+        }
 
-            Console.WriteLine($"megnyomta a paraszt következő gombot: {SubHeaderTitle}");
-        }
-        private void OnHeadButtonClick()
-        {
-            OnBtnClick(1);
-        }
         protected override async Task OnInitializedAsync()
         {
-
-
             Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.GameSolo"], 4);
-            if (_isLoaded == false)
-            {
-                BuildButtons();
-            }
 
+            _boxOrder = SgameBoxBuilder.Root;
+
+            _isLoaded = true;
+
+            if (_isReady == false)
+                BuildBoxes();
+
+            await Task.Delay(1);
+        }
+        protected override void OnInitialized()
+        {
+            Ui.Header.OnBackBtnClicked += UpdateBckClick;
+        }
+        private void UpdateBckClick()
+        {
+            if (Ui.Header.PageIndex == 4)
+                Ui.Nav.NavigateTo("/home");
+            else
+                OnBoxClick(4);
+            InvokeAsync(StateHasChanged);
         }
         public void Dispose()
         {
+            Ui.Header.OnBackBtnClicked -= UpdateBckClick;
             GC.SuppressFinalize(this);
         }
     }
 }
+
+
+
+/*
+ 
+ 
+ 
+ 
+ */

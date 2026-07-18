@@ -17,10 +17,9 @@ namespace KvizCommando.Server.Services.PlayerCache
 {
     public sealed class PlayerCacheService : IPlayerCacheService
     {
-        //private readonly ApplicationDbContext _db;
         private readonly IPlayerDbService _playerDb;
         private readonly IQuestionDbService _questionDb;
-        //private readonly IRecruitService _recruit;
+
         private static readonly ConcurrentDictionary<int, CacheEntry> _entries = new();
 
 
@@ -154,6 +153,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             {
                 entry.CachedQ.pSlots[i] = cq.pSlots[i];
             }
+            /*
             for (int i = 0; i < 8; i++)
             {
                 if (cp.CharCatMask[i])
@@ -167,10 +167,7 @@ namespace KvizCommando.Server.Services.PlayerCache
                         entry.Dirty = DirtyFlags.Characters;
                     }
                 }
-            }
-
-            //if (cp.CandidateChanged)
-            //  entry.Dirty = DirtyFlags.Characters;
+            }*/
             _entries[playerId] = entry;
             return entry;
         }
@@ -234,10 +231,11 @@ namespace KvizCommando.Server.Services.PlayerCache
             }
         }
 
-        public async Task<bool?> UpdatePartialCharachters(
+        public async Task<bool?> UpdatePartialCharachtersAsync(
             int playerId,
             string sessionId,
             ManageTeamRequest teamReq,
+            RecruitSlot[]? recruitSlots = null,
             CancellationToken ct = default
             )
         {
@@ -249,6 +247,14 @@ namespace KvizCommando.Server.Services.PlayerCache
             {
                 if (entry.Player.SessionId != sessionId)
                     return null;
+
+                if (recruitSlots is not null)
+                {
+                    entry.Player.CandidateCharacters = recruitSlots;
+                    entry.Dirty |= DirtyFlags.Characters;
+                    return true;
+                }
+
                 var member = entry.Player.Characters[teamReq.MemberNo - 1] ?? new CharachterSlot();
                 var candidate = entry.Player.CandidateCharacters[teamReq.MemberNo - 1] ?? new RecruitSlot();
 
@@ -304,7 +310,7 @@ namespace KvizCommando.Server.Services.PlayerCache
                         {
                             member.Rank += 1;
                             member.Rank = Math.Min(member.Rank, 21);
-                            candidate = RecruitService.Generate(8);
+                            candidate = RecruitService.Generate(8, 7);
                             candidate.ExpirationTime = DateTime.UtcNow.AddDays(7);
                             entry.Player.Core.DevPoint += RankRewards.List[member.Rank].DevPointToStore;
                             entry.Player.Core.Credit += member.Pension;
@@ -631,6 +637,7 @@ namespace KvizCommando.Server.Services.PlayerCache
                 entry.Player.Core = updated.Core;
                 entry.Player.Loadout = updated.Loadout;
                 entry.Player.Characters = updated.Characters;
+                entry.Player.CandidateCharacters = updated.CandidateCharacters;
                 entry.Player.AskStats = updated.AskStats;
                 entry.Player.CategoryStats = updated.CategoryStats;
                 Array.Copy(updatedQ.uSlots, entry.CachedQ.uSlots, updatedQ.uSlots.Length);

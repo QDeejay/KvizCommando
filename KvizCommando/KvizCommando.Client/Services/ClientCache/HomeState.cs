@@ -6,12 +6,12 @@ namespace KvizCommando.Client.Services.ClientCache
 {
     public sealed class HomeState : IHomeState
     {
-        private readonly IScreenApiService _api;
+        private readonly ICacheApiService _api;
         private HomeDTOs? _snapshot;
         private bool _dirty = true;
         private readonly SemaphoreSlim _gate = new(1, 1);
 
-        public HomeState(IScreenApiService api) => _api = api;
+        public HomeState(ICacheApiService api) => _api = api;
 
         public bool IsLoaded => _snapshot is not null && !_dirty;
         public HomeDTOs? Snapshot => _snapshot;

@@ -2,12 +2,24 @@
 
 @inherits Utilities.KcComponentBase
 
-<LangGuard Culture=@Culture Module="solo" OnReady="BuildButtons">
+<LangGuard Culture=@Culture Module="solo" OnReady="BuildBoxes">
 
    <PageContainer>
-        @if (_isLoaded == true)
+        @if (_isReady == true)
         {
-          
+            <div class="@(SelectorCSS)">
+                @foreach (string bx in _boxOrder)
+                {
+                    var box = Box(bx);
+
+                    <ContentBox Vm="@box"
+                                OnClick="OnBoxClick">
+                        <ContentBody>
+                           
+                        </ContentBody>
+                    </ContentBox>
+                }
+           </div>
         }
    </PageContainer>
 </LangGuard>

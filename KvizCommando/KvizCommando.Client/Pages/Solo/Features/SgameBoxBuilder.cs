@@ -1,9 +1,8 @@
-﻿using KvizCommando.Client.Features.Question;
-using KvizCommando.Client.Models.ViewModels;
+﻿using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 
-namespace KvizCommando.Client.Features.Sologame
+namespace KvizCommando.Client.Pages.Solo.Features
 {
     public static class SgameBoxBuilder
     {
@@ -14,17 +13,17 @@ namespace KvizCommando.Client.Features.Sologame
         public static Dictionary<string, ContentBoxVm> BuildBoxes(SoloGameDtos ss, string cult, ILanguageService lang)
         {
             var dict = new Dictionary<string, ContentBoxVm>();
-            //var spec = new SgameBtnSpecs();
 
             foreach (var spec in SoloBoxSpecs.RootSpecs)
             {
                 dict.Add(spec.Key.ToString(), new ContentBoxVm
                 {
                     Header = lang[spec.TitleKey],
-                    Footer = spec.BuildFooter(lang, ss.Results),
+                    Footer = spec.BuildFooter(lang, ss.Results, 0),
                     FooterDisplay = spec.FooterDisplay,
                     Size = spec.Size,
                     ImageSrc = spec.ImageSrc,
+                    BgImageSrc = spec.BgImageSrc,
                     IsClickable = spec.BuildEnable(ss.Enables, 1),
                     IsEnabled = spec.BuildEnable(ss.Enables, 1),
                     ClickId = spec.ClickId
@@ -41,12 +40,12 @@ namespace KvizCommando.Client.Features.Sologame
                         Footer = spec.BuildFooter(lang, ss.Results, i),
                         FooterDisplay = spec.FooterDisplay,
                         Size = spec.Size,
-                        ImageSrc = spec.BuildImageSrc(i),
+                        ImageSrc = spec.ImageSrc,
+                        BgImageSrc = spec.BuildImageSrc(i),
                         IsClickable = spec.BuildEnable(ss.Enables, i - 1),
                         IsEnabled = spec.BuildEnable(ss.Enables, i - 1),
                         ClickId = spec.ClickId + i
                     });
-
                 }
             }
 

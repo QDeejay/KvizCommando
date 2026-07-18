@@ -6,13 +6,13 @@ namespace KvizCommando.Client.Services.ClientCache
 {
     public sealed class QuestionState : IQuestionState
     {
-        private readonly IScreenApiService _api;
+        private readonly ICacheApiService _api;
 
         private QuestionDtos? _snapshot;
         private bool _dirty = true;
         private readonly SemaphoreSlim _gate = new(1, 1);
 
-        public QuestionState(IScreenApiService api) => _api = api;
+        public QuestionState(ICacheApiService api) => _api = api;
 
         public bool IsLoaded => _snapshot is not null && !_dirty;
 
