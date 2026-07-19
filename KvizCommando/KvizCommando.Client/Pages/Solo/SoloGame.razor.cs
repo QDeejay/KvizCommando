@@ -26,7 +26,19 @@ namespace KvizCommando.Client.Pages.Solo
         private SoloGameDtos SState => AppStates.SoloGame!;
 
         private ContentBoxVm Box(string orx) => _boxes[orx];
+        private readonly string[] _previewAnswers =
+            [
+                "1848",
+                "1873",
+                "1896",
+                "1918"
+            ];
 
+        private static Task SelectAnswerAsync(int answerIndex)
+        {
+            // Később itt megy az API-hívás.
+            return Task.CompletedTask;
+        }
 
         private void BuildBoxes()
         {

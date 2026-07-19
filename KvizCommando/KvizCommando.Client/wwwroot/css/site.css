@@ -107,10 +107,10 @@
 }
 
 .label-text {
-    font-family: 'Courier New', monospace;
-    font-size: 0.95rem;
     color: #cccccc;
+    font-family: 'Courier New', monospace;
     letter-spacing: 0.2px;
+    font-size: 0.95rem;
     text-align: left; /* opcionális, mivel alapból az */
     display: block;
 }

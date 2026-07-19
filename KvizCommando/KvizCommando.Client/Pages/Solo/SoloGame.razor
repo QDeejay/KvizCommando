@@ -1,5 +1,6 @@
 ﻿@page "/solo-game"
-
+@using KvizCommando.Client.Pages.Solo.Components
+@using KvizCommando.Client.Components.CharacterComponent;
 @inherits Utilities.KcComponentBase
 
 <LangGuard Culture=@Culture Module="solo" OnReady="BuildBoxes">
@@ -7,7 +8,37 @@
    <PageContainer>
         @if (_isReady == true)
         {
-            <div class="@(SelectorCSS)">
+            <SoloPlayView PlayerName="Karl Brimfield"
+              RankName="Közlegény"
+              Level="12"
+              OrientationName="Játékos"
+              PlayerImageSrc="/images/characters/example.png"
+              Points="1240"
+              CategoryName="Történelem"
+              CurrentQuestion="4"
+              TotalQuestions="13"
+              TotalSeconds="20"
+              RemainingSeconds="17"
+              Question="Melyik évben alapították Budapestet?"
+              Answers="@_previewAnswers"
+              AnswerEnabled="true"
+                          OnAnswerSelected="SelectAnswerAsync" >
+                          
+                          <PlayerImage>
+                     
+                    <CharacterView PicCode="@("M7270BG")" />
+                          </PlayerImage>
+
+             </SoloPlayView>
+        }
+   </PageContainer>
+</LangGuard>
+
+
+
+<!-- 
+
+  <div class="@(SelectorCSS)">
                 @foreach (string bx in _boxOrder)
                 {
                     var box = Box(bx);
@@ -15,39 +46,11 @@
                     <ContentBox Vm="@box"
                                 OnClick="OnBoxClick">
                         <ContentBody>
-                           
-                        </ContentBody>
+
+</ContentBody>
                     </ContentBox>
                 }
            </div>
-        }
-   </PageContainer>
-</LangGuard>
-
-
-<!-- 
-
-  <div class="main-selector @(_buttonAryStart == CatBtnCount + OriBtnCount ? "root-buttons" : "")">
-@for (int i = _buttonAryStart; i < _buttonAryEnd; i++)
-{
-    var btn = _soloBtns[i];
-                                    <ContentBox Header="@btn.Header"
-                                                Footer="@btn.Footer"
-                                                FooterDisplay="@btn.FooterDisplay"
-                                                Size="@btn.Size"
-                                                ShowImage="true"
-                                                ImageSrc="@btn.ImageSrc"
-                                                IsClickable="@btn.IsEnabled"
-                                                IsEnabled="@btn.IsEnabled"
-                                                ClickId="@btn.ClickId"
-                                                OnClick="OnBtnClick" />
-}
-            </div>
-
-
-
-
-
 
 
 -->

@@ -1,0 +1,102 @@
+<div class="kc-solo-play">
+   
+    <aside class="kc-solo-player-panel">
+
+        <div class="kc-solo-player-image-box">
+            @if (PlayerImage is not null)
+            {
+                <div class="kc-solo-player-svg-host">
+                    @PlayerImage
+                </div>
+            }
+            else if (!string.IsNullOrWhiteSpace(PlayerImageSrc))
+            {
+                <img class="kc-solo-player-image"
+                     src="@PlayerImageSrc"
+                     alt="@PlayerName" />
+            }
+            else
+            {
+                <i class="bi bi-person-bounding-box kc-solo-player-placeholder"></i>
+            }
+        </div>
+
+        <div class="kc-solo-player-data">
+            <div class="kc-solo-player-name" title="@PlayerName">@PlayerName</div>
+            <div class="kc-solo-player-rank">@RankName</div>
+
+            <div class="kc-solo-player-separator"></div>
+
+            <div class="kc-solo-player-property">@(Level). szint</div>
+            <div class="kc-solo-player-property">@OrientationName</div>
+        </div>
+
+        <div class="kc-solo-score-box">
+            <span>Aktuális pontszám</span>
+            <strong>@Points pont</strong>
+        </div>
+    </aside>
+
+    <section class="kc-solo-question-panel">
+        <header class="kc-solo-question-header">
+            <div class="kc-solo-category" title="@CategoryName">@CategoryName</div>
+            <div class="kc-solo-question-count">@CurrentQuestion / @TotalQuestions</div>
+        </header>
+
+        <div class="kc-solo-timer @TimerWarningClass">
+            <i class="bi bi-stopwatch"></i>
+
+            <div class="kc-solo-timer-display">
+                <strong>@RemainingSeconds</strong>
+                <span>mp</span>
+            </div>
+
+            <div class="kc-solo-timer-track">
+                <div class="kc-solo-timer-value" style="@TimerStyle">
+                </div>
+            </div>
+        </div>
+
+        <div class="kc-solo-question-text">
+            @Question
+        </div>
+
+        <div class="kc-solo-answer-list">
+            @for (var i = 0; i < Answers.Count; i++)
+            {
+                var answerIndex = i;
+
+                <button type="button"
+                        class="kc-solo-answer"
+                        disabled="@(!AnswerEnabled)"
+                        @onclick="() => SelectAnswerAsync(answerIndex)">
+                    <span class="kc-solo-answer-letter">@AnswerLetter(answerIndex)</span>
+                    <span class="kc-solo-answer-text">@Answers[answerIndex]</span>
+                </button>
+            }
+        </div>
+
+        <div class="kc-solo-progress">
+            @for (var i = 1; i <= TotalQuestions; i++)
+            {
+                var hasResult = i <= AnswerResults.Count;
+
+                <div class="kc-solo-progress-item
+                    @(i > 10 ? "second-row" : "")
+                    @(i == 11 ? "row-turn" : "")
+                    @GetProgressClass(i)"
+                     style="@GetProgressPosition(i)">
+
+                    <span class="kc-solo-progress-dot">
+                        @if (hasResult)
+                        {
+                            <i class="bi @(AnswerResults[i - 1] ? "bi-check-lg" : "bi-x-lg")">  </i>
+                        }
+                        else { @i }
+                    </span>
+                </div>
+            }
+        </div>
+    </section>
+
+</div>

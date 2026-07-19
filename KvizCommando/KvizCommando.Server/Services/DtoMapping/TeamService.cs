@@ -27,7 +27,7 @@ namespace KvizCommando.Server.Services.DtoMapping
         public async Task<bool?> SaveModifiedSkillAsync(int playerid, ModifySkillRequest dto, CancellationToken ct = default)
         {
             //var sessionId = "Teszt";
-            var (player, question) = await _cache.GetOrLoadLockedAsync(playerid, dto.SessionId, ct);
+            var (player, _) = await _cache.GetOrLoadLockedAsync(playerid, dto.SessionId, ct);
             if (player == null)
                 return false;
             if (player.SessionId == "denied")
@@ -44,8 +44,8 @@ namespace KvizCommando.Server.Services.DtoMapping
             int maxLevel = dto.MemberId == 0 ? player.Core.RankEnum : player.Characters[dto.MemberId - 1].Rank;
             int levelLimit;
             var helpDatas = string.IsNullOrEmpty(player.Loadout?.HelpLevelsJson)
-                    ? Array.Empty<int>()
-                     : JsonSerializer.Deserialize<int[]>(player.Loadout.HelpLevelsJson) ?? Array.Empty<int>();
+                    ? []
+                     : JsonSerializer.Deserialize<int[]>(player.Loadout.HelpLevelsJson) ?? [];
             string newHelpJson = player.Loadout.HelpLevelsJson;
             // validálás 
             for (int i = 0; i < 4; i++)
@@ -359,7 +359,7 @@ namespace KvizCommando.Server.Services.DtoMapping
             var skill = SkillResolver(attitude.Level, rank, maxLevels, startLevels, [0, 1, 0, 1]);
             return new AttidtudeDto
             {
-                Category = attitude.CatNo.Take(4).Select(x => (byte)x).ToArray(),
+                Category = [.. attitude.CatNo.Take(4).Select(x => (byte)x)],
                 Skill = skill,
                 CanDev = skill.Any(x => x.SkillCanDev) && devPoints > 0
             };
