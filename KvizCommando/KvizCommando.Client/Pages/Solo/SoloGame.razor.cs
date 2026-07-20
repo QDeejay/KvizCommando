@@ -20,7 +20,7 @@ namespace KvizCommando.Client.Pages.Solo
         private bool _isReady = false;
         private bool _isLoaded = false;
 
-        private string SelectorCSS => _boxOrder != SgameBoxBuilder.Root ? "kc-solo-selector-sub" : "kc-solo-selector-root";
+        private string SelectorCSS => _boxOrder.Length > SgameBoxBuilder.Root.Length ? "kc-solo-selector-sub" : "kc-solo-selector-root";
 
         private string Culture => AppStates.Culture;
         private SoloGameDtos SState => AppStates.SoloGame!;
@@ -76,8 +76,14 @@ namespace KvizCommando.Client.Pages.Solo
                 case 403:
                     headerTitle = _boxes[SgameBoxKeyRoot.RtBtnCampaign.ToString()].Header;
                     break;
-                case > 420 && < 440:
-                        break;
+                case >= 420 and <= 440:
+                    _boxOrder = SgameBoxBuilder.GameCat;
+                    headerTitle = _boxes[SgameBoxKeyRoot.RtBtnCategory.ToString()].Header;
+                    break;
+                case >= 450 and <= 460:
+                    _boxOrder = SgameBoxBuilder.GameOri;
+                    headerTitle = _boxes[SgameBoxKeyRoot.RtBtnOrient.ToString()].Header;
+                    break;
                 default:
                     headerTitle = Ui.Lang["mainlayout.Header.GameSolo"];
                     break;

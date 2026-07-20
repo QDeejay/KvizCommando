@@ -8,28 +8,42 @@
    <PageContainer>
         @if (_isReady == true)
         {
-            <SoloPlayView PlayerName="Karl Brimfield"
-              RankName="Közlegény"
-              Level="12"
-              OrientationName="Játékos"
-              PlayerImageSrc="/images/characters/example.png"
-              Points="1240"
-              CategoryName="Történelem"
-              CurrentQuestion="4"
-              TotalQuestions="13"
-              TotalSeconds="20"
-              RemainingSeconds="17"
-              Question="Melyik évben alapították Budapestet?"
-              Answers="@_previewAnswers"
-              AnswerEnabled="true"
-                          OnAnswerSelected="SelectAnswerAsync" >
-                          
-                          <PlayerImage>
-                     
-                    <CharacterView PicCode="@("M7270BG")" />
-                          </PlayerImage>
+      
+                @foreach (string bx in _boxOrder)
+                {
+                    var box = Box(bx);
 
-             </SoloPlayView>
+                    <ContentBox Vm="@box"
+                                OnClick="OnBoxClick">
+                        <ContentBody>
+
+                            <SoloPlayView PlayerName="Karl Brimfield"
+                                          RankName="Közlegény"
+                                          Level="12"
+                                          OrientationName="Játékos"
+                                          PlayerImageSrc="/images/characters/example.png"
+                                          Points="1240"
+                                          CategoryName="Történelem"
+                                          CurrentQuestion="4"
+                                          TotalQuestions="13"
+                                          TotalSeconds="20"
+                                          RemainingSeconds="17"
+                                          Question="Melyik évben alapították Budapestet?"
+                                          Answers="@_previewAnswers"
+                                          AnswerEnabled="true"
+                                          OnAnswerSelected="SelectAnswerAsync">
+                                <PlayerImage>
+
+                                    <CharacterView PicCode="@("M7270BG")" />
+
+                                </PlayerImage>
+                            </SoloPlayView>
+
+                        </ContentBody>
+                    </ContentBox>
+                }
+           
+          
         }
    </PageContainer>
 </LangGuard>
@@ -37,6 +51,9 @@
 
 
 <!-- 
+          <div class="@(SelectorCSS)">
+            </div>
+
 
   <div class="@(SelectorCSS)">
                 @foreach (string bx in _boxOrder)

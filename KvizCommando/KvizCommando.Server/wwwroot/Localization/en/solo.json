@@ -3,5 +3,13 @@
   "Button.Footer.Catandori": "All points: {0} ",
   "Button.Title.Campaign": "Campaign mode",
   "Button.Title.Categories": "Categories mode",
-  "Button.Title.Orients": "Orientation mode"
+  "Button.Title.Orients": "Orientation mode",
+  "Button.Game.Skip": "Skip",
+  "Display.Game.Time": "{0} sec",
+  "Button.Game.Report": "Report",
+  "Label.Game.Points": "Actual points",
+  "Label.Game.HighScorePts": "Highest result",
+  "Label.Game.HighScoreTim": "Result's time",
+  "Label.Title.Game.Category": "Category game",
+  "Label.Title.Game.Orient": "Orientation game"
 }

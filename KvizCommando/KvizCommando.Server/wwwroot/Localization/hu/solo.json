@@ -3,5 +3,13 @@
   "Button.Footer.Catandori": "Összes pont: {0}",
   "Button.Title.Campaign": "Kampány mód",
   "Button.Title.Categories": "Kategoria mód",
-  "Button.Title.Orients": "Orientáció mód"
+  "Button.Title.Orients": "Orientáció mód",
+  "Button.Game.Skip": "Átugor",
+  "Display.Game.Time": "{0} mp",
+  "Button.Game.Report": "Jelentés",
+  "Label.Game.Points": "Aktuális pontok",
+  "Label.Game.HighScorePts": "Legmagasabb eredmény",
+  "Label.Game.HighScoreTim": "Eredmény ideje",
+  "Label.Title.Game.Category": "Kategória Játék",
+  "Label.Title.Game.Orient": "Orientáció Játék"
 }

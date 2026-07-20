@@ -1,8 +1,6 @@
 ﻿using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using System.Drawing;
 
 namespace KvizCommando.Client.Components
 {
@@ -14,11 +12,11 @@ namespace KvizCommando.Client.Components
         [Parameter] public RenderFragment? ContentBody { get; set; }
         private ContentBoxVm _vm = new();
         private bool _noContent = true;
-        private readonly string[] _content = ["content1","valami","tete","défldf","lajos","vaszom","kika","togai","kloi"];
+        private readonly string[] _content = ["content1", "valami", "tete", "défldf", "lajos", "vaszom", "kika", "togai", "kloi"];
         protected override void OnParametersSet()
         {
             _vm = Vm;
-            _noContent = _vm.RenderContent == 0 && string.IsNullOrEmpty(_vm.ImageSrc);
+            _noContent = _vm.RenderContent == 0 && string.IsNullOrEmpty(_vm.ImageSrc) && _vm.Size != "content-sized";
         }
 
         private string CursorStyle { get; set; } = string.Empty;
@@ -34,7 +32,7 @@ namespace KvizCommando.Client.Components
         {
             if (_vm.IsClickable && _vm.IsEnabled)
             {
-                if(OnClick.HasDelegate)
+                if (OnClick.HasDelegate)
                     await OnClick.InvokeAsync(_vm.ClickId);
             }
         }
@@ -54,9 +52,9 @@ namespace KvizCommando.Client.Components
         public void Dispose()
         {
             OnClick = default!;
-            FooterClick= default!;
+            FooterClick = default!;
             GC.SuppressFinalize(this);
         }
-       
+
     }
 }

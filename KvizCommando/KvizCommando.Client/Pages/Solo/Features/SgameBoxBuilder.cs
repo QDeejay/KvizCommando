@@ -7,7 +7,8 @@ namespace KvizCommando.Client.Pages.Solo.Features
     public static class SgameBoxBuilder
     {
         public static readonly string[] Root = Enum.GetNames<SgameBoxKeyRoot>();
-        public static readonly string[] Game = [SgameBoxKeySub.GameBox.ToString()];
+        public static readonly string[] GameCat = [SgameBoxKeySub.GameBoxCat.ToString()];
+        public static readonly string[] GameOri = [SgameBoxKeySub.GameBoxOri.ToString()];
         public static readonly string[] SubCat = BuildNames(SgameBoxKeySub.BtnCat);
         public static readonly string[] SubOri = BuildNames(SgameBoxKeySub.BtnOri);
 

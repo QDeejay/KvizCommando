@@ -6,7 +6,7 @@
     box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
     transition: all 0.2s ease-in-out;
     opacity: 0.95;
-    padding:2px;
+    padding: 2px;
 }
 
 .kc-content-box--inner {
@@ -20,47 +20,51 @@
     border: inset 2px rgba(23,23,23,0.8);
 }
 
-    /* Méretvariációk */
-    .kc-content-box.small {
-        width: 200px;           /*180 x 140 */
-        height: 200px;
-    }
+/* Méretvariációk */
+.kc-content-box.small {
+    width: 200px; /*180 x 140 */
+    height: 200px;
+}
 
-    .kc-content-box.medium {
-        width: 320px;       
-        height: 200px;
-    }
+.kc-content-box.medium {
+    width: 320px;
+    height: 200px;
+}
 
-    .kc-content-box.large {
-        width: 650px;
-        height: 550px;
-    }
+.kc-content-box.large {
+    width: 650px;
+    height: 550px;
+}
+
 .kc-content-box.extra-large {
     width: 650px;
     height: 685px;
 }
+
 .kc-content-box.closed-large {
     width: 650px;
     height: 130px;
 }
-    .kc-content-box.halflarge {
-        width: 325px;
-        height: 550px;
-    }
 
-    .kc-content-box.wide {
-        width: 440px;       
-        height: 200px;
-    }
-    .kc-content-box.tall {
-        width: 200px;
-        height: 320px;
-    }
+.kc-content-box.halflarge {
+    width: 325px;
+    height: 550px;
+}
 
-    .kc-content-box.minimalized {
-        width: 650px;
-        height: 65px;
-    }
+.kc-content-box.wide {
+    width: 440px;
+    height: 200px;
+}
+
+.kc-content-box.tall {
+    width: 200px;
+    height: 320px;
+}
+
+.kc-content-box.minimalized {
+    width: 650px;
+    height: 65px;
+}
 
 /* Fejléc / Lábléc */
 .kc-content-box--footer,
@@ -80,8 +84,8 @@
 }
 .label-title {
     position: relative;
-    color: whitesmoke;
-    width: 100%;
+    color: #cccccc;
+    
 }
 
 .kc-content-box--footeractive {
@@ -274,36 +278,14 @@
             background-color: #ffe14d; /* világosabb hover */
         }
 
-.kc-btn-bar {
-    display: flex;
-    justify-content: center;
-    height:60px;
-    padding:10px;
-}
 
-    .kc-btn-bar.hidden {
-        display: none;
-    }
 
-.kc-content-box.content-sized {
+.kc-content-box.content-sized,
+.kc-content-box.content-sized .kc-content-box--inner,
+.kc-content-box.content-sized .kc-content-box--content {
     width: max-content;
-    height: max-content;
-    min-width: 0;
-    min-height: 0;
+    min-width: max-content;
+    max-width: none;
+    flex: none;
+    overflow: visible;
 }
-
-    /* A külső box keretéhez igazodjon */
-    .kc-content-box.content-sized .kc-content-box--inner {
-        width: max-content;
-        height: max-content;
-        flex: none;
-        justify-content: flex-start;
-    }
-
-    /* Ne töltse ki a rendelkezésre álló magasságot */
-    .kc-content-box.content-sized .kc-content-box--content {
-        width: max-content;
-        height: max-content;
-        flex-grow: 0;
-        flex-shrink: 0;
-    }

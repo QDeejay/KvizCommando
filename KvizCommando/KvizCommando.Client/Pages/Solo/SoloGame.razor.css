@@ -8,8 +8,9 @@
 .kc-solo-selector-root {
     grid-template-columns: 1fr;
     max-width: 440px;
-  
 }
+
+
 .kc-solo-selector-sub {
     grid-template-columns: repeat(4, 1fr); /* mindig 4 oszlop */
     max-width: 900px; /* 4x140px + 3x12px gap ≈ 600px */
