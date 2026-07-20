@@ -20,12 +20,14 @@ namespace KvizCommando.Client.Pages.Question.Features
     public static class QuestionBoxSpecs
     {
 
-        public static readonly IReadOnlyList<QBoxSpecs> Specs = new[]
-        {
+        public static readonly IReadOnlyList<QBoxSpecs> Specs =
+        [
             new QBoxSpecs {
                 Key = QBoxKeyRoot.RtBtnFactory,
                 TitleKey = "question.Box.Title.FactorySlots",
-                ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = true, ClickId = 101,
+                ImageSrc = "images/solo/categories.webp",
+                Size =ContentBoxSize.BUTTON_WIDE,
+                FooterDisplay = true, ClickId = 101,
                 BuildBoxText = (lang, qn) => lang["question.Box.Footer.FactorySlots"].FormatSafe(qn.NoFownQuestion),
                 CheckEnable = (qn) => true,
                 LcdBackground = false,
@@ -35,7 +37,9 @@ namespace KvizCommando.Client.Pages.Question.Features
             new QBoxSpecs {
                 Key = QBoxKeyRoot.RtBtnUsr,
                 TitleKey = "question.Box.Title.UsrSlots.NoData",
-                ImageSrc = "images/solo/orients.webp", Size = "wide", FooterDisplay = true, ClickId = 102,
+                ImageSrc = "images/solo/orients.webp",
+                Size = ContentBoxSize.BUTTON_WIDE,
+                FooterDisplay = true, ClickId = 102,
                 BuildBoxText =(lang, qn) => lang["question.Box.Footer.UsrSlots"].FormatSafe(qn.OccupiedUserSlot,qn.AvailableUserSlot),
                 CheckEnable = (qn) => qn.AvailableUserSlot>0,
                 LcdBackground = false,
@@ -45,7 +49,9 @@ namespace KvizCommando.Client.Pages.Question.Features
             new QBoxSpecs {
                 Key = QBoxKeyRoot.RtBtnPendig,
                 TitleKey = "question.Box.Title.PendingSlots.NoData",
-                ImageSrc = "images/solo/campaign.webp", Size = "wide", FooterDisplay = true, ClickId = 103,
+                ImageSrc = "images/solo/campaign.webp",
+                Size = ContentBoxSize.BUTTON_WIDE,
+                FooterDisplay = true, ClickId = 103,
                 BuildBoxText = (lang, qn) => lang["question.Box.Footer.PendingSlots"].FormatSafe(qn.HandlePendingSlot),
                 CheckEnable = (qn) => qn.AvailablePendingSlot>0,
                 LcdBackground = false,
@@ -55,7 +61,9 @@ namespace KvizCommando.Client.Pages.Question.Features
             new QBoxSpecs {
                 Key = QBoxKeyRoot.RtBtnNew,
                 TitleKey = "question.Modal.Title.New",
-                ImageSrc = "images/solo/campaign.webp", Size = "wide", FooterDisplay = true, ClickId = 104,
+                ImageSrc = "images/solo/campaign.webp",
+                Size = ContentBoxSize.BUTTON_WIDE,
+                FooterDisplay = true, ClickId = 104,
                 BuildBoxText = (lang, qn) => lang["question.Box.Footer.New"].FormatSafe(qn.FreePendingSlot),
                 CheckEnable = (qn) => qn.FreePendingSlot > 0,
                 LcdBackground = false,
@@ -65,7 +73,9 @@ namespace KvizCommando.Client.Pages.Question.Features
             new QBoxSpecs {
                 Key = QBoxKeyContent.FactSlots,
                 TitleKey = "question.Box.Title.FactorySlots",
-                ImageSrc = string.Empty, Size = "halflarge", FooterDisplay = false, ClickId = 0,
+                ImageSrc = string.Empty,
+                Size = ContentBoxSize.CONTENT_HALF_LARGE,
+                FooterDisplay = false, ClickId = 0,
                 BuildBoxText = (lang, qn) => "",
                 CheckEnable = (qn) => true,
                 LcdBackground = true,
@@ -79,7 +89,9 @@ namespace KvizCommando.Client.Pages.Question.Features
                 Key = QBoxKeyContent.UsrSlots,
                 TitleKey = string.Empty,
                 BuildBoxText = (lang, qn) => lang["question.Box.Title.UsrSlots"].FormatSafe(qn.OccupiedUserSlot, qn.AvailableUserSlot),
-                ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 0,
+                ImageSrc = string.Empty,
+                Size = ContentBoxSize.CONTENT_LARGE,
+                FooterDisplay = false, ClickId = 0,
                 CheckEnable = (qn) => true,
                 LcdBackground = true,
                 RenderContent = 1,
@@ -95,7 +107,9 @@ namespace KvizCommando.Client.Pages.Question.Features
                 Key = QBoxKeyContent.PendigSlots,
                 TitleKey = string.Empty,
                 BuildBoxText = (lang, qn) =>  lang["question.Box.Title.PendingSlots"].FormatSafe(qn.OccupiedPendingSlot, qn.AvailableUserSlot >> 1),
-                ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 0,
+                ImageSrc = string.Empty,
+                 Size = ContentBoxSize.CONTENT_LARGE,
+                FooterDisplay = false, ClickId = 0,
                 CheckEnable = (qn) => true,
                 LcdBackground = true,
                 RenderContent = 1,
@@ -108,7 +122,9 @@ namespace KvizCommando.Client.Pages.Question.Features
             new QBoxSpecs {
                 Key = QBoxKeyContent.NewSlot,
                 TitleKey = "question.Modal.Title.New",
-                ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 0,
+                ImageSrc = string.Empty,
+                 Size = ContentBoxSize.CONTENT_LARGE,
+                FooterDisplay = false, ClickId = 0,
                 BuildBoxText = (lang, qn) => "",
                 CheckEnable = (qn) => true,
                 LcdBackground = false,
@@ -118,7 +134,7 @@ namespace KvizCommando.Client.Pages.Question.Features
                     { QParamNames.OnSendQuestion.ToString(), cb.OnSend }
                 }
              }
-        };
+        ];
     }
 
 }

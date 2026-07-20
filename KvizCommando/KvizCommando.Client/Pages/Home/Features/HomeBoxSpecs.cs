@@ -14,14 +14,16 @@ public sealed class HomeSpecs : VmSpecs
 
 public static class HomeBoxSpecs
 {
+
     public static readonly IReadOnlyList<HomeSpecs> Specs = new[]
     {
         new HomeSpecs {
-            Key = HomeBoxKey.GameVs, 
+            Key = HomeBoxKey.GameVs,
             TitleKey = "home.Box.Title.GameVs",
             ImageSrc = string.Empty,
             BgImageSrc ="images/buttons/game.webp",
-            Size = "wide", FooterDisplay = true, ClickId = 3,
+            Size = ContentBoxSize.BUTTON_WIDE,
+            FooterDisplay = true, ClickId = 3,
             Pick = s => s.VsGame,
             BuildFooter = (lang, b) => lang["home.Box.Footer.GameVs"].FormatSafe(b.FooterData1)
         },
@@ -30,23 +32,28 @@ public static class HomeBoxSpecs
             TitleKey = "home.Box.Title.GameSolo",
             ImageSrc = string.Empty,
             BgImageSrc = "images/buttons/gamesolo.webp",
-            Size = "small", FooterDisplay = false, ClickId = 4,
+            Size = ContentBoxSize.BUTTON_SMALL,
+            FooterDisplay = false, ClickId = 4,
             Pick = s => s.SoloGame,
             BuildFooter = (lang, b) => ""
         },
         new HomeSpecs {
-            Key = HomeBoxKey.Shop, 
+            Key = HomeBoxKey.Shop,
             TitleKey = "home.Box.Title.Shop",
             ImageSrc = string.Empty,
-            BgImageSrc = "images/buttons/shop.webp", Size = "medium", FooterDisplay = false, ClickId = 4,
+            BgImageSrc = "images/buttons/shop.webp",
+            Size = ContentBoxSize.BUTTON_MEDIUM,
+            FooterDisplay = false, ClickId = 4,
             Pick = s => s.Shop,
             BuildFooter = (lang, b) => ""
         },
         new HomeSpecs {
-            Key = HomeBoxKey.Rankings, 
+            Key = HomeBoxKey.Rankings,
             TitleKey = "home.Box.Title.Rankings",
             ImageSrc = string.Empty,
-            BgImageSrc = "images/buttons/ranking.webp", Size = "medium", FooterDisplay = true, ClickId = 5,
+            BgImageSrc = "images/buttons/ranking.webp",
+            Size = ContentBoxSize.BUTTON_MEDIUM,
+            FooterDisplay = true, ClickId = 5,
             Pick = s => s.Ranking,
             BuildFooter = (lang, b) =>
                 b.FooterData1 < 1
@@ -54,19 +61,22 @@ public static class HomeBoxSpecs
                 : lang["home.Box.Footer.Rankings1"].FormatSafe(b.FooterData1)
         },
         new HomeSpecs {
-            Key = HomeBoxKey.Statistic, 
+            Key = HomeBoxKey.Statistic,
             TitleKey = "home.Box.Title.Statistic",
             BgImageSrc = "images/buttons/statistic.webp",
             ImageSrc = string.Empty,
-            Size = "small", FooterDisplay = false, ClickId = 6,
+            Size =ContentBoxSize.BUTTON_SMALL,
+            FooterDisplay = false, ClickId = 6,
             Pick = s => s.Statistic,
             BuildFooter = (lang, b) => ""
         },
         new HomeSpecs {
-            Key = HomeBoxKey.Events, 
+            Key = HomeBoxKey.Events,
             TitleKey = "home.Box.Title.Events",
             ImageSrc = string.Empty,
-            BgImageSrc = "images/buttons/events.webp", Size = "wide", FooterDisplay = true, ClickId = 7,
+            BgImageSrc = "images/buttons/events.webp",
+            Size = ContentBoxSize.BUTTON_WIDE,
+            FooterDisplay = true, ClickId = 7,
             Pick = s => s.Events,
             BuildFooter = (lang, b) => b.FooterData1 switch
             {
@@ -77,41 +87,48 @@ public static class HomeBoxSpecs
             }
         },
         new HomeSpecs {
-            Key = HomeBoxKey.Community, 
+            Key = HomeBoxKey.Community,
             TitleKey = "home.Box.Title.Community",
             ImageSrc = string.Empty,
-            BgImageSrc = "images/buttons/community.webp", Size = "medium", FooterDisplay = true, ClickId = 8,
+            BgImageSrc = "images/buttons/community.webp",
+            Size = ContentBoxSize.BUTTON_MEDIUM,
+            FooterDisplay = true, ClickId = 8,
             Pick = s => s.Community,
             BuildFooter = (lang, b) => lang["home.Box.Footer.Community"].FormatSafe(b.FooterData1, b.FooterData2)
         },
         new HomeSpecs {
-            Key = HomeBoxKey.Messages, 
+            Key = HomeBoxKey.Messages,
             TitleKey = "home.Box.Title.Messages",
             ImageSrc = string.Empty,
-            BgImageSrc = "images/buttons/messages.webp", Size = "medium", FooterDisplay = true, ClickId = 9,
+            BgImageSrc = "images/buttons/messages.webp",
+            Size = ContentBoxSize.BUTTON_MEDIUM,
+            FooterDisplay = true, ClickId = 9,
             Pick = s => s.Messages,
             BuildFooter = (lang, b) => lang["home.Box.Footer.Messages"].FormatSafe(b.FooterData1)
         },
         new HomeSpecs {
-            Key = HomeBoxKey.Team, 
+            Key = HomeBoxKey.Team,
             TitleKey = "home.Box.Title.Team",
             ImageSrc = string.Empty,
-            BgImageSrc = "images/buttons/team.webp", Size = "medium", FooterDisplay = true, ClickId = 2,
+            BgImageSrc = "images/buttons/team.webp",
+            Size = ContentBoxSize.BUTTON_MEDIUM,
+            FooterDisplay = true, ClickId = 2,
             Pick = s => s.Team,
             BuildFooter = (lang, b) => lang["home.Box.Footer.Team"].FormatSafe(b.FooterData1, b.FooterData2)
         },
         new HomeSpecs {
-            Key = HomeBoxKey.Question, 
+            Key = HomeBoxKey.Question,
             TitleKey = "home.Box.Title.Question",
             ImageSrc = string.Empty,
-            BgImageSrc = "images/buttons/questions.webp", Size = "medium",
+            BgImageSrc = "images/buttons/questions.webp",
+            Size = ContentBoxSize.BUTTON_MEDIUM,
             FooterDisplay = false,
             ClickId = 1,
             Pick = s => s.Question,
             BuildFooter = (lang, b) => ""
         },
         new HomeSpecs {
-            Key = HomeBoxKey.InfoBoard, 
+            Key = HomeBoxKey.InfoBoard,
             TitleKey = "home.Title.BulleteinBoard",
             ImageSrc = string.Empty,
             BgImageSrc = string.Empty, Size = string.Empty,

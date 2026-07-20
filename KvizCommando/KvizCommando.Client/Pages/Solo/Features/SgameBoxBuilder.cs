@@ -7,6 +7,7 @@ namespace KvizCommando.Client.Pages.Solo.Features
     public static class SgameBoxBuilder
     {
         public static readonly string[] Root = Enum.GetNames<SgameBoxKeyRoot>();
+        public static readonly string[] Game = [SgameBoxKeySub.GameBox.ToString()];
         public static readonly string[] SubCat = BuildNames(SgameBoxKeySub.BtnCat);
         public static readonly string[] SubOri = BuildNames(SgameBoxKeySub.BtnOri);
 
@@ -14,7 +15,7 @@ namespace KvizCommando.Client.Pages.Solo.Features
         {
             var dict = new Dictionary<string, ContentBoxVm>();
 
-            foreach (var spec in SoloBoxSpecs.RootSpecs)
+            foreach (var spec in SoloBoxSpecs.Specs)
             {
                 dict.Add(spec.Key.ToString(), new ContentBoxVm
                 {
@@ -24,7 +25,7 @@ namespace KvizCommando.Client.Pages.Solo.Features
                     Size = spec.Size,
                     ImageSrc = spec.ImageSrc,
                     BgImageSrc = spec.BgImageSrc,
-                    IsClickable = spec.BuildEnable(ss.Enables, 1),
+                    IsClickable = spec.BuildEnable(ss.Enables, 1) && spec.ClickId > 0,
                     IsEnabled = spec.BuildEnable(ss.Enables, 1),
                     ClickId = spec.ClickId
                 });

@@ -17,8 +17,13 @@
             @if (!string.IsNullOrEmpty(_vm.ImageSrc))
             {
                 <img src="@_vm.ImageSrc" alt="logo" />
+
             }
-            else if(_vm.RenderContent>0)
+            else if (_vm.Size == "content-sized")
+            {
+                @ContentBody
+            }
+            else if (_vm.RenderContent > 0)
             {
                 <div class="kc-lcd-wrapper">
                     <div class="kc-lcd-display--outer @(_vm.LcdDisplay ? "" : "lcd-off")">

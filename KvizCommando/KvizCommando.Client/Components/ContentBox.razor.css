@@ -283,4 +283,27 @@
 
     .kc-btn-bar.hidden {
         display: none;
-    }   
+    }
+
+.kc-content-box.content-sized {
+    width: max-content;
+    height: max-content;
+    min-width: 0;
+    min-height: 0;
+}
+
+    /* A külső box keretéhez igazodjon */
+    .kc-content-box.content-sized .kc-content-box--inner {
+        width: max-content;
+        height: max-content;
+        flex: none;
+        justify-content: flex-start;
+    }
+
+    /* Ne töltse ki a rendelkezésre álló magasságot */
+    .kc-content-box.content-sized .kc-content-box--content {
+        width: max-content;
+        height: max-content;
+        flex-grow: 0;
+        flex-shrink: 0;
+    }

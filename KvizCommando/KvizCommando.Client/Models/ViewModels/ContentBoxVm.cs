@@ -32,4 +32,20 @@
         public int ClickId { get; init; } = 0;
         public Type? BodyComp { get; init; }
     }
+
+    public sealed class ContentBoxSize
+    {
+        public const string BUTTON_SMALL = "small";
+        public const string BUTTON_MEDIUM = "medium";
+        public const string BUTTON_WIDE = "wide";
+        public const string BUTTON_TALL = "tall";
+        public const string MINIMALIZED = "minimalized";
+        public const string CONTENT_LARGE = "large";
+        public const string CONTENT_EXTRA_LARGE = "extra-large";
+        public const string CONTENT_CLOSED_LARGE = "closed-large";
+        public const string CONTENT_HALF_LARGE = "halflarge";
+        public const string CONTENT_FLEXIBLE = "content-sized";
+
+    }
+
 }

@@ -76,6 +76,8 @@ namespace KvizCommando.Client.Pages.Solo
                 case 403:
                     headerTitle = _boxes[SgameBoxKeyRoot.RtBtnCampaign.ToString()].Header;
                     break;
+                case > 420 && < 440:
+                        break;
                 default:
                     headerTitle = Ui.Lang["mainlayout.Header.GameSolo"];
                     break;

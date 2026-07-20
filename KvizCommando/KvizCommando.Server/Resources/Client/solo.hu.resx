@@ -132,4 +132,28 @@
   <data name="Button.Title.Orients" xml:space="preserve">
     <value>Orientáció mód</value>
   </data>
+  <data name="Button.Game.Skip" xml:space="preserve">
+    <value>Átugor</value>
+  </data>
+  <data name="Display.Game.Time" xml:space="preserve">
+    <value>{0} mp</value>
+  </data>
+  <data name="Button.Game.Report" xml:space="preserve">
+    <value>Jelentés</value>
+  </data>
+  <data name="Label.Game.Points" xml:space="preserve">
+    <value>Aktuális pontok</value>
+  </data>
+  <data name="Label.Game.HighScorePts" xml:space="preserve">
+    <value>Legmagasabb eredmény</value>
+  </data>
+  <data name="Label.Game.HighScoreTim" xml:space="preserve">
+    <value>Eredmény ideje</value>
+  </data>
+  <data name="Label.Title.Game.Category" xml:space="preserve">
+    <value>Kategória Játék</value>
+  </data>
+  <data name="Label.Title.Game.Orient" xml:space="preserve">
+    <value>Orientáció Játék</value>
+  </data>
 </root>

@@ -22,7 +22,9 @@ namespace KvizCommando.Client.Pages.Team.Features
             new TBoxSpecs {
                 Key = TBoxKeyRoot.RtBtnTeam,
                 TitleKey = "team.Box.Title.TeamOverview",
-                ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = true, ClickId = 201,
+                ImageSrc = "images/solo/categories.webp",
+                Size = ContentBoxSize.BUTTON_WIDE,
+                FooterDisplay = true, ClickId = 201,
                 BuildBoxText = (lang, rb) => lang["team.Box.Footer.Team"].FormatSafe(rb.TeamOpRequired),
                 CheckEnable = (rb) => rb.IsTeamEnable,
                 LcdBackground = false,
@@ -32,7 +34,9 @@ namespace KvizCommando.Client.Pages.Team.Features
             new TBoxSpecs {
                 Key = TBoxKeyRoot.RtBtnMembers,
                 TitleKey = "team.Box.Title.Members",
-                ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = true, ClickId = 202,
+                ImageSrc = "images/solo/categories.webp",
+                Size = ContentBoxSize.BUTTON_WIDE,
+                FooterDisplay = true, ClickId = 202,
                 BuildBoxText = (lang, rb) => lang["team.Box.Footer.Member"].FormatSafe(rb.MemberOpRequired),
                 CheckEnable = (rb) => rb.IsMemberEnable,
                 LcdBackground = false,
@@ -42,7 +46,9 @@ namespace KvizCommando.Client.Pages.Team.Features
             new TBoxSpecs {
                 Key = TBoxKeyRoot.RtBtnRecruit,
                 TitleKey = "team.Box.Title.Recruit",
-                ImageSrc = "images/solo/categories.webp", Size = "wide", FooterDisplay = true, ClickId = 203,
+                ImageSrc = "images/solo/categories.webp",
+                Size = ContentBoxSize.BUTTON_WIDE,
+                FooterDisplay = true, ClickId = 203,
                 BuildBoxText = (lang, rb) => lang["team.Box.Footer.Recruit"].FormatSafe(rb.FreePositions),
                 CheckEnable = (rb) => rb.IsRecruitEnable,
                 LcdBackground = false,
@@ -53,7 +59,9 @@ namespace KvizCommando.Client.Pages.Team.Features
             new TBoxSpecs {
                 Key = TBoxKeyContent.Team,
                 TitleKey = "team.Box.Title.TeamOverview",
-                ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 0,
+                ImageSrc = string.Empty,
+                 Size = ContentBoxSize.CONTENT_LARGE,
+                FooterDisplay = false, ClickId = 0,
                 BuildBoxText = (lang, rb) => "",
                 CheckEnable = (rb) => true,
                 LcdBackground = true,
@@ -67,7 +75,9 @@ namespace KvizCommando.Client.Pages.Team.Features
             new TBoxSpecs {
                 Key = TBoxKeyContent.Member,
                 TitleKey = "team.Box.Title.Members",
-                ImageSrc = string.Empty, Size = "large", FooterDisplay = false, ClickId = 0,
+                ImageSrc = string.Empty,
+                Size = ContentBoxSize.CONTENT_LARGE,
+                FooterDisplay = false, ClickId = 0,
                 BuildBoxText = (lang, rb) => "",
                 CheckEnable = (rb) => true,
                 LcdBackground = true,
@@ -85,7 +95,7 @@ namespace KvizCommando.Client.Pages.Team.Features
                 CheckEnable = (rb) => true,
                 LcdBackground = false,
                 RenderContent = 1,
-                SizeBuilder = (rb) => rb.AbleToHire==0 ? "closed-large" : "extra-large",
+                SizeBuilder = (rb) => rb.AbleToHire==0 ? ContentBoxSize.CONTENT_CLOSED_LARGE : ContentBoxSize.CONTENT_EXTRA_LARGE,
                 BodyComp = typeof(RecruitManager),
                 BuildParams = (cb) => new Dictionary<string, object?> {
                     { TParamNames.OnCandidateHired.ToString(), cb.OnHire },

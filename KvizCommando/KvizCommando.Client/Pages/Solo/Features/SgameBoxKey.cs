@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace KvizCommando.Client.Pages.Solo.Features
+﻿namespace KvizCommando.Client.Pages.Solo.Features
 
 {
     internal enum SgameBoxKeyRoot
@@ -10,15 +8,20 @@ namespace KvizCommando.Client.Pages.Solo.Features
         //------------------  
         RtBtnOrient,
         // ------------------
-        RtBtnCampaign 
+        RtBtnCampaign
+
+
     };
-    internal enum SgameBoxKeySub 
+
+    internal enum SgameBoxKeySub
     {
         // ---------- Cat boxes * 16 -------- 
-        BtnCat=16,
+        BtnCat = 16,
         // --------- Ori boxes * 8 ---------- //
-        BtnOri=8
+        BtnOri = 8,
         // ------------------ 
+        GameBoxCat,
+        GameBoxOri
     }
 
 }
