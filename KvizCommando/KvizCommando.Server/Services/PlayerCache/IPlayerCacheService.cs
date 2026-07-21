@@ -64,6 +64,17 @@ namespace KvizCommando.Server.Services.PlayerCache
             List<PlayerOrientStat> newStats,
             CancellationToken ct = default);
 
+        Task<bool?> UpdatePartialPlayerAsync(
+            int playerId,
+            string sessionId,
+            int xp, int devpoints,
+            int selectedid,
+            int memXp, int memDev,
+            int credit,
+            CancellationToken ct = default
+            );
+
+
 
         Task<bool?> UpdateAllLockedAsync(
             int playerId,

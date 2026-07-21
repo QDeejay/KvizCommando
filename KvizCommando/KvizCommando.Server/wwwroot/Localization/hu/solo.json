@@ -11,5 +11,9 @@
   "Label.Game.HighScorePts": "Legmagasabb eredmény",
   "Label.Game.HighScoreTim": "Eredmény ideje",
   "Label.Title.Game.Category": "Kategória Játék",
-  "Label.Title.Game.Orient": "Orientáció Játék"
+  "Label.Title.Game.Orient": "Orientáció Játék",
+  "Label.Game.PointsPerMax": "Maximum pontok",
+  "Label.Game.Message.NewRecord": "Gratulálunk! Új rekord!",
+  "Label.GameProcess.Init": "",
+  "Label.GameProcess.WaitingResult": ""
 }

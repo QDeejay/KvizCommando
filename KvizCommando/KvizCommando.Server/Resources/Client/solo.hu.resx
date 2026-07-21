@@ -162,4 +162,10 @@
   <data name="Label.Game.Message.NewRecord" xml:space="preserve">
     <value>Gratulálunk! Új rekord!</value>
   </data>
+  <data name="Label.GameProcess.Init" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Label.GameProcess.WaitingResult" xml:space="preserve">
+    <value />
+  </data>
 </root>

@@ -11,5 +11,9 @@
   "Label.Game.HighScorePts": "Highest result",
   "Label.Game.HighScoreTim": "Result's time",
   "Label.Title.Game.Category": "Category game",
-  "Label.Title.Game.Orient": "Orientation game"
+  "Label.Title.Game.Orient": "Orientation game",
+  "Label.Game.PointsPerMax": "Maximum points",
+  "Label.Game.Message.NewRecord": "Congratulation! New highscore!",
+  "Label.GameProcess.Init": "",
+  "Label.GameProcess.WaitingResult": ""
 }

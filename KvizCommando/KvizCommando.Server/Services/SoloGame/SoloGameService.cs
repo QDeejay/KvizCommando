@@ -3,6 +3,7 @@ using KvizCommando.Server.Domain.Entities.Statistics;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
 using KvizCommando.Server.Services.SoloGame.GameCache;
+using KvizCommando.Shared.Constants;
 using KvizCommando.Shared.Contracts.SoloGame;
 using System.Text.Json;
 
@@ -53,6 +54,7 @@ namespace KvizCommando.Server.Services.SoloGame
 
             if (level < 0)
                 return (null, false);
+            var isHealing = request.Mode == SoloGameMode.Orientation && player.Characters[request.SelectionId - 1].EnergyPoints == 0;
 
             var categoryIds = request.Mode == SoloGameMode.Category
                 ? [request.SelectionId]
@@ -88,7 +90,9 @@ namespace KvizCommando.Server.Services.SoloGame
 
             var now = DateTime.UtcNow;
             var gameTime = TimeSpan.FromSeconds(questionCount * (AnswerSeconds + FeedbackSeconds));
+
             var maxPointPerQuestion = 100 + level / 2 * 10;
+
             var game = new SoloGameSession
             {
                 GameId = Guid.NewGuid(),
@@ -148,26 +152,61 @@ namespace KvizCommando.Server.Services.SoloGame
 
                 var submittedAnswers = request.Answers.ToDictionary(answer => answer.QuestionToken);
 
-                var results = game.Questions.Select(question =>
-                    submittedAnswers[question.QuestionToken].SelectedOptionIndex == question.CorrectOptionIndex).ToArray();
+                var answerResults = game.Questions
+                                         .Select(question =>
+                                         {
+                                             var answer = submittedAnswers[question.QuestionToken];
 
-                var correctAnswers = results.Count(result => result);
+                                             if (answer.SelectedOptionIndex == -1)
+                                                 return (bool?)null;
+
+                                             return answer.SelectedOptionIndex ==
+                                                    question.CorrectOptionIndex;
+                                         })
+                                         .ToArray();
+                var correctAnswers =
+                     answerResults.Count(result => result == true);
+
+                var wrongAnswers =
+                    answerResults.Count(result => result == false);
+
+                var unansweredAnswers =
+                    answerResults.Count(result => result == null);
+
+                var Points = game.Questions
+                        .Select((question, index) =>
+                        {
+                            var answer =
+                                submittedAnswers[question.QuestionToken];
+
+                            return CalculateAnswerPoints(
+                                game.PointsPerLevel,
+                                answer.AnswerTimeMs,
+                                answerResults[index]);
+                        }).ToArray();
+
+                var clientResults = answerResults
+                                        .Select(result => result == true)
+                                        .ToArray();
+
                 var totalTimeMs = request.Answers.Sum(answer => answer.AnswerTimeMs);
 
-                var highScoreResult = await SaveResultAsync(game, correctAnswers, totalTimeMs, ct);
+                var highScoreResult = await SaveResultAsync(game, Points.Sum(), totalTimeMs, ct);
 
                 if (highScoreResult.Success != true)
-
                     return (null, highScoreResult.Success);
+
+                var rewards = CreateRewardsAsync(game, Points.Sum(), highScoreResult.OldScore, ct);
 
                 var response = new FinishSoloGameResponse
                 {
-                    AnswerResults = results,
+                    TotalPoints = Points,
+                    AnswerResults = clientResults,
                     CorrectAnswers = correctAnswers,
-                    WrongAnswers = results.Length - correctAnswers,
+                    WrongAnswers = wrongAnswers + unansweredAnswers,
                     TotalAnswerTimeMs = totalTimeMs,
                     IsNewHighScore = highScoreResult.IsNewHighScore,
-                    Rewards = CreateRewards(game, correctAnswers, totalTimeMs)
+                    Rewards = rewards.Result
                 };
 
                 game.Status = SoloGameStatus.Completed;
@@ -288,59 +327,132 @@ namespace KvizCommando.Server.Services.SoloGame
                        game.Questions.Count * FeedbackSeconds * 1000 + 1000;
         }
 
-        private async Task<(bool? Success, bool IsNewHighScore)> SaveResultAsync(
+        private async Task<(bool? Success, bool IsNewHighScore, int OldScore)> SaveResultAsync(
             SoloGameSession game,
-            int correctAnswers,
+            int newScore,
             int totalTimeMs,
             CancellationToken ct)
         {
             var (player, _) = await _playerCache.GetOrLoadLockedAsync(game.PlayerId, game.SessionId, ct);
 
-            if (player is null) return (false, false);
-            if (player.SessionId == "denied") return (null, false);
+            if (player is null) return (false, false, 0);
 
+            if (player.SessionId == "denied") return (null, false, 0);
+
+            int oldScore;
             var totalSeconds = totalTimeMs / 1000d;
 
             if (game.Mode == SoloGameMode.Category)
             {
                 var stats = player.CategoryStats.Select(CloneCategoryStat).ToList();
+
                 var stat = stats.FirstOrDefault(item => item.CategoryId == game.SelectionId);
+
                 if (stat is null)
                 {
                     stat = new PlayerCategoryStat { PlayerId = game.PlayerId, CategoryId = (short)game.SelectionId };
                     stats.Add(stat);
                 }
 
-                stat.Answered += game.Questions.Count;
-                stat.Correct += correctAnswers;
-                var isHighScore = IsBetter(correctAnswers, totalSeconds, stat.HighScore, stat.HighScoreTime);
-                if (isHighScore) { stat.HighScore = correctAnswers; stat.HighScoreTime = totalSeconds; }
+                oldScore = stat.HighScore;
+
+                var isHighScore = IsBetter(newScore, totalSeconds, stat.HighScore, stat.HighScoreTime);
+
+
+                if (isHighScore) { stat.HighScore = newScore; stat.HighScoreTime = totalSeconds; }
 
                 var success = await _playerCache.UpdatePartialCategoryStatsLockedAsync(
                     game.PlayerId, game.SessionId, stats, ct);
-                return (success, isHighScore);
+                return (success, isHighScore, oldScore);
             }
-
-            var orientStats = player.OrientStats.Select(CloneOrientStat).ToList();
-            var orientStat = orientStats.FirstOrDefault(item => item.OrientId == game.SelectionId);
-            if (orientStat is null)
+            else
             {
-                orientStat = new PlayerOrientStat { PlayerId = game.PlayerId, OrientId = (short)game.SelectionId };
-                orientStats.Add(orientStat);
+                var orientStats = player.OrientStats.Select(CloneOrientStat).ToList();
+
+                var orientStat = orientStats.FirstOrDefault(item => item.OrientId == game.SelectionId);
+
+                if (orientStat is null)
+                {
+                    orientStat = new PlayerOrientStat { PlayerId = game.PlayerId, OrientId = (short)game.SelectionId };
+                    orientStats.Add(orientStat);
+                }
+                oldScore = orientStat.HighScore;
+
+                var orientHighScore = IsBetter(newScore, totalSeconds, orientStat.HighScore, orientStat.HighScoreTime);
+                if (orientHighScore) { orientStat.HighScore = newScore; orientStat.HighScoreTime = totalSeconds; }
+
+                var orientSuccess = await _playerCache.UpdatePartialOrientStatsLockedAsync(
+                    game.PlayerId, game.SessionId, orientStats, ct);
+                return (orientSuccess, orientHighScore, oldScore);
             }
 
-            var orientHighScore = IsBetter(correctAnswers, totalSeconds, orientStat.HighScore, orientStat.HighScoreTime);
-            if (orientHighScore) { orientStat.HighScore = correctAnswers; orientStat.HighScoreTime = totalSeconds; }
+        }
+        private static int CalculateAnswerPoints(
+                                    int magicNumberMax,
+                                    int elapsedMs,
+                                    bool? isCorrect)
+        {
+            if (isCorrect == null)
+                return 0;
 
-            var orientSuccess = await _playerCache.UpdatePartialOrientStatsLockedAsync(
-                game.PlayerId, game.SessionId, orientStats, ct);
-            return (orientSuccess, orientHighScore);
+            var decreasingTimeMs = Math.Clamp(
+                elapsedMs - 5000,
+                0,
+                15000);
+
+            var multiplier =
+                1.0 - decreasingTimeMs / 15000.0;
+
+            var points = (int)Math.Round(
+                magicNumberMax * multiplier,
+                MidpointRounding.AwayFromZero);
+
+            return isCorrect.Value
+                ? points
+                : -points;
         }
 
-        private static SoloRewardDto CreateRewards(SoloGameSession game, int correctAnswers, int totalTimeMs)
+        private async Task<SoloRewardDto> CreateRewardsAsync(SoloGameSession game, int pointsNew, int pointsOld, CancellationToken ct)
         {
-            // PLACEHOLDER: itt készül majd a jutalom és itt kerül a PlayerCache-be.
-            return new SoloRewardDto();
+            int dev = Math.Max(ScoreConstants.ScorLimits.Count(value => value > pointsNew) -
+                 ScoreConstants.ScorLimits.Count(value => value > pointsOld), 0);
+
+            int xpTeam = 0;
+            int xpMember = 0;
+            int devTeam = 0;
+            int devMember = 0;
+
+            if (game.Mode == SoloGameMode.Category)
+            {
+                devTeam = dev;
+            }
+            else
+            {
+
+                devMember += game.isHealing ? 1 : 0;
+                devMember += game.SelectionId > 0 ? dev : 0;
+                if (game.Level == 0)
+                {
+                    xpMember += game.Level == 0 ? pointsNew / 10 : 0;
+                    xpTeam += xpMember / 2;
+                }
+            }
+
+            await _playerCache.UpdatePartialPlayerAsync(
+                game.PlayerId,
+                game.SessionId,
+                xpTeam, devTeam,
+                xpMember, devMember,
+                game.Mode == SoloGameMode.Category ? 0 : game.SelectionId,
+                dev, ct);
+
+            return new SoloRewardDto
+            {
+                TeamXp = xpTeam,
+                TeamDevPoints = devTeam,
+                MemberXp = xpMember,
+                MemberDevPoints = devMember,
+            };
         }
 
         private static bool IsBetter(int score, double time, int oldScore, double oldTime)

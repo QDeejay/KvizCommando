@@ -21,6 +21,7 @@ public sealed class SoloGameSession
     public required SoloGameMode Mode { get; init; }
     public required int SelectionId { get; init; }
     public required int Level { get; init; }
+    public bool isHealing { get; init; }
     public required int PointsPerLevel { get; init; }
     public required DateTime StartedAtUtc { get; init; }
     public required DateTime GameplayDeadlineUtc { get; init; }

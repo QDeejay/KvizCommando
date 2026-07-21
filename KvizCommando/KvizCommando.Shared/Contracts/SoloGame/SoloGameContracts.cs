@@ -47,9 +47,12 @@ namespace KvizCommando.Shared.Contracts.SoloGame
 
     public sealed class SoloRewardDto
     {
-        public int Xp { get; set; }
-        public int Credit { get; set; }
-        public int Voucher { get; set; }
+        public int TeamXp { get; set; }
+        public int TeamDevPoints { get; set; }
+
+        public int MemberXp { get; set; }
+        public int MemberDevPoints { get; set; }
+
     }
 
     public sealed class FinishSoloGameResponse
