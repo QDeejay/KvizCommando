@@ -10,6 +10,7 @@ using KvizCommando.Server.Services.DtoMapping;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.Players;
 using KvizCommando.Server.Services.Security;
+using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
 using KvizCommando.Server.Services.UserPlayerIdCache;
 using Microsoft.AspNetCore.Authorization;
 
@@ -46,6 +47,11 @@ public static class ServiceCollectionExtensions
         /// 
         services.AddScoped<IQuestionDbService, QuestionDbService>();
         services.AddScoped<IPlayerDbService, PlayerDbService>();
+
+        ///
+        /// Solo game services
+        ///
+        services.AddSingleton<ICategoryQuestionIndexCache, CategoryQuestionIndexCache>();
 
         ///
         /// Email services
