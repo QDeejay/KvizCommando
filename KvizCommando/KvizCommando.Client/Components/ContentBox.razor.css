@@ -280,12 +280,22 @@
 
 
 
-.kc-content-box.content-sized,
-.kc-content-box.content-sized .kc-content-box--inner,
-.kc-content-box.content-sized .kc-content-box--content {
-    width: max-content;
-    min-width: max-content;
-    max-width: none;
-    flex: none;
-    overflow: visible;
+.kc-content-box.content-sized {
+    width: min(100%, 1120px);
+    height: auto;
+    box-sizing: border-box;
+    flex-shrink: 1;
 }
+
+    .kc-content-box.content-sized .kc-content-box--inner,
+    .kc-content-box.content-sized .kc-content-box--content,
+    .kc-solo-play {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .kc-content-box.content-sized .kc-content-box--content {
+        flex-grow: 0;
+        overflow: visible;
+    }

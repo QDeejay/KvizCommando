@@ -8,7 +8,8 @@
    <PageContainer>
         @if (_isReady == true)
         {
-      
+            <div class="@(SelectorCSS)">
+           
                 @foreach (string bx in _boxOrder)
                 {
                     var box = Box(bx);
@@ -42,7 +43,7 @@
                         </ContentBody>
                     </ContentBox>
                 }
-           
+            </div>
           
         }
    </PageContainer>
@@ -51,8 +52,7 @@
 
 
 <!-- 
-          <div class="@(SelectorCSS)">
-            </div>
+          
 
 
   <div class="@(SelectorCSS)">

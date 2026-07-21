@@ -1,7 +1,8 @@
 ﻿.main-pagecontainer {
     display: flex;
     flex-direction: row;
-    margin-top: 60px;
+    margin-top: 50px;
     justify-content: center;
     z-index: 10;
+  
 }

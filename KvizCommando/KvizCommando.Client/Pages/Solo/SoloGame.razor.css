@@ -3,23 +3,20 @@
     display: grid;
     gap: 10px;
     margin: 0 auto;
+
+    width: 100%;
 }
 
 .kc-solo-selector-root {
     grid-template-columns: 1fr;
-    max-width: 440px;
+    place-items:center;
 }
 
 
 .kc-solo-selector-sub {
-    grid-template-columns: repeat(4, 1fr); /* mindig 4 oszlop */
-    max-width: 900px; /* 4x140px + 3x12px gap ≈ 600px */
-    width: 100%;
+    grid-template-columns: repeat(4, 1fr); /* mindig 4 oszlop  /* 4x140px + 3x12px gap ≈ 600px */
+    max-width: 900px;
 }
-
-
-
-
 
 /* Tablet: 2 oszlop */
 @media (max-width: 1000px) {
