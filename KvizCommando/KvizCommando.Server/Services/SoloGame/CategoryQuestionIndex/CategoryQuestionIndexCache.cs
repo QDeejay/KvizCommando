@@ -60,10 +60,23 @@ public sealed class CategoryQuestionIndexCache : ICategoryQuestionIndexCache
 
                 LogLoadedIndex(newIndex);
             }
-            catch
+            catch (OperationCanceledException) when (ct.IsCancellationRequested)
             {
                 Volatile.Write(ref _invalidated, 1);
                 throw;
+            }
+            catch (Exception ex)
+            {
+                Volatile.Write(ref _invalidated, 1);
+
+                var currentIndex = Volatile.Read(ref _index);
+
+                if (currentIndex.Count == 0)
+                    throw;
+
+                Console.WriteLine(
+                    $"[CategoryQuestionIndexCache] Az index újratöltése sikertelen. " +
+                    $"A korábbi snapshot marad használatban. Hiba: {ex.Message}");
             }
         }
         finally
