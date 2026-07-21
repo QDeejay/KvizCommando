@@ -1,6 +1,4 @@
-﻿using KvizCommando.Server.Authorization;
-using KvizCommando.Server.Data;
-using KvizCommando.Server.Endpoints;
+﻿using KvizCommando.Server.Endpoints;
 using KvizCommando.Server.Extensions;
 using KvizCommando.Server.Identity;
 using KvizCommando.Server.Infrastructure.Email;
@@ -8,15 +6,11 @@ using KvizCommando.Server.Infrastructure.Extensions;
 using KvizCommando.Server.Infrastructure.Logging;
 using KvizCommando.Server.Infrastructure.Options;
 using KvizCommando.Server.Infrastructure.Persistence;
-using KvizCommando.Server.Security;
 using KvizCommando.Server.Security.RateLimiting;
-using KvizCommando.Server.Services;
+using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -97,7 +91,16 @@ builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
 var app = builder.Build();
 
+var categoryQuestionIndexCache =
+    app.Services.GetRequiredService<ICategoryQuestionIndexCache>();
+
+await categoryQuestionIndexCache.LoadAsync();
+
+
+
+
 // --- Diagnosztikai log ---
+/*
 app.Use(async (context, next) =>
 {
     var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
@@ -109,7 +112,7 @@ app.Use(async (context, next) =>
 
     await next();
 });
-
+*/
 
 // --- Dev eszközök ---
 if (app.Environment.IsDevelopment())
@@ -170,8 +173,8 @@ app.Use(async (ctx, next) =>
     var cookieAuth = await ctx.AuthenticateAsync(IdentityConstants.ApplicationScheme);
     //var bearerAuth = await ctx.AuthenticateAsync("Bearer");
     var idBearerAuth = await ctx.AuthenticateAsync(IdentityConstants.BearerScheme);
-    Console.Clear();
-    Console.SetCursorPosition(0,0);
+    //Console.Clear();
+    //Console.SetCursorPosition(0, 0);
     app.Logger.LogWarning(@"
 === AUTH DEBUG ===
 PATH: {path}
@@ -200,7 +203,7 @@ app.UseExceptionHandler();
 app.MapRazorPages();
 
 
-app.MapControllers() ;
+app.MapControllers();
 
 // Identity API endpointok (login, register, confirm, reset)
 app.MapGroup("/")

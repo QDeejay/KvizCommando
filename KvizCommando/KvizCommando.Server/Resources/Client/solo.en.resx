@@ -156,4 +156,10 @@
   <data name="Label.Title.Game.Orient" xml:space="preserve">
     <value>Orientation game</value>
   </data>
+  <data name="Label.Game.PointsPerMax" xml:space="preserve">
+    <value>Maximum points</value>
+  </data>
+  <data name="Label.Game.Message.NewRecord" xml:space="preserve">
+    <value>Congratulation! New highscore!</value>
+  </data>
 </root>

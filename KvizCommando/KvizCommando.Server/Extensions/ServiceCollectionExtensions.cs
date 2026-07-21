@@ -1,5 +1,4 @@
-﻿
-using KvizCommando.Server.Authorization;
+﻿using KvizCommando.Server.Authorization;
 using KvizCommando.Server.Infrastructure.Email;
 using KvizCommando.Server.Infrastructure.Logging;
 using KvizCommando.Server.Services;
@@ -10,7 +9,9 @@ using KvizCommando.Server.Services.DtoMapping;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.Players;
 using KvizCommando.Server.Services.Security;
+using KvizCommando.Server.Services.SoloGame;
 using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
+using KvizCommando.Server.Services.SoloGame.GameCache;
 using KvizCommando.Server.Services.UserPlayerIdCache;
 using Microsoft.AspNetCore.Authorization;
 
@@ -30,17 +31,15 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPlayerCacheService, PlayerCacheService>();
         services.AddScoped<IUserPlayerIdCacheService, UserPlayerIdCacheService>();
 
-        //services.AddSingleton<INameGenerator, NameGenerator>();
-        //services.AddSingleton<IPicCodeGenerator, PicCodeGenerator>();
-
-        //services.AddScoped<IRecruitService, RecruitService>();
-
         ///
         /// Dto services
         /// 
         services.AddScoped<IScreenService, ScreenService>();
         services.AddScoped<IQuestionService, QuestionService>();
         services.AddScoped<ITeamService, TeamService>();
+        services.AddSingleton<ISoloGameCache, SoloGameCache>();
+        services.AddScoped<ISoloQuestionRepository, SoloQuestionRepository>();
+        services.AddScoped<ISoloGameService, SoloGameService>();
 
         ///
         /// Game database services

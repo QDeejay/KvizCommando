@@ -117,49 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Button.Footer.Games" xml:space="preserve">
-    <value>Pontok: {0} Idő: {1}s</value>
+  <data name="SoloGame.Error.ActiveGame" xml:space="preserve">
+    <value>&lt; UnSuccessed (8400)&gt;</value>
   </data>
-  <data name="Button.Footer.Catandori" xml:space="preserve">
-    <value>Összes pont: {0}</value>
+  <data name="SoloGame.Error.InvalidData" xml:space="preserve">
+    <value>&lt; UnSuccessed (8402)&gt;</value>
   </data>
-  <data name="Button.Title.Campaign" xml:space="preserve">
-    <value>Kampány mód</value>
+  <data name="SoloGame.Error.InvalidFinish" xml:space="preserve">
+    <value>&lt; UnSuccessed (8411)&gt;</value>
   </data>
-  <data name="Button.Title.Categories" xml:space="preserve">
-    <value>Kategoria mód</value>
+  <data name="SoloGame.Error.NotFound" xml:space="preserve">
+    <value>&lt; UnSuccessed (8412)&gt;</value>
   </data>
-  <data name="Button.Title.Orients" xml:space="preserve">
-    <value>Orientáció mód</value>
+  <data name="SoloGame.Error.Session" xml:space="preserve">
+    <value>Re-Logined on other device!</value>
   </data>
-  <data name="Button.Game.Skip" xml:space="preserve">
-    <value>Átugor</value>
+  <data name="SoloGame.Response.Abandoned" xml:space="preserve">
+    <value>&lt; Game has been canceled! &gt;</value>
   </data>
-  <data name="Display.Game.Time" xml:space="preserve">
-    <value>{0} mp</value>
+  <data name="SoloGame.Response.Finished" xml:space="preserve">
+    <value>&lt; Game has been finished! &gt;</value>
   </data>
-  <data name="Button.Game.Report" xml:space="preserve">
-    <value>Jelentés</value>
-  </data>
-  <data name="Label.Game.Points" xml:space="preserve">
-    <value>Aktuális pontok</value>
-  </data>
-  <data name="Label.Game.HighScorePts" xml:space="preserve">
-    <value>Legmagasabb eredmény</value>
-  </data>
-  <data name="Label.Game.HighScoreTim" xml:space="preserve">
-    <value>Eredmény ideje</value>
-  </data>
-  <data name="Label.Title.Game.Category" xml:space="preserve">
-    <value>Kategória Játék</value>
-  </data>
-  <data name="Label.Title.Game.Orient" xml:space="preserve">
-    <value>Orientáció Játék</value>
-  </data>
-  <data name="Label.Game.PointsPerMax" xml:space="preserve">
-    <value>Maximum pontok</value>
-  </data>
-  <data name="Label.Game.Message.NewRecord" xml:space="preserve">
-    <value>Gratulálunk! Új rekord!</value>
+  <data name="SoloGame.Response.Started" xml:space="preserve">
+    <value>&lt; Game has been started! &gt;</value>
   </data>
 </root>
