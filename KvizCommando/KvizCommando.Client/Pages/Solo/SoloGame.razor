@@ -1,16 +1,67 @@
 ﻿@page "/solo-game"
+
 @using KvizCommando.Client.Pages.Solo.Components
 @using KvizCommando.Client.Components.CharacterComponent;
+
 @inherits Utilities.KcComponentBase
 
+
+
+
+
+<LangGuard Culture="@Culture" Module="solo" OnReady="BuildBoxes">
+    <PageContainer>
+        @if (_isReady)
+        {
+
+            <div class="@SelectorCss">
+                @foreach (var boxKey in _boxOrder)
+                {
+                    <ContentBox Vm="@Box(boxKey)"
+                                OnClick="OnBoxClick">
+
+                        <ContentBody>
+                            <SoloPlayView Data="@PlayViewData"
+                                          OnAnswerSelected="SelectAnswerAsync"
+                                          OnSkipEvaluation="SkipEvaluationAsync" />
+                        </ContentBody>
+
+                    </ContentBox>
+                }
+            </div>
+        }
+    </PageContainer>
+</LangGuard>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+          
 <LangGuard Culture=@Culture Module="solo" OnReady="BuildBoxes">
 
    <PageContainer>
         @if (_isReady == true)
         {
             <div class="@(SelectorCSS)">
-           
-                @foreach (string bx in _boxOrder)
+
+@foreach (string bx in _boxOrder)
                 {
                     var box = Box(bx);
 
@@ -44,30 +95,11 @@
                     </ContentBox>
                 }
             </div>
-          
-        }
+
+}
    </PageContainer>
 </LangGuard>
 
-
-
-<!-- 
-          
-
-
-  <div class="@(SelectorCSS)">
-                @foreach (string bx in _boxOrder)
-                {
-                    var box = Box(bx);
-
-                    <ContentBox Vm="@box"
-                                OnClick="OnBoxClick">
-                        <ContentBody>
-
-</ContentBody>
-                    </ContentBox>
-                }
-           </div>
 
 
 -->

@@ -54,6 +54,7 @@ namespace KvizCommando.Server.Services.SoloGame
 
             if (level < 0)
                 return (null, false);
+
             var isHealing = request.Mode == SoloGameMode.Orientation && player.Characters[request.SelectionId - 1].EnergyPoints == 0;
 
             var categoryIds = request.Mode == SoloGameMode.Category
@@ -257,7 +258,7 @@ namespace KvizCommando.Server.Services.SoloGame
                 return [];
 
             var first = character.Attitude.Main.CatNo[0];
-            var second = character.Attitude.Main.CatNo[1];
+            var second = character.Attitude.Main.CatNo[2];
 
             return first > 0 && second > 0 ? [first, second] : [];
         }

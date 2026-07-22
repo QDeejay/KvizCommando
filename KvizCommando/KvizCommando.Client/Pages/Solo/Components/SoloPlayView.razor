@@ -1,6 +1,166 @@
+@using KvizCommando.Client.Components.CharacterComponent
+@using KvizCommando.Client.Pages.Solo.ViewModels;
+
+
 <div class="kc-solo-play">
-   
     <aside class="kc-solo-player-panel">
+        <div class="kc-solo-player-image-box">
+            @if (!string.IsNullOrWhiteSpace(Data.Player.PictureCode))
+            {
+                <div class="kc-solo-player-svg-host">
+                    <CharacterView PicCode="@Data.Player.PictureCode" />
+                </div>
+            }
+            else if (!string.IsNullOrWhiteSpace(Data.Player.ImageSrc))
+            {
+                <img class="kc-solo-player-image"
+                     src="@Data.Player.ImageSrc"
+                     alt="@Data.Player.Name" />
+            }
+            else
+            {
+                <i class="bi bi-person-bounding-box kc-solo-player-placeholder"></i>
+            }
+        </div>
+
+        <div class="kc-solo-player-data">
+            <div class="kc-solo-player-name" title="@Data.Player.Name">@Data.Player.Name</div>
+            <div class="kc-solo-player-rank">@Data.Player.RankName</div>
+            <div class="kc-solo-player-separator"></div>
+            <div class="kc-solo-player-property">@Data.Player.Level. @Lang["solo.Label.Game.Level"]</div>
+            <div class="kc-solo-player-property">@Data.Player.OrientationName</div>
+        </div>
+
+        <div class="kc-solo-score-box">
+            <span>@Lang["solo.Label.Game.Points"]</span>
+            <strong>@Data.Game.Points @Lang["solo.Label.Game.PointUnit"]</strong>
+        </div>
+    </aside>
+
+    <section class="kc-solo-question-panel">
+        <header class="kc-solo-question-header">
+            <div class="kc-solo-category" title="@Data.Game.Title">@Data.Game.Title</div>
+            <div class="kc-solo-question-count">@Data.Game.CurrentQuestion / @Data.Game.TotalQuestions</div>
+        </header>
+
+        <div class="kc-solo-timer @TimerWarningClass">
+            <i class="bi bi-stopwatch"></i>
+            <div class="kc-solo-timer-display">
+                <strong>@Data.Game.RemainingSeconds</strong>
+                <span>@Lang["solo.Label.Game.SecondUnit"]</span>
+            </div>
+            <div class="kc-solo-timer-track">
+                <div class="kc-solo-timer-value" style="@TimerStyle"></div>
+            </div>
+        </div>
+
+        <div class="@QuestionPanelClass">
+            @foreach (var line in Data.Panel.DisplayLines)
+            {
+                <div class="@(line.Emphasized ? "emphasized" : "")">
+                    @if (!string.IsNullOrWhiteSpace(line.ResourceKey))
+                    {
+                        <span>@Lang[line.ResourceKey]</span>
+                    }
+                    else
+                    {
+                        <span>@line.Text</span>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(line.Value))
+                    {
+                        <strong>@line.Value</strong>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="kc-solo-answer-list">
+            @for (var i = 0; i < Data.Panel.Answers.Count; i++)
+            {
+                var answerIndex = i;
+                <button type="button"
+                        class="kc-solo-answer @GetAnswerClass(answerIndex)"
+                        disabled="@(!Data.Panel.AnswerEnabled)"
+                        @onclick="() => SelectAnswerAsync(answerIndex)">
+                    <span class="kc-solo-answer-letter">@AnswerLetter(answerIndex)</span>
+                    <span class="kc-solo-answer-text">@Data.Panel.Answers[answerIndex]</span>
+                </button>
+            }
+        </div>
+
+        <div class="kc-solo-progress">
+            @for (var i = 1; i <= Data.Game.TotalQuestions; i++)
+            {
+                var state = Data.Panel.Progress.ElementAtOrDefault(i - 1);
+                <div class="kc-solo-progress-item @(i > 10 ? "second-row" : "") @(i == 11 ? "row-turn" : "") @GetProgressClass(i)"
+                     style="@GetProgressPosition(i)">
+                    <span class="kc-solo-progress-dot">
+                        @if (state == SoloQuestionState.Correct)
+                        {
+                            <i class="bi bi-check-lg"></i>
+                        }
+                        else if (state == SoloQuestionState.Wrong)
+                        {
+                            <i class="bi bi-x-lg"></i>
+                        }
+                        else if (state == SoloQuestionState.Unanswered)
+                        {
+                            <i class="bi bi-square-fill"></i>
+                        }
+                        else
+                        {
+                            @i
+                        }
+                    </span>
+                </div>
+            }
+        </div>
+
+        @if (Data.Panel.ShowSkip)
+        {
+            <button type="button" class="kc-solo-skip" @onclick="OnSkipEvaluation">
+                @Lang["solo.Button.Game.Skip"]
+            </button>
+        }
+    </section>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <!-- 
+
+                    <div class="kc-solo-play">
+
+<aside class="kc-solo-player-panel">
 
         <div class="kc-solo-player-image-box">
             @if (PlayerImage is not null)
@@ -92,7 +252,10 @@
                         {
                             <i class="bi @(AnswerResults[i - 1] ? "bi-check-lg" : "bi-x-lg")">  </i>
                         }
-                        else { @i }
+                        else {
+
+                        @i
+                        }
                     </span>
                 </div>
             }
@@ -100,3 +263,12 @@
     </section>
 
 </div>
+
+
+
+
+
+
+
+
+                    -->
