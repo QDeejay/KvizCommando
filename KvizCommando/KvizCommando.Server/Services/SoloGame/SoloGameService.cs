@@ -117,6 +117,7 @@ namespace KvizCommando.Server.Services.SoloGame
                 QuestionCount = questionCount,
                 AnswerTimeSeconds = AnswerSeconds,
                 FeedbackTimeSeconds = FeedbackSeconds,
+                MaxPointsPerQuestion = maxPointPerQuestion,
                 Questions = cachedQuestions.Select(question => new SoloQuestionDto
                 {
                     QuestionToken = question.QuestionToken,

@@ -168,4 +168,23 @@
   <data name="Label.GameProcess.WaitingResult" xml:space="preserve">
     <value />
   </data>
+  <data name="Label.Game.Level" xml:space="preserve"><value>szint</value></data>
+  <data name="Label.Game.PointUnit" xml:space="preserve"><value>pont</value></data>
+  <data name="Label.Game.SecondUnit" xml:space="preserve"><value>mp</value></data>
+  <data name="Label.GameProcess.Preparing" xml:space="preserve"><value>Terminál előkészítése</value></data>
+  <data name="Label.GameProcess.Connecting" xml:space="preserve"><value>Csatlakozás a szerverhez</value></data>
+  <data name="Label.GameProcess.Starting" xml:space="preserve"><value>Játék indítása</value></data>
+  <data name="Label.GameProcess.ProcessingQuestions" xml:space="preserve"><value>Kérdések feldolgozása folyamatban</value></data>
+  <data name="Label.GameProcess.Evaluating" xml:space="preserve"><value>Kiértékelés folyamatban</value></data>
+  <data name="Label.GameProcess.EvaluationReady" xml:space="preserve"><value>Kiértékelés kész</value></data>
+  <data name="Label.GameProcess.Aborted" xml:space="preserve"><value>Művelet megszakadt</value></data>
+  <data name="Label.Game.Reward.Title" xml:space="preserve"><value>Megjelenített reward</value></data>
+  <data name="Label.Game.Reward.Answered" xml:space="preserve"><value>Megválaszolt kérdések</value></data>
+  <data name="Label.Game.Reward.Correct" xml:space="preserve"><value>Helyes válaszok</value></data>
+  <data name="Label.Game.Reward.Time" xml:space="preserve"><value>Teljesített idő</value></data>
+  <data name="Label.Game.Reward.TotalPoints" xml:space="preserve"><value>Összpontszám</value></data>
+  <data name="Label.Game.Reward.TeamXp" xml:space="preserve"><value>Csapat XP</value></data>
+  <data name="Label.Game.Reward.TeamDev" xml:space="preserve"><value>Csapat fejlesztési pont</value></data>
+  <data name="Label.Game.Reward.MemberXp" xml:space="preserve"><value>Karakter XP</value></data>
+  <data name="Label.Game.Reward.MemberDev" xml:space="preserve"><value>Karakter fejlesztési pont</value></data>
 </root>

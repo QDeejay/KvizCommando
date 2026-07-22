@@ -1,5 +1,6 @@
 ﻿using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Shared.Contracts.Question;
+using KvizCommando.Shared.Contracts.SoloGame;
 using KvizCommando.Shared.Contracts.Team;
 using System.Net.Http.Json;
 
@@ -88,6 +89,7 @@ namespace KvizCommando.Client.Services.Dto
                 Console.WriteLine("Send new question finished");
             }
         }
+
         public async Task<bool> ModifyTeamAsync(ModifySkillRequest dto, CancellationToken ct = default)
         {
             dto.SessionId = _sessionCache.SessionId ?? "NoId";
@@ -133,5 +135,59 @@ namespace KvizCommando.Client.Services.Dto
                 Console.WriteLine("Modify teamskill finished");
             }
         }
+
+        public async Task<StartSoloGameResponse?> StartSoloGameAsync(StartSoloGameRequest dto, CancellationToken ct = default)
+        {
+            dto.SessionId = _sessionCache.SessionId ?? "NoId";
+
+            try
+            {
+                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_SOLO}/start", dto, ct);
+                return response.IsSuccessStatusCode
+                    ? await response.Content.ReadFromJsonAsync<StartSoloGameResponse>(cancellationToken: ct)
+                    : null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+        public async Task<FinishSoloGameResponse?> FinishSoloGameAsync(Guid gameId, FinishSoloGameRequest dto, CancellationToken ct = default)
+        {
+            dto.SessionId = _sessionCache.SessionId ?? "NoId";
+
+            try
+            {
+                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_SOLO}/{gameId}/finish", dto, ct);
+                return response.IsSuccessStatusCode
+                    ? await response.Content.ReadFromJsonAsync<FinishSoloGameResponse>(cancellationToken: ct)
+                   : null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+        public async Task<bool> AbandonSoloGameAsync(Guid gameId, CancellationToken ct = default)
+        {
+            var dto = new AbandonSoloGameRequest
+            {
+                SessionId = _sessionCache.SessionId ?? "NoId"
+            };
+
+            try
+            {
+                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_SOLO}/{gameId}/abandon", dto, ct);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return false;
+            }
+        }
+
     }
 }

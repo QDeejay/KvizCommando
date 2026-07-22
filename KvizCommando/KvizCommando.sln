@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
 		..\..\..\..\..\Downloads\SoloGameServer_project_style\SoloGameServer_project_style\INSTALL_HU.md = ..\..\..\..\..\Downloads\SoloGameServer_project_style\SoloGameServer_project_style\INSTALL_HU.md
+		..\..\..\..\..\Downloads\SoloGame-client-kodreszletek\SoloGame-client-kodreszletek\modositasok\README.md = ..\..\..\..\..\Downloads\SoloGame-client-kodreszletek\SoloGame-client-kodreszletek\modositasok\README.md
 		Runbook_CheckIn_Terms_ClaimFlow.md = Runbook_CheckIn_Terms_ClaimFlow.md
 		..\ops\Runbook_CheckIn_Terms_Update.md = ..\ops\Runbook_CheckIn_Terms_Update.md
 		Runbook_Legal_Update.md = Runbook_Legal_Update.md
@@ -23,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tosExporter", "..\BuildTools\tosExporter\tosExporter.csproj", "{FC8F5145-88B4-4E79-8F20-68F8A9513200}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BenchmarkSuite1", "BenchmarkSuite1\BenchmarkSuite1.csproj", "{A20861A9-411E-6150-BF5C-69E8196E5D22}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Temp", "Temp", "{90F8315A-55AF-429B-B322-4164C1B17114}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
