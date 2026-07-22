@@ -67,10 +67,7 @@ namespace KvizCommando.Server.Services.PlayerCache
         Task<bool?> UpdatePartialPlayerAsync(
             int playerId,
             string sessionId,
-            int xp, int devpoints,
-            int selectedid,
-            int memXp, int memDev,
-            int credit,
+            CachedPlayer newPlayer,
             CancellationToken ct = default
             );
 

@@ -614,10 +614,7 @@ namespace KvizCommando.Server.Services.PlayerCache
         public async Task<bool?> UpdatePartialPlayerAsync(
             int playerId,
             string sessionId,
-            int xp, int devpoints,
-            int selectedid,
-            int memXp, int memDev,
-            int credit,
+            CachedPlayer newPlayer,
             CancellationToken ct = default
             )
         {
@@ -630,20 +627,13 @@ namespace KvizCommando.Server.Services.PlayerCache
                 if (entry.Player.SessionId != sessionId)
                     return null;
 
-                if (selectedid > 0)
-                {
-                    entry.Player.Characters[selectedid - 1].XP += xp;
-                    entry.Player.Characters[selectedid - 1].XP = Math.Min(entry.Player.Characters[selectedid - 1].XP, RankRewards.List[entry.Player.Characters[selectedid - 1].Rank].NextLevel);
-                    entry.Player.Characters[selectedid - 1].DevPoints += devpoints;
-                    entry.Player.Core.XP += entry.Player.Characters[selectedid - 1].Rank == 0 ? xp / 2 : 0;
-                    entry.Dirty |= DirtyFlags.Characters;
-                }
+                if (entry.Player.Core != newPlayer.Core)
+                    entry.Dirty |= DirtyFlags.Core;
 
-                entry.Player.Core.XP += xp;
-                entry.Player.Core.DevPoint += devpoints;
-                entry.Player.Core.XP = Math.Min(entry.Player.Core.XP, RankRewards.List[entry.Player.Core.RankEnum].NextLevel);
-                entry.Player.Core.Credit += credit;
-                entry.Dirty |= DirtyFlags.Core;
+                if (entry.Player.Characters != newPlayer.Characters)
+                    entry.Dirty |= DirtyFlags.Characters;
+
+                entry.Player = newPlayer;
 
                 entry.LastAccessUtc = DateTime.UtcNow;
                 return true;
