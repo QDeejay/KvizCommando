@@ -21,10 +21,13 @@ public partial class SoloPlayView
     private string TimerStyle =>
        $"width: {TimerPercent.ToString("0.##", CultureInfo.InvariantCulture)}%";
 
-    private string TimerWarningClass => Data.Game.RemainingSeconds <= 5
-        ? "kc-solo-timer-warning"
-        : string.Empty;
-
+    private string TimerStateClass => Data.Game.RemainingSeconds switch
+    {
+        <= 0 => "kc-solo-timer-zero",
+        <= 5 => "kc-solo-timer-warning",
+        > 15 => "kc-solo-timer-high",
+        _ => string.Empty
+    };
     private string QuestionPanelClass => Data.Panel.Mode == SoloPanelMode.Reward
         ? "kc-solo-question-text reward"
         : "kc-solo-question-text";

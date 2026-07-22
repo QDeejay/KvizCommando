@@ -119,12 +119,12 @@ namespace KvizCommando.Server.Services.SoloGame
                 AnswerTimeSeconds = AnswerSeconds,
                 FeedbackTimeSeconds = FeedbackSeconds,
                 MaxPointsPerQuestion = maxPointPerQuestion,
-                Questions = cachedQuestions.Select(question => new SoloQuestionDto
+                Questions = [.. cachedQuestions.Select(question => new SoloQuestionDto
                 {
                     QuestionToken = question.QuestionToken,
                     Question = question.Question,
                     Answers = question.Answers
-                }).ToArray()
+                })]
             };
 
             return (response, true);
@@ -427,8 +427,9 @@ namespace KvizCommando.Server.Services.SoloGame
 
             if (player.SessionId == "denied") return (null, new SoloRewardDto());
 
-            int dev = Math.Max(ScoreConstants.ScorLimits.Count(value => value > pointsNew) -
-                 ScoreConstants.ScorLimits.Count(value => value > pointsOld), 0);
+            int dev = Math.Max(ScoreConstants.ScorLimits.Count(value => pointsNew >= value) -
+                            ScoreConstants.ScorLimits.Count(value => pointsOld >= value),
+                            0);
 
             int xpTeam = 0;
             int xpMember = 0;
@@ -442,16 +443,16 @@ namespace KvizCommando.Server.Services.SoloGame
             }
             else
             {
-                var tempMember = player.Characters[game.SelectionId];
+                var tempMember = player.Characters[game.SelectionId - 1];
                 devMember += game.isHealing ? 1 : 0;
                 devMember += game.SelectionId > 0 ? dev : 0;
                 if (game.Level == 0)
                 {
-                    xpMember += game.Level == 0 ? pointsNew / 10 : 0;
+                    xpMember += game.Level == 0 && pointsNew > 0 ? pointsNew / 10 : 0;
                     xpTeam += xpMember / 2;
                     player.Core.XP += xpTeam;
                 }
-                player.Characters[game.SelectionId] = tempMember;
+                player.Characters[game.SelectionId - 1] = tempMember;
             }
 
             await _playerCache.UpdatePartialPlayerAsync(

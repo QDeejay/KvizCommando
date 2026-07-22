@@ -2,7 +2,6 @@
 using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Services.Visual.UiService;
-using KvizCommando.Client.Services.Visual.UiService.Language;
 using Microsoft.AspNetCore.Components;
 
 namespace KvizCommando.Client.Utilities
@@ -11,7 +10,8 @@ namespace KvizCommando.Client.Utilities
     {
         [Inject] protected UiServices Ui { get; set; } = default!;
         [Inject] protected MarkupLoaderService MarkupLoader { get; set; } = default!;
-        // [Inject] protected NavigationManager Nav { get; set; } = default!;
+
+
         [Inject] protected IApiService Api { get; set; } = default!;
         [Inject] protected IUserService User { get; set; } = default!;
         //[Inject] protected ILanguageService Lang { get; set; } = default!;

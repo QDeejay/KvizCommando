@@ -187,7 +187,7 @@ box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
     min-height: 58px;
     padding: 6px 10px;
     display: grid;
-    grid-template-columns: auto 170px minmax(80px, 1fr);
+    grid-template-columns: auto 100px minmax(80px, 1fr);
     align-items: center;
     gap: 10px;
     background: #181b16;
@@ -238,16 +238,21 @@ box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
 
 .kc-solo-timer-value {
     height: 100%;
-    background-color: olive; /* #bfe935 */
+    background-color: yellow;
     box-shadow: 0 0 7px rgba(197, 242, 57, .8);
     transition: width .25s linear;
 }
 
-.kc-solo-timer-warning .kc-solo-timer-display,
-.kc-solo-timer-warning .kc-solo-timer-value {
-    background: #e78c35;
-    box-shadow: 0 0 9px rgba(231, 80, 35, .85);
+.kc-solo-timer-high .kc-solo-timer-value {
+    background-color: #bfe935;
 }
+.kc-solo-timer-warning .kc-solo-timer-value { background-color: rgba(231, 140, 53,1); }
+
+
+.kc-solo-timer-warning .kc-solo-timer-display { background-color: rgba(231, 140, 53, 0.9); }
+
+.kc-solo-timer-zero .kc-solo-timer-display { background-color: rgba(200, 59, 50, 0.9); }
+
 
 .kc-solo-question-text {
     padding: 16px 24px;
@@ -277,17 +282,46 @@ box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
     justify-content: flex-start;
     gap: 10px;
     text-align: left;
+    animation: kc-solo-reward-in .45s ease-out both;
 }
 
 .kc-solo-question-text.reward > div {
     display: flex;
     justify-content: space-between;
     gap: 20px;
+    opacity: 0;
+    animation: kc-solo-reward-line-in .3s ease-out forwards;
 }
 
 .kc-solo-question-text.reward .emphasized {
     color: #756000;
     font-weight: 700;
+}
+
+/* Az alábbi két animáció új, ezeket add a fenti szabályok után. */
+
+@keyframes kc-solo-reward-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes kc-solo-reward-line-in {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .kc-solo-answer-list {

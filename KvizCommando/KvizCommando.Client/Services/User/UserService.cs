@@ -3,12 +3,9 @@ using KvizCommando.Client.Models.StoreModels;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Dto;
-using KvizCommando.Client.Services.Visual;
 using KvizCommando.Shared.Contracts.Auth;
 using KvizCommando.Shared.Contracts.CheckIn;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.JSInterop;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -214,10 +211,10 @@ namespace KvizCommando.Client.Services.User
             string sessionId = Guid.NewGuid().ToString("N");
 
             var resp = await _http.GetAsync($"{CheckInRoute}?sessionId={sessionId}", ct);
-            
+
 
             if (resp.StatusCode == HttpStatusCode.Unauthorized)
-                 return (false , new List<string> { "Unauthorized" });
+                return (false, new List<string> { "Unauthorized" });
 
             if (!resp.IsSuccessStatusCode)
                 return (false, new List<string> { "DefaultError" });
@@ -226,7 +223,7 @@ namespace KvizCommando.Client.Services.User
 
             if (dto is null || dto.CurrentTerms is null)
                 return (false, new List<string> { "DefaultError" });
-            
+
             if (dto.NeedsDisplayName || dto.NeedsTermsAcceptance)
             {
                 var cacheData = new CheckInSessionCache()
@@ -237,14 +234,14 @@ namespace KvizCommando.Client.Services.User
                     url = dto.CurrentTerms.Url,
                     PublishedAt = dto.CurrentTerms.PublishedAt
                 };
-                await _session.SetItemAsync(CheckInCacheKey, cacheData);
-                if (needToRoute==false)
+                await _session.SetItemAsync(CheckInCacheKey, cacheData, ct);
+                if (needToRoute == false)
                     return (true, new List<string> { });
                 _nav.NavigateTo("/checkin");
             }
             else
             {
-                await _session.SetItemAsync("SessionId", sessionId);
+                await _session.SetItemAsync("SessionId", sessionId, ct);
                 _sessionCache.SessionId = sessionId;
                 await _audio.InitializeAsync();
                 await _home.EnsureLoadedAsync();
@@ -262,11 +259,11 @@ namespace KvizCommando.Client.Services.User
             var sessionId = Guid.NewGuid().ToString("N");
             request.SessionId = sessionId;
             var errors = new List<string> { "DefaultError" };
-            var resp = await _http.PostAsJsonAsync(CheckInRoute, request, cancellationToken: ct);        
+            var resp = await _http.PostAsJsonAsync(CheckInRoute, request, cancellationToken: ct);
             var content = await resp.Content.ReadFromJsonAsync<CheckInPostResponse>(ct);
 
-            if (resp.IsSuccessStatusCode && content!.Success == true )
-                return (true, new List<string>(),"");
+            if (resp.IsSuccessStatusCode && content!.Success == true)
+                return (true, new List<string>(), "");
 
             if (content is null)
                 return (false, errors, "");

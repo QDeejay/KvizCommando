@@ -43,7 +43,7 @@
             <div class="kc-solo-question-count">@Data.Game.CurrentQuestion / @Data.Game.TotalQuestions</div>
         </header>
 
-        <div class="kc-solo-timer @TimerWarningClass">
+        <div class="kc-solo-timer @TimerStateClass">
             <i class="bi bi-stopwatch"></i>
             <div class="kc-solo-timer-display">
                 <strong>@Data.Game.RemainingSeconds</strong>
@@ -55,9 +55,12 @@
         </div>
 
         <div class="@QuestionPanelClass">
-            @foreach (var line in Data.Panel.DisplayLines)
+            @for (var i = 0; i < Data.Panel.DisplayLines.Count; i++)
             {
-                <div class="@(line.Emphasized ? "emphasized" : "")">
+                var line = Data.Panel.DisplayLines[i];
+
+                <div class="@(line.Emphasized ? "emphasized" : "")"
+                     style="animation-delay: @(i * 90)ms">
                     @if (!string.IsNullOrWhiteSpace(line.ResourceKey))
                     {
                         <span>@Lang[line.ResourceKey]</span>
@@ -75,19 +78,22 @@
             }
         </div>
 
-        <div class="kc-solo-answer-list">
-            @for (var i = 0; i < Data.Panel.Answers.Count; i++)
-            {
-                var answerIndex = i;
-                <button type="button"
-                        class="kc-solo-answer @GetAnswerClass(answerIndex)"
-                        disabled="@(!Data.Panel.AnswerEnabled)"
-                        @onclick="() => SelectAnswerAsync(answerIndex)">
-                    <span class="kc-solo-answer-letter">@AnswerLetter(answerIndex)</span>
-                    <span class="kc-solo-answer-text">@Data.Panel.Answers[answerIndex]</span>
-                </button>
-            }
-        </div>
+        @if (Data.Panel.Mode != SoloPanelMode.Reward)
+        {
+            <div class="kc-solo-answer-list">
+                @for (var i = 0; i < Data.Panel.Answers.Count; i++)
+                {
+                    var answerIndex = i;
+                    <button type="button"
+                            class="kc-solo-answer @GetAnswerClass(answerIndex)"
+                            disabled="@(!Data.Panel.AnswerEnabled)"
+                            @onclick="() => SelectAnswerAsync(answerIndex)">
+                        <span class="kc-solo-answer-letter">@AnswerLetter(answerIndex)</span>
+                        <span class="kc-solo-answer-text">@Data.Panel.Answers[answerIndex]</span>
+                    </button>
+                }
+            </div>
+        }
 
         <div class="kc-solo-progress">
             @for (var i = 1; i <= Data.Game.TotalQuestions; i++)

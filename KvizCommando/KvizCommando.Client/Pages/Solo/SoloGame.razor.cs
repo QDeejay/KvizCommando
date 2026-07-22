@@ -1,6 +1,7 @@
 ﻿using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Pages.Solo.Features;
 using KvizCommando.Client.Pages.Solo.ViewModels;
+using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.SoloGame;
@@ -16,6 +17,8 @@ namespace KvizCommando.Client.Pages.Solo
     {
         [CascadingParameter]
         private AppState AppStates { get; set; } = default!;
+
+        [Inject] AudioService Audio { get; set; } = default!;
 
         private readonly Dictionary<string, ContentBoxVm> _boxes = [];
         private readonly Stopwatch _gameWatch = new();
@@ -149,10 +152,12 @@ namespace KvizCommando.Client.Pages.Solo
 
         private async Task StartGameAsync(SoloGameMode mode, int selectionId)
         {
+            await Audio.PlayMusicAsync("Battle01.webm");
             CancelGameWork();
             _gameCts = new CancellationTokenSource();
             var ct = _gameCts.Token;
             _phase = SoloPagePhase.Status;
+            _remainingSeconds = 0;
 
             try
             {
@@ -172,17 +177,18 @@ namespace KvizCommando.Client.Pages.Solo
                     return;
                 }
 
-                _answers = _game.Questions.Select(question => new SoloAnswerDto
+                _answers = [.. _game.Questions.Select(question => new SoloAnswerDto
                 {
                     QuestionToken = question.QuestionToken,
                     SelectedOptionIndex = -1
-                }).ToArray();
+                })];
 
-                _progress = Enumerable.Repeat(SoloQuestionState.Pending, _game.QuestionCount).ToArray();
+                _progress = [.. Enumerable.Repeat(SoloQuestionState.Pending, _game.QuestionCount)];
                 _points = _game.MaxPointsPerQuestion;
                 _remainingSeconds = _game.AnswerTimeSeconds;
 
                 await ShowStatusAsync("solo.Label.GameProcess.Starting", 1000, ct);
+                await Audio.PlayMusicAsync("Battle01.webm");
                 await PlayAsync(ct);
             }
             catch (OperationCanceledException)
@@ -198,6 +204,10 @@ namespace KvizCommando.Client.Pages.Solo
             {
                 _progress[_questionIndex] = SoloQuestionState.Active;
                 await PlayQuestionAsync(ct);
+
+                _answerEnabled = false;
+                await InvokeAsync(StateHasChanged);
+
                 await Task.Delay(1000, ct);
             }
 
@@ -220,12 +230,15 @@ namespace KvizCommando.Client.Pages.Solo
                     return;
                 }
 
-                _remainingSeconds = Math.Max(0,
+                _remainingSeconds = Math.Max(
+                    0,
                     _game.AnswerTimeSeconds - (int)(_questionWatch.ElapsedMilliseconds / 1000));
+
                 await InvokeAsync(StateHasChanged);
                 await Task.Delay(100, ct);
             }
 
+            _remainingSeconds = 0;
             SaveAnswer(-1, _game.AnswerTimeSeconds * 1000);
         }
         private void SaveAnswer(int selectedOptionIndex, int answerTimeMs)
@@ -264,11 +277,12 @@ namespace KvizCommando.Client.Pages.Solo
                 ShowFailure();
                 return;
             }
-
+            await Audio.PlayMusicAsync("Menu02.webm");
             await ShowStatusAsync("solo.Label.GameProcess.Evaluating", 1000, ct);
             await ShowStatusAsync("solo.Label.GameProcess.EvaluationReady", 1000, ct);
             await EvaluateAsync(ct);
         }
+
         private async Task EvaluateAsync(CancellationToken ct)
         {
             _phase = SoloPagePhase.Evaluation;
@@ -278,6 +292,8 @@ namespace KvizCommando.Client.Pages.Solo
 
             for (_questionIndex = 0; _questionIndex < _result!.AnswerResults.Length; _questionIndex++)
             {
+                SetEvaluationTime(_questionIndex);
+
                 _progress[_questionIndex] = _answers[_questionIndex].SelectedOptionIndex == -1
                     ? SoloQuestionState.Unanswered
                     : _result.AnswerResults[_questionIndex]
@@ -293,7 +309,35 @@ namespace KvizCommando.Client.Pages.Solo
                     break;
             }
 
+            CompleteEvaluationProgress();
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(700, ct);
             ShowReward();
+        }
+
+        private void CompleteEvaluationProgress()
+        {
+            for (var i = _evaluatedCount; i < _result!.AnswerResults.Length; i++)
+            {
+                _progress[i] = _answers[i].SelectedOptionIndex == -1
+                    ? SoloQuestionState.Unanswered
+                    : _result.AnswerResults[i]
+                        ? SoloQuestionState.Correct
+                        : SoloQuestionState.Wrong;
+            }
+
+            _evaluatedCount = _result.AnswerResults.Length;
+            _points = _result.TotalPoints.Sum();
+        }
+
+        private void SetEvaluationTime(int questionIndex)
+        {
+            var answerTimeMs = _answers[questionIndex].AnswerTimeMs;
+            var elapsedSeconds = answerTimeMs / 1000;
+
+            _remainingSeconds = Math.Max(
+                _game!.AnswerTimeSeconds - elapsedSeconds,
+                0);
         }
         private Task SkipEvaluationAsync()
         {
@@ -406,7 +450,7 @@ namespace KvizCommando.Client.Pages.Solo
                 _phase is SoloPagePhase.Playing or SoloPagePhase.Status;
 
             CancelGameWork();
-
+            await Audio.PlayMusicAsync("Menu02.webm");
             if (abandon)
                 await Api.AbandonSoloGameAsync(_game!.GameId);
 
