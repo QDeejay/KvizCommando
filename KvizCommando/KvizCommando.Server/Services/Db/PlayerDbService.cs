@@ -198,7 +198,7 @@ namespace KvizCommando.Server.Services.Db
 
 
                 await _db.SaveChangesAsync(ct);
-                return false;
+                return true;
             }
             catch
             {

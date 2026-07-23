@@ -433,11 +433,11 @@ namespace KvizCommando.Server.Services.SoloGame
 
         private async Task<(bool? Success, SoloRewardDto? Reward)> CreateRewardsAsync(SoloGameSession game, int pointsNew, int pointsOld, CancellationToken ct)
         {
-            var (player, _) = await _playerCache.GetOrLoadLockedAsync(game.PlayerId, game.SessionId, ct);
+            //var (player, _) = await _playerCache.GetOrLoadLockedAsync(game.PlayerId, game.SessionId, ct);
+            var player = new CachedPlayer();
+            //if (player is null) return (false, new SoloRewardDto());
 
-            if (player is null) return (false, new SoloRewardDto());
-
-            if (player.SessionId == "denied") return (null, new SoloRewardDto());
+            //if (player.SessionId == "denied") return (null, new SoloRewardDto());
 
             int dev = Math.Max(ScoreConstants.ScorLimits.Count(value => pointsNew >= value) -
                             ScoreConstants.ScorLimits.Count(value => pointsOld >= value),
@@ -464,6 +464,8 @@ namespace KvizCommando.Server.Services.SoloGame
                     xpTeam += xpMember / 2;
                     player.Core.XP += xpTeam;
                 }
+                tempMember!.DevPoints += devMember;
+                tempMember.XP += xpMember;
                 player.Characters[game.SelectionId - 1] = tempMember;
             }
 
