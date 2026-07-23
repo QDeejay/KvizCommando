@@ -46,7 +46,8 @@ namespace KvizCommando.Client.Layout
 
         private void ToggleSidebar() => _hasSidebarCollapsed = (!_hasSidebarCollapsed && _isLoggedIn);
         private bool BackNavigationEna => (_hasSidebarCollapsed && Ui.Header.PageIndex != 0) || _isBckBtnEna;
-        private HomeScreen Hs => _isLoggedIn ? _appState.Home!.HomeScreen : new HomeScreen() { };
+        private bool SideBarStatus => _hasSidebarCollapsed || !_isLoggedIn;
+        private HomeScreen Hs => _isLoggedIn && !(Ui.Header.PageIndex >= 420 && Ui.Header.PageIndex <= 470) ? _appState.Home!.HomeScreen : new HomeScreen() { };
         protected override async Task OnInitializedAsync()
         {
             _isReady = false;
@@ -113,26 +114,15 @@ namespace KvizCommando.Client.Layout
             _isBckBtnEna = Ui.Header.BackEna;
             InvokeAsync(StateHasChanged);
         }
-        private void Refresh()
-        {
-            InvokeAsync(StateHasChanged);
-        }
+
         private void OnBackClick()
         {
             Ui.SubHeader.Hide();
             Ui.Header.SetBackBtnToPushState();
         }
-
-        private void ShowModal()
-        {
-            var vm = Ui.Modal.Parameter!;
-            _ = _mainModal!.ShowAsync(vm);
-        }
-
-        private void HideModal()
-        {
-            _ = _mainModal!.HideAsync();
-        }
+        private void ShowModal() => _ = _mainModal!.ShowAsync(Ui.Modal.Parameter!);
+        private void HideModal() => _ = _mainModal!.HideAsync();
+        private void Refresh() => InvokeAsync(StateHasChanged);
         private void ModalAction(ModalResult result)
         {
             Ui.Modal.SendResult(result);

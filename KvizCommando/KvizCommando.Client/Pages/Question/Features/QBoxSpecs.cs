@@ -19,13 +19,14 @@ namespace KvizCommando.Client.Pages.Question.Features
 
     public static class QuestionBoxSpecs
     {
+        private const string IMAGE_ROOT = "images/buttons/question";
 
         public static readonly IReadOnlyList<QBoxSpecs> Specs =
         [
             new QBoxSpecs {
                 Key = QBoxKeyRoot.RtBtnFactory,
                 TitleKey = "question.Box.Title.FactorySlots",
-                ImageSrc = "images/solo/categories.webp",
+                ImageSrc = $"{IMAGE_ROOT}/fact.webp",
                 Size =ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = 101,
                 BuildBoxText = (lang, qn) => lang["question.Box.Footer.FactorySlots"].FormatSafe(qn.NoFownQuestion),
@@ -37,7 +38,7 @@ namespace KvizCommando.Client.Pages.Question.Features
             new QBoxSpecs {
                 Key = QBoxKeyRoot.RtBtnUsr,
                 TitleKey = "question.Box.Title.UsrSlots.NoData",
-                ImageSrc = "images/solo/orients.webp",
+                ImageSrc =$"{IMAGE_ROOT}/usr.webp",
                 Size = ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = 102,
                 BuildBoxText =(lang, qn) => lang["question.Box.Footer.UsrSlots"].FormatSafe(qn.OccupiedUserSlot,qn.AvailableUserSlot),
@@ -49,7 +50,7 @@ namespace KvizCommando.Client.Pages.Question.Features
             new QBoxSpecs {
                 Key = QBoxKeyRoot.RtBtnPendig,
                 TitleKey = "question.Box.Title.PendingSlots.NoData",
-                ImageSrc = "images/solo/campaign.webp",
+                ImageSrc = $"{IMAGE_ROOT}/pending.webp",
                 Size = ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = 103,
                 BuildBoxText = (lang, qn) => lang["question.Box.Footer.PendingSlots"].FormatSafe(qn.HandlePendingSlot),
@@ -61,7 +62,7 @@ namespace KvizCommando.Client.Pages.Question.Features
             new QBoxSpecs {
                 Key = QBoxKeyRoot.RtBtnNew,
                 TitleKey = "question.Modal.Title.New",
-                ImageSrc = "images/solo/campaign.webp",
+                ImageSrc = $"{IMAGE_ROOT}/new.webp",
                 Size = ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = 104,
                 BuildBoxText = (lang, qn) => lang["question.Box.Footer.New"].FormatSafe(qn.FreePendingSlot),

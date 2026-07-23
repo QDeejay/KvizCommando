@@ -14,14 +14,14 @@ public sealed class HomeSpecs : VmSpecs
 
 public static class HomeBoxSpecs
 {
-
+    private const string IMAGE_ROOT = "images/buttons/home";
     public static readonly IReadOnlyList<HomeSpecs> Specs = new[]
     {
         new HomeSpecs {
             Key = HomeBoxKey.GameVs,
             TitleKey = "home.Box.Title.GameVs",
             ImageSrc = string.Empty,
-            BgImageSrc ="images/buttons/game.webp",
+            BgImageSrc =$"{IMAGE_ROOT}/game.webp",
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = true, ClickId = 3,
             Pick = s => s.VsGame,
@@ -31,7 +31,7 @@ public static class HomeBoxSpecs
             Key = HomeBoxKey.GameSolo,
             TitleKey = "home.Box.Title.GameSolo",
             ImageSrc = string.Empty,
-            BgImageSrc = "images/buttons/gamesolo.webp",
+            BgImageSrc = $"{IMAGE_ROOT}/gamesolo.webp",
             Size = ContentBoxSize.BUTTON_SMALL,
             FooterDisplay = false, ClickId = 4,
             Pick = s => s.SoloGame,
@@ -41,7 +41,7 @@ public static class HomeBoxSpecs
             Key = HomeBoxKey.Shop,
             TitleKey = "home.Box.Title.Shop",
             ImageSrc = string.Empty,
-            BgImageSrc = "images/buttons/shop.webp",
+            BgImageSrc = $"{IMAGE_ROOT}/shop.webp",
             Size = ContentBoxSize.BUTTON_MEDIUM,
             FooterDisplay = false, ClickId = 4,
             Pick = s => s.Shop,
@@ -51,7 +51,7 @@ public static class HomeBoxSpecs
             Key = HomeBoxKey.Rankings,
             TitleKey = "home.Box.Title.Rankings",
             ImageSrc = string.Empty,
-            BgImageSrc = "images/buttons/ranking.webp",
+            BgImageSrc = $"{IMAGE_ROOT}/ranking.webp",
             Size = ContentBoxSize.BUTTON_MEDIUM,
             FooterDisplay = true, ClickId = 5,
             Pick = s => s.Ranking,
@@ -63,7 +63,7 @@ public static class HomeBoxSpecs
         new HomeSpecs {
             Key = HomeBoxKey.Statistic,
             TitleKey = "home.Box.Title.Statistic",
-            BgImageSrc = "images/buttons/statistic.webp",
+            BgImageSrc = $"{IMAGE_ROOT}/statistic.webp",
             ImageSrc = string.Empty,
             Size =ContentBoxSize.BUTTON_SMALL,
             FooterDisplay = false, ClickId = 6,
@@ -74,7 +74,7 @@ public static class HomeBoxSpecs
             Key = HomeBoxKey.Events,
             TitleKey = "home.Box.Title.Events",
             ImageSrc = string.Empty,
-            BgImageSrc = "images/buttons/events.webp",
+            BgImageSrc = $"{IMAGE_ROOT}/events.webp",
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = true, ClickId = 7,
             Pick = s => s.Events,
@@ -90,7 +90,7 @@ public static class HomeBoxSpecs
             Key = HomeBoxKey.Community,
             TitleKey = "home.Box.Title.Community",
             ImageSrc = string.Empty,
-            BgImageSrc = "images/buttons/community.webp",
+            BgImageSrc = $"{IMAGE_ROOT}/community.webp",
             Size = ContentBoxSize.BUTTON_MEDIUM,
             FooterDisplay = true, ClickId = 8,
             Pick = s => s.Community,
@@ -100,7 +100,7 @@ public static class HomeBoxSpecs
             Key = HomeBoxKey.Messages,
             TitleKey = "home.Box.Title.Messages",
             ImageSrc = string.Empty,
-            BgImageSrc = "images/buttons/messages.webp",
+            BgImageSrc = $"{IMAGE_ROOT}/messages.webp",
             Size = ContentBoxSize.BUTTON_MEDIUM,
             FooterDisplay = true, ClickId = 9,
             Pick = s => s.Messages,
@@ -110,7 +110,7 @@ public static class HomeBoxSpecs
             Key = HomeBoxKey.Team,
             TitleKey = "home.Box.Title.Team",
             ImageSrc = string.Empty,
-            BgImageSrc = "images/buttons/team.webp",
+            BgImageSrc = $"{IMAGE_ROOT}/team.webp",
             Size = ContentBoxSize.BUTTON_MEDIUM,
             FooterDisplay = true, ClickId = 2,
             Pick = s => s.Team,
@@ -120,7 +120,7 @@ public static class HomeBoxSpecs
             Key = HomeBoxKey.Question,
             TitleKey = "home.Box.Title.Question",
             ImageSrc = string.Empty,
-            BgImageSrc = "images/buttons/questions.webp",
+            BgImageSrc = $"{IMAGE_ROOT}/questions.webp",
             Size = ContentBoxSize.BUTTON_MEDIUM,
             FooterDisplay = false,
             ClickId = 1,

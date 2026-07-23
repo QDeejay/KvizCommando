@@ -38,7 +38,6 @@ box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
 .kc-solo-player-image-box {
     position: relative;
     height: clamp(140px, 24vh, 210px);
-   
     aspect-ratio: 138 / 176;
     flex: 0 0 auto;
     margin: 0 auto;
@@ -58,9 +57,10 @@ box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
 }
 
 .kc-solo-player-image {
-    width: calc(100% - 10px);
-    height: calc(100% - 10px);
+    width: 100%;
+    height: auto;
     object-fit: contain;
+    background-color: rgba(210, 255, 57, 0.4);
     object-position: center bottom;
     filter: brightness(0.92) contrast(1.04);
 }

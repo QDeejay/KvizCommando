@@ -40,10 +40,10 @@
         
 
         <LangGuard Culture=@_culture Module="nav">
-            <div class="kc-mainlayout-nav-side @(_hasSidebarCollapsed || !_isLoggedIn ? "collapsed" : "")">
+            <div class="kc-mainlayout-nav-side @(SideBarStatus ? "collapsed" : "")">
                 <NavMenu Hs="@Hs"
                          OnToggleSidebar="ToggleSidebar" 
-                         IsCollapsed="@(_hasSidebarCollapsed || !_isLoggedIn)" />
+                         IsCollapsed="@(SideBarStatus)" />
             </div>
         </LangGuard>
         <main>
@@ -52,7 +52,7 @@
                     {
                         <header class="kc-mainlayout-content-header">
                             <div class="kc-mainlayout-content-header--left-warper">
-                                  <div class="kc-collapse-btn @(!_hasSidebarCollapsed ? "" : "collapsed")" @onclick="() => ToggleSidebar()">
+                            <div class="kc-collapse-btn @(SideBarStatus ? "collapsed" : "")" @onclick="() => ToggleSidebar()">
                                             <img src="images/logo.webp" alt="Logo" class="nav-logo" />
                                   </div>
                                   <div class="kc-mainlayout-content-header--left">

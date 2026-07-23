@@ -13,7 +13,7 @@ namespace KvizCommando.Client.Pages.Solo.ViewModels
     {
         public string Name { get; init; } = string.Empty;
         public string RankName { get; init; } = string.Empty;
-        public int Level { get; init; }
+        public string Level { get; init; } = string.Empty;
         public string OrientationName { get; init; } = string.Empty;
         public string PictureCode { get; init; } = string.Empty;
         public string ImageSrc { get; init; } = string.Empty;

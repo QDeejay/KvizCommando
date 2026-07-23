@@ -14,8 +14,6 @@
   "Label.Title.Game.Orient": "Orientation game",
   "Label.Game.PointsPerMax": "Maximum points",
   "Label.Game.Message.NewRecord": "Congratulation! New highscore!",
-  "Label.GameProcess.Init": "",
-  "Label.GameProcess.WaitingResult": "",
   "Label.Game.Level": "level",
   "Label.Game.PointUnit": "points",
   "Label.Game.SecondUnit": "sec",

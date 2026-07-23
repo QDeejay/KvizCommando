@@ -13,6 +13,12 @@
 		<InvariantGlobalization>false</InvariantGlobalization>
 		<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="wwwroot\Images\question\**" />
+	  <Content Remove="wwwroot\Images\question\**" />
+	  <EmbeddedResource Remove="wwwroot\Images\question\**" />
+	  <None Remove="wwwroot\Images\question\**" />
+	</ItemGroup>
 	
 
 
@@ -39,8 +45,7 @@
     <Folder Include="Features\Sologame\" />
     <Folder Include="Services\Logic\" />
     <Folder Include="wwwroot\audio\sfx\" />
-    <Folder Include="wwwroot\Data\" />
-    <Folder Include="wwwroot\Images\question\" /> 
+    <Folder Include="wwwroot\Data\" /> 
   </ItemGroup>
 
   <ItemGroup>

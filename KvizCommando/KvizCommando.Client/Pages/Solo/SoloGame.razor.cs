@@ -1,4 +1,6 @@
-﻿using KvizCommando.Client.Models.ViewModels;
+﻿using KvizCommando.Client.Data;
+using KvizCommando.Client.Helpers;
+using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Pages.Solo.Features;
 using KvizCommando.Client.Pages.Solo.ViewModels;
 using KvizCommando.Client.Services.Audio;
@@ -6,6 +8,7 @@ using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.SoloGame;
 using KvizCommando.Shared.Models.Dtos;
+using KvizCommando.Shared.Models.User;
 using Microsoft.AspNetCore.Components;
 using System.Diagnostics;
 
@@ -24,14 +27,7 @@ namespace KvizCommando.Client.Pages.Solo
         private readonly Stopwatch _gameWatch = new();
         private readonly Stopwatch _questionWatch = new();
 
-        private readonly SoloPlayerViewData _player = new()
-        {
-            Name = "Karl Brimfield",
-            RankName = "Közlegény",
-            Level = 12,
-            OrientationName = "Játékos",
-            PictureCode = "M7270BG"
-        };
+        private SoloPlayerViewData _playerVm = new();
 
         private string[] _boxOrder = [];
         private string _gameTitle = string.Empty;
@@ -54,13 +50,16 @@ namespace KvizCommando.Client.Pages.Solo
 
         private string Culture => AppStates.Culture;
         private SoloGameDtos SState => AppStates.SoloGame!;
+        private UserMainData UsrData => AppStates.Home!.UserMainData;
+
+        private TeamMemberDto[] Members => AppStates.Team.TeamMembers;
         private string SelectorCss => _boxOrder.Length > SgameBoxBuilder.Root.Length
            ? "kc-solo-selector-sub"
            : "kc-solo-selector-root";
         private ContentBoxVm Box(string key) => _boxes[key];
         private SoloPlayViewData PlayViewData => new()
         {
-            Player = _player,
+            Player = _playerVm,
             Game = new SoloGameViewData
             {
                 Title = _gameTitle,
@@ -72,7 +71,29 @@ namespace KvizCommando.Client.Pages.Solo
             },
             Panel = BuildPanelData()
         };
-
+        private SoloPlayerViewData GetPlayerProfile(SoloGameMode mode, int selectedId)
+        {
+            if (mode == SoloGameMode.Category)
+                return new SoloPlayerViewData
+                {
+                    Name = UsrData.UserName,
+                    RankName = RankNameLocalizer.GetName(UsrData.RankEnum, Culture),
+                    Level = RankNameTable.Data[UsrData.RankEnum].PublicLevel ?? "N/A",
+                    OrientationName = OrientationLocalizer.GetOrientation(9, Culture),
+                    PictureCode = string.Empty,
+                    ImageSrc = "images/avatars/basic.webp"
+                };
+            else
+                return new SoloPlayerViewData
+                {
+                    Name = Members[selectedId].Name,
+                    RankName = RankNameLocalizer.GetName(Members[selectedId].Level, Culture),
+                    Level = RankNameTable.Data[Members[selectedId].Level].PublicLevel ?? "N/A",
+                    OrientationName = OrientationLocalizer.GetOrientation(selectedId, Culture),
+                    PictureCode = Members[selectedId].PictureCode,
+                    ImageSrc = ""
+                };
+        }
         private void BuildBoxes()
         {
             foreach (var box in SgameBoxBuilder.BuildBoxes(SState, Culture, Ui.Lang))
@@ -134,6 +155,7 @@ namespace KvizCommando.Client.Pages.Solo
 
         private void BeginGame(SoloGameMode mode, int selectionId, int boxId)
         {
+            _playerVm = GetPlayerProfile(mode, selectionId);
             _boxOrder = mode == SoloGameMode.Category
                 ? SgameBoxBuilder.GameCat
                 : SgameBoxBuilder.GameOri;

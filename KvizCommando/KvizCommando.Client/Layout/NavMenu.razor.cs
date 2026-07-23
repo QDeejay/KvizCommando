@@ -1,6 +1,4 @@
-﻿using KvizCommando.Client.Pages.Solo;
-using KvizCommando.Client.Services.ClientCache;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+﻿using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
@@ -15,15 +13,17 @@ namespace KvizCommando.Client.Layout
         [Parameter] public EventCallback OnToggleSidebar { get; set; }
 
 
-        private bool _isReady ;
+        private bool _isReady;
         private string[] btnNavClass = new string[16];
         private const string btnNavClassDef = "navigation-button";
         private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
+
         protected override void OnParametersSet()
         {
             if (Hs != null)
             {
-                btnNavClass[0] = btnNavClassDef; // Home Allways on
+                btnNavClass[0] = btnNavClassDef + (!Hs.NavBarEnable ? " disabled" : "");
                 btnNavClass[1] = btnNavClassDef + (!Hs.Team.Enable ? " disabled" : "");     // Team 
                 btnNavClass[2] = btnNavClassDef + (!Hs.Question.Enable ? " disabled" : ""); // Question
                 btnNavClass[3] = btnNavClassDef + (!Hs.SoloGame.Enable ? " disabled" : "");// Game

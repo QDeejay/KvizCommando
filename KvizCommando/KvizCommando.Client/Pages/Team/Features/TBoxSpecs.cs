@@ -17,12 +17,14 @@ namespace KvizCommando.Client.Pages.Team.Features
 
     public static class TeamBoxSpecs
     {
+        private const string IMAGE_ROOT = "images/buttons/team";
+
         public static readonly IReadOnlyList<TBoxSpecs> Specs =
         [
             new TBoxSpecs {
                 Key = TBoxKeyRoot.RtBtnTeam,
                 TitleKey = "team.Box.Title.TeamOverview",
-                ImageSrc = "images/solo/categories.webp",
+                ImageSrc = $"{IMAGE_ROOT}/team.webp",
                 Size = ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = 201,
                 BuildBoxText = (lang, rb) => lang["team.Box.Footer.Team"].FormatSafe(rb.TeamOpRequired),
@@ -34,7 +36,7 @@ namespace KvizCommando.Client.Pages.Team.Features
             new TBoxSpecs {
                 Key = TBoxKeyRoot.RtBtnMembers,
                 TitleKey = "team.Box.Title.Members",
-                ImageSrc = "images/solo/categories.webp",
+                ImageSrc = $"{IMAGE_ROOT}/members.webp",
                 Size = ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = 202,
                 BuildBoxText = (lang, rb) => lang["team.Box.Footer.Member"].FormatSafe(rb.MemberOpRequired),
@@ -46,7 +48,7 @@ namespace KvizCommando.Client.Pages.Team.Features
             new TBoxSpecs {
                 Key = TBoxKeyRoot.RtBtnRecruit,
                 TitleKey = "team.Box.Title.Recruit",
-                ImageSrc = "images/solo/categories.webp",
+                ImageSrc = $"{IMAGE_ROOT}/recruit.webp",
                 Size = ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = 203,
                 BuildBoxText = (lang, rb) => lang["team.Box.Footer.Recruit"].FormatSafe(rb.FreePositions),

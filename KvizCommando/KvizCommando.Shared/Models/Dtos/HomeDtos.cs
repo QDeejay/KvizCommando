@@ -10,12 +10,12 @@ namespace KvizCommando.Shared.Models.Dtos
 
         public HomeScreen HomeScreen { get; set; } = new();
 
-        public HomeExtendedInfo ExtendedInfo { get; set; } = new(); 
+        public HomeExtendedInfo ExtendedInfo { get; set; } = new();
 
     }
 
-    public class HomeExtendedInfo 
-    { 
+    public class HomeExtendedInfo
+    {
         public int NextXp { get; set; } = 0;
 
         public DateTime LastInfo { get; set; } = DateTime.MinValue;
@@ -24,7 +24,7 @@ namespace KvizCommando.Shared.Models.Dtos
 
     public class HomeScreen
     {
-        public bool NavBarEnable { get; set; } = true; 
+        public bool NavBarEnable { get; set; } = false;
         public ScreenButtonEntity VsGame { get; set; } = new();
         public ScreenButtonEntity SoloGame { get; set; } = new();
         public ScreenButtonEntity Team { get; set; } = new();
