@@ -1,16 +1,20 @@
-﻿.kc-mainlayout-nav-side {
+﻿.kc-mainlayout-root {
+    --kc-main-header-height: 60px;
+    position: relative;
+}
+
+.kc-mainlayout-nav-side {
     position: absolute;
-    top: 120px;
+    top: var(--kc-main-header-height);
+    bottom: 0;
     left: 0;
     width: max(80px, 6vw);
-    height: calc(100% - 120px);
     z-index: 103;
     visibility: hidden;
     pointer-events: none;
     transform: translateX(-100%);
     transition: transform 0.25s ease-out, visibility 0.25s;
 }
-
     .kc-mainlayout-nav-side.open {
         visibility: visible;
         pointer-events: auto;
@@ -18,8 +22,8 @@
     }
 
 .kc-mainlayout-nav-backdrop {
-    position: fixed;
-    top: 60px;
+    position: absolute;
+    top: var(--kc-main-header-height);
     right: 0;
     bottom: 0;
     left: 0;

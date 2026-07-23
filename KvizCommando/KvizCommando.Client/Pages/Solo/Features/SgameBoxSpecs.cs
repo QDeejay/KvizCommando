@@ -90,7 +90,7 @@ namespace KvizCommando.Client.Pages.Solo.Features
                 ImageSrc = string.Empty,
                 BuildImageSrc = (ix) => $"{IMAGE_ROOT}/categories/{CatFileName[ix]}.webp", Size ="small", FooterDisplay=true, ClickId=420,
                 BuildEnable = (se,ix) => se.EnaCat[ix],
-                BuildFooter = (lang,sr, ix) => lang["solo.Button.Footer.Games"].FormatSafe(sr.CategoryResults[ix].Points,sr.CategoryResults[ix].Time)
+                BuildFooter = (lang,sr, ix) => lang["solo.Button.Footer.Games"].FormatSafe(sr.CategoryResults[ix].Points,sr.CategoryResults[ix].TimeStr)
             },
             new SgameBoxSub {
                 Key = SgameBoxKeySub.BtnOri,
@@ -99,7 +99,7 @@ namespace KvizCommando.Client.Pages.Solo.Features
                 ImageSrc = string.Empty,
                 BuildImageSrc = (ix) => $"{IMAGE_ROOT}/orients/{OriFileName[ix]}.webp", Size ="tall", FooterDisplay=true, ClickId=450,
                 BuildEnable = (se,ix) => se.EnaOri[ix],
-                BuildFooter = (lang,sr,ix) => lang["solo.Button.Footer.Games"].FormatSafe(sr.OrientResults[ix].Points,sr.OrientResults[ix].Time)
+                BuildFooter = (lang,sr,ix) => lang["solo.Button.Footer.Games"].FormatSafe(sr.OrientResults[ix].Points,sr.OrientResults[ix].TimeStr)
             }
 
         ];

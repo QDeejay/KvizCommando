@@ -95,40 +95,49 @@
             </div>
         }
 
-        <div class="kc-solo-progress">
-            @for (var i = 1; i <= Data.Game.TotalQuestions; i++)
+        <div class="kc-solo-progress-row">
+            <div class="kc-solo-progress">
+                @for (var i = 1; i <= Data.Game.TotalQuestions; i++)
+                {
+                    var state = Data.Panel.Progress.ElementAtOrDefault(i - 1);
+
+                    <div class="kc-solo-progress-item @(i > 10 ? "second-row" : "") @(i == 11 ? "row-turn" : "") @GetProgressClass(i)"
+                         style="@GetProgressPosition(i)">
+                        <span class="kc-solo-progress-dot">
+                            @if (state == SoloQuestionState.Correct)
+                            {
+                                <i class="bi bi-check-lg"></i>
+                            }
+                            else if (state == SoloQuestionState.Wrong)
+                            {
+                                <i class="bi bi-x-lg"></i>
+                            }
+                            else if (state == SoloQuestionState.Unanswered)
+                            {
+                                <i class="bi bi-square-fill"></i>
+                            }
+                            else
+                            {
+                                @i
+                            }
+                        </span>
+                    </div>
+                }
+            </div>
+            @if (Data.Game.TotalQuestions>1)
             {
-                var state = Data.Panel.Progress.ElementAtOrDefault(i - 1);
-                <div class="kc-solo-progress-item @(i > 10 ? "second-row" : "") @(i == 11 ? "row-turn" : "") @GetProgressClass(i)"
-                     style="@GetProgressPosition(i)">
-                    <span class="kc-solo-progress-dot">
-                        @if (state == SoloQuestionState.Correct)
-                        {
-                            <i class="bi bi-check-lg"></i>
-                        }
-                        else if (state == SoloQuestionState.Wrong)
-                        {
-                            <i class="bi bi-x-lg"></i>
-                        }
-                        else if (state == SoloQuestionState.Unanswered)
-                        {
-                            <i class="bi bi-square-fill"></i>
-                        }
-                        else
-                        {
-                            @i
-                        }
-                    </span>
-                </div>
+                <button type="button"
+                        class="button-on-lcd"
+                        disabled="@(Data.Panel.Mode != SoloPanelMode.Evaluation)"
+                        aria-label="@Lang["solo.Button.Game.Skip"]"
+                        title="@Lang["solo.Button.Game.Skip"]"
+                        @onclick="OnSkipEvaluation">
+                    <i class="bi bi-skip-forward-fill"></i>
+                </button>
             }
         </div>
-
-        @if (Data.Panel.ShowSkip)
-        {
-            <button type="button" class="kc-solo-skip" @onclick="OnSkipEvaluation">
-                @Lang["solo.Button.Game.Skip"]
-            </button>
-        }
+           
+    
     </section>
 </div>
 

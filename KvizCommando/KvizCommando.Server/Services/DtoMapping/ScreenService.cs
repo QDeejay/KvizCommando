@@ -4,6 +4,7 @@ using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.User;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System.Globalization;
 
 namespace KvizCommando.Server.Services.DtoMapping
@@ -190,36 +191,42 @@ namespace KvizCommando.Server.Services.DtoMapping
         private static ResultDto[] GetCatResultFromCache(List<PlayerCategoryStat> data)
         {
             int ix;
+            double tempTime;
             var result = new ResultDto[data.Count + 1];
             result[0] = new ResultDto { Points = 0, Time = 0.0 };
             foreach (var d in data)
             {
                 ix = Math.Min((int)d.CategoryId, 16);
+                tempTime = Math.Round(d.HighScoreTime, 1);
                 result[ix] = new ResultDto
                 {
                     Points = d.HighScore,
-                    Time = d.HighScoreTime
+                    Time = tempTime,
+                    TimeStr = tempTime > 99.9  ? "+99.9" : tempTime.ToString("0.0", CultureInfo.InvariantCulture)
                 };
                 result[0].Points += d.HighScore;
-                result[0].Time += d.HighScoreTime;
+                result[0].Time += tempTime;
             }
             return result;
         }
         private static ResultDto[] GetOriResultFromCache(List<PlayerOrientStat> data)
         {
             int ix;
+            double tempTime;
             var result = new ResultDto[data.Count + 1];
             result[0] = new ResultDto { Points = 0, Time = 0.0 };
             foreach (var d in data)
             {
                 ix = Math.Min((int)d.OrientId, 8);
+                tempTime = Math.Round(d.HighScoreTime, 1);
                 result[ix] = new ResultDto
                 {
                     Points = d.HighScore,
-                    Time = d.HighScoreTime
+                    Time = Math.Round(d.HighScoreTime, 1),
+                    TimeStr = tempTime > 99.9 ? "+99.9" : tempTime.ToString("0.0", CultureInfo.InvariantCulture)
                 };
                 result[0].Points += d.HighScore;
-                result[0].Time += d.HighScoreTime;
+                result[0].Time += Math.Round(d.HighScoreTime, 1);
             }
             return result;
         }

@@ -4,6 +4,9 @@ public interface ISoloGameCache
 {
     bool TryCreate(SoloGameSession session);
     bool TryGet(Guid gameId, out SoloGameSession? session);
-    bool HasActiveGame(int playerId, string sessionId);
+    bool TryGetActiveGame(
+    int playerId,
+    string sessionId,
+    out SoloGameSession? session);
     void Remove(Guid gameId);
 }

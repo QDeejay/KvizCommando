@@ -619,6 +619,7 @@ namespace KvizCommando.Server.Services.PlayerCache
             )
         {
             var entry = await GetOrCreateEntryAsync(playerId, sessionId, ct);
+
             if (entry is null) return false;
 
             await entry.Lock.WaitAsync(ct);

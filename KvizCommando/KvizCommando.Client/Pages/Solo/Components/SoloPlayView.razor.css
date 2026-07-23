@@ -8,16 +8,6 @@
     grid-template-columns: 230px minmax(0, 1fr);
     padding: 2px;
 }
-/*
-        border-radius: 22px;
-background-color: #2a2a2a; 
-border: 2px solid rgba(64, 64, 64, 0.7);
-box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
-    
-
-
-
-*/
 
 .kc-solo-player-panel,
 .kc-solo-question-panel {
@@ -246,10 +236,17 @@ box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
 .kc-solo-timer-high .kc-solo-timer-value {
     background-color: #bfe935;
 }
-.kc-solo-timer-warning .kc-solo-timer-value { background-color: rgba(231, 140, 53,1); }
 
+.kc-solo-timer-warning .kc-solo-timer-value {
+    background-color: rgba(231, 140, 53,1);
+}
+.kc-solo-timer-warning .kc-solo-timer-display {
+    background-color: rgba(231, 140, 53, 0.9);
+}
 
-.kc-solo-timer-warning .kc-solo-timer-display { background-color: rgba(231, 140, 53, 0.9); }
+.kc-solo-timer-zero .kc-solo-timer-value {
+    background-color: rgba(200, 59, 50, 1);
+}
 
 .kc-solo-timer-zero .kc-solo-timer-display { background-color: rgba(200, 59, 50, 0.9); }
 
@@ -406,6 +403,13 @@ box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
     -webkit-line-clamp: 2;
     font-family: 'Share Tech Mono', monospace;
 }
+.kc-solo-progress-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+}
+
 
 .kc-solo-progress {
     position: relative;
@@ -500,9 +504,6 @@ box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
     border-color: #f0d66e;
 }
 
-.kc-solo-skip {
-    justify-self: end;
-}
 
 .kc-solo-progress-number {
     line-height: 1;

@@ -38,6 +38,7 @@ namespace KvizCommando.Shared.Models.Dtos
     {
         public int Points { get; set; } = 0;
         public double Time { get; set; } = 0.0;
+        public string TimeStr { get; set; } = string.Empty;
     }
 
 

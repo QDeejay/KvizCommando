@@ -45,8 +45,20 @@ namespace KvizCommando.Server.Services.SoloGame
             if (player.SessionId == "denied")
                 return (null, null);
 
-            if (_gameCache.HasActiveGame(playerId, request.SessionId))
+            if (_gameCache.TryGetActiveGame(
+                    playerId,
+                    request.SessionId,
+                    out var activeGame) &&
+                    activeGame is not null)
+            {
+                await AbandonAsync(
+                    playerId,
+                    activeGame.GameId,
+                    request.SessionId,
+                    ct);
+
                 return (null, false);
+            }
 
             var level = request.Mode == SoloGameMode.Category
                 ? player.Core.RankEnum

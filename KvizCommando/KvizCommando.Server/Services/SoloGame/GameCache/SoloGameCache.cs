@@ -25,11 +25,25 @@ public sealed class SoloGameCache : ISoloGameCache
     public bool TryGet(Guid gameId, out SoloGameSession? session)
         => _cache.TryGetValue(CacheKey(gameId), out session);
 
-    public bool HasActiveGame(int playerId, string sessionId)
+    public bool TryGetActiveGame(
+     int playerId,
+     string sessionId,
+     out SoloGameSession? session)
     {
-        if (!_playerGames.TryGetValue(playerId, out var gameId)) return false;
-        if (TryGet(gameId, out var game) && game?.SessionId == sessionId && game.Status == SoloGameStatus.Active)
+        session = null;
+
+        if (!_playerGames.TryGetValue(playerId, out var gameId))
+            return false;
+
+        if (TryGet(gameId, out var game) &&
+            game is not null &&
+            game.SessionId == sessionId &&
+            game.Status == SoloGameStatus.Active)
+        {
+            session = game;
             return true;
+        }
+
         RemovePlayerGame(playerId, gameId);
         return false;
     }

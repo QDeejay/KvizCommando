@@ -258,6 +258,7 @@
     .button-on-lcd:hover i {
         transform: scale(1.01);
         opacity: 0.7;
+        cursor: url('/Images/cursors/active.cur'), pointer;
     }
 
     .button-on-lcd:disabled {
@@ -271,6 +272,7 @@
         .button-on-lcd:disabled i {
             transform: none;
             opacity: 0.7;
+            cursor: url('/Images/cursors/disabled.cur'), not-allowed;
         }
 
 .component-button-row {

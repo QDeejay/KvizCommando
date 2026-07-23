@@ -11,7 +11,7 @@ using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.User;
 using Microsoft.AspNetCore.Components;
 using System.Diagnostics;
-
+using KvizCommando.Client.Layout;
 
 
 namespace KvizCommando.Client.Pages.Solo
@@ -53,6 +53,7 @@ namespace KvizCommando.Client.Pages.Solo
         private UserMainData UsrData => AppStates.Home!.UserMainData;
 
         private TeamMemberDto[] Members => AppStates.Team.TeamMembers;
+        
         private string SelectorCss => _boxOrder.Length > SgameBoxBuilder.Root.Length
            ? "kc-solo-selector-sub"
            : "kc-solo-selector-root";
@@ -255,7 +256,7 @@ namespace KvizCommando.Client.Pages.Solo
                 _remainingSeconds = Math.Max(
                     0,
                     _game.AnswerTimeSeconds - (int)(_questionWatch.ElapsedMilliseconds / 1000));
-
+                _points = Math.Max(CalculateAnswerPoints(_game.MaxPointsPerQuestion, (int)_questionWatch.ElapsedMilliseconds), 0);
                 await InvokeAsync(StateHasChanged);
                 await Task.Delay(100, ct);
             }
@@ -286,6 +287,7 @@ namespace KvizCommando.Client.Pages.Solo
         {
             _phase = SoloPagePhase.Status;
             _statusKey = "solo.Label.GameProcess.ProcessingQuestions";
+            _points = 0;
             await InvokeAsync(StateHasChanged);
 
             _result = await Api.FinishSoloGameAsync(_game!.GameId, new FinishSoloGameRequest
@@ -299,6 +301,7 @@ namespace KvizCommando.Client.Pages.Solo
                 ShowFailure();
                 return;
             }
+            await Ui.ReloadAsync(ReqStates.SoloGame);
             await Audio.PlayMusicAsync("Menu02.webm");
             await ShowStatusAsync("solo.Label.GameProcess.Evaluating", 1000, ct);
             await ShowStatusAsync("solo.Label.GameProcess.EvaluationReady", 1000, ct);
@@ -336,7 +339,7 @@ namespace KvizCommando.Client.Pages.Solo
             await Task.Delay(700, ct);
             ShowReward();
         }
-
+       
         private void CompleteEvaluationProgress()
         {
             for (var i = _evaluatedCount; i < _result!.AnswerResults.Length; i++)
@@ -350,8 +353,8 @@ namespace KvizCommando.Client.Pages.Solo
 
             _evaluatedCount = _result.AnswerResults.Length;
             _points = _result.TotalPoints.Sum();
+            _questionIndex = Math.Max(_result.AnswerResults.Length - 1, 0);
         }
-
         private void SetEvaluationTime(int questionIndex)
         {
             var answerTimeMs = _answers[questionIndex].AnswerTimeMs;
@@ -420,7 +423,7 @@ namespace KvizCommando.Client.Pages.Solo
                     ? _result?.AnswerResults[_questionIndex]
                     : null,
                 AnswerEnabled = _answerEnabled,
-                ShowSkip = _phase == SoloPagePhase.Evaluation
+                ShowSkip = _phase is not SoloPagePhase.Failed || true
             };
         }
         private SoloPanelViewData BuildRewardPanel()
@@ -460,6 +463,26 @@ namespace KvizCommando.Client.Pages.Solo
             if (value != 0)
                 lines.Add(new SoloDisplayLine { ResourceKey = resourceKey, Value = value.ToString() });
         }
+        private static int CalculateAnswerPoints(
+                                   int magicNumberMax,
+                                   int elapsedMs)
+        {
+
+            var decreasingTimeMs = Math.Clamp(
+                elapsedMs - 5000,
+                0,
+                15000);
+
+            var multiplier =
+                1.0 - decreasingTimeMs / 15000.0;
+
+            var points = (int)Math.Round(
+                magicNumberMax * multiplier,
+                MidpointRounding.AwayFromZero);
+
+            return points;
+
+        }
         private static string FormatTime(int milliseconds) =>
            TimeSpan.FromMilliseconds(milliseconds).ToString(@"mm\:ss");
         private void UpdateBackClick()
@@ -483,6 +506,7 @@ namespace KvizCommando.Client.Pages.Solo
             }
 
             ResetGame();
+            BuildBoxes();
             OnBoxClick(4);
             await InvokeAsync(StateHasChanged);
         }
