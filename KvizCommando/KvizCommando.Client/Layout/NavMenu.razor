@@ -1,13 +1,9 @@
 ﻿@inherits LayoutComponentBase
 @if (_isReady == true)
 {
-    <nav class="side-nav @(IsCollapsed || !Hs.NavBarEnable ? "collapsed" : "")">
-        <div class="kc-sidenav-collapse-btn@(IsCollapsed || !Hs.NavBarEnable ? "" : "-disabled") @(IsCollapsed || !Hs.NavBarEnable ? "collapsed" : "")" @onclick="() => OnToggleSidebar.InvokeAsync()">
-            <img src="images/logo.webp" alt="Logo" class="nav-logo" />
-        </div>
-        @if (!IsCollapsed && Hs.NavBarEnable)
-        {
-            
+    @if (Hs.NavBarEnable)
+    {
+        <nav class="side-nav">
             <NavLink class=@btnNavClass[0] href="home" Match="NavLinkMatch.All">
                 <i class="bi bi-house-door"></i>
                 <span>@Lang["nav.Button.Home"]</span>
@@ -18,7 +14,7 @@
                 <span>@Lang["nav.Button.Team"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[2] href="question"  Match=" NavLinkMatch.All">
+            <NavLink class=@btnNavClass[2] href="question" Match=" NavLinkMatch.All">
                 <i class="bi bi-patch-question"></i>
                 <span>@Lang["nav.Button.Question"]</span>
             </NavLink>
@@ -56,14 +52,6 @@
                 <i class="bi bi-people"></i>
                 <span>@Lang["nav.Button.Community"]</span>
             </NavLink>
-            <!--
-                <div class="nav-footer">
-                <NavLink class=@btnNavClass[15] href="#">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <div>@Lang["nav.Button.Exit"]</div>
-                </NavLink>
-            </div>
-            -->
-        }
-</nav>
+        </nav>
+    }
 }

@@ -1,7 +1,6 @@
 ﻿using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
-using System.Globalization;
 
 namespace KvizCommando.Client.Layout
 {
@@ -9,14 +8,11 @@ namespace KvizCommando.Client.Layout
     {
         [Inject] private ILanguageService Lang { get; set; } = default!;
         [Parameter] public HomeScreen Hs { get; set; } = default!;
-        [Parameter] public bool IsCollapsed { get; set; }
-        [Parameter] public EventCallback OnToggleSidebar { get; set; }
 
 
         private bool _isReady;
         private string[] btnNavClass = new string[16];
         private const string btnNavClassDef = "navigation-button";
-        private string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
 
         protected override void OnParametersSet()
@@ -37,11 +33,6 @@ namespace KvizCommando.Client.Layout
                 btnNavClass[15] = btnNavClassDef;                                        // Exit allways on
                 _isReady = true;
             }
-        }
-
-        protected override async Task OnInitializedAsync()
-        {
-            await Task.Delay(1);
         }
     }
 }

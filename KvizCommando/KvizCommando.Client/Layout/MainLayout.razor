@@ -38,24 +38,38 @@
                   ? "background-image: url('/images/lobby.webp');" 
                   : "background-image: url('/images/login.webp');")">
         
+        @if (_isLoggedIn)
+        {
+            @if (_isNavOpen)
+            {
+                <div class="kc-mainlayout-nav-backdrop" @onclick="CloseSidebar"></div>
+            }
 
-        <LangGuard Culture=@_culture Module="nav">
-            <div class="kc-mainlayout-nav-side @(SideBarStatus ? "collapsed" : "")">
-                <NavMenu Hs="@Hs"
-                         OnToggleSidebar="ToggleSidebar" 
-                         IsCollapsed="@(SideBarStatus)" />
-            </div>
-        </LangGuard>
+            <LangGuard Culture="@_culture" Module="nav">
+                <div class="kc-mainlayout-nav-side @(_isNavOpen ? "open" : "")">
+                    <NavMenu Hs="@Hs" />
+                </div>
+            </LangGuard>
+        }
+
         <main>
             <section class="kc-mainlayout-content-side">
                 @if (_isLoggedIn)
                     {
                         <header class="kc-mainlayout-content-header">
+
                             <div class="kc-mainlayout-content-header--left-warper">
-                            <div class="kc-collapse-btn @(SideBarStatus ? "collapsed" : "")" @onclick="() => ToggleSidebar()">
-                                            <img src="images/logo.webp" alt="Logo" class="nav-logo" />
-                                  </div>
+                            <button type="button"
+                                    class="kc-collapse-btn"
+                                    disabled="@(!CanToggleSidebar)"
+                                    aria-label="Navigation"
+                                    aria-expanded="@_isNavOpen"
+                                    @onclick="ToggleSidebar">
+                                <img src="images/logo.webp" alt="Logo" class="nav-logo" />
+                            </button>
                                   <div class="kc-mainlayout-content-header--left">
+
+
                                 <div class="kc-back-button @(BackNavigationEna ? "" : "btn-hidden")"
                                                  @onclick="OnBackClick">
                                                 @("◀")
