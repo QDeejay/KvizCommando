@@ -1,10 +1,4 @@
-﻿using KvizCommando.Server.Domain.Entities.Players;
-using KvizCommando.Server.Domain.Entities.Statistics;
-using KvizCommando.Server.Models;
-using KvizCommando.Shared.Contracts.Question;
-using KvizCommando.Shared.Contracts.Team;
-
-namespace KvizCommando.Server.Services.PlayerCache
+﻿namespace KvizCommando.Server.Services.PlayerCache
 {
     public interface IPlayerCacheService
     {
@@ -19,66 +13,29 @@ namespace KvizCommando.Server.Services.PlayerCache
             int playerId,
             string sessionId,
             CancellationToken ct = default);
-        Task<bool?> UpdatePartialCharachtersAsync(
-            int playerId,
-            string sessionId,
-            ManageTeamRequest teamReq,
-            RecruitSlot[]? recruitSlots = null,
-            CancellationToken ct = default
-            );
-        Task<bool?> UpdatePartialModifySillsLockedAsync(
-           int playerId,
-           string sessionId,
-           string newhelpdata,
-           ModifySkillRequest newskilldata,
-           CancellationToken ct = default);
-        Task<bool?> UpdatePartialQuestionsLockedAsync(
-            int playerId,
-            string sessionId,
-            ManageSlotRequest slotReq,
-            CancellationToken ct = default);
-        Task<bool?> UpdatePartialNewQuestionLockedAsync(
-            int playerId,
-            string sessionId,
-            NewQuestionRequest slotReq,
-            CancellationToken ct = default);
-        Task<bool?> UpdatePartialLoadoutLockedAsync(
-           int playerId,
-           string sessionId,
-           PlayerLoadout newLoadout,
-           CancellationToken ct = default);
 
-        Task<bool?> UpdatePartialAskStatsLockedAsync(
+        /// <summary>
+        /// A játékos cache-elt állapotát a saját lockja alatt módosítja.
+        /// A callback null értékkel elutasíthatja a műveletet, siker esetén pedig
+        /// visszaadja a mentendő player-szegmenseket.
+        /// </summary>
+        Task<bool?> UpdatePlayerLockedAsync(
             int playerId,
             string sessionId,
-            PlayerAskStats newStats,
-            CancellationToken ct = default);
-        Task<bool?> UpdatePartialCategoryStatsLockedAsync(
-            int playerId,
-            string sessionId,
-            List<PlayerCategoryStat> newStats,
-            CancellationToken ct = default);
-        Task<bool?> UpdatePartialOrientStatsLockedAsync(
-            int playerId,
-            string sessionId,
-            List<PlayerOrientStat> newStats,
+            Func<CachedPlayer, DirtyFlags?> update,
             CancellationToken ct = default);
 
-        Task<bool?> UpdatePartialPlayerAsync(
+        /// <summary>
+        /// A kérdéscache-t a játékos saját lockja alatt módosítja.
+        /// A callback null értékkel elutasíthatja a műveletet, siker esetén pedig
+        /// visszaadja a mentendő kérdésslotok bitmaskját.
+        /// </summary>
+        Task<bool?> UpdateQuestionsLockedAsync(
             int playerId,
             string sessionId,
-            CachedPlayer newPlayer,
-            CancellationToken ct = default
-            );
-
-
-
-        Task<bool?> UpdateAllLockedAsync(
-            int playerId,
-            string sessionId,
-            CachedPlayer updated,
-            CachedQuestion updatedQ,
+            Func<CachedPlayer, CachedQuestion, uint?> update,
             CancellationToken ct = default);
+
         Task<bool?> LogoutLockedRequestAsync(
             int playerId,
             string sessionId,

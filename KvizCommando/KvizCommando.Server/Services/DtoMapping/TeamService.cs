@@ -1,5 +1,6 @@
 ﻿using KvizCommando.Server.Models;
 using KvizCommando.Server.Services.PlayerCache;
+using KvizCommando.Server.Utilities;
 using KvizCommando.Server.Utilities.Recruit;
 using KvizCommando.Shared.Contracts.Team;
 using KvizCommando.Shared.Models;
@@ -26,113 +27,258 @@ namespace KvizCommando.Server.Services.DtoMapping
 
         public async Task<bool?> SaveModifiedSkillAsync(int playerid, ModifySkillRequest dto, CancellationToken ct = default)
         {
-            //var sessionId = "Teszt";
-            var (player, _) = await _cache.GetOrLoadLockedAsync(playerid, dto.SessionId, ct);
-            if (player == null)
-                return false;
-            if (player.SessionId == "denied")
-                return null;
-            if (dto.MemberId > 0 && player.CharCatMask[dto.MemberId - 1] == false)
-                return false;
-
-            int avialableDevPoints = dto.MemberId == 0 ? player.Core.DevPoint : player.Characters[dto.MemberId - 1].DevPoints;
-
-            if (avialableDevPoints < dto.SkillChanges.Sum())
-                return false;
-
-            int skillType = dto.MemberId == 0 ? 12 : dto.SkillType == 1 ? 4 : 8;
-            int maxLevel = dto.MemberId == 0 ? player.Core.RankEnum : player.Characters[dto.MemberId - 1].Rank;
-            int levelLimit;
-            var helpDatas = string.IsNullOrEmpty(player.Loadout?.HelpLevelsJson)
-                    ? []
-                     : JsonSerializer.Deserialize<int[]>(player.Loadout.HelpLevelsJson) ?? [];
-            string newHelpJson = player.Loadout.HelpLevelsJson;
-            // validálás 
-            for (int i = 0; i < 4; i++)
-            {
-                if (dto.SkillChanges[i] > 0 && maxLevel < RankConstants.startLevels[i + skillType]) return false;
-                levelLimit = Math.Min(RankConstants.maxLevels[i + skillType], RankConstants.maxLevels[i + skillType] - 21 + maxLevel);
-                levelLimit = Math.Max(0, levelLimit);
-                if (dto.MemberId == 0)
+            return await _cache.UpdatePlayerLockedAsync(
+                playerid,
+                dto.SessionId,
+                player =>
                 {
-                    if (dto.SkillChanges[i] > 0 && dto.SkillChanges[i] + helpDatas[i] > levelLimit)
-                        return false;
-                    helpDatas[i] += dto.SkillChanges[i];
+                    if (dto.MemberId > 0 && player.CharCatMask[dto.MemberId - 1] == false)
+                        return null;
 
-                }
-                else if (dto.SkillChanges[i] > 0 && dto.SkillType == 0 && dto.SkillChanges[i] + player.Characters[dto.MemberId - 1].Attitude.Secondary.Level[i] > levelLimit)
-                    return false;
-                else if (dto.SkillChanges[i] > 0 && dto.SkillType == 4 && dto.SkillChanges[i] + player.Characters[dto.MemberId - 1].Attitude.Gender.Level[i] > levelLimit)
-                    return false;
-            }
-            newHelpJson = JsonSerializer.Serialize(helpDatas);
+                    var member = dto.MemberId > 0
+                        ? player.Characters[dto.MemberId - 1]
+                        : null;
 
-            int totalUsedPoints = dto.SkillChanges.Sum();
-            int modifiedMemberId = dto.MemberId; // 0=team, 1-8=characters
+                    if (dto.MemberId > 0 && member is null)
+                        return null;
 
-            Console.WriteLine($"Modifying skills for player {playerid}, member {modifiedMemberId}, total used points {totalUsedPoints}");
+                    int availableDevPoints = dto.MemberId == 0
+                        ? player.Core.DevPoint
+                        : member!.DevPoints;
 
-            return await _cache.UpdatePartialModifySillsLockedAsync(playerid, dto.SessionId, newHelpJson, dto, ct);
+                    if (availableDevPoints < dto.SkillChanges.Sum())
+                        return null;
+
+                    int skillType = dto.MemberId == 0
+                        ? 12
+                        : dto.SkillType == 1 ? 4 : 8;
+
+                    int maxLevel = dto.MemberId == 0
+                        ? player.Core.RankEnum
+                        : member!.Rank;
+
+                    var helpDatas = string.IsNullOrEmpty(player.Loadout.HelpLevelsJson)
+                        ? []
+                        : JsonSerializer.Deserialize<int[]>(player.Loadout.HelpLevelsJson) ?? [];
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (dto.SkillChanges[i] > 0 &&
+                            maxLevel < RankConstants.startLevels[i + skillType])
+                            return null;
+
+                        int levelLimit = Math.Min(
+                            RankConstants.maxLevels[i + skillType],
+                            RankConstants.maxLevels[i + skillType] - 21 + maxLevel);
+                        levelLimit = Math.Max(0, levelLimit);
+
+                        if (dto.MemberId == 0)
+                        {
+                            if (dto.SkillChanges[i] > 0 &&
+                                dto.SkillChanges[i] + helpDatas[i] > levelLimit)
+                                return null;
+
+                            helpDatas[i] += dto.SkillChanges[i];
+                        }
+                        else if (dto.SkillChanges[i] > 0 &&
+                                 dto.SkillType == 0 &&
+                                 dto.SkillChanges[i] + member!.Attitude.Secondary.Level[i] > levelLimit)
+                        {
+                            return null;
+                        }
+                        else if (dto.SkillChanges[i] > 0 &&
+                                 dto.SkillType == 4 &&
+                                 dto.SkillChanges[i] + member!.Attitude.Gender.Level[i] > levelLimit)
+                        {
+                            return null;
+                        }
+                    }
+
+                    int totalUsedPoints = dto.SkillChanges.Sum();
+
+                    if (dto.MemberId > 0)
+                    {
+                        member!.DevPoints -= totalUsedPoints;
+
+                        if (dto.SkillType == 1)
+                            member.Attitude.Secondary.Level =
+                                member.Attitude.Secondary.Level.AddTo(dto.SkillChanges);
+
+                        if (dto.SkillType == 2)
+                            member.Attitude.Gender.Level =
+                                member.Attitude.Gender.Level.AddTo(dto.SkillChanges);
+
+                        return DirtyFlags.Characters;
+                    }
+
+                    player.Core.DevPoint -= totalUsedPoints;
+                    player.Loadout.HelpLevelsJson = JsonSerializer.Serialize(helpDatas);
+
+                    return DirtyFlags.Core | DirtyFlags.Loadout;
+                },
+                ct);
         }
+
         public async Task<bool?> ManageTeamAsync(int playerid, ManageTeamRequest dto, CancellationToken ct = default)
         {
-            //ar sessionId = "Teszt";
-            var (player, question) = await _cache.GetOrLoadLockedAsync(playerid, dto.SessionId, ct);
-            if (player == null)
-                return false;
-            if (player.SessionId == "denied")
-                return null;
-            var member = player.Characters[dto.MemberNo - 1];
-            var candidate = player.CandidateCharacters[dto.MemberNo - 1];
+            return await _cache.UpdatePlayerLockedAsync(
+                playerid,
+                dto.SessionId,
+                player =>
+                {
+                    var member = player.Characters[dto.MemberNo - 1];
+                    var candidate = player.CandidateCharacters[dto.MemberNo - 1];
 
-            var level = member != null ? member.Rank : 0;
-            var teamLevel = player.Core.RankEnum;
-            var devPoints = player.Core.DevPoint;
-            var nextLevelXp = RankRewards.List[level].NextLevel;
-            if ((int)dto.ReqType > 0)
-            { if (member == null) return false; }
-            else
-            { if (candidate == null) return false; }
+                    var level = member?.Rank ?? 0;
+                    var teamLevel = player.Core.RankEnum;
+                    var devPoints = player.Core.DevPoint;
+                    var nextLevelXp = RankRewards.List[level].NextLevel;
 
-            switch (dto.ReqType)
-            {
-                case ManageType.Hire:
-                    if (candidate.Names == null || candidate.PictureCodes == null)
-                        return false;
-                    if (player.CharCatMask[dto.MemberNo - 1])
-                        return false;
-                    break;
-                case ManageType.Promote:
+                    if ((int)dto.ReqType > 0)
                     {
-                        var rankClassChanged = ((level - 1) / 3 + 1) != ((level) / 3 + 1) || level == 0;
-                        if (level >= 21 || level >= teamLevel)
-                            return false;
-                        if (devPoints == 0 && rankClassChanged != false)
-                            return false;
-                        if (member.XP < nextLevelXp)
-                            return false;
-                        break;
+                        if (member is null)
+                            return null;
                     }
-                case ManageType.Retire:
-                    if (level != 21 || teamLevel < 22)
-                        return false;
-                    if (member.XP < RankRewards.List[21].NextLevel)
-                        return false;
-                    break;
-                case ManageType.Fire:
-                    if (member.EnergyPoints > 0)
-                        return false;
-                    break;
-                case ManageType.Heal:
-                    if (member.EnergyPoints > 0 || member.DevPoints <= 0)
-                        return false;
-                    break;
-                default:
-                    return false;
-            }
-            var succesPlayerUpdate = _cache.UpdatePartialCharachtersAsync(playerid, dto.SessionId, dto, null, ct);
+                    else if (candidate is null)
+                    {
+                        return null;
+                    }
 
-            return await succesPlayerUpdate;
+                    switch (dto.ReqType)
+                    {
+                        case ManageType.Hire:
+                            if (candidate!.Names is null || candidate.PictureCodes is null)
+                                return null;
+                            if (player.CharCatMask[dto.MemberNo - 1])
+                                return null;
+                            break;
+
+                        case ManageType.Promote:
+                            {
+                                var rankClassChanged =
+                                    ((level - 1) / 3 + 1) != (level / 3 + 1) ||
+                                    level == 0;
+
+                                if (level >= 21 || level >= teamLevel)
+                                    return null;
+                                if (devPoints == 0 && rankClassChanged)
+                                    return null;
+                                if (member!.XP < nextLevelXp)
+                                    return null;
+                                break;
+                            }
+
+                        case ManageType.Retire:
+                            if (level != 21 || teamLevel < 22)
+                                return null;
+                            if (member!.XP < RankRewards.List[21].NextLevel)
+                                return null;
+                            break;
+
+                        case ManageType.Fire:
+                            if (member!.EnergyPoints > 0)
+                                return null;
+                            break;
+
+                        case ManageType.Heal:
+                            if (member!.EnergyPoints > 0 || member.DevPoints <= 0)
+                                return null;
+                            break;
+
+                        default:
+                            return null;
+                    }
+
+                    var dirty = DirtyFlags.Characters;
+
+                    switch (dto.ReqType)
+                    {
+                        case ManageType.Hire:
+                            {
+                                var recruit = RecruitService.RecruitResolver(
+                                    dto.MemberNo,
+                                    dto.CandidateId);
+                                var levels = new[] { 0, 0, 0, 0 };
+
+                                member = new CharachterSlot
+                                {
+                                    Name = candidate!.Names![dto.CandidateId - 1],
+                                    PictureCode = candidate.PictureCodes![dto.CandidateId - 1],
+                                    XP = 0,
+                                    Rank = 0,
+                                    DevPoints = 0,
+                                    EnergyPoints = 36,
+                                    Attitude = new Attitude
+                                    {
+                                        Main = new AttitudeBranch
+                                        {
+                                            CatNo = recruit.Item1,
+                                            Level = levels
+                                        },
+                                        Secondary = new AttitudeBranch
+                                        {
+                                            CatNo = recruit.Item2,
+                                            Level = levels
+                                        },
+                                        Gender = new AttitudeBranch
+                                        {
+                                            CatNo = recruit.Item3,
+                                            Level = levels
+                                        }
+                                    }
+                                };
+                                candidate = null;
+                                break;
+                            }
+
+                        case ManageType.Promote:
+                            {
+                                var rankClassChanged =
+                                    ((member!.Rank - 1) / 3 + 1) != (member.Rank / 3 + 1) ||
+                                    member.Rank == 0;
+
+                                member.Rank = Math.Min(member.Rank + 1, 21);
+                                player.Core.DevPoint -= rankClassChanged ? 0 : 1;
+                                member.DevPoints += RankRewards.List[member.Rank].DevPointRevard;
+                                member.EnergyPoints = 36 + member.Rank * 3;
+                                player.Core.DevPoint += RankRewards.List[member.Rank].DevPointToStore;
+                                dirty |= DirtyFlags.Core;
+                                break;
+                            }
+
+                        case ManageType.Retire:
+                            member!.Rank = Math.Min(member.Rank + 1, 21);
+                            candidate = RecruitService.Generate(8, 7);
+                            candidate.ExpirationTime = DateTime.UtcNow.AddDays(7);
+                            player.Core.DevPoint += RankRewards.List[member.Rank].DevPointToStore;
+                            player.Core.Credit += member.Pension;
+                            member = null;
+                            dirty |= DirtyFlags.Core;
+                            break;
+
+                        case ManageType.Fire:
+                            member = null;
+                            candidate = new RecruitSlot
+                            {
+                                Names = null,
+                                PictureCodes = null,
+                                ExpirationTime = DateTime.UtcNow.AddDays(1)
+                            };
+                            break;
+
+                        case ManageType.Heal:
+                            member!.EnergyPoints = 33 + member.Rank * 3;
+                            member.DevPoints -= 1;
+                            break;
+                    }
+
+                    player.Characters[dto.MemberNo - 1] = member;
+                    player.CharCatMask[dto.MemberNo - 1] = member is not null;
+                    player.CandidateCharacters[dto.MemberNo - 1] = candidate;
+
+                    return dirty;
+                },
+                ct);
         }
         public async Task<TeamDtos?> GetTeamScreenDataAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
@@ -151,7 +297,7 @@ namespace KvizCommando.Server.Services.DtoMapping
 
             var context = BuildContext(player);
 
-            await CorrectCandidateSlotsAsync(playerId, sessionId, player, context, ct);
+            await CorrectCandidateSlotsAsync(playerId, sessionId, context, ct);
 
             var teamInfo = new TeamExtendedInfo
             {
@@ -407,21 +553,29 @@ namespace KvizCommando.Server.Services.DtoMapping
         private async Task CorrectCandidateSlotsAsync(
             int playerId,
             string sessionId,
-            CachedPlayer player,
             TeamContext context,
             CancellationToken ct)
         {
-            bool updateRequired = false;
+            await _cache.UpdatePlayerLockedAsync(
+                playerId,
+                sessionId,
+                player =>
+                {
+                    bool updateRequired = false;
 
-            for (int i = 0; i < 8; i++)
-            {
-                updateRequired |= context.UpdRecruitSlots[i] != player.CandidateCharacters[i];
-            }
+                    for (int i = 0; i < 8; i++)
+                    {
+                        updateRequired |=
+                            context.UpdRecruitSlots[i] != player.CandidateCharacters[i];
+                    }
 
-            if (updateRequired)
-                await _cache.UpdatePartialCharachtersAsync(playerId, sessionId, new ManageTeamRequest { }, context.UpdRecruitSlots, ct);
+                    if (updateRequired == false)
+                        return DirtyFlags.None;
 
-            return;
+                    player.CandidateCharacters = context.UpdRecruitSlots;
+                    return DirtyFlags.Characters;
+                },
+                ct);
         }
 
         private sealed class TeamContext
@@ -436,4 +590,3 @@ namespace KvizCommando.Server.Services.DtoMapping
         }
     }
 }
-

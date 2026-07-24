@@ -209,9 +209,8 @@ namespace KvizCommando.Client.Pages.Solo
                 _progress = [.. Enumerable.Repeat(SoloQuestionState.Pending, _game.QuestionCount)];
                 _points = _game.MaxPointsPerQuestion;
                 _remainingSeconds = _game.AnswerTimeSeconds;
-
-                await ShowStatusAsync("solo.Label.GameProcess.Starting", 1000, ct);
                 await Audio.PlayMusicAsync("Battle01.webm");
+                await ShowStatusAsync("solo.Label.GameProcess.Starting", 1000, ct);
                 await PlayAsync(ct);
             }
             catch (OperationCanceledException)
@@ -301,7 +300,7 @@ namespace KvizCommando.Client.Pages.Solo
                 ShowFailure();
                 return;
             }
-            await Ui.ReloadAsync(ReqStates.SoloGame);
+            await Ui.ReloadAsync(ReqStates.All);
             await Audio.PlayMusicAsync("Menu02.webm");
             await ShowStatusAsync("solo.Label.GameProcess.Evaluating", 1000, ct);
             await ShowStatusAsync("solo.Label.GameProcess.EvaluationReady", 1000, ct);

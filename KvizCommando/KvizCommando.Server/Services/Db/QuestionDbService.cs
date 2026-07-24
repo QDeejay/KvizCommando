@@ -122,7 +122,7 @@ namespace KvizCommando.Server.Services.Db
             {
                 result.Add(new UserQuestion());
             }
-            return result.ToArray();
+            return [.. result];
         }
         private async Task<PendingQuestion[]> GetPendingSlotsAsync(int playerId, CancellationToken ct)
         {
@@ -136,7 +136,7 @@ namespace KvizCommando.Server.Services.Db
             {
                 result.Add(new PendingQuestion());
             }
-            return result.ToArray();
+            return [.. result];
         }
 
     }

@@ -1,9 +1,10 @@
-﻿using KvizCommando.Server.Domain.Entities.Players;
+﻿using KvizCommando.Server.Domain.Entities.Questions;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Utilities;
 using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
+using KvizCommando.Shared.Models.Enums;
 using System.Text.Json;
 
 namespace KvizCommando.Server.Services.DtoMapping
@@ -25,109 +26,181 @@ namespace KvizCommando.Server.Services.DtoMapping
 
         public async Task<bool?> SaveFactorySlotsAsync(int playerId, SaveFactoryRequest dto, CancellationToken ct)
         {
-            //var sessionId = "Teszt";
-            //var sessionId = sessionid;
-            var loadout = new PlayerLoadout
-            {
-                UserSlotsJson = null, // nem módosítjuk
-                PendingSlotsJson = null, // nem módosítjuk
-                FactorySlotsJson = JsonSerializer.Serialize(dto.CategorySlots)
-            };
-
-            var success = await _cache.UpdatePartialLoadoutLockedAsync(
+            return await _cache.UpdatePlayerLockedAsync(
                 playerId,
                 dto.SessionId,
-                loadout,
+                player =>
+                {
+                    player.Loadout.FactorySlotsJson =
+                        JsonSerializer.Serialize(dto.CategorySlots);
+
+                    return DirtyFlags.Loadout;
+                },
                 ct);
-            return success;
         }
+
         public async Task<bool?> ManageSlotsAsync(int playerId, ManageSlotRequest dto, CancellationToken ct)
         {
-            //var sessionId = "Teszt";
-            //var sessionId = sessionid;
-            //
-            /// Data validácio a cacheben
-            /// 
-            var (player, question) = await _cache.GetOrLoadLockedAsync(playerId, dto.SessionId, ct);
-            if (player == null)
-                return false;
-            if (player?.SessionId == "denied")
-                return null;
-            var lvl = player?.Core.RankEnum ?? 0;
-            var maxUsrSlot = RankRewards.List[lvl].OwnQuestSlot;
-            var maxPendingSlot = maxUsrSlot >> 1;
-            var freeUserSlot = question.uSlots.Take(10).Count(x => x.CategoryNo == 0);
-            var reqType = dto.ReqType;
-            switch (reqType)
-            {
-                case SlotManageType.DeleteUsr:
-                    if (dto.SlotNo > maxUsrSlot)
-                    {
-                        _logger.LogWarning($"DeleteUsr: Invalid user slot number. userId={playerId}, SlotNo={dto.SlotNo}", playerId, dto.SlotNo);
-                        return false;
-                    }
-
-                    break;
-                case SlotManageType.DeletePending:
-                    if (dto.SlotNo > maxPendingSlot)
-                    {
-                        _logger.LogWarning($"DeletePending: Invalid user slot number. userId={playerId}, SlotNo={dto.SlotNo}", playerId, dto.SlotNo);
-                        return false;
-                    }
-
-                    break;
-                case SlotManageType.MovePending:
-                    if (dto.SlotNo > maxPendingSlot || freeUserSlot == 0)
-                    {
-                        _logger.LogWarning($"MovePending: Invalid user slot number. userId={playerId}, SlotNo={dto.SlotNo}", playerId, dto.SlotNo);
-                        return false;
-                    }
-                    break;
-                default:
-                    _logger.LogWarning("ManageSlots: Invalid request type. userId={playerId}, ReqType={dto.SlotNo}", playerId, dto.ReqType);
-                    return false;
-            }
-            var succes = await _cache.UpdatePartialQuestionsLockedAsync(
+            return await _cache.UpdateQuestionsLockedAsync(
                 playerId,
                 dto.SessionId,
-                dto,
-                ct
-                );
+                (player, question) =>
+                {
+                    var level = player.Core.RankEnum;
 
-            return succes;
+                    var maxUserSlot = Math.Min(
+                        RankRewards.List[level].OwnQuestSlot,
+                        question.uSlots.Length);
+
+                    var maxPendingSlot = Math.Min(
+                        maxUserSlot >> 1,
+                        question.pSlots.Length);
+
+                    switch (dto.ReqType)
+                    {
+                        case SlotManageType.DeleteUsr:
+                            if (dto.SlotNo < 0 || dto.SlotNo >= maxUserSlot)
+                            {
+                                _logger.LogWarning(
+                                    "DeleteUsr: Invalid user slot number. userId={PlayerId}, SlotNo={SlotNo}",
+                                    playerId,
+                                    dto.SlotNo);
+                                return null;
+                            }
+
+                            var userId = question.uSlots[dto.SlotNo].Id;
+                            question.fSlots.Add(new FactoryQuestion
+                            {
+                                Id = 0,
+                                Question = question.uSlots[dto.SlotNo].Question,
+                                AnswersJson = question.uSlots[dto.SlotNo].AnswersJson,
+                                CategoryNo = question.uSlots[dto.SlotNo].CategoryNo
+                            });
+                            question.uSlots[dto.SlotNo] = new UserQuestion
+                            {
+                                Id = userId,
+                                PlayerId = playerId
+                            };
+                            return 1u << dto.SlotNo;
+
+                        case SlotManageType.DeletePending:
+                            if (dto.SlotNo < 0 || dto.SlotNo >= maxPendingSlot)
+                            {
+                                _logger.LogWarning(
+                                    "DeletePending: Invalid pending slot number. userId={PlayerId}, SlotNo={SlotNo}",
+                                    playerId,
+                                    dto.SlotNo);
+                                return null;
+                            }
+
+                            var pendingId = question.pSlots[dto.SlotNo].Id;
+                            question.pSlots[dto.SlotNo] = new PendingQuestion
+                            {
+                                Id = pendingId,
+                                PlayerId = playerId
+                            };
+                            return 1u << (dto.SlotNo + 16);
+
+                        case SlotManageType.MovePending:
+                            {
+                                if (dto.SlotNo < 0 || dto.SlotNo >= maxPendingSlot)
+                                {
+                                    _logger.LogWarning(
+                                        "MovePending: Invalid pending slot number. userId={PlayerId}, SlotNo={SlotNo}",
+                                        playerId,
+                                        dto.SlotNo);
+
+                                    return null;
+                                }
+
+                                var firstEmptySlot = Array.FindIndex(
+                                    question.uSlots,
+                                    0,
+                                    maxUserSlot,
+                                    slot => slot.CategoryNo == 0);
+
+                                if (firstEmptySlot < 0)
+                                    return null;
+
+                                var firstEmptyId = question.uSlots[firstEmptySlot].Id;
+                                var movedPendingId = question.pSlots[dto.SlotNo].Id;
+
+                                question.uSlots[firstEmptySlot] = new UserQuestion
+                                {
+                                    Id = firstEmptyId,
+                                    PlayerId = playerId,
+                                    Question = question.pSlots[dto.SlotNo].Question,
+                                    AnswersJson = question.pSlots[dto.SlotNo].AnswersJson,
+                                    CategoryNo = question.pSlots[dto.SlotNo].CategoryNo
+                                };
+
+                                question.pSlots[dto.SlotNo] = new PendingQuestion
+                                {
+                                    Id = movedPendingId,
+                                    PlayerId = playerId
+                                };
+
+                                return (1u << firstEmptySlot) |
+                                       (1u << (dto.SlotNo + 16));
+                            }
+
+                        default:
+                            _logger.LogWarning(
+                                "ManageSlots: Invalid request type. userId={PlayerId}, ReqType={ReqType}",
+                                playerId,
+                                dto.ReqType);
+                            return null;
+                    }
+                },
+                ct);
         }
+
         public async Task<bool?> SendNewQuestionAsync(int playerId, NewQuestionRequest dto, CancellationToken ct)
         {
-            //var sessionId = "Teszt";
-            //var sessionId = sessionid;
-
-            var (player, question) = await _cache.GetOrLoadLockedAsync(playerId, dto.SessionId, ct);
-            if (player == null)
-                return false;
-            if (player.SessionId == "denied")
-                return null;
-            var freependingslot = question.pSlots.Take(5).Count(x => x.CategoryNo == 0);
-            if (freependingslot == 0)
-            {
-                _logger.LogWarning($"SendNewQuestion: No free pending slot. userId={playerId}");
-                return false;
-            }
-            var lvl = player?.Core.RankEnum ?? 0;
-            var maxPendingSlot = RankRewards.List[lvl].OwnQuestSlot >> 1;
-            if (dto.SlotNo > maxPendingSlot)
-            {
-                _logger.LogWarning($"SendNewQuestion: Invalid user slot number. userId={playerId}, SlotNo={dto.SlotNo}", dto.SlotNo);
-                return false;
-            }
-            var succes = await _cache.UpdatePartialNewQuestionLockedAsync(
+            return await _cache.UpdateQuestionsLockedAsync(
                 playerId,
                 dto.SessionId,
-                dto,
-                ct
-                );
+                (player, question) =>
+                {
+                    var freePendingSlots = question.pSlots
+                        .Take(5)
+                        .Count(item => item.CategoryNo == 0);
 
+                    if (freePendingSlots == 0)
+                    {
+                        _logger.LogWarning(
+                            "SendNewQuestion: No free pending slot. userId={PlayerId}",
+                            playerId);
+                        return null;
+                    }
 
-            return succes;
+                    var maxPendingSlot =
+                        RankRewards.List[player.Core.RankEnum].OwnQuestSlot >> 1;
+
+                    if (dto.SlotNo > maxPendingSlot)
+                    {
+                        _logger.LogWarning(
+                            "SendNewQuestion: Invalid pending slot number. userId={PlayerId}, SlotNo={SlotNo}",
+                            playerId,
+                            dto.SlotNo);
+                        return null;
+                    }
+
+                    var id = question.pSlots[dto.SlotNo].Id;
+                    question.pSlots[dto.SlotNo] = new PendingQuestion
+                    {
+                        Id = id,
+                        PlayerId = playerId,
+                        Question = dto.Question,
+                        AnswersJson = JsonSerializer.Serialize(dto.Answers),
+                        CategoryNo = dto.Category,
+                        Status = (QuestionStatus)1,
+                        SubmittedAt = DateTime.UtcNow
+                    };
+
+                    return 1u << (dto.SlotNo + 16);
+                },
+                ct);
         }
 
         public async Task<QuestionDtos?> GetQuestionScreenAsync(int playerId, string sessionId, CancellationToken ct = default)
@@ -196,17 +269,18 @@ namespace KvizCommando.Server.Services.DtoMapping
             context.FactorySlots = player.Loadout?.FactorySlotsJson.ConvertToArray<int>() ?? [];
             context.OwnQuestionCount = context.FactorySlots.Count(c => c == 17);
 
-            context.UserSlots = BuildUserSlots(slot);
-            context.PendingSlots = BuildPendingSlots(slot);
+            context.UserSlots = BuildUserSlots(slot, context.AvailableUserSlot);
+
+            context.PendingSlots = BuildPendingSlots(slot, context.AvailablePendingSlot);
 
             context.CategoryMask =
                 [.. player.CharCatMask, .. player.CharCatMask];
 
             context.FreeUserSlot =
-                context.UserSlots.Take(10).Count(v => v.Category == 0);
+                context.UserSlots.Count(slot => slot.Category == 0);
 
             context.FreePendingSlot =
-                context.PendingSlots.Take(5).Count(v => v.Category == 0);
+                context.PendingSlots.Count(slot => slot.Category == 0);
 
             context.OccupiedUserSlot =
                 context.AvailableUserSlot - context.FreeUserSlot;
@@ -222,19 +296,19 @@ namespace KvizCommando.Server.Services.DtoMapping
 
             return context;
         }
-        private static UserSlot[] BuildUserSlots(CachedQuestion slot)
+        private static UserSlot[] BuildUserSlots(CachedQuestion slot, int limit)
         {
             var userSlots = new List<UserSlot>();
 
-            foreach (var uq in slot.uSlots)
+            foreach (var uq in slot.uSlots.Take(limit))
             {
                 var answers = uq.AnswersJson.ConvertToArray<string>();
 
                 userSlots.Add(new UserSlot
                 {
-                    Question = uq?.Question ?? string.Empty,
+                    Question = uq.Question ?? string.Empty,
                     Answer = answers,
-                    Category = uq?.CategoryNo ?? 0,
+                    Category = uq.CategoryNo,
                     NoOfUse = uq.Ask > 0 ? uq.Ask.ToString() : "N/A",
                     NofOfCorrect = uq.Ask > 0 ? uq.OkAnswer.ToString() : "N/A",
                     Ratio = uq.Ask > 40
@@ -243,30 +317,29 @@ namespace KvizCommando.Server.Services.DtoMapping
                 });
             }
 
-            return userSlots.ToArray();
+            return [.. userSlots];
         }
-        private static PendingSlot[] BuildPendingSlots(CachedQuestion slot)
+        private static PendingSlot[] BuildPendingSlots(CachedQuestion slot, int limit)
         {
             var pendingSlots = new List<PendingSlot>();
 
-            foreach (var pq in slot.pSlots)
+            foreach (var pq in slot.pSlots.Take(limit))
             {
                 var answers = pq.AnswersJson.ConvertToArray<string>();
 
                 pendingSlots.Add(new PendingSlot
                 {
-                    Question = pq?.Question ?? string.Empty,
+                    Question = pq.Question ?? string.Empty,
                     Answer = answers,
-                    Category = pq?.CategoryNo ?? 0,
-                    Status = pq?.Status.ToString() ?? "None",
-                    Remark = pq?.Remark,
-                    SubmittedAt = pq?.SubmittedAt ?? DateTime.UtcNow
+                    Category = pq.CategoryNo,
+                    Status = pq.Status.ToString(),
+                    Remark = pq.Remark,
+                    SubmittedAt = pq.SubmittedAt
                 });
             }
 
             return pendingSlots.ToArray();
         }
-
         private async Task CorrectFactorySlotsIfNeededAsync(
             int playerId,
             string sessionId,
@@ -313,12 +386,15 @@ namespace KvizCommando.Server.Services.DtoMapping
                 Console.WriteLine("------------------------------------------------------");
             }
 
-            await _cache.UpdatePartialLoadoutLockedAsync(
+            await _cache.UpdatePlayerLockedAsync(
                 playerId,
                 sessionId,
-                new PlayerLoadout
+                player =>
                 {
-                    FactorySlotsJson = JsonSerializer.Serialize(context.FactorySlots)
+                    player.Loadout.FactorySlotsJson =
+                        JsonSerializer.Serialize(context.FactorySlots);
+
+                    return DirtyFlags.Loadout;
                 },
                 ct);
         }
@@ -343,6 +419,4 @@ namespace KvizCommando.Server.Services.DtoMapping
 
     }
 }
-
-
 
