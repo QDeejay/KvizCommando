@@ -9,8 +9,8 @@ namespace KvizCommando.Client.Services.Dto
         private readonly HttpClient _http;
         private readonly SessionService _sessionCache;
         private const string SCREEN_ROUTE = "/api/screen";
-        private const string SCREEN_ROUTE_QUESTION = "/api/question/qscreen";
-        private const string SCREEN_ROUTE_TEAM = "/api/team/tscreen";
+        private const string SCREEN_ROUTE_QUESTION = "/api/question/screen";
+        private const string SCREEN_ROUTE_TEAM = "/api/team/screen";
         private const string SCREEN_ROUTE_SOLO = "/api/sologame/screen";
         private const string SCREEN_ROUTE_HOME = "/api/home/screen";
         public CacheApiService(HttpClient http, SessionService sessioncache)

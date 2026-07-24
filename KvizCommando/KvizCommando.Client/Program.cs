@@ -3,6 +3,7 @@ using Blazored.SessionStorage;
 using KvizCommando.Client;
 using KvizCommando.Client.Features.Question.Services;
 using KvizCommando.Client.Features.Solo.Services;
+using KvizCommando.Client.Features.Team.Services;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Http;
 using KvizCommando.Client.Services;
@@ -26,9 +27,10 @@ builder.Services.AddScoped<ILanguageService, LanguageService>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICacheApiService, CacheApiService>();
-builder.Services.AddScoped<IApiService, ApiService>();
+//builder.Services.AddScoped<IApiService, ApiService>();
 builder.Services.AddScoped<IQuestionClientService, QuestionClientService>();
 builder.Services.AddScoped<ISoloGameClientService, SoloGameClientService>();
+builder.Services.AddScoped<ITeamClientService, TeamClientService>();
 
 builder.Services.AddScoped<IHomeState, HomeState>();
 builder.Services.AddScoped<IQuestionState, QuestionState>();

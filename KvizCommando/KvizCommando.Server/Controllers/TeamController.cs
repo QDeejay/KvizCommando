@@ -35,7 +35,7 @@ namespace KvizCommando.Server.Controllers
         }
 
 
-        [HttpGet("tscreen")]
+        [HttpGet("screen")]
         [ProducesResponseType(typeof(TeamDtos), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]

@@ -42,8 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Home\" />
-    <Folder Include="Features\Login\" />
     <Folder Include="Features\Question\" />
     <Folder Include="Features\Team\" />
     <Folder Include="Services\Logic\" />
@@ -52,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Pages\Shared\Modal\ViewModels\TeamModalVm.cs" />
+    <None Include="Features\Shared\Modal\ViewModels\TeamModalVm.cs" />
   </ItemGroup>
 	
 

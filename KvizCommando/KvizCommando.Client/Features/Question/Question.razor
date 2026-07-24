@@ -4,21 +4,19 @@
 
 <link href="css/question-common.css" rel="stylesheet" />
 
-<LangGuard Culture="@Culture" Module="question" OnReady="SetReady">
+<LangGuard Culture="@Culture" Module="question" OnReady="BuildBoxes">
     <PageContainer>
         @if (_isReady)
         {
-            var boxes = BuildBoxes();
-
             <div class="kc-quest-selector">
-                @foreach (var boxKey in _boxOrder)
+                @foreach (var bx in _boxOrder)
                 {
-                    var box = boxes[boxKey];
-
+                    var box = Box(bx);
                     <ContentBox Vm="@box"
                                 OnClick="OnBoxClick">
                         <ContentBody>
-                            <DynamicComponent Type="@box.BodyComponent" />
+                            <DynamicComponent Type="@box.BodyComponent"
+                                              Parameters="@box.BodyParameters" />
                         </ContentBody>
                     </ContentBox>
                 }

@@ -12,7 +12,7 @@ namespace KvizCommando.Client.Utilities
         [Inject] protected MarkupLoaderService MarkupLoader { get; set; } = default!;
 
 
-        [Inject] protected IApiService Api { get; set; } = default!;
+       // [Inject] protected IApiService Api { get; set; } = default!;
         [Inject] protected IUserService User { get; set; } = default!;
         //[Inject] protected ILanguageService Lang { get; set; } = default!;
         //[Inject] protected ModalService Modal { get; set; } = default!;

@@ -1,8 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Pages.Shared.Modal;
-using KvizCommando.Client.Pages.Shared.Modal.Features;
+using KvizCommando.Client.Features.Shared.Modal;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
@@ -10,6 +9,7 @@ using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
+using KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders;
 
 namespace KvizCommando.Client.Layout
 {

@@ -9,9 +9,11 @@
         @if (_isReady)
         {
             <div class="@SelectorCss">
-                @foreach (var boxKey in _boxOrder)
+                @foreach (var bx in _boxOrder)
                 {
-                    <ContentBox Vm="@Box(boxKey)"
+                    var box = Box(bx);
+
+                    <ContentBox Vm="@box"
                                 OnClick="OnBoxClick">
                         <ContentBody>
 

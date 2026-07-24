@@ -12,6 +12,8 @@ public partial class Question : KcComponentBase, IDisposable
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
 
+    private readonly Dictionary<string, ContentBoxVm> _boxes = [];
+
     private string[] _boxOrder = [];
     private bool _isReady;
 
@@ -25,16 +27,22 @@ public partial class Question : KcComponentBase, IDisposable
         _boxOrder = QBoxBuilder.Root;
     }
 
-    private Dictionary<string, ContentBoxVm> BuildBoxes() =>
-        QBoxBuilder.BuildBoxes(
-            QuestionData.ExtendedInfo!,
-            Ui.Lang);
+    private ContentBoxVm Box(string key) => _boxes[key];
 
-    private void SetReady() => _isReady = true;
+    private void BuildBoxes()
+    {
+        foreach (var box in QBoxBuilder.BuildBoxes(
+                     QuestionData.ExtendedInfo!,
+                     Ui.Lang))
+        {
+            _boxes[box.Key] = box.Value;
+        }
+
+        _isReady = true;
+    }
 
     private void OnBoxClick(int boxId)
     {
-        var boxes = BuildBoxes();
         _boxOrder = QBoxBuilder.Root;
         var headerTitle = Ui.Lang["mainlayout.Header.Question"];
 
@@ -42,22 +50,26 @@ public partial class Question : KcComponentBase, IDisposable
         {
             case 101:
                 _boxOrder = QBoxBuilder.SubFact;
-                headerTitle = boxes[QBoxKeyRoot.RtBtnFactory.ToString()].Header;
+                headerTitle = _boxes[
+                    QBoxKeyRoot.RtBtnFactory.ToString()].Header;
                 break;
 
             case 102:
                 _boxOrder = QBoxBuilder.SubUsr;
-                headerTitle = boxes[QBoxKeyRoot.RtBtnUsr.ToString()].Header;
+                headerTitle = _boxes[
+                    QBoxKeyRoot.RtBtnUsr.ToString()].Header;
                 break;
 
             case 103:
                 _boxOrder = QBoxBuilder.SubPend;
-                headerTitle = boxes[QBoxKeyRoot.RtBtnPendig.ToString()].Header;
+                headerTitle = _boxes[
+                    QBoxKeyRoot.RtBtnPendig.ToString()].Header;
                 break;
 
             case 104:
                 _boxOrder = QBoxBuilder.SubNew;
-                headerTitle = boxes[QBoxKeyRoot.RtBtnNew.ToString()].Header;
+                headerTitle = _boxes[
+                    QBoxKeyRoot.RtBtnNew.ToString()].Header;
                 break;
         }
 
@@ -74,6 +86,7 @@ public partial class Question : KcComponentBase, IDisposable
             return;
         }
 
+        BuildBoxes();
         OnBoxClick(1);
     }
 

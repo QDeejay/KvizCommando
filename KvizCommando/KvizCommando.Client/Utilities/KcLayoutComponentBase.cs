@@ -11,7 +11,7 @@ namespace KvizCommando.Client.Utilities
         //[Inject] protected ModalService Modal { get; set; } = default!;
         //[Inject] protected NavigationManager Nav { get; set; } = default!;
         //[Inject] protected ILanguageService Lang { get; set; } = default!;
-        [Inject] protected IApiService Api { get; set; } = default!;
+       // [Inject] protected IApiService Api { get; set; } = default!;
         [Inject] protected IUserService User { get; set; } = default!;
 
         //[Inject] protected ToastService Toast { get; set; } = default!;
