@@ -2,7 +2,7 @@
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 
-namespace KvizCommando.Client.Pages.Solo.Features
+namespace KvizCommando.Client.Features.Solo.Builders
 {
     public static class SgameBoxBuilder
     {

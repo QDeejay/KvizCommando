@@ -42,7 +42,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Sologame\" />
+    <Folder Include="Features\Home\" />
+    <Folder Include="Features\Login\" />
+    <Folder Include="Features\Question\" />
+    <Folder Include="Features\Team\" />
     <Folder Include="Services\Logic\" />
     <Folder Include="wwwroot\audio\sfx\" />
     <Folder Include="wwwroot\Data\" /> 

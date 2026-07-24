@@ -1,6 +1,6 @@
 ﻿
 
-namespace KvizCommando.Client.Pages.Solo.ViewModels
+namespace KvizCommando.Client.Features.Solo.ViewModels
 {
     public sealed class SoloPlayViewData
     {
@@ -38,7 +38,6 @@ namespace KvizCommando.Client.Pages.Solo.ViewModels
         public int SelectedAnswerIndex { get; init; } = -1;
         public bool? CurrentAnswerResult { get; init; }
         public bool AnswerEnabled { get; init; }
-        public bool ShowSkip { get; init; }
     }
     public sealed class SoloDisplayLine
     {

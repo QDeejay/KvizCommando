@@ -1,4 +1,4 @@
-﻿namespace KvizCommando.Client.Pages.Solo.Features
+﻿namespace KvizCommando.Client.Features.Solo.Builders
 
 {
     internal enum SgameBoxKeyRoot

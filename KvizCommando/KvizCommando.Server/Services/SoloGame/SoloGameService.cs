@@ -11,9 +11,9 @@ namespace KvizCommando.Server.Services.SoloGame
 {
     public sealed class SoloGameService : ISoloGameService
     {
-        private const int AnswerSeconds = 20;
-        private const int FeedbackSeconds = 2;
-        private const int GraceSeconds = 60;
+        private const int ANSWER_SECONDS = 20;
+        private const int FEEDBACK_SECONDS = 2;
+        private const int GRACE_SECONDS = 60;
 
         private readonly IPlayerCacheService _playerCache;
         private readonly ICategoryQuestionIndexCache _questionIndex;
@@ -102,7 +102,7 @@ namespace KvizCommando.Server.Services.SoloGame
             }
 
             var now = DateTime.UtcNow;
-            var gameTime = TimeSpan.FromSeconds(questionCount * (AnswerSeconds + FeedbackSeconds));
+            var gameTime = TimeSpan.FromSeconds(questionCount * (ANSWER_SECONDS + FEEDBACK_SECONDS));
 
             var maxPointPerQuestion = 100 + level / 2 * 10;
 
@@ -118,7 +118,7 @@ namespace KvizCommando.Server.Services.SoloGame
                 StartedAtUtc = now,
                 PointsPerLevel = maxPointPerQuestion,
                 GameplayDeadlineUtc = now.Add(gameTime),
-                ExpiresAtUtc = now.Add(gameTime).AddSeconds(GraceSeconds),
+                ExpiresAtUtc = now.Add(gameTime).AddSeconds(GRACE_SECONDS),
                 Questions = cachedQuestions
             };
 
@@ -129,8 +129,8 @@ namespace KvizCommando.Server.Services.SoloGame
             {
                 GameId = game.GameId,
                 QuestionCount = questionCount,
-                AnswerTimeSeconds = AnswerSeconds,
-                FeedbackTimeSeconds = FeedbackSeconds,
+                AnswerTimeSeconds = ANSWER_SECONDS,
+                FeedbackTimeSeconds = FEEDBACK_SECONDS,
                 MaxPointsPerQuestion = maxPointPerQuestion,
                 Questions = [.. cachedQuestions.Select(question => new SoloQuestionDto
                 {
@@ -284,6 +284,7 @@ namespace KvizCommando.Server.Services.SoloGame
 
 
 
+
         private List<int> GetQuestionIds(int[] categoryIds, int questionCount)
         {
             var result = new List<int>(questionCount);
@@ -291,14 +292,22 @@ namespace KvizCommando.Server.Services.SoloGame
 
             foreach (var categoryId in categoryIds)
             {
-                var ids = _questionIndex.GetQuestionIds(categoryId).ToArray();
-                if (ids.Length < categoryQuestionCount)
+                var ids = _questionIndex.GetQuestionIds(categoryId);
+                if (ids.Count < categoryQuestionCount)
                     return [];
 
-                Shuffle(ids);
-                result.AddRange(ids.Take(categoryQuestionCount));
+                var selectedIndexes = new HashSet<int>(categoryQuestionCount);
+
+                while (selectedIndexes.Count < categoryQuestionCount)
+                {
+                    var index = Random.Shared.Next(ids.Count);
+
+                    if (selectedIndexes.Add(index))
+                        result.Add(ids[index]);
+                }
             }
 
+            Shuffle(result);
             return result;
         }
 
@@ -333,16 +342,16 @@ namespace KvizCommando.Server.Services.SoloGame
             if (request.Answers.Any(answer =>
                 validTokens.Contains(answer.QuestionToken) == false ||
                 answer.SelectedOptionIndex < -1 || answer.SelectedOptionIndex > 3 ||
-                answer.AnswerTimeMs < 0 || answer.AnswerTimeMs > AnswerSeconds * 1000))
+                answer.AnswerTimeMs < 0 || answer.AnswerTimeMs > ANSWER_SECONDS * 1000))
                 return false;
 
             var answerTimeMs = request.Answers.Sum(answer => answer.AnswerTimeMs);
-            var maximumElapsedMs = game.Questions.Count * (AnswerSeconds + FeedbackSeconds) * 1000;
+            var maximumElapsedMs = game.Questions.Count * (ANSWER_SECONDS + FEEDBACK_SECONDS) * 1000;
 
             return request.ClientElapsedMs >= answerTimeMs &&
                    request.ClientElapsedMs <= maximumElapsedMs &&
                    request.ClientElapsedMs <= answerTimeMs +
-                       game.Questions.Count * FeedbackSeconds * 1000 + 1000;
+                       game.Questions.Count * FEEDBACK_SECONDS * 1000 + 1000;
         }
 
         private async Task<(bool? Success, bool IsNewHighScore, int OldScore)> SaveResultAsync(
@@ -517,9 +526,9 @@ namespace KvizCommando.Server.Services.SoloGame
         private static bool IsBetter(int score, double time, int oldScore, double oldTime)
             => score > oldScore || score == oldScore && (oldTime <= 0 || time < oldTime);
 
-        private static void Shuffle<T>(T[] values)
+        private static void Shuffle<T>(IList<T> values)
         {
-            for (var i = values.Length - 1; i > 0; i--)
+            for (var i = values.Count - 1; i > 0; i--)
             {
                 var j = Random.Shared.Next(i + 1);
                 (values[i], values[j]) = (values[j], values[i]);

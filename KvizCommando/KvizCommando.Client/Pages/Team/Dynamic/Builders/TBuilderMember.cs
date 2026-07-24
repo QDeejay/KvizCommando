@@ -37,16 +37,14 @@ namespace KvizCommando.Client.Pages.Team.Dynamic.Builders
             vm.Rows.Add(new(_lang["team.Label.Name"], name));
             vm.Rows.Add(new(_lang["team.Label.Rank"], RankNameLocalizer.GetName(m.Level, culture)));
             vm.Rows.Add(new(_lang["team.Label.Class"], RankNameLocalizer.GetClass(rankClass, culture)));
-            vm.Rows.Add(new(_lang["team.Label.Main"], o1));
+            vm.Rows.Add(new(_lang["team.Label.Main"] , o1 + $" ({publicLevel})"));
             vm.Rows.Add(new(_lang["team.Label.Second"], o2));
-
-
-            vm.Rows.Add(new(_lang["team.Label.Level"], publicLevel));
+            
             vm.Rows.Add(new(_lang["team.Label.Vitality"], $"{vitAct}/{vitMax}"));
-            vm.Rows.Add(new(_lang["team.Label.Next"], (m.NextXp - m.Xp).ToString()));
             vm.Rows.Add(new(_lang["team.Label.SkillPointShort"].FormatSafe(oShort), devPointsDisplay));
             vm.Rows.Add(new(_lang["team.Label.Pension"], m.Pension.ToString()));
-
+            vm.Rows.Add(new(_lang["team.Label.Next"], (m.NextXp - m.Xp).ToString()));
+            vm.Rows.Add(new("",""));
 
             return vm;
         }

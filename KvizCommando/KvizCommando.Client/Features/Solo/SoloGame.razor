@@ -1,0 +1,28 @@
+@page "/solo-game"
+
+@using KvizCommando.Client.Features.Solo.Components
+
+@inherits Utilities.KcComponentBase
+
+<LangGuard Culture="@Culture" Module="solo" OnReady="BuildBoxes">
+    <PageContainer>
+        @if (_isReady)
+        {
+            <div class="@SelectorCss">
+                @foreach (var boxKey in _boxOrder)
+                {
+                    <ContentBox Vm="@Box(boxKey)"
+                                OnClick="OnBoxClick">
+                        <ContentBody>
+
+                                <SoloGameManager Mode="@_gameMode"
+                                                 SelectionId="@_selectionId"
+                                                 Title="@_gameTitle" />
+
+                        </ContentBody>
+                    </ContentBox>
+                }
+            </div>
+        }
+    </PageContainer>
+</LangGuard>

@@ -1,9 +1,9 @@
-using KvizCommando.Client.Pages.Solo.ViewModels;
+using KvizCommando.Client.Features.Solo.ViewModels;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
 
-namespace KvizCommando.Client.Pages.Solo.Components;
+namespace KvizCommando.Client.Features.Solo.Components;
 
 public partial class SoloPlayView
 {

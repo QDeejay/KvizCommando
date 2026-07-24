@@ -1,5 +1,4 @@
-﻿
-using KvizCommando.Client.Services.User;
+﻿using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -10,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace KvizCommando.Client.Pages
+namespace KvizCommando.Client.Features.Start
 {
     public partial class Start : KcComponentBase, IDisposable
     {

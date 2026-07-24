@@ -1,4 +1,4 @@
-﻿namespace KvizCommando.Client.Pages.Solo.ViewModels
+﻿namespace KvizCommando.Client.Features.Solo.ViewModels
 {
     public enum SoloPanelMode
     {
