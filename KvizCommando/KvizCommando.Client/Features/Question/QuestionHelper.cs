@@ -1,6 +1,6 @@
 ﻿using KvizCommando.Client.Services.Visual;
 
-namespace KvizCommando.Client.Pages.Question
+namespace KvizCommando.Client.Features.Question
 {
     public sealed class QuestionHelper
     {

@@ -2,7 +2,6 @@ using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Solo.Services;
 using KvizCommando.Client.Features.Solo.ViewModels;
 using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Layout;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
@@ -86,7 +85,7 @@ public partial class SoloGameManager : IAsyncDisposable
     {
         try
         {
-            
+            await Audio.PlayMusicAsync("Battle01.webm");
             await ShowStatusAsync("solo.Label.GameProcess.Preparing", 1000, ct);
 
             _statusKey = "solo.Label.GameProcess.Connecting";
@@ -103,7 +102,7 @@ public partial class SoloGameManager : IAsyncDisposable
                 await ShowFailureAsync();
                 return;
             }
-            await Audio.PlayMusicAsync("Battle02.webm");
+
             _activeGameId = _game.GameId;
             _answers = [.. _game.Questions.Select(question => new SoloAnswerDto
             {

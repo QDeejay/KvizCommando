@@ -1,5 +1,4 @@
-﻿using KvizCommando.Client.Layout;
-using KvizCommando.Client.Models.ViewModels;
+﻿using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Pages.Team.Dynamic.Builders;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
@@ -84,4 +83,3 @@ namespace KvizCommando.Client.Pages.Team.Dynamic
         }
     }
 }
-

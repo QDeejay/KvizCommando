@@ -1,11 +1,11 @@
 ﻿using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Pages.Question.Dynamic;
+using KvizCommando.Client.Features.Question.Components;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 
 
-namespace KvizCommando.Client.Pages.Question.Features
+namespace KvizCommando.Client.Features.Question.Builders
 {
 
 
@@ -14,7 +14,6 @@ namespace KvizCommando.Client.Pages.Question.Features
         internal Enum Key { get; init; } = default!;
         internal Func<QuestionExtendedInfo, bool> CheckEnable { get; init; } = default!;
         internal Func<ILanguageService, QuestionExtendedInfo, string> BuildBoxText { get; init; } = default!;
-        internal Func<QuestionCallbacks, Dictionary<string, object?>> BuildParams { get; init; } = default!;
     }
 
     public static class QuestionBoxSpecs
@@ -81,10 +80,7 @@ namespace KvizCommando.Client.Pages.Question.Features
                 CheckEnable = (qn) => true,
                 LcdBackground = true,
                 RenderContent = 1,
-                BodyComp = typeof(FactorySlotsBase),
-                BuildParams = (cb) => new Dictionary<string, object?> {
-                    { QParamNames.SaveSlots.ToString(), cb.OnFactSave }
-                }
+                BodyComp = typeof(FactorySlotsBase)
             },
             new QBoxSpecs {
                 Key = QBoxKeyContent.UsrSlots,
@@ -96,12 +92,7 @@ namespace KvizCommando.Client.Pages.Question.Features
                 CheckEnable = (qn) => true,
                 LcdBackground = true,
                 RenderContent = 1,
-                BodyComp = typeof(UserSlotManager),
-                BuildParams = (cb) => new Dictionary<string, object?> {
-                    { QParamNames.SelectedIdChanged.ToString(), cb.OnSelectId },
-                    { QParamNames.OnWatchButtonPushed.ToString(), cb.OnWatch },
-                    { QParamNames.OnHandleButtonPushed.ToString(), cb.OnDelete }
-                }
+                BodyComp = typeof(UserSlotManager)
 
             },
             new QBoxSpecs {
@@ -114,11 +105,7 @@ namespace KvizCommando.Client.Pages.Question.Features
                 CheckEnable = (qn) => true,
                 LcdBackground = true,
                 RenderContent = 1,
-                BodyComp = typeof(PendingSlotManager),
-                BuildParams = (cb) => new Dictionary<string, object?> {
-                    { QParamNames.SelectedIdChanged.ToString(), cb.OnSelectId },
-                    { QParamNames.OnHandleButtonPushed.ToString(), cb.OnHandle }
-                }
+                BodyComp = typeof(PendingSlotManager)
             },
             new QBoxSpecs {
                 Key = QBoxKeyContent.NewSlot,
@@ -130,10 +117,7 @@ namespace KvizCommando.Client.Pages.Question.Features
                 CheckEnable = (qn) => true,
                 LcdBackground = false,
                 RenderContent = 1,
-                BodyComp = typeof(NewQuestionManager),
-                BuildParams = (cb) => new Dictionary<string, object?> {
-                    { QParamNames.OnSendQuestion.ToString(), cb.OnSend }
-                }
+                BodyComp = typeof(NewQuestionManager)
              }
         ];
     }

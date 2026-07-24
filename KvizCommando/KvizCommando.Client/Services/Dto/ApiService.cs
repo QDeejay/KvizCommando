@@ -1,5 +1,4 @@
 ﻿using KvizCommando.Client.Services.ClientCache;
-using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Contracts.SoloGame;
 using KvizCommando.Shared.Contracts.Team;
 using System.Net.Http.Json;
@@ -11,7 +10,6 @@ namespace KvizCommando.Client.Services.Dto
         private readonly HttpClient _http;
         private readonly SessionService _sessionCache;
 
-        private const string SCREEN_ROUTE_QUESTION = "/api/question";
         private const string SCREEN_ROUTE_TEAM = "/api/team";
         private const string SCREEN_ROUTE_SOLO = "/api/sologame";
         public ApiService(HttpClient http, SessionService sessioncache)
@@ -19,77 +17,6 @@ namespace KvizCommando.Client.Services.Dto
             _http = http;
             _sessionCache = sessioncache;
         }
-        public async Task<bool> SaveFactorySlotsAsync(SaveFactoryRequest dto, CancellationToken ct = default)
-        {
-
-            dto.SessionId = _sessionCache.SessionId ?? "NoId";
-            try
-            {
-                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_QUESTION}/factory", dto, ct);
-
-                if (!response.IsSuccessStatusCode)
-                    return false;
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                return false;
-            }
-            finally
-            {
-                Console.WriteLine("SaveFinished");
-            }
-        }
-        public async Task<bool> ManageSlotAsync(ManageSlotRequest dto, CancellationToken ct = default)
-        {
-
-            dto.SessionId = _sessionCache.SessionId ?? "NoId";
-            try
-            {
-                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_QUESTION}/manageslot", dto, ct);
-
-                if (!response.IsSuccessStatusCode)
-                    return false;
-
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                return false;
-            }
-            finally
-            {
-                Console.WriteLine("Slot managment finished");
-            }
-        }
-        public async Task<bool> SendNewQuestionAsync(NewQuestionRequest dto, CancellationToken ct = default)
-        {
-
-            dto.SessionId = _sessionCache.SessionId ?? "NoId";
-            try
-            {
-                var response = await _http.PostAsJsonAsync($"{SCREEN_ROUTE_QUESTION}/sendnew", dto, ct);
-
-                if (!response.IsSuccessStatusCode)
-                    return false;
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                return false;
-            }
-            finally
-            {
-                Console.WriteLine("Send new question finished");
-            }
-        }
-
         public async Task<bool> ModifyTeamAsync(ModifySkillRequest dto, CancellationToken ct = default)
         {
             dto.SessionId = _sessionCache.SessionId ?? "NoId";

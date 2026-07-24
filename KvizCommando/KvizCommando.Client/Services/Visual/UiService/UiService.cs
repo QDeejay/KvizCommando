@@ -1,5 +1,4 @@
-﻿using KvizCommando.Client.Layout;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+﻿using KvizCommando.Client.Services.Visual.UiService.Language;
 using Microsoft.AspNetCore.Components;
 
 namespace KvizCommando.Client.Services.Visual.UiService

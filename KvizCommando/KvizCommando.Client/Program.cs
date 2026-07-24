@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using KvizCommando.Client;
+using KvizCommando.Client.Features.Question.Services;
 using KvizCommando.Client.Features.Solo.Services;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Http;
@@ -26,6 +27,7 @@ builder.Services.AddScoped<ILanguageService, LanguageService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICacheApiService, CacheApiService>();
 builder.Services.AddScoped<IApiService, ApiService>();
+builder.Services.AddScoped<IQuestionClientService, QuestionClientService>();
 builder.Services.AddScoped<ISoloGameClientService, SoloGameClientService>();
 
 builder.Services.AddScoped<IHomeState, HomeState>();
@@ -42,6 +44,10 @@ builder.Services.AddScoped<UiServices>();
 builder.Services.AddScoped<MarkupLoaderService>();
 
 builder.Services.AddScoped<CategoryOptionHelpers>();
+//builder.Services.AddScoped<DevDataBuilder>();
+//builder.Services.AddScoped<UpperBlockDataBuilder>();
+//builder.Services.AddScoped<BottomBlockDataBuilder>();
+//builder.Services.AddScoped<RecruitBlockBuilder>();
 builder.Services.AddSingleton<AudioService>();
 builder.Services.AddSingleton<LoaderService>();
 builder.Services.AddSingleton<SessionService>();
@@ -65,7 +71,7 @@ builder.Services.AddScoped(sp =>
 
     var loggingHandler = new LoggingHandler
     {
-        InnerHandler = new HttpClientHandler() // WASM-ban nem kell UseCookies.
+        InnerHandler = new HttpClientHandler() // Itt NEM kell UseCookies, mert WASM-ban úgysem támogatott
     };
 
     return new HttpClient(loggingHandler)

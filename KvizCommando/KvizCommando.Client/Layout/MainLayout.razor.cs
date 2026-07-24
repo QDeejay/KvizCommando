@@ -218,13 +218,4 @@ namespace KvizCommando.Client.Layout
             GC.SuppressFinalize(this);
         }
     }
-    public enum ReqStates
-    {
-        All = 0,
-        Home,
-        Question,
-        Team,
-        SoloGame,
-        LocalSotrage
-    }
 }
