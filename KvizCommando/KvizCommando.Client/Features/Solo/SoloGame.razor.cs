@@ -52,62 +52,34 @@ public partial class SoloGame : KcComponentBase, IDisposable
 
     private void OnBoxClick(int boxId)
     {
-        if (boxId is >= 421 and <= 436)
-        {
-            BeginGame(SoloGameMode.Category, boxId - 420, boxId);
-            return;
-        }
-
-        if (boxId is >= 451 and <= 458)
-        {
-            BeginGame(SoloGameMode.Orientation, boxId - 450, boxId);
-            return;
-        }
-
         _boxOrder = SgameBoxBuilder.Root;
         var headerTitle = Ui.Lang["mainlayout.Header.GameSolo"];
 
         switch (boxId)
         {
-            case 401:
-                _boxOrder = SgameBoxBuilder.SubCat;
-                headerTitle = _boxes[
-                    SgameBoxKeyRoot.RtBtnCategory.ToString()].Header;
+            case >= 420 and <= 436:
+                _boxOrder = boxId==420 ? SgameBoxBuilder.SubCat : SgameBoxBuilder.GameCat;
+                _gameMode = SoloGameMode.Category;
+                _selectionId = boxId - 420;
+                 headerTitle = _boxes[ SgameBoxKeyRoot.RtBtnCategory.ToString()].Header;
                 break;
 
-            case 402:
-                _boxOrder = SgameBoxBuilder.SubOri;
+            case >= 450 and <= 458:
+                _boxOrder = boxId==450 ? SgameBoxBuilder.SubOri : SgameBoxBuilder.GameOri;
+                _gameMode = SoloGameMode.Orientation;
+                _selectionId = boxId - 450;
                 headerTitle = _boxes[SgameBoxKeyRoot.RtBtnOrient.ToString()].Header;
                 break;
 
             case 403:
                 headerTitle = _boxes[SgameBoxKeyRoot.RtBtnCampaign.ToString()].Header;
                 break;
+
+            
         }
 
         Ui.Header.SetTitle(headerTitle, boxId);
         Ui.Header.SetBackBtnEna(boxId != 4);
-        StateHasChanged();
-    }
-
-    private void BeginGame(
-        SoloGameMode mode,
-        int selectionId,
-        int boxId)
-    {
-        _gameMode = mode;
-        _selectionId = selectionId;
-        _gameTitle = mode == SoloGameMode.Category
-            ? _boxes[$"{SgameBoxKeySub.BtnCat}{selectionId}"].Header
-            : _boxes[$"{SgameBoxKeySub.BtnOri}{selectionId}"].Header;
-
-        _boxOrder = mode == SoloGameMode.Category
-            ? SgameBoxBuilder.GameCat
-            : SgameBoxBuilder.GameOri;
-
-
-        Ui.Header.SetTitle(Ui.Header.Title, boxId);
-        Ui.Header.SetBackBtnEna(true);
         StateHasChanged();
     }
 

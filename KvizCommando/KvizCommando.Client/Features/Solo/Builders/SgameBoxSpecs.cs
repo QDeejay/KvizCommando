@@ -39,7 +39,7 @@ namespace KvizCommando.Client.Features.Solo.Builders
             new SgameBoxSpecs {
                 Key = SgameBoxKeyRoot.RtBtnCategory,
                 TitleKey = "solo.Button.Title.Categories",
-                ImageSrc = string.Empty, Size = "wide", FooterDisplay = true, ClickId = 401,
+                ImageSrc = string.Empty, Size = "wide", FooterDisplay = true, ClickId = 420,
                 BgImageSrc = $"{IMAGE_ROOT}/categories.webp",
                 BuildEnable = (se,ix) => se.EnaCategory,
                 BuildFooter = (lang, sr,ix) => lang["solo.Button.Footer.Catandori"].FormatSafe(sr.CategoryResults[0].Points)
@@ -47,7 +47,7 @@ namespace KvizCommando.Client.Features.Solo.Builders
             new SgameBoxSpecs {
                 Key = SgameBoxKeyRoot.RtBtnOrient,
                 TitleKey = "solo.Button.Title.Orients",
-                ImageSrc = string.Empty, Size = "wide", FooterDisplay = true, ClickId = 402,
+                ImageSrc = string.Empty, Size = "wide", FooterDisplay = true, ClickId = 450,
                 BgImageSrc = $"{IMAGE_ROOT}/orients.webp",
                 BuildEnable = (se,ix) => se.EnaOrient,
                 BuildFooter =(lang, sr, ix) => lang["solo.Button.Footer.Catandori"].FormatSafe(sr.OrientResults[0].Points)
