@@ -7,5 +7,7 @@ namespace KvizCommando.Server.Services.DtoMapping
         Task<HomeDTOs?> GetHomeScreenAsync(int playerId, string sessionId, CancellationToken ct = default);
 
         Task<SoloGameDtos?> GetSoloGameScreenAsync(int playerId, string sessionId, CancellationToken ct = default);
+
+        Task<VsGameDtos?> GetVsGameScreenAsync(int playerId, string sessionId, CancellationToken ct = default);
     }
 }

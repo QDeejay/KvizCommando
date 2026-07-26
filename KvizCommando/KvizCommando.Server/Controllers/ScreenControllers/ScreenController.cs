@@ -71,5 +71,33 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
                 return NotFound();
             return Ok(dto);
         }
+
+        [HttpGet("vsgame")]
+        [ProducesResponseType(typeof(VsGameDtos), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<VsGameDtos>> GetVsGameScreenAsync([FromQuery] string sessionId,CancellationToken ct)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                     ?? User.FindFirstValue("sub")
+                     ?? throw new InvalidOperationException("Missing user id");
+
+            if (userId == null)
+                return Unauthorized();
+
+            var playerId = await _idCache.GetPlayerIdAsync(userId, ct);
+            if (playerId is null or 0)
+                return NotFound("No Player record found for this user.");
+
+            var dto = await _screenService.GetVsGameScreenAsync(
+                playerId.Value,
+                sessionId,
+                ct);
+
+            if (dto == null)
+                return NotFound();
+
+            return Ok(dto);
+        }
     }
 }

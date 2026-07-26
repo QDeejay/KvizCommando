@@ -8,7 +8,7 @@ namespace KvizCommando.Client.Services.ClientCache
         public TeamDtos? Team { get; set; }
         public QuestionDtos? Question { get; set; }
         public SoloGameDtos? SoloGame { get; set; }
-
+        public VsGameDtos? VsGame { get; set; }
         public string Culture { get; set; } = "hu";
         public LocalStorageStates LocStoreStates { get; set; } = new LocalStorageStates();
     }

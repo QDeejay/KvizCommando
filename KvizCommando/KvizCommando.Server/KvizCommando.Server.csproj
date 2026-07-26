@@ -45,6 +45,7 @@
     <Folder Include="Data\StaticData\" />
     <Folder Include="Resources\Client\localization\en\" />
     <Folder Include="Resources\Client\localization\hu\" />
+    <Folder Include="Services\VsGame\" />
     <Folder Include="wwwroot\Denied\hu\" />
     <Folder Include="wwwroot\Denied\en\" />
     <Folder Include="wwwroot\Localization\" />
@@ -64,6 +65,13 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Remove="Infrastructure\Email\Templates\EmailTemplates\Auth\Class.cs" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Remove="..\..\..\..\..\Downloads\KvizCommando_VS_menu_fajlok\KvizCommando_VS_menu_fajlok\Fajlok\KvizCommando\KvizCommando.Server\Services\VsGame\IVsGameService.cs" Link="Services\VsGame\IVsGameService.cs">
+			
+		</Compile>
+		<Compile Remove="..\..\..\..\..\Downloads\KvizCommando_VS_menu_fajlok\KvizCommando_VS_menu_fajlok\Fajlok\KvizCommando\KvizCommando.Server\Services\VsGame\VsBattleClassificationRules.cs" Link="Services\VsGame\VsBattleClassificationRules.cs" />
+		<Compile Remove="..\..\..\..\..\Downloads\KvizCommando_VS_menu_fajlok\KvizCommando_VS_menu_fajlok\Fajlok\KvizCommando\KvizCommando.Server\Services\VsGame\VsGameService.cs" Link="Services\VsGame\VsGameService.cs" />
 	</ItemGroup>
 
 

@@ -198,7 +198,7 @@ public partial class TeamManager
         var refreshTarget = requestType is
             ManageType.Retire or ManageType.Fire
                 ? ReqStates.All
-                : ReqStates.Team;
+                : ReqStates.TeamVsGame;
 
         await Ui.ReloadAsync(refreshTarget);
     }

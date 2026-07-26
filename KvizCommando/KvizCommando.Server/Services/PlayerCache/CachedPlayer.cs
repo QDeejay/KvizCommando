@@ -15,10 +15,15 @@ namespace KvizCommando.Server.Services.PlayerCache
         public CharachterSlot?[] Characters { get; set; } = new CharachterSlot?[8];
         public RecruitSlot?[] CandidateCharacters { get; set; } = new RecruitSlot[8];
         public bool[] CharCatMask { get; set; } = new bool[8];
-        //public bool CandidateChanged { get; set; } = false;
 
         public PlayerLoadout Loadout { get; set; } = default!;
 
+        /// <summary>
+        /// Az aktuális rangsorolt csatacsapat karakterhelyei.
+        /// Üres: még nincs összeállítva.
+        /// Csak nullák: karakterváltozás miatt újra össze kell állítani.
+        /// </summary>
+        public int[] BattleTeamSlots { get; set; } = [];
 
         public PlayerAskStats AskStats { get; set; } = default!;
         public List<PlayerCategoryStat> CategoryStats { get; set; } = [];

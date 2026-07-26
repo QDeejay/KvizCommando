@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="Box.Title.CreateBattlefield" xml:space="preserve">
+    <value>Csatatér létrehozása</value>
+  </data>
+  <data name="Box.Title.JoinBattlefield" xml:space="preserve">
+    <value>Csatlakozás csatatérhez</value>
+  </data>
+  <data name="Box.Title.RankedBattlefields" xml:space="preserve">
+    <value>Rangsorolásos csataterek</value>
+  </data>
+  <data name="Box.Footer.RankedRequirements" xml:space="preserve">
+    <value>Feltétel: {0} hadra fogható karakter és {1} kredit</value>
+  </data>
+  <data name="Manager.Title" xml:space="preserve">
+    <value>Csapat összeállítása</value>
+  </data>
+  <data name="Manager.Message.Initial" xml:space="preserve">
+    <value>Állítsd össze a mai csapatod!</value>
+  </data>
+  <data name="Manager.Message.Invalidated" xml:space="preserve">
+    <value>Változott a csapat, állítsd össze újra!</value>
+  </data>
+  <data name="Manager.Message.Saved" xml:space="preserve">
+    <value>A mai csapat összeállítva.</value>
+  </data>
+  <data name="Manager.Footer.Toggle" xml:space="preserve">
+    <value>Csapatmanager</value>
+  </data>
+  <data name="Manager.Button.Save" xml:space="preserve">
+    <value>Mentés</value>
+  </data>
+  <data name="Classification.Title.1" xml:space="preserve">
+    <value>I. harci besorolás</value>
+  </data>
+  <data name="Classification.Title.2" xml:space="preserve">
+    <value>II. harci besorolás</value>
+  </data>
+  <data name="Classification.Title.3" xml:space="preserve">
+    <value>III. harci besorolás</value>
+  </data>
+  <data name="Classification.Title.4" xml:space="preserve">
+    <value>IV. harci besorolás</value>
+  </data>
+  <data name="Classification.Title.5" xml:space="preserve">
+    <value>V. harci besorolás</value>
+  </data>
+  <data name="Classification.Footer.Requirements" xml:space="preserve">
+    <value>{0} karakter, rangosztály: {1}–{2}</value>
+  </data>
+</root>

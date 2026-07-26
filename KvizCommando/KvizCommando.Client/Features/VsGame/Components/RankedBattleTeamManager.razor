@@ -1,0 +1,50 @@
+@using KvizCommando.Client.Components.CharacterComponent
+
+@if (_isReady)
+{
+    <div class="kc-ranked-team-manager">
+        <div class="kc-ranked-team-message">
+            @_vm.Message
+        </div>
+
+        <div class="kc-ranked-member-grid">
+            @foreach (var member in _vm.Members)
+            {
+                <label class="kc-ranked-member @(member.IsSelected ? "selected" : "")">
+                    <span class="kc-ranked-member-picture">
+                        <CharacterView PicCode="@member.PictureCode" />
+                    </span>
+                    <span class="kc-ranked-member-data">
+                        <span>@member.Name</span>
+                        <span>@member.RankName</span>
+                    </span>
+                    <input type="checkbox"
+                           checked="@member.IsSelected"
+                           @onchange="@(_ => ToggleMember(member.SlotNumber))" />
+                </label>
+            }
+        </div>
+
+        <div class="kc-ranked-lamp-row">
+            @foreach (var lamp in _vm.ClassificationLamps)
+            {
+                <div class="kc-ranked-lamp @(lamp.IsActive ? "active" : "")">
+                    <span></span>
+                    <label>@lamp.Label</label>
+                </div>
+            }
+        </div>
+
+        <div class="component-button-row">
+            <div></div>
+            <div class="component-button-group right">
+                <button class="button-on-lcd"
+                        disabled="@(!_vm.CanSave)"
+                        @onclick="SaveAsync">
+                    <i class="bi bi-floppy"></i>
+                    @Ui.Lang["vsgame.Manager.Button.Save"]
+                </button>
+            </div>
+        </div>
+    </div>
+}

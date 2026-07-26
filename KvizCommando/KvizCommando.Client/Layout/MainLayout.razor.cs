@@ -1,7 +1,9 @@
 ﻿using Blazored.LocalStorage;
 using Blazored.SessionStorage;
-using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Features.Shared.Modal;
+using KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders;
+using KvizCommando.Client.Features.VsGame;
+using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
@@ -9,7 +11,6 @@ using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
-using KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders;
 
 namespace KvizCommando.Client.Layout
 {
@@ -21,6 +22,7 @@ namespace KvizCommando.Client.Layout
         [Inject] private IQuestionState QState { get; set; } = default!;
         [Inject] private ITeamState TState { get; set; } = default!;
         [Inject] private ISoloState SState { get; set; } = default!;
+        [Inject] private IVsState VState { get; set; } = default!;
         [Inject] private AudioService Audio { get; set; } = default!;
         [Inject] private SessionService SessionService { get; set; } = default!;
 
@@ -173,7 +175,7 @@ namespace KvizCommando.Client.Layout
                 await QState.EnsureLoadedAsync();
                 _appState.Question = QState.Snapshot;
             }
-            if (state == ReqStates.All || state == ReqStates.Team)
+            if (state == ReqStates.All || state == ReqStates.Team || state == ReqStates.TeamVsGame )
             {
                 TState.Invalidate();
                 await TState.EnsureLoadedAsync();
@@ -184,6 +186,14 @@ namespace KvizCommando.Client.Layout
                 SState.Invalidate();
                 await SState.EnsureLoadedAsync();
                 _appState.SoloGame = SState.Snapshot;
+            }
+            if (state == ReqStates.All ||
+                state == ReqStates.VsGame ||
+                state == ReqStates.TeamVsGame)
+            {
+                VState.Invalidate();
+                await VState.EnsureLoadedAsync();
+                _appState.VsGame = VState.Snapshot;
             }
             if (state == ReqStates.All || state == ReqStates.LocalSotrage)
             {

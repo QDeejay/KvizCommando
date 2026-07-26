@@ -1,0 +1,10 @@
+.kc-vsgame-selector {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    top: -30px;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+}

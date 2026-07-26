@@ -13,6 +13,7 @@ namespace KvizCommando.Client.Services.Dto
         private const string SCREEN_ROUTE_TEAM = "/api/team/screen";
         private const string SCREEN_ROUTE_SOLO = "/api/sologame/screen";
         private const string SCREEN_ROUTE_HOME = "/api/home/screen";
+        //private const string SCREEN_ROUTE_VS_GAME = "/api/screen/vsgame";
         public CacheApiService(HttpClient http, SessionService sessioncache)
         {
             _http = http;
@@ -43,6 +44,12 @@ namespace KvizCommando.Client.Services.Dto
             var SessionId = _sessionCache.SessionId;
             var dto = await _http.GetFromJsonAsync<SoloGameDtos>($"{SCREEN_ROUTE}/sologame?sessionId={SessionId}", ct);
             return dto;
+
+        }
+        public async Task<VsGameDtos?> GetVsGameAsync(CancellationToken ct = default)
+        {
+            var sessionId = _sessionCache.SessionId;
+            return await _http.GetFromJsonAsync<VsGameDtos>($"{SCREEN_ROUTE}/vsgame?sessionId={sessionId}", ct);
         }
     }
 }

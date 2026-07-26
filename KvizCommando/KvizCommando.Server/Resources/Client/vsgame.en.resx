@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="Box.Title.CreateBattlefield" xml:space="preserve">
+    <value>Create battlefield</value>
+  </data>
+  <data name="Box.Title.JoinBattlefield" xml:space="preserve">
+    <value>Join battlefield</value>
+  </data>
+  <data name="Box.Title.RankedBattlefields" xml:space="preserve">
+    <value>Ranked battlefields</value>
+  </data>
+  <data name="Box.Footer.RankedRequirements" xml:space="preserve">
+    <value>Requires {0} battle-ready characters and {1} credits</value>
+  </data>
+  <data name="Manager.Title" xml:space="preserve">
+    <value>Assemble battle team</value>
+  </data>
+  <data name="Manager.Message.Initial" xml:space="preserve">
+    <value>Assemble today's team!</value>
+  </data>
+  <data name="Manager.Message.Invalidated" xml:space="preserve">
+    <value>Your team has changed. Assemble it again!</value>
+  </data>
+  <data name="Manager.Message.Saved" xml:space="preserve">
+    <value>Today's team is ready.</value>
+  </data>
+  <data name="Manager.Footer.Toggle" xml:space="preserve">
+    <value>Team manager</value>
+  </data>
+  <data name="Manager.Button.Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Classification.Title.1" xml:space="preserve">
+    <value>Battle classification I</value>
+  </data>
+  <data name="Classification.Title.2" xml:space="preserve">
+    <value>Battle classification II</value>
+  </data>
+  <data name="Classification.Title.3" xml:space="preserve">
+    <value>Battle classification III</value>
+  </data>
+  <data name="Classification.Title.4" xml:space="preserve">
+    <value>Battle classification IV</value>
+  </data>
+  <data name="Classification.Title.5" xml:space="preserve">
+    <value>Battle classification V</value>
+  </data>
+  <data name="Classification.Footer.Requirements" xml:space="preserve">
+    <value>{0} characters, rank classes: {1}–{2}</value>
+  </data>
+</root>

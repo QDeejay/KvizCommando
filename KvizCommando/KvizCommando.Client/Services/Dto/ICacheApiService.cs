@@ -8,6 +8,7 @@ namespace KvizCommando.Client.Services.Dto
         Task<QuestionDtos?> GetQuestionAsync(CancellationToken ct = default);
         Task<TeamDtos?> GetTeamAsync(CancellationToken ct = default);
         Task<SoloGameDtos?> GetSoloAsync(CancellationToken ct = default);
+        Task<VsGameDtos?> GetVsGameAsync(CancellationToken ct = default);
 
     }
 }

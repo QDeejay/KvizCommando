@@ -1,11 +1,13 @@
 ﻿using KvizCommando.Server.Domain.Entities.Statistics;
 using KvizCommando.Server.Services.PlayerCache;
+using KvizCommando.Server.Services.VsGame;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.User;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
+
 
 namespace KvizCommando.Server.Services.DtoMapping
 {
@@ -184,6 +186,125 @@ namespace KvizCommando.Server.Services.DtoMapping
             };
 
         }
+
+        public async Task<VsGameDtos?> GetVsGameScreenAsync(int playerId, string sessionId, CancellationToken ct = default)
+        {
+            var (player, _) = await _cache.GetOrLoadLockedAsync(
+                playerId,
+                sessionId,
+                ct);
+
+            if (player is null)
+            {
+                _logger.LogWarning(
+                    "Player not found in cache. userId={UserId}",
+                    playerId);
+                return null;
+            }
+
+            if (player.SessionId == "denied")
+                return new VsGameDtos { AccessDenied = true };
+
+            var battleReadyMembers = player.Characters
+                .Select((member, index) => new
+                {
+                    Member = member,
+                    SlotNumber = index + 1
+                })
+                .Where(item =>
+                    item.Member is not null &&
+                    item.Member.EnergyPoints > 0)
+                .Select(item => new VsBattleMemberDto
+                {
+                    SlotNumber = item.SlotNumber,
+                    Name = item.Member!.Name,
+                    PictureCode = item.Member.PictureCode,
+                    Rank = item.Member.Rank,
+                    RankClass =
+                        VsBattleClassificationRules.ResolveRankClass(
+                            item.Member.Rank),
+                    EnergyPoints = item.Member.EnergyPoints
+                })
+                .ToArray();
+
+            var savedSlots = player.BattleTeamSlots is null
+                ? []
+                : player.BattleTeamSlots.ToArray();
+
+            var savedRanks = savedSlots.Length > 0 &&
+                             savedSlots.All(slot => slot is >= 1 and <= 8)
+                ? savedSlots
+                    .Select(slot => player.Characters[slot - 1])
+                    .Where(member =>
+                        member is not null &&
+                        member.EnergyPoints > 0)
+                    .Select(member => member!.Rank)
+                    .ToArray()
+                : [];
+
+            var eligibleIds = savedRanks.Length == savedSlots.Length
+                ? VsBattleClassificationRules
+                    .GetEligibleClassificationIds(
+                        player.Core.RankEnum,
+                        savedRanks)
+                : [];
+
+            return new VsGameDtos
+            {
+                RootBoxInfo = new VsRootBoxInfo
+                {
+                    IsCreateBattlefieldEnabled = false,
+                    IsJoinBattlefieldEnabled = false,
+                    IsRankedBattlefieldsEnabled =
+                        battleReadyMembers.Length >=
+                            VsBattleClassificationRules
+                                .RequiredBattleReadyCharacters &&
+                        player.Core.Credit >=
+                            VsBattleClassificationRules
+                                .RequiredCreditBalance,
+                    BattleReadyCharacterCount =
+                        battleReadyMembers.Length,
+                    RequiredBattleReadyCharacterCount =
+                        VsBattleClassificationRules
+                            .RequiredBattleReadyCharacters,
+                    CreditBalance = player.Core.Credit,
+                    RequiredCreditBalance =
+                        VsBattleClassificationRules
+                            .RequiredCreditBalance,
+                    TeamRank = player.Core.RankEnum
+                },
+                RankedBattlefields =
+                    new VsRankedBattlefieldsDto
+                    {
+                        BattleReadyMembers = battleReadyMembers,
+                        SavedSelection = new VsRankedSelectionDto
+                        {
+                            SelectedSlotNumbers = savedSlots,
+                            EligibleClassificationIds = eligibleIds
+                        },
+                        Classifications =
+                        [
+                            .. VsBattleClassificationRules.List.Select(
+                                rule => new VsBattleClassificationDto
+                                {
+                                    ClassificationId =
+                                        rule.ClassificationId,
+                                    MinimumTeamRank =
+                                        rule.MinimumTeamRank,
+                                    RequiredPartySize =
+                                        rule.RequiredPartySize,
+                                    MemberMinimumRankClass =
+                                        rule.MemberMinimumRankClass,
+                                    MemberMaximumRankClass =
+                                        rule.MemberMaximumRankClass,
+                                    RequiredMembersInRankClassRange =
+                                        rule.RequiredMembersInRankClassRange
+                                })
+                        ]
+                    }
+            };
+        }
+
 
         /// <summary>
         /// Itt vanna az osztály privát helperei

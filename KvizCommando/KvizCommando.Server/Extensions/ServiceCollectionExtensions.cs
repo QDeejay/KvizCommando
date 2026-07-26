@@ -13,6 +13,7 @@ using KvizCommando.Server.Services.SoloGame;
 using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
 using KvizCommando.Server.Services.SoloGame.GameCache;
 using KvizCommando.Server.Services.UserPlayerIdCache;
+using KvizCommando.Server.Services.VsGame;
 using Microsoft.AspNetCore.Authorization;
 
 
@@ -40,6 +41,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ISoloGameCache, SoloGameCache>();
         services.AddScoped<ISoloQuestionRepository, SoloQuestionRepository>();
         services.AddScoped<ISoloGameService, SoloGameService>();
+        services.AddScoped<IVsGameService, VsGameService>();
 
         ///
         /// Game database services

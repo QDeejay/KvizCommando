@@ -135,6 +135,12 @@ namespace KvizCommando.Server.Services.PlayerCache
                 if (dirty is null)
                     return false;
 
+                if ((dirty.Value & DirtyFlags.Characters) != 0 &&
+                    entry.Player.BattleTeamSlots.Length > 0)
+                {
+                    Array.Clear(entry.Player.BattleTeamSlots);
+                }
+
                 entry.Dirty |= dirty.Value;
                 entry.LastAccessUtc = DateTime.UtcNow;
                 return true;

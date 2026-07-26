@@ -1,0 +1,18 @@
+{
+  "Box.Title.CreateBattlefield": "Create battlefield",
+  "Box.Title.JoinBattlefield": "Join battlefield",
+  "Box.Title.RankedBattlefields": "Ranked battlefields",
+  "Box.Footer.RankedRequirements": "Requires {0} battle-ready characters and {1} credits",
+  "Manager.Title": "Assemble battle team",
+  "Manager.Message.Initial": "Assemble today's team!",
+  "Manager.Message.Invalidated": "Your team has changed. Assemble it again!",
+  "Manager.Message.Saved": "Today's team is ready.",
+  "Manager.Footer.Toggle": "Team manager",
+  "Manager.Button.Save": "Save",
+  "Classification.Title.1": "Battle classification I",
+  "Classification.Title.2": "Battle classification II",
+  "Classification.Title.3": "Battle classification III",
+  "Classification.Title.4": "Battle classification IV",
+  "Classification.Title.5": "Battle classification V",
+  "Classification.Footer.Requirements": "{0} characters, rank classes: {1}–{2}"
+}

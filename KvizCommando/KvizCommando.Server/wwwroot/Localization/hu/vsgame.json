@@ -1,0 +1,18 @@
+{
+  "Box.Title.CreateBattlefield": "Csatatér létrehozása",
+  "Box.Title.JoinBattlefield": "Csatlakozás csatatérhez",
+  "Box.Title.RankedBattlefields": "Rangsorolásos csataterek",
+  "Box.Footer.RankedRequirements": "Feltétel: {0} hadra fogható karakter és {1} kredit",
+  "Manager.Title": "Csapat összeállítása",
+  "Manager.Message.Initial": "Állítsd össze a mai csapatod!",
+  "Manager.Message.Invalidated": "Változott a csapat, állítsd össze újra!",
+  "Manager.Message.Saved": "A mai csapat összeállítva.",
+  "Manager.Footer.Toggle": "Csapatmanager",
+  "Manager.Button.Save": "Mentés",
+  "Classification.Title.1": "I. harci besorolás",
+  "Classification.Title.2": "II. harci besorolás",
+  "Classification.Title.3": "III. harci besorolás",
+  "Classification.Title.4": "IV. harci besorolás",
+  "Classification.Title.5": "V. harci besorolás",
+  "Classification.Footer.Requirements": "{0} karakter, rangosztály: {1}–{2}"
+}
