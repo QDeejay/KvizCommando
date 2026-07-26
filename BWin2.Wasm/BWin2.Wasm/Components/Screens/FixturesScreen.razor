@@ -1,0 +1,149 @@
+<section class="screen-panel fixtures-panel"
+         tabindex="0"
+         @ref="_host"
+         @onkeydown="HandleKeyDown">
+    <div class="screen-title-row">
+        <div>
+            <div class="eyebrow">MENETREND ÉS FOGADÁS</div>
+            <h2 class="@FocusClass(FixtureFocus.Tab)">Fixtures</h2>
+        </div>
+        @if (_lastPayout > 0)
+        {
+            <div class="payout-chip">+@_lastPayout.ToString("N0") HUF jóváírva</div>
+        }
+    </div>
+
+    <div class="fixture-toolbar">
+        <div class="competition-switch">
+            <button class="@(!_isCup ? "active" : null)"
+                    @onclick="() => SetCompetition(false)">
+                Bundesliga
+            </button>
+            <button class="@(_isCup ? "active" : null)"
+                    @onclick="() => SetCompetition(true)">
+                DFB Cup
+            </button>
+        </div>
+
+        <div class="round-selector @FocusClass(FixtureFocus.Round)">
+            <button aria-label="Előző" @onclick="PreviousRound">‹</button>
+            <strong>@RoundText</strong>
+            <button aria-label="Következő" @onclick="NextRound">›</button>
+        </div>
+
+        <div class="fixture-range-note">
+            @if (!_isCup)
+            {
+                <span>Fogadás: aktuális forduló + 5 előre</span>
+            }
+            else
+            {
+                <span>@(_visibleRound > 3 ? "Semleges pálya" : "Kieséses rendszer")</span>
+            }
+        </div>
+    </div>
+
+    <div class="fixture-list">
+        <div class="fixture-list-header">
+            <span>Mérkőzés</span>
+            <span class="odds-header">
+                <b>Home</b>
+                @if (!_isCup)
+                {
+                    <b>Draw</b>
+                }
+                <b>Away</b>
+            </span>
+        </div>
+
+        @foreach (Fixture fixture in Fixtures)
+        {
+            Team homeTeam = Game.State.TeamAt(fixture.HomeTeamSlot);
+            Team awayTeam = Game.State.TeamAt(fixture.AwayTeamSlot);
+            MatchOdds odds = GetOdds(fixture);
+            IReadOnlyList<Bet> bets = GetFixtureBets(fixture.MatchNumber);
+
+            <div class="fixture-row @FixtureRowClass(fixture)">
+                <div class="fixture-teams">
+                    <span class="@SelectedTeamClass(fixture.HomeTeamSlot)">@homeTeam.Name</span>
+                    <i>–</i>
+                    <span class="@SelectedTeamClass(fixture.AwayTeamSlot)">@awayTeam.Name</span>
+                </div>
+
+                @if (ShowOdds)
+                {
+                    <div class="fixture-odds">
+                        @foreach ((BetSelection selection, string text) in DisplayedOdds(odds))
+                        {
+                            Bet? placedBet = bets.FirstOrDefault(bet =>
+                                bet.Selection == selection &&
+                                bet.Status == BetStatus.Opened);
+                            <button class="@OddsClass(fixture, selection, placedBet)"
+                                    disabled="@(!CanSelectOdds)"
+                                    @onclick="() => ChooseOdds(fixture, selection)">
+                                @if (placedBet is not null)
+                                {
+                                    <span class="bet-marker">▶</span>
+                                }
+                                <strong>@text</strong>
+                                @if (placedBet is not null && !_isCup)
+                                {
+                                    <small>@OddsMovement(odds, placedBet)</small>
+                                }
+                            </button>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="fixture-result">
+                        @Game.State.GetResult(_isCup, _visibleRound, fixture.MatchNumber)
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="fixture-focus-help">
+        @FocusHelp
+    </div>
+</section>
+
+@if (_isStakeOpen && _pendingFixture is Fixture pendingFixture)
+{
+    <div class="dialog-backdrop">
+        <section class="bet-dialog">
+            <div class="eyebrow">FOGADÁS RÖGZÍTÉSE</div>
+            <h3>
+                @Game.State.TeamAt(pendingFixture.HomeTeamSlot).ShortName
+                –
+                @Game.State.TeamAt(pendingFixture.AwayTeamSlot).ShortName
+            </h3>
+            <div class="bet-dialog-grid">
+                <span>Tipp</span>
+                <strong>@SelectionText(_pendingSelection)</strong>
+                <span>Odds</span>
+                <strong>@PendingOddsText</strong>
+            </div>
+            <label for="fixture-stake">Tét</label>
+            <input id="fixture-stake"
+                   type="number"
+                   min="@GameRules.MinimumStake"
+                   max="@MaximumStake"
+                   step="100"
+                   @bind="_stake" />
+            <div class="potential-win">
+                Várható nyeremény:
+                <strong>@PendingPotentialWin.ToString("N0") HUF</strong>
+            </div>
+            @if (!string.IsNullOrEmpty(_error))
+            {
+                <div class="form-error">@_error</div>
+            }
+            <div class="dialog-actions">
+                <button class="secondary-action" @onclick="CancelStake">Mégse</button>
+                <button class="primary-action" @onclick="ConfirmStake">Fogadás</button>
+            </div>
+        </section>
+    </div>
+}

@@ -1,0 +1,40 @@
+<section class="screen-panel"
+         tabindex="0"
+         @ref="_host"
+         @onkeydown="HandleKeyDown">
+    <div class="screen-title-row">
+        <div>
+            <div class="eyebrow">FOGADÁSI NAPLÓ</div>
+            <h2>Bet summary</h2>
+        </div>
+        <div class="round-chip">@Game.State.Bets.Count fogadás</div>
+    </div>
+
+    <div class="bet-list">
+        <div class="bet-list-header">
+            <span>Event</span>
+            <span>Week</span>
+            <span>Tip</span>
+            <span>Bet</span>
+            <span>Odds</span>
+            <span>Status</span>
+            <span>Win</span>
+        </div>
+        @foreach (Bet bet in Game.State.Bets.OrderBy(item => item.EventWeek))
+        {
+            <div class="bet-row @BetClass(bet)">
+                <strong>@bet.EventName.Trim()</strong>
+                <span>@bet.WeekLabel.Trim()</span>
+                <span>@bet.Tip.Trim()</span>
+                <span>@bet.Stake.ToString("N0")</span>
+                <span>@bet.OddsText</span>
+                <span>@bet.StatusText</span>
+                <b>@WinText(bet)</b>
+            </div>
+        }
+    </div>
+
+    <div class="fixture-focus-help">
+        ← → főmenü · Space vissza a Fixtures képernyőre
+    </div>
+</section>

@@ -1,0 +1,26 @@
+@if (Game.Phase == GamePhase.Loading)
+{
+    <section class="boot-screen">
+        <div class="boot-logo">BWIN2</div>
+        <div class="boot-line">Standalone WebAssembly · adatok betöltése…</div>
+    </section>
+}
+else if (Game.Phase == GamePhase.Failed)
+{
+    <section class="boot-screen error-screen">
+        <div class="boot-logo">BWIN2</div>
+        <div class="boot-line">@Game.ErrorMessage</div>
+    </section>
+}
+else if (Match.IsActive)
+{
+    <MatchViewer />
+}
+else if (Game.Phase == GamePhase.Preseason)
+{
+    <PreseasonScreen />
+}
+else
+{
+    <GameShell />
+}

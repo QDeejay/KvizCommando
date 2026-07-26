@@ -1,0 +1,48 @@
+<section class="preseason-screen">
+    <div class="preseason-copy">
+        <div class="eyebrow">SZEZON ELŐTTI FOGADÁS</div>
+        <h1>@Title</h1>
+        <p>
+            Válassz csapatot, add meg a tétet, majd erősítsd meg.
+            A játék pontosan két fogadással indul.
+        </p>
+
+        <div class="balance-card large">
+            <span>Balance</span>
+            <strong>@Game.State.Credit.ToString("N0") HUF</strong>
+        </div>
+
+        <div class="stake-panel">
+            <label for="preseason-stake">Tét</label>
+            <input id="preseason-stake"
+                   type="number"
+                   min="@GameRules.MinimumStake"
+                   max="@MaximumStake"
+                   step="100"
+                   @bind="_stake" />
+            <div class="potential-win">
+                Várható nyeremény:
+                <strong>@PotentialWin.ToString("N0") HUF</strong>
+            </div>
+            @if (!string.IsNullOrEmpty(_error))
+            {
+                <div class="form-error">@_error</div>
+            }
+            <button class="primary-action"
+                    @onclick="PlaceBet">
+                Fogadás rögzítése
+            </button>
+        </div>
+    </div>
+
+    <div class="team-picker">
+        @foreach (Team team in Teams)
+        {
+            <button class="team-choice @(team.Id == _selectedTeamSlot ? "selected" : null)"
+                    @onclick="() => SelectTeam(team.Id)">
+                <span>@team.Name</span>
+                <strong>@GetOdds(team)</strong>
+            </button>
+        }
+    </div>
+</section>

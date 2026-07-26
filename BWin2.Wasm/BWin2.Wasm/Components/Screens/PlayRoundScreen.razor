@@ -1,0 +1,90 @@
+<section class="screen-panel match-menu-panel"
+         tabindex="0"
+         @ref="_host"
+         @onkeydown="HandleKeyDown">
+    <div class="screen-title-row">
+        <div>
+            <div class="eyebrow">FORDULÓ VEZÉRLÉS</div>
+            <h2>Match</h2>
+        </div>
+        <div class="round-chip">@CurrentRoundText</div>
+    </div>
+
+    @if (Game.LastRound is not null)
+    {
+        <div class="round-results">
+            @foreach (PlayedMatch match in Game.LastRound.Matches)
+            {
+                <div class="round-result-row">
+                    <span>
+                        @Game.State.TeamAt(match.Fixture.HomeTeamSlot).Name
+                        –
+                        @Game.State.TeamAt(match.Fixture.AwayTeamSlot).Name
+                    </span>
+                    <strong>@match.ResultText</strong>
+                    @foreach (Bet bet in MatchBets(match))
+                    {
+                        <b class="@(bet.Lost ? "lost-text" : "won-text")">
+                            @(bet.Lost ? "Lost" : $"+{bet.PotentialWin:N0}")
+                        </b>
+                    }
+                </div>
+            }
+        </div>
+
+        <button class="primary-action centered" @onclick="CompleteRound">
+            Eredmények rögzítése
+        </button>
+    }
+    else if (Game.IsRoundRunning)
+    {
+        <div class="calculation-state">
+            <div class="spinner-ring"></div>
+            <strong>Forduló számítása…</strong>
+        </div>
+    }
+    else if (Game.IsSeasonFinished())
+    {
+        <div class="season-finished">
+            <span>END OF THE SEASON</span>
+            <h3>Új szezon indítható</h3>
+            <button class="primary-action" @onclick="BeginNewSeason">
+                New season
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="match-options">
+            <button class="@(!_showBetMatches ? "selected" : null)"
+                    @onclick="() => SelectOption(false)">
+                <span class="option-number">01</span>
+                <span>
+                    <strong>Play Round</strong>
+                    <small>Minden mérkőzés azonnali kiszámítása</small>
+                </span>
+            </button>
+
+            @if (HasBetMatch)
+            {
+                <button class="@(_showBetMatches ? "selected" : null)"
+                        @onclick="() => SelectOption(true)">
+                    <span class="option-number">02</span>
+                    <span>
+                        <strong>Show bet matches</strong>
+                        <small>600 ms/játékperc és élő kommentár</small>
+                    </span>
+                </button>
+            }
+        </div>
+
+        <button class="primary-action centered"
+                @onclick="PlayRoundAsync">
+            Forduló indítása
+        </button>
+    }
+
+    <div class="fixture-focus-help">
+        ↑ ↓ opció · Enter indítás · ← előző menü
+    </div>
+</section>

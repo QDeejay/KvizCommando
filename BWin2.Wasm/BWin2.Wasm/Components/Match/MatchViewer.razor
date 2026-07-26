@@ -1,0 +1,101 @@
+<section class="match-view">
+    <header class="match-view-header">
+        <div>
+            <div class="brand-small">BWIN2 · LIVE</div>
+            <span>@Match.RoundLabel</span>
+        </div>
+        <div class="match-clock @(Match.Phase == MatchPresentationPhase.Live ? "running" : null)">
+            @ClockText
+        </div>
+    </header>
+
+    <div class="scoreboard">
+        <div class="score-team home">@Match.HomeTeam</div>
+        <strong>
+            <span>@Match.HomeScore</span>
+            <i>:</i>
+            <span>@Match.AwayScore</span>
+        </strong>
+        <div class="score-team away">@Match.AwayTeam</div>
+    </div>
+
+    @if (Match.Phase == MatchPresentationPhase.Introduction)
+    {
+        <div class="match-introduction">
+            <section class="lineup-column">
+                <h3>@Match.HomeTeam</h3>
+                @foreach (string player in Match.HomeLineup)
+                {
+                    <span>@player</span>
+                }
+            </section>
+
+            <section class="venue-card">
+                <div class="eyebrow">MÉRKŐZÉS HELYSZÍNE</div>
+                <h2>@Match.Stadium</h2>
+                <p>@Match.City</p>
+                <dl>
+                    <dt>Nézőszám</dt>
+                    <dd>@Match.Attendance.ToString("N0")</dd>
+                    <dt>Pálya</dt>
+                    <dd>@(Match.Neutral ? "semleges" : "hazai")</dd>
+                </dl>
+            </section>
+
+            <section class="lineup-column away">
+                <h3>@Match.AwayTeam</h3>
+                @foreach (string player in Match.AwayLineup)
+                {
+                    <span>@player</span>
+                }
+            </section>
+        </div>
+    }
+    else
+    {
+        <div class="live-match-grid">
+            <section class="commentary-panel">
+                <div class="eyebrow">MATCH COMMENTARY</div>
+                <div class="commentary-line" style="@CommentaryStyle">
+                    @(string.IsNullOrWhiteSpace(Match.Commentary)
+                        ? "A mérkőzés folyamatban…"
+                        : Match.Commentary)
+                </div>
+
+                @if (Match.Phase == MatchPresentationPhase.Penalties)
+                {
+                    <div class="penalty-board">
+                        <PenaltyRow Name="@Match.HomeTeam" Marks="@Match.HomePenalties" />
+                        <PenaltyRow Name="@Match.AwayTeam" Marks="@Match.AwayPenalties" />
+                    </div>
+                }
+            </section>
+
+            <aside class="goal-log">
+                <div class="eyebrow">GOALS</div>
+                @if (Match.Goals.Count == 0)
+                {
+                    <div class="no-goals">Még nincs gól.</div>
+                }
+                else
+                {
+                    @foreach (MatchGoalVm goal in Match.Goals)
+                    {
+                        <div class="goal-entry">
+                            <span>@goal.Minute'</span>
+                            <strong>@goal.Player</strong>
+                            <small>@goal.Team · @goal.HomeScore:@goal.AwayScore</small>
+                        </div>
+                    }
+                }
+            </aside>
+        </div>
+    }
+
+    @if (Match.CanContinue)
+    {
+        <button class="primary-action match-continue" @onclick="Continue">
+            @Match.ContinueText
+        </button>
+    }
+</section>

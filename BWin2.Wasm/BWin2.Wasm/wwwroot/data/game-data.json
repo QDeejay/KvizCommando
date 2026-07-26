@@ -1,0 +1,2065 @@
+{
+  "teams": [
+    {
+      "id": 1,
+      "name": "VFB Stuttgart  ",
+      "players": [
+        {
+          "name": "Hildebrand  ",
+          "position": "GK"
+        },
+        {
+          "name": "Meira       ",
+          "position": "LB"
+        },
+        {
+          "name": "Gerber      ",
+          "position": "CD"
+        },
+        {
+          "name": "Delpierre   ",
+          "position": "CD"
+        },
+        {
+          "name": "Magnin      ",
+          "position": "RB"
+        },
+        {
+          "name": "Osorio      ",
+          "position": "LM"
+        },
+        {
+          "name": "Babbel      ",
+          "position": "CM"
+        },
+        {
+          "name": "Da Silva    ",
+          "position": "CM"
+        },
+        {
+          "name": "Khedira     ",
+          "position": "RM"
+        },
+        {
+          "name": "Pardo       ",
+          "position": "ST"
+        },
+        {
+          "name": "Gomez       ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Gottlieb-Daimler Stadion",
+        "city": "Stuttgart",
+        "capacity": 57000,
+        "foregroundColor": 4,
+        "backgroundColor": 15
+      },
+      "shortName": "VFB",
+      "coach": "Armin Veh",
+      "strength": 85
+    },
+    {
+      "id": 2,
+      "name": "Schalke 04     ",
+      "players": [
+        {
+          "name": "Neuer       ",
+          "position": "GK"
+        },
+        {
+          "name": "Bordon      ",
+          "position": "LB"
+        },
+        {
+          "name": "Rafinha     ",
+          "position": "CD"
+        },
+        {
+          "name": "Krstajic    ",
+          "position": "CD"
+        },
+        {
+          "name": "Pander      ",
+          "position": "RB"
+        },
+        {
+          "name": "Kobiaschwili",
+          "position": "LM"
+        },
+        {
+          "name": "Ernst       ",
+          "position": "CM"
+        },
+        {
+          "name": "Lincoln     ",
+          "position": "CM"
+        },
+        {
+          "name": "H.Altintop  ",
+          "position": "RM"
+        },
+        {
+          "name": "Kuranyi     ",
+          "position": "ST"
+        },
+        {
+          "name": "Asamoah     ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Veltins Arena",
+        "city": "Gelsenkirchen",
+        "capacity": 71000,
+        "foregroundColor": 15,
+        "backgroundColor": 1
+      },
+      "shortName": "S04",
+      "coach": "Mirko Slomka",
+      "strength": 83
+    },
+    {
+      "id": 3,
+      "name": "Werder Bremen  ",
+      "players": [
+        {
+          "name": "Wiese       ",
+          "position": "GK"
+        },
+        {
+          "name": "Wome        ",
+          "position": "LB"
+        },
+        {
+          "name": "Mertezacher ",
+          "position": "CD"
+        },
+        {
+          "name": "Naldo       ",
+          "position": "CD"
+        },
+        {
+          "name": "Almeida     ",
+          "position": "RB"
+        },
+        {
+          "name": "Baumann     ",
+          "position": "LM"
+        },
+        {
+          "name": "Diego       ",
+          "position": "CM"
+        },
+        {
+          "name": "Frings      ",
+          "position": "CM"
+        },
+        {
+          "name": "Borowski    ",
+          "position": "RM"
+        },
+        {
+          "name": "Hunt        ",
+          "position": "ST"
+        },
+        {
+          "name": "Klasnich    ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Weser",
+        "city": "Bremen",
+        "capacity": 42000,
+        "foregroundColor": 15,
+        "backgroundColor": 2
+      },
+      "shortName": "W.B",
+      "coach": "Thomas Schaff",
+      "strength": 83
+    },
+    {
+      "id": 4,
+      "name": "Bayern Muenchen",
+      "players": [
+        {
+          "name": "Kahn        ",
+          "position": "GK"
+        },
+        {
+          "name": "Sagnol      ",
+          "position": "LB"
+        },
+        {
+          "name": "Lucio       ",
+          "position": "CD"
+        },
+        {
+          "name": "Ottl        ",
+          "position": "CD"
+        },
+        {
+          "name": "Lahm        ",
+          "position": "RB"
+        },
+        {
+          "name": "Ribery      ",
+          "position": "LM"
+        },
+        {
+          "name": "van Bommel  ",
+          "position": "CM"
+        },
+        {
+          "name": "Scholl      ",
+          "position": "CM"
+        },
+        {
+          "name": "Swinesteiger",
+          "position": "RM"
+        },
+        {
+          "name": "Toni        ",
+          "position": "ST"
+        },
+        {
+          "name": "Klose       ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Allianz Arena",
+        "city": "Muenchen",
+        "capacity": 69000,
+        "foregroundColor": 1,
+        "backgroundColor": 4
+      },
+      "shortName": "BMU",
+      "coach": "Ottmar Hitzfeld",
+      "strength": 81
+    },
+    {
+      "id": 5,
+      "name": "Bay. Leverkusen",
+      "players": [
+        {
+          "name": "Butt        ",
+          "position": "GK"
+        },
+        {
+          "name": "Roque Junior",
+          "position": "LB"
+        },
+        {
+          "name": "Juan        ",
+          "position": "CD"
+        },
+        {
+          "name": "Vidic       ",
+          "position": "CD"
+        },
+        {
+          "name": "Toure       ",
+          "position": "RB"
+        },
+        {
+          "name": "Freier      ",
+          "position": "LM"
+        },
+        {
+          "name": "Babic       ",
+          "position": "CM"
+        },
+        {
+          "name": "Schneider   ",
+          "position": "CM"
+        },
+        {
+          "name": "Ramelow     ",
+          "position": "RM"
+        },
+        {
+          "name": "Barbarez    ",
+          "position": "ST"
+        },
+        {
+          "name": "Voronin     ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "BayArena",
+        "city": "Leverkusen",
+        "capacity": 22500,
+        "foregroundColor": 0,
+        "backgroundColor": 4
+      },
+      "shortName": "LEV",
+      "coach": "Michael Skibbe",
+      "strength": 80
+    },
+    {
+      "id": 6,
+      "name": "1.FC Nuernberg ",
+      "players": [
+        {
+          "name": "Schaefer    ",
+          "position": "GK"
+        },
+        {
+          "name": "Glauber     ",
+          "position": "LB"
+        },
+        {
+          "name": "Spiranovic  ",
+          "position": "CD"
+        },
+        {
+          "name": "Pinola      ",
+          "position": "CD"
+        },
+        {
+          "name": "Reinhardt   ",
+          "position": "RB"
+        },
+        {
+          "name": "Galasek     ",
+          "position": "LM"
+        },
+        {
+          "name": "Mintal      ",
+          "position": "CM"
+        },
+        {
+          "name": "Polak       ",
+          "position": "CM"
+        },
+        {
+          "name": "Mnari       ",
+          "position": "RM"
+        },
+        {
+          "name": "Vittek      ",
+          "position": "ST"
+        },
+        {
+          "name": "Saenko      ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "easyCredit Stadion",
+        "city": "Nuernberg",
+        "capacity": 47780,
+        "foregroundColor": 15,
+        "backgroundColor": 4
+      },
+      "shortName": "NUR",
+      "coach": "Hans Meyer",
+      "strength": 78
+    },
+    {
+      "id": 7,
+      "name": "Hamburger SV   ",
+      "players": [
+        {
+          "name": "Kirschtein  ",
+          "position": "GK"
+        },
+        {
+          "name": "Atouba      ",
+          "position": "LB"
+        },
+        {
+          "name": "Mathijsen   ",
+          "position": "CD"
+        },
+        {
+          "name": "Mahdavikia  ",
+          "position": "CD"
+        },
+        {
+          "name": "Demel       ",
+          "position": "RB"
+        },
+        {
+          "name": "Fillinger   ",
+          "position": "LM"
+        },
+        {
+          "name": "Jarolim     ",
+          "position": "CM"
+        },
+        {
+          "name": "vander Vaart",
+          "position": "CM"
+        },
+        {
+          "name": "de Jong     ",
+          "position": "RM"
+        },
+        {
+          "name": "Olic        ",
+          "position": "ST"
+        },
+        {
+          "name": "Ljuboja     ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "HSH Nordbank Arena",
+        "city": "Hamburg",
+        "capacity": 57000,
+        "foregroundColor": 15,
+        "backgroundColor": 1
+      },
+      "shortName": "HSV",
+      "coach": "Huub Stevens",
+      "strength": 76
+    },
+    {
+      "id": 8,
+      "name": "VFL Bochum     ",
+      "players": [
+        {
+          "name": "Skov-Jensen ",
+          "position": "GK"
+        },
+        {
+          "name": "Lense       ",
+          "position": "LB"
+        },
+        {
+          "name": "Maltritz    ",
+          "position": "CD"
+        },
+        {
+          "name": "Drsek       ",
+          "position": "CD"
+        },
+        {
+          "name": "Yahia       ",
+          "position": "RB"
+        },
+        {
+          "name": "Dabrowski   ",
+          "position": "LM"
+        },
+        {
+          "name": "Illicevic   ",
+          "position": "CM"
+        },
+        {
+          "name": "Schroeder   ",
+          "position": "CM"
+        },
+        {
+          "name": "Grote       ",
+          "position": "RM"
+        },
+        {
+          "name": "Gekas       ",
+          "position": "ST"
+        },
+        {
+          "name": "Fabio Junior",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "rewirpowerStadion",
+        "city": "Bochum",
+        "capacity": 31328,
+        "foregroundColor": 15,
+        "backgroundColor": 1
+      },
+      "shortName": "VFL",
+      "coach": "Marcel Koller",
+      "strength": 75
+    },
+    {
+      "id": 9,
+      "name": "Bor. Dortmund  ",
+      "players": [
+        {
+          "name": "Weidenfeller",
+          "position": "GK"
+        },
+        {
+          "name": "Dede        ",
+          "position": "LB"
+        },
+        {
+          "name": "Metzelder   ",
+          "position": "CD"
+        },
+        {
+          "name": "Wörns       ",
+          "position": "CD"
+        },
+        {
+          "name": "Khel        ",
+          "position": "RB"
+        },
+        {
+          "name": "Pienaar     ",
+          "position": "LM"
+        },
+        {
+          "name": "Tinga       ",
+          "position": "CM"
+        },
+        {
+          "name": "Shahin      ",
+          "position": "CM"
+        },
+        {
+          "name": "Kringe      ",
+          "position": "RM"
+        },
+        {
+          "name": "Frei        ",
+          "position": "ST"
+        },
+        {
+          "name": "Smolarek    ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Signal Iduna Park",
+        "city": "Dortmund",
+        "capacity": 82000,
+        "foregroundColor": 0,
+        "backgroundColor": 14
+      },
+      "shortName": "BVB",
+      "coach": "Thomas Doll",
+      "strength": 74
+    },
+    {
+      "id": 10,
+      "name": "Hertha BSC     ",
+      "players": [
+        {
+          "name": "Fiedler     ",
+          "position": "GK"
+        },
+        {
+          "name": "Friedrich   ",
+          "position": "LB"
+        },
+        {
+          "name": "Simunic     ",
+          "position": "CD"
+        },
+        {
+          "name": "Fathi       ",
+          "position": "CD"
+        },
+        {
+          "name": "Boateng     ",
+          "position": "RB"
+        },
+        {
+          "name": "Gilberto    ",
+          "position": "LM"
+        },
+        {
+          "name": "Dardai      ",
+          "position": "CM"
+        },
+        {
+          "name": "Neuedorf    ",
+          "position": "CM"
+        },
+        {
+          "name": "Ebert       ",
+          "position": "RM"
+        },
+        {
+          "name": "Pantelic    ",
+          "position": "ST"
+        },
+        {
+          "name": "Lakic       ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "OlympiaStadion",
+        "city": "Berlin",
+        "capacity": 74244,
+        "foregroundColor": 15,
+        "backgroundColor": 1
+      },
+      "shortName": "HER",
+      "coach": "Lucien Favre",
+      "strength": 72
+    },
+    {
+      "id": 11,
+      "name": "Hannover 96    ",
+      "players": [
+        {
+          "name": "Enke        ",
+          "position": "GK"
+        },
+        {
+          "name": "Zuraw       ",
+          "position": "LB"
+        },
+        {
+          "name": "Cherundolo  ",
+          "position": "CD"
+        },
+        {
+          "name": "Tarnat      ",
+          "position": "CD"
+        },
+        {
+          "name": "Fahrenhorst ",
+          "position": "RB"
+        },
+        {
+          "name": "Huszti      ",
+          "position": "LM"
+        },
+        {
+          "name": "Yankow      ",
+          "position": "CM"
+        },
+        {
+          "name": "Rosenthal   ",
+          "position": "CM"
+        },
+        {
+          "name": "Bikmaz      ",
+          "position": "RM"
+        },
+        {
+          "name": "Jendrisek   ",
+          "position": "ST"
+        },
+        {
+          "name": "Stajner     ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "AWD Arena",
+        "city": "Hannover",
+        "capacity": 49000,
+        "foregroundColor": 0,
+        "backgroundColor": 4
+      },
+      "shortName": "H96",
+      "coach": "Dieter Hecking",
+      "strength": 69
+    },
+    {
+      "id": 12,
+      "name": "Arm.  Bielefeld",
+      "players": [
+        {
+          "name": "Hain        ",
+          "position": "GK"
+        },
+        {
+          "name": "Borges      ",
+          "position": "LB"
+        },
+        {
+          "name": "Gabriel     ",
+          "position": "CD"
+        },
+        {
+          "name": "Bollmann    ",
+          "position": "CD"
+        },
+        {
+          "name": "Westermann  ",
+          "position": "RB"
+        },
+        {
+          "name": "Marx        ",
+          "position": "LM"
+        },
+        {
+          "name": "Vata        ",
+          "position": "CM"
+        },
+        {
+          "name": "Kamper      ",
+          "position": "CM"
+        },
+        {
+          "name": "Vacek       ",
+          "position": "RM"
+        },
+        {
+          "name": "Eigler      ",
+          "position": "ST"
+        },
+        {
+          "name": "Wichniarek  ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Schueco Arena",
+        "city": "Bielefeld",
+        "capacity": 26601,
+        "foregroundColor": 0,
+        "backgroundColor": 1
+      },
+      "shortName": "BIE",
+      "coach": "Ernst Middendorp",
+      "strength": 68
+    },
+    {
+      "id": 13,
+      "name": "Energie Cottbus",
+      "players": [
+        {
+          "name": "Piplica     ",
+          "position": "GK"
+        },
+        {
+          "name": "McKenna     ",
+          "position": "LB"
+        },
+        {
+          "name": "Kanik       ",
+          "position": "CD"
+        },
+        {
+          "name": "Szelesi     ",
+          "position": "CD"
+        },
+        {
+          "name": "Mitreski    ",
+          "position": "RB"
+        },
+        {
+          "name": "Rost        ",
+          "position": "LM"
+        },
+        {
+          "name": "Skela       ",
+          "position": "CM"
+        },
+        {
+          "name": "Munteanu    ",
+          "position": "CM"
+        },
+        {
+          "name": "Badrowski   ",
+          "position": "RM"
+        },
+        {
+          "name": "Baumgart    ",
+          "position": "ST"
+        },
+        {
+          "name": "Radu        ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Stadion der Freundschaft",
+        "city": "Cottbus",
+        "capacity": 22746,
+        "foregroundColor": 15,
+        "backgroundColor": 4
+      },
+      "shortName": "COT",
+      "coach": "Petrik Sander",
+      "strength": 65
+    },
+    {
+      "id": 14,
+      "name": "Eint. Frankfurt",
+      "players": [
+        {
+          "name": "Nikolov     ",
+          "position": "GK"
+        },
+        {
+          "name": "Vasoski     ",
+          "position": "LB"
+        },
+        {
+          "name": "Spyscher    ",
+          "position": "CD"
+        },
+        {
+          "name": "Kirgaikos   ",
+          "position": "CD"
+        },
+        {
+          "name": "Chaftar     ",
+          "position": "RB"
+        },
+        {
+          "name": "Fink        ",
+          "position": "LM"
+        },
+        {
+          "name": "Jones       ",
+          "position": "CM"
+        },
+        {
+          "name": "Meier       ",
+          "position": "CM"
+        },
+        {
+          "name": "Huggel      ",
+          "position": "RM"
+        },
+        {
+          "name": "Takahara    ",
+          "position": "ST"
+        },
+        {
+          "name": "Amanatidis  ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Commerzbank Arena",
+        "city": "Frankfurt",
+        "capacity": 51500,
+        "foregroundColor": 0,
+        "backgroundColor": 4
+      },
+      "shortName": "EIN",
+      "coach": "Freidhelm Funkel",
+      "strength": 65
+    },
+    {
+      "id": 15,
+      "name": "Wolfsburg      ",
+      "players": [
+        {
+          "name": "Jentzsch    ",
+          "position": "GK"
+        },
+        {
+          "name": "v. d. Heyden",
+          "position": "LB"
+        },
+        {
+          "name": "Alex        ",
+          "position": "CD"
+        },
+        {
+          "name": "Hofland     ",
+          "position": "CD"
+        },
+        {
+          "name": "Stegmeyer   ",
+          "position": "RB"
+        },
+        {
+          "name": "Santana     ",
+          "position": "LM"
+        },
+        {
+          "name": "Makiadi     ",
+          "position": "CM"
+        },
+        {
+          "name": "Marcelinho  ",
+          "position": "CM"
+        },
+        {
+          "name": "dos Santos  ",
+          "position": "RM"
+        },
+        {
+          "name": "Hanke       ",
+          "position": "ST"
+        },
+        {
+          "name": "Rama        ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Volkswagen Arena",
+        "city": "Wolfsburg",
+        "capacity": 30000,
+        "foregroundColor": 15,
+        "backgroundColor": 2
+      },
+      "shortName": "WOL",
+      "coach": "Felix Magath",
+      "strength": 62
+    },
+    {
+      "id": 16,
+      "name": "Karlsruher SC  ",
+      "players": [
+        {
+          "name": "Miller      ",
+          "position": "GK"
+        },
+        {
+          "name": "Eggiman     ",
+          "position": "LB"
+        },
+        {
+          "name": "Barg        ",
+          "position": "CD"
+        },
+        {
+          "name": "Eichner     ",
+          "position": "CD"
+        },
+        {
+          "name": "Kies        ",
+          "position": "RB"
+        },
+        {
+          "name": "Adoube      ",
+          "position": "LM"
+        },
+        {
+          "name": "Federico    ",
+          "position": "CM"
+        },
+        {
+          "name": "Mutzel      ",
+          "position": "CM"
+        },
+        {
+          "name": "Traut       ",
+          "position": "RM"
+        },
+        {
+          "name": "Orahovac    ",
+          "position": "ST"
+        },
+        {
+          "name": "Kapllani    ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Wildpont Arena",
+        "city": "Karlsruhe",
+        "capacity": 29699,
+        "foregroundColor": 15,
+        "backgroundColor": 1
+      },
+      "shortName": "KSC",
+      "coach": "Edmund Becker",
+      "strength": 60
+    },
+    {
+      "id": 17,
+      "name": "Hansa Rostock  ",
+      "players": [
+        {
+          "name": "Schober     ",
+          "position": "GK"
+        },
+        {
+          "name": "Madsen      ",
+          "position": "LB"
+        },
+        {
+          "name": "Rahn        ",
+          "position": "CD"
+        },
+        {
+          "name": "Diego Morais",
+          "position": "CD"
+        },
+        {
+          "name": "Hartmann    ",
+          "position": "RB"
+        },
+        {
+          "name": "Rydlewicz   ",
+          "position": "LM"
+        },
+        {
+          "name": "Dojahn      ",
+          "position": "CM"
+        },
+        {
+          "name": "Beinlich    ",
+          "position": "CM"
+        },
+        {
+          "name": "Yelen       ",
+          "position": "RM"
+        },
+        {
+          "name": "Shapourzadeh",
+          "position": "ST"
+        },
+        {
+          "name": "Dorn        ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "DKB Arena",
+        "city": "Rostock",
+        "capacity": 29000,
+        "foregroundColor": 4,
+        "backgroundColor": 1
+      },
+      "shortName": "ROS",
+      "coach": "Frank Pagelsdorf",
+      "strength": 60
+    },
+    {
+      "id": 18,
+      "name": "MSV Duisburg   ",
+      "players": [
+        {
+          "name": "Koch        ",
+          "position": "GK"
+        },
+        {
+          "name": "Weber       ",
+          "position": "LB"
+        },
+        {
+          "name": "Bodzek      ",
+          "position": "CD"
+        },
+        {
+          "name": "Lanzaat     ",
+          "position": "CD"
+        },
+        {
+          "name": "Blank       ",
+          "position": "RB"
+        },
+        {
+          "name": "Caligiuri   ",
+          "position": "LM"
+        },
+        {
+          "name": "Hausweiler  ",
+          "position": "CM"
+        },
+        {
+          "name": "Voss        ",
+          "position": "CM"
+        },
+        {
+          "name": "Grlic       ",
+          "position": "RM"
+        },
+        {
+          "name": "Idrissou    ",
+          "position": "ST"
+        },
+        {
+          "name": "Stegmann    ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "MSV Arena",
+        "city": "Duisburg",
+        "capacity": 31500,
+        "foregroundColor": 15,
+        "backgroundColor": 1
+      },
+      "shortName": "MSV",
+      "coach": "Rudi Bommer",
+      "strength": 60
+    },
+    {
+      "id": 19,
+      "name": "FSV Mainz 05   ",
+      "players": [
+        {
+          "name": "Butt        ",
+          "position": "GK"
+        },
+        {
+          "name": "Roque Junior",
+          "position": "LB"
+        },
+        {
+          "name": "Juan        ",
+          "position": "CD"
+        },
+        {
+          "name": "Vidic       ",
+          "position": "CD"
+        },
+        {
+          "name": "Toure       ",
+          "position": "RB"
+        },
+        {
+          "name": "Freier      ",
+          "position": "LM"
+        },
+        {
+          "name": "Babic       ",
+          "position": "CM"
+        },
+        {
+          "name": "Schneider   ",
+          "position": "CM"
+        },
+        {
+          "name": "Ramelow     ",
+          "position": "RM"
+        },
+        {
+          "name": "Barbarez    ",
+          "position": "ST"
+        },
+        {
+          "name": "Voronin     ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Stadion am Bruchweg",
+        "city": "Mainz",
+        "capacity": 20200,
+        "foregroundColor": 15,
+        "backgroundColor": 4
+      },
+      "shortName": "MAI",
+      "coach": "Michael Skibbe",
+      "strength": 60
+    },
+    {
+      "id": 20,
+      "name": "Alemania Aachen",
+      "players": [
+        {
+          "name": "Schaefer    ",
+          "position": "GK"
+        },
+        {
+          "name": "Glauber     ",
+          "position": "LB"
+        },
+        {
+          "name": "Spiranovic  ",
+          "position": "CD"
+        },
+        {
+          "name": "Pinola      ",
+          "position": "CD"
+        },
+        {
+          "name": "Reinhardt   ",
+          "position": "RB"
+        },
+        {
+          "name": "Galasek     ",
+          "position": "LM"
+        },
+        {
+          "name": "Mintal      ",
+          "position": "CM"
+        },
+        {
+          "name": "Polak       ",
+          "position": "CM"
+        },
+        {
+          "name": "Mnari       ",
+          "position": "RM"
+        },
+        {
+          "name": "Vittek      ",
+          "position": "ST"
+        },
+        {
+          "name": "Saenko      ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Stadion Tivoli",
+        "city": "Aachen",
+        "capacity": 21632,
+        "foregroundColor": 0,
+        "backgroundColor": 14
+      },
+      "shortName": "ACH",
+      "coach": "Hans Meyer",
+      "strength": 60
+    },
+    {
+      "id": 21,
+      "name": "Bor. M'Gladbach",
+      "players": [
+        {
+          "name": "Kirschtein  ",
+          "position": "GK"
+        },
+        {
+          "name": "Atouba      ",
+          "position": "LB"
+        },
+        {
+          "name": "Mathijsen   ",
+          "position": "CD"
+        },
+        {
+          "name": "Mahdavikia  ",
+          "position": "CD"
+        },
+        {
+          "name": "Demel       ",
+          "position": "RB"
+        },
+        {
+          "name": "Fillinger   ",
+          "position": "LM"
+        },
+        {
+          "name": "Jarolim     ",
+          "position": "CM"
+        },
+        {
+          "name": "vander Vaart",
+          "position": "CM"
+        },
+        {
+          "name": "de Jong     ",
+          "position": "RM"
+        },
+        {
+          "name": "Olic        ",
+          "position": "ST"
+        },
+        {
+          "name": "Ljuboja     ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Stadion im Borussia-Park",
+        "city": "Gladbach",
+        "capacity": 54067,
+        "foregroundColor": 0,
+        "backgroundColor": 15
+      },
+      "shortName": "GLB",
+      "coach": "Huub Stevens",
+      "strength": 60
+    },
+    {
+      "id": 22,
+      "name": "SC Freiburg    ",
+      "players": [
+        {
+          "name": "Skov-Jensen ",
+          "position": "GK"
+        },
+        {
+          "name": "Lense       ",
+          "position": "LB"
+        },
+        {
+          "name": "Maltritz    ",
+          "position": "CD"
+        },
+        {
+          "name": "Drsek       ",
+          "position": "CD"
+        },
+        {
+          "name": "Yahia       ",
+          "position": "RB"
+        },
+        {
+          "name": "Dabrowski   ",
+          "position": "LM"
+        },
+        {
+          "name": "Illicevic   ",
+          "position": "CM"
+        },
+        {
+          "name": "Schroeder   ",
+          "position": "CM"
+        },
+        {
+          "name": "Grote       ",
+          "position": "RM"
+        },
+        {
+          "name": "Gekas       ",
+          "position": "ST"
+        },
+        {
+          "name": "Fabio Junior",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "badenova-Stadion",
+        "city": "Freiburg",
+        "capacity": 25000,
+        "foregroundColor": 0,
+        "backgroundColor": 4
+      },
+      "shortName": "FRE",
+      "coach": "Marcel Koller",
+      "strength": 55
+    },
+    {
+      "id": 23,
+      "name": "Spvgg G. Fuerth",
+      "players": [
+        {
+          "name": "Weidenfeller",
+          "position": "GK"
+        },
+        {
+          "name": "Dede        ",
+          "position": "LB"
+        },
+        {
+          "name": "Metzelder   ",
+          "position": "CD"
+        },
+        {
+          "name": "Wörns       ",
+          "position": "CD"
+        },
+        {
+          "name": "Khel        ",
+          "position": "RB"
+        },
+        {
+          "name": "Pienaar     ",
+          "position": "LM"
+        },
+        {
+          "name": "Tinga       ",
+          "position": "CM"
+        },
+        {
+          "name": "Shahin      ",
+          "position": "CM"
+        },
+        {
+          "name": "Kringe      ",
+          "position": "RM"
+        },
+        {
+          "name": "Frei        ",
+          "position": "ST"
+        },
+        {
+          "name": "Smolarek    ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Playmobil Stadion",
+        "city": "Fuerth",
+        "capacity": 15500,
+        "foregroundColor": 15,
+        "backgroundColor": 2
+      },
+      "shortName": "FUR",
+      "coach": "Thomas Doll",
+      "strength": 52
+    },
+    {
+      "id": 24,
+      "name": "1.FC K'lautern ",
+      "players": [
+        {
+          "name": "Fiedler     ",
+          "position": "GK"
+        },
+        {
+          "name": "Friedrich   ",
+          "position": "LB"
+        },
+        {
+          "name": "Simunic     ",
+          "position": "CD"
+        },
+        {
+          "name": "Fathi       ",
+          "position": "CD"
+        },
+        {
+          "name": "Boateng     ",
+          "position": "RB"
+        },
+        {
+          "name": "Gilberto    ",
+          "position": "LM"
+        },
+        {
+          "name": "Dardai      ",
+          "position": "CM"
+        },
+        {
+          "name": "Neuedorf    ",
+          "position": "CM"
+        },
+        {
+          "name": "Ebert       ",
+          "position": "RM"
+        },
+        {
+          "name": "Pantelic    ",
+          "position": "ST"
+        },
+        {
+          "name": "Lakic       ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Fritz-Walter Stadion",
+        "city": "K'Lautern",
+        "capacity": 48500,
+        "foregroundColor": 15,
+        "backgroundColor": 4
+      },
+      "shortName": "FCK",
+      "coach": "Lucien Favre",
+      "strength": 51
+    },
+    {
+      "id": 25,
+      "name": "FC Augsburg    ",
+      "players": [
+        {
+          "name": "Enke        ",
+          "position": "GK"
+        },
+        {
+          "name": "Zuraw       ",
+          "position": "LB"
+        },
+        {
+          "name": "Cherundolo  ",
+          "position": "CD"
+        },
+        {
+          "name": "Tarnat      ",
+          "position": "CD"
+        },
+        {
+          "name": "Fahrenhorst ",
+          "position": "RB"
+        },
+        {
+          "name": "Huszti      ",
+          "position": "LM"
+        },
+        {
+          "name": "Yankow      ",
+          "position": "CM"
+        },
+        {
+          "name": "Rosenthal   ",
+          "position": "CM"
+        },
+        {
+          "name": "Bikmaz      ",
+          "position": "RM"
+        },
+        {
+          "name": "Jendrisek   ",
+          "position": "ST"
+        },
+        {
+          "name": "Stajner     ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Rosenaustadion",
+        "city": "Augsburg",
+        "capacity": 28400,
+        "foregroundColor": 15,
+        "backgroundColor": 4
+      },
+      "shortName": "AUG",
+      "coach": "Dieter Hecking",
+      "strength": 50
+    },
+    {
+      "id": 26,
+      "name": "1860 Muenchen  ",
+      "players": [
+        {
+          "name": "Hain        ",
+          "position": "GK"
+        },
+        {
+          "name": "Borges      ",
+          "position": "LB"
+        },
+        {
+          "name": "Gabriel     ",
+          "position": "CD"
+        },
+        {
+          "name": "Bollmann    ",
+          "position": "CD"
+        },
+        {
+          "name": "Westermann  ",
+          "position": "RB"
+        },
+        {
+          "name": "Marx        ",
+          "position": "LM"
+        },
+        {
+          "name": "Vata        ",
+          "position": "CM"
+        },
+        {
+          "name": "Kamper      ",
+          "position": "CM"
+        },
+        {
+          "name": "Vacek       ",
+          "position": "RM"
+        },
+        {
+          "name": "Eigler      ",
+          "position": "ST"
+        },
+        {
+          "name": "Wichniarek  ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Allianz Arena",
+        "city": "Muenchen",
+        "capacity": 69901,
+        "foregroundColor": 15,
+        "backgroundColor": 3
+      },
+      "shortName": "60M",
+      "coach": "Ernst Middendorp",
+      "strength": 49
+    },
+    {
+      "id": 27,
+      "name": "1.FC Koeln     ",
+      "players": [
+        {
+          "name": "Piplica     ",
+          "position": "GK"
+        },
+        {
+          "name": "McKenna     ",
+          "position": "LB"
+        },
+        {
+          "name": "Kanik       ",
+          "position": "CD"
+        },
+        {
+          "name": "Szelesi     ",
+          "position": "CD"
+        },
+        {
+          "name": "Mitreski    ",
+          "position": "RB"
+        },
+        {
+          "name": "Rost        ",
+          "position": "LM"
+        },
+        {
+          "name": "Skela       ",
+          "position": "CM"
+        },
+        {
+          "name": "Munteanu    ",
+          "position": "CM"
+        },
+        {
+          "name": "Badrowski   ",
+          "position": "RM"
+        },
+        {
+          "name": "Baumgart    ",
+          "position": "ST"
+        },
+        {
+          "name": "Radu        ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "RheinEnergie Stadion",
+        "city": "Koeln",
+        "capacity": 50997,
+        "foregroundColor": 15,
+        "backgroundColor": 4
+      },
+      "shortName": "1FC",
+      "coach": "Petrik Sander",
+      "strength": 49
+    },
+    {
+      "id": 28,
+      "name": "Erzgebirge Aue ",
+      "players": [
+        {
+          "name": "Nikolov     ",
+          "position": "GK"
+        },
+        {
+          "name": "Vasoski     ",
+          "position": "LB"
+        },
+        {
+          "name": "Spyscher    ",
+          "position": "CD"
+        },
+        {
+          "name": "Kirgaikos   ",
+          "position": "CD"
+        },
+        {
+          "name": "Chaftar     ",
+          "position": "RB"
+        },
+        {
+          "name": "Fink        ",
+          "position": "LM"
+        },
+        {
+          "name": "Jones       ",
+          "position": "CM"
+        },
+        {
+          "name": "Meier       ",
+          "position": "CM"
+        },
+        {
+          "name": "Huggel      ",
+          "position": "RM"
+        },
+        {
+          "name": "Takahara    ",
+          "position": "ST"
+        },
+        {
+          "name": "Amanatidis  ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Erzgebirgsstadion",
+        "city": "Aue",
+        "capacity": 16500,
+        "foregroundColor": 15,
+        "backgroundColor": 5
+      },
+      "shortName": "AUE",
+      "coach": "Freidhelm Funkel",
+      "strength": 48
+    },
+    {
+      "id": 29,
+      "name": "Paderborn      ",
+      "players": [
+        {
+          "name": "Jentzsch    ",
+          "position": "GK"
+        },
+        {
+          "name": "v. d. Heyden",
+          "position": "LB"
+        },
+        {
+          "name": "Alex        ",
+          "position": "CD"
+        },
+        {
+          "name": "Hofland     ",
+          "position": "CD"
+        },
+        {
+          "name": "Stegmeyer   ",
+          "position": "RB"
+        },
+        {
+          "name": "Santana     ",
+          "position": "LM"
+        },
+        {
+          "name": "Makiadi     ",
+          "position": "CM"
+        },
+        {
+          "name": "Marcelinho  ",
+          "position": "CM"
+        },
+        {
+          "name": "dos Santos  ",
+          "position": "RM"
+        },
+        {
+          "name": "Hanke       ",
+          "position": "ST"
+        },
+        {
+          "name": "Rama        ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Hermann Loens Stadion",
+        "city": "Paderborn",
+        "capacity": 12000,
+        "foregroundColor": 0,
+        "backgroundColor": 1
+      },
+      "shortName": "PAD",
+      "coach": "Felix Magath",
+      "strength": 46
+    },
+    {
+      "id": 30,
+      "name": "TuS Koblenz    ",
+      "players": [
+        {
+          "name": "Miller      ",
+          "position": "GK"
+        },
+        {
+          "name": "Eggiman     ",
+          "position": "LB"
+        },
+        {
+          "name": "Barg        ",
+          "position": "CD"
+        },
+        {
+          "name": "Eichner     ",
+          "position": "CD"
+        },
+        {
+          "name": "Kies        ",
+          "position": "RB"
+        },
+        {
+          "name": "Adoube      ",
+          "position": "LM"
+        },
+        {
+          "name": "Federico    ",
+          "position": "CM"
+        },
+        {
+          "name": "Mutzel      ",
+          "position": "CM"
+        },
+        {
+          "name": "Traut       ",
+          "position": "RM"
+        },
+        {
+          "name": "Orahovac    ",
+          "position": "ST"
+        },
+        {
+          "name": "Kapllani    ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Stadion Oberwerth",
+        "city": "Koblenz",
+        "capacity": 16527,
+        "foregroundColor": 4,
+        "backgroundColor": 1
+      },
+      "shortName": "KOB",
+      "coach": "Edmund Becker",
+      "strength": 46
+    },
+    {
+      "id": 31,
+      "name": "Carl Zeiss Jena",
+      "players": [
+        {
+          "name": "Schober     ",
+          "position": "GK"
+        },
+        {
+          "name": "Madsen      ",
+          "position": "LB"
+        },
+        {
+          "name": "Rahn        ",
+          "position": "CD"
+        },
+        {
+          "name": "Diego Morais",
+          "position": "CD"
+        },
+        {
+          "name": "Hartmann    ",
+          "position": "RB"
+        },
+        {
+          "name": "Rydlewicz   ",
+          "position": "LM"
+        },
+        {
+          "name": "Dojahn      ",
+          "position": "CM"
+        },
+        {
+          "name": "Beinlich    ",
+          "position": "CM"
+        },
+        {
+          "name": "Yelen       ",
+          "position": "RM"
+        },
+        {
+          "name": "Shapourzadeh",
+          "position": "ST"
+        },
+        {
+          "name": "Dorn        ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Ernst-Abbe Sportfeld",
+        "city": "Jena",
+        "capacity": 12500,
+        "foregroundColor": 14,
+        "backgroundColor": 1
+      },
+      "shortName": "JEN",
+      "coach": "Frank Pagelsdorf",
+      "strength": 42
+    },
+    {
+      "id": 32,
+      "name": "Kick. Offenbach",
+      "players": [
+        {
+          "name": "Koch        ",
+          "position": "GK"
+        },
+        {
+          "name": "Weber       ",
+          "position": "LB"
+        },
+        {
+          "name": "Bodzek      ",
+          "position": "CD"
+        },
+        {
+          "name": "Lanzaat     ",
+          "position": "CD"
+        },
+        {
+          "name": "Blank       ",
+          "position": "RB"
+        },
+        {
+          "name": "Caligiuri   ",
+          "position": "LM"
+        },
+        {
+          "name": "Hausweiler  ",
+          "position": "CM"
+        },
+        {
+          "name": "Voss        ",
+          "position": "CM"
+        },
+        {
+          "name": "Grlic       ",
+          "position": "RM"
+        },
+        {
+          "name": "Idrissou    ",
+          "position": "ST"
+        },
+        {
+          "name": "Stegmann    ",
+          "position": "ST"
+        }
+      ],
+      "stadium": {
+        "name": "Bieberer Berg",
+        "city": "Offenbach",
+        "capacity": 24879,
+        "foregroundColor": 4,
+        "backgroundColor": 15
+      },
+      "shortName": "OFF",
+      "coach": "Rudi Bommer",
+      "strength": 42
+    }
+  ],
+  "leagueRoundScripts": [
+    "ABDQEMFPHCIRKGNJOL",
+    "PKBICDJALNQFROGEMH",
+    "HGARDKFCEPIMLJNQOB",
+    "BNCEJOKHMFQIRLGDPA",
+    "ICAMDBEHFKLQNGOPRJ",
+    "BLCAGFHNJIKEMOPDRQ",
+    "AHDMFEIGJQLKNPOCRB",
+    "BJCLEDGOHFKRMNPIQA",
+    "AKBPDFIHJMLGNEOQRC",
+    "CJEIFNGAHDKOMRPLQB",
+    "AEBCIDJHLMNKOFQPRG",
+    "CQDNELFAGJHOKIMBPR",
+    "ADBGCPINJKLFOEQMRH",
+    "DOERFIGQHLKBMCNAPJ",
+    "AIBHCGJELDMPONQKRF",
+    "AODREQFJGMHPILKCNB",
+    "BFCEJDLAMKOIPGQHRN",
+    "BAQDMEPFCHRIGKJNLO",
+    "KPIBDCAJNLFQOREGHM",
+    "GHRAKDCFPEMIJLQNBO",
+    "NBECOJHKFMIQLRDGAP",
+    "CIMABDHEKFQLGNPOJR",
+    "LBACFGNHIJEKOMDPQR",
+    "HAMDEFGIQJKLPNCOBR",
+    "JBLCDEOGFHRKNMIPAQ",
+    "KAPBFDHIMJGLENQOCR",
+    "JCIENFAGDHOKRMLPBQ",
+    "EACBDIHJMLKNFOPQGR",
+    "QCNDLEAFJGOHIKBMRP",
+    "DAGBPCNIKJFLEOMQHR",
+    "ODREIFQGLHBKCMANJP",
+    "IAHBGCEJDLPMNOKQFR",
+    "OARDQEJFMGPHLICKBN",
+    "FBECDJALKMIOGPHQNR"
+  ],
+  "commentary": {
+    "phrases": [
+      "is in attack!",
+      "cleares diffense",
+      "is taking a shot from",
+      "rounds the keeper and shoting",
+      "has a free kick",
+      "attacker is run in to the box",
+      "kick a corner",
+      "player running on the wing",
+      "hit the bar...",
+      "wide...",
+      "behind the ball",
+      "and shot",
+      "take ball to the centre",
+      "is catching the ball!",
+      "saves!",
+      "attacker is jump over the deffenders",
+      "is heading",
+      "scores!",
+      "Goal!",
+      "is heading",
+      "is coming and kick",
+      "the deffender tackling nice",
+      "he is fallen",
+      "Penalty!"
+    ],
+    "scripts": [
+      "the refry look a away...",
+      "BCS",
+      "BCR",
+      "ACS",
+      "ACR",
+      "BDS",
+      "EKLS",
+      "EMPQS",
+      "EMUR",
+      "FWXKLS",
+      "FWXKLR",
+      "FMUR",
+      "FMUS",
+      "GMPTS",
+      "GMPTR",
+      "GMUR",
+      "GMUS",
+      "HMPTS",
+      "HMPTR",
+      "HMUR",
+      "HMUS",
+      "BCI",
+      "BCO",
+      "BCJ",
+      "BCN",
+      "ACI",
+      "ACJ",
+      "ACN",
+      "ACO",
+      "BDI",
+      "BDJ",
+      "BDN",
+      "BDO",
+      "EKLI",
+      "EKLJ",
+      "EKLN",
+      "EKLO",
+      "EMV",
+      "EMN",
+      "EMPQI",
+      "EMPQJ",
+      "EMPQN",
+      "EMPQO",
+      "EMUN",
+      "EMUJ",
+      "EMUO",
+      "EMUI",
+      "FV",
+      "FWY",
+      "FWXKLO",
+      "FWXKLI",
+      "FWXKLN",
+      "FWXKLJ",
+      "FMUO",
+      "FMUN",
+      "FMUI",
+      "FMUJ",
+      "GMN",
+      "GMPTO",
+      "GMPTN",
+      "GMPTI",
+      "GMPTJ",
+      "GMUO",
+      "GMUN",
+      "GMUJ",
+      "GMUI",
+      "HMN",
+      "HMPTO",
+      "HMPTN",
+      "HMPTI",
+      "HMPTJ",
+      "HMUO",
+      "HMUN",
+      "HMUJ",
+      "HMUI"
+    ]
+  }
+}

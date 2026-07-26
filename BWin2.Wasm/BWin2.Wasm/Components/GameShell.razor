@@ -1,0 +1,51 @@
+<div class="game-shell">
+    <header class="game-header">
+        <div>
+            <div class="brand-small">BWIN2</div>
+            <div class="season-label">
+                @SeasonLabel
+            </div>
+        </div>
+        <div class="balance-card">
+            <span>Balance</span>
+            <strong>@Game.State.Credit.ToString("N0") HUF</strong>
+        </div>
+    </header>
+
+    <nav class="game-tabs" aria-label="Főmenü">
+        @foreach (GameScreen screen in Enum.GetValues<GameScreen>())
+        {
+            <button class="game-tab @(Game.CurrentScreen == screen ? "active" : null)"
+                    @onclick="() => SelectScreen(screen)">
+                @ScreenText(screen)
+            </button>
+        }
+    </nav>
+
+    <section class="game-content">
+        @switch (Game.CurrentScreen)
+        {
+            case GameScreen.Fixtures:
+                <FixturesScreen />
+                break;
+            case GameScreen.LeagueTable:
+                <LeagueTableScreen />
+                break;
+            case GameScreen.Players:
+                <LineupScreen />
+                break;
+            case GameScreen.BetSummary:
+                <BetSummaryScreen />
+                break;
+            case GameScreen.PlayRound:
+                <PlayRoundScreen />
+                break;
+        }
+    </section>
+
+    <footer class="key-help">
+        <span>← → menü / választás</span>
+        <span>↑ ↓ navigáció</span>
+        <span>Enter kiválasztás</span>
+    </footer>
+</div>

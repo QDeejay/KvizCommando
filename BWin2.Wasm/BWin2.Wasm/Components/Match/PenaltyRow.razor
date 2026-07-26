@@ -1,0 +1,11 @@
+<div class="penalty-row">
+    <strong>@Name</strong>
+    <div>
+        @foreach (bool? mark in Marks)
+        {
+            <i class="@(mark is null ? "pending" : mark.Value ? "scored" : "missed")">
+                @(mark is null ? "·" : mark.Value ? "●" : "×")
+            </i>
+        }
+    </div>
+</div>

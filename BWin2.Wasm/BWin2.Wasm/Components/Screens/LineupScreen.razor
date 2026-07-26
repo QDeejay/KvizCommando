@@ -1,0 +1,91 @@
+<section class="screen-panel"
+         tabindex="0"
+         @ref="_host"
+         @onkeydown="HandleKeyDown">
+    <div class="screen-title-row">
+        <div>
+            <div class="eyebrow">KERET ÉS GÓLLÖVŐLISTA</div>
+            <h2>Players</h2>
+        </div>
+        <div class="view-switch">
+            <button class="@(!_showScorers ? "active" : null)"
+                    @onclick="() => SetView(false)">
+                Line-up
+            </button>
+            <button class="@(_showScorers ? "active" : null)"
+                    @onclick="() => SetView(true)">
+                Top scorers
+            </button>
+        </div>
+    </div>
+
+    @if (!_showScorers)
+    {
+        Team team = Game.State.TeamAt(_teamSlot);
+        <div class="lineup-layout">
+            <aside class="team-rail">
+                @foreach (Team item in Game.State.FirstDivisionTeams())
+                {
+                    <button class="@(item.Id == _teamSlot ? "active" : null)"
+                            @onclick="() => SelectTeam(item.Id)">
+                        @item.ShortName
+                    </button>
+                }
+            </aside>
+
+            <div class="lineup-card">
+                <div class="lineup-heading">
+                    <div>
+                        <h3>@team.Name</h3>
+                        <span>@team.Coach · @team.Stadium.Name</span>
+                    </div>
+                    <strong>@team.Strength</strong>
+                </div>
+
+                <div class="player-grid">
+                    @for (int index = 0; index < team.Players.Count; index++)
+                    {
+                        Player player = team.Players[index];
+                        <div class="player-row">
+                            <span class="shirt-number">@(index + 1)</span>
+                            <strong>@player.Name</strong>
+                            <span>@player.Position</span>
+                            <b>@player.Goals gól</b>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="scorer-list">
+            @if (Game.State.Week <= 3)
+            {
+                <div class="empty-state">A góllövőlista a harmadik forduló után jelenik meg.</div>
+            }
+            else
+            {
+                @for (int index = 0;
+                    index < Math.Min(Game.State.Scorers.Count, 12);
+                    index++)
+                {
+                    ScorerEntry scorer = Game.State.Scorers[index];
+                    int previousGoals =
+                        index == 0 ? -1 : Game.State.Scorers[index - 1].Goals;
+                    <div class="scorer-row @(scorer.IsSelectedTeam ? "selected" : null)">
+                        <span class="scorer-goals">
+                            @(scorer.Goals == previousGoals ? string.Empty : scorer.Goals)
+                        </span>
+                        <strong>@scorer.PlayerName</strong>
+                        <span>@scorer.TeamShortName</span>
+                    </div>
+                }
+            }
+        </div>
+    }
+
+    <div class="fixture-focus-help">
+        ↑ ↓ csapat · Enter Line-up/Top scorers · ← → főmenü
+    </div>
+</section>

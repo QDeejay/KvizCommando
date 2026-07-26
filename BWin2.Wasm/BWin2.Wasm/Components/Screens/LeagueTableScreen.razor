@@ -1,0 +1,68 @@
+<section class="screen-panel"
+         tabindex="0"
+         @ref="_host"
+         @onkeydown="HandleKeyDown">
+    <div class="screen-title-row">
+        <div>
+            <div class="eyebrow">BUNDESLIGA</div>
+            <h2>Tabelle</h2>
+        </div>
+        <div class="round-chip">@Math.Min(Game.State.Week - 1, 34) / 34 forduló</div>
+    </div>
+
+    <div class="table-wrap">
+        <table class="league-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Team</th>
+                    <th>PL</th>
+                    <th>W</th>
+                    <th>D</th>
+                    <th>L</th>
+                    <th>GF</th>
+                    <th>GA</th>
+                    <th>GD</th>
+                    <th>PTS</th>
+                    <th>Form</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int index = 0; index < Table.Count; index++)
+                {
+                    int place = index + 1;
+                    Team team = Table[index];
+                    <tr class="@RowClass(team, place)">
+                        <td class="place">@place</td>
+                        <td class="team-name">
+                            @team.Name
+                            @if (team.Name == Game.State.Marks.Champion)
+                            {
+                                <small>Ma</small>
+                            }
+                            @if (team.Name == Game.State.Marks.PreviousCupWinner)
+                            {
+                                <small>Po</small>
+                            }
+                        </td>
+                        <td>@Math.Min(Game.State.Week - 1, 34)</td>
+                        <td>@team.Statistics.Wins</td>
+                        <td>@team.Statistics.Draws</td>
+                        <td>@team.Statistics.Losses</td>
+                        <td>@team.Statistics.GoalsFor</td>
+                        <td>@team.Statistics.GoalsAgainst</td>
+                        <td>@Signed(team.Statistics.GoalDifference)</td>
+                        <td class="points">@team.Statistics.Points</td>
+                        <td class="form">@RecentForm(team)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="legend">
+        <span><i class="legend-dot champion"></i> bajnok / vezető</span>
+        <span><i class="legend-dot relegation"></i> kiesőhely</span>
+        <span><i class="legend-dot selected"></i> kiválasztott bajnok</span>
+    </div>
+</section>
