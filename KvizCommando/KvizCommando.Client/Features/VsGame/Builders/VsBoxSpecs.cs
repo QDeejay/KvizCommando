@@ -17,6 +17,8 @@ public sealed class VsBoxSpecs : VmSpecs
 
 public static class VsGameBoxSpecs
 {
+    private const string IMAGE_ROOT = "images/buttons/vsgame";
+
     public static readonly IReadOnlyList<VsBoxSpecs> Specs =
     [
         new()
@@ -24,7 +26,7 @@ public static class VsGameBoxSpecs
             Key = VsBoxKeyRoot.RtBtnCreateBattlefield,
             TitleKey = "vsgame.Box.Title.CreateBattlefield",
             ImageSrc = string.Empty,
-            BgImageSrc = string.Empty,
+            BgImageSrc = $"{IMAGE_ROOT}/create.webp",
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = false,
             ClickId = 601,
@@ -36,7 +38,7 @@ public static class VsGameBoxSpecs
             Key = VsBoxKeyRoot.RtBtnJoinBattlefield,
             TitleKey = "vsgame.Box.Title.JoinBattlefield",
             ImageSrc = string.Empty,
-            BgImageSrc = string.Empty,
+            BgImageSrc = $"{IMAGE_ROOT}/private.webp",
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = false,
             ClickId = 602,
@@ -48,7 +50,7 @@ public static class VsGameBoxSpecs
             Key = VsBoxKeyRoot.RtBtnRankedBattlefields,
             TitleKey = "vsgame.Box.Title.RankedBattlefields",
             ImageSrc = string.Empty,
-            BgImageSrc = string.Empty,
+            BgImageSrc = $"{IMAGE_ROOT}/ranked.webp",
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = true,
             ClickId = 603,
@@ -67,7 +69,7 @@ public static class VsGameBoxSpecs
             ImageSrc = string.Empty,
             BgImageSrc = string.Empty,
             Size = ContentBoxSize.CONTENT_LARGE,
-            FooterDisplay = true,
+            FooterDisplay = false,
             ClickId = 0,
             RenderContent = 1,
             LcdBackground = true,

@@ -6,6 +6,7 @@ public static class VsBattleClassificationRules
 {
     public const int RequiredBattleReadyCharacters = 3;
     public const int RequiredCreditBalance = 50;
+    public const int UnrankedMemberMinimumTeamRank = 28;
 
     // Első, központi szabálytábla. A konkrét minimumok és létszámok
     // a játékszabály véglegesítésekor kizárólag itt módosítandók.
@@ -76,6 +77,14 @@ public static class VsBattleClassificationRules
 
     public static bool IsSupportedPartySize(int partySize) =>
         List.Any(rule => rule.RequiredPartySize == partySize);
+
+    public static bool CanSelectMember(
+        int teamRank,
+        int energyPoints,
+        int memberRank) =>
+        energyPoints > 0 &&
+        (memberRank > 0 ||
+         teamRank >= UnrankedMemberMinimumTeamRank);
 
     private static bool IsEligible(
         VsBattleClassificationDto rule,

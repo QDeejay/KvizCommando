@@ -46,7 +46,8 @@
     <Folder Include="Features\Team\" />
     <Folder Include="Services\Logic\" />
     <Folder Include="wwwroot\audio\sfx\" />
-    <Folder Include="wwwroot\Data\" /> 
+    <Folder Include="wwwroot\Data\" />
+    <Folder Include="wwwroot\Images\buttons\vsgame\" /> 
   </ItemGroup>
 
   <ItemGroup>

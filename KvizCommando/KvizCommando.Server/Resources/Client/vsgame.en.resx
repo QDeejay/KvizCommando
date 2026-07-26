@@ -42,6 +42,21 @@
   <data name="Manager.Button.Save" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="Manager.Member.Classification" xml:space="preserve">
+    <value>Classification: {0}</value>
+  </data>
+  <data name="Manager.Tooltip.MinimumTeamLevel" xml:space="preserve">
+    <value>Minimum team level: {0}</value>
+  </data>
+  <data name="Manager.Tooltip.PartySize" xml:space="preserve">
+    <value>Team size: {0}</value>
+  </data>
+  <data name="Manager.Tooltip.RankClassZone" xml:space="preserve">
+    <value>Rank-class zone: {0}–{1} ({2}–{3})</value>
+  </data>
+  <data name="Manager.Tooltip.RequiredMembers" xml:space="preserve">
+    <value>Required members in zone: {0}</value>
+  </data>
   <data name="Classification.Title.1" xml:space="preserve">
     <value>Battle classification I</value>
   </data>
@@ -58,6 +73,6 @@
     <value>Battle classification V</value>
   </data>
   <data name="Classification.Footer.Requirements" xml:space="preserve">
-    <value>{0} characters, rank classes: {1}–{2}</value>
+    <value>Min level: {0}, Min team size: {1} of which {2}, zone: R{3}-R{4}</value>
   </data>
 </root>

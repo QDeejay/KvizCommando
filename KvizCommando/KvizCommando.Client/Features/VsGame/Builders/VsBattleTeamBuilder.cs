@@ -1,4 +1,5 @@
 using KvizCommando.Client.Features.VsGame.ViewModels;
+using KvizCommando.Client.Data;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
@@ -24,7 +25,7 @@ public sealed class VsBattleTeamBuilder
         string culture)
     {
         var selection = data.RankedBattlefields.SavedSelection;
-        var members = data.RankedBattlefields.BattleReadyMembers;
+        var members = data.RankedBattlefields.TeamMembers;
 
         var memberVms = members
             .Select(member => new VsBattleMemberVm
@@ -35,8 +36,16 @@ public sealed class VsBattleTeamBuilder
                 RankName = RankNameLocalizer.GetName(
                     member.Rank,
                     culture),
+                RankClassName = RankNameLocalizer.GetClass(
+                    member.RankClass,
+                    culture),
+                ClassificationText =
+                    _lang["vsgame.Manager.Member.Classification"]
+                        .FormatSafe(member.RankClass),
                 IsSelected =
-                    selectedSlots.Contains(member.SlotNumber)
+                    member.IsSelectable &&
+                    selectedSlots.Contains(member.SlotNumber),
+                IsSelectable = member.IsSelectable
             })
             .ToArray();
 
@@ -50,27 +59,66 @@ public sealed class VsBattleTeamBuilder
                     rule,
                     data.RootBoxInfo.TeamRank,
                     members,
-                    selectedSlots)
+                    selectedSlots),
+                MinimumTeamLevelText =
+                    _lang[
+                        "vsgame.Manager.Tooltip.MinimumTeamLevel"]
+                        .FormatSafe(
+                            ResolveTeamLevelCode(
+                                rule.MinimumTeamRank)),
+                PartySizeText =
+                    _lang["vsgame.Manager.Tooltip.PartySize"]
+                        .FormatSafe(rule.RequiredPartySize),
+                RankClassZoneText =
+                    _lang[
+                        "vsgame.Manager.Tooltip.RankClassZone"]
+                        .FormatSafe(
+                            rule.MemberMinimumRankClass,
+                            rule.MemberMaximumRankClass,
+                            RankNameLocalizer.GetClass(
+                                rule.MemberMinimumRankClass,
+                                culture),
+                            RankNameLocalizer.GetClass(
+                                rule.MemberMaximumRankClass,
+                                culture)),
+                RequiredMembersText =
+                    _lang[
+                        "vsgame.Manager.Tooltip.RequiredMembers"]
+                        .FormatSafe(
+                            rule.RequiredMembersInRankClassRange)
             })
             .ToArray();
 
         return new VsBattleTeamVm
         {
             Message = ResolveMessage(
-                selection.SelectedSlotNumbers),
+                selection.SelectedSlotNumbers,
+                members),
             Members = memberVms,
             ClassificationLamps = lamps,
             CanSave = isDirty && lamps.Any(lamp => lamp.IsActive)
         };
     }
 
-    private string ResolveMessage(int[] savedSlots)
+    private string ResolveMessage(
+        int[] savedSlots,
+        IReadOnlyCollection<VsBattleMemberDto> members)
     {
         if (savedSlots.Length == 0)
             return _lang["vsgame.Manager.Message.Initial"];
 
-        if (savedSlots.All(slot => slot == 0))
+        var selectableSlots = members
+            .Where(member => member.IsSelectable)
+            .Select(member => member.SlotNumber)
+            .ToHashSet();
+
+        if (savedSlots.All(slot => slot == 0) ||
+            savedSlots.Any(slot =>
+                slot <= 0 ||
+                !selectableSlots.Contains(slot)))
+        {
             return _lang["vsgame.Manager.Message.Invalidated"];
+        }
 
         return _lang["vsgame.Manager.Message.Saved"];
     }
@@ -92,7 +140,8 @@ public sealed class VsBattleTeamBuilder
                 selectedSlots.Contains(member.SlotNumber))
             .ToArray();
 
-        if (selectedMembers.Length != selectedSlots.Count)
+        if (selectedMembers.Length != selectedSlots.Count ||
+            selectedMembers.Any(member => !member.IsSelectable))
             return false;
 
         var membersInRange = selectedMembers.Count(member =>
@@ -107,4 +156,17 @@ public sealed class VsBattleTeamBuilder
         id >= 1 && id < RomanNumbers.Length
             ? RomanNumbers[id]
             : id.ToString();
+
+    private static string ResolveTeamLevelCode(int rank)
+    {
+        var maximumActiveRank =
+            RankNameTable.Data.Count - 2;
+        var index = Math.Clamp(
+            rank,
+            0,
+            maximumActiveRank);
+
+        return RankNameTable.Data[index].PublicLevel ??
+               string.Empty;
+    }
 }

@@ -1,4 +1,5 @@
 using KvizCommando.Client.Features.VsGame.Components;
+using KvizCommando.Client.Data;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.Visual.UiService.Language;
@@ -41,17 +42,9 @@ public static class VsBoxBuilder
             {
                 DictKey = key,
                 Header = lang[spec.TitleKey],
-                Footer = isManager
-                    ? lang["vsgame.Manager.Footer.Toggle"]
-                    : spec.FooterDisplay
-                        ? spec.BuildFooter(lang, data.RootBoxInfo)
-                        : string.Empty,
+                Footer = spec.FooterDisplay ? spec.BuildFooter(lang, data.RootBoxInfo) : string.Empty,
                 FooterDisplay = spec.FooterDisplay,
-                Size = isManager
-                    ? ResolveManagerSize(
-                        data.RankedBattlefields
-                            .SavedSelection.SelectedSlotNumbers)
-                    : spec.Size,
+                Size = isManager ? ResolveManagerSize(data.RankedBattlefields) : spec.Size,
                 ReSizable = isManager,
                 ImageSrc = spec.ImageSrc,
                 BgImageSrc = spec.BgImageSrc,
@@ -61,13 +54,8 @@ public static class VsBoxBuilder
                 LcdDisplay = spec.LcdBackground,
                 RenderContent = spec.RenderContent,
                 BodyComponent = spec.BodyComp,
-                BodyParameters = isManager
-                    ? new Dictionary<string, object?>
-                    {
-                        [nameof(
-                            RankedBattleTeamManager.OnTeamSaved)] =
-                            parameters.OnTeamSaved
-                    }
+                BodyParameters = isManager ? new Dictionary<string, object?>
+                    { [nameof(RankedBattleTeamManager.OnTeamSaved)] =parameters.OnTeamSaved }
                     : []
             });
         }
@@ -90,10 +78,14 @@ public static class VsBoxBuilder
                 Footer = lang[
                     "vsgame.Classification.Footer.Requirements"]
                     .FormatSafe(
+                        RankNameTable.Data[classification.MinimumTeamRank].PublicLevel ?? string.Empty,
                         classification.RequiredPartySize,
+                        classification
+                            .RequiredMembersInRankClassRange,
                         classification.MemberMinimumRankClass,
                         classification.MemberMaximumRankClass),
                 FooterDisplay = true,
+                BgImageSrc = $"images/buttons/vsgame/tier{id}.webp",
                 Size = ContentBoxSize.BUTTON_WIDE,
                 IsEnabled = enabled,
                 IsClickable = enabled,
@@ -104,10 +96,23 @@ public static class VsBoxBuilder
         return boxes;
     }
 
-    private static string ResolveManagerSize(int[] slots) =>
-        slots.Length > 0 && slots.All(slot => slot > 0)
+    private static string ResolveManagerSize(
+        VsRankedBattlefieldsDto ranked)
+    {
+        var slots =
+            ranked.SavedSelection.SelectedSlotNumbers;
+        var selectableSlots = ranked.TeamMembers
+            .Where(member => member.IsSelectable)
+            .Select(member => member.SlotNumber)
+            .ToHashSet();
+
+        return slots.Length > 0 &&
+               slots.All(slot =>
+                   slot > 0 &&
+                   selectableSlots.Contains(slot))
             ? ContentBoxSize.MINIMALIZED
             : ContentBoxSize.CONTENT_LARGE;
+    }
 
     private static string[] BuildClassificationNames()
     {
@@ -122,4 +127,5 @@ public static class VsBoxBuilder
 
     private static string BuildClassificationKey(int id) =>
         $"{VsBoxKeyRanked.Classification}{id}";
+
 }

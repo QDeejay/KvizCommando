@@ -38,7 +38,11 @@ public sealed class VsGameService : IVsGameService
                     .ToArray();
 
                 if (selectedMembers.Any(member =>
-                        member is null || member.EnergyPoints <= 0))
+                        member is null ||
+                        !VsBattleClassificationRules.CanSelectMember(
+                            player.Core.RankEnum,
+                            member.EnergyPoints,
+                            member.Rank)))
                 {
                     return null;
                 }

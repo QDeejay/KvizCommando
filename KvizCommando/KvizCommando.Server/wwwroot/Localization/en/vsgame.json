@@ -9,10 +9,15 @@
   "Manager.Message.Saved": "Today's team is ready.",
   "Manager.Footer.Toggle": "Team manager",
   "Manager.Button.Save": "Save",
+  "Manager.Member.Classification": "Classification: {0}",
+  "Manager.Tooltip.MinimumTeamLevel": "Minimum team level: {0}",
+  "Manager.Tooltip.PartySize": "Team size: {0}",
+  "Manager.Tooltip.RankClassZone": "Rank-class zone: {0}–{1} ({2}–{3})",
+  "Manager.Tooltip.RequiredMembers": "Required members in zone: {0}",
   "Classification.Title.1": "Battle classification I",
   "Classification.Title.2": "Battle classification II",
   "Classification.Title.3": "Battle classification III",
   "Classification.Title.4": "Battle classification IV",
   "Classification.Title.5": "Battle classification V",
-  "Classification.Footer.Requirements": "{0} characters, rank classes: {1}–{2}"
+  "Classification.Footer.Requirements": "Min level: {0}, Min team size: {1} of which {2}, zone: R{3}-R{4}"
 }

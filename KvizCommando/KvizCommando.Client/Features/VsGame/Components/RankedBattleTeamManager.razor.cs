@@ -51,10 +51,17 @@ public partial class RankedBattleTeamManager
         var savedSlots = VsData.RankedBattlefields
             .SavedSelection.SelectedSlotNumbers;
 
+        var selectableSlots = VsData.RankedBattlefields
+            .TeamMembers
+            .Where(member => member.IsSelectable)
+            .Select(member => member.SlotNumber)
+            .ToHashSet();
+
         if (savedSlots.Length > 0 &&
             savedSlots.All(slot => slot > 0))
         {
-            _selectedSlots.AddRange(savedSlots);
+            _selectedSlots.AddRange(
+                savedSlots.Where(selectableSlots.Contains));
         }
 
         _isDirty = false;
@@ -65,6 +72,12 @@ public partial class RankedBattleTeamManager
 
     private void ToggleMember(int slotNumber)
     {
+        var member = _vm.Members.FirstOrDefault(
+            item => item.SlotNumber == slotNumber);
+
+        if (member?.IsSelectable != true)
+            return;
+
         if (_selectedSlots.Contains(slotNumber))
         {
             _selectedSlots.Remove(slotNumber);

@@ -22,7 +22,7 @@ public sealed class VsRootBoxInfo
 
 public sealed class VsRankedBattlefieldsDto
 {
-    public VsBattleMemberDto[] BattleReadyMembers { get; set; } = [];
+    public VsBattleMemberDto[] TeamMembers { get; set; } = [];
     public VsRankedSelectionDto SavedSelection { get; set; } = new();
     public VsBattleClassificationDto[] Classifications { get; set; } = [];
 }
@@ -35,6 +35,7 @@ public sealed class VsBattleMemberDto
     public int Rank { get; set; }
     public int RankClass { get; set; }
     public int EnergyPoints { get; set; }
+    public bool IsSelectable { get; set; }
 }
 
 public sealed class VsRankedSelectionDto

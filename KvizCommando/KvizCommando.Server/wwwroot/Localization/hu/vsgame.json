@@ -9,10 +9,15 @@
   "Manager.Message.Saved": "A mai csapat összeállítva.",
   "Manager.Footer.Toggle": "Csapatmanager",
   "Manager.Button.Save": "Mentés",
+  "Manager.Member.Classification": "Besorolás: {0}",
+  "Manager.Tooltip.MinimumTeamLevel": "Minimum csapatszint: {0}",
+  "Manager.Tooltip.PartySize": "Csapatméret: {0} fő",
+  "Manager.Tooltip.RankClassZone": "Rangosztály-zóna: {0}–{1} ({2}–{3})",
+  "Manager.Tooltip.RequiredMembers": "Kötelező tag a zónából: {0} fő",
   "Classification.Title.1": "I. harci besorolás",
   "Classification.Title.2": "II. harci besorolás",
   "Classification.Title.3": "III. harci besorolás",
   "Classification.Title.4": "IV. harci besorolás",
   "Classification.Title.5": "V. harci besorolás",
-  "Classification.Footer.Requirements": "{0} karakter, rangosztály: {1}–{2}"
+  "Classification.Footer.Requirements": "Min szint: {0}, Min létszám: {1} ebből {2}, sáv: R{3}-R{4}"
 }

@@ -14,7 +14,10 @@ public sealed class VsBattleMemberVm
     public string Name { get; set; } = string.Empty;
     public string PictureCode { get; set; } = string.Empty;
     public string RankName { get; set; } = string.Empty;
+    public string RankClassName { get; set; } = string.Empty;
+    public string ClassificationText { get; set; } = string.Empty;
     public bool IsSelected { get; set; }
+    public bool IsSelectable { get; set; }
 }
 
 public sealed class VsClassificationLampVm
@@ -22,4 +25,8 @@ public sealed class VsClassificationLampVm
     public int ClassificationId { get; set; }
     public string Label { get; set; } = string.Empty;
     public bool IsActive { get; set; }
+    public string MinimumTeamLevelText { get; set; } = string.Empty;
+    public string PartySizeText { get; set; } = string.Empty;
+    public string RankClassZoneText { get; set; } = string.Empty;
+    public string RequiredMembersText { get; set; } = string.Empty;
 }

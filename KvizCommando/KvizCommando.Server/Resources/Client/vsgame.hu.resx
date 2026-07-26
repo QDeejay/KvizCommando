@@ -42,6 +42,21 @@
   <data name="Manager.Button.Save" xml:space="preserve">
     <value>Mentés</value>
   </data>
+  <data name="Manager.Member.Classification" xml:space="preserve">
+    <value>Besorolás: {0}</value>
+  </data>
+  <data name="Manager.Tooltip.MinimumTeamLevel" xml:space="preserve">
+    <value>Minimum csapatszint: {0}</value>
+  </data>
+  <data name="Manager.Tooltip.PartySize" xml:space="preserve">
+    <value>Csapatméret: {0} fő</value>
+  </data>
+  <data name="Manager.Tooltip.RankClassZone" xml:space="preserve">
+    <value>Rangosztály-zóna: {0}–{1} ({2}–{3})</value>
+  </data>
+  <data name="Manager.Tooltip.RequiredMembers" xml:space="preserve">
+    <value>Kötelező tag a zónából: {0} fő</value>
+  </data>
   <data name="Classification.Title.1" xml:space="preserve">
     <value>I. harci besorolás</value>
   </data>
@@ -58,6 +73,6 @@
     <value>V. harci besorolás</value>
   </data>
   <data name="Classification.Footer.Requirements" xml:space="preserve">
-    <value>{0} karakter, rangosztály: {1}–{2}</value>
+    <value>Min szint: {0}, Min létszám: {1} ebből {2}, sáv: R{3}-R{4}</value>
   </data>
 </root>

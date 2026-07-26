@@ -205,15 +205,13 @@ namespace KvizCommando.Server.Services.DtoMapping
             if (player.SessionId == "denied")
                 return new VsGameDtos { AccessDenied = true };
 
-            var battleReadyMembers = player.Characters
+            var teamMembers = player.Characters
                 .Select((member, index) => new
                 {
                     Member = member,
                     SlotNumber = index + 1
                 })
-                .Where(item =>
-                    item.Member is not null &&
-                    item.Member.EnergyPoints > 0)
+                .Where(item => item.Member is not null)
                 .Select(item => new VsBattleMemberDto
                 {
                     SlotNumber = item.SlotNumber,
@@ -223,9 +221,17 @@ namespace KvizCommando.Server.Services.DtoMapping
                     RankClass =
                         VsBattleClassificationRules.ResolveRankClass(
                             item.Member.Rank),
-                    EnergyPoints = item.Member.EnergyPoints
+                    EnergyPoints = item.Member.EnergyPoints,
+                    IsSelectable =
+                        VsBattleClassificationRules.CanSelectMember(
+                            player.Core.RankEnum,
+                            item.Member.EnergyPoints,
+                            item.Member.Rank)
                 })
                 .ToArray();
+
+            var battleReadyMemberCount =
+                teamMembers.Count(member => member.IsSelectable);
 
             var savedSlots = player.BattleTeamSlots is null
                 ? []
@@ -237,7 +243,10 @@ namespace KvizCommando.Server.Services.DtoMapping
                     .Select(slot => player.Characters[slot - 1])
                     .Where(member =>
                         member is not null &&
-                        member.EnergyPoints > 0)
+                        VsBattleClassificationRules.CanSelectMember(
+                            player.Core.RankEnum,
+                            member.EnergyPoints,
+                            member.Rank))
                     .Select(member => member!.Rank)
                     .ToArray()
                 : [];
@@ -256,14 +265,14 @@ namespace KvizCommando.Server.Services.DtoMapping
                     IsCreateBattlefieldEnabled = false,
                     IsJoinBattlefieldEnabled = false,
                     IsRankedBattlefieldsEnabled =
-                        battleReadyMembers.Length >=
+                        battleReadyMemberCount >=
                             VsBattleClassificationRules
                                 .RequiredBattleReadyCharacters &&
                         player.Core.Credit >=
                             VsBattleClassificationRules
                                 .RequiredCreditBalance,
                     BattleReadyCharacterCount =
-                        battleReadyMembers.Length,
+                        battleReadyMemberCount,
                     RequiredBattleReadyCharacterCount =
                         VsBattleClassificationRules
                             .RequiredBattleReadyCharacters,
@@ -276,7 +285,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                 RankedBattlefields =
                     new VsRankedBattlefieldsDto
                     {
-                        BattleReadyMembers = battleReadyMembers,
+                        TeamMembers = teamMembers,
                         SavedSelection = new VsRankedSelectionDto
                         {
                             SelectedSlotNumbers = savedSlots,
@@ -304,7 +313,6 @@ namespace KvizCommando.Server.Services.DtoMapping
                     }
             };
         }
-
 
         /// <summary>
         /// Itt vanna az osztály privát helperei
