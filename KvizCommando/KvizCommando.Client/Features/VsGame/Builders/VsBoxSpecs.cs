@@ -11,7 +11,6 @@ namespace KvizCommando.Client.Features.VsGame.Builders;
 public class VsBoxSpecs : VmSpecs
 {
     internal Enum Key { get; init; } = default!;
-    internal bool ReSizable { get; init; }
     internal Func<VsGameDtos, int, bool> CheckEnable { get; init; } =
         (_, _) => true;
     internal Func<ILanguageService, VsGameDtos, int, string> BuildFooter
@@ -86,7 +85,7 @@ public static class VsGameBoxSpecs
             TitleKey = "vsgame.Manager.Title",
             ImageSrc = string.Empty,
             BgImageSrc = string.Empty,
-            Size = string.Empty,
+            Size = ContentBoxSize.CONTENT_LARGE,
             SizeBuilder = data => ResolveManagerSize(data.RankedBattlefields),
             FooterDisplay = false,
             ReSizable = true,

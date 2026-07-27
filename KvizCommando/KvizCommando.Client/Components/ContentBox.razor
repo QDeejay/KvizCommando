@@ -47,7 +47,7 @@
         }
         <div class="@FooterClass" @onclick="ToggleSize" style=@CursorStyle>
             @_vm.Footer
-            @if (_vm.ReSizable && (_vm.Size == _startSize || _vm.Size == "minimalized"))
+            @if (_vm.ReSizable)
             {
                 <span class="kc-toggle-icon @(_vm.Size == "minimalized" ? "arrow-down" : "arrow-up")"></span>
             }

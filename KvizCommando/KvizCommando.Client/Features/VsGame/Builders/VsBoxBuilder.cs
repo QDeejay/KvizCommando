@@ -42,7 +42,7 @@ public static class VsBoxBuilder
                 Header = lang[spec.TitleKey],
                 Footer = spec.FooterDisplay ? spec.BuildFooter(lang, data, 0) : string.Empty,
                 FooterDisplay = spec.FooterDisplay,
-                Size = string.IsNullOrEmpty(spec.Size) ? spec.SizeBuilder(data) : spec.Size,
+                Size = spec.ReSizable ? spec.SizeBuilder(data) : spec.Size,
                 ReSizable = spec.ReSizable,
                 ImageSrc = spec.ImageSrc,
                 BgImageSrc = spec.BgImageSrc,

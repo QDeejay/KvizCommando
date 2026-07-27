@@ -28,6 +28,7 @@
         public int RenderContent { get; init; } = 0;
         public bool LcdBackground { get; init; } = false;
         public string Size { get; init; } = "medium";
+        public bool ReSizable { get; init; } = false;
         public bool FooterDisplay { get; init; } = false;
         public int ClickId { get; init; } = 0;
         public Type? BodyComp { get; init; }

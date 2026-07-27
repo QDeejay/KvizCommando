@@ -16,11 +16,6 @@ namespace KvizCommando.Client.Components
         private bool _noContent = true;
         private string _startSize = string.Empty;
 
-        protected override void OnInitialized()
-        {
-            _startSize = Vm.Size == "minimalized" ? string.Empty : Vm.Size;
-        }
-
         protected override void OnParametersSet()
         {
             _vm = Vm;
@@ -49,7 +44,7 @@ namespace KvizCommando.Client.Components
             if (!_vm.ReSizable)
                 return;
             if (_vm.Size == "minimalized")
-                _vm.Size = _startSize;
+                _vm.Size = "large";
             else if (_vm.Size != "minimalized")
             {
                 _startSize = _vm.Size;

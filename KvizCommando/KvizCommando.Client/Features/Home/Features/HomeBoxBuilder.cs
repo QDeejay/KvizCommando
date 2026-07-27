@@ -24,7 +24,7 @@ public static class HomeBoxBuilder
                 Footer = spec.BuildFooter(lang, btn),
                 FooterDisplay = spec.FooterDisplay,
                 Size = spec.Size,
-                ReSizable = string.IsNullOrEmpty(spec.Size),
+                ReSizable = spec.ReSizable,
                 ImageSrc = spec.ImageSrc,
                 BgImageSrc = spec.BgImageSrc,
                 IsEnabled = btn.Enable,
