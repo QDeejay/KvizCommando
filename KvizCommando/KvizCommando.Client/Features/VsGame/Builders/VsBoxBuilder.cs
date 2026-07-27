@@ -14,8 +14,7 @@ public sealed class VsComponentParameters
 
 public static class VsBoxBuilder
 {
-    public static readonly string[] Root =
-        Enum.GetNames<VsBoxKeyRoot>();
+    public static readonly string[] Root = Enum.GetNames<VsBoxKeyRoot>();
 
     public static readonly string[] Ranked =
     [
@@ -28,24 +27,23 @@ public static class VsBoxBuilder
         VsComponentParameters parameters,
         ILanguageService lang)
     {
-        var boxes = new Dictionary<string, ContentBoxVm>();
+        var boxes = new Dictionary<string, ContentBoxVm>(
+            VsGameBoxSpecs.Specs.Count +
+            data.RankedBattlefields.Classifications.Length);
 
         foreach (var spec in VsGameBoxSpecs.Specs)
         {
             var key = spec.Key.ToString();
-            var isManager =
-                spec.Key.Equals(
-                    VsBoxKeyContent.RankedBattleTeamManager);
-            var enabled = spec.CheckEnable(data.RootBoxInfo);
+            var enabled = spec.CheckEnable(data, 0);
 
             boxes.Add(key, new ContentBoxVm
             {
                 DictKey = key,
                 Header = lang[spec.TitleKey],
-                Footer = spec.FooterDisplay ? spec.BuildFooter(lang, data.RootBoxInfo) : string.Empty,
+                Footer = spec.FooterDisplay ? spec.BuildFooter(lang, data, 0) : string.Empty,
                 FooterDisplay = spec.FooterDisplay,
-                Size = isManager ? ResolveManagerSize(data.RankedBattlefields) : spec.Size,
-                ReSizable = isManager,
+                Size = string.IsNullOrEmpty(spec.Size) ? spec.SizeBuilder(data) : spec.Size,
+                ReSizable = spec.ReSizable,
                 ImageSrc = spec.ImageSrc,
                 BgImageSrc = spec.BgImageSrc,
                 IsEnabled = enabled,
@@ -54,64 +52,38 @@ public static class VsBoxBuilder
                 LcdDisplay = spec.LcdBackground,
                 RenderContent = spec.RenderContent,
                 BodyComponent = spec.BodyComp,
-                BodyParameters = isManager ? new Dictionary<string, object?>
-                    { [nameof(RankedBattleTeamManager.OnTeamSaved)] =parameters.OnTeamSaved }
-                    : []
+                BodyParameters = spec.BodyComp is null ? [] : spec.BuildParams(parameters)
             });
         }
 
-        foreach (var classification in
-                 data.RankedBattlefields.Classifications)
+        foreach (var spec in VsGameBoxSpecs.SubSpecs)
         {
-            var id = classification.ClassificationId;
-            var key = BuildClassificationKey(id);
-            var enabled = data.RankedBattlefields
-                .SavedSelection
-                .EligibleClassificationIds
-                .Contains(id);
-
-            boxes.Add(key, new ContentBoxVm
+            foreach (var classification in
+                     data.RankedBattlefields.Classifications)
             {
-                DictKey = key,
-                Header = lang[
-                    $"vsgame.Classification.Title.{id}"],
-                Footer = lang[
-                    "vsgame.Classification.Footer.Requirements"]
-                    .FormatSafe(
-                        RankNameTable.Data[classification.MinimumTeamRank].PublicLevel ?? string.Empty,
-                        classification.RequiredPartySize,
-                        classification
-                            .RequiredMembersInRankClassRange,
-                        classification.MemberMinimumRankClass,
-                        classification.MemberMaximumRankClass),
-                FooterDisplay = true,
-                BgImageSrc = $"images/buttons/vsgame/tier{id}.webp",
-                Size = ContentBoxSize.BUTTON_WIDE,
-                IsEnabled = enabled,
-                IsClickable = enabled,
-                ClickId = 610 + id
-            });
+                var id = classification.ClassificationId;
+                var key = $"{spec.Key}{id}";
+
+                boxes.Add(key, new ContentBoxVm
+                {
+                    DictKey = key,
+                    Header = spec.BuildTitle(lang, id),
+                    Footer = spec.FooterDisplay ? spec.BuildFooter(lang, data, id) : string.Empty,
+                    FooterDisplay = spec.FooterDisplay,
+                    Size = spec.Size,
+                    ImageSrc = spec.ImageSrc,
+                    BgImageSrc = spec.BuildImageSrc(id),
+                    IsEnabled = spec.CheckEnable(data, id),
+                    IsClickable = spec.CheckEnable(data, id) && spec.ClickId > 0,
+                    ClickId = spec.ClickId + id,
+                    LcdDisplay = spec.LcdBackground,
+                    RenderContent = spec.RenderContent,
+                    BodyComponent = spec.BodyComp
+                });
+            }
         }
 
         return boxes;
-    }
-
-    private static string ResolveManagerSize(
-        VsRankedBattlefieldsDto ranked)
-    {
-        var slots =
-            ranked.SavedSelection.SelectedSlotNumbers;
-        var selectableSlots = ranked.TeamMembers
-            .Where(member => member.IsSelectable)
-            .Select(member => member.SlotNumber)
-            .ToHashSet();
-
-        return slots.Length > 0 &&
-               slots.All(slot =>
-                   slot > 0 &&
-                   selectableSlots.Contains(slot))
-            ? ContentBoxSize.MINIMALIZED
-            : ContentBoxSize.CONTENT_LARGE;
     }
 
     private static string[] BuildClassificationNames()
@@ -120,12 +92,10 @@ public static class VsBoxBuilder
         var names = new string[count];
 
         for (var i = 0; i < count; i++)
-            names[i] = BuildClassificationKey(i + 1);
+            names[i] =
+                $"{VsBoxKeyRanked.Classification}{i + 1}";
 
         return names;
     }
-
-    private static string BuildClassificationKey(int id) =>
-        $"{VsBoxKeyRanked.Classification}{id}";
 
 }

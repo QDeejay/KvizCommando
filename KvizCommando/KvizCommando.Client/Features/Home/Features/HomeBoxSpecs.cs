@@ -9,7 +9,8 @@ public sealed class HomeSpecs : VmSpecs
 {
     internal HomeBoxKey Key { get; init; }
     internal Func<HomeScreen, ScreenButtonEntity> Pick { get; init; } = default!;
-    internal Func<ILanguageService, ScreenButtonEntity, string> BuildFooter { get; init; } = default!;
+    internal Func<ILanguageService, ScreenButtonEntity, string> BuildFooter 
+        { get; init; } = (_, _) => string.Empty;
 }
 
 public static class HomeBoxSpecs
@@ -35,7 +36,7 @@ public static class HomeBoxSpecs
             Size = ContentBoxSize.BUTTON_SMALL,
             FooterDisplay = false, ClickId = 4,
             Pick = s => s.SoloGame,
-            BuildFooter = (lang, b) => ""
+        
         },
         new HomeSpecs {
             Key = HomeBoxKey.Shop,
@@ -45,7 +46,7 @@ public static class HomeBoxSpecs
             Size = ContentBoxSize.BUTTON_MEDIUM,
             FooterDisplay = false, ClickId = 4,
             Pick = s => s.Shop,
-            BuildFooter = (lang, b) => ""
+          
         },
         new HomeSpecs {
             Key = HomeBoxKey.Rankings,
@@ -68,7 +69,7 @@ public static class HomeBoxSpecs
             Size =ContentBoxSize.BUTTON_SMALL,
             FooterDisplay = false, ClickId = 6,
             Pick = s => s.Statistic,
-            BuildFooter = (lang, b) => ""
+           
         },
         new HomeSpecs {
             Key = HomeBoxKey.Events,
@@ -124,8 +125,7 @@ public static class HomeBoxSpecs
             Size = ContentBoxSize.BUTTON_MEDIUM,
             FooterDisplay = false,
             ClickId = 1,
-            Pick = s => s.Question,
-            BuildFooter = (lang, b) => ""
+            Pick = s => s.Question
         },
         new HomeSpecs {
             Key = HomeBoxKey.InfoBoard,
@@ -136,8 +136,7 @@ public static class HomeBoxSpecs
             LcdBackground=true,
             FooterDisplay = false,
             ClickId = 0,
-            Pick = s => s.InfoBoard,
-            BuildFooter = (lang, b) => ""
+            Pick = s => s.InfoBoard
         }
     };
 }

@@ -36,7 +36,7 @@ namespace KvizCommando.Client.Features.Solo.Builders
             {
                 for (int i = 1; i <= spec.BtnQnty; i++)
                 {
-                    dict.Add($"{spec.Key.ToString()}{i}", new ContentBoxVm
+                    dict.Add($"{spec.Key}{i}", new ContentBoxVm
                     {
                         Header = spec.BuildTitle(i, cult),
                         Footer = spec.BuildFooter(lang, ss.Results, i),

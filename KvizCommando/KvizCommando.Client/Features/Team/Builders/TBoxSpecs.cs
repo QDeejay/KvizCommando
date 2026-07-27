@@ -9,14 +9,14 @@ namespace KvizCommando.Client.Features.Team.Builders;
 public sealed class TBoxSpecs : VmSpecs
 {
     internal Enum Key { get; init; } = default!;
-    internal Func<TeamRootBoxInfo, string> SizeBuilder { get; init; } =
-        _ => string.Empty;
-    internal Func<TeamRootBoxInfo, bool> CheckEnable { get; init; } =
-        _ => true;
+    internal Func<TeamRootBoxInfo, string> SizeBuilder 
+        { get; init; } = _ => string.Empty;
+    internal Func<TeamRootBoxInfo, bool> CheckEnable 
+        { get; init; } = _ => true;
     internal Func<ILanguageService, TeamRootBoxInfo, string> BuildBoxText
         { get; init; } = (_, _) => string.Empty;
-    internal Func<TeamComponentParameters, Dictionary<string, object?>>
-        BuildParams { get; init; } = _ => [];
+    internal Func<TeamComponentParameters, Dictionary<string, object?>>  BuildParams 
+        { get; init; } = _ => [];
 }
 
 public static class TeamBoxSpecs
@@ -33,9 +33,7 @@ public static class TeamBoxSpecs
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = true,
             ClickId = 201,
-            BuildBoxText = (lang, root) =>
-                lang["team.Box.Footer.Team"].FormatSafe(
-                    root.TeamOpRequired),
+            BuildBoxText = (lang, root) => lang["team.Box.Footer.Team"].FormatSafe( root.TeamOpRequired),
             CheckEnable = root => root.IsTeamEnable
         },
         new TBoxSpecs
@@ -46,9 +44,7 @@ public static class TeamBoxSpecs
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = true,
             ClickId = 202,
-            BuildBoxText = (lang, root) =>
-                lang["team.Box.Footer.Member"].FormatSafe(
-                    root.MemberOpRequired),
+            BuildBoxText = (lang, root) => lang["team.Box.Footer.Member"].FormatSafe(root.MemberOpRequired),
             CheckEnable = root => root.IsMemberEnable
         },
         new TBoxSpecs
@@ -59,9 +55,7 @@ public static class TeamBoxSpecs
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = true,
             ClickId = 203,
-            BuildBoxText = (lang, root) =>
-                lang["team.Box.Footer.Recruit"].FormatSafe(
-                    root.FreePositions),
+            BuildBoxText = (lang, root) => lang["team.Box.Footer.Recruit"].FormatSafe( root.FreePositions),
             CheckEnable = root => root.IsRecruitEnable
         },
         new TBoxSpecs
@@ -76,12 +70,8 @@ public static class TeamBoxSpecs
             LcdBackground = true,
             RenderContent = 1,
             BodyComp = typeof(TeamManager),
-            BuildParams = parameters =>
-                new Dictionary<string, object?>
-                {
-                    [nameof(TeamManager.OnMemberSelected)] =
-                        parameters.OnMemberSelected
-                }
+            BuildParams = parameters => new Dictionary<string, object?>
+                { [nameof(TeamManager.OnMemberSelected)] =  parameters.OnMemberSelected }
         },
         new TBoxSpecs
         {
@@ -95,12 +85,8 @@ public static class TeamBoxSpecs
             LcdBackground = true,
             RenderContent = 1,
             BodyComp = typeof(MemberManager),
-            BuildParams = parameters =>
-                new Dictionary<string, object?>
-                {
-                    [nameof(MemberManager.InitialPosition)] =
-                        parameters.SelectedMember
-                }
+            BuildParams = parameters => new Dictionary<string, object?>
+                { [nameof(MemberManager.InitialPosition)] = parameters.SelectedMember }
         },
         new TBoxSpecs
         {
@@ -110,19 +96,13 @@ public static class TeamBoxSpecs
             Size = string.Empty,
             FooterDisplay = false,
             ClickId = 0,
-            SizeBuilder = root => root.AbleToHire == 0
-                ? ContentBoxSize.CONTENT_CLOSED_LARGE
-                : ContentBoxSize.CONTENT_EXTRA_LARGE,
+            SizeBuilder = root => root.AbleToHire == 0 ? ContentBoxSize.CONTENT_CLOSED_LARGE : ContentBoxSize.CONTENT_EXTRA_LARGE,
             CheckEnable = _ => true,
             LcdBackground = false,
             RenderContent = 1,
             BodyComp = typeof(RecruitManager),
-            BuildParams = parameters =>
-                new Dictionary<string, object?>
-                {
-                    [nameof(RecruitManager.OnHireCompleted)] =
-                        parameters.OnHireCompleted
-                }
+            BuildParams = parameters => new Dictionary<string, object?>
+                { [nameof(RecruitManager.OnHireCompleted)] =  parameters.OnHireCompleted }
         }
     ];
 }

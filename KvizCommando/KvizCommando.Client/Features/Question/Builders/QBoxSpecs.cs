@@ -12,8 +12,10 @@ namespace KvizCommando.Client.Features.Question.Builders
     public sealed class QBoxSpecs : VmSpecs
     {
         internal Enum Key { get; init; } = default!;
-        internal Func<QuestionExtendedInfo, bool> CheckEnable { get; init; } = default!;
-        internal Func<ILanguageService, QuestionExtendedInfo, string> BuildBoxText { get; init; } = default!;
+        internal Func<QuestionExtendedInfo, bool> CheckEnable 
+            { get; init; } =  _ => true;
+        internal Func<ILanguageService, QuestionExtendedInfo, string> BuildBoxText
+            { get; init; } = (_, _) => string.Empty;
     }
 
     public static class QuestionBoxSpecs
@@ -76,8 +78,6 @@ namespace KvizCommando.Client.Features.Question.Builders
                 ImageSrc = string.Empty,
                 Size = ContentBoxSize.CONTENT_HALF_LARGE,
                 FooterDisplay = false, ClickId = 0,
-                BuildBoxText = (lang, qn) => "",
-                CheckEnable = (qn) => true,
                 LcdBackground = true,
                 RenderContent = 1,
                 BodyComp = typeof(FactorySlotsBase)
@@ -89,7 +89,6 @@ namespace KvizCommando.Client.Features.Question.Builders
                 ImageSrc = string.Empty,
                 Size = ContentBoxSize.CONTENT_LARGE,
                 FooterDisplay = false, ClickId = 0,
-                CheckEnable = (qn) => true,
                 LcdBackground = true,
                 RenderContent = 1,
                 BodyComp = typeof(UserSlotManager)
@@ -102,7 +101,6 @@ namespace KvizCommando.Client.Features.Question.Builders
                 ImageSrc = string.Empty,
                  Size = ContentBoxSize.CONTENT_LARGE,
                 FooterDisplay = false, ClickId = 0,
-                CheckEnable = (qn) => true,
                 LcdBackground = true,
                 RenderContent = 1,
                 BodyComp = typeof(PendingSlotManager)
@@ -113,8 +111,6 @@ namespace KvizCommando.Client.Features.Question.Builders
                 ImageSrc = string.Empty,
                  Size = ContentBoxSize.CONTENT_LARGE,
                 FooterDisplay = false, ClickId = 0,
-                BuildBoxText = (lang, qn) => "",
-                CheckEnable = (qn) => true,
                 LcdBackground = false,
                 RenderContent = 1,
                 BodyComp = typeof(NewQuestionManager)

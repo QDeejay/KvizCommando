@@ -64,8 +64,9 @@ public sealed class VsBattleTeamBuilder
                     _lang[
                         "vsgame.Manager.Tooltip.MinimumTeamLevel"]
                         .FormatSafe(
-                            ResolveTeamLevelCode(
-                                rule.MinimumTeamRank)),
+                            RankNameTable.Data[
+                                rule.MinimumTeamRank]
+                                .PublicLevel ?? string.Empty),
                 PartySizeText =
                     _lang["vsgame.Manager.Tooltip.PartySize"]
                         .FormatSafe(rule.RequiredPartySize),
@@ -156,17 +157,4 @@ public sealed class VsBattleTeamBuilder
         id >= 1 && id < RomanNumbers.Length
             ? RomanNumbers[id]
             : id.ToString();
-
-    private static string ResolveTeamLevelCode(int rank)
-    {
-        var maximumActiveRank =
-            RankNameTable.Data.Count - 2;
-        var index = Math.Clamp(
-            rank,
-            0,
-            maximumActiveRank);
-
-        return RankNameTable.Data[index].PublicLevel ??
-               string.Empty;
-    }
 }

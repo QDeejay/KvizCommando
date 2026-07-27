@@ -1,6 +1,7 @@
 ﻿using KvizCommando.Client.Models.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using System.Runtime.Intrinsics.X86;
 
 namespace KvizCommando.Client.Components
 {
@@ -10,9 +11,16 @@ namespace KvizCommando.Client.Components
         [Parameter] public EventCallback<int> OnClick { get; set; }
         [Parameter] public EventCallback FooterClick { get; set; }
         [Parameter] public RenderFragment? ContentBody { get; set; }
+
         private ContentBoxVm _vm = new();
         private bool _noContent = true;
-        private readonly string[] _content = ["content1", "valami", "tete", "défldf", "lajos", "vaszom", "kika", "togai", "kloi"];
+        private string _startSize = string.Empty;
+
+        protected override void OnInitialized()
+        {
+            _startSize = Vm.Size == "minimalized" ? string.Empty : Vm.Size;
+        }
+
         protected override void OnParametersSet()
         {
             _vm = Vm;
@@ -41,9 +49,10 @@ namespace KvizCommando.Client.Components
             if (!_vm.ReSizable)
                 return;
             if (_vm.Size == "minimalized")
-                _vm.Size = "large";
-            else if (_vm.Size == "large")
+                _vm.Size = _startSize;
+            else if (_vm.Size != "minimalized")
             {
+                _startSize = _vm.Size;
                 _vm.Size = "minimalized";
                 if (FooterClick.HasDelegate)
                     await FooterClick.InvokeAsync();

@@ -58,7 +58,7 @@ public partial class VsGame : KcComponentBase, IDisposable
         var headerTitle =
             Ui.Lang["mainlayout.Header.GameVs"];
 
-        if (boxId == 603)
+        if (boxId == 303)
         {
             _boxOrder = VsBoxBuilder.Ranked;
             headerTitle = _boxes[
@@ -74,7 +74,7 @@ public partial class VsGame : KcComponentBase, IDisposable
     private Task RefreshRankedAsync()
     {
         BuildBoxes();
-        OnBoxClick(603);
+        OnBoxClick(303);
         return Task.CompletedTask;
     }
 

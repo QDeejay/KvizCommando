@@ -10,9 +10,12 @@ namespace KvizCommando.Client.Features.Solo.Builders
     {
 
         internal Enum Key { get; init; } = default!;
-        internal Func<int, string> BuildImageSrc { get; init; } = default!;
-        internal Func<SoloEnables, int, bool> BuildEnable { get; init; } = default!;
-        internal Func<ILanguageService, SoloResults, int, string> BuildFooter { get; init; } = default!;
+        internal Func<int, string> BuildImageSrc 
+         { get; init; } =  _ => string.Empty;
+        internal Func<SoloEnables, int, bool> BuildEnable 
+        { get; init; } = (_, _) => true;
+        internal Func<ILanguageService, SoloResults, int, string> BuildFooter
+        { get; init; } = (_, _, _) => string.Empty; 
     }
 
     public sealed class SgameBoxSub : SgameBoxSpecs
@@ -58,25 +61,19 @@ namespace KvizCommando.Client.Features.Solo.Builders
                 ImageSrc = string.Empty, Size = "wide", FooterDisplay = false, ClickId = 403,
                 BgImageSrc = $"{IMAGE_ROOT}/campaign.webp",
                 BuildEnable = (se,ix) => se.EnaCampaign,
-                BuildFooter = (lang, sr, ix) => ""
             },
              new SgameBoxSpecs {
-              Key = SgameBoxKeySub.GameBoxCat,
+                Key = SgameBoxKeySub.GameBoxCat,
                 TitleKey = "solo.Label.Title.Game.Category",
                 ImageSrc = string.Empty, Size = ContentBoxSize.CONTENT_FLEXIBLE, FooterDisplay = false, ClickId = 0,
                 BgImageSrc = string.Empty,
-                BuildEnable = (se,ix) => true,
-                BuildFooter = (lang, sr, ix) => ""
 
              },
             new SgameBoxSpecs {
-              Key = SgameBoxKeySub.GameBoxOri,
+                Key = SgameBoxKeySub.GameBoxOri,
                 TitleKey = "solo.Label.Title.Game.Orient",
                 ImageSrc = string.Empty, Size = ContentBoxSize.CONTENT_FLEXIBLE, FooterDisplay = false, ClickId = 0,
-                BgImageSrc = string.Empty,
-                BuildEnable = (se,ix) => true,
-                BuildFooter = (lang, sr, ix) => ""
-
+                BgImageSrc = string.Empty
              }
 
 
