@@ -1,4 +1,5 @@
 using KvizCommando.Client.Features.VsGame.Builders;
+using KvizCommando.Client.Features.VsGame.Match.Services;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Utilities;
@@ -9,6 +10,9 @@ namespace KvizCommando.Client.Features.VsGame;
 
 public partial class VsGame : KcComponentBase, IDisposable
 {
+    [Inject]
+    private IVsMatchClientService MatchClient { get; set; } = default!;
+
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
 
@@ -17,6 +21,7 @@ public partial class VsGame : KcComponentBase, IDisposable
     private string[] _boxOrder = [];
     private int _classificationId;
     private bool _isMatchLocked;
+    private bool _isLeavingMatch;
     private bool _isReady;
 
     private string Culture => AppStates.Culture;
@@ -100,20 +105,40 @@ public partial class VsGame : KcComponentBase, IDisposable
 
     private void HandleBack()
     {
+        if (Ui.Header.PageIndex is >= 311 and <= 315)
+        {
+            _ = LeaveMatchAsync();
+            return;
+        }
+
         if (Ui.Header.PageIndex == 3)
         {
             Ui.Nav.NavigateTo("/home");
             return;
         }
 
-        var returnToRanked =
-            Ui.Header.PageIndex is >= 311 and <= 315;
-
-        if (returnToRanked)
-            _isMatchLocked = false;
-
         BuildBoxes();
-        OnBoxClick(returnToRanked ? 303 : 3);
+        OnBoxClick(3);
+    }
+
+    private async Task LeaveMatchAsync()
+    {
+        if (_isLeavingMatch)
+            return;
+
+        _isLeavingMatch = true;
+
+        try
+        {
+            await MatchClient.StopAsync();
+            _isMatchLocked = false;
+            BuildBoxes();
+            OnBoxClick(303);
+        }
+        finally
+        {
+            _isLeavingMatch = false;
+        }
     }
 
     public void Dispose()
@@ -126,9 +151,9 @@ public partial class VsGame : KcComponentBase, IDisposable
 /**
  * MÓDOSÍTÁS: a rangbesorolás kiválasztásakor a VS lap a
  * DynamicComponent meccsmanagerre vált. A fejléc vissza gombja lock
- * után is engedélyezett hivatalos kilépés: eltávolítja a managert,
- * amely a meglévő DisposeAsync láncon lezárja a SignalR kapcsolatot,
- * így a szerver OnDisconnected ága végzi a queue/match takarítását.
+ * után is engedélyezett hivatalos kilépés: előbb lezárja a SignalR
+ * kapcsolatot, így a szerver OnDisconnected ága elvégzi a
+ * queue/match takarítását, és csak utána vált vissza a ranked menüre.
  *
  * A fájl a VS menü dobozsorrendjét és navigációs állapotát kezeli.
  */

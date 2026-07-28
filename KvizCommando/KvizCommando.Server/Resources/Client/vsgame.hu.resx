@@ -147,6 +147,18 @@
   <data name="Match.Inventory.Helps" xml:space="preserve">
     <value>Segítségek</value>
   </data>
+  <data name="Match.Inventory.Title" xml:space="preserve">
+    <value>Készlet</value>
+  </data>
+  <data name="Match.Timer.SecondsShort" xml:space="preserve">
+    <value>MP</value>
+  </data>
+  <data name="Match.Roster.Match" xml:space="preserve">
+    <value>VS meccs</value>
+  </data>
+  <data name="Match.Roster.Lobby" xml:space="preserve">
+    <value>Váróterem</value>
+  </data>
   <data name="Match.Round.Empty" xml:space="preserve">
     <value>Üres hely</value>
   </data>
@@ -180,7 +192,7 @@
   <!--
     MÓDOSÍTÁS: hozzáadja a ranked várólista, MatchLocked, a három
     preparációs fázis, az ismétlésmentes preparációs fejléc, az
-    inventory és az üres körhely magyar feliratait.
+    inventory, időegység, roster és az üres körhely magyar feliratait.
 
     A fájl a VS kliens magyar lokalizációs forrása; Debug buildkor
     a ResxExporter ebből készíti el a vsgame.json fájlt.

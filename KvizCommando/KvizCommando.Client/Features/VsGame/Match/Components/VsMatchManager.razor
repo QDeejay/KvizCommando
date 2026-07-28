@@ -12,7 +12,9 @@
     @if (_match is not null)
     {
         <div class="kc-vs-match-stage">
-            <VsMatchRoster Players="@_match.Players" />
+            <VsMatchRoster
+                Players="@_match.Players"
+                Title="@Lang["vsgame.Match.Roster.Match"]" />
 
             <main class="kc-vs-match-content">
                 @if (_match.Phase == VsMatchPhase.MatchLocked)
@@ -42,7 +44,7 @@
             <VsMatchRoster
                 Players="@_queue.Players"
                 ExpectedPlayers="@_queue.RequiredPlayers"
-                Title="LOBBY" />
+                Title="@Lang["vsgame.Match.Roster.Lobby"]" />
 
             <main class="kc-vs-match-content">
                 <section class="kc-vs-queue">
@@ -84,7 +86,8 @@
     A VS menü DynamicComponentként példányosított ranked meccsmanagere.
     MÓDOSÍTÁS: a lobby is a látványterv kétoszlopos stage-ét használja:
     bal oldalt a várakozók és hiányzó helyek, jobb oldalt a kör alakú
-    számláló és az alapfeltételek látszanak.
+    számláló és az alapfeltételek látszanak. A meccs- és lobby-roster
+    címe közvetlen szöveg helyett a vsgame lokalizációból érkezik.
 
     A várólistát, a MatchLocked betöltést, a rostert és az aktuális
     preparációs nézetet a SignalR snapshot alapján cseréli.

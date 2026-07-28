@@ -217,6 +217,7 @@ public sealed class VsMatchService : IVsMatchService
                     round.RoundNumber == request.RoundNumber);
 
                 if (target is null ||
+                    target.HelpType != VsHelpType.None ||
                     !CanUseHelpInRound(
                         request.HelpType,
                         target.IsCaptainRound))
@@ -227,12 +228,12 @@ public sealed class VsMatchService : IVsMatchService
                 var available = player.HelpCounts[
                     (int)request.HelpType - 1];
 
-                var alreadyAssigned = player.Rounds.Count(round =>
-                    round != target &&
-                    round.HelpType == request.HelpType);
-
-                if (alreadyAssigned >= available)
+                if (available <= 0 ||
+                    player.Rounds.Any(round =>
+                        round.HelpType == request.HelpType))
+                {
                     return false;
+                }
 
                 target.HelpType = request.HelpType;
                 AddLog(
@@ -1065,11 +1066,12 @@ public sealed class VsMatchService : IVsMatchService
                     .Select(help => new VsHelpCardDto
                     {
                         HelpType = help,
-                        Count = Math.Max(
-                            0,
-                            currentPlayer.HelpCounts[(int)help - 1] -
-                            currentPlayer.Rounds.Count(round =>
-                                round.HelpType == help))
+                        Count =
+                            currentPlayer.HelpCounts[(int)help - 1] > 0 &&
+                            currentPlayer.Rounds.All(round =>
+                                round.HelpType != help)
+                                ? 1
+                                : 0
                     })
             ],
             CategoryModifiers = BuildCategoryModifiers(
@@ -1258,7 +1260,9 @@ internal static class VsMatchEnumerableExtensions
  * futhat automatikus kitöltés és fázisváltás nélkül; ilyenkor a
  * kiválasztási parancsok és a Finish gomb viszik tovább a preparációt.
  * Kategória kizárólag üres körslotba tehető; átrendezéshez a Reset
- * parancs törli az addigi kiosztást.
+ * parancs törli az addigi kiosztást. Segítségből típusonként legfeljebb
+ * egy használható, és az is csak üres, számára engedélyezett körslotba
+ * kerülhet. A segítség nélküli játékos automatikusan kész állapotú.
  * Ha a meccs minden SignalR-kapcsolata megszűnt, a store-bejegyzés és
  * a player/connection indexek törlődnek, ezért az elhagyott tesztmeccs
  * nem tartja bent a játékosokat.

@@ -23,7 +23,7 @@
                 <i class="bi bi-clock"></i>
                 <div class="kc-vs-prep-timer-display">
                     <strong>@RemainingSeconds</strong>
-                    <span>MP</span>
+                    <span>@Lang["vsgame.Match.Timer.SecondsShort"]</span>
                 </div>
                 <div class="kc-vs-prep-timer-track">
                     <div class="kc-vs-prep-timer-value"
@@ -93,7 +93,7 @@
                     }
 
                     <button type="button"
-                            class="kc-vs-prep-round-help"
+                            class="kc-vs-prep-round-help @(CanAssignHelp(round) ? "assignable" : "")"
                             disabled="@(!CanAssignHelp(round))"
                             @onclick="() => AssignHelpAsync(round)">
                         @if (round.Help is not null)
@@ -123,7 +123,7 @@
 
         <section class="kc-vs-prep-inventory @InventoryCssClass">
             <header>
-                <strong>INVENTORY</strong>
+                <strong>@Lang["vsgame.Match.Inventory.Title"]</strong>
                 <span>•</span>
                 <small>@InventoryTitle</small>
             </header>
@@ -190,30 +190,31 @@
                     }
                 </div>
             }
-        </section>
 
-        <div class="kc-vs-prep-actions">
-            <button type="button"
-                    class="button-on-lcd"
-                    disabled="@(!Data.Preparation.CanReset)"
-                    aria-label="@Lang["vsgame.Match.Button.Reset"]"
-                    title="@Lang["vsgame.Match.Button.Reset"]"
-                    @onclick="ResetAsync">
-                <i class="bi bi-arrow-counterclockwise"></i>
-            </button>
-
-            @if (Data.Preparation.CanFinish &&
-                 !Data.Preparation.IsFinished)
-            {
+            <div class="kc-vs-prep-actions">
                 <button type="button"
                         class="button-on-lcd"
-                        aria-label="@Lang["vsgame.Match.Button.Finish"]"
-                        title="@Lang["vsgame.Match.Button.Finish"]"
-                        @onclick="OnFinish">
-                    <i class="bi bi-check2"></i>
+                        disabled="@(!Data.Preparation.CanReset)"
+                        aria-label="@Lang["vsgame.Match.Button.Reset"]"
+                        title="@Lang["vsgame.Match.Button.Reset"]"
+                        @onclick="ResetAsync">
+                    <i class="bi bi-arrow-counterclockwise"></i>
                 </button>
-            }
-        </div>
+
+                @if (Data.Preparation.CanFinish ||
+                     Data.Preparation.IsFinished)
+                {
+                    <button type="button"
+                            class="button-on-lcd @(Data.Preparation.IsFinished ? "finished" : "")"
+                            disabled="@Data.Preparation.IsFinished"
+                            aria-label="@Lang["vsgame.Match.Button.Finish"]"
+                            title="@Lang["vsgame.Match.Button.Finish"]"
+                            @onclick="OnFinish">
+                        <i class="bi bi-check2"></i>
+                    </button>
+                }
+            </div>
+        </section>
     }
 </section>
 
@@ -222,7 +223,11 @@
     sávos szerkezetét követi. A felső infósáv a SoloGame title-sorának
     szerkezetét használja. A karaktereknél csak a 138:176 arányú SVG
     marad; az orientációs képek kikerültek. A kijelölt kategória csak a
-    ténylegesen fogadó kategóriacellákat emeli ki.
+    ténylegesen fogadó kategóriacellákat emeli ki. A Reset és Finish
+    gomb az inventory alsó sorába került; a kész állapotot a letiltott,
+    zölden kiemelt Finish gomb jelzi. A kijelölt segítség csak a
+    ténylegesen fogadó segítségcellákat emeli ki. Az inventory főcíme
+    és a visszaszámláló rövid időegysége is lokalizált.
 
     A három VS preparáció közös, snapshot-alapú nézete. Karaktersorrendet,
     kategóriakiosztást, segítségkiosztást és szerverhatáridőt jelenít meg.

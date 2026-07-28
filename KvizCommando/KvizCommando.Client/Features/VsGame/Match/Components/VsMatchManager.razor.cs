@@ -47,7 +47,6 @@ public partial class VsMatchManager : IAsyncDisposable
             _errorText =
                 Lang["vsgame.Match.Error.Connection"];
 
-            _errorText = ex.Message;
             Console.WriteLine(ex);
         }
     }
@@ -148,5 +147,7 @@ public partial class VsMatchManager : IAsyncDisposable
  * továbbítja a preparációs parancsokat és jelzi a lapnak a
  * MatchLocked állapotot. Dispose során a hivatalos queue-kilépést
  * meghívja, majd minden esetben lezárja a kapcsolatot; lezárt meccsnél
- * a szerver OnDisconnected ága végzi a meccsből kiléptetést.
+ * a szerver OnDisconnected ága végzi a meccsből kiléptetést. A
+ * kapcsolódási kivétel technikai, angol szövege csak a konzolra kerül;
+ * a felhasználó a lokalizált hibaüzenetet kapja.
  */

@@ -4,7 +4,6 @@
     min-height: 560px;
     margin: 0 auto;
     position: relative;
-    isolation: isolate;
     color: #cccccc;
 }
 
@@ -24,11 +23,11 @@
 }
 
 .kc-vs-match-error {
-    position: absolute;
-    z-index: 9999;
-    top: 8px;
-    right: 8px;
-    left: 8px;
+    position: fixed;
+    z-index: 100000;
+    top: 68px;
+    left: 50%;
+    width: min(calc(100vw - 24px), 1060px);
     min-height: 42px;
     padding: 7px 12px;
     display: flex;
@@ -44,6 +43,7 @@
         0 4px 12px rgba(0, 0, 0, .55);
     font-family: 'Special Elite', cursive;
     text-align: center;
+    transform: translateX(-50%);
 }
 
 .kc-vs-queue,
@@ -190,8 +190,9 @@
  * MÓDOSÍTÁS: a meccskeret két oszlopa és köze a jóváhagyott
  * látványterv arányaihoz igazodik, a fix játéktér továbbra sem nyúlik
  * a tartalommal. A lobby játékosszámlálója az 01-es terv szaggatott
- * körjelzője, nem LCD-panel. A hibasáv saját, legfelső rétegen marad,
- * ezért a roster és a karakterek nem takarhatják el.
+ * körjelzője, nem LCD-panel. A hibasáv fix viewport-rétegen,
+ * közvetlenül a főfejléc alatt marad, ezért a ContentBox címsora, a
+ * roster és a karakterek sem takarhatják el.
  *
  * A VS ranked várólista és meccskeret a SoloGame rögzített
  * játékméretét, katonai paneljeit, LCD-színét és meglévő

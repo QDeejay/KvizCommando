@@ -234,6 +234,7 @@ public partial class VsMatchPreparationView : IDisposable
         Data.Phase == VsMatchPhase.PreparationHelps &&
         !Data.Preparation.IsFinished &&
         _selectedHelp != VsHelpType.None &&
+        round.Help is null &&
         (_selectedHelp is
             VsHelpType.FiftyFifty or
             VsHelpType.AiSuggestion ||
@@ -277,7 +278,9 @@ public partial class VsMatchPreparationView : IDisposable
  * feliratokat, a fázishoz tartozó inventory CSS-osztályt és a
  * befejezett állapot ismétlésmentes fejlécét. Domainállapotot továbbra
  * sem módosít. Kategória csak üres körslotba helyezhető; hibás
- * elrendezéshez a meglévő Reset parancs használható.
+ * elrendezéshez a meglévő Reset parancs használható. Segítség szintén
+ * csak üres, a kiválasztott típus számára engedélyezett körslotba
+ * helyezhető.
  *
  * A preparációs nézet lokális kijelöléseit, visszaszámlálását és
  * EventCallback-alapú parancstovábbítását kezeli.

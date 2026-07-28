@@ -123,6 +123,10 @@ namespace KvizCommando.Client.Layout
         private void UpdateTitle()
         {
             _currentTitle = Ui.Header.Title;
+
+            if (IsFullScreenGame)
+                _isNavOpen = false;
+
             InvokeAsync(StateHasChanged);
         }
         private void UpdateBackBtnEna()
@@ -239,5 +243,6 @@ namespace KvizCommando.Client.Layout
 /**
  * MÓDOSÍTÁS: a SoloGame 420–470 oldaltartományának meglévő teljes
  * képernyős navbar-tiltását a VS ranked meccs 311–315 tartományára is
- * alkalmazza. A fejléc vissza gombját ez nem tiltja.
+ * alkalmazza. Teljes képernyőre váltáskor a korábban nyitva maradt
+ * oldalsávot is bezárja. A fejléc vissza gombját ez nem tiltja.
  */
