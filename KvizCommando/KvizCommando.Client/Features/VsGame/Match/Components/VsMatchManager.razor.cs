@@ -122,7 +122,15 @@ public partial class VsMatchManager : IAsyncDisposable
 
         _disposed = true;
         MatchClient.OnChanged -= OnMatchClientChanged;
-        await MatchClient.StopAsync();
+
+        try
+        {
+            await MatchClient.LeaveQueueAsync();
+        }
+        finally
+        {
+            await MatchClient.StopAsync();
+        }
 
         if (_reportedLocked &&
             OnMatchLockChanged is not null)
@@ -138,5 +146,7 @@ public partial class VsMatchManager : IAsyncDisposable
  * A VS ranked DynamicComponent életciklusát kezeli: felépíti az
  * egyetlen SignalR kapcsolatot, snapshotból view modelleket készít,
  * továbbítja a preparációs parancsokat és jelzi a lapnak a
- * MatchLocked állapotot.
+ * MatchLocked állapotot. Dispose során a hivatalos queue-kilépést
+ * meghívja, majd minden esetben lezárja a kapcsolatot; lezárt meccsnél
+ * a szerver OnDisconnected ága végzi a meccsből kiléptetést.
  */

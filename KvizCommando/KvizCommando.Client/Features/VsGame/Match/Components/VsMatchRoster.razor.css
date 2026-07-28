@@ -63,9 +63,7 @@
 
 .kc-vs-roster-card.searching {
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    gap: 8px;
     color: #777850;
 }
 
@@ -75,11 +73,6 @@
     border: 3px dashed #777850;
     border-radius: 50%;
     animation: kc-vs-roster-search 3s linear infinite;
-}
-
-.kc-vs-roster-search-copy {
-    font-family: 'Share Tech Mono', monospace;
-    letter-spacing: .18em;
 }
 
 .kc-vs-roster-avatar {
@@ -153,7 +146,7 @@
  * MÓDOSÍTÁS: a roster a 02–04 mockup állandó, kompakt bal oldali
  * csapatkártya-sávját követi. A csapatavatar marad placeholder, amíg
  * a szerver nem tölti a TeamPictureCode mezőt. Lobbyban a hiányzó
- * játékoshelyek szaggatott keresőjelzőt mutatnak.
+ * játékoshelyek csak egy szaggatott, forgó keresőjelzőt mutatnak.
  *
  * A fájl kizárólag a VS meccs publikus játékoslistáját formázza.
  */

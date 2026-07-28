@@ -157,6 +157,7 @@ public partial class VsMatchPreparationView : IDisposable
         Data.Phase == VsMatchPhase.PreparationCategories &&
         !Data.Preparation.IsFinished &&
         !round.IsCaptainRound &&
+        round.Loadout is null &&
         _selectedLoadoutToken.HasValue;
 
     private async Task AssignCategoryAsync(
@@ -275,7 +276,8 @@ public partial class VsMatchPreparationView : IDisposable
  * körönkénti módosítót, és a markup számára előállítja a prep/inventory
  * feliratokat, a fázishoz tartozó inventory CSS-osztályt és a
  * befejezett állapot ismétlésmentes fejlécét. Domainállapotot továbbra
- * sem módosít.
+ * sem módosít. Kategória csak üres körslotba helyezhető; hibás
+ * elrendezéshez a meglévő Reset parancs használható.
  *
  * A preparációs nézet lokális kijelöléseit, visszaszámlálását és
  * EventCallback-alapú parancstovábbítását kezeli.

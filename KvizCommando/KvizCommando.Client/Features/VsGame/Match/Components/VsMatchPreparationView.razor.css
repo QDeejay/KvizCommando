@@ -320,11 +320,11 @@
 }
 
 .kc-vs-prep-round-modifier.positive strong {
-    color: #d15f52;
+    color: #51b36d;
 }
 
 .kc-vs-prep-round-modifier.negative strong {
-    color: #51b36d;
+    color: #d15f52;
 }
 
 .kc-vs-prep-round.captain {
@@ -598,9 +598,9 @@
  * középre rendezve jelennek meg.
  * Desktopon a körsávok egyenletesen kitöltik a rendelkezésre álló
  * magasságot scrollbar nélkül; alacsony viewportnál a görgetés
- * megtartott, de a csík rejtett. A negatív módosító zöld, a pozitív
- * piros. Kategóriakijelöléskor kizárólag a fogadó kategóriacella kap
- * halványsárga keretet.
+ * megtartott, de a csík rejtett. A játékos szemszögéből a pozitív
+ * módosító zöld, a negatív piros. Kategóriakijelöléskor kizárólag az
+ * üres, fogadó kategóriacella kap halványsárga keretet.
  *
  * A fájl kizárólag a VS preparáció megjelenítését szabályozza.
  */

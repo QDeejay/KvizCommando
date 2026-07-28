@@ -46,9 +46,15 @@ namespace KvizCommando.Client.Layout
             ? Ui.Lang["mainlayout.Text.Greetings"].FormatSafe(RankNameLocalizer.GetName(_appState.Home!.UserMainData.RankEnum, _culture))
             : string.Empty;
 
+        private bool IsFullScreenGame =>
+            Ui.Header.PageIndex is >= 420 and <= 470 ||
+            Ui.Header.PageIndex is >= 311 and <= 315;
         private bool CanToggleSidebar => _isLoggedIn && Hs.NavBarEnable;
         private bool BackNavigationEna => (!_isNavOpen && Ui.Header.PageIndex != 0) || _isBckBtnEna;
-        private HomeScreen Hs => _isLoggedIn && !(Ui.Header.PageIndex >= 420 && Ui.Header.PageIndex <= 470) ? _appState.Home!.HomeScreen : new();
+        private HomeScreen Hs =>
+            _isLoggedIn && !IsFullScreenGame
+                ? _appState.Home!.HomeScreen
+                : new();
 
         private void ToggleSidebar()
         {
@@ -229,3 +235,9 @@ namespace KvizCommando.Client.Layout
         }
     }
 }
+
+/**
+ * MÓDOSÍTÁS: a SoloGame 420–470 oldaltartományának meglévő teljes
+ * képernyős navbar-tiltását a VS ranked meccs 311–315 tartományára is
+ * alkalmazza. A fejléc vissza gombját ez nem tiltja.
+ */

@@ -94,15 +94,12 @@ public partial class VsGame : KcComponentBase, IDisposable
     private Task SetMatchLockedAsync(bool isLocked)
     {
         _isMatchLocked = isLocked;
-        Ui.Header.SetBackBtnEna(!isLocked);
+        Ui.Header.SetBackBtnEna(true);
         return Task.CompletedTask;
     }
 
     private void HandleBack()
     {
-        if (_isMatchLocked)
-            return;
-
         if (Ui.Header.PageIndex == 3)
         {
             Ui.Nav.NavigateTo("/home");
@@ -111,6 +108,9 @@ public partial class VsGame : KcComponentBase, IDisposable
 
         var returnToRanked =
             Ui.Header.PageIndex is >= 311 and <= 315;
+
+        if (returnToRanked)
+            _isMatchLocked = false;
 
         BuildBoxes();
         OnBoxClick(returnToRanked ? 303 : 3);
@@ -125,9 +125,10 @@ public partial class VsGame : KcComponentBase, IDisposable
 
 /**
  * MÓDOSÍTÁS: a rangbesorolás kiválasztásakor a VS lap a
- * DynamicComponent meccsmanagerre vált, MatchLocked után pedig
- * letiltja a visszalépést. Lock előtt a visszalépés büntetlenül
- * megszünteti a várólistás kapcsolatot.
+ * DynamicComponent meccsmanagerre vált. A fejléc vissza gombja lock
+ * után is engedélyezett hivatalos kilépés: eltávolítja a managert,
+ * amely a meglévő DisposeAsync láncon lezárja a SignalR kapcsolatot,
+ * így a szerver OnDisconnected ága végzi a queue/match takarítását.
  *
  * A fájl a VS menü dobozsorrendjét és navigációs állapotát kezeli.
  */

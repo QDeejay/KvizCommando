@@ -23,14 +23,15 @@ public enum VsHelpType
 
 public static class VsLoadoutCategoryIds
 {
+    public const int AllCategories = 0;
     public const int MinimumFactoryCategory = 1;
     public const int MaximumFactoryCategory = 16;
     public const int OwnQuestion = 17;
-    public const int AllCategories = 18;
 }
 
 /**
  * A VS meccs kliens és szerver között közösen használt fázis- és
  * segítségtípusait, valamint a speciális loadout-kategóriákat
- * tartalmazza.
+ * tartalmazza. Az Összes kategória a loadout meglévő alapértékével
+ * egyezően 0; az 1–16 gyári, a 17 saját kérdés.
  */

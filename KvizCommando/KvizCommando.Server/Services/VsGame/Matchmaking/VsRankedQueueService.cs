@@ -278,9 +278,12 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
             .ToArray();
 
         if (matchLoadout.Any(category =>
-                category is <
-                    VsLoadoutCategoryIds.MinimumFactoryCategory or >
-                    VsLoadoutCategoryIds.AllCategories))
+                category !=
+                    VsLoadoutCategoryIds.AllCategories &&
+                (category <
+                    VsLoadoutCategoryIds.MinimumFactoryCategory ||
+                 category >
+                    VsLoadoutCategoryIds.OwnQuestion)))
         {
             return false;
         }
@@ -369,7 +372,8 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
 /**
  * MÓDOSÍTÁS: minden várakozó személyre szabott publikus roster-
  * snapshotot kap, ezért a lobby bal oldali játékoslistája is
- * kirajzolható.
+ * kirajzolható. A loadout 0 értékét Összes kategóriaként validálja;
+ * üres kategóriahelyként nem kezeli.
  *
  * Az öt besorolás külön várólistáját kezeli, cache-snapshotból
  * validálja a belépést, majd a profil szerinti játékosszámnál

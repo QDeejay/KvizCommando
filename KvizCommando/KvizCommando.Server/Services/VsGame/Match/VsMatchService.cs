@@ -178,16 +178,14 @@ public sealed class VsMatchService : IVsMatchService
 
                 if (loadout is null ||
                     target is null ||
-                    loadout.IsOwnQuestion)
+                    loadout.IsOwnQuestion ||
+                    target.LoadoutToken.HasValue ||
+                    player.Rounds.Any(round =>
+                        round.LoadoutToken ==
+                        request.LoadoutToken))
                 {
                     return false;
                 }
-
-                var previous = player.Rounds.FirstOrDefault(round =>
-                    round.LoadoutToken == request.LoadoutToken);
-
-                if (previous is not null)
-                    previous.LoadoutToken = null;
 
                 target.LoadoutToken = request.LoadoutToken;
                 AddLog(
@@ -1259,6 +1257,8 @@ internal static class VsMatchEnumerableExtensions
  * MÓDOSÍTÁS: a profil fejlesztői pause flagje mellett az óra nullára
  * futhat automatikus kitöltés és fázisváltás nélkül; ilyenkor a
  * kiválasztási parancsok és a Finish gomb viszik tovább a preparációt.
+ * Kategória kizárólag üres körslotba tehető; átrendezéshez a Reset
+ * parancs törli az addigi kiosztást.
  * Ha a meccs minden SignalR-kapcsolata megszűnt, a store-bejegyzés és
  * a player/connection indexek törlődnek, ezért az elhagyott tesztmeccs
  * nem tartja bent a játékosokat.
