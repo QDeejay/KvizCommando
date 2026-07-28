@@ -21,6 +21,7 @@
   "Classification.Title.5": "V. harci besorolás",
   "Classification.Footer.Requirements": "Min szint: {0}, Min létszám: {1} ebből {2}, sáv: R{3}-R{4}",
   "Match.Title": "Rangsorolt csatatér",
+  "Match.Title.Preparation": "Preparáció",
   "Match.Queue.Status": "Várakozás a többi játékosra",
   "Match.Queue.Stake": "Tét",
   "Match.Status.Connecting": "Kapcsolódás a rangsorolt várólistához",

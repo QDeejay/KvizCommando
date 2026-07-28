@@ -4,7 +4,7 @@
     height: 100%;
     padding: 10px 10px 62px;
     display: grid;
-    grid-template-rows: 58px 58px minmax(0, 1fr) auto;
+    grid-template-rows: 42px 52px minmax(0, 1fr) auto;
     gap: 9px;
     overflow: hidden;
     color: #cccccc;
@@ -18,42 +18,49 @@
 
 .kc-vs-prep-info {
     min-width: 0;
-    padding: 7px 15px;
-    display: grid;
-    grid-template-columns: 62px minmax(0, 1fr);
+    min-height: 40px;
+    padding: 0 8px;
+    display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
-    color: #222f16;
-    background-color: rgba(210, 255, 57, .94);
-    border: inset 2px #777;
-    border-radius: 4px;
+    color: #cccccc;
+    opacity: .9;
+    border: inset 1px #777;
     box-shadow:
         0 4px 16px rgba(0, 0, 0, .4),
         inset 0 4px 8px rgba(0, 0, 0, .7);
     font-family: 'Special Elite', cursive;
+    font-size: clamp(1rem, 1.35vw, 1.35rem);
+    text-transform: uppercase;
 }
 
+.kc-vs-prep-info > strong,
 .kc-vs-prep-info > span {
-    padding-right: 12px;
-    border-right: 1px solid rgba(34, 47, 22, .45);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 1rem;
-    text-align: center;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    transform: translateY(3px);
 }
 
 .kc-vs-prep-info strong {
+    min-width: 0;
     overflow: hidden;
-    font-size: clamp(1rem, 1.7vw, 1.35rem);
     letter-spacing: .04em;
-    text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
-    text-transform: uppercase;
+}
+
+.kc-vs-prep-info > span {
+    flex: 0 0 auto;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
 }
 
 .kc-vs-prep-timer {
     min-width: 0;
-    padding: 4px 18px;
+    min-height: 52px;
+    padding: 3px 18px;
     display: grid;
     grid-template-columns: 38px 110px minmax(100px, 1fr);
     align-items: center;
@@ -66,7 +73,7 @@
 }
 
 .kc-vs-prep-timer-display {
-    height: 44px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -123,13 +130,14 @@
     min-height: 0;
     padding: 0 6px;
     display: grid;
-    align-content: start;
+    grid-auto-rows: minmax(0, 1fr);
+    align-content: stretch;
     gap: 6px;
-    overflow-y: auto;
+    overflow: hidden;
 }
 
 .kc-vs-prep-round {
-    min-height: 72px;
+    min-height: 0;
     display: grid;
     grid-template-columns:
         minmax(215px, 1.15fr)
@@ -157,35 +165,28 @@
 .kc-vs-prep-round-character {
     padding: 4px 7px;
     display: grid;
-    grid-template-columns: 44px 46px minmax(0, 1fr);
+    grid-template-columns: 38px minmax(0, 1fr);
     align-items: center;
     gap: 7px;
 }
 
 .kc-vs-prep-round.captain .kc-vs-prep-round-character {
-    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-columns: 38px minmax(0, 1fr);
 }
 
-.kc-vs-prep-orientation-box {
-    width: 42px;
-    height: 58px;
-    display: grid;
-    place-items: center;
+.kc-vs-prep-captain-picture {
+    width: 38px;
+    aspect-ratio: 138 / 176;
     overflow: hidden;
     background: rgba(23, 23, 23, .75);
     border: 2px solid #687037;
     border-radius: 4px;
 }
 
-.kc-vs-prep-orientation-box img {
+.kc-vs-prep-captain-picture img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-.kc-vs-prep-orientation-box i {
-    color: #7f8552;
-    font-size: 1.55rem;
 }
 
 .kc-vs-prep-round-picture-frame,
@@ -202,11 +203,11 @@
 }
 
 .kc-vs-prep-round-picture-frame {
-    width: 46px;
+    width: 38px;
 }
 
 .kc-vs-prep-inventory-picture-frame {
-    width: 43px;
+    width: 38px;
 }
 
 .kc-vs-prep-round-svg-host,
@@ -271,9 +272,17 @@
     cursor: url('/Images/cursors/normal.cur'), default;
 }
 
+.kc-vs-prep-round-category.assignable {
+    border-color: rgba(210, 255, 57, .62);
+    box-shadow:
+        inset 0 0 0 1px rgba(210, 255, 57, .2),
+        0 0 6px rgba(210, 255, 57, .22);
+}
+
 .kc-vs-prep-round-category > img {
     width: 100%;
-    height: 58px;
+    height: 100%;
+    max-height: 58px;
     object-fit: cover;
     border: inset 1px #777;
 }
@@ -311,11 +320,11 @@
 }
 
 .kc-vs-prep-round-modifier.positive strong {
-    color: #51b36d;
+    color: #d15f52;
 }
 
 .kc-vs-prep-round-modifier.negative strong {
-    color: #d15f52;
+    color: #51b36d;
 }
 
 .kc-vs-prep-round.captain {
@@ -376,18 +385,21 @@
 }
 
 .kc-vs-prep-character-inventory {
-    display: grid;
-    grid-template-columns:
-        repeat(auto-fit, minmax(185px, 1fr));
+    max-width: 584px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .kc-vs-prep-character-card {
-    width: 100%;
+    width: 190px;
     min-width: 0;
-    height: 62px;
+    flex: 0 0 190px;
+    height: 54px;
     padding: 3px 8px;
     display: grid;
-    grid-template-columns: 40px 43px minmax(0, 1fr);
+    grid-template-columns: 38px minmax(0, 1fr);
     align-items: center;
     gap: 7px;
     color: #e6e2d5;
@@ -402,14 +414,6 @@
 .kc-vs-prep-loadout-card:hover:not(:disabled) {
     border-color: #c6ef39;
     filter: brightness(1.08);
-}
-
-.kc-vs-prep-inventory-orientation {
-    width: 38px;
-    height: 52px;
-    object-fit: cover;
-    border: 2px solid #687037;
-    border-radius: 4px;
 }
 
 .kc-vs-prep-character-card > span,
@@ -446,7 +450,7 @@
     position: relative;
     width: 100%;
     min-width: 0;
-    height: 58px;
+    height: 54px;
     padding: 3px;
     display: grid;
     place-items: center;
@@ -458,7 +462,7 @@
 
 .kc-vs-prep-loadout-card > img {
     width: 100%;
-    height: 48px;
+    height: 44px;
     object-fit: cover;
     border: inset 1px #777;
 }
@@ -483,7 +487,7 @@
 
 .kc-vs-prep-loadout-card:hover > .tooltip-box {
     left: 0;
-    bottom: 63px;
+    bottom: 59px;
     z-index: 20;
     display: block;
     padding: 6px 9px;
@@ -570,17 +574,33 @@
     }
 
     .kc-vs-prep-round-character {
-        grid-template-columns: 40px 43px minmax(0, 1fr);
+        grid-template-columns: 38px minmax(0, 1fr);
+    }
+}
+
+@media (max-height: 780px) {
+    .kc-vs-prep-rounds {
+        grid-auto-rows: 50px;
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .kc-vs-prep-rounds::-webkit-scrollbar {
+        display: none;
     }
 }
 
 /*
- * MÓDOSÍTÁS: a 02–04 mockup szerinti sávos preparációs elrendezés.
- * A CharacterView keretei a projektben használt 138:176 képarányt,
- * relatív befoglalót és abszolút SVG-hostot kaptak; ezzel a belső
- * display-layer csak a portré méretén belül marad. A loadout tíz képe
- * ötoszlopos, kétsoros gridben fér el, vízszintes scrollbar nélkül.
- * Az inventory sötét panel, nem a teljes nézetet fedő LCD-felület.
+ * MÓDOSÍTÁS: a title-sor a SoloGame fejlécével azonos megoldású.
+ * Az orientációs képek helyett csak a 138:176 karakter-SVG marad. A
+ * karakterkártyák fix 190 px szélesek, soronként legfeljebb hárman,
+ * középre rendezve jelennek meg.
+ * Desktopon a körsávok egyenletesen kitöltik a rendelkezésre álló
+ * magasságot scrollbar nélkül; alacsony viewportnál a görgetés
+ * megtartott, de a csík rejtett. A negatív módosító zöld, a pozitív
+ * piros. Kategóriakijelöléskor kizárólag a fogadó kategóriacella kap
+ * halványsárga keretet.
  *
  * A fájl kizárólag a VS preparáció megjelenítését szabályozza.
  */

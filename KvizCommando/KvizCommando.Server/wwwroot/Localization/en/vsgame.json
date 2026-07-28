@@ -21,6 +21,7 @@
   "Classification.Title.5": "Battle classification V",
   "Classification.Footer.Requirements": "Min level: {0}, Min team size: {1} of which {2}, zone: R{3}-R{4}",
   "Match.Title": "Ranked battlefield",
+  "Match.Title.Preparation": "Preparation",
   "Match.Queue.Status": "Waiting for the other players",
   "Match.Queue.Stake": "Stake",
   "Match.Status.Connecting": "Connecting to the ranked queue",

@@ -103,6 +103,11 @@ public partial class VsMatchPreparationView : IDisposable
         _ => "3 / 3"
     };
 
+    private string PreparationHeaderText =>
+        Data.Phase == VsMatchPhase.PreparationCompleted
+            ? Lang["vsgame.Match.Title.Preparation"]
+            : Data.InfoText;
+
     private string InventoryTitle => Data.Phase switch
     {
         VsMatchPhase.PreparationOrder =>
@@ -268,8 +273,9 @@ public partial class VsMatchPreparationView : IDisposable
  * MÓDOSÍTÁS: fázisváltáskor törli az előző fázis lokális kijelölését,
  * a kiválasztott vagy már kiosztott kategória alapján jeleníti meg a
  * körönkénti módosítót, és a markup számára előállítja a prep/inventory
- * feliratokat, valamint a fázishoz tartozó inventory CSS-osztályt.
- * Domainállapotot továbbra sem módosít.
+ * feliratokat, a fázishoz tartozó inventory CSS-osztályt és a
+ * befejezett állapot ismétlésmentes fejlécét. Domainállapotot továbbra
+ * sem módosít.
  *
  * A preparációs nézet lokális kijelöléseit, visszaszámlálását és
  * EventCallback-alapú parancstovábbítását kezeli.

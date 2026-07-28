@@ -78,6 +78,9 @@
   <data name="Match.Title" xml:space="preserve">
     <value>Rangsorolt csatatér</value>
   </data>
+  <data name="Match.Title.Preparation" xml:space="preserve">
+    <value>Preparáció</value>
+  </data>
   <data name="Match.Queue.Status" xml:space="preserve">
     <value>Várakozás a többi játékosra</value>
   </data>
@@ -176,8 +179,8 @@
   </data>
   <!--
     MÓDOSÍTÁS: hozzáadja a ranked várólista, MatchLocked, a három
-    preparációs fázis, az inventory és az üres körhely magyar
-    feliratait.
+    preparációs fázis, az ismétlésmentes preparációs fejléc, az
+    inventory és az üres körhely magyar feliratait.
 
     A fájl a VS kliens magyar lokalizációs forrása; Debug buildkor
     a ResxExporter ebből készíti el a vsgame.json fájlt.

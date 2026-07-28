@@ -4,8 +4,8 @@
 
 <section class="kc-vs-preparation">
     <header class="kc-vs-prep-info">
+        <strong>@PreparationHeaderText</strong>
         <span>@PreparationStepText</span>
-        <strong>@Data.InfoText</strong>
     </header>
 
     @if (Data.Phase == VsMatchPhase.PreparationCompleted)
@@ -37,24 +37,14 @@
             {
                 <article class="kc-vs-prep-round @(round.IsCaptainRound ? "captain" : "")">
                     <div class="kc-vs-prep-round-character">
-                        <div class="kc-vs-prep-orientation-box">
-                            @if (round.IsCaptainRound)
-                            {
+                        @if (round.IsCaptainRound)
+                        {
+                            <div class="kc-vs-prep-captain-picture">
                                 <img src="images/avatars/basic.webp"
                                      alt="@Lang["vsgame.Match.Round.Captain"]" />
-                            }
-                            else if (round.Character is not null)
-                            {
-                                <img src="@round.Character.OrientationImageSrc"
-                                     alt="@round.Character.OrientationName" />
-                            }
-                            else
-                            {
-                                <i class="bi bi-person"></i>
-                            }
-                        </div>
-
-                        @if (!round.IsCaptainRound)
+                            </div>
+                        }
+                        else
                         {
                             <div class="kc-vs-prep-round-picture-frame">
                                 @if (round.Character is not null)
@@ -87,7 +77,7 @@
                     else
                     {
                         <button type="button"
-                                class="kc-vs-prep-round-category"
+                                class="kc-vs-prep-round-category @(CanAssignCategory(round) ? "assignable" : "")"
                                 disabled="@(!CanAssignCategory(round))"
                                 @onclick="() => AssignCategoryAsync(round)">
                             @if (round.Loadout is not null)
@@ -147,9 +137,6 @@
                                 class="kc-vs-prep-character-card"
                                 disabled="@Data.Preparation.IsFinished"
                                 @onclick="() => OnCharacterSelected.InvokeAsync(character.SlotNumber)">
-                            <img class="kc-vs-prep-inventory-orientation"
-                                 src="@character.OrientationImageSrc"
-                                 alt="@character.OrientationName" />
                             <div class="kc-vs-prep-inventory-picture-frame">
                                 <div class="kc-vs-prep-inventory-svg-host">
                                     <CharacterView PicCode="@character.PictureCode" />
@@ -232,11 +219,10 @@
 
 @*
     MÓDOSÍTÁS: a preparáció markupja a jóváhagyott 02–04 látványterv
-    sávos szerkezetét követi. A CharacterView minden előfordulása saját,
-    138:176 arányú, méretezett keretet és abszolút SVG-hostot kap, ezért
-    a belső LCD display-layer nem fedheti le a teljes preparációs
-    felületet és nem nyelheti el a kattintásokat. Az inventory fázisonként
-    külön CSS-osztályt kap a soros/többsoros elrendezéshez.
+    sávos szerkezetét követi. A felső infósáv a SoloGame title-sorának
+    szerkezetét használja. A karaktereknél csak a 138:176 arányú SVG
+    marad; az orientációs képek kikerültek. A kijelölt kategória csak a
+    ténylegesen fogadó kategóriacellákat emeli ki.
 
     A három VS preparáció közös, snapshot-alapú nézete. Karaktersorrendet,
     kategóriakiosztást, segítségkiosztást és szerverhatáridőt jelenít meg.
