@@ -217,7 +217,9 @@ public sealed class VsMatchService : IVsMatchService
                     round.RoundNumber == request.RoundNumber);
 
                 if (target is null ||
-                    target.HelpType != VsHelpType.None ||
+                    player.Rounds.Any(round =>
+                        round.RoundNumber == request.RoundNumber &&
+                        round.HelpType != VsHelpType.None) ||
                     !CanUseHelpInRound(
                         request.HelpType,
                         target.IsCaptainRound))
@@ -1262,7 +1264,10 @@ internal static class VsMatchEnumerableExtensions
  * Kategória kizárólag üres körslotba tehető; átrendezéshez a Reset
  * parancs törli az addigi kiosztást. Segítségből típusonként legfeljebb
  * egy használható, és az is csak üres, számára engedélyezett körslotba
- * kerülhet. A segítség nélküli játékos automatikusan kész állapotú.
+ * kerülhet. Az egy segítség/kör szabályt explicit körszám-ellenőrzés
+ * kényszeríti ki a szerver match lockja alatt; ehhez nem használ
+ * kliensállapotot. A segítség nélküli játékos automatikusan kész
+ * állapotú.
  * Ha a meccs minden SignalR-kapcsolata megszűnt, a store-bejegyzés és
  * a player/connection indexek törlődnek, ezért az elhagyott tesztmeccs
  * nem tartja bent a játékosokat.

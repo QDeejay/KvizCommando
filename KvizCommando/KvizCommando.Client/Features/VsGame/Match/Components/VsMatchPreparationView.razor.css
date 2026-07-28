@@ -268,24 +268,16 @@
     cursor: url('/Images/cursors/normal.cur'), default;
 }
 
-.kc-vs-prep-round-category.assignable {
+.kc-vs-prep-round-category.static {
+    cursor: url('/Images/cursors/normal.cur'), default;
+}
+
+.kc-vs-prep-round-category.assignable,
+.kc-vs-prep-round-help.assignable {
     border-color: rgba(210, 255, 57, .62);
     box-shadow:
         inset 0 0 0 1px rgba(210, 255, 57, .2),
         0 0 6px rgba(210, 255, 57, .22);
-}
-
-.kc-vs-prep-round-help.assignable {
-    border-color: #c6ef39;
-    outline: 2px solid rgba(210, 255, 57, .55);
-    outline-offset: -5px;
-    background: linear-gradient(
-        180deg,
-        rgba(91, 98, 49, .98),
-        rgba(43, 49, 28, .98));
-    box-shadow:
-        inset 0 0 0 1px rgba(210, 255, 57, .34),
-        0 0 9px rgba(210, 255, 57, .48);
 }
 
 .kc-vs-prep-round-category > img {
@@ -334,15 +326,6 @@
 
 .kc-vs-prep-round-modifier.negative strong {
     color: #d15f52;
-}
-
-.kc-vs-prep-round.captain {
-    grid-template-columns:
-        minmax(215px, 1.15fr)
-        minmax(125px, .95fr)
-        minmax(76px, .6fr);
-    outline: 1px solid rgba(198, 239, 57, .42);
-    outline-offset: -2px;
 }
 
 .kc-vs-prep-round.captain .kc-vs-prep-round-modifier {
@@ -600,13 +583,6 @@
             70px;
     }
 
-    .kc-vs-prep-round.captain {
-        grid-template-columns:
-            minmax(190px, 1.15fr)
-            minmax(95px, .8fr)
-            70px;
-    }
-
     .kc-vs-prep-round-character {
         grid-template-columns: 38px minmax(0, 1fr);
     }
@@ -635,11 +611,13 @@
  * megtartott, de a csík rejtett. A játékos szemszögéből a pozitív
  * módosító zöld, a negatív piros. Kategóriakijelöléskor kizárólag az
  * üres, fogadó kategóriacella kap halványsárga keretet. Ugyanez a
- * célhelykiemelés erős, halványsárga kerettel működik a segítségeknél
- * is. Az inventory rögzített alsó rácssora tartalmazza a meglévő
+ * célhelykiemelés változtatás nélkül, pontosan ugyanezzel a szabállyal
+ * működik a segítségeknél is. Az inventory rögzített alsó rácssora
+ * tartalmazza a meglévő
  * LCD-gombos Reset/Finish sort; a Finish mindig látható, a kész Finish
- * pedig zöld állapotjelzőként marad a helyén. A kapitánysor külön
- * háromoszlopos rácsot kapott, ezért nincs benne üres kategóriacella.
+ * pedig zöld állapotjelzőként marad a helyén. A kapitány üres
+ * kategóriacellája megmaradt; csak a teljes sor túlnyúló outline-ja
+ * került ki.
  *
  * A fájl kizárólag a VS preparáció megjelenítését szabályozza.
  */

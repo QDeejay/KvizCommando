@@ -33,7 +33,6 @@ public partial class VsMatchPreparationView : IDisposable
     private Guid? _selectedLoadoutToken;
     private int? _selectedCategoryId;
     private VsHelpType _selectedHelp = VsHelpType.None;
-    private bool _helpAssignmentPending;
     private VsMatchPhase? _lastPhase;
 
     protected override void OnInitialized()
@@ -234,7 +233,6 @@ public partial class VsMatchPreparationView : IDisposable
         VsPreparationRoundVm round) =>
         Data.Phase == VsMatchPhase.PreparationHelps &&
         !Data.Preparation.IsFinished &&
-        !_helpAssignmentPending &&
         _selectedHelp != VsHelpType.None &&
         round.Help is null &&
         (_selectedHelp is
@@ -248,23 +246,14 @@ public partial class VsMatchPreparationView : IDisposable
         if (!CanAssignHelp(round))
             return;
 
-        _helpAssignmentPending = true;
+        await OnHelpAssigned.InvokeAsync(
+            new VsHelpAssignmentRequest
+            {
+                HelpType = _selectedHelp,
+                RoundNumber = round.RoundNumber
+            });
 
-        try
-        {
-            await OnHelpAssigned.InvokeAsync(
-                new VsHelpAssignmentRequest
-                {
-                    HelpType = _selectedHelp,
-                    RoundNumber = round.RoundNumber
-                });
-
-            _selectedHelp = VsHelpType.None;
-        }
-        finally
-        {
-            _helpAssignmentPending = false;
-        }
+        _selectedHelp = VsHelpType.None;
     }
 
     private async Task ResetAsync()
@@ -291,8 +280,8 @@ public partial class VsMatchPreparationView : IDisposable
  * sem módosít. Kategória csak üres körslotba helyezhető; hibás
  * elrendezéshez a meglévő Reset parancs használható. Segítség szintén
  * csak üres, a kiválasztott típus számára engedélyezett körslotba
- * helyezhető. A segítségparancs idejére lokális retesz akadályozza
- * meg, hogy a friss szerver-snapshot előtt újabb kiosztás induljon.
+ * küldhető; ez csak megjelenítési szabály, a korlátozást a szerver
+ * érvényesíti a match lock alatt.
  *
  * A preparációs nézet lokális kijelöléseit, visszaszámlálását és
  * EventCallback-alapú parancstovábbítását kezeli.

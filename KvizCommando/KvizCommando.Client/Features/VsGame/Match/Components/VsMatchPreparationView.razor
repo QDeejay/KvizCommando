@@ -68,7 +68,11 @@
                         </div>
                     </div>
 
-                    @if (!round.IsCaptainRound)
+                    @if (round.IsCaptainRound)
+                    {
+                        <div class="kc-vs-prep-round-category static"></div>
+                    }
+                    else
                     {
                         <button type="button"
                                 class="kc-vs-prep-round-category @(CanAssignCategory(round) ? "assignable" : "")"
@@ -218,9 +222,9 @@
     zölden kiemelt Finish gomb jelzi; a gomb minden fázisban látható,
     de csak a szerver által engedélyezett állapotban nyomható meg.
     A kijelölt segítség csak a ténylegesen fogadó segítségcellákat
-    emeli ki. A kapitánysorból kikerült a funkció nélküli kategóriajel.
-    Az inventory főcíme és a visszaszámláló rövid időegysége is
-    lokalizált.
+    emeli ki. A kapitánysor üres kategóriaboxa megmarad, kizárólag a
+    teljes sort körberajzoló, túlnyúló outline került ki. Az inventory
+    főcíme és a visszaszámláló rövid időegysége is lokalizált.
 
     A három VS preparáció közös, snapshot-alapú nézete. Karaktersorrendet,
     kategóriakiosztást, segítségkiosztást és szerverhatáridőt jelenít meg.
