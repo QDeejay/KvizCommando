@@ -8,3 +8,33 @@
     align-items: center;
     width: 100%;
 }
+
+.kc-vsgame-match-error {
+    position: fixed;
+    z-index: 100000;
+    top: 68px;
+    left: 50%;
+    width: min(calc(100vw - 24px), 1060px);
+    min-height: 42px;
+    padding: 7px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    color: #eee9dc;
+    background: rgba(119, 47, 31, .96);
+    border: 2px solid #2a110c;
+    border-radius: 7px;
+    box-shadow:
+        inset 0 0 0 1px rgba(221, 117, 79, .45),
+        0 4px 12px rgba(0, 0, 0, .55);
+    font-family: 'Special Elite', cursive;
+    text-align: center;
+    transform: translateX(-50%);
+}
+
+/*
+ * MÓDOSÍTÁS: a ranked meccs hibasávja ezen a ContentBoxon kívüli,
+ * fix rétegen jelenik meg, ezért a ContentBox overflow-ja nem vágja
+ * le és a title fölött is látható marad.
+ */

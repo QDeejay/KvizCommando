@@ -22,30 +22,6 @@
     min-height: 0;
 }
 
-.kc-vs-match-error {
-    position: fixed;
-    z-index: 100000;
-    top: 68px;
-    left: 50%;
-    width: min(calc(100vw - 24px), 1060px);
-    min-height: 42px;
-    padding: 7px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-    color: #eee9dc;
-    background: rgba(119, 47, 31, .96);
-    border: 2px solid #2a110c;
-    border-radius: 7px;
-    box-shadow:
-        inset 0 0 0 1px rgba(221, 117, 79, .45),
-        0 4px 12px rgba(0, 0, 0, .55);
-    font-family: 'Special Elite', cursive;
-    text-align: center;
-    transform: translateX(-50%);
-}
-
 .kc-vs-queue,
 .kc-vs-match-locked {
     width: 100%;
@@ -192,7 +168,9 @@
  * a tartalommal. A lobby játékosszámlálója az 01-es terv szaggatott
  * körjelzője, nem LCD-panel. A hibasáv fix viewport-rétegen,
  * közvetlenül a főfejléc alatt marad, ezért a ContentBox címsora, a
- * roster és a karakterek sem takarhatják el.
+ * roster és a karakterek sem takarhatják el. A hibasáv kikerült ebből
+ * a komponensből; azt a VsGame lap jeleníti meg a ContentBox
+ * overflow-rétegén kívül.
  *
  * A VS ranked várólista és meccskeret a SoloGame rögzített
  * játékméretét, katonai paneljeit, LCD-színét és meglévő

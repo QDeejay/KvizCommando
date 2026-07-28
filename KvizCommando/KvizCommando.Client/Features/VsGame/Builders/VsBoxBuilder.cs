@@ -13,6 +13,7 @@ public sealed class VsComponentParameters
     public Func<Task>? OnTeamSaved { get; init; }
     public int ClassificationId { get; init; }
     public Func<bool, Task>? OnMatchLockChanged { get; init; }
+    public Func<string, Task>? OnMatchErrorChanged { get; init; }
 }
 
 public static class VsBoxBuilder
@@ -110,7 +111,8 @@ public static class VsBoxBuilder
 
 /**
  * MÓDOSÍTÁS: a meglévő VS dobozbuilderhez hozzáadja a ranked meccs
- * külön dobozsorrendjét és a dinamikus manager paramétereit.
+ * külön dobozsorrendjét és a dinamikus manager paramétereit, köztük
+ * a ContentBox fölötti hibasáv callbackjét.
  *
  * A fájl a VS spec-ekből ContentBox view modelleket épít.
  */

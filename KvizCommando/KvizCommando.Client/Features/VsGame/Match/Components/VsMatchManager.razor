@@ -1,14 +1,6 @@
 @using KvizCommando.Shared.Models.Enums.VsGame
 
 <div class="kc-vs-match-manager">
-    @if (!string.IsNullOrWhiteSpace(_errorText))
-    {
-        <div class="kc-vs-match-error">
-            <i class="bi bi-exclamation-triangle-fill"></i>
-            <span>@_errorText</span>
-        </div>
-    }
-
     @if (_match is not null)
     {
         <div class="kc-vs-match-stage">
@@ -88,6 +80,8 @@
     bal oldalt a várakozók és hiányzó helyek, jobb oldalt a kör alakú
     számláló és az alapfeltételek látszanak. A meccs- és lobby-roster
     címe közvetlen szöveg helyett a vsgame lokalizációból érkezik.
+    A hibaüzenetet callbacken adja át a VsGame lapnak, hogy az ne a
+    ContentBox levágott rétegében jelenjen meg.
 
     A várólistát, a MatchLocked betöltést, a rostert és az aktuális
     preparációs nézetet a SignalR snapshot alapján cseréli.

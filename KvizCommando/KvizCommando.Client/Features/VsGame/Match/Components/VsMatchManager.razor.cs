@@ -25,10 +25,14 @@ public partial class VsMatchManager : IAsyncDisposable
     [Parameter]
     public Func<bool, Task>? OnMatchLockChanged { get; set; }
 
+    [Parameter]
+    public Func<string, Task>? OnMatchErrorChanged { get; set; }
+
     private VsMatchViewBuilder _builder = default!;
     private VsQueueViewData? _queue;
     private VsMatchViewData? _match;
     private string _errorText = string.Empty;
+    private string _reportedErrorText = string.Empty;
     private bool _reportedLocked;
     private bool _disposed;
 
@@ -49,6 +53,8 @@ public partial class VsMatchManager : IAsyncDisposable
 
             Console.WriteLine(ex);
         }
+
+        await ReportErrorAsync();
     }
     
 
@@ -63,6 +69,7 @@ public partial class VsMatchManager : IAsyncDisposable
             return;
 
         BuildViewData();
+        await ReportErrorAsync();
 
         var isLocked = MatchClient.MatchSnapshot is not null;
 
@@ -95,6 +102,17 @@ public partial class VsMatchManager : IAsyncDisposable
                 MatchClient.ErrorMessageKey)
                 ? string.Empty
                 : Lang[MatchClient.ErrorMessageKey];
+    }
+
+    private async Task ReportErrorAsync()
+    {
+        if (_reportedErrorText == _errorText)
+            return;
+
+        _reportedErrorText = _errorText;
+
+        if (OnMatchErrorChanged is not null)
+            await OnMatchErrorChanged.Invoke(_errorText);
     }
 
     private Task SelectCharacterAsync(int slotNumber) =>
@@ -137,6 +155,12 @@ public partial class VsMatchManager : IAsyncDisposable
             await OnMatchLockChanged.Invoke(false);
         }
 
+        if (!string.IsNullOrWhiteSpace(_reportedErrorText) &&
+            OnMatchErrorChanged is not null)
+        {
+            await OnMatchErrorChanged.Invoke(string.Empty);
+        }
+
         GC.SuppressFinalize(this);
     }
 }
@@ -149,5 +173,7 @@ public partial class VsMatchManager : IAsyncDisposable
  * meghívja, majd minden esetben lezárja a kapcsolatot; lezárt meccsnél
  * a szerver OnDisconnected ága végzi a meccsből kiléptetést. A
  * kapcsolódási kivétel technikai, angol szövege csak a konzolra kerül;
- * a felhasználó a lokalizált hibaüzenetet kapja.
+ * a felhasználó a lokalizált hibaüzenetet kapja. A hibaüzenetet a
+ * VsGame lapnak továbbítja, így az a ContentBox overflow-rétegén
+ * kívül, valódi felső rétegen jelenhet meg.
  */

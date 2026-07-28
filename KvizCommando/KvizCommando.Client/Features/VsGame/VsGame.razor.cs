@@ -19,6 +19,7 @@ public partial class VsGame : KcComponentBase, IDisposable
     private readonly Dictionary<string, ContentBoxVm> _boxes = [];
 
     private string[] _boxOrder = [];
+    private string _matchErrorText = string.Empty;
     private int _classificationId;
     private bool _isMatchLocked;
     private bool _isLeavingMatch;
@@ -44,7 +45,8 @@ public partial class VsGame : KcComponentBase, IDisposable
         {
             OnTeamSaved = RefreshRankedAsync,
             ClassificationId = _classificationId,
-            OnMatchLockChanged = SetMatchLockedAsync
+            OnMatchLockChanged = SetMatchLockedAsync,
+            OnMatchErrorChanged = SetMatchErrorAsync
         };
 
         foreach (var box in VsBoxBuilder.BuildBoxes(
@@ -62,6 +64,9 @@ public partial class VsGame : KcComponentBase, IDisposable
     {
         if (_isMatchLocked)
             return;
+
+        if (boxId is not (>= 311 and <= 315))
+            _matchErrorText = string.Empty;
 
         _boxOrder = VsBoxBuilder.Root;
         var headerTitle =
@@ -103,6 +108,12 @@ public partial class VsGame : KcComponentBase, IDisposable
         return Task.CompletedTask;
     }
 
+    private Task SetMatchErrorAsync(string errorText)
+    {
+        _matchErrorText = errorText;
+        return InvokeAsync(StateHasChanged);
+    }
+
     private void HandleBack()
     {
         if (Ui.Header.PageIndex is >= 311 and <= 315)
@@ -132,6 +143,7 @@ public partial class VsGame : KcComponentBase, IDisposable
         {
             await MatchClient.StopAsync();
             _isMatchLocked = false;
+            _matchErrorText = string.Empty;
             BuildBoxes();
             OnBoxClick(303);
         }
@@ -154,6 +166,9 @@ public partial class VsGame : KcComponentBase, IDisposable
  * után is engedélyezett hivatalos kilépés: előbb lezárja a SignalR
  * kapcsolatot, így a szerver OnDisconnected ága elvégzi a
  * queue/match takarítását, és csak utána vált vissza a ranked menüre.
+ * A ranked manager lokalizált hibaüzenetét a lap saját, ContentBoxon
+ * kívüli állapotában tárolja; meccsből kilépéskor vagy más VS
+ * menüszintre lépéskor törli.
  *
  * A fájl a VS menü dobozsorrendjét és navigációs állapotát kezeli.
  */
