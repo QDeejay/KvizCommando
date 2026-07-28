@@ -1,0 +1,27 @@
+@using KvizCommando.Client.Features.VsGame.Match.ViewModels
+
+<aside class="kc-vs-roster">
+    @foreach (var player in Players)
+    {
+        <article class="kc-vs-roster-card @(player.IsMe ? "me" : "") @(!player.IsConnected ? "disconnected" : "")">
+            <div class="kc-vs-roster-avatar">
+                <img src="@player.TeamPictureSrc"
+                     alt="@player.TeamName" />
+            </div>
+
+            <div class="kc-vs-roster-data">
+                <strong title="@player.TeamName">@player.TeamName</strong>
+                <span title="@player.DisplayName">@player.DisplayName</span>
+                <span>@player.TeamLevel</span>
+            </div>
+
+            <span class="kc-vs-roster-state @(player.IsFinished ? "ready" : "")"></span>
+        </article>
+    }
+</aside>
+
+@*
+    A meccs teljes ideje alatt látható, kompakt ellenfél- és
+    csapatkártya-sáv. Preparációban a csapatavatar placeholderét
+    mutatja.
+*@

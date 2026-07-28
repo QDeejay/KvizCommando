@@ -1,6 +1,7 @@
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Solo.Builders;
 using KvizCommando.Client.Features.VsGame.Components;
+using KvizCommando.Client.Features.VsGame.Match.Components;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.Visual.UiService.Language;
@@ -95,6 +96,22 @@ public static class VsGameBoxSpecs
             BodyComp = typeof(RankedBattleTeamManager),
             BuildParams = parameters => new Dictionary<string, object?>
                 { [nameof( RankedBattleTeamManager.OnTeamSaved)] =  parameters.OnTeamSaved  }
+        },
+        new()
+        {
+            Key = VsBoxKeyContent.RankedMatchManager,
+            TitleKey = "vsgame.Match.Title",
+            ImageSrc = string.Empty,
+            BgImageSrc = string.Empty,
+            Size = ContentBoxSize.CONTENT_FLEXIBLE,
+            FooterDisplay = false,
+            ClickId = 0,
+            RenderContent = 1,
+            LcdBackground = false,
+            BodyComp = typeof(VsMatchManager),
+            BuildParams = parameters => new Dictionary<string, object?>
+                { [nameof( VsMatchManager.ClassificationId)] =  parameters.ClassificationId,
+                  [nameof( VsMatchManager.OnMatchLockChanged)] =  parameters.OnMatchLockChanged  }
         }
     ];
     public static readonly IReadOnlyList<VsBoxSub> SubSpecs =
@@ -113,7 +130,10 @@ public static class VsGameBoxSpecs
             CheckEnable = (data, id) => data.RankedBattlefields
                     .SavedSelection
                     .EligibleClassificationIds
-                    .Contains(id),
+                    .Contains(id) &&
+                data.RootBoxInfo.CreditBalance >=
+                    data.RankedBattlefields
+                        .Classifications[id - 1].Stake,
             BuildFooter = (lang, data, id) => lang["vsgame.Classification.Footer.Requirements"].FormatSafe(
                 RankNameTable.Data[data.RankedBattlefields.Classifications[id - 1].MinimumTeamRank].PublicLevel ?? string.Empty,
                 data.RankedBattlefields.Classifications[id - 1].RequiredPartySize,
@@ -143,3 +163,12 @@ public static class VsGameBoxSpecs
             : ContentBoxSize.CONTENT_LARGE;
     }
 }
+
+/**
+ * MÓDOSÍTÁS: a VS spec-listába felveszi a ranked meccs
+ * ContentBox-specjét. A meglévő BuildParams formázása változatlan
+ * maradt, az új paraméterek ugyanazt a mintát követik.
+ *
+ * A fájl a VS root-, manager- és rangsorolási dobozok deklaratív
+ * megjelenítési szabályait tartalmazza.
+ */

@@ -95,9 +95,38 @@ namespace KvizCommando.Client.Features.Login
 
             }
         }
-        private async Task BypassLogin()
+        private async Task BypassLoginQD()
         {
             _loginForm.Email = "qleedeejay@freemial.hu";
+            _loginForm.Password = "-Ranger1980-0621";
+
+            try
+            {
+                var response = await User.LoginAsync(_loginForm);
+
+                if (response.Success)
+                {
+                    var resp = await User.CheckInStartAsync(true);
+                    _errorMessage = Ui.Lang[response.Errors];
+                }
+                else
+                {
+                    _errorMessage = Ui.Lang[response.Errors] ?? Ui.Lang["identityerrors.default"];
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Login failed: {ex.Message}");
+                _errorMessage = Ui.Lang["identityerrors.default"];
+            }
+            finally
+            {
+
+            }
+        }
+        private async Task BypassLogin(int id)
+        {
+            _loginForm.Email = $"vstestuser{id}@vstestuser{id}.com";
             _loginForm.Password = "-Ranger1980-0621";
 
             try

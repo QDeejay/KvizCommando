@@ -14,6 +14,8 @@ using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
 using KvizCommando.Server.Services.SoloGame.GameCache;
 using KvizCommando.Server.Services.UserPlayerIdCache;
 using KvizCommando.Server.Services.VsGame;
+using KvizCommando.Server.Services.VsGame.Match;
+using KvizCommando.Server.Services.VsGame.Matchmaking;
 using Microsoft.AspNetCore.Authorization;
 
 
@@ -41,7 +43,12 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ISoloGameCache, SoloGameCache>();
         services.AddScoped<ISoloQuestionRepository, SoloQuestionRepository>();
         services.AddScoped<ISoloGameService, SoloGameService>();
+
         services.AddScoped<IVsGameService, VsGameService>();
+        services.AddSingleton<VsMatchStore>();
+        services.AddSingleton<IVsMatchQuestionLoader, VsMatchQuestionLoader>();
+        services.AddSingleton<IVsMatchService, VsMatchService>();
+        services.AddSingleton<IVsRankedQueueService, VsRankedQueueService>();
 
         ///
         /// Game database services
@@ -81,3 +88,11 @@ public static class ServiceCollectionExtensions
         return services;
     }
 }
+
+/**
+ * MÓDOSÍTÁS: regisztrálja a VS match store, kérdésbetöltő,
+ * preparációs meccsszerviz és ranked queue singleton szolgáltatásait.
+ *
+ * A fájl az alkalmazás saját szolgáltatásainak központi DI
+ * regisztrációját tartalmazza.
+ */

@@ -75,4 +75,98 @@
   <data name="Classification.Footer.Requirements" xml:space="preserve">
     <value>Min szint: {0}, Min létszám: {1} ebből {2}, sáv: R{3}-R{4}</value>
   </data>
+  <data name="Match.Title" xml:space="preserve">
+    <value>Rangsorolt csatatér</value>
+  </data>
+  <data name="Match.Queue.Status" xml:space="preserve">
+    <value>Várakozás a többi játékosra</value>
+  </data>
+  <data name="Match.Queue.Stake" xml:space="preserve">
+    <value>Tét</value>
+  </data>
+  <data name="Match.Status.Connecting" xml:space="preserve">
+    <value>Kapcsolódás a rangsorolt várólistához</value>
+  </data>
+  <data name="Match.Info.Locked" xml:space="preserve">
+    <value>A meccs lezárva</value>
+  </data>
+  <data name="Match.Info.LoadingQuestions" xml:space="preserve">
+    <value>A meccs kérdéseinek egyszeri betöltése</value>
+  </data>
+  <data name="Match.Info.Order" xml:space="preserve">
+    <value>Válassz sorrendet!</value>
+  </data>
+  <data name="Match.Info.Categories" xml:space="preserve">
+    <value>Párosítsd a kategóriáid a körökhöz!</value>
+  </data>
+  <data name="Match.Info.Helps" xml:space="preserve">
+    <value>Párosítsd a segítségeid!</value>
+  </data>
+  <data name="Match.Info.WaitingForPlayers" xml:space="preserve">
+    <value>Várakozás a többi játékosra</value>
+  </data>
+  <data name="Match.Info.PreparationCompleted" xml:space="preserve">
+    <value>A preparáció befejeződött</value>
+  </data>
+  <data name="Match.Info.Aborted" xml:space="preserve">
+    <value>A meccs megszakadt</value>
+  </data>
+  <data name="Match.Round.Captain" xml:space="preserve">
+    <value>Kapitánykör</value>
+  </data>
+  <data name="Match.Round.Normal" xml:space="preserve">
+    <value>{0}. normál kör</value>
+  </data>
+  <data name="Match.Help.1" xml:space="preserve">
+    <value>50-50</value>
+  </data>
+  <data name="Match.Help.2" xml:space="preserve">
+    <value>Tippsáv</value>
+  </data>
+  <data name="Match.Help.3" xml:space="preserve">
+    <value>Időtlenítő</value>
+  </data>
+  <data name="Match.Help.4" xml:space="preserve">
+    <value>AI-segítség</value>
+  </data>
+  <data name="Match.Category.Own" xml:space="preserve">
+    <value>Saját kérdés</value>
+  </data>
+  <data name="Match.Category.All" xml:space="preserve">
+    <value>Összes kategória</value>
+  </data>
+  <data name="Match.Button.Reset" xml:space="preserve">
+    <value>Visszaállítás</value>
+  </data>
+  <data name="Match.Button.Finish" xml:space="preserve">
+    <value>Kész</value>
+  </data>
+  <data name="Match.Error.Identity" xml:space="preserve">
+    <value>A játékosazonosítás sikertelen.</value>
+  </data>
+  <data name="Match.Error.Player" xml:space="preserve">
+    <value>A játékos nem található.</value>
+  </data>
+  <data name="Match.Error.Classification" xml:space="preserve">
+    <value>Érvénytelen harci besorolás.</value>
+  </data>
+  <data name="Match.Error.AlreadyLocked" xml:space="preserve">
+    <value>A játékos már lezárt meccsben van.</value>
+  </data>
+  <data name="Match.Error.QueueValidation" xml:space="preserve">
+    <value>A csapat, a loadout vagy a kreditegyenleg már nem felel meg a besorolás feltételeinek.</value>
+  </data>
+  <data name="Match.Error.Connection" xml:space="preserve">
+    <value>A rangsorolt kapcsolat megszakadt.</value>
+  </data>
+  <data name="Match.Error.Disconnected" xml:space="preserve">
+    <value>A meccskapcsolat megszakadt; ehhez a meccshez nincs újracsatlakozás.</value>
+  </data>
+  <!--
+    MÓDOSÍTÁS: hozzáadja a ranked várólista, MatchLocked és a három
+    preparációs fázis magyar feliratait.
+
+    A fájl a VS kliens magyar lokalizációs forrása; Debug buildkor
+    a ResxExporter ebből készíti el a vsgame.json fájlt.
+  -->
 </root>

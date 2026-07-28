@@ -15,6 +15,7 @@ public static class VsBattleClassificationRules
         new()
         {
             ClassificationId = 1,
+            Stake = 50,
             MinimumTeamRank = 1,
             RequiredPartySize = 3,
             MemberMinimumRankClass = 1,
@@ -24,6 +25,7 @@ public static class VsBattleClassificationRules
         new()
         {
             ClassificationId = 2,
+            Stake = 100,
             MinimumTeamRank = 7,
             RequiredPartySize = 3,
             MemberMinimumRankClass = 3,
@@ -33,6 +35,7 @@ public static class VsBattleClassificationRules
         new()
         {
             ClassificationId = 3,
+            Stake = 200,
             MinimumTeamRank = 13,
             RequiredPartySize = 4,
             MemberMinimumRankClass = 5,
@@ -42,6 +45,7 @@ public static class VsBattleClassificationRules
         new()
         {
             ClassificationId = 4,
+            Stake = 500,
             MinimumTeamRank = 19,
             RequiredPartySize = 4,
             MemberMinimumRankClass = 7,
@@ -51,6 +55,7 @@ public static class VsBattleClassificationRules
         new()
         {
             ClassificationId = 5,
+            Stake = 1000,
             MinimumTeamRank = 28,
             RequiredPartySize = 5,
             MemberMinimumRankClass = 10,
@@ -111,3 +116,11 @@ public static class VsBattleClassificationRules
     public static int ResolveRankClass(int rank) =>
         rank == 0 ? 0 : (rank - 1) / 3 + 1;
 }
+
+/**
+ * MÓDOSÍTÁS: a központi besorolási szabálytábla megkapta az
+ * I–V. osztály 50/100/200/500/1000 kredites tétjeit.
+ *
+ * A fájl a VS harci csapat szerveroldali besorolási és
+ * választhatósági szabályait tartalmazza.
+ */

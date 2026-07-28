@@ -5,6 +5,7 @@ using KvizCommando.Client.Features.Question.Services;
 using KvizCommando.Client.Features.Solo.Services;
 using KvizCommando.Client.Features.Team.Services;
 using KvizCommando.Client.Features.VsGame.Services;
+using KvizCommando.Client.Features.VsGame.Match.Services;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Http;
 using KvizCommando.Client.Services;
@@ -33,6 +34,7 @@ builder.Services.AddScoped<IQuestionClientService, QuestionClientService>();
 builder.Services.AddScoped<ISoloGameClientService, SoloGameClientService>();
 builder.Services.AddScoped<ITeamClientService, TeamClientService>();
 builder.Services.AddScoped<IVsGameClientService, VsGameClientService>();
+builder.Services.AddScoped<IVsMatchClientService, VsMatchClientService>();
 
 builder.Services.AddScoped<IHomeState, HomeState>();
 builder.Services.AddScoped<IQuestionState, QuestionState>();
@@ -118,6 +120,13 @@ builder.Services.AddBlazoredSessionStorage();
 
 ///
 /// Version 1.026.0621.01
+
+/**
+ * MÓDOSÍTÁS: regisztrálja a VS multiplayer SignalR kliensszervizét.
+ *
+ * A fájl a Blazor WebAssembly kliens szolgáltatásait és HTTP
+ * csővezetékét állítja össze.
+ */
 /// 
 
 

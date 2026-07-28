@@ -1,0 +1,384 @@
+.kc-vs-preparation {
+    position: relative;
+    min-width: 0;
+    height: 100%;
+    padding: 10px 10px 64px;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 10px;
+    color: #cccccc;
+    background: rgba(30, 32, 27, .96);
+    border: 2px solid #151713;
+    border-radius: 10px;
+    box-shadow:
+        inset 0 0 0 1px #55584a,
+        inset 0 0 16px rgba(0, 0, 0, .75);
+}
+
+.kc-vs-prep-info {
+    min-height: 54px;
+    padding: 7px 10px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(190px, 34%);
+    align-items: center;
+    gap: 12px;
+    border: inset 1px #777;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, .4),
+        inset 0 4px 8px rgba(0, 0, 0, .7);
+    font-family: 'Special Elite', cursive;
+}
+
+.kc-vs-prep-info strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-transform: uppercase;
+}
+
+.kc-vs-prep-timer {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    align-items: center;
+    gap: 7px;
+}
+
+.kc-vs-prep-timer > span {
+    height: 34px;
+    display: grid;
+    place-items: center;
+    color: #222f16;
+    background-color: rgba(210, 255, 57, .9);
+    border: inset 2px #777;
+    border-radius: 4px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.25rem;
+}
+
+.kc-vs-prep-timer-track {
+    height: 21px;
+    padding: 3px;
+    overflow: hidden;
+    background: repeating-linear-gradient(
+        90deg,
+        #262a1c 0,
+        #262a1c 7px,
+        #0d0f0b 7px,
+        #0d0f0b 11px);
+    border: inset 2px #777;
+}
+
+.kc-vs-prep-timer-value {
+    height: 100%;
+    background: #bfe935;
+    box-shadow: 0 0 7px rgba(197, 242, 57, .8);
+    transition: width .25s linear;
+}
+
+.kc-vs-prep-timer.warning > span,
+.kc-vs-prep-timer.warning .kc-vs-prep-timer-value {
+    background-color: rgba(231, 140, 53, .9);
+}
+
+.kc-vs-prep-rounds {
+    min-height: 0;
+    display: grid;
+    align-content: start;
+    gap: 7px;
+    overflow-y: auto;
+}
+
+.kc-vs-prep-round {
+    min-height: 82px;
+    display: grid;
+    grid-template-columns:
+        minmax(105px, .8fr)
+        minmax(180px, 1.6fr)
+        minmax(92px, .8fr)
+        66px;
+    align-items: stretch;
+    gap: 7px;
+}
+
+.kc-vs-prep-round-title,
+.kc-vs-prep-round-character,
+.kc-vs-prep-round-category,
+.kc-vs-prep-round-help {
+    min-width: 0;
+    color: #e6e2d5;
+    background: linear-gradient(180deg, #4c5033, #343820);
+    border: 2px solid #171910;
+    border-radius: 7px;
+    box-shadow:
+        inset 0 0 0 1px #777850,
+        0 2px 3px rgba(0, 0, 0, .6);
+}
+
+.kc-vs-prep-round.captain {
+    opacity: .96;
+}
+
+.kc-vs-prep-round-title {
+    display: grid;
+    place-items: center;
+    padding: 5px;
+    color: #c6ef39;
+    font-family: 'Special Elite', cursive;
+    text-align: center;
+}
+
+.kc-vs-prep-round-character {
+    padding: 4px 8px;
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+}
+
+.kc-vs-prep-round-character > img,
+.kc-vs-prep-character-svg {
+    width: 46px;
+    height: 62px;
+    overflow: hidden;
+    object-fit: cover;
+    background: rgba(23, 23, 23, .7);
+    border: inset 1px #666;
+}
+
+.kc-vs-prep-round-character > i {
+    grid-column: 1 / 3;
+    margin: auto;
+    color: #7f8552;
+    font-size: 2.2rem;
+}
+
+.kc-vs-prep-round-character > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.kc-vs-prep-round-category,
+.kc-vs-prep-round-help {
+    position: relative;
+    padding: 4px;
+    display: grid;
+    place-items: center;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.kc-vs-prep-round-category:disabled,
+.kc-vs-prep-round-help:disabled {
+    cursor: url('/Images/cursors/normal.cur'), default;
+}
+
+.kc-vs-prep-round-category > img {
+    width: 58px;
+    height: 58px;
+    object-fit: cover;
+    border: inset 1px #777;
+}
+
+.kc-vs-prep-round-category > i,
+.kc-vs-prep-round-help > i {
+    color: #7f8552;
+    font-size: 2rem;
+}
+
+.kc-vs-prep-modifier {
+    position: absolute;
+    right: 5px;
+    bottom: 3px;
+    color: #c6ef39;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .75rem;
+}
+
+.kc-vs-prep-inventory {
+    min-height: 104px;
+    padding: 7px;
+    overflow-x: auto;
+    background-color: rgba(210, 255, 57, .9);
+    border: inset 2px #777;
+    border-radius: 4px;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, .4),
+        inset 0 4px 8px rgba(0, 0, 0, .7);
+}
+
+.kc-vs-prep-character-inventory,
+.kc-vs-prep-loadout-inventory,
+.kc-vs-prep-help-inventory {
+    min-width: max-content;
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+}
+
+.kc-vs-prep-character-card {
+    width: 112px;
+    min-height: 112px;
+    padding: 4px;
+    display: grid;
+    grid-template-columns: 54px 36px;
+    grid-template-rows: 68px auto auto;
+    align-items: center;
+    justify-content: center;
+    gap: 2px 5px;
+    color: #222f16;
+    background: rgba(120, 120, 120, .08);
+    border: 1px solid rgba(34, 47, 22, .55);
+    border-radius: 5px;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.kc-vs-prep-character-card-svg {
+    width: 52px;
+    height: 66px;
+    overflow: hidden;
+    border: inset 1px rgba(60, 60, 60, .55);
+}
+
+.kc-vs-prep-orientation {
+    width: 34px;
+    height: 34px;
+    object-fit: cover;
+    border: inset 1px #777;
+}
+
+.kc-vs-prep-character-card > span,
+.kc-vs-prep-character-card > small {
+    grid-column: 1 / 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.kc-vs-prep-loadout-card {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    padding: 4px;
+    display: grid;
+    place-items: center;
+    background: #343820;
+    border: 2px solid #171910;
+    border-radius: 7px;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.kc-vs-prep-loadout-card > img {
+    width: 58px;
+    height: 58px;
+    object-fit: cover;
+    border: inset 1px #777;
+}
+
+.kc-vs-prep-loadout-card.selected {
+    border-color: #c6ef39;
+    box-shadow: 0 0 9px rgba(210, 255, 57, .8);
+}
+
+.kc-vs-prep-loadout-card.locked {
+    opacity: .45;
+    filter: grayscale(.8);
+    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+}
+
+.kc-vs-prep-loadout-card > i {
+    position: absolute;
+    color: #e6e2d5;
+    font-size: 1.2rem;
+}
+
+.kc-vs-prep-loadout-card:hover > .tooltip-box {
+    left: 0;
+    bottom: 78px;
+    z-index: 20;
+    display: block;
+    padding: 6px 9px;
+    white-space: nowrap;
+}
+
+.kc-vs-prep-help-card {
+    min-width: 142px;
+    min-height: 70px;
+    padding: 7px 10px;
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) 26px;
+    align-items: center;
+    gap: 7px;
+    color: #222f16;
+    background: rgba(120, 120, 120, .08);
+    border: 1px solid rgba(34, 47, 22, .55);
+    border-radius: 5px;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.kc-vs-prep-help-card > i {
+    font-size: 1.65rem;
+}
+
+.kc-vs-prep-help-card.selected {
+    background: rgba(34, 47, 22, .18);
+    border-color: #087a27;
+    box-shadow: inset 0 0 0 2px rgba(16, 105, 42, .45);
+}
+
+.kc-vs-prep-help-card:disabled {
+    opacity: .35;
+    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+}
+
+.kc-vs-prep-actions {
+    position: absolute;
+    right: 10px;
+    bottom: 7px;
+    left: 10px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.kc-vs-prep-actions .button-on-lcd {
+    width: 50px;
+    height: 50px;
+}
+
+.kc-vs-prep-completed {
+    grid-row: 2 / 4;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 18px;
+    color: #c6ef39;
+    font-family: 'Special Elite', cursive;
+    font-size: 1.35rem;
+    text-align: center;
+}
+
+.kc-vs-prep-completed > i {
+    font-size: 5rem;
+}
+
+@media (max-width: 860px) {
+    .kc-vs-prep-round {
+        grid-template-columns:
+            92px
+            minmax(145px, 1fr)
+            82px
+            58px;
+    }
+
+    .kc-vs-prep-info {
+        grid-template-columns: 1fr;
+    }
+}
+
+/*
+ * A VS preparáció a SoloGame sötét katonai paneljeit, olívazöld
+ * gombjait, LCD-sárgászöld inventoryját, időszíneit és központi
+ * tooltipjét használja. A Reset/Finish pozíció ideiglenes.
+ */

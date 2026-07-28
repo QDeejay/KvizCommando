@@ -1,4 +1,5 @@
 using KvizCommando.Client.Features.VsGame.Components;
+using KvizCommando.Client.Features.VsGame.Match.Components;
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
@@ -10,6 +11,8 @@ namespace KvizCommando.Client.Features.VsGame.Builders;
 public sealed class VsComponentParameters
 {
     public Func<Task>? OnTeamSaved { get; init; }
+    public int ClassificationId { get; init; }
+    public Func<bool, Task>? OnMatchLockChanged { get; init; }
 }
 
 public static class VsBoxBuilder
@@ -20,6 +23,11 @@ public static class VsBoxBuilder
     [
         VsBoxKeyContent.RankedBattleTeamManager.ToString(),
         .. BuildClassificationNames()
+    ];
+
+    public static readonly string[] Match =
+    [
+        VsBoxKeyContent.RankedMatchManager.ToString()
     ];
 
     public static Dictionary<string, ContentBoxVm> BuildBoxes(
@@ -99,3 +107,10 @@ public static class VsBoxBuilder
     }
 
 }
+
+/**
+ * MÓDOSÍTÁS: a meglévő VS dobozbuilderhez hozzáadja a ranked meccs
+ * külön dobozsorrendjét és a dinamikus manager paramétereit.
+ *
+ * A fájl a VS spec-ekből ContentBox view modelleket épít.
+ */

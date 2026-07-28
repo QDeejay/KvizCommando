@@ -47,9 +47,18 @@ public sealed class VsRankedSelectionDto
 public sealed class VsBattleClassificationDto
 {
     public int ClassificationId { get; set; }
+    public int Stake { get; set; }
     public int MinimumTeamRank { get; set; }
     public int RequiredPartySize { get; set; }
     public int MemberMinimumRankClass { get; set; }
     public int MemberMaximumRankClass { get; set; }
     public int RequiredMembersInRankClassRange { get; set; }
 }
+
+/**
+ * MÓDOSÍTÁS: a harci besorolás DTO megkapta a szerver által
+ * meghatározott ranked tétet.
+ *
+ * A fájl a VS menü, a mentett harci csapat és a besorolási
+ * feltételrendszer képernyő-snapshotjait tartalmazza.
+ */

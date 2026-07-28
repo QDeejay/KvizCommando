@@ -1,5 +1,6 @@
 ﻿using KvizCommando.Server.Endpoints;
 using KvizCommando.Server.Extensions;
+using KvizCommando.Server.Hubs;
 using KvizCommando.Server.Identity;
 using KvizCommando.Server.Infrastructure.Email;
 using KvizCommando.Server.Infrastructure.Extensions;
@@ -20,6 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddMemoryCache();
+builder.Services.AddSignalR();
 // --- Saját szolgáltatások ---
 builder.Services.AddCustomServices();
 
@@ -204,6 +206,7 @@ app.MapRazorPages();
 
 
 app.MapControllers();
+app.MapHub<VsMatchHub>("/hubs/vs-match");
 
 // Identity API endpointok (login, register, confirm, reset)
 app.MapGroup("/")
@@ -217,3 +220,10 @@ app.MapFallbackToFile("index.html");
 
 app.Run();
 
+/**
+ * MÓDOSÍTÁS: bekapcsolja a SignalR szolgáltatást és publikálja a
+ * /hubs/vs-match VS multiplayer végpontot.
+ *
+ * A fájl a KvizCommando szerver indulását, middleware-láncát és
+ * endpoint-regisztrációját állítja össze.
+ */

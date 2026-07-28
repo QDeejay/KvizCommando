@@ -298,6 +298,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                                 {
                                     ClassificationId =
                                         rule.ClassificationId,
+                                    Stake = rule.Stake,
                                     MinimumTeamRank =
                                         rule.MinimumTeamRank,
                                     RequiredPartySize =
@@ -365,126 +366,12 @@ namespace KvizCommando.Server.Services.DtoMapping
 
 
 
-/*
- 
-  public async Task<TeamDtos?> GetTeamScreenDataAsync2(int playerId, string sessionId, CancellationToken ct = default)
-        {
-
-            var (player, _) = await _cache.GetOrLoadLockedAsync(playerId, sessionId, ct);
-
-            if (player is null)
-            {
-                _logger.LogWarning("Player not found in cache. userId={UserId}", playerId);
-                return null;
-            }
-            if (player.SessionId == "denied")
-                return new TeamDtos() { AccessDenied = true };
-
-            TeamMemberDto?[] teamMembers = new TeamMemberDto[9];
-            CandidateDto?[] candidates = new CandidateDto[9];
-            MembRemark[] membRemarks = new MembRemark[9];
-
-            bool[] tempCharmask = new bool[9];
-            bool[] tempAbleToHiremask = new bool[9];
-            int numberOfCharacters = 0;
-            teamMembers[0] = null;
-            candidates[0] = null;
-            tempCharmask[0] = true;
-            tempAbleToHiremask[0] = false;
-
-            for (int i = 1; i < 9; i++)
-            {
-                var character = player.Characters[i - 1];
-                if (character != null)
-                {
-                    int tempRank = player.Characters[i - 1] != null ? character.Rank : 0;
-                    int nextRank = Math.Min(21, character.Rank + 1);
-                    teamMembers[i] = new TeamMemberDto
-                    {
-                        Name = character.Name,
-                        Level = tempRank,
-                        PictureCode = character.PictureCode,
-                        Xp = character.XP,
-                        Pension = character.Pension,
-                        SkillPoints = character.DevPoints,
-                        EnergyPoints = character.EnergyPoints,
-                        NextXp = RankRewards.List[tempRank].NextLevel,
-                        NextDevPoints = tempRank != nextRank ? RankRewards.List[nextRank].NextLevel : 0,
-                        NextUnlock = tempRank != nextRank ? RankRewards.List[nextRank].NextLevel : null,
-                        MaintAttitude = AttitudeResolver(character.Attitude.Main, tempRank, RankConstants.maxLevels[0..4], RankConstants.startLevels[0..4], 0),
-                        SecondAttitude = AttitudeResolver(character.Attitude.Secondary, tempRank, RankConstants.maxLevels[4..8], RankConstants.startLevels[4..8], character.DevPoints),
-                        GenderAttitude = AttitudeResolver(character.Attitude.Gender, tempRank, RankConstants.maxLevels[8..12], RankConstants.startLevels[8..12], character.DevPoints)
-                    };
-                    membRemarks[i] = RemarkResolver(teamMembers[i]!, player.Core.DevPoint, player.Core.RankEnum);
-                    teamMembers[i]!.Remark = membRemarks[i];
-                    tempCharmask[i] = true;
-                    numberOfCharacters++;
-                }
-                else
-                {
-                    teamMembers[i] = null;
-                    tempCharmask[i] = false;
-                }
-
-                var candidate = player.CandidateCharacters[i - 1];
-                if (candidate != null)
-                {
-                    candidates[i] = new CandidateDto
-                    {
-                        Name = candidate.Names,
-                        PictureCode = candidate.PictureCodes,
-                        CanBeHire = candidate.Names != null && candidate.PictureCodes != null,
-                        ExpirationTime = candidate.ExpirationTime
-
-                    };
-
-                }
-                else
-                {
-                    candidates[i] = new CandidateDto
-                    {
-                        CanBeHire = false,
-                    };
-
-                }
-                tempAbleToHiremask[i] = candidates[i]!.CanBeHire;
-
-            }
-
-            var teamInfo = new TeamExtendedInfo
-            {
-                Name = player.Core.TeamName,
-                Level = player.Core.RankEnum,
-                Xp = player.Core.XP,
-                NextXp = RankRewards.List[player.Core.RankEnum].NextLevel,
-                DevPoints = player.Core.DevPoint,
-                TotalMembers = numberOfCharacters,
-                MaxMembers = RankRewards.List[player.Core.RankEnum].MaxCharacters,
-                AbleToHireMask = tempAbleToHiremask,
-                Bonus = RankRewards.List[player.Core.RankEnum].WinBonus,
-                Credits = player.Core.Credit,
-                MembRemarks = membRemarks
-
-            };
-
-            var help = HelpResolver(player.Loadout.HelpLevelsJson, teamInfo.Level, teamInfo.DevPoints);
-
-            var rootBoxInfo = TeamRootBoxInfoResolver(teamInfo, help.CanDev);
-
-            var teamDto = new TeamDtos
-            {
-                TeamInfo = teamInfo,
-                TeamMembers = teamMembers,
-                Candidates = candidates,
-                CharCatMask = tempCharmask,
-                Help = help,
-                RootBoxInfo = rootBoxInfo
-            };
-
-            return teamDto;
-        }
 
 
-
- 
+/**
+ * MÓDOSÍTÁS: a VS képernyő besorolási DTO-jába bemásolja a
+ * szerveroldali szabálytábla tétértékét.
+ *
+ * A fájl a Home, Solo és VS képernyők PlayerCache-alapú
+ * snapshotjait állítja össze.
  */

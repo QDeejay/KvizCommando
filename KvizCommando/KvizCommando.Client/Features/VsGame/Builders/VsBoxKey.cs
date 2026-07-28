@@ -9,10 +9,19 @@ internal enum VsBoxKeyRoot
 
 internal enum VsBoxKeyContent
 {
-    RankedBattleTeamManager
+    RankedBattleTeamManager,
+    RankedMatchManager
 }
 
 internal enum VsBoxKeyRanked
 {
     Classification = 5
 }
+
+/**
+ * MÓDOSÍTÁS: a VS tartalmi kulcsok közé felveszi a DynamicComponent
+ * alapú ranked meccsmanagert.
+ *
+ * A fájl a VS menü root-, tartalmi és rangsorolási dobozkulcsait
+ * tartalmazza.
+ */

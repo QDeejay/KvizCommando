@@ -75,4 +75,98 @@
   <data name="Classification.Footer.Requirements" xml:space="preserve">
     <value>Min level: {0}, Min team size: {1} of which {2}, zone: R{3}-R{4}</value>
   </data>
+  <data name="Match.Title" xml:space="preserve">
+    <value>Ranked battlefield</value>
+  </data>
+  <data name="Match.Queue.Status" xml:space="preserve">
+    <value>Waiting for the other players</value>
+  </data>
+  <data name="Match.Queue.Stake" xml:space="preserve">
+    <value>Stake</value>
+  </data>
+  <data name="Match.Status.Connecting" xml:space="preserve">
+    <value>Connecting to the ranked queue</value>
+  </data>
+  <data name="Match.Info.Locked" xml:space="preserve">
+    <value>Match locked</value>
+  </data>
+  <data name="Match.Info.LoadingQuestions" xml:space="preserve">
+    <value>Loading the match questions once</value>
+  </data>
+  <data name="Match.Info.Order" xml:space="preserve">
+    <value>Choose the order!</value>
+  </data>
+  <data name="Match.Info.Categories" xml:space="preserve">
+    <value>Assign your categories to the rounds!</value>
+  </data>
+  <data name="Match.Info.Helps" xml:space="preserve">
+    <value>Assign your helps!</value>
+  </data>
+  <data name="Match.Info.WaitingForPlayers" xml:space="preserve">
+    <value>Waiting for the other players</value>
+  </data>
+  <data name="Match.Info.PreparationCompleted" xml:space="preserve">
+    <value>Preparation completed</value>
+  </data>
+  <data name="Match.Info.Aborted" xml:space="preserve">
+    <value>The match was aborted</value>
+  </data>
+  <data name="Match.Round.Captain" xml:space="preserve">
+    <value>Captain round</value>
+  </data>
+  <data name="Match.Round.Normal" xml:space="preserve">
+    <value>Normal round {0}</value>
+  </data>
+  <data name="Match.Help.1" xml:space="preserve">
+    <value>50-50</value>
+  </data>
+  <data name="Match.Help.2" xml:space="preserve">
+    <value>Guess range</value>
+  </data>
+  <data name="Match.Help.3" xml:space="preserve">
+    <value>Time freeze</value>
+  </data>
+  <data name="Match.Help.4" xml:space="preserve">
+    <value>AI help</value>
+  </data>
+  <data name="Match.Category.Own" xml:space="preserve">
+    <value>Own question</value>
+  </data>
+  <data name="Match.Category.All" xml:space="preserve">
+    <value>All categories</value>
+  </data>
+  <data name="Match.Button.Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Match.Button.Finish" xml:space="preserve">
+    <value>Finish</value>
+  </data>
+  <data name="Match.Error.Identity" xml:space="preserve">
+    <value>Player identification failed.</value>
+  </data>
+  <data name="Match.Error.Player" xml:space="preserve">
+    <value>The player was not found.</value>
+  </data>
+  <data name="Match.Error.Classification" xml:space="preserve">
+    <value>Invalid battle classification.</value>
+  </data>
+  <data name="Match.Error.AlreadyLocked" xml:space="preserve">
+    <value>The player is already in a locked match.</value>
+  </data>
+  <data name="Match.Error.QueueValidation" xml:space="preserve">
+    <value>The team, loadout or credit balance no longer meets the classification requirements.</value>
+  </data>
+  <data name="Match.Error.Connection" xml:space="preserve">
+    <value>The ranked connection was closed.</value>
+  </data>
+  <data name="Match.Error.Disconnected" xml:space="preserve">
+    <value>The match connection was closed; this match does not support reconnecting.</value>
+  </data>
+  <!--
+    MÓDOSÍTÁS: hozzáadja a ranked várólista, MatchLocked és a három
+    preparációs fázis angol feliratait.
+
+    A fájl a VS kliens angol lokalizációs forrása; Debug buildkor
+    a ResxExporter ebből készíti el a vsgame.json fájlt.
+  -->
 </root>

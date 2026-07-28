@@ -76,9 +76,21 @@
                         <img src="https://www.facebook.com/images/fb_icon_325x325.png"
 accesskey="       "      alt="Facebook logo" style="width:25px;height:25px;margin-right:8px;">
                     </a>
-                    <a class="kc-btn-provider" @onclick="BypassLogin">
+                    <a class="kc-btn-provider" @onclick="BypassLoginQD">
                         <img src="icon-192.png"
                              alt="Facebook logo" style="width:30px;height:30px;margin-right:8px;">
+                    </a>
+                    <a class="kc-btn-provider" @onclick="() => BypassLogin(1)">
+                        -01-
+                    </a>
+                    <a class="kc-btn-provider" @onclick="() => BypassLogin(2)">
+                        -02-
+                    </a>
+                    <a class="kc-btn-provider" @onclick="() => BypassLogin(3)">
+                        -03-
+                    </a>
+                    <a class="kc-btn-provider" @onclick="() => BypassLogin(4)">
+                        -04-
                     </a>
                 </div>
             </div>
