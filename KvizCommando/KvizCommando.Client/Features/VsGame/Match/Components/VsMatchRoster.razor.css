@@ -1,9 +1,11 @@
 .kc-vs-roster {
     min-width: 0;
-    padding: 8px;
-    display: grid;
-    align-content: start;
-    gap: 8px;
+    min-height: 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    overflow: hidden;
     border: 2px solid #151713;
     border-radius: 10px;
     background: rgba(30, 32, 27, .96);
@@ -12,27 +14,46 @@
         inset 0 0 16px rgba(0, 0, 0, .75);
 }
 
+.kc-vs-roster > header {
+    height: 38px;
+    flex: 0 0 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    color: #c6ef39;
+    border-bottom: 1px solid #55583f;
+    font-family: 'Special Elite', cursive;
+    letter-spacing: .08em;
+}
+
+.kc-vs-roster > header i {
+    font-size: 1.05rem;
+}
+
 .kc-vs-roster-card {
     position: relative;
     min-width: 0;
-    min-height: 92px;
-    padding: 7px;
+    min-height: 84px;
+    max-height: 132px;
+    flex: 1 1 0;
+    padding: 8px;
     display: grid;
-    grid-template-columns: 62px minmax(0, 1fr);
+    grid-template-columns: 54px minmax(0, 1fr);
     align-items: center;
-    gap: 8px;
+    gap: 9px;
     color: #cccccc;
-    background: linear-gradient(180deg, #3b3f2b, #292d1d);
+    background: rgba(28, 32, 24, .78);
     border: 1px solid #55583f;
     border-radius: 7px;
-    box-shadow: inset 0 0 0 1px rgba(119, 120, 80, .45);
+    box-shadow: inset 0 0 0 1px rgba(119, 120, 80, .24);
 }
 
 .kc-vs-roster-card.me {
-    border-color: #c6ef39;
+    border: 2px solid #c6ef39;
     box-shadow:
-        inset 0 0 0 1px rgba(210, 255, 57, .45),
-        0 0 8px rgba(210, 255, 57, .22);
+        inset 0 0 0 1px rgba(210, 255, 57, .32),
+        0 0 8px rgba(210, 255, 57, .18);
 }
 
 .kc-vs-roster-card.disconnected {
@@ -40,14 +61,36 @@
     filter: grayscale(.85);
 }
 
+.kc-vs-roster-card.searching {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    color: #777850;
+}
+
+.kc-vs-roster-search-ring {
+    width: 42px;
+    aspect-ratio: 1;
+    border: 3px dashed #777850;
+    border-radius: 50%;
+    animation: kc-vs-roster-search 3s linear infinite;
+}
+
+.kc-vs-roster-search-copy {
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: .18em;
+}
+
 .kc-vs-roster-avatar {
-    width: 62px;
-    height: 72px;
+    width: 52px;
+    height: 66px;
     display: grid;
     place-items: center;
     overflow: hidden;
     background: rgba(23, 23, 23, .75);
     border: inset 2px #555;
+    border-radius: 4px;
 }
 
 .kc-vs-roster-avatar img {
@@ -60,13 +103,14 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
     font-family: 'Courier New', monospace;
-    font-size: .78rem;
+    font-size: .76rem;
 }
 
 .kc-vs-roster-data strong,
-.kc-vs-roster-data span {
+.kc-vs-roster-data span,
+.kc-vs-roster-data small {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -75,13 +119,18 @@
 .kc-vs-roster-data strong {
     color: #eee9dc;
     font-family: 'Special Elite', cursive;
-    font-size: .92rem;
+    font-size: .94rem;
+}
+
+.kc-vs-roster-data small {
+    color: #b9b9af;
+    font-size: .7rem;
 }
 
 .kc-vs-roster-state {
     position: absolute;
-    right: 6px;
-    bottom: 6px;
+    right: 7px;
+    bottom: 7px;
     width: 9px;
     height: 9px;
     border-radius: 50%;
@@ -94,7 +143,17 @@
     box-shadow: 0 0 6px rgba(210, 255, 57, .8);
 }
 
+@keyframes kc-vs-roster-search {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /*
- * A VS roster a SoloGame katonai panel-, keret- és
- * kiemelőszíneit használó bal oldali csapatkártya-sávja.
+ * MÓDOSÍTÁS: a roster a 02–04 mockup állandó, kompakt bal oldali
+ * csapatkártya-sávját követi. A csapatavatar marad placeholder, amíg
+ * a szerver nem tölti a TeamPictureCode mezőt. Lobbyban a hiányzó
+ * játékoshelyek szaggatott keresőjelzőt mutatnak.
+ *
+ * A fájl kizárólag a VS meccs publikus játékoslistáját formázza.
  */

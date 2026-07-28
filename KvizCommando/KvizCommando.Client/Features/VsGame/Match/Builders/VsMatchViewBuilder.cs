@@ -66,7 +66,12 @@ public sealed class VsMatchViewBuilder
             StatusText = _lang["vsgame.Match.Queue.Status"],
             WaitingPlayers = snapshot.WaitingPlayers,
             RequiredPlayers = snapshot.RequiredPlayers,
-            Stake = snapshot.Stake
+            RequiredPartySize = snapshot.RequiredPartySize,
+            Stake = snapshot.Stake,
+            Players =
+            [
+                .. snapshot.Players.Select(BuildPlayer)
+            ]
         };
     }
 
@@ -298,6 +303,9 @@ public sealed class VsMatchViewBuilder
 }
 
 /**
+ * MÓDOSÍTÁS: a queue publikus játékosadataiból is ugyanazzal a
+ * BuildPlayer leképezéssel készít lobby rostert.
+ *
  * A szerver snapshotjából lokalizált neveket, meglévő Solo
  * kategória-/orientációképeket és VS megjelenítési view modelleket
  * épít. DI-be nem kerül, kizárólag a manager példányosítja.

@@ -21,7 +21,9 @@ public sealed class VsQueueViewData
     public string StatusText { get; set; } = string.Empty;
     public int WaitingPlayers { get; set; }
     public int RequiredPlayers { get; set; }
+    public int RequiredPartySize { get; set; }
     public int Stake { get; set; }
+    public VsRosterPlayerVm[] Players { get; set; } = [];
 }
 
 public sealed class VsRosterPlayerVm
@@ -95,6 +97,9 @@ public sealed class VsCategoryModifierVm
 }
 
 /**
+ * MÓDOSÍTÁS: a queue view model a lobby rosterét és kötelező
+ * csapatméretét is tartalmazza.
+ *
  * A VS lobby, roster és preparáció komponenseinek kizárólag
  * megjelenítési célú view modeljeit tartalmazza.
  */

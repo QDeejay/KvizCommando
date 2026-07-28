@@ -1,6 +1,11 @@
 @using KvizCommando.Client.Features.VsGame.Match.ViewModels
 
 <aside class="kc-vs-roster">
+    <header>
+        <i class="bi bi-broadcast-pin"></i>
+        <strong>@Title</strong>
+    </header>
+
     @foreach (var player in Players)
     {
         <article class="kc-vs-roster-card @(player.IsMe ? "me" : "") @(!player.IsConnected ? "disconnected" : "")">
@@ -12,15 +17,28 @@
             <div class="kc-vs-roster-data">
                 <strong title="@player.TeamName">@player.TeamName</strong>
                 <span title="@player.DisplayName">@player.DisplayName</span>
-                <span>@player.TeamLevel</span>
+                <small>@player.TeamLevel</small>
             </div>
 
             <span class="kc-vs-roster-state @(player.IsFinished ? "ready" : "")"></span>
         </article>
     }
+
+    @for (var index = 0; index < MissingPlayers; index++)
+    {
+        <article class="kc-vs-roster-card searching">
+            <span class="kc-vs-roster-search-ring"></span>
+            <span class="kc-vs-roster-search-copy">...</span>
+        </article>
+    }
 </aside>
 
 @*
+    MÓDOSÍTÁS: a bal oldali roster a látványterv kompakt, állandó
+    csapatkártya-sávját követi, külön fejlécet, egyértelmű saját
+    játékoskiemelést és a lobbyban hiányzó helyekhez keresőállapotot
+    használ.
+
     A meccs teljes ideje alatt látható, kompakt ellenfél- és
     csapatkártya-sáv. Preparációban a csapatavatar placeholderét
     mutatja.

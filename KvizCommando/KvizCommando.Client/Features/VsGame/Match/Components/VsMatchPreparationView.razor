@@ -4,18 +4,8 @@
 
 <section class="kc-vs-preparation">
     <header class="kc-vs-prep-info">
+        <span>@PreparationStepText</span>
         <strong>@Data.InfoText</strong>
-
-        @if (Data.DeadlineUtc.HasValue)
-        {
-            <div class="kc-vs-prep-timer @(RemainingSeconds <= 5 ? "warning" : "")">
-                <span>@RemainingSeconds</span>
-                <div class="kc-vs-prep-timer-track">
-                    <div class="kc-vs-prep-timer-value"
-                         style="@TimerStyle"></div>
-                </div>
-            </div>
-        }
     </header>
 
     @if (Data.Phase == VsMatchPhase.PreparationCompleted)
@@ -27,62 +17,90 @@
     }
     else
     {
+        @if (Data.DeadlineUtc.HasValue)
+        {
+            <div class="kc-vs-prep-timer @(RemainingSeconds <= 5 ? "warning" : "")">
+                <i class="bi bi-clock"></i>
+                <div class="kc-vs-prep-timer-display">
+                    <strong>@RemainingSeconds</strong>
+                    <span>MP</span>
+                </div>
+                <div class="kc-vs-prep-timer-track">
+                    <div class="kc-vs-prep-timer-value"
+                         style="@TimerStyle"></div>
+                </div>
+            </div>
+        }
+
         <div class="kc-vs-prep-rounds">
             @foreach (var round in Data.Preparation.Rounds)
             {
                 <article class="kc-vs-prep-round @(round.IsCaptainRound ? "captain" : "")">
-                    <div class="kc-vs-prep-round-title">
-                        @round.RoundText
-                    </div>
-
                     <div class="kc-vs-prep-round-character">
-                        @if (round.IsCaptainRound)
+                        <div class="kc-vs-prep-orientation-box">
+                            @if (round.IsCaptainRound)
+                            {
+                                <img src="images/avatars/basic.webp"
+                                     alt="@Lang["vsgame.Match.Round.Captain"]" />
+                            }
+                            else if (round.Character is not null)
+                            {
+                                <img src="@round.Character.OrientationImageSrc"
+                                     alt="@round.Character.OrientationName" />
+                            }
+                            else
+                            {
+                                <i class="bi bi-person"></i>
+                            }
+                        </div>
+
+                        @if (!round.IsCaptainRound)
                         {
-                            <img src="images/avatars/basic.webp"
-                                 alt="@Lang["vsgame.Match.Round.Captain"]" />
-                        }
-                        else if (round.Character is not null)
-                        {
-                            <div class="kc-vs-prep-character-svg">
-                                <CharacterView PicCode="@round.Character.PictureCode" />
+                            <div class="kc-vs-prep-round-picture-frame">
+                                @if (round.Character is not null)
+                                {
+                                    <div class="kc-vs-prep-round-svg-host">
+                                        <CharacterView PicCode="@round.Character.PictureCode" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-person-bounding-box"></i>
+                                }
                             </div>
-                            <span title="@round.Character.Name">
-                                @round.Character.Name
-                            </span>
                         }
-                        else
-                        {
-                            <i class="bi bi-person-bounding-box"></i>
-                        }
+
+                        <div class="kc-vs-prep-round-copy">
+                            <small>@round.RoundText</small>
+                            <strong title="@ResolveRoundName(round)">
+                                @ResolveRoundName(round)
+                            </strong>
+                        </div>
                     </div>
 
-                    <button type="button"
-                            class="kc-vs-prep-round-category"
-                            disabled="@(!CanAssignCategory(round))"
-                            @onclick="() => AssignCategoryAsync(round)">
-                        @if (round.IsCaptainRound)
-                        {
+                    @if (round.IsCaptainRound)
+                    {
+                        <div class="kc-vs-prep-round-category static">
                             <i class="bi bi-dash-lg"></i>
-                        }
-                        else if (round.Loadout is not null)
-                        {
-                            <img src="@round.Loadout.ImageSrc"
-                                 alt="@round.Loadout.CategoryName" />
-                        }
-                        else
-                        {
-                            <i class="bi bi-grid-3x3-gap"></i>
-                        }
-
-                        @if (Data.Phase ==
-                             VsMatchPhase.PreparationCategories &&
-                             !round.IsCaptainRound)
-                        {
-                            <span class="kc-vs-prep-modifier">
-                                @GetModifierText(round.RoundNumber)
-                            </span>
-                        }
-                    </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <button type="button"
+                                class="kc-vs-prep-round-category"
+                                disabled="@(!CanAssignCategory(round))"
+                                @onclick="() => AssignCategoryAsync(round)">
+                            @if (round.Loadout is not null)
+                            {
+                                <img src="@round.Loadout.ImageSrc"
+                                     alt="@round.Loadout.CategoryName" />
+                            }
+                            else
+                            {
+                                <i class="bi bi-grid-3x3-gap"></i>
+                            }
+                        </button>
+                    }
 
                     <button type="button"
                             class="kc-vs-prep-round-help"
@@ -91,17 +109,35 @@
                         @if (round.Help is not null)
                         {
                             <i class="@round.Help.IconCss"></i>
+                            <span>@round.Help.Name</span>
                         }
                         else
                         {
                             <i class="bi bi-life-preserver"></i>
                         }
                     </button>
+
+                    <div class="kc-vs-prep-round-modifier @GetModifierClass(round)">
+                        @if (round.IsCaptainRound)
+                        {
+                            <small>x2</small>
+                        }
+                        else
+                        {
+                            <strong>@GetModifierText(round)</strong>
+                        }
+                    </div>
                 </article>
             }
         </div>
 
-        <div class="kc-vs-prep-inventory">
+        <section class="kc-vs-prep-inventory @InventoryCssClass">
+            <header>
+                <strong>INVENTORY</strong>
+                <span>•</span>
+                <small>@InventoryTitle</small>
+            </header>
+
             @if (Data.Phase == VsMatchPhase.PreparationOrder)
             {
                 <div class="kc-vs-prep-character-inventory">
@@ -111,20 +147,23 @@
                                 class="kc-vs-prep-character-card"
                                 disabled="@Data.Preparation.IsFinished"
                                 @onclick="() => OnCharacterSelected.InvokeAsync(character.SlotNumber)">
-                            <div class="kc-vs-prep-character-card-svg">
-                                <CharacterView PicCode="@character.PictureCode" />
-                            </div>
-                            <img class="kc-vs-prep-orientation"
+                            <img class="kc-vs-prep-inventory-orientation"
                                  src="@character.OrientationImageSrc"
                                  alt="@character.OrientationName" />
-                            <span>@character.Name</span>
-                            <small>@character.LevelText</small>
+                            <div class="kc-vs-prep-inventory-picture-frame">
+                                <div class="kc-vs-prep-inventory-svg-host">
+                                    <CharacterView PicCode="@character.PictureCode" />
+                                </div>
+                            </div>
+                            <span>
+                                <strong>@character.Name</strong>
+                                <small>@character.LevelText • @character.OrientationName</small>
+                            </span>
                         </button>
                     }
                 </div>
             }
-            else if (Data.Phase ==
-                     VsMatchPhase.PreparationCategories)
+            else if (Data.Phase == VsMatchPhase.PreparationCategories)
             {
                 <div class="kc-vs-prep-loadout-inventory">
                     @foreach (var loadout in Data.Preparation.Loadout)
@@ -146,8 +185,7 @@
                     }
                 </div>
             }
-            else if (Data.Phase ==
-                     VsMatchPhase.PreparationHelps)
+            else if (Data.Phase == VsMatchPhase.PreparationHelps)
             {
                 <div class="kc-vs-prep-help-inventory">
                     @foreach (var help in Data.Preparation.Helps)
@@ -157,13 +195,15 @@
                                 disabled="@(help.Count <= 0 || Data.Preparation.IsFinished)"
                                 @onclick="() => SelectHelp(help)">
                             <i class="@help.IconCss"></i>
-                            <span>@help.Name</span>
-                            <strong>@help.Count</strong>
+                            <span>
+                                <strong>@help.Name</strong>
+                                <small>@help.Count</small>
+                            </span>
                         </button>
                     }
                 </div>
             }
-        </div>
+        </section>
 
         <div class="kc-vs-prep-actions">
             <button type="button"
@@ -183,7 +223,7 @@
                         aria-label="@Lang["vsgame.Match.Button.Finish"]"
                         title="@Lang["vsgame.Match.Button.Finish"]"
                         @onclick="OnFinish">
-                    <i class="bi bi-check2-square"></i>
+                    <i class="bi bi-check2"></i>
                 </button>
             }
         </div>
@@ -191,7 +231,13 @@
 </section>
 
 @*
+    MÓDOSÍTÁS: a preparáció markupja a jóváhagyott 02–04 látványterv
+    sávos szerkezetét követi. A CharacterView minden előfordulása saját,
+    138:176 arányú, méretezett keretet és abszolút SVG-hostot kap, ezért
+    a belső LCD display-layer nem fedheti le a teljes preparációs
+    felületet és nem nyelheti el a kattintásokat. Az inventory fázisonként
+    külön CSS-osztályt kap a soros/többsoros elrendezéshez.
+
     A három VS preparáció közös, snapshot-alapú nézete. Karaktersorrendet,
     kategóriakiosztást, segítségkiosztást és szerverhatáridőt jelenít meg.
-    A Reset/Finish gombok helye a végső látványkörben még módosítható.
 *@

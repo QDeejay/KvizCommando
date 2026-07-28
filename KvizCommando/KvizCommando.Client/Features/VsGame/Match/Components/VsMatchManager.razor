@@ -38,24 +38,36 @@
     }
     else if (_queue is not null)
     {
-        <section class="kc-vs-queue">
-            <div class="kc-vs-queue-emblem">
-                <i class="bi bi-broadcast-pin"></i>
-            </div>
+        <div class="kc-vs-match-stage">
+            <VsMatchRoster
+                Players="@_queue.Players"
+                ExpectedPlayers="@_queue.RequiredPlayers"
+                Title="LOBBY" />
 
-            <h3>@_queue.ClassificationText</h3>
-            <p>@_queue.StatusText</p>
+            <main class="kc-vs-match-content">
+                <section class="kc-vs-queue">
+                    <h3>@_queue.ClassificationText</h3>
+                    <p>@_queue.StatusText</p>
 
-            <div class="kc-vs-queue-counter">
-                <span>@_queue.WaitingPlayers</span>
-                <small>/ @_queue.RequiredPlayers</small>
-            </div>
+                    <div class="kc-vs-queue-counter">
+                        <span>@_queue.WaitingPlayers</span>
+                        <small>/ @_queue.RequiredPlayers</small>
+                    </div>
 
-            <div class="kc-vs-queue-stake">
-                @Lang["vsgame.Match.Queue.Stake"]
-                <strong>@_queue.Stake</strong>
-            </div>
-        </section>
+                    <div class="kc-vs-queue-conditions">
+                        <span>
+                            <i class="bi bi-diagram-3-fill"></i>
+                            <strong>@_queue.RequiredPartySize</strong>
+                            + 1
+                        </span>
+                        <span>
+                            @Lang["vsgame.Match.Queue.Stake"]
+                            <strong>@_queue.Stake</strong>
+                        </span>
+                    </div>
+                </section>
+            </main>
+        </div>
     }
     else
     {
@@ -70,6 +82,10 @@
 
 @*
     A VS menü DynamicComponentként példányosított ranked meccsmanagere.
+    MÓDOSÍTÁS: a lobby is a látványterv kétoszlopos stage-ét használja:
+    bal oldalt a várakozók és hiányzó helyek, jobb oldalt a kör alakú
+    számláló és az alapfeltételek látszanak.
+
     A várólistát, a MatchLocked betöltést, a rostert és az aktuális
     preparációs nézetet a SignalR snapshot alapján cseréli.
 *@

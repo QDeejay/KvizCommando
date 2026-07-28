@@ -339,6 +339,9 @@ public sealed class VsMatchService : IVsMatchService
             return;
         }
 
+        var removeMatch = false;
+        (string ConnectionId, VsMatchSnapshot Snapshot)[] messages = [];
+
         await match.Lock.WaitAsync(ct);
         try
         {
@@ -358,13 +361,25 @@ public sealed class VsMatchService : IVsMatchService
                 string.Empty);
 
             AdvanceIfReadyLocked(match);
+
+            removeMatch =
+                match.Players.All(item => !item.IsConnected);
+
+            if (!removeMatch)
+                messages = BuildBroadcastMessagesLocked(match);
         }
         finally
         {
             match.Lock.Release();
         }
 
-        await BroadcastMatchAsync(match, CancellationToken.None);
+        if (removeMatch)
+        {
+            _store.TryRemove(match.MatchId, out _);
+            return;
+        }
+
+        await SendBroadcastMessagesAsync(messages);
     }
 
     private async Task ExecutePreparationCommandAsync(
@@ -740,6 +755,16 @@ public sealed class VsMatchService : IVsMatchService
                     return;
                 }
 
+                if (match.Profile.PausePreparationOnTimeout)
+                {
+                    AddLog(
+                        match,
+                        null,
+                        "PreparationTimerPaused",
+                        match.Phase.ToString());
+                    return;
+                }
+
                 foreach (var player in match.Players
                              .Where(player => !player.IsFinished))
                 {
@@ -898,6 +923,7 @@ public sealed class VsMatchService : IVsMatchService
         };
 
     private static bool HasExpired(VsMatchSession match) =>
+        !match.Profile.PausePreparationOnTimeout &&
         match.DeadlineUtc.HasValue &&
         DateTime.UtcNow >= match.DeadlineUtc.Value;
 
@@ -910,20 +936,31 @@ public sealed class VsMatchService : IVsMatchService
         await match.Lock.WaitAsync(ct);
         try
         {
-            messages =
-            [
-                .. match.Players
-                    .Where(player => player.IsConnected)
-                    .Select(player => (
-                        player.ConnectionId,
-                        BuildSnapshot(match, player)))
-            ];
+            messages = BuildBroadcastMessagesLocked(match);
         }
         finally
         {
             match.Lock.Release();
         }
 
+        await SendBroadcastMessagesAsync(messages);
+    }
+
+    private static (
+        string ConnectionId,
+        VsMatchSnapshot Snapshot)[] BuildBroadcastMessagesLocked(
+            VsMatchSession match) =>
+        [
+            .. match.Players
+                .Where(player => player.IsConnected)
+                .Select(player => (
+                    player.ConnectionId,
+                    BuildSnapshot(match, player)))
+        ];
+
+    private async Task SendBroadcastMessagesAsync(
+        (string ConnectionId, VsMatchSnapshot Snapshot)[] messages)
+    {
         foreach (var message in messages)
         {
             await _hub.Clients
@@ -1218,4 +1255,11 @@ internal static class VsMatchEnumerableExtensions
  * csapatokat, egyszer betölti a meccs kérdéseit, majd szerverórával
  * végigviszi a három preparációs fázist és személyre szabott
  * SignalR-snapshotokat küld.
+ *
+ * MÓDOSÍTÁS: a profil fejlesztői pause flagje mellett az óra nullára
+ * futhat automatikus kitöltés és fázisváltás nélkül; ilyenkor a
+ * kiválasztási parancsok és a Finish gomb viszik tovább a preparációt.
+ * Ha a meccs minden SignalR-kapcsolata megszűnt, a store-bejegyzés és
+ * a player/connection indexek törlődnek, ezért az elhagyott tesztmeccs
+ * nem tartja bent a játékosokat.
  */

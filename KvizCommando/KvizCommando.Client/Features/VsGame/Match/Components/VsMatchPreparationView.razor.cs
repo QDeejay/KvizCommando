@@ -33,6 +33,7 @@ public partial class VsMatchPreparationView : IDisposable
     private Guid? _selectedLoadoutToken;
     private int? _selectedCategoryId;
     private VsHelpType _selectedHelp = VsHelpType.None;
+    private VsMatchPhase? _lastPhase;
 
     protected override void OnInitialized()
     {
@@ -66,6 +67,14 @@ public partial class VsMatchPreparationView : IDisposable
 
     protected override void OnParametersSet()
     {
+        if (_lastPhase != Data.Phase)
+        {
+            _lastPhase = Data.Phase;
+            _selectedLoadoutToken = null;
+            _selectedCategoryId = null;
+            _selectedHelp = VsHelpType.None;
+        }
+
         if (_selectedLoadoutToken.HasValue &&
             Data.Preparation.Loadout.All(item =>
                 item.LoadoutToken != _selectedLoadoutToken.Value))
@@ -84,6 +93,46 @@ public partial class VsMatchPreparationView : IDisposable
         {
             _selectedHelp = VsHelpType.None;
         }
+    }
+
+    private string PreparationStepText => Data.Phase switch
+    {
+        VsMatchPhase.PreparationOrder => "1 / 3",
+        VsMatchPhase.PreparationCategories => "2 / 3",
+        VsMatchPhase.PreparationHelps => "3 / 3",
+        _ => "3 / 3"
+    };
+
+    private string InventoryTitle => Data.Phase switch
+    {
+        VsMatchPhase.PreparationOrder =>
+            Lang["vsgame.Match.Inventory.Characters"],
+        VsMatchPhase.PreparationCategories =>
+            Lang["vsgame.Match.Inventory.Loadout"],
+        VsMatchPhase.PreparationHelps =>
+            Lang["vsgame.Match.Inventory.Helps"],
+        _ => string.Empty
+    };
+
+    private string InventoryCssClass => Data.Phase switch
+    {
+        VsMatchPhase.PreparationOrder => "characters",
+        VsMatchPhase.PreparationCategories => "categories",
+        VsMatchPhase.PreparationHelps => "helps",
+        _ => string.Empty
+    };
+
+    private string ResolveRoundName(VsPreparationRoundVm round)
+    {
+        if (round.IsCaptainRound)
+        {
+            return Data.Players
+                       .FirstOrDefault(player => player.IsMe)?.DisplayName ??
+                   Lang["vsgame.Match.Round.Captain"];
+        }
+
+        return round.Character?.Name ??
+               Lang["vsgame.Match.Round.Empty"];
     }
 
     private void SelectLoadout(VsLoadoutCardVm loadout)
@@ -123,10 +172,14 @@ public partial class VsMatchPreparationView : IDisposable
         _selectedCategoryId = null;
     }
 
-    private string GetModifierText(int roundNumber)
+    private string GetModifierText(VsPreparationRoundVm round)
     {
-        if (!_selectedCategoryId.HasValue ||
-            _selectedCategoryId.Value is
+        var categoryId =
+            _selectedCategoryId ??
+            round.Loadout?.CategoryId;
+
+        if (!categoryId.HasValue ||
+            categoryId.Value is
                 VsLoadoutCategoryIds.OwnQuestion or
                 VsLoadoutCategoryIds.AllCategories)
         {
@@ -135,9 +188,9 @@ public partial class VsMatchPreparationView : IDisposable
 
         var seconds = Data.Preparation.CategoryModifiers
             .FirstOrDefault(item =>
-                item.RoundNumber == roundNumber &&
+                item.RoundNumber == round.RoundNumber &&
                 item.CategoryId ==
-                _selectedCategoryId.Value)?.Seconds ?? 0;
+                categoryId.Value)?.Seconds ?? 0;
 
         var prefix = seconds > 0 ? "+" : string.Empty;
 
@@ -146,6 +199,17 @@ public partial class VsMatchPreparationView : IDisposable
                    "0.0",
                    CultureInfo.InvariantCulture) +
                "s";
+    }
+
+    private string GetModifierClass(VsPreparationRoundVm round)
+    {
+        var text = GetModifierText(round);
+
+        return text.StartsWith('+')
+            ? "positive"
+            : text.StartsWith('-')
+                ? "negative"
+                : string.Empty;
     }
 
     private void SelectHelp(VsHelpCardVm help)
@@ -201,7 +265,12 @@ public partial class VsMatchPreparationView : IDisposable
 }
 
 /**
+ * MÓDOSÍTÁS: fázisváltáskor törli az előző fázis lokális kijelölését,
+ * a kiválasztott vagy már kiosztott kategória alapján jeleníti meg a
+ * körönkénti módosítót, és a markup számára előállítja a prep/inventory
+ * feliratokat, valamint a fázishoz tartozó inventory CSS-osztályt.
+ * Domainállapotot továbbra sem módosít.
+ *
  * A preparációs nézet lokális kijelöléseit, visszaszámlálását és
- * EventCallback-alapú parancstovábbítását kezeli; domainállapotot
- * nem módosít.
+ * EventCallback-alapú parancstovábbítását kezeli.
  */

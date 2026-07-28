@@ -6,7 +6,7 @@ namespace KvizCommando.Client.Features.VsGame.Services;
 
 public sealed class VsGameClientService : IVsGameClientService
 {
-    private const string VsGameRoute = "/api/vsgame";
+    private const string VS_GAME_ROUTE = "/api/vsgame";
 
     private readonly HttpClient _http;
     private readonly SessionService _session;
@@ -31,7 +31,7 @@ public sealed class VsGameClientService : IVsGameClientService
         try
         {
             using var response = await _http.PostAsJsonAsync(
-                $"{VsGameRoute}/battle-team",
+                $"{VS_GAME_ROUTE}/battle-team",
                 request,
                 ct);
 

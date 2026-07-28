@@ -135,6 +135,18 @@
   <data name="Match.Category.All" xml:space="preserve">
     <value>All categories</value>
   </data>
+  <data name="Match.Inventory.Characters" xml:space="preserve">
+    <value>Battle characters</value>
+  </data>
+  <data name="Match.Inventory.Loadout" xml:space="preserve">
+    <value>Loadout categories</value>
+  </data>
+  <data name="Match.Inventory.Helps" xml:space="preserve">
+    <value>Helps</value>
+  </data>
+  <data name="Match.Round.Empty" xml:space="preserve">
+    <value>Empty slot</value>
+  </data>
   <data name="Match.Button.Reset" xml:space="preserve">
     <value>Reset</value>
   </data>
@@ -163,8 +175,9 @@
     <value>The match connection was closed; this match does not support reconnecting.</value>
   </data>
   <!--
-    MÓDOSÍTÁS: hozzáadja a ranked várólista, MatchLocked és a három
-    preparációs fázis angol feliratait.
+    MÓDOSÍTÁS: hozzáadja a ranked várólista, MatchLocked, a három
+    preparációs fázis, az inventory és az üres körhely angol
+    feliratait.
 
     A fájl a VS kliens angol lokalizációs forrása; Debug buildkor
     a ResxExporter ebből készíti el a vsgame.json fájlt.

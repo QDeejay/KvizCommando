@@ -325,18 +325,35 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
         var rule = VsBattleClassificationRules.List.First(
             item => item.ClassificationId == classificationId);
 
-        var snapshot = new VsRankedQueueSnapshot
+        foreach (var currentEntry in entries)
         {
-            ClassificationId = classificationId,
-            WaitingPlayers = entries.Length,
-            RequiredPlayers = VsMatchProfiles.Ranked.RequiredPlayers,
-            Stake = rule.Stake
-        };
+            var snapshot = new VsRankedQueueSnapshot
+            {
+                ClassificationId = classificationId,
+                WaitingPlayers = entries.Length,
+                RequiredPlayers =
+                    VsMatchProfiles.Ranked.RequiredPlayers,
+                RequiredPartySize = rule.RequiredPartySize,
+                Stake = rule.Stake,
+                Players =
+                [
+                    .. entries.Select((entry, index) =>
+                        new VsMatchPlayerDto
+                        {
+                            Position = index + 1,
+                            DisplayName = entry.DisplayName,
+                            TeamName = entry.TeamName,
+                            TeamLevel = entry.TeamLevel,
+                            IsMe =
+                                entry.PlayerId ==
+                                currentEntry.PlayerId,
+                            IsConnected = true
+                        })
+                ]
+            };
 
-        foreach (var entry in entries)
-        {
             await _hub.Clients
-                .Client(entry.ConnectionId)
+                .Client(currentEntry.ConnectionId)
                 .QueueChanged(snapshot);
         }
     }
@@ -350,7 +367,12 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
 }
 
 /**
+ * MÓDOSÍTÁS: minden várakozó személyre szabott publikus roster-
+ * snapshotot kap, ezért a lobby bal oldali játékoslistája is
+ * kirajzolható.
+ *
  * Az öt besorolás külön várólistáját kezeli, cache-snapshotból
- * validálja a belépést, majd négy játékosnál MatchLocked meccset
- * hoz létre. Kérdést nem tölt és játékállapotot nem tárol.
+ * validálja a belépést, majd a profil szerinti játékosszámnál
+ * MatchLocked meccset hoz létre. Kérdést nem tölt és játékállapotot
+ * nem tárol.
  */

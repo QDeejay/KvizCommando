@@ -135,6 +135,18 @@
   <data name="Match.Category.All" xml:space="preserve">
     <value>Összes kategória</value>
   </data>
+  <data name="Match.Inventory.Characters" xml:space="preserve">
+    <value>Csatába hozott karakterek</value>
+  </data>
+  <data name="Match.Inventory.Loadout" xml:space="preserve">
+    <value>Loadout kategóriák</value>
+  </data>
+  <data name="Match.Inventory.Helps" xml:space="preserve">
+    <value>Segítségek</value>
+  </data>
+  <data name="Match.Round.Empty" xml:space="preserve">
+    <value>Üres hely</value>
+  </data>
   <data name="Match.Button.Reset" xml:space="preserve">
     <value>Visszaállítás</value>
   </data>
@@ -163,8 +175,9 @@
     <value>A meccskapcsolat megszakadt; ehhez a meccshez nincs újracsatlakozás.</value>
   </data>
   <!--
-    MÓDOSÍTÁS: hozzáadja a ranked várólista, MatchLocked és a három
-    preparációs fázis magyar feliratait.
+    MÓDOSÍTÁS: hozzáadja a ranked várólista, MatchLocked, a három
+    preparációs fázis, az inventory és az üres körhely magyar
+    feliratait.
 
     A fájl a VS kliens magyar lokalizációs forrása; Debug buildkor
     a ResxExporter ebből készíti el a vsgame.json fájlt.
