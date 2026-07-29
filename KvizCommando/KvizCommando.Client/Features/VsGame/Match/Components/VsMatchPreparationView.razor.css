@@ -495,7 +495,7 @@
 }
 
 .kc-vs-prep-loadout-card:hover {
-    z-index: 20;
+    z-index: 1;
 }
 
 .kc-vs-prep-help-inventory {
