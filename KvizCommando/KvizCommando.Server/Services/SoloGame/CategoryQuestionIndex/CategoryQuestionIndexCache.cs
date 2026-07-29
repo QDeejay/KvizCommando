@@ -5,6 +5,7 @@ namespace KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
 
 public sealed class CategoryQuestionIndexCache : ICategoryQuestionIndexCache
 {
+    private const int GUESS_CATEGORY_NO = 99;
     private readonly IServiceScopeFactory _scopeFactory;
 
     private IReadOnlyDictionary<int, IReadOnlyList<int>> _index =
@@ -32,6 +33,12 @@ public sealed class CategoryQuestionIndexCache : ICategoryQuestionIndexCache
             })
             .ToListAsync(ct);
 
+        var guessQuestionIds = await db.GuessQuestions
+            .AsNoTracking()
+            .OrderBy(question => question.Id)
+            .Select(question => question.Id)
+            .ToArrayAsync(ct);
+
         var newIndex = rows
             .GroupBy(question => question.CategoryNo)
             .OrderBy(group => group.Key)
@@ -41,6 +48,8 @@ public sealed class CategoryQuestionIndexCache : ICategoryQuestionIndexCache
                     .Select(question => question.Id)
                     .OrderBy(id => id)
                     .ToArray());
+
+        newIndex[GUESS_CATEGORY_NO] = guessQuestionIds;
 
         _index = newIndex;
         _invalidated = false;
