@@ -20,12 +20,5 @@
         TRetire = 203,
         THandle = 204
     }
-    public enum DialogConfirmTypes
-    {
-        None = 0,
-        Language = 1,
-        SoloGameQuit = 2,
-        VsGameQuit = 3
-    }
-
+   
 }

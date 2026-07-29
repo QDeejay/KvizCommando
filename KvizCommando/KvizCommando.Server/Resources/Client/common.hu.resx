@@ -150,6 +150,15 @@
   <data name="Modal.Language.Title.hu" xml:space="preserve">
     <value>Betölti az oldalt?</value>
   </data>
+  <data name="Modal.Confirm.Title" xml:space="preserve">
+    <value>Megerősítés</value>
+  </data>
+  <data name="Modal.Confirm.Accept" xml:space="preserve">
+    <value>Igen</value>
+  </data>
+  <data name="Modal.Confirm.Cancel" xml:space="preserve">
+    <value>Nem</value>
+  </data>
   <data name="Username" xml:space="preserve">
     <value>Felhasználónév</value>
   </data>

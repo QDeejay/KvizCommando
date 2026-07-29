@@ -10,6 +10,9 @@
   "Modal.Language.Restart.hu": "Újratölt",
   "Modal.Language.Title.en": "Refresh the page?",
   "Modal.Language.Title.hu": "Betölti az oldalt?",
+  "Modal.Confirm.Title": "Confirmation",
+  "Modal.Confirm.Accept": "Yes",
+  "Modal.Confirm.Cancel": "No",
   "Username": "Username",
   "Email": "E-mail address:",
   "Password.Confirm": "Confirm password"

@@ -3,7 +3,7 @@
 .modal-custom {
     position: relative;
     z-index: 9999; /* magasabb mint a backdrop (1050) */
-    width: 600px;
+    width: 100%;
     margin: auto;
     border: 2px solid #444;
     border-radius: 8px;
@@ -38,8 +38,8 @@
 .kc-modal-body {
     font-size: 0.8rem;
     font-family: 'Courier New', monospace;
-    padding: 15px;
     /* mindig a modal keret görget */
+    padding: 15px;
     color: #d3d3d3;
     margin: 10px;
     border: 2px inset rgba(255,255,255,0.1);

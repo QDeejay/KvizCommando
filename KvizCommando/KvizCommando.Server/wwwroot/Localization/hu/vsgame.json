@@ -56,5 +56,6 @@
   "Match.Error.AlreadyLocked": "A játékos már lezárt meccsben van.",
   "Match.Error.QueueValidation": "A csapat, a loadout vagy a kreditegyenleg már nem felel meg a besorolás feltételeinek.",
   "Match.Error.Connection": "A rangsorolt kapcsolat megszakadt.",
-  "Match.Error.Disconnected": "A meccskapcsolat megszakadt; ehhez a meccshez nincs újracsatlakozás."
+  "Match.Error.Disconnected": "A meccskapcsolat megszakadt; ehhez a meccshez nincs újracsatlakozás.",
+  "Modal.Quit.Content": "Ha kilépsz, elhagyod az aktuális VS játékot. Biztosan ki szeretnél lépni?"
 }

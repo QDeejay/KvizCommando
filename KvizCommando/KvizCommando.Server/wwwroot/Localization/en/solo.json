@@ -32,5 +32,6 @@
   "Label.Game.Reward.TeamXp": "Team XP",
   "Label.Game.Reward.TeamDev": "Team development points",
   "Label.Game.Reward.MemberXp": "Character XP",
-  "Label.Game.Reward.MemberDev": "Character development points"
+  "Label.Game.Reward.MemberDev": "Character development points",
+  "Modal.Quit.Content": "Leaving will discard the result of the current game. Are you sure you want to leave?"
 }

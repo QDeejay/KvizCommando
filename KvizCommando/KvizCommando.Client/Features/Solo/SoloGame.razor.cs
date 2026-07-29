@@ -1,6 +1,9 @@
+using KvizCommando.Client.Features.Shared.Modal.Builders;
+using KvizCommando.Client.Features.Shared.Modal.Dynamic;
 using KvizCommando.Client.Features.Solo.Builders;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.SoloGame;
 using KvizCommando.Shared.Models.Dtos;
@@ -83,8 +86,25 @@ public partial class SoloGame : KcComponentBase, IDisposable
         StateHasChanged();
     }
 
-    private void HandleBack()
+    private async void HandleBack()
     {
+        var isActiveGame =
+        Ui.Header.PageIndex is >= 421 and <= 436 ||
+        Ui.Header.PageIndex is >= 451 and <= 458;
+
+        if (isActiveGame)
+        {
+            var modal = MBoxBuilder.BuildParam(
+                ModalTypes.DialogConfirm,
+                Ui.Lang);
+
+            modal.BodyParameters.Add(
+                nameof(DBoxModalRender.DialogBoxType),
+                DBoxConfirmTypes.SoloGameQuitConfirm);
+
+            if (await Ui.Modal.ShowAsync(modal) != ModalResult.Button1)
+                return;
+        }
         if (Ui.Header.PageIndex == 4)
         {
             Ui.Nav.NavigateTo("/home");

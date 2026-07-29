@@ -56,5 +56,6 @@
   "Match.Error.AlreadyLocked": "The player is already in a locked match.",
   "Match.Error.QueueValidation": "The team, loadout or credit balance no longer meets the classification requirements.",
   "Match.Error.Connection": "The ranked connection was closed.",
-  "Match.Error.Disconnected": "The match connection was closed; this match does not support reconnecting."
+  "Match.Error.Disconnected": "The match connection was closed; this match does not support reconnecting.",
+  "Modal.Quit.Content": "Leaving will exit the current VS game. Are you sure you want to leave?"
 }

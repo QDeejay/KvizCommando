@@ -1,4 +1,4 @@
-using KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders;
+using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using Microsoft.AspNetCore.Components;
 
@@ -9,12 +9,15 @@ namespace KvizCommando.Client.Features.Shared.Modal.Dynamic
         [Inject] private ILanguageService Lang { get; set; } = default!;
 
         [Parameter]
-        public DBoxConfirmTypes ConfirmType { get; set; } =
+        public DBoxConfirmTypes DialogBoxType { get; set; } =
             DBoxConfirmTypes.None;
+
+        [Parameter]
+        public string RequestedLanguage { get; set; } = string.Empty;
     }
 }
 
 /**
- * ÚJ FÁJL: a dinamikus komponens egyetlen bemenete a ténylegesen deklarált
- * ConfirmType paraméter; ez vezérli a Razor switch ágát.
+ * ÚJ FÁJL: a dinamikus modal body két bemenete a dialogtípus és a
+ * LanguageConfirm által használt kért nyelvkód.
  */

@@ -1,25 +1,16 @@
-@using KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders;
+@using KvizCommando.Client.Features.Shared.Modal.Builders;
 
 <div class="modal-display">
-    @switch (ConfirmType)
+    @switch (DialogBoxType)
     {
         case DBoxConfirmTypes.LanguageConfirm:
-            <br>
-            @Lang["common.Modal.Language.Content"]
-            <br>
-            <br>
+            @Lang[$"common.Modal.Language.Content.{RequestedLanguage}"]
             break;
         case DBoxConfirmTypes.SoloGameQuitConfirm:
-            <br>
             @Lang["solo.Modal.Quit.Content"]
-            <br>
-            <br>
             break;
         case DBoxConfirmTypes.VsGameQuitConfirm:
-            <br>
             @Lang["vsgame.Modal.Quit.Content"]
-            <br>
-            <br>
             break;
         default:
             break;
@@ -27,6 +18,6 @@
 </div>
 
 @*
-    ÚJ FÁJL: a QModalRender mintájára közvetlen switch választja ki a
-    megerősítő modal tartalmát. Nincs köztes manager vagy újabb builder.
+    ÚJ FÁJL: a QModalRender mintájára a bemeneti dialogtípuson switch-el.
+    A RequestedLanguage értéket kizárólag a LanguageConfirm ág használja.
 *@

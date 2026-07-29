@@ -32,5 +32,6 @@
   "Label.Game.Reward.TeamXp": "Csapat XP",
   "Label.Game.Reward.TeamDev": "Csapat fejlesztési pont",
   "Label.Game.Reward.MemberXp": "Karakter XP",
-  "Label.Game.Reward.MemberDev": "Karakter fejlesztési pont"
+  "Label.Game.Reward.MemberDev": "Karakter fejlesztési pont",
+  "Modal.Quit.Content": "Ha kilépsz, az aktuális játék eredménye elveszik. Biztosan ki szeretnél lépni?"
 }

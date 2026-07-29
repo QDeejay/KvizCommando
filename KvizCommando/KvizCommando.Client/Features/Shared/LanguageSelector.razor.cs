@@ -1,10 +1,9 @@
-﻿using Blazored.LocalStorage;
+using Blazored.LocalStorage;
+using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Features.Shared.Modal.Dynamic;
-using KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders;
 using KvizCommando.Client.Services.Visual.UiService;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
-
 
 namespace KvizCommando.Client.Features.Shared
 {
@@ -15,6 +14,7 @@ namespace KvizCommando.Client.Features.Shared
 
         private Task HuClickAsync() => ShowConfirmAsync("hu");
         private Task EnClickAsync() => ShowConfirmAsync("en");
+
         private async Task ShowConfirmAsync(string languageCode)
         {
             if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName ==
@@ -23,11 +23,21 @@ namespace KvizCommando.Client.Features.Shared
 
             var modal = MBoxBuilder.BuildParam(
                 ModalTypes.LangConfirm,
-                Ui.Lang);
+                Ui.Lang) with
+            {
+                Title =
+                    Ui.Lang[$"common.Modal.Language.Title.{languageCode}"],
+                ActionText1 =
+                    Ui.Lang[$"common.Modal.Language.Restart.{languageCode}"]
+            };
 
             modal.BodyParameters.Add(
-                nameof(DBoxModalRender.ConfirmType),
+                nameof(DBoxModalRender.DialogBoxType),
                 DBoxConfirmTypes.LanguageConfirm);
+
+            modal.BodyParameters.Add(
+                nameof(DBoxModalRender.RequestedLanguage),
+                languageCode);
 
             if (await Ui.Modal.ShowAsync(modal) != ModalResult.Button1)
                 return;
@@ -46,7 +56,7 @@ namespace KvizCommando.Client.Features.Shared
 }
 
 /**
- * MÓDOSÍTÁS: a nyelvválasztó egyetlen MBoxBuilder hívással készíti el a
- * modalt, átadja a DBoxModalRender ConfirmType paraméterét, awaiteli az
- * eredményt, majd maga menti a kultúrát és tölti újra az oldalt.
+ * MÓDOSÍTÁS: a modal címe és első gombja a kiválasztott új nyelv
+ * .hu/.en kulcsából készül. A modal body megkapja a dialogtípust és a
+ * kért nyelvkódot; Close vagy X esetén nem történik nyelvváltás.
  */

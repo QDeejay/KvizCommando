@@ -1,6 +1,9 @@
+using KvizCommando.Client.Features.Shared.Modal.Builders;
+using KvizCommando.Client.Features.Shared.Modal.Dynamic;
 using KvizCommando.Client.Features.VsGame.Builders;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
@@ -86,10 +89,21 @@ public partial class VsGame : KcComponentBase, IDisposable
         return Task.CompletedTask;
     }
 
-    private void HandleBack()
+    private async void HandleBack()
     {
         if (Ui.Header.PageIndex is >= 311 and <= 315)
         {
+            var modal = MBoxBuilder.BuildParam(
+                ModalTypes.DialogConfirm,
+                Ui.Lang);
+
+            modal.BodyParameters.Add(
+                nameof(DBoxModalRender.DialogBoxType),
+                DBoxConfirmTypes.VsGameQuitConfirm);
+
+            if (await Ui.Modal.ShowAsync(modal) != ModalResult.Button1)
+                return;
+
             BuildBoxes();
             OnBoxClick(303);
             return;

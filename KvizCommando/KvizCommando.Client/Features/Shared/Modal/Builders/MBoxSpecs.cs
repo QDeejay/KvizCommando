@@ -39,7 +39,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                     CloseTextKey = "common.Modal.Language.Keep",
                     Style1 = "#4b5320",
                     Style2 = string.Empty,
-                    Size = "modal-sm",
+                    Size = string.Empty,
                     BodyComponent = typeof(DBoxModalRender)
                 },
                 [ModalTypes.DialogConfirm] = new MboxSpecs
