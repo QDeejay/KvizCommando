@@ -6,7 +6,7 @@ using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
 
-namespace KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders
+namespace KvizCommando.Client.Features.Shared.Modal.Builders
 {
     public sealed class TBuilderModal
     {

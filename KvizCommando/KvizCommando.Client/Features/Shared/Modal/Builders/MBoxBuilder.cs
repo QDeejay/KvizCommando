@@ -1,7 +1,7 @@
 ﻿using KvizCommando.Client.Features.Shared.Modal.ViewModels;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 
-namespace KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders
+namespace KvizCommando.Client.Features.Shared.Modal.Builders
 {
     public static class MBoxBuilder
     {
@@ -22,7 +22,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders
                 ActionStyle1 = string.IsNullOrEmpty(specs.Style1) ? string.Empty : $"{BUTTON_STYLE}{specs.Style1}",
                 ActionStyle2 = string.IsNullOrEmpty(specs.Style2) ? string.Empty : $"{BUTTON_STYLE}{specs.Style2}",
                 CloseText = lang[specs.CloseTextKey],
-                Size = $"modal-{specs.Size}",
+                Size = $"{specs.Size}",
                 CheckBoxText = lang[specs.CheckBoxTextKey],
                 CheckBoxKey = specs.CheckBoxKey,
                 CheckBottom = specs.CheckBottom,

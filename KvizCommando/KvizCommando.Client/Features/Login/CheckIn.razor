@@ -13,38 +13,37 @@
 
          <KcModal @ref="_termsModal"
              Id="termsModal"
-             Par="@_termsPar"
              OnAction1="AcceptTerms">
              @if (!string.IsNullOrWhiteSpace(_cacheData.url))
                  {
                       @_renderHTML
                  }
-        </KcModal>
+         </KcModal>
  
         
         <div class="checkin-panel">
             <div class="checkin-head">
-                  <label class="label-title">@DynamicTitle</label>
+                  <label class="label-title">@_dynamicTitle</label>
                  
               
             </div>
                  <div class="checkin-body"> 
                     
-                        <label class="label-text">@Message</label>
+                        <label class="label-text">@_message</label>
                      <br>
                 @if (_cacheData.needsName == true)
                 {
                     <label class="label-text">@Ui.Lang["checkin.Label.DisplayName"]</label>
                      <input class="lcd-input"   @bind-value="_formData.DisplayName"
                                     @bind-value:event="oninput"
-                    style="@((DisplayNameField ? "border: 1px solid red;" : null))" />
+                    style="@((_displayNameField ? "border: 1px solid red;" : null))" />
             
                 }
                 @if (_cacheData.needsTerms == true)
                 {
                     <div class="checkin-action">
                                 <div class="checkin-checkbox">                            
-                                    <input class="form-check-input AcceptTerms-checkbox" type="checkbox" id="AcceptTerms" 
+                            <input class="form-check-input custom-checkbox" type="checkbox" id="AcceptTerms"
                                         @bind="IsAccepted" 
                                             />
                                 </div>
@@ -83,7 +82,7 @@
                  </div>
                 }
                    <br>
-                    <p style="color:red">@ResultMessage</p> 
+                    <p style="color:red">@_resultMessage</p> 
                  </div>
         </div>
     </LangGuard>

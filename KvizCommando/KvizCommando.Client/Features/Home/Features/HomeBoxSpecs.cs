@@ -26,7 +26,7 @@ public static class HomeBoxSpecs
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = true, ClickId = 3,
             Pick = s => s.VsGame,
-            BuildFooter = (lang, b) => lang["home.Box.Footer.GameVs"].FormatSafe(b.FooterData1)
+            BuildFooter = (lang, b) => $"Online: {b.FooterData1}"
         },
         new HomeSpecs {
             Key = HomeBoxKey.GameSolo,

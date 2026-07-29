@@ -60,7 +60,9 @@ public static class VsGameBoxSpecs
             FooterDisplay = false,
             ClickId = 302,
             CheckEnable = (data, _) =>
-                data.RootBoxInfo.IsJoinBattlefieldEnabled
+                data.RootBoxInfo.IsJoinBattlefieldEnabled,
+             BuildFooter = (_, data, _) =>
+                $"Online: {data.RootBoxInfo.PrivatePlayerCount}"
         },
         new()
         {
@@ -73,12 +75,8 @@ public static class VsGameBoxSpecs
             ClickId = 303,
             CheckEnable = (data, _) =>
                 data.RootBoxInfo.IsRankedBattlefieldsEnabled,
-            BuildFooter = (lang, data, _) =>
-                lang["vsgame.Box.Footer.RankedRequirements"]
-                    .FormatSafe(
-                        data.RootBoxInfo
-                            .RequiredBattleReadyCharacterCount,
-                        data.RootBoxInfo.RequiredCreditBalance)
+             BuildFooter = (_, data, _) =>
+                $"Online: {data.RootBoxInfo.RankedPlayerCount}"
         },
         new()
         {
@@ -133,12 +131,8 @@ public static class VsGameBoxSpecs
                 data.RootBoxInfo.CreditBalance >=
                     data.RankedBattlefields
                         .Classifications[id - 1].Stake,
-            BuildFooter = (lang, data, id) => lang["vsgame.Classification.Footer.Requirements"].FormatSafe(
-                RankNameTable.Data[data.RankedBattlefields.Classifications[id - 1].MinimumTeamRank].PublicLevel ?? string.Empty,
-                data.RankedBattlefields.Classifications[id - 1].RequiredPartySize,
-                data.RankedBattlefields.Classifications[id - 1].RequiredMembersInRankClassRange,
-                data.RankedBattlefields.Classifications[id - 1].MemberMinimumRankClass,
-                data.RankedBattlefields.Classifications[id - 1].MemberMaximumRankClass)
+            BuildFooter = (_, data, id) =>
+                $"Online: {data.RankedBattlefields.Classifications[id - 1].PlayerCount}"
         }
     ];
 

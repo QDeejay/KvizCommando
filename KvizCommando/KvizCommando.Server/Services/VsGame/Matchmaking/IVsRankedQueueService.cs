@@ -4,6 +4,8 @@ namespace KvizCommando.Server.Services.VsGame.Matchmaking;
 
 public interface IVsRankedQueueService
 {
+    IReadOnlyDictionary<int, int> GetConnectedPlayerCounts();
+
     Task<VsQueueJoinResult> JoinAsync(
         int playerId,
         string sessionId,
@@ -29,6 +31,8 @@ public sealed class VsRankedQueueEntry
 
 /**
  * MÓDOSÍTÁS: a queue-belépés közvetlen, típusos eredményt ad a Hubnak.
+ * A képernyő-DTO számára besorolásonkénti pillanatképet ad az összes
+ * várakozó és már meccsben lévő, kapcsolódott játékosról.
  *
  * A rangsorolt várólista műveleteit és egy várakozó játékos
  * minimális, még nem meccssnapshotolt adatait írja le.

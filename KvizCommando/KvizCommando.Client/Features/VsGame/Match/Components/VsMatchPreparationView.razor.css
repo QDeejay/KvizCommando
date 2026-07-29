@@ -1,12 +1,13 @@
 .kc-vs-preparation {
     position: relative;
     min-width: 0;
-    height: 100%;
+    min-height: 100%;
+    height: auto;
     padding: 10px;
     display: grid;
-    grid-template-rows: 42px 52px minmax(0, 1fr) auto;
+    grid-template-rows: 42px 52px minmax(min-content, 1fr) auto;
     gap: 9px;
-    overflow: hidden;
+    overflow: visible;
     color: #cccccc;
     background: rgba(30, 32, 27, .96);
     border: 2px solid #151713;
@@ -130,14 +131,14 @@
     min-height: 0;
     padding: 0 6px;
     display: grid;
-    grid-auto-rows: minmax(0, 1fr);
+    grid-auto-rows: minmax(62px, 1fr);
     align-content: stretch;
     gap: 6px;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .kc-vs-prep-round {
-    min-height: 0;
+    min-height: 62px;
     display: grid;
     grid-template-columns:
         minmax(215px, 1.15fr)
@@ -488,7 +489,7 @@
 .kc-vs-prep-loadout-card:hover > .tooltip-box {
     left: 0;
     bottom: 59px;
-    z-index: 20;
+    z-index: 2;
     display: block;
     padding: 6px 9px;
     white-space: nowrap;
@@ -588,27 +589,14 @@
     }
 }
 
-@media (max-height: 780px) {
-    .kc-vs-prep-rounds {
-        grid-auto-rows: 50px;
-        overflow-y: auto;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-    }
-
-    .kc-vs-prep-rounds::-webkit-scrollbar {
-        display: none;
-    }
-}
-
 /*
  * MÓDOSÍTÁS: a title-sor a SoloGame fejlécével azonos megoldású.
  * Az orientációs képek helyett csak a 138:176 karakter-SVG marad. A
  * karakterkártyák fix 190 px szélesek, soronként legfeljebb hárman,
  * középre rendezve jelennek meg.
- * Desktopon a körsávok egyenletesen kitöltik a rendelkezésre álló
- * magasságot scrollbar nélkül; alacsony viewportnál a görgetés
- * megtartott, de a csík rejtett. A játékos szemszögéből a pozitív
+ * A körsávok egyenletesen zsugorodnak 62 px magasságig; ez alatt a
+ * teljes preparáció nő tovább, ezért a keretek sosem érnek össze és
+ * a körlista saját görgetést nem kap. A játékos szemszögéből a pozitív
  * módosító zöld, a negatív piros. Kategóriakijelöléskor kizárólag az
  * üres, fogadó kategóriacella kap halványsárga keretet. Ugyanez a
  * célhelykiemelés változtatás nélkül, pontosan ugyanezzel a szabállyal
@@ -617,7 +605,9 @@
  * LCD-gombos Reset/Finish sort; a Finish mindig látható, a kész Finish
  * pedig zöld állapotjelzőként marad a helyén. A kapitány üres
  * kategóriacellája megmaradt; csak a teljes sor túlnyúló outline-ja
- * került ki.
+ * került ki. A kategóriatooltip helyi 1/2 rétegsorrenddel az
+ * inventory címsora fölött jelenik meg; alkalmazásszintű z-indexet
+ * nem használ.
  *
  * A fájl kizárólag a VS preparáció megjelenítését szabályozza.
  */

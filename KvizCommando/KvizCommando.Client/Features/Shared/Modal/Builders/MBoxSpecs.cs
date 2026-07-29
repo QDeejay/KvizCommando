@@ -1,13 +1,12 @@
 ﻿using KvizCommando.Client.Features.Shared.Modal.ViewModels;
 using KvizCommando.Client.Features.Shared.Modal.Dynamic;
 
-namespace KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders
+namespace KvizCommando.Client.Features.Shared.Modal.Builders
 {
     public sealed class MboxSpecs : ModalVmSpecs
     {
         //internal Func<ILanguageService, string> BuidText { get; init; } = default!;
     }
-
 
     public static class ModalBox
     {
@@ -20,21 +19,40 @@ namespace KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders
                 {
                     TitleKey = "PLACEHOLDER",
                     TextKey1 = "checkin.modal.Button.Action",
+                    Size = "modal-lg",
+                    CheckBottom = true,
+                    BodyComponent = null
+                    /*
                     TextKey2 = string.Empty,
                     CloseTextKey = string.Empty,
                     Style1 = string.Empty,
                     Style2 = string.Empty,
-                    Size = "modal-lg",
                     CheckBoxTextKey = string.Empty,
-                    CheckBoxKey = string.Empty,
-                    CheckBottom = true,
-                    BodyComponent = null
+                    CheckBoxKey = string.Empty,*/
                 },
 
                 [ModalTypes.LangConfirm] = new MboxSpecs
                 {
+                    TitleKey = string.Empty,
+                    TextKey1 = string.Empty,
+                    TextKey2 = string.Empty,
+                    CloseTextKey = "common.Modal.Language.Keep",
+                    Style1 = "#4b5320",
+                    Style2 = string.Empty,
+                    Size = "modal-sm",
+                    BodyComponent = typeof(DBoxModalRender)
                 },
-
+                [ModalTypes.DialogConfirm] = new MboxSpecs
+                {
+                    TitleKey = "common.Modal.Confirm.Title",
+                    TextKey1 = "common.Modal.Confirm.Accept",
+                    TextKey2 = string.Empty,
+                    CloseTextKey = "common.Modal.Confirm.Cancel",
+                    Style1 = "#a64b2a",
+                    Style2 = string.Empty,
+                    Size = "modal-sm",
+                    BodyComponent = typeof(DBoxModalRender)
+                },
                 [ModalTypes.QUsrDelet] = new MboxSpecs
                 {
                     TitleKey = "question.Modal.Title.Confirm",

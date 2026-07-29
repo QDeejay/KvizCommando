@@ -1,7 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using KvizCommando.Client.Features.Shared.Modal;
-using KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders;
+using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Features.VsGame;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Audio;

@@ -129,9 +129,6 @@
   <data name="Box.Footer.Events3" xml:space="preserve">
     <value>Events in {0} day(s)</value>
   </data>
-  <data name="Box.Footer.GameVs" xml:space="preserve">
-    <value>Online {0}</value>
-  </data>
   <data name="Box.Footer.Messages" xml:space="preserve">
     <value>New: {0}</value>
   </data>

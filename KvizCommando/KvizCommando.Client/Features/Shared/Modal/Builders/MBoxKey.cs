@@ -1,4 +1,4 @@
-﻿namespace KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders
+﻿namespace KvizCommando.Client.Features.Shared.Modal.Builders
 {
     public static class ModalConst
     {
@@ -10,6 +10,7 @@
         None = 0,
         Terms = 1,
         LangConfirm = 2,
+        DialogConfirm = 3,
         QUsrDelet = 101,
         QPendHandle = 102,
         QNewRules = 103,
@@ -19,5 +20,12 @@
         TRetire = 203,
         THandle = 204
     }
-    
+    public enum DialogConfirmTypes
+    {
+        None = 0,
+        Language = 1,
+        SoloGameQuit = 2,
+        VsGameQuit = 3
+    }
+
 }

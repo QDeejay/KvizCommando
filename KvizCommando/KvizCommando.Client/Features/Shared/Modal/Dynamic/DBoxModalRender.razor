@@ -1,0 +1,32 @@
+@using KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders;
+
+<div class="modal-display">
+    @switch (ConfirmType)
+    {
+        case DBoxConfirmTypes.LanguageConfirm:
+            <br>
+            @Lang["common.Modal.Language.Content"]
+            <br>
+            <br>
+            break;
+        case DBoxConfirmTypes.SoloGameQuitConfirm:
+            <br>
+            @Lang["solo.Modal.Quit.Content"]
+            <br>
+            <br>
+            break;
+        case DBoxConfirmTypes.VsGameQuitConfirm:
+            <br>
+            @Lang["vsgame.Modal.Quit.Content"]
+            <br>
+            <br>
+            break;
+        default:
+            break;
+    }
+</div>
+
+@*
+    ÚJ FÁJL: a QModalRender mintájára közvetlen switch választja ki a
+    megerősítő modal tartalmát. Nincs köztes manager vagy újabb builder.
+*@

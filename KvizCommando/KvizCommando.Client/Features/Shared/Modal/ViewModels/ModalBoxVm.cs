@@ -1,4 +1,4 @@
-﻿using KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders;
+﻿using KvizCommando.Client.Features.Shared.Modal.Builders;
 
 namespace KvizCommando.Client.Features.Shared.Modal.ViewModels
 {

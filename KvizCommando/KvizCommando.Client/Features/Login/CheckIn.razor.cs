@@ -8,7 +8,7 @@ using KvizCommando.Shared.Contracts.CheckIn;
 using KvizCommando.Shared.Options;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
-using KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders;
+using KvizCommando.Client.Features.Shared.Modal.Builders;
 
 
 namespace KvizCommando.Client.Features.Login
@@ -33,11 +33,11 @@ namespace KvizCommando.Client.Features.Login
         private RegisterOptionsResponse? _options;
 
         private CheckInPostRequest _formData = new();
-        private string ResultMessage { get; set; } = string.Empty;
+        private string _resultMessage { get; set; } = string.Empty;
 
-        private string DynamicTitle { get; set; } = string.Empty; // Dinamikus oldal cím
-        private string Message { get; set; } = string.Empty; // Általános üzenet a felhasználónak
-        private bool DisplayNameField { get; set; } = false;
+        private string _dynamicTitle { get; set; } = string.Empty; // Dinamikus oldal cím
+        private string _message { get; set; } = string.Empty; // Általános üzenet a felhasználónak
+        private bool _displayNameField { get; set; } = false;
 
 
         private bool _isLoaded = false;
@@ -114,29 +114,29 @@ namespace KvizCommando.Client.Features.Login
         private async Task HandleValidSubmit()
 
         {
-            ResultMessage = string.Empty;
+            _resultMessage = string.Empty;
 
-            DisplayNameField = false;
+            _displayNameField = false;
             var dsp = _formData.DisplayName?.Trim() ?? string.Empty;
 
             if (_options is not null)
             {
                 if (_options.DisplayNameMinLength > dsp.Length && _cacheData.needsName == true)
                 {
-                    ResultMessage = Ui.Lang["identityerrors.DisplayNameTooShort"];
-                    DisplayNameField = true;
+                    _resultMessage = Ui.Lang["identityerrors.DisplayNameTooShort"];
+                    _displayNameField = true;
                 }
                 else if (_options.DisplayNameMaxLength < dsp.Length & _cacheData.needsName == true)
                 {
-                    ResultMessage = Ui.Lang["identityerrors.DisplayNameTooLong"];
-                    DisplayNameField = true;
+                    _resultMessage = Ui.Lang["identityerrors.DisplayNameTooLong"];
+                    _displayNameField = true;
                 }
                 else if (IsAccepted == false)
                 {
-                    ResultMessage = Ui.Lang["identityerrors.TermsNotAccepted"];
+                    _resultMessage = Ui.Lang["identityerrors.TermsNotAccepted"];
                 }
             }
-            if ((DisplayNameField && _cacheData.needsName) || IsAccepted == false)
+            if ((_displayNameField && _cacheData.needsName) || IsAccepted == false)
                 return;
             _formData.TeamName = _formData.DisplayName + Ui.Lang["checkin.Team.Append"];
             // Kérés a szerver felé
@@ -153,17 +153,17 @@ namespace KvizCommando.Client.Features.Login
             if (errors is { Count: > 0 })
             {
                 // csak az első hibát mutatjuk; ha több kell, join-olható
-                ResultMessage = Ui.Lang[$"identityerrors.{errors[0]}"];
+                _resultMessage = Ui.Lang[$"identityerrors.{errors[0]}"];
             }
             else
             {
-                ResultMessage = Ui.Lang["identityerrors.DefaultError"];
+                _resultMessage = Ui.Lang["identityerrors.DefaultError"];
             }
             if (suggestedname is not null && suggestedname != string.Empty)
             {
-                ResultMessage += " " + Ui.Lang["checkin.Reason.SuggestedName"] + $" '{suggestedname}'.";
+                _resultMessage += " " + Ui.Lang["checkin.Reason.SuggestedName"] + $" '{suggestedname}'.";
                 _formData.DisplayName = suggestedname;
-                DisplayNameField = true;
+                _displayNameField = true;
             }
 
         }
@@ -172,19 +172,19 @@ namespace KvizCommando.Client.Features.Login
         {
             if (_cacheData is null || (_cacheData.needsName == false && _cacheData.needsTerms == false))
             {
-                Message = Ui.Lang["checkin.Reason.FallBack"];
-                DynamicTitle = Ui.Lang["checkin.Title.Fallback"];
+                _message = Ui.Lang["checkin.Reason.FallBack"];
+                _dynamicTitle = Ui.Lang["checkin.Title.Fallback"];
             }
             else if (_cacheData.needsName == true)
             {
                 _cacheData.needsTerms = true;
-                Message = Ui.Lang["checkin.Reason.DisplayName"];
-                DynamicTitle = Ui.Lang["checkin.Title.DisplayName"];
+                _message = Ui.Lang["checkin.Reason.DisplayName"];
+                _dynamicTitle = Ui.Lang["checkin.Title.DisplayName"];
             }
             else
             {
-                Message = Ui.Lang["checkin.Reason.TermsUpdated"];
-                DynamicTitle = Ui.Lang["checkin.Title.TermsOutdated"];
+                _message = Ui.Lang["checkin.Reason.TermsUpdated"];
+                _dynamicTitle = Ui.Lang["checkin.Title.TermsOutdated"];
 
             }
             _termsPar = MBoxBuilder.BuildParam(ModalTypes.Terms, Ui.Lang);

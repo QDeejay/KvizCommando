@@ -219,4 +219,7 @@
   <data name="Label.Game.Reward.MemberDev" xml:space="preserve">
     <value>Character development points</value>
   </data>
+  <data name="Modal.Quit.Content" xml:space="preserve">
+    <value>Leaving will discard the result of the current game. Are you sure you want to leave?</value>
+  </data>
 </root>

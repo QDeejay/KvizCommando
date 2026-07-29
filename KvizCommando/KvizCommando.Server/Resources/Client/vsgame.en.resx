@@ -21,9 +21,6 @@
   <data name="Box.Title.RankedBattlefields" xml:space="preserve">
     <value>Ranked battlefields</value>
   </data>
-  <data name="Box.Footer.RankedRequirements" xml:space="preserve">
-    <value>Requires {0} battle-ready characters and {1} credits</value>
-  </data>
   <data name="Manager.Title" xml:space="preserve">
     <value>Assemble battle team</value>
   </data>
@@ -72,9 +69,6 @@
   <data name="Classification.Title.5" xml:space="preserve">
     <value>Battle classification V</value>
   </data>
-  <data name="Classification.Footer.Requirements" xml:space="preserve">
-    <value>Min level: {0}, Min team size: {1} of which {2}, zone: R{3}-R{4}</value>
-  </data>
   <data name="Match.Title" xml:space="preserve">
     <value>Ranked battlefield</value>
   </data>
@@ -86,6 +80,9 @@
   </data>
   <data name="Match.Queue.Stake" xml:space="preserve">
     <value>Stake</value>
+  </data>
+  <data name="Match.Queue.Rounds" xml:space="preserve">
+    <value>Rounds: {0} normal + 1 captain round</value>
   </data>
   <data name="Match.Status.Connecting" xml:space="preserve">
     <value>Connecting to the ranked queue</value>
@@ -197,4 +194,7 @@
     A fájl a VS kliens angol lokalizációs forrása; Debug buildkor
     a ResxExporter ebből készíti el a vsgame.json fájlt.
   -->
+  <data name="Modal.Quit.Content" xml:space="preserve">
+    <value>Leaving will exit the current VS game. Are you sure you want to leave?</value>
+  </data>
 </root>

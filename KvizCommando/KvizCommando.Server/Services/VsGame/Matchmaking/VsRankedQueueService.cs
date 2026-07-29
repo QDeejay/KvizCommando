@@ -34,6 +34,39 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
         _hub = hub;
     }
 
+    public IReadOnlyDictionary<int, int>
+        GetConnectedPlayerCounts()
+    {
+        lock (_syncRoot)
+        {
+            var playersByClassification =
+                VsBattleClassificationRules.List.ToDictionary(
+                    rule => rule.ClassificationId,
+                    _ => new HashSet<int>());
+
+            foreach (var queue in _queues)
+            {
+                foreach (var entry in queue.Value)
+                    playersByClassification[queue.Key]
+                        .Add(entry.PlayerId);
+            }
+
+            foreach (var player in _matchStore.GetConnectedPlayers())
+            {
+                if (playersByClassification.TryGetValue(
+                        player.ClassificationId,
+                        out var players))
+                {
+                    players.Add(player.PlayerId);
+                }
+            }
+
+            return playersByClassification.ToDictionary(
+                item => item.Key,
+                item => item.Value.Count);
+        }
+    }
+
     public async Task<VsQueueJoinResult> JoinAsync(
         int playerId,
         string sessionId,
@@ -368,6 +401,9 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
  * sessionje még a queue lock elengedése előtt bekerül a store-ba, így
  * megszűnik a queue és a match közötti disconnect-rés és nincs szükség
  * _lockingPlayers segédállapotra. A belépés közvetlen eredményt ad.
+ * A DTO-pillanatkép a várólisták és a kapcsolódott meccsjátékosok
+ * PlayerId-halmazának unióját számolja, ezért átmozgatáskor sincs
+ * kettős számlálás.
  *
  * Az öt besorolás külön várólistáját kezeli, cache-snapshotból
  * validálja a belépést, majd a profil szerinti játékosszámnál

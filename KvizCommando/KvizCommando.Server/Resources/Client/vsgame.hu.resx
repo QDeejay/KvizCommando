@@ -21,9 +21,6 @@
   <data name="Box.Title.RankedBattlefields" xml:space="preserve">
     <value>Rangsorolásos csataterek</value>
   </data>
-  <data name="Box.Footer.RankedRequirements" xml:space="preserve">
-    <value>Feltétel: {0} hadra fogható karakter és {1} kredit</value>
-  </data>
   <data name="Manager.Title" xml:space="preserve">
     <value>Csapat összeállítása</value>
   </data>
@@ -72,9 +69,6 @@
   <data name="Classification.Title.5" xml:space="preserve">
     <value>V. harci besorolás</value>
   </data>
-  <data name="Classification.Footer.Requirements" xml:space="preserve">
-    <value>Min szint: {0}, Min létszám: {1} ebből {2}, sáv: R{3}-R{4}</value>
-  </data>
   <data name="Match.Title" xml:space="preserve">
     <value>Rangsorolt csatatér</value>
   </data>
@@ -86,6 +80,9 @@
   </data>
   <data name="Match.Queue.Stake" xml:space="preserve">
     <value>Tét</value>
+  </data>
+  <data name="Match.Queue.Rounds" xml:space="preserve">
+    <value>Körök: {0} normál + 1 kapitánykör</value>
   </data>
   <data name="Match.Status.Connecting" xml:space="preserve">
     <value>Kapcsolódás a rangsorolt várólistához</value>
@@ -197,4 +194,7 @@
     A fájl a VS kliens magyar lokalizációs forrása; Debug buildkor
     a ResxExporter ebből készíti el a vsgame.json fájlt.
   -->
+  <data name="Modal.Quit.Content" xml:space="preserve">
+    <value>Ha kilépsz, elhagyod az aktuális VS játékot. Biztosan ki szeretnél lépni?</value>
+  </data>
 </root>

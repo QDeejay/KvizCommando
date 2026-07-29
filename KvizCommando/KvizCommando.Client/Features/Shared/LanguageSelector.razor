@@ -9,15 +9,19 @@
 
     <ul id="langMenu" class="dropdown-menu dropdown-menu-end">
         <li>
-            <a class="dropdown-item d-flex align-items-center" @onclick="HuClick">
+            <a class="dropdown-item d-flex align-items-center" @onclick="HuClickAsync">
                 <span class="flag flag-hu"></span> Magyar
             </a>
         </li>
         <li>
-            <a class="dropdown-item d-flex align-items-center" @onclick="EnClick">
+            <a class="dropdown-item d-flex align-items-center" @onclick="EnClickAsync">
                 <span class="flag flag-en"></span> English
             </a>
         </li>
     </ul>
 </div>
-<LanguageConfirm @ref="ConfirmModal" />
+
+@*
+    MÓDOSÍTÁS: a külön LanguageConfirm példány helyett a MainLayout központi
+    KcModal példánya jeleníti meg a nyelvváltás megerősítését.
+*@

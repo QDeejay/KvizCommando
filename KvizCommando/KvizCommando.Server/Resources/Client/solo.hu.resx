@@ -219,4 +219,7 @@
   <data name="Label.Game.Reward.MemberDev" xml:space="preserve">
     <value>Karakter fejlesztési pont</value>
   </data>
+  <data name="Modal.Quit.Content" xml:space="preserve">
+    <value>Ha kilépsz, az aktuális játék eredménye elveszik. Biztosan ki szeretnél lépni?</value>
+  </data>
 </root>

@@ -1,4 +1,4 @@
-﻿using KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders;
+﻿using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService.Language;

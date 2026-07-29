@@ -1,50 +1,52 @@
-﻿
-using KvizCommando.Client.Services.Visual;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+﻿using Blazored.LocalStorage;
+using KvizCommando.Client.Features.Shared.Modal.Dynamic;
+using KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders;
+using KvizCommando.Client.Services.Visual.UiService;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 
 
 namespace KvizCommando.Client.Features.Shared
 {
-    public partial class LanguageSelector : IDisposable
+    public partial class LanguageSelector
     {
-        
-        [Inject] private ILanguageService Lang { get; set; } = default!;
+        [Inject] private UiServices Ui { get; set; } = default!;
+        [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
 
-        private LanguageConfirmBase? ConfirmModal;
-        protected override void OnInitialized()
+        private Task HuClickAsync() => ShowConfirmAsync("hu");
+        private Task EnClickAsync() => ShowConfirmAsync("en");
+        private async Task ShowConfirmAsync(string languageCode)
         {
-          //  Ui.Changed += OnUiChanged;
-        }
+            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName ==
+                languageCode)
+                return;
 
-        //private void OnUiChanged() => InvokeAsync(StateHasChanged);
-        private void HuClick() => ShowConfirm("hu");
-        private void EnClick() => ShowConfirm("en");
-        private void ShowConfirm(string lang)
-        {
-            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName != lang)
-            {
-                ConfirmModal?.ShowForLanguage(
-                        lang,
-                        Lang[$"common.Modal.Language.Title.{lang}"],
-                        Lang[$"common.Modal.Language.Content.{lang}"],
-                        Lang[$"common.Modal.Language.Restart.{lang}"],
-                        Lang["common.Modal.Language.Keep"]
-                    );
-            }
-        }
+            var modal = MBoxBuilder.BuildParam(
+                ModalTypes.LangConfirm,
+                Ui.Lang);
 
+            modal.BodyParameters.Add(
+                nameof(DBoxModalRender.ConfirmType),
+                DBoxConfirmTypes.LanguageConfirm);
 
-        public void Dispose() 
-        {
-            //Ui.Changed -= OnUiChanged;
-            GC.SuppressFinalize(this);
+            if (await Ui.Modal.ShowAsync(modal) != ModalResult.Button1)
+                return;
+
+            await Ui.Lang.ClearLanguageCacheAsync(
+                CultureInfo.CurrentCulture.TwoLetterISOLanguageName);
+
+            var culture = languageCode == "hu"
+                ? "hu-HU"
+                : "en-US";
+
+            await LocalStorage.SetItemAsync("userLang", culture);
+            Ui.Nav.NavigateTo(Ui.Nav.Uri, forceLoad: true);
         }
     }
 }
+
+/**
+ * MÓDOSÍTÁS: a nyelvválasztó egyetlen MBoxBuilder hívással készíti el a
+ * modalt, átadja a DBoxModalRender ConfirmType paraméterét, awaiteli az
+ * eredményt, majd maga menti a kultúrát és tölti újra az oldalt.
+ */

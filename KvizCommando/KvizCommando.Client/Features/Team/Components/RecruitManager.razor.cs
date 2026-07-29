@@ -9,7 +9,7 @@ using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.Team;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
-using KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders;
+using KvizCommando.Client.Features.Shared.Modal.Builders;
 
 namespace KvizCommando.Client.Features.Team.Components;
 

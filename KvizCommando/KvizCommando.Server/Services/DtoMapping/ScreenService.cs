@@ -1,6 +1,7 @@
 ﻿using KvizCommando.Server.Domain.Entities.Statistics;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.VsGame;
+using KvizCommando.Server.Services.VsGame.Matchmaking;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.User;
@@ -14,15 +15,18 @@ namespace KvizCommando.Server.Services.DtoMapping
     public sealed class ScreenService : IScreenService
     {
         private readonly IPlayerCacheService _cache;
+        private readonly IVsRankedQueueService _rankedQueue;
         private readonly ILogger<ScreenService> _logger;
         private readonly IWebHostEnvironment _env;
 
         public ScreenService(
             IPlayerCacheService cache,
+            IVsRankedQueueService rankedQueue,
             ILogger<ScreenService> logger,
             IWebHostEnvironment env)
         {
             _cache = cache;
+            _rankedQueue = rankedQueue;
             _logger = logger;
             _env = env;
         }
@@ -90,7 +94,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                 VsGame = new ScreenButtonEntity
                 {
                     Enable = activeChars > 2,
-                    FooterData1 = 789 // TODO: később lekérdezésből
+                    FooterData1 = _cache.GetActivePlayerIds().Count
                 },
                 Shop = new ScreenButtonEntity
                 {
@@ -205,6 +209,9 @@ namespace KvizCommando.Server.Services.DtoMapping
             if (player.SessionId == "denied")
                 return new VsGameDtos { AccessDenied = true };
 
+            var rankedPlayerCounts =
+                _rankedQueue.GetConnectedPlayerCounts();
+
             var teamMembers = player.Characters
                 .Select((member, index) => new
                 {
@@ -264,23 +271,17 @@ namespace KvizCommando.Server.Services.DtoMapping
                 {
                     IsCreateBattlefieldEnabled = false,
                     IsJoinBattlefieldEnabled = false,
-                    IsRankedBattlefieldsEnabled =
-                        battleReadyMemberCount >=
-                            VsBattleClassificationRules
-                                .RequiredBattleReadyCharacters &&
-                        player.Core.Credit >=
-                            VsBattleClassificationRules
-                                .RequiredCreditBalance,
-                    BattleReadyCharacterCount =
-                        battleReadyMemberCount,
-                    RequiredBattleReadyCharacterCount =
-                        VsBattleClassificationRules
-                            .RequiredBattleReadyCharacters,
+                    IsRankedBattlefieldsEnabled = 
+                        battleReadyMemberCount >= VsBattleClassificationRules.RequiredBattleReadyCharacters &&
+                        player.Core.Credit >= VsBattleClassificationRules.RequiredCreditBalance,
+                    BattleReadyCharacterCount =  battleReadyMemberCount,
+                    RequiredBattleReadyCharacterCount = VsBattleClassificationRules.RequiredBattleReadyCharacters,
                     CreditBalance = player.Core.Credit,
-                    RequiredCreditBalance =
-                        VsBattleClassificationRules
-                            .RequiredCreditBalance,
-                    TeamRank = player.Core.RankEnum
+                    RequiredCreditBalance = VsBattleClassificationRules.RequiredCreditBalance,
+                    TeamRank = player.Core.RankEnum,
+                    PrivatePlayerCount = 0,
+                    RankedPlayerCount =
+                        rankedPlayerCounts.Values.Sum()
                 },
                 RankedBattlefields =
                     new VsRankedBattlefieldsDto
@@ -308,7 +309,10 @@ namespace KvizCommando.Server.Services.DtoMapping
                                     MemberMaximumRankClass =
                                         rule.MemberMaximumRankClass,
                                     RequiredMembersInRankClassRange =
-                                        rule.RequiredMembersInRankClassRange
+                                        rule.RequiredMembersInRankClassRange,
+                                    PlayerCount =
+                                        rankedPlayerCounts[
+                                            rule.ClassificationId]
                                 })
                         ]
                     }

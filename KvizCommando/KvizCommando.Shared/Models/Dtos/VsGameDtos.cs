@@ -18,6 +18,8 @@ public sealed class VsRootBoxInfo
     public int CreditBalance { get; set; }
     public int RequiredCreditBalance { get; set; } = 50;
     public int TeamRank { get; set; }
+    public int PrivatePlayerCount { get; set; }
+    public int RankedPlayerCount { get; set; }
 }
 
 public sealed class VsRankedBattlefieldsDto
@@ -53,11 +55,13 @@ public sealed class VsBattleClassificationDto
     public int MemberMinimumRankClass { get; set; }
     public int MemberMaximumRankClass { get; set; }
     public int RequiredMembersInRankClassRange { get; set; }
+    public int PlayerCount { get; set; }
 }
 
 /**
  * MÓDOSÍTÁS: a harci besorolás DTO megkapta a szerver által
- * meghatározott ranked tétet.
+ * meghatározott ranked tétet, valamint a képernyő lekérésekor
+ * rögzített privát, összes ranked és besorolásonkénti létszámot.
  *
  * A fájl a VS menü, a mentett harci csapat és a besorolási
  * feltételrendszer képernyő-snapshotjait tartalmazza.

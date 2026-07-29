@@ -70,6 +70,32 @@ public sealed class VsMatchStore
                _matches.TryGetValue(matchId, out match);
     }
 
+    public (int PlayerId, int ClassificationId)[]
+        GetConnectedPlayers()
+    {
+        var matches = _matches.Values.ToArray();
+        var players =
+            new List<(int PlayerId, int ClassificationId)>();
+
+        foreach (var match in matches)
+        {
+            lock (match.SyncRoot)
+            {
+                if (match.IsClosed)
+                    continue;
+
+                players.AddRange(
+                    match.Players
+                        .Where(player => player.IsConnected)
+                        .Select(player => (
+                            player.PlayerId,
+                            match.Classification.ClassificationId)));
+            }
+        }
+
+        return [.. players];
+    }
+
     public bool TryRemove(Guid matchId, out VsMatchSession? match)
     {
         match = null;
@@ -104,6 +130,8 @@ public sealed class VsMatchStore
  * állapotot, ezért egy korábban lekért referencia sem módosíthatja
  * tovább a törölt meccset. A szinkronizáló objektum nem eldobható
  * erőforrás, így nincs SemaphoreSlim-dispose versenyhelyzet.
+ * A kapcsolódott játékosokról rövid, lockolt pillanatképet ad a
+ * ranked létszám képernyő-DTO-ba töltéséhez.
  *
  * A futó VS meccsek és a connection/player hozzárendelések
  * folyamaton belüli, konkurens tárolója.

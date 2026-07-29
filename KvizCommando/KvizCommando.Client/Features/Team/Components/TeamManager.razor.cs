@@ -1,4 +1,3 @@
-using KvizCommando.Client.Features.Shared.Modal.Dynamic.Builders;
 using KvizCommando.Client.Features.Team.Builders;
 using KvizCommando.Client.Features.Team.Services;
 using KvizCommando.Client.Features.Team.ViewModels;
@@ -10,6 +9,7 @@ using KvizCommando.Shared.Contracts.Team;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Enums;
 using Microsoft.AspNetCore.Components;
+using KvizCommando.Client.Features.Shared.Modal.Builders;
 
 namespace KvizCommando.Client.Features.Team.Components;
 
