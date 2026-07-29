@@ -1,40 +1,32 @@
 using KvizCommando.Server.Hubs;
-using KvizCommando.Server.Models;
-using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.VsGame.Matchmaking;
 using KvizCommando.Shared.Contracts.VsGame.Match;
-using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Enums.VsGame;
 using Microsoft.AspNetCore.SignalR;
-using System.Text.Json;
 
 namespace KvizCommando.Server.Services.VsGame.Match;
 
 public sealed class VsMatchService : IVsMatchService
 {
-    private readonly IServiceScopeFactory _scopeFactory;
     private readonly VsMatchStore _store;
-    private readonly IVsMatchQuestionLoader _questionLoader;
+    private readonly VsMatchSetupService _setup;
     private readonly IHubContext<VsMatchHub, IVsMatchHubClient> _hub;
     private readonly ILogger<VsMatchService> _logger;
 
     public VsMatchService(
-        IServiceScopeFactory scopeFactory,
         VsMatchStore store,
-        IVsMatchQuestionLoader questionLoader,
+        VsMatchSetupService setup,
         IHubContext<VsMatchHub, IVsMatchHubClient> hub,
         ILogger<VsMatchService> logger)
     {
-        _scopeFactory = scopeFactory;
         _store = store;
-        _questionLoader = questionLoader;
+        _setup = setup;
         _hub = hub;
         _logger = logger;
     }
 
-    public async Task CreateLockedMatchAsync(
-        IReadOnlyList<VsRankedQueueEntry> entries,
-        CancellationToken ct = default)
+    public VsMatchSession LockMatch(
+        IReadOnlyList<VsRankedQueueEntry> entries)
     {
         if (entries.Count != VsMatchProfiles.Ranked.RequiredPlayers)
         {
@@ -69,6 +61,9 @@ public sealed class VsMatchService : IVsMatchService
             ]
         };
 
+        AddLog(match, null, "MatchLocked",
+            $"Classification={classificationId}");
+
         if (!_store.TryAdd(match))
         {
             match.Dispose();
@@ -76,216 +71,329 @@ public sealed class VsMatchService : IVsMatchService
                 "The locked VS match could not be registered.");
         }
 
-        AddLog(match, null, "MatchLocked",
-            $"Classification={classificationId}");
-
-        foreach (var player in match.Players)
-            await LockStakeAsync(player, classification.Stake, ct);
-
-        await BroadcastMatchAsync(match, ct);
-
-        var seeds = new List<VsMatchPlayerSeed>(match.Players.Count);
-
-        foreach (var player in match.Players)
-            seeds.Add(await BuildPlayerSeedAsync(player, ct));
-
-        var loadouts = await _questionLoader.LoadAsync(
-            seeds,
-            match.Profile.LoadoutSize,
-            ct);
-
-        await match.Lock.WaitAsync(ct);
-        try
-        {
-            foreach (var seed in seeds)
-            {
-                var player = match.Players.First(item =>
-                    item.PlayerId == seed.PlayerId);
-
-                player.DisplayName = seed.DisplayName;
-                player.TeamName = seed.TeamName;
-                player.TeamLevel = seed.TeamLevel;
-                player.Characters = seed.Characters;
-                player.HelpCounts = seed.HelpCounts;
-                player.Loadout = loadouts[seed.PlayerId];
-            }
-
-            StartPhaseLocked(
-                match,
-                VsMatchPhase.PreparationOrder);
-        }
-        finally
-        {
-            match.Lock.Release();
-        }
-
-        await BroadcastMatchAsync(match, ct);
+        return match;
     }
 
-    public Task SelectCharacterAsync(
+    public async Task<bool> InitializeLockedMatchAsync(
+        VsMatchSession match,
+        CancellationToken ct = default)
+    {
+        try
+        {
+            await BroadcastMatchAsync(match);
+
+            var hasConnectedPlayer =
+                await _setup.InitializePlayersAsync(match, ct);
+
+            (string ConnectionId, VsMatchSnapshot Snapshot)[] messages;
+
+            lock (match.SyncRoot)
+            {
+                if (match.IsClosed)
+                    return false;
+
+                match.IsInitializing = false;
+                hasConnectedPlayer =
+                    hasConnectedPlayer &&
+                    match.Players.Any(player =>
+                        player.IsConnected);
+
+                if (!hasConnectedPlayer)
+                {
+                    messages = [];
+                }
+                else
+                {
+                    StartPhaseLocked(
+                        match,
+                        VsMatchPhase.PreparationOrder);
+
+                    messages =
+                        VsMatchSnapshotBuilder.BuildMessages(match);
+                }
+            }
+
+            if (!hasConnectedPlayer)
+            {
+                _store.TryRemove(match.MatchId, out _);
+                return false;
+            }
+
+            await SendBroadcastMessagesAsync(messages);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "VS match initialization failed. matchId={MatchId}",
+                match.MatchId);
+
+            string[] connectedClients;
+
+            lock (match.SyncRoot)
+            {
+                match.IsInitializing = false;
+                connectedClients =
+                [
+                    .. match.Players
+                        .Where(player => player.IsConnected)
+                        .Select(player => player.ConnectionId)
+                ];
+            }
+
+            await _setup.RefundStakesAsync(match);
+            _store.TryRemove(match.MatchId, out _);
+
+            await SendMatchClosedAsync(
+                connectedClients,
+                "vsgame.Match.Error.Connection");
+
+            return false;
+        }
+    }
+
+    public async Task SelectCharacterAsync(
         string connectionId,
         int slotNumber,
-        CancellationToken ct = default) =>
-        ExecutePreparationCommandAsync(
-            connectionId,
-            VsMatchPhase.PreparationOrder,
-            (match, player) =>
+        CancellationToken ct = default)
+    {
+        ct.ThrowIfCancellationRequested();
+
+        if (!_store.TryGetByConnection(connectionId, out var match) ||
+            match is null)
+        {
+            return;
+        }
+
+        (string ConnectionId, VsMatchSnapshot Snapshot)[] messages;
+
+        lock (match.SyncRoot)
+        {
+            var player = match.FindByConnection(connectionId);
+
+            if (match.IsClosed ||
+                match.Phase != VsMatchPhase.PreparationOrder ||
+                player is null ||
+                !player.IsConnected ||
+                player.IsFinished ||
+                HasExpired(match) ||
+                player.Characters.All(character =>
+                    character.SlotNumber != slotNumber) ||
+                player.Rounds.Any(round =>
+                    round.CharacterSlotNumber == slotNumber))
             {
-                if (player.IsFinished ||
-                    player.Characters.All(character =>
-                        character.SlotNumber != slotNumber) ||
-                    player.Rounds.Any(round =>
-                        round.CharacterSlotNumber == slotNumber))
-                {
-                    return false;
-                }
+                return;
+            }
 
-                var target = player.Rounds.FirstOrDefault(round =>
-                    !round.IsCaptainRound &&
-                    !round.CharacterSlotNumber.HasValue);
+            var target = player.Rounds.FirstOrDefault(round =>
+                !round.IsCaptainRound &&
+                !round.CharacterSlotNumber.HasValue);
 
-                if (target is null)
-                    return false;
+            if (target is null)
+                return;
 
-                target.CharacterSlotNumber = slotNumber;
-                AddLog(
-                    match,
-                    player.PlayerId,
-                    "PreparationCharacterSelected",
-                    $"Round={target.RoundNumber};Slot={slotNumber}");
-                return true;
-            },
-            ct);
+            target.CharacterSlotNumber = slotNumber;
 
-    public Task AssignLoadoutAsync(
+            AddLog(
+                match,
+                player.PlayerId,
+                "PreparationCharacterSelected",
+                $"Round={target.RoundNumber};Slot={slotNumber}");
+
+            messages = VsMatchSnapshotBuilder.BuildMessages(match);
+        }
+
+        await SendBroadcastMessagesAsync(messages);
+    }
+
+    public async Task AssignLoadoutAsync(
         string connectionId,
         VsLoadoutAssignmentRequest request,
-        CancellationToken ct = default) =>
-        ExecutePreparationCommandAsync(
-            connectionId,
-            VsMatchPhase.PreparationCategories,
-            (match, player) =>
+        CancellationToken ct = default)
+    {
+        ct.ThrowIfCancellationRequested();
+
+        if (!_store.TryGetByConnection(connectionId, out var match) ||
+            match is null)
+        {
+            return;
+        }
+
+        (string ConnectionId, VsMatchSnapshot Snapshot)[] messages;
+
+        lock (match.SyncRoot)
+        {
+            var player = match.FindByConnection(connectionId);
+
+            if (match.IsClosed ||
+                match.Phase != VsMatchPhase.PreparationCategories ||
+                player is null ||
+                !player.IsConnected ||
+                player.IsFinished ||
+                HasExpired(match))
             {
-                if (player.IsFinished)
-                    return false;
+                return;
+            }
 
-                var loadout = player.Loadout.FirstOrDefault(item =>
-                    item.Token == request.LoadoutToken);
+            var loadout = player.Loadout.FirstOrDefault(item =>
+                item.Token == request.LoadoutToken);
 
-                var target = player.Rounds.FirstOrDefault(round =>
-                    !round.IsCaptainRound &&
-                    round.RoundNumber == request.RoundNumber);
+            var target = player.Rounds.FirstOrDefault(round =>
+                !round.IsCaptainRound &&
+                round.RoundNumber == request.RoundNumber);
 
-                if (loadout is null ||
-                    target is null ||
-                    loadout.IsOwnQuestion ||
-                    target.LoadoutToken.HasValue ||
-                    player.Rounds.Any(round =>
-                        round.LoadoutToken ==
-                        request.LoadoutToken))
-                {
-                    return false;
-                }
+            if (loadout is null ||
+                target is null ||
+                loadout.IsOwnQuestion ||
+                target.LoadoutToken.HasValue ||
+                player.Rounds.Any(round =>
+                    round.LoadoutToken ==
+                    request.LoadoutToken))
+            {
+                return;
+            }
 
-                target.LoadoutToken = request.LoadoutToken;
-                AddLog(
-                    match,
-                    player.PlayerId,
-                    "PreparationLoadoutAssigned",
-                    $"Round={target.RoundNumber};Token={request.LoadoutToken}");
-                return true;
-            },
-            ct);
+            target.LoadoutToken = request.LoadoutToken;
 
-    public Task AssignHelpAsync(
+            AddLog(
+                match,
+                player.PlayerId,
+                "PreparationLoadoutAssigned",
+                $"Round={target.RoundNumber};Token={request.LoadoutToken}");
+
+            messages = VsMatchSnapshotBuilder.BuildMessages(match);
+        }
+
+        await SendBroadcastMessagesAsync(messages);
+    }
+
+    public async Task AssignHelpAsync(
         string connectionId,
         VsHelpAssignmentRequest request,
-        CancellationToken ct = default) =>
-        ExecutePreparationCommandAsync(
-            connectionId,
-            VsMatchPhase.PreparationHelps,
-            (match, player) =>
+        CancellationToken ct = default)
+    {
+        ct.ThrowIfCancellationRequested();
+
+        if (!_store.TryGetByConnection(connectionId, out var match) ||
+            match is null)
+        {
+            return;
+        }
+
+        (string ConnectionId, VsMatchSnapshot Snapshot)[] messages;
+
+        lock (match.SyncRoot)
+        {
+            var player = match.FindByConnection(connectionId);
+
+            if (match.IsClosed ||
+                match.Phase != VsMatchPhase.PreparationHelps ||
+                player is null ||
+                !player.IsConnected ||
+                player.IsFinished ||
+                HasExpired(match) ||
+                request.HelpType is <= VsHelpType.None or >
+                    VsHelpType.AiSuggestion)
             {
-                if (player.IsFinished ||
-                    request.HelpType is <= VsHelpType.None or >
-                        VsHelpType.AiSuggestion)
-                {
-                    return false;
-                }
+                return;
+            }
 
-                var target = player.Rounds.FirstOrDefault(round =>
-                    round.RoundNumber == request.RoundNumber);
+            var target = player.Rounds.FirstOrDefault(round =>
+                round.RoundNumber == request.RoundNumber);
 
-                if (target is null ||
-                    player.Rounds.Any(round =>
-                        round.RoundNumber == request.RoundNumber &&
-                        round.HelpType != VsHelpType.None) ||
-                    !CanUseHelpInRound(
-                        request.HelpType,
-                        target.IsCaptainRound))
-                {
-                    return false;
-                }
+            if (target is null ||
+                target.HelpType != VsHelpType.None ||
+                !CanUseHelpInRound(
+                    request.HelpType,
+                    target.IsCaptainRound))
+            {
+                return;
+            }
 
-                var available = player.HelpCounts[
-                    (int)request.HelpType - 1];
+            var available = player.HelpCounts[
+                (int)request.HelpType - 1];
 
-                if (available <= 0 ||
-                    player.Rounds.Any(round =>
-                        round.HelpType == request.HelpType))
-                {
-                    return false;
-                }
+            if (available <= 0 ||
+                player.Rounds.Any(round =>
+                    round.HelpType == request.HelpType))
+            {
+                return;
+            }
 
-                target.HelpType = request.HelpType;
-                AddLog(
-                    match,
-                    player.PlayerId,
-                    "PreparationHelpAssigned",
-                    $"Round={target.RoundNumber};Help={request.HelpType}");
-                return true;
-            },
-            ct);
+            target.HelpType = request.HelpType;
 
-    public Task ResetPreparationAsync(
+            AddLog(
+                match,
+                player.PlayerId,
+                "PreparationHelpAssigned",
+                $"Round={target.RoundNumber};Help={request.HelpType}");
+
+            messages = VsMatchSnapshotBuilder.BuildMessages(match);
+        }
+
+        await SendBroadcastMessagesAsync(messages);
+    }
+
+    public async Task ResetPreparationAsync(
         string connectionId,
-        CancellationToken ct = default) =>
-        ExecuteAnyPreparationCommandAsync(
-            connectionId,
-            (match, player) =>
+        CancellationToken ct = default)
+    {
+        ct.ThrowIfCancellationRequested();
+
+        if (!_store.TryGetByConnection(connectionId, out var match) ||
+            match is null)
+        {
+            return;
+        }
+
+        (string ConnectionId, VsMatchSnapshot Snapshot)[] messages;
+
+        lock (match.SyncRoot)
+        {
+            var player = match.FindByConnection(connectionId);
+
+            if (match.IsClosed ||
+                player is null ||
+                !player.IsConnected ||
+                player.IsFinished ||
+                HasExpired(match))
             {
-                if (player.IsFinished)
-                    return false;
+                return;
+            }
 
-                switch (match.Phase)
-                {
-                    case VsMatchPhase.PreparationOrder:
-                        foreach (var round in player.Rounds)
-                            round.CharacterSlotNumber = null;
-                        break;
+            switch (match.Phase)
+            {
+                case VsMatchPhase.PreparationOrder:
+                    foreach (var round in player.Rounds)
+                        round.CharacterSlotNumber = null;
+                    break;
 
-                    case VsMatchPhase.PreparationCategories:
-                        foreach (var round in player.Rounds)
-                            round.LoadoutToken = null;
-                        break;
+                case VsMatchPhase.PreparationCategories:
+                    foreach (var round in player.Rounds)
+                        round.LoadoutToken = null;
+                    break;
 
-                    case VsMatchPhase.PreparationHelps:
-                        foreach (var round in player.Rounds)
-                            round.HelpType = VsHelpType.None;
-                        break;
+                case VsMatchPhase.PreparationHelps:
+                    foreach (var round in player.Rounds)
+                        round.HelpType = VsHelpType.None;
+                    break;
 
-                    default:
-                        return false;
-                }
+                default:
+                    return;
+            }
 
-                AddLog(
-                    match,
-                    player.PlayerId,
-                    "PreparationReset",
-                    string.Empty);
-                return true;
-            },
-            ct);
+            AddLog(
+                match,
+                player.PlayerId,
+                "PreparationReset",
+                string.Empty);
+
+            messages = VsMatchSnapshotBuilder.BuildMessages(match);
+        }
+
+        await SendBroadcastMessagesAsync(messages);
+    }
 
     public async Task FinishPreparationAsync(
         string connectionId,
@@ -297,22 +405,28 @@ public sealed class VsMatchService : IVsMatchService
             return;
         }
 
-        var changed = false;
+        ct.ThrowIfCancellationRequested();
 
-        await match.Lock.WaitAsync(ct);
-        try
+        (string ConnectionId, VsMatchSnapshot Snapshot)[] messages;
+
+        lock (match.SyncRoot)
         {
             var player = match.FindByConnection(connectionId);
 
-            if (player is null ||
+            if (match.IsClosed ||
+                player is null ||
+                !player.IsConnected ||
                 player.IsFinished ||
-                !CanFinish(match.Phase, player))
+                HasExpired(match) ||
+                !VsMatchPreparationRules.CanFinish(
+                    match.Phase,
+                    player))
             {
                 return;
             }
 
             player.IsFinished = true;
-            changed = true;
+
             AddLog(
                 match,
                 player.PlayerId,
@@ -320,14 +434,11 @@ public sealed class VsMatchService : IVsMatchService
                 string.Empty);
 
             AdvanceIfReadyLocked(match);
-        }
-        finally
-        {
-            match.Lock.Release();
+
+            messages = VsMatchSnapshotBuilder.BuildMessages(match);
         }
 
-        if (changed)
-            await BroadcastMatchAsync(match, ct);
+        await SendBroadcastMessagesAsync(messages);
     }
 
     public async Task DisconnectAsync(
@@ -340,16 +451,21 @@ public sealed class VsMatchService : IVsMatchService
             return;
         }
 
+        ct.ThrowIfCancellationRequested();
+
         var removeMatch = false;
         (string ConnectionId, VsMatchSnapshot Snapshot)[] messages = [];
 
-        await match.Lock.WaitAsync(ct);
-        try
+        lock (match.SyncRoot)
         {
             var player = match.FindByConnection(connectionId);
 
-            if (player is null || !player.IsConnected)
+            if (match.IsClosed ||
+                player is null ||
+                !player.IsConnected)
+            {
                 return;
+            }
 
             player.IsConnected = false;
             ApplyTimeoutDefaults(match, player);
@@ -364,14 +480,15 @@ public sealed class VsMatchService : IVsMatchService
             AdvanceIfReadyLocked(match);
 
             removeMatch =
+                !match.IsInitializing &&
                 match.Players.All(item => !item.IsConnected);
 
-            if (!removeMatch)
-                messages = BuildBroadcastMessagesLocked(match);
-        }
-        finally
-        {
-            match.Lock.Release();
+            if (!removeMatch &&
+                match.Players.Any(item => item.IsConnected))
+            {
+                messages =
+                    VsMatchSnapshotBuilder.BuildMessages(match);
+            }
         }
 
         if (removeMatch)
@@ -381,193 +498,6 @@ public sealed class VsMatchService : IVsMatchService
         }
 
         await SendBroadcastMessagesAsync(messages);
-    }
-
-    private async Task ExecutePreparationCommandAsync(
-        string connectionId,
-        VsMatchPhase requiredPhase,
-        Func<VsMatchSession, VsMatchPlayerState, bool> command,
-        CancellationToken ct)
-    {
-        await ExecuteCommandAsync(
-            connectionId,
-            (match, player) =>
-                match.Phase == requiredPhase &&
-                command(match, player),
-            ct);
-    }
-
-    private async Task ExecuteAnyPreparationCommandAsync(
-        string connectionId,
-        Func<VsMatchSession, VsMatchPlayerState, bool> command,
-        CancellationToken ct)
-    {
-        await ExecuteCommandAsync(
-            connectionId,
-            (match, player) =>
-                (match.Phase is
-                    VsMatchPhase.PreparationOrder or
-                    VsMatchPhase.PreparationCategories or
-                    VsMatchPhase.PreparationHelps) &&
-                command(match, player),
-            ct);
-    }
-
-    private async Task ExecuteCommandAsync(
-        string connectionId,
-        Func<VsMatchSession, VsMatchPlayerState, bool> command,
-        CancellationToken ct)
-    {
-        if (!_store.TryGetByConnection(connectionId, out var match) ||
-            match is null)
-        {
-            return;
-        }
-
-        var changed = false;
-
-        await match.Lock.WaitAsync(ct);
-        try
-        {
-            var player = match.FindByConnection(connectionId);
-
-            if (player is null ||
-                !player.IsConnected ||
-                HasExpired(match))
-            {
-                return;
-            }
-
-            changed = command(match, player);
-        }
-        finally
-        {
-            match.Lock.Release();
-        }
-
-        if (changed)
-            await BroadcastMatchAsync(match, ct);
-    }
-
-    private async Task<VsMatchPlayerSeed> BuildPlayerSeedAsync(
-        VsMatchPlayerState matchPlayer,
-        CancellationToken ct)
-    {
-        using var scope = _scopeFactory.CreateScope();
-        var cache =
-            scope.ServiceProvider.GetRequiredService<IPlayerCacheService>();
-
-        VsMatchPlayerSeed? seed = null;
-
-        var success = await cache.UpdateQuestionsLockedAsync(
-            matchPlayer.PlayerId,
-            matchPlayer.SessionId,
-            (player, questions) =>
-            {
-                var selectedSlots = player.BattleTeamSlots.ToArray();
-
-                if (selectedSlots.Length !=
-                    matchPlayer.Rounds.Count(round =>
-                        !round.IsCaptainRound))
-                {
-                    return null;
-                }
-
-                var characters = selectedSlots
-                    .Select(slot => player.Characters[slot - 1])
-                    .ToArray();
-
-                if (characters.Any(character => character is null))
-                    return null;
-
-                var loadout = JsonSerializer.Deserialize<int[]>(
-                                  player.Loadout.FactorySlotsJson) ??
-                              [];
-
-                var helpData = JsonSerializer.Deserialize<int[]>(
-                                   player.Loadout.HelpLevelsJson) ??
-                               [];
-
-                seed = new VsMatchPlayerSeed
-                {
-                    PlayerId = matchPlayer.PlayerId,
-                    Position = matchPlayer.Position,
-                    SessionId = matchPlayer.SessionId,
-                    ConnectionId = matchPlayer.ConnectionId,
-                    DisplayName = player.Core.DisplayName,
-                    TeamName = player.Core.TeamName,
-                    TeamLevel = player.Core.RankEnum,
-                    LoadoutCategories =
-                    [
-                        .. loadout.Take(
-                            VsMatchProfiles.Ranked.LoadoutSize)
-                    ],
-                    HelpCounts = BuildHelpCounts(helpData),
-                    Characters =
-                    [
-                        .. selectedSlots.Select((slot, index) =>
-                            BuildCharacterState(
-                                slot,
-                                characters[index]!))
-                    ],
-                    OwnQuestions =
-                    [
-                        .. questions.uSlots
-                            .Where(question =>
-                                question is not null &&
-                                question.CategoryNo > 0)
-                            .Select(question => new VsOwnQuestionSeed
-                            {
-                                QuestionId = question.Id,
-                                Question = question.Question,
-                                CategoryId = question.CategoryNo,
-                                AnswersJson = question.AnswersJson
-                            })
-                    ]
-                };
-
-                return 0u;
-            },
-            ct);
-
-        if (success != true || seed is null)
-        {
-            throw new InvalidOperationException(
-                $"Locked VS player {matchPlayer.PlayerId} could not be snapshotted.");
-        }
-
-        return seed;
-    }
-
-    private async Task LockStakeAsync(
-        VsMatchPlayerState matchPlayer,
-        int stake,
-        CancellationToken ct)
-    {
-        using var scope = _scopeFactory.CreateScope();
-        var cache =
-            scope.ServiceProvider.GetRequiredService<IPlayerCacheService>();
-
-        var success = await cache.UpdatePlayerLockedAsync(
-            matchPlayer.PlayerId,
-            matchPlayer.SessionId,
-            player =>
-            {
-                if (player.Core.Credit < stake)
-                    return null;
-
-                player.Core.Credit -= stake;
-                return DirtyFlags.Core;
-            },
-            ct);
-
-        if (success != true)
-        {
-            throw new InvalidOperationException(
-                $"Locked VS player {matchPlayer.PlayerId} stake could not be reserved.");
-        }
-
-        matchPlayer.StakeLocked = true;
     }
 
     private static VsMatchPlayerState CreateLockedPlayer(
@@ -593,95 +523,6 @@ public sealed class VsMatchService : IVsMatchService
                     })
             ]
         };
-
-    private static VsMatchCharacterState BuildCharacterState(
-        int slotNumber,
-        CharachterSlot character)
-    {
-        var effectiveLevel = Math.Max(character.Rank, 1);
-        var modifiers = new Dictionary<int, double>();
-
-        for (var index = 0; index < 4; index++)
-        {
-            AddModifier(
-                modifiers,
-                character.Attitude.Main.CatNo[index],
-                ModifierTable.DataMainSkill[index].StartValue +
-                (effectiveLevel - 1) *
-                ModifierTable.DataMainSkill[index].StepValue);
-
-            var secondaryLevel = Math.Clamp(
-                character.Attitude.Secondary.Level[index],
-                0,
-                ModifierTable.Data.Count - 1);
-
-            AddModifier(
-                modifiers,
-                character.Attitude.Secondary.CatNo[index],
-                ModifierTable.Data[secondaryLevel]
-                    .Modifier[index] ?? 0);
-
-            var genderLevel = Math.Clamp(
-                character.Attitude.Gender.Level[index],
-                0,
-                ModifierTable.Data.Count - 1);
-
-            AddModifier(
-                modifiers,
-                character.Attitude.Gender.CatNo[index],
-                ModifierTable.Data[genderLevel]
-                    .Modifier[index + 4] ?? 0);
-        }
-
-        var orientationId = character.Attitude.Main.CatNo[0];
-        if (orientationId > 8)
-            orientationId -= 8;
-
-        return new VsMatchCharacterState
-        {
-            SlotNumber = slotNumber,
-            Name = character.Name,
-            PictureCode = character.PictureCode,
-            Level = character.Rank,
-            OrientationId = orientationId,
-            CategoryModifiers = modifiers
-        };
-    }
-
-    private static void AddModifier(
-        IDictionary<int, double> modifiers,
-        int categoryId,
-        double value)
-    {
-        if (categoryId is <
-                VsLoadoutCategoryIds.MinimumFactoryCategory or >
-                VsLoadoutCategoryIds.MaximumFactoryCategory)
-        {
-            return;
-        }
-
-        modifiers.TryGetValue(
-           categoryId,
-           out var currentValue);
-
-        modifiers[categoryId] =
-            currentValue + value;
-    }
-
-    private static int[] BuildHelpCounts(int[] helpData)
-    {
-        var result = new int[4];
-
-        for (var index = 0; index < result.Length; index++)
-        {
-            var sourceIndex = index + 4;
-            result[index] = sourceIndex < helpData.Length
-                ? Math.Max(helpData[sourceIndex], 0)
-                : 0;
-        }
-
-        return result;
-    }
 
     private void StartPhaseLocked(
         VsMatchSession match,
@@ -747,10 +588,12 @@ public sealed class VsMatchService : IVsMatchService
                 return;
             }
 
-            await match.Lock.WaitAsync(ct);
-            try
+            (string ConnectionId, VsMatchSnapshot Snapshot)[] messages;
+
+            lock (match.SyncRoot)
             {
-                if (match.PhaseVersion != phaseVersion ||
+                if (match.IsClosed ||
+                    match.PhaseVersion != phaseVersion ||
                     match.DeadlineUtc != deadlineUtc)
                 {
                     return;
@@ -779,15 +622,12 @@ public sealed class VsMatchService : IVsMatchService
                 }
 
                 AdvanceIfReadyLocked(match);
-            }
-            finally
-            {
-                match.Lock.Release();
+
+                messages =
+                    VsMatchSnapshotBuilder.BuildMessages(match);
             }
 
-            await BroadcastMatchAsync(
-                match,
-                CancellationToken.None);
+            await SendBroadcastMessagesAsync(messages);
         }
         catch (OperationCanceledException) when (ct.IsCancellationRequested)
         {
@@ -891,26 +731,6 @@ public sealed class VsMatchService : IVsMatchService
         }
     }
 
-    private static bool CanFinish(
-        VsMatchPhase phase,
-        VsMatchPlayerState player) =>
-        phase switch
-        {
-            VsMatchPhase.PreparationOrder =>
-                player.Rounds
-                    .Where(round => !round.IsCaptainRound)
-                    .All(round =>
-                        round.CharacterSlotNumber.HasValue),
-
-            VsMatchPhase.PreparationCategories =>
-                player.Rounds
-                    .Where(round => !round.IsCaptainRound)
-                    .All(round => round.LoadoutToken.HasValue),
-
-            VsMatchPhase.PreparationHelps => true,
-            _ => false
-        };
-
     private static bool CanUseHelpInRound(
         VsHelpType helpType,
         bool isCaptainRound) =>
@@ -929,35 +749,21 @@ public sealed class VsMatchService : IVsMatchService
         DateTime.UtcNow >= match.DeadlineUtc.Value;
 
     private async Task BroadcastMatchAsync(
-        VsMatchSession match,
-        CancellationToken ct)
+        VsMatchSession match)
     {
         (string ConnectionId, VsMatchSnapshot Snapshot)[] messages;
 
-        await match.Lock.WaitAsync(ct);
-        try
+        lock (match.SyncRoot)
         {
-            messages = BuildBroadcastMessagesLocked(match);
-        }
-        finally
-        {
-            match.Lock.Release();
+            if (match.IsClosed)
+                return;
+
+            messages =
+                VsMatchSnapshotBuilder.BuildMessages(match);
         }
 
         await SendBroadcastMessagesAsync(messages);
     }
-
-    private static (
-        string ConnectionId,
-        VsMatchSnapshot Snapshot)[] BuildBroadcastMessagesLocked(
-            VsMatchSession match) =>
-        [
-            .. match.Players
-                .Where(player => player.IsConnected)
-                .Select(player => (
-                    player.ConnectionId,
-                    BuildSnapshot(match, player)))
-        ];
 
     private async Task SendBroadcastMessagesAsync(
         (string ConnectionId, VsMatchSnapshot Snapshot)[] messages)
@@ -970,263 +776,16 @@ public sealed class VsMatchService : IVsMatchService
         }
     }
 
-    private static VsMatchSnapshot BuildSnapshot(
-        VsMatchSession match,
-        VsMatchPlayerState currentPlayer)
+    private async Task SendMatchClosedAsync(
+        IEnumerable<string> connectionIds,
+        string messageKey)
     {
-        var preparation = BuildPreparation(
-            match,
-            currentPlayer);
-
-        return new VsMatchSnapshot
+        foreach (var connectionId in connectionIds)
         {
-            MatchId = match.MatchId,
-            PhaseVersion = match.PhaseVersion,
-            ClassificationId =
-                match.Classification.ClassificationId,
-            Stake = match.Classification.Stake,
-            Phase = match.Phase,
-            DeadlineUtc = match.DeadlineUtc,
-            PhaseDurationSeconds =
-                match.Phase is
-                    VsMatchPhase.PreparationOrder or
-                    VsMatchPhase.PreparationCategories or
-                    VsMatchPhase.PreparationHelps
-                    ? match.Profile.PreparationSeconds
-                    : 0,
-            InfoKey = ResolveInfoKey(match, currentPlayer),
-            Players =
-            [
-                .. match.Players.Select(player =>
-                    new VsMatchPlayerDto
-                    {
-                        Position = player.Position,
-                        DisplayName = player.DisplayName,
-                        TeamName = player.TeamName,
-                        TeamLevel = player.TeamLevel,
-                        TeamPictureCode =
-                            player.TeamPictureCode,
-                        IsMe =
-                            player.PlayerId ==
-                            currentPlayer.PlayerId,
-                        IsConnected = player.IsConnected,
-                        IsFinished = player.IsFinished
-                    })
-            ],
-            Preparation = preparation
-        };
-    }
-
-    private static VsPreparationDto BuildPreparation(
-        VsMatchSession match,
-        VsMatchPlayerState currentPlayer)
-    {
-        var assignedCharacterSlots = currentPlayer.Rounds
-            .Where(round =>
-                round.CharacterSlotNumber.HasValue)
-            .Select(round =>
-                round.CharacterSlotNumber!.Value)
-            .ToHashSet();
-
-        var assignedLoadoutTokens = currentPlayer.Rounds
-            .Where(round => round.LoadoutToken.HasValue)
-            .Select(round => round.LoadoutToken!.Value)
-            .ToHashSet();
-
-        return new VsPreparationDto
-        {
-            TeamSize = match.Classification.RequiredPartySize,
-            IsFinished = currentPlayer.IsFinished,
-            CanReset = CanReset(match.Phase, currentPlayer),
-            CanFinish = !currentPlayer.IsFinished &&
-                        CanFinish(match.Phase, currentPlayer),
-            Rounds =
-            [
-                .. currentPlayer.Rounds.Select(round =>
-                    BuildRound(currentPlayer, round))
-            ],
-            CharacterInventory =
-            [
-                .. currentPlayer.Characters
-                    .Where(character =>
-                        !assignedCharacterSlots.Contains(
-                            character.SlotNumber))
-                    .Select(ToCharacterDto)
-            ],
-            LoadoutInventory =
-            [
-                .. currentPlayer.Loadout
-                    .Where(item =>
-                        !assignedLoadoutTokens.Contains(item.Token))
-                    .OrderBy(item => item.LoadoutPosition)
-                    .Select(ToLoadoutDto)
-            ],
-            HelpInventory =
-            [
-                .. Enum.GetValues<VsHelpType>()
-                    .Where(help => help != VsHelpType.None)
-                    .Select(help => new VsHelpCardDto
-                    {
-                        HelpType = help,
-                        Count =
-                            currentPlayer.HelpCounts[(int)help - 1] > 0 &&
-                            currentPlayer.Rounds.All(round =>
-                                round.HelpType != help)
-                                ? 1
-                                : 0
-                    })
-            ],
-            CategoryModifiers = BuildCategoryModifiers(
-                match,
-                currentPlayer)
-        };
-    }
-
-    private static VsPreparationRoundDto BuildRound(
-        VsMatchPlayerState player,
-        VsMatchRoundState round)
-    {
-        var character = round.CharacterSlotNumber.HasValue
-            ? player.Characters.FirstOrDefault(item =>
-                item.SlotNumber ==
-                round.CharacterSlotNumber.Value)
-            : null;
-
-        var loadout = round.LoadoutToken.HasValue
-            ? player.Loadout.FirstOrDefault(item =>
-                item.Token == round.LoadoutToken.Value)
-            : null;
-
-        return new VsPreparationRoundDto
-        {
-            RoundNumber = round.RoundNumber,
-            IsCaptainRound = round.IsCaptainRound,
-            Character = character is null
-                ? null
-                : ToCharacterDto(character),
-            Loadout = loadout is null
-                ? null
-                : ToLoadoutDto(loadout),
-            HelpType = round.HelpType
-        };
-    }
-
-    private static VsCategoryModifierDto[] BuildCategoryModifiers(
-        VsMatchSession match,
-        VsMatchPlayerState currentPlayer)
-    {
-        var result = new List<VsCategoryModifierDto>();
-
-        foreach (var round in currentPlayer.Rounds.Where(round =>
-                     !round.IsCaptainRound))
-        {
-            for (var categoryId =
-                     VsLoadoutCategoryIds.MinimumFactoryCategory;
-                 categoryId <=
-                     VsLoadoutCategoryIds.MaximumFactoryCategory;
-                 categoryId++)
-            {
-                var seconds = 0d;
-
-                foreach (var otherPlayer in match.Players.Where(player =>
-                             player.PlayerId != currentPlayer.PlayerId))
-                {
-                    var otherRound =
-                        otherPlayer.Rounds.First(item =>
-                            item.RoundNumber == round.RoundNumber);
-
-                    if (!otherRound.CharacterSlotNumber.HasValue)
-                        continue;
-
-                    var character =
-                        otherPlayer.Characters.First(item =>
-                            item.SlotNumber ==
-                            otherRound.CharacterSlotNumber.Value);
-
-                    seconds += character.CategoryModifiers
-                        .GetValueOrDefault(categoryId);
-                }
-
-                result.Add(new VsCategoryModifierDto
-                {
-                    RoundNumber = round.RoundNumber,
-                    CategoryId = categoryId,
-                    Seconds = Math.Truncate(seconds * 10) / 10
-                });
-            }
+            await _hub.Clients
+                .Client(connectionId)
+                .MatchClosed(messageKey);
         }
-
-        return [.. result];
-    }
-
-    private static VsCharacterCardDto ToCharacterDto(
-        VsMatchCharacterState character) =>
-        new()
-        {
-            SlotNumber = character.SlotNumber,
-            Name = character.Name,
-            PictureCode = character.PictureCode,
-            Level = character.Level,
-            OrientationId = character.OrientationId
-        };
-
-    private static VsLoadoutCardDto ToLoadoutDto(
-        VsMatchLoadoutItemState item) =>
-        new()
-        {
-            LoadoutToken = item.Token,
-            LoadoutPosition = item.LoadoutPosition,
-            CategoryId = item.CategoryId,
-            IsOwnQuestion = item.IsOwnQuestion,
-            IsAllCategories = item.IsAllCategories,
-            IsSelectable = !item.IsOwnQuestion
-        };
-
-    private static bool CanReset(
-        VsMatchPhase phase,
-        VsMatchPlayerState player) =>
-        !player.IsFinished &&
-        (phase switch
-         {
-             VsMatchPhase.PreparationOrder =>
-                 player.Rounds.Any(round =>
-                     round.CharacterSlotNumber.HasValue),
-             VsMatchPhase.PreparationCategories =>
-                 player.Rounds.Any(round =>
-                     round.LoadoutToken.HasValue),
-             VsMatchPhase.PreparationHelps =>
-                 player.Rounds.Any(round =>
-                     round.HelpType != VsHelpType.None),
-             _ => false
-         });
-
-    private static string ResolveInfoKey(
-        VsMatchSession match,
-        VsMatchPlayerState player)
-    {
-        if (player.IsFinished &&
-            match.Phase is
-                VsMatchPhase.PreparationOrder or
-                VsMatchPhase.PreparationCategories or
-                VsMatchPhase.PreparationHelps)
-        {
-            return "vsgame.Match.Info.WaitingForPlayers";
-        }
-
-        return match.Phase switch
-        {
-            VsMatchPhase.MatchLocked =>
-                "vsgame.Match.Info.Locked",
-            VsMatchPhase.PreparationOrder =>
-                "vsgame.Match.Info.Order",
-            VsMatchPhase.PreparationCategories =>
-                "vsgame.Match.Info.Categories",
-            VsMatchPhase.PreparationHelps =>
-                "vsgame.Match.Info.Helps",
-            VsMatchPhase.PreparationCompleted =>
-                "vsgame.Match.Info.PreparationCompleted",
-            _ => "vsgame.Match.Info.Aborted"
-        };
     }
 
     private static void AddLog(
@@ -1253,22 +812,15 @@ internal static class VsMatchEnumerableExtensions
 }
 
 /**
- * A MatchLocked állapot után lefoglalja a téteket, snapshotolja a
- * csapatokat, egyszer betölti a meccs kérdéseit, majd szerverórával
- * végigviszi a három preparációs fázist és személyre szabott
- * SignalR-snapshotokat küld.
+ * MÓDOSÍTÁS: megszűnt az általános Func-delegáltas
+ * ExecuteCommand-metóduslánc. Minden kliensparancsnak rövid, explicit,
+ * szerveroldali validációs és állapotmódosító útja van. Az in-memory
+ * állapot csak await nélküli lock alatt változik; a személyre szabott
+ * snapshotok elkészítése még ugyanott, a SignalR-küldés már a lockon
+ * kívül történik. A meccs inicializálását a VsMatchSetupService, a DTO-
+ * építést a VsMatchSnapshotBuilder végzi.
  *
- * MÓDOSÍTÁS: a profil fejlesztői pause flagje mellett az óra nullára
- * futhat automatikus kitöltés és fázisváltás nélkül; ilyenkor a
- * kiválasztási parancsok és a Finish gomb viszik tovább a preparációt.
- * Kategória kizárólag üres körslotba tehető; átrendezéshez a Reset
- * parancs törli az addigi kiosztást. Segítségből típusonként legfeljebb
- * egy használható, és az is csak üres, számára engedélyezett körslotba
- * kerülhet. Az egy segítség/kör szabályt explicit körszám-ellenőrzés
- * kényszeríti ki a szerver match lockja alatt; ehhez nem használ
- * kliensállapotot. A segítség nélküli játékos automatikusan kész
- * állapotú.
- * Ha a meccs minden SignalR-kapcsolata megszűnt, a store-bejegyzés és
- * a player/connection indexek törlődnek, ezért az elhagyott tesztmeccs
- * nem tartja bent a játékosokat.
+ * A fájl a MatchLocked session létrehozását, a preparációs parancsok
+ * authoritative feldolgozását, a fázisváltást, a szerverórát és a
+ * disconnect miatti takarítást koordinálja.
  */

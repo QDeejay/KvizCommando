@@ -8,7 +8,7 @@ public sealed class VsMatchSession : IDisposable
     public Guid MatchId { get; init; } = Guid.NewGuid();
     public VsMatchProfile Profile { get; init; } = VsMatchProfiles.Ranked;
     public VsBattleClassificationDto Classification { get; init; } = new();
-    public SemaphoreSlim Lock { get; } = new(1, 1);
+    public object SyncRoot { get; } = new();
     public List<VsMatchPlayerState> Players { get; init; } = [];
     public List<VsMatchEventLogEntry> EventLog { get; } = [];
 
@@ -16,6 +16,8 @@ public sealed class VsMatchSession : IDisposable
     public long PhaseVersion { get; set; }
     public DateTime? DeadlineUtc { get; set; }
     public CancellationTokenSource PhaseTimerCts { get; set; } = new();
+    public bool IsInitializing { get; set; } = true;
+    public bool IsClosed { get; set; }
 
     public VsMatchPlayerState? FindByConnection(string connectionId) =>
         Players.FirstOrDefault(player =>
@@ -25,7 +27,6 @@ public sealed class VsMatchSession : IDisposable
     {
         PhaseTimerCts.Cancel();
         PhaseTimerCts.Dispose();
-        Lock.Dispose();
     }
 }
 
@@ -104,6 +105,12 @@ public sealed class VsOwnQuestionSeed
 }
 
 /**
+ * MÓDOSÍTÁS: az in-memory állapot rövid, await nélküli kritikus
+ * szakaszai egyszerű SyncRoot lockot használnak. Az IsInitializing
+ * megakadályozza, hogy a match lock közbeni disconnect félbehagyott
+ * tétfoglalást hozzon létre; az IsClosed kizárja a törölt session
+ * további módosítását.
+ *
  * Egy lezárt meccs teljes, szerveroldali és authoritative állapotát
  * tartalmazza. A SignalR Hub nem őriz játékállapotot.
  */

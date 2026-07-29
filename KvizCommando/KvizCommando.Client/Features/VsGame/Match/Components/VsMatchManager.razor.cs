@@ -22,18 +22,11 @@ public partial class VsMatchManager : IAsyncDisposable
     [Parameter, EditorRequired]
     public int ClassificationId { get; set; }
 
-    [Parameter]
-    public Func<bool, Task>? OnMatchLockChanged { get; set; }
-
-    [Parameter]
-    public Func<string, Task>? OnMatchErrorChanged { get; set; }
-
     private VsMatchViewBuilder _builder = default!;
     private VsQueueViewData? _queue;
     private VsMatchViewData? _match;
     private string _errorText = string.Empty;
-    private string _reportedErrorText = string.Empty;
-    private bool _reportedLocked;
+    private readonly CancellationTokenSource _lifetimeCts = new();
     private bool _disposed;
 
     protected override async Task OnInitializedAsync()
@@ -43,44 +36,41 @@ public partial class VsMatchManager : IAsyncDisposable
 
         try
         {
-            await MatchClient.StartAsync(ClassificationId);
-            BuildViewData();
+            var result =
+                await MatchClient.StartAsync(
+                    ClassificationId,
+                    _lifetimeCts.Token);
+
+            if (result.IsAccepted)
+            {
+                BuildViewData();
+            }
+            else
+            {
+                _errorText = Lang[result.ErrorKey];
+            }
         }
-        catch (Exception ex)
+        catch (OperationCanceledException) when (_disposed)
+        {
+        }
+        catch
         {
             _errorText =
                 Lang["vsgame.Match.Error.Connection"];
-
-            Console.WriteLine(ex);
         }
-
-        await ReportErrorAsync();
     }
-    
 
     private void OnMatchClientChanged()
     {
-        _ = InvokeAsync(RefreshFromSnapshotAsync);
+        _ = InvokeAsync(RefreshFromSnapshot);
     }
 
-    private async Task RefreshFromSnapshotAsync()
+    private void RefreshFromSnapshot()
     {
         if (_disposed)
             return;
 
         BuildViewData();
-        await ReportErrorAsync();
-
-        var isLocked = MatchClient.MatchSnapshot is not null;
-
-        if (_reportedLocked != isLocked)
-        {
-            _reportedLocked = isLocked;
-
-            if (OnMatchLockChanged is not null)
-                await OnMatchLockChanged.Invoke(isLocked);
-        }
-
         StateHasChanged();
     }
 
@@ -102,17 +92,6 @@ public partial class VsMatchManager : IAsyncDisposable
                 MatchClient.ErrorMessageKey)
                 ? string.Empty
                 : Lang[MatchClient.ErrorMessageKey];
-    }
-
-    private async Task ReportErrorAsync()
-    {
-        if (_reportedErrorText == _errorText)
-            return;
-
-        _reportedErrorText = _errorText;
-
-        if (OnMatchErrorChanged is not null)
-            await OnMatchErrorChanged.Invoke(_errorText);
     }
 
     private Task SelectCharacterAsync(int slotNumber) =>
@@ -138,27 +117,23 @@ public partial class VsMatchManager : IAsyncDisposable
             return;
 
         _disposed = true;
+        _lifetimeCts.Cancel();
         MatchClient.OnChanged -= OnMatchClientChanged;
 
         try
         {
-            await MatchClient.LeaveQueueAsync();
+            try
+            {
+                await MatchClient.LeaveQueueAsync();
+            }
+            finally
+            {
+                await MatchClient.StopAsync();
+            }
         }
         finally
         {
-            await MatchClient.StopAsync();
-        }
-
-        if (_reportedLocked &&
-            OnMatchLockChanged is not null)
-        {
-            await OnMatchLockChanged.Invoke(false);
-        }
-
-        if (!string.IsNullOrWhiteSpace(_reportedErrorText) &&
-            OnMatchErrorChanged is not null)
-        {
-            await OnMatchErrorChanged.Invoke(string.Empty);
+            _lifetimeCts.Dispose();
         }
 
         GC.SuppressFinalize(this);
@@ -166,14 +141,13 @@ public partial class VsMatchManager : IAsyncDisposable
 }
 
 /**
- * A VS ranked DynamicComponent életciklusát kezeli: felépíti az
- * egyetlen SignalR kapcsolatot, snapshotból view modelleket készít,
- * továbbítja a preparációs parancsokat és jelzi a lapnak a
- * MatchLocked állapotot. Dispose során a hivatalos queue-kilépést
- * meghívja, majd minden esetben lezárja a kapcsolatot; lezárt meccsnél
- * a szerver OnDisconnected ága végzi a meccsből kiléptetést. A
- * kapcsolódási kivétel technikai, angol szövege csak a konzolra kerül;
- * a felhasználó a lokalizált hibaüzenetet kapja. A hibaüzenetet a
- * VsGame lapnak továbbítja, így az a ContentBox overflow-rétegén
- * kívül, valódi felső rétegen jelenhet meg.
+ * MÓDOSÍTÁS: a manager az egyetlen SignalR-kapcsolat tulajdonosa.
+ * Közvetlenül feldolgozza a queue-belépési eredményt és helyben tartja
+ * a lokalizált hibaállapotot; match lock- és hibacallbacket nem küld a
+ * VS lap, builder vagy spec felé. Dispose során hivatalosan kilép a
+ * queue-ból, majd minden esetben lezárja a kapcsolatot. A saját
+ * életciklus-token megszakítja a még folyamatban lévő csatlakozást.
+ *
+ * A VS ranked DynamicComponent életciklusát kezeli, snapshotból view
+ * modelleket készít és továbbítja a preparációs parancsokat.
  */

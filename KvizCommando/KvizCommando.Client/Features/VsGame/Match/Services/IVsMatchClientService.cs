@@ -11,7 +11,7 @@ public interface IVsMatchClientService : IAsyncDisposable
     string ErrorMessageKey { get; }
     bool IsConnected { get; }
 
-    Task StartAsync(
+    Task<VsQueueJoinResult> StartAsync(
         int classificationId,
         CancellationToken ct = default);
 
@@ -35,6 +35,10 @@ public interface IVsMatchClientService : IAsyncDisposable
 }
 
 /**
+ * MÓDOSÍTÁS: a StartAsync közvetlen queue-belépési eredményt ad, a
+ * játékmeneti parancsok pedig nem nyelhetik el a megszakadt kapcsolat
+ * hibáját.
+ *
  * A VS dynamic manager által használt SignalR klienskapcsolat
  * szerződése. Automatikus reconnectet szándékosan nem tartalmaz.
  */

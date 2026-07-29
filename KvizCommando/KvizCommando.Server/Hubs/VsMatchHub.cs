@@ -26,14 +26,14 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
         _matches = matches;
     }
 
-    public async Task JoinRankedQueue(
+    public async Task<VsQueueJoinResult> JoinRankedQueue(
         int classificationId,
         string sessionId)
     {
         var ct = Context.ConnectionAborted;
         var playerId = await ResolvePlayerIdAsync(ct);
 
-        await _queue.JoinAsync(
+        return await _queue.JoinAsync(
             playerId,
             sessionId,
             Context.ConnectionId,
@@ -106,6 +106,9 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
 }
 
 /**
+ * MÓDOSÍTÁS: a queue-belépés várható eredményét közvetlenül visszaadja
+ * a hívó kliensnek. A Hub továbbra sem tart fenn játékállapotot.
+ *
  * A VS kliens parancsait azonosítja és továbbítja a queue- vagy
  * match-szerviznek. Saját játékállapotot és adatbázislogikát nem
  * tartalmaz.

@@ -32,7 +32,7 @@ public sealed class VsMatchClientService : IVsMatchClientService
     public bool IsConnected =>
         _connection?.State == HubConnectionState.Connected;
 
-    public async Task StartAsync(
+    public async Task<VsQueueJoinResult> StartAsync(
         int classificationId,
         CancellationToken ct = default)
     {
@@ -41,6 +41,15 @@ public sealed class VsMatchClientService : IVsMatchClientService
         QueueSnapshot = null;
         MatchSnapshot = null;
         ErrorMessageKey = string.Empty;
+
+        var sessionId = _session.SessionId;
+        if (string.IsNullOrWhiteSpace(sessionId))
+        {
+            return new VsQueueJoinResult
+            {
+                ErrorKey = "vsgame.Match.Error.Identity"
+            };
+        }
 
         _connection = new HubConnectionBuilder()
             .WithUrl(_navigation.ToAbsoluteUri("/hubs/vs-match"))
@@ -64,26 +73,53 @@ public sealed class VsMatchClientService : IVsMatchClientService
             }));
 
         _handlers.Add(_connection.On<string>(
-            "CommandRejected",
+            "MatchClosed",
             messageKey =>
             {
                 ErrorMessageKey = messageKey;
+                QueueSnapshot = null;
+                MatchSnapshot = null;
                 NotifyChanged();
             }));
 
         _connection.Closed += HandleClosedAsync;
 
-        await _connection.StartAsync(ct);
+        try
+        {
+            await _connection.StartAsync(ct);
 
-        await _connection.InvokeAsync(
-            "JoinRankedQueue",
-            classificationId,
-            _session.SessionId ?? "NoId",
-            ct);
+            var result =
+                await _connection.InvokeAsync<VsQueueJoinResult>(
+                    "JoinRankedQueue",
+                    classificationId,
+                    sessionId,
+                    ct);
+
+            if (!result.IsAccepted)
+                await StopAsync(CancellationToken.None);
+
+            return result;
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+            await StopAsync(CancellationToken.None);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "VS SignalR connection or queue join failed.");
+
+            await StopAsync(CancellationToken.None);
+            throw;
+        }
     }
 
     public Task LeaveQueueAsync(CancellationToken ct = default) =>
-        InvokeAsync("LeaveRankedQueue", ct);
+        IsConnected
+            ? _connection!.InvokeAsync("LeaveRankedQueue", ct)
+            : Task.CompletedTask;
 
     public Task SelectCharacterAsync(
         int slotNumber,
@@ -138,9 +174,8 @@ public sealed class VsMatchClientService : IVsMatchClientService
         string methodName,
         CancellationToken ct)
     {
-        return _connection?.State == HubConnectionState.Connected
-            ? _connection.InvokeAsync(methodName, ct)
-            : Task.CompletedTask;
+        return GetConnectedConnection()
+            .InvokeAsync(methodName, ct);
     }
 
     private Task InvokeAsync<T>(
@@ -148,13 +183,17 @@ public sealed class VsMatchClientService : IVsMatchClientService
         T argument,
         CancellationToken ct)
     {
-        return _connection?.State == HubConnectionState.Connected
-            ? _connection.InvokeAsync(
-                methodName,
-                argument,
-                ct)
-            : Task.CompletedTask;
+        return GetConnectedConnection().InvokeAsync(
+            methodName,
+            argument,
+            ct);
     }
+
+    private HubConnection GetConnectedConnection() =>
+        IsConnected
+            ? _connection!
+            : throw new InvalidOperationException(
+                "The VS SignalR connection is not active.");
 
     private Task HandleClosedAsync(Exception? exception)
     {
@@ -183,6 +222,12 @@ public sealed class VsMatchClientService : IVsMatchClientService
 }
 
 /**
+ * MÓDOSÍTÁS: a queue-belépés közvetlen eredményét visszaadja, hiányzó
+ * sessionnel nem nyit kapcsolatot, a megszakított csatlakozást
+ * csendesen takarítja, és a játékmeneti parancsokat nem jelenti
+ * sikeresnek megszakadt kapcsolat mellett. A MatchClosed esemény
+ * kizárólag aszinkron, több játékost érintő meccslezárást közvetít.
+ *
  * Egyetlen, automatikusan újra nem kapcsolódó SignalR kapcsolatot
  * kezel, fogadja a queue/match snapshotokat és továbbítja a
  * preparációs parancsokat.

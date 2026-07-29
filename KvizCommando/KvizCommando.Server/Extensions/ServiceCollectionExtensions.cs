@@ -47,6 +47,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IVsGameService, VsGameService>();
         services.AddSingleton<VsMatchStore>();
         services.AddSingleton<IVsMatchQuestionLoader, VsMatchQuestionLoader>();
+        services.AddSingleton<VsMatchSetupService>();
         services.AddSingleton<IVsMatchService, VsMatchService>();
         services.AddSingleton<IVsRankedQueueService, VsRankedQueueService>();
 
@@ -90,8 +91,8 @@ public static class ServiceCollectionExtensions
 }
 
 /**
- * MÓDOSÍTÁS: regisztrálja a VS match store, kérdésbetöltő,
- * preparációs meccsszerviz és ranked queue singleton szolgáltatásait.
+ * MÓDOSÍTÁS: a VS meccs inicializálási felelőssége külön, belső
+ * singleton setup service-be került.
  *
  * A fájl az alkalmazás saját szolgáltatásainak központi DI
  * regisztrációját tartalmazza.

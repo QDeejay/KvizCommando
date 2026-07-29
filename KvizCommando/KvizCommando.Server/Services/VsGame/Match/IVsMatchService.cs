@@ -5,8 +5,11 @@ namespace KvizCommando.Server.Services.VsGame.Match;
 
 public interface IVsMatchService
 {
-    Task CreateLockedMatchAsync(
-        IReadOnlyList<VsRankedQueueEntry> entries,
+    VsMatchSession LockMatch(
+        IReadOnlyList<VsRankedQueueEntry> entries);
+
+    Task<bool> InitializeLockedMatchAsync(
+        VsMatchSession match,
         CancellationToken ct = default);
 
     Task SelectCharacterAsync(
@@ -38,6 +41,11 @@ public interface IVsMatchService
 }
 
 /**
- * A lezárt VS meccs létrehozásának és a preparációs parancsoknak
- * a szerveroldali szerződése.
+ * MÓDOSÍTÁS: a szinkron LockMatch azonnal regisztrálja a kiválasztott
+ * játékosokat, az aszinkron inicializálás csak ezután foglal tétet és
+ * tölt adatot. Így nincs queue és match store közötti láthatatlan
+ * disconnect-időablak.
+ *
+ * A lezárt VS meccs létrehozásának és a preparációs parancsoknak a
+ * szerveroldali szerződése.
  */

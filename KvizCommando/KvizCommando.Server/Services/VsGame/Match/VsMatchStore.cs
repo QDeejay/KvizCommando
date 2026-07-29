@@ -72,21 +72,39 @@ public sealed class VsMatchStore
 
     public bool TryRemove(Guid matchId, out VsMatchSession? match)
     {
-        if (!_matches.TryRemove(matchId, out match))
+        match = null;
+
+        if (!_matches.TryGetValue(matchId, out var current))
             return false;
 
-        foreach (var player in match.Players)
+        lock (current.SyncRoot)
+        {
+            if (!_matches.TryRemove(matchId, out match) ||
+                !ReferenceEquals(match, current))
+            {
+                return false;
+            }
+
+            match.IsClosed = true;
+        }
+
+        foreach (var player in current.Players)
         {
             _connectionMatches.TryRemove(player.ConnectionId, out _);
             _playerMatches.TryRemove(player.PlayerId, out _);
         }
 
-        match.Dispose();
+        current.Dispose();
         return true;
     }
 }
 
 /**
+ * MÓDOSÍTÁS: eltávolításkor a session saját lockja alatt kap Closed
+ * állapotot, ezért egy korábban lekért referencia sem módosíthatja
+ * tovább a törölt meccset. A szinkronizáló objektum nem eldobható
+ * erőforrás, így nincs SemaphoreSlim-dispose versenyhelyzet.
+ *
  * A futó VS meccsek és a connection/player hozzárendelések
  * folyamaton belüli, konkurens tárolója.
  */

@@ -11,12 +11,11 @@ namespace KvizCommando.Server.Services.VsGame.Matchmaking;
 
 public sealed class VsRankedQueueService : IVsRankedQueueService
 {
-    private readonly SemaphoreSlim _gate = new(1, 1);
+    private readonly object _syncRoot = new();
     private readonly Dictionary<int, List<VsRankedQueueEntry>> _queues =
         VsBattleClassificationRules.List.ToDictionary(
             rule => rule.ClassificationId,
             _ => new List<VsRankedQueueEntry>());
-    private readonly HashSet<int> _lockingPlayers = [];
 
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly VsMatchStore _matchStore;
@@ -35,7 +34,7 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
         _hub = hub;
     }
 
-    public async Task JoinAsync(
+    public async Task<VsQueueJoinResult> JoinAsync(
         int playerId,
         string sessionId,
         string connectionId,
@@ -47,18 +46,20 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
 
         if (rule is null)
         {
-            await RejectAsync(
-                connectionId,
-                "vsgame.Match.Error.Classification");
-            return;
+            return new VsQueueJoinResult
+            {
+                ErrorKey =
+                    "vsgame.Match.Error.Classification"
+            };
         }
 
         if (_matchStore.ContainsPlayer(playerId))
         {
-            await RejectAsync(
-                connectionId,
-                "vsgame.Match.Error.AlreadyLocked");
-            return;
+            return new VsQueueJoinResult
+            {
+                ErrorKey =
+                    "vsgame.Match.Error.AlreadyLocked"
+            };
         }
 
         var entry = await BuildQueueEntryAsync(
@@ -70,22 +71,27 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
 
         if (entry is null)
         {
-            await RejectAsync(
-                connectionId,
-                "vsgame.Match.Error.QueueValidation");
-            return;
+            return new VsQueueJoinResult
+            {
+                ErrorKey =
+                    "vsgame.Match.Error.QueueValidation"
+            };
         }
 
-        List<VsRankedQueueEntry>? matchedEntries = null;
-        var rejectedAfterValidation = false;
+        VsMatchSession? lockedMatch = null;
+        VsQueueJoinResult result;
 
-        await _gate.WaitAsync(ct);
-        try
+        ct.ThrowIfCancellationRequested();
+
+        lock (_syncRoot)
         {
-            if (_lockingPlayers.Contains(playerId) ||
-                _matchStore.ContainsPlayer(playerId))
+            if (_matchStore.ContainsPlayer(playerId))
             {
-                rejectedAfterValidation = true;
+                result = new VsQueueJoinResult
+                {
+                    ErrorKey =
+                        "vsgame.Match.Error.AlreadyLocked"
+                };
             }
             else
             {
@@ -95,58 +101,47 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
                 if (_queues[classificationId].Count >=
                     VsMatchProfiles.Ranked.RequiredPlayers)
                 {
-                    matchedEntries =
+                    List<VsRankedQueueEntry> matchedEntries =
                     [
                         .. _queues[classificationId]
                             .Take(VsMatchProfiles.Ranked.RequiredPlayers)
                     ];
 
+                    lockedMatch =
+                        _matchService.LockMatch(matchedEntries);
+
                     _queues[classificationId].RemoveRange(
                         0,
                         matchedEntries.Count);
-
-                    foreach (var matched in matchedEntries)
-                        _lockingPlayers.Add(matched.PlayerId);
                 }
-            }
-        }
-        finally
-        {
-            _gate.Release();
-        }
 
-        if (rejectedAfterValidation)
-        {
-            await RejectAsync(
-                connectionId,
-                "vsgame.Match.Error.AlreadyLocked");
-            return;
+                result = new VsQueueJoinResult
+                {
+                    IsAccepted = true
+                };
+            }
         }
 
         await BroadcastQueueAsync(classificationId);
 
-        if (matchedEntries is not null)
+        if (lockedMatch is not null)
         {
-            try
-            {
-                await _matchService.CreateLockedMatchAsync(
-                    matchedEntries,
+            var initialized =
+                await _matchService.InitializeLockedMatchAsync(
+                    lockedMatch,
                     CancellationToken.None);
-            }
-            finally
+
+            if (!initialized)
             {
-                await _gate.WaitAsync();
-                try
+                result = new VsQueueJoinResult
                 {
-                    foreach (var matched in matchedEntries)
-                        _lockingPlayers.Remove(matched.PlayerId);
-                }
-                finally
-                {
-                    _gate.Release();
-                }
+                    ErrorKey =
+                        "vsgame.Match.Error.Connection"
+                };
             }
         }
+
+        return result;
     }
 
     public async Task LeaveAsync(
@@ -155,8 +150,9 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
     {
         int? changedClassification = null;
 
-        await _gate.WaitAsync(ct);
-        try
+        ct.ThrowIfCancellationRequested();
+
+        lock (_syncRoot)
         {
             foreach (var queue in _queues)
             {
@@ -169,10 +165,6 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
                     break;
                 }
             }
-        }
-        finally
-        {
-            _gate.Release();
         }
 
         if (changedClassification.HasValue)
@@ -313,67 +305,69 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
 
     private async Task BroadcastQueueAsync(int classificationId)
     {
-        VsRankedQueueEntry[] entries;
+        (string ConnectionId, VsRankedQueueSnapshot Snapshot)[] messages;
 
-        await _gate.WaitAsync();
-        try
+        lock (_syncRoot)
         {
-            entries = [.. _queues[classificationId]];
-        }
-        finally
-        {
-            _gate.Release();
+            messages = BuildQueueMessagesLocked(classificationId);
         }
 
-        var rule = VsBattleClassificationRules.List.First(
-            item => item.ClassificationId == classificationId);
-
-        foreach (var currentEntry in entries)
+        foreach (var message in messages)
         {
-            var snapshot = new VsRankedQueueSnapshot
-            {
-                ClassificationId = classificationId,
-                WaitingPlayers = entries.Length,
-                RequiredPlayers =
-                    VsMatchProfiles.Ranked.RequiredPlayers,
-                RequiredPartySize = rule.RequiredPartySize,
-                Stake = rule.Stake,
-                Players =
-                [
-                    .. entries.Select((entry, index) =>
-                        new VsMatchPlayerDto
-                        {
-                            Position = index + 1,
-                            DisplayName = entry.DisplayName,
-                            TeamName = entry.TeamName,
-                            TeamLevel = entry.TeamLevel,
-                            IsMe =
-                                entry.PlayerId ==
-                                currentEntry.PlayerId,
-                            IsConnected = true
-                        })
-                ]
-            };
-
             await _hub.Clients
-                .Client(currentEntry.ConnectionId)
-                .QueueChanged(snapshot);
+                .Client(message.ConnectionId)
+                .QueueChanged(message.Snapshot);
         }
     }
 
-    private Task RejectAsync(
-        string connectionId,
-        string messageKey) =>
-        _hub.Clients
-            .Client(connectionId)
-            .CommandRejected(messageKey);
+    private (
+        string ConnectionId,
+        VsRankedQueueSnapshot Snapshot)[] BuildQueueMessagesLocked(
+            int classificationId)
+    {
+        var entries = _queues[classificationId].ToArray();
+        var rule = VsBattleClassificationRules.List.First(
+            item => item.ClassificationId == classificationId);
+
+        return
+        [
+            .. entries.Select(currentEntry => (
+                currentEntry.ConnectionId,
+                new VsRankedQueueSnapshot
+                {
+                    ClassificationId = classificationId,
+                    WaitingPlayers = entries.Length,
+                    RequiredPlayers =
+                        VsMatchProfiles.Ranked.RequiredPlayers,
+                    RequiredPartySize = rule.RequiredPartySize,
+                    Stake = rule.Stake,
+                    Players =
+                    [
+                        .. entries.Select((entry, index) =>
+                            new VsMatchPlayerDto
+                            {
+                                Position = index + 1,
+                                DisplayName = entry.DisplayName,
+                                TeamName = entry.TeamName,
+                                TeamLevel = entry.TeamLevel,
+                                IsMe =
+                                    entry.PlayerId ==
+                                    currentEntry.PlayerId,
+                                IsConnected = true
+                            })
+                    ]
+                }))
+        ];
+    }
+
 }
 
 /**
- * MÓDOSÍTÁS: minden várakozó személyre szabott publikus roster-
- * snapshotot kap, ezért a lobby bal oldali játékoslistája is
- * kirajzolható. A loadout 0 értékét Összes kategóriaként validálja;
- * üres kategóriahelyként nem kezeli.
+ * MÓDOSÍTÁS: a queue szinkron lockot használ, mert a kritikus
+ * szakaszban nincs await. A kiválasztott játékosok MatchLocked
+ * sessionje még a queue lock elengedése előtt bekerül a store-ba, így
+ * megszűnik a queue és a match közötti disconnect-rés és nincs szükség
+ * _lockingPlayers segédállapotra. A belépés közvetlen eredményt ad.
  *
  * Az öt besorolás külön várólistáját kezeli, cache-snapshotból
  * validálja a belépést, majd a profil szerinti játékosszámnál

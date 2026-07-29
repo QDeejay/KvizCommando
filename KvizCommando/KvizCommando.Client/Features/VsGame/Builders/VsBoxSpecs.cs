@@ -110,9 +110,7 @@ public static class VsGameBoxSpecs
             LcdBackground = false,
             BodyComp = typeof(VsMatchManager),
             BuildParams = parameters => new Dictionary<string, object?>
-                { [nameof( VsMatchManager.ClassificationId)] =  parameters.ClassificationId,
-                  [nameof( VsMatchManager.OnMatchLockChanged)] =  parameters.OnMatchLockChanged,
-                  [nameof( VsMatchManager.OnMatchErrorChanged)] =  parameters.OnMatchErrorChanged  }
+                { [nameof( VsMatchManager.ClassificationId)] =  parameters.ClassificationId  }
         }
     ];
     public static readonly IReadOnlyList<VsBoxSub> SubSpecs =
@@ -166,11 +164,9 @@ public static class VsGameBoxSpecs
 }
 
 /**
- * MÓDOSÍTÁS: a VS spec-listába felveszi a ranked meccs
- * ContentBox-specjét. A ranked meccs hibaüzenet-callbackje ugyanebben
- * a deklaratív paraméterlistában szerepel. A meglévő BuildParams
- * formázása változatlan maradt, az új paraméter ugyanazt a mintát
- * követi.
+ * MÓDOSÍTÁS: a ranked meccs ContentBox-specje kizárólag a
+ * besorolásazonosítót adja át; SignalR-állapothoz nem használ
+ * DynamicComponent callback-láncot.
  *
  * A fájl a VS root-, manager- és rangsorolási dobozok deklaratív
  * megjelenítési szabályait tartalmazza.

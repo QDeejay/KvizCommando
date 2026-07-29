@@ -5,14 +5,6 @@
 <LangGuard Culture="@Culture"
            Module="vsgame"
            OnReady="BuildBoxes">
-    @if (!string.IsNullOrWhiteSpace(_matchErrorText))
-    {
-        <div class="kc-vsgame-match-error" role="alert">
-            <i class="bi bi-exclamation-triangle-fill"></i>
-            <span>@_matchErrorText</span>
-        </div>
-    }
-
     <PageContainer>
         @if (_isReady)
         {
@@ -39,7 +31,6 @@
 </LangGuard>
 
 @*
-    MÓDOSÍTÁS: a ranked meccs piros hibasávja a ContentBox testvér-
-    rétegében jelenik meg, ezért annak opacity/overflow rétege nem
-    takarhatja el.
+    MÓDOSÍTÁS: a ranked SignalR-hiba helyi managerállapot lett, ezért
+    a VS gyökéroldal nem közvetít meccshiba-callbacket.
 *@

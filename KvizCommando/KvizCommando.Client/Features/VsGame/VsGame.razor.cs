@@ -1,5 +1,4 @@
 using KvizCommando.Client.Features.VsGame.Builders;
-using KvizCommando.Client.Features.VsGame.Match.Services;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Utilities;
@@ -10,19 +9,13 @@ namespace KvizCommando.Client.Features.VsGame;
 
 public partial class VsGame : KcComponentBase, IDisposable
 {
-    [Inject]
-    private IVsMatchClientService MatchClient { get; set; } = default!;
-
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
 
     private readonly Dictionary<string, ContentBoxVm> _boxes = [];
 
     private string[] _boxOrder = [];
-    private string _matchErrorText = string.Empty;
     private int _classificationId;
-    private bool _isMatchLocked;
-    private bool _isLeavingMatch;
     private bool _isReady;
 
     private string Culture => AppStates.Culture;
@@ -44,9 +37,7 @@ public partial class VsGame : KcComponentBase, IDisposable
         var parameters = new VsComponentParameters
         {
             OnTeamSaved = RefreshRankedAsync,
-            ClassificationId = _classificationId,
-            OnMatchLockChanged = SetMatchLockedAsync,
-            OnMatchErrorChanged = SetMatchErrorAsync
+            ClassificationId = _classificationId
         };
 
         foreach (var box in VsBoxBuilder.BuildBoxes(
@@ -62,12 +53,6 @@ public partial class VsGame : KcComponentBase, IDisposable
 
     private void OnBoxClick(int boxId)
     {
-        if (_isMatchLocked)
-            return;
-
-        if (boxId is not (>= 311 and <= 315))
-            _matchErrorText = string.Empty;
-
         _boxOrder = VsBoxBuilder.Root;
         var headerTitle =
             Ui.Lang["mainlayout.Header.GameVs"];
@@ -101,24 +86,12 @@ public partial class VsGame : KcComponentBase, IDisposable
         return Task.CompletedTask;
     }
 
-    private Task SetMatchLockedAsync(bool isLocked)
-    {
-        _isMatchLocked = isLocked;
-        Ui.Header.SetBackBtnEna(true);
-        return Task.CompletedTask;
-    }
-
-    private Task SetMatchErrorAsync(string errorText)
-    {
-        _matchErrorText = errorText;
-        return InvokeAsync(StateHasChanged);
-    }
-
     private void HandleBack()
     {
         if (Ui.Header.PageIndex is >= 311 and <= 315)
         {
-            _ = LeaveMatchAsync();
+            BuildBoxes();
+            OnBoxClick(303);
             return;
         }
 
@@ -132,27 +105,6 @@ public partial class VsGame : KcComponentBase, IDisposable
         OnBoxClick(3);
     }
 
-    private async Task LeaveMatchAsync()
-    {
-        if (_isLeavingMatch)
-            return;
-
-        _isLeavingMatch = true;
-
-        try
-        {
-            await MatchClient.StopAsync();
-            _isMatchLocked = false;
-            _matchErrorText = string.Empty;
-            BuildBoxes();
-            OnBoxClick(303);
-        }
-        finally
-        {
-            _isLeavingMatch = false;
-        }
-    }
-
     public void Dispose()
     {
         Ui.Header.OnBackBtnClicked -= HandleBack;
@@ -161,14 +113,10 @@ public partial class VsGame : KcComponentBase, IDisposable
 }
 
 /**
- * MÓDOSÍTÁS: a rangbesorolás kiválasztásakor a VS lap a
- * DynamicComponent meccsmanagerre vált. A fejléc vissza gombja lock
- * után is engedélyezett hivatalos kilépés: előbb lezárja a SignalR
- * kapcsolatot, így a szerver OnDisconnected ága elvégzi a
- * queue/match takarítását, és csak utána vált vissza a ranked menüre.
- * A ranked manager lokalizált hibaüzenetét a lap saját, ContentBoxon
- * kívüli állapotában tárolja; meccsből kilépéskor vagy más VS
- * menüszintre lépéskor törli.
+ * MÓDOSÍTÁS: a VS lap többé nem tulajdonosa a SignalR-kapcsolatnak és
+ * nem közvetít match lock- vagy hibacallbacket. Visszalépéskor
+ * eltávolítja a DynamicComponentet; annak DisposeAsync metódusa
+ * végzi a hivatalos queue-kilépést és kapcsolatlezárást.
  *
  * A fájl a VS menü dobozsorrendjét és navigációs állapotát kezeli.
  */
