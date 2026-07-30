@@ -76,6 +76,31 @@ public partial class VsMatchPlayView : IDisposable
             "0.##",
             CultureInfo.InvariantCulture)}%";
 
+    private string WaitTimerStyle =>
+        $"--kc-vs-wait-progress: {TimerPercent.ToString(
+            "0.##",
+            CultureInfo.InvariantCulture)}%";
+
+    private bool ShowAnswerTimer =>
+        Data.DeadlineUtc.HasValue &&
+        Data.Phase is
+            VsMatchPhase.NormalRoundGuess or
+            VsMatchPhase.NormalRoundQuestion or
+            VsMatchPhase.CaptainQuestionSelection or
+            VsMatchPhase.CaptainQuestion;
+
+    private bool ShowWaitTimer =>
+        Data.DeadlineUtc.HasValue &&
+        Data.Phase is
+            VsMatchPhase.GameStarting or
+            VsMatchPhase.QuestionResult or
+            VsMatchPhase.NormalRoundResult or
+            VsMatchPhase.CaptainRoundResult;
+
+    private bool ShowProgress =>
+        Data.Game.CurrentRoundNumber > 0 &&
+        Data.Phase != VsMatchPhase.GameCompleted;
+
     private string MatchReference =>
         Data.MatchId.ToString("N")[..8]
             .ToUpperInvariant();
@@ -221,4 +246,6 @@ public partial class VsMatchPlayView : IDisposable
  * állapotát és a három explicit EventCallback parancsát kezeli.
  * Pontot, sorrendet vagy válaszjogosultságot nem számol kliensoldalon.
  * A teljes MatchId-ből csak megjelenítési célú rövid hivatkozást képez.
+ * MÓDOSÍTÁS: külön kezeli a válaszadási idősort és a színezés nélküli,
+ * kör alakú várakozási visszaszámlálót.
  */

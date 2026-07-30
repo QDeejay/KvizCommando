@@ -11,12 +11,23 @@ public partial class VsMatchRoster
     [Parameter] public int ExpectedPlayers { get; set; }
     [Parameter] public string Title { get; set; } = string.Empty;
     [Parameter] public bool ShowScore { get; set; }
+    [Parameter] public double? CurrentTimeModifierSeconds { get; set; }
 
     private int MissingPlayers =>
         Math.Max(0, ExpectedPlayers - Players.Length);
 
     private static string Seconds(double value) =>
         $"{value:0.0}s";
+
+    private static string ModifierText(double value) =>
+        $"({(value > 0 ? "+" : string.Empty)}{value:0.0}s)";
+
+    private static string ModifierClass(double value) =>
+        value > 0
+            ? "positive"
+            : value < 0
+                ? "negative"
+                : "neutral";
 }
 
 /**
@@ -27,6 +38,8 @@ public partial class VsMatchRoster
  *
  * MÓDOSÍTÁS: a szülő fázis szerint bekapcsolhatja az összpont és
  * összidő megjelenítését.
+ * MÓDOSÍTÁS: az opcionális saját időmódosító feliratát és előjel
+ * szerinti megjelenítési osztályát adja.
  *
  * A VS meccs publikus játékoslistáját megjelenítő komponens
  * paramétereit tartalmazza.

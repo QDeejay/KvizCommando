@@ -96,6 +96,11 @@ internal static class VsMatchSnapshotBuilder
             MyAnswerIndex =
                 currentPlayer.CurrentAnswer?.AnswerIndex,
             MyGuess = currentPlayer.CurrentAnswer?.Guess,
+            MyTimeModifierSeconds =
+                ResolveCurrentTimeModifier(
+                    match,
+                    currentPlayer,
+                    question),
             MyRoundPoints = currentPlayer.RoundPoints,
             MyRoundTimeSeconds =
                 currentPlayer.RoundTimeSeconds,
@@ -120,6 +125,35 @@ internal static class VsMatchSnapshotBuilder
             CaptainOrder = game.CaptainOrder,
             CaptainOrderIndex = game.CaptainOrderIndex
         };
+    }
+
+    private static double? ResolveCurrentTimeModifier(
+        VsMatchSession match,
+        VsMatchPlayerState currentPlayer,
+        VsMatchQuestionState? question)
+    {
+        if (match.Phase is not
+                (VsMatchPhase.NormalRoundQuestion or
+                 VsMatchPhase.QuestionResult) ||
+            question is null ||
+            question.Kind != VsQuestionKind.Choice ||
+            question.QuestionerPosition == currentPlayer.Position ||
+            match.Game.CurrentRoundNumber <= 0 ||
+            match.Game.CurrentRoundNumber >
+                match.Classification.RequiredPartySize ||
+            question.CategoryId is
+                < VsLoadoutCategoryIds.MinimumFactoryCategory or
+                > VsLoadoutCategoryIds.MaximumFactoryCategory)
+        {
+            return null;
+        }
+
+        var seconds = VsMatchScoring.CalculateTimeModifier(
+            match,
+            currentPlayer,
+            question);
+
+        return Math.Truncate(seconds * 10) / 10;
     }
 
     private static VsQuestionPlayerDto[] BuildQuestionPlayers(
@@ -603,6 +637,8 @@ internal static class VsMatchSnapshotBuilder
  * élő rangsort, kérdésállapotot, progresszt és köreredményt épít. A
  * helyes válasz és az ellenfelek választása csak QuestionResult
  * fázisban jelenik meg.
+ * MÓDOSÍTÁS: normál kérdésnél a saját időmódosítót csak a nem
+ * kérdező játékos személyre szabott snapshotja tartalmazza.
  *
  * A szerveroldali meccsállapotból játékosonként tiszta SignalR-
  * snapshotokat épít. Nem módosít állapotot és nem küld üzenetet.

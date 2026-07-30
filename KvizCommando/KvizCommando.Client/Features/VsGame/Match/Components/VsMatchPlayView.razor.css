@@ -1,13 +1,20 @@
 .kc-vs-play {
     width: 100%;
     height: 100%;
+    max-height: 100%;
     min-width: 0;
     min-height: 0;
     padding: 10px;
     display: grid;
-    grid-template-rows: 42px 48px minmax(0, 1fr) 64px;
+    grid-template-rows: 42px 58px minmax(0, 1fr) 64px;
+    grid-template-areas:
+        "title"
+        "timer"
+        "body"
+        "progress";
     gap: 8px;
     overflow: hidden;
+    box-sizing: border-box;
     color: #cccccc;
     background: rgba(30, 32, 27, .96);
     border: 2px solid #151713;
@@ -18,75 +25,105 @@
 }
 
 .kc-vs-play-title {
+    grid-area: title;
     min-width: 0;
-    padding: 0 10px;
+    min-height: 40px;
+    padding: 0 8px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
     color: #cccccc;
+    opacity: .9;
     border: inset 1px #777;
     box-shadow:
         0 4px 16px rgba(0, 0, 0, .4),
         inset 0 4px 8px rgba(0, 0, 0, .7);
     font-family: 'Special Elite', cursive;
+    font-size: clamp(1rem, 1.35vw, 1.35rem);
     text-transform: uppercase;
 }
 
-.kc-vs-play-title strong {
+.kc-vs-play-title > strong,
+.kc-vs-play-title > span {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    transform: translateY(3px);
+}
+
+.kc-vs-play-title > strong {
     min-width: 0;
     overflow: hidden;
+    letter-spacing: .04em;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.kc-vs-play-title > div {
+.kc-vs-play-title > span {
     flex: 0 0 auto;
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-}
-
-.kc-vs-play-title span {
     color: #c6ef39;
     font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
 }
 
-.kc-vs-play-title small {
-    color: #777850;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: .62rem;
+.kc-vs-play-timer-slot {
+    grid-area: timer;
+    min-width: 0;
+    min-height: 58px;
+    display: grid;
+    place-items: center;
 }
 
 .kc-vs-play-timer {
+    width: 100%;
     min-width: 0;
-    padding: 2px 16px;
+    min-height: 58px;
+    padding: 6px 10px;
     display: grid;
-    grid-template-columns: 30px 50px minmax(80px, 1fr);
+    grid-template-columns: auto 100px minmax(80px, 1fr);
     align-items: center;
     gap: 10px;
-    color: #c6ef39;
-    font-family: 'Share Tech Mono', monospace;
+    background: #181b16;
+    border: 2px solid #080a08;
+    border-radius: 7px;
+    box-shadow: inset 0 0 0 1px #55594a;
+    box-sizing: border-box;
 }
 
 .kc-vs-play-timer > i {
-    font-size: 1.65rem;
+    color: #c6ef39;
+    font-size: 2rem;
 }
 
-.kc-vs-play-timer > strong {
-    height: 34px;
-    display: grid;
-    place-items: center;
+.kc-vs-play-timer-display {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     color: #222f16;
     background: rgba(210, 255, 57, .9);
     border: inset 2px #777;
     border-radius: 4px;
-    box-shadow: inset 0 4px 8px rgba(0, 0, 0, .7);
-    font-size: 1.35rem;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, .4),
+        inset 0 4px 8px rgba(0, 0, 0, .7);
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.kc-vs-play-timer-display strong {
+    font-family: monospace;
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.kc-vs-play-timer-display span {
+    font-size: .9rem;
 }
 
 .kc-vs-play-timer-track {
-    height: 22px;
+    height: 25px;
     padding: 4px;
     overflow: hidden;
     background: repeating-linear-gradient(
@@ -96,6 +133,10 @@
         #0d0f0b 7px,
         #0d0f0b 11px);
     border: inset 2px #777;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, .4),
+        inset 0 4px 8px rgba(0, 0, 0, .7);
+    box-sizing: border-box;
 }
 
 .kc-vs-play-timer-value {
@@ -105,16 +146,43 @@
     transition: width .25s linear;
 }
 
-.kc-vs-play-timer.warning {
-    color: #e78c35;
-}
-
-.kc-vs-play-timer.warning > strong,
+.kc-vs-play-timer.warning .kc-vs-play-timer-display,
 .kc-vs-play-timer.warning .kc-vs-play-timer-value {
     background: #e78c35;
 }
 
+.kc-vs-wait-timer {
+    width: 50px;
+    aspect-ratio: 1;
+    padding: 4px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: conic-gradient(
+        #c6ef39 var(--kc-vs-wait-progress),
+        #262a1c 0);
+    box-shadow: 0 0 7px rgba(197, 242, 57, .28);
+}
+
+.kc-vs-wait-timer::before {
+    content: "";
+    grid-area: 1 / 1;
+    width: 38px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #181b16;
+}
+
+.kc-vs-wait-timer strong {
+    z-index: 1;
+    grid-area: 1 / 1;
+    color: #c6ef39;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+}
+
 .kc-vs-play-body {
+    grid-area: body;
     min-width: 0;
     min-height: 0;
     overflow: auto;
@@ -221,9 +289,32 @@
     font-size: 1.25rem;
 }
 
-.kc-vs-guess .kc-lcd-button {
-    min-width: 112px;
+.kc-vs-guess .button-on-lcd {
+    width: 50px;
     height: 42px;
+    flex: 0 0 50px;
+}
+
+.kc-vs-guess-result {
+    min-width: min(100%, 320px);
+    min-height: 58px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #222f16;
+    background: rgba(210, 255, 57, .9);
+    border: inset 2px #777;
+    border-radius: 4px;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, .4),
+        inset 0 4px 8px rgba(0, 0, 0, .7);
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.kc-vs-guess-result strong {
+    font-size: 1.45rem;
 }
 
 .kc-vs-question-status {
@@ -395,6 +486,7 @@
 }
 
 .kc-vs-progress {
+    grid-area: progress;
     min-width: 0;
     padding: 5px 10px;
     display: flex;
@@ -404,6 +496,12 @@
     background: rgba(17, 22, 16, .94);
     border: 1px solid #55583f;
     border-radius: 6px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.kc-vs-progress.empty {
+    visibility: hidden;
 }
 
 .kc-vs-progress > span {
@@ -495,4 +593,7 @@
  * formázása. A válaszok egy oszlopban, a kérdések és köreredmények
  * görgethető belső testben, a progressz pedig rögzített láblécben
  * jelenik meg.
+ * MÓDOSÍTÁS: a title és a válaszidő a bevált Solo/VS struktúrát
+ * követi; a stabil grid-sorok a progresszt a content boxban tartják.
+ * A várakozási idő egyszínű, kör alakú visszaszámláló.
  */

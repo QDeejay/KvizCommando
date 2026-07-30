@@ -32,6 +32,7 @@ public sealed class VsGameDto
     public double? CorrectGuess { get; set; }
     public int? MyAnswerIndex { get; set; }
     public double? MyGuess { get; set; }
+    public double? MyTimeModifierSeconds { get; set; }
     public int MyRoundPoints { get; set; }
     public double MyRoundTimeSeconds { get; set; }
     public bool CanAnswer { get; set; }
@@ -93,4 +94,5 @@ public sealed class VsCaptainQuestionDto
  * valamint a játékosra szabott snapshot megjelenítési DTO-it
  * tartalmazza. A válaszparancsot kizárólag a növekvő QuestionNumber
  * köti az aktuális kérdéshez; technikai kérésazonosítót nem használ.
+ * MÓDOSÍTÁS: a saját aktuális időmódosító külön megjelenítési adat.
  */

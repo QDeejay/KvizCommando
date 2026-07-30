@@ -112,6 +112,7 @@ public sealed class VsGameViewData
     public double? CorrectGuess { get; set; }
     public int? MyAnswerIndex { get; set; }
     public double? MyGuess { get; set; }
+    public double? MyTimeModifierSeconds { get; set; }
     public int MyRoundPoints { get; set; }
     public double MyRoundTimeSeconds { get; set; }
     public bool CanAnswer { get; set; }
@@ -179,6 +180,7 @@ public sealed class VsCaptainQuestionVm
  * MÓDOSÍTÁS: felvette az élő rangsor, kérdés, válaszállapot,
  * progressz, köreredmény és kapitányi kérdésválasztás kizárólag
  * megjelenítési célú modelljeit.
+ * A saját aktuális időmódosító szintén csak megjelenítési adat.
  *
  * A VS lobby, roster, preparáció és játéknézet view modeljeit
  * tartalmazza.

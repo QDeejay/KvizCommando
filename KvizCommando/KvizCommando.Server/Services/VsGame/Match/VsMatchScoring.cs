@@ -302,13 +302,26 @@ internal static class VsMatchScoring
             player.CurrentAnswer?.AnswerTimeSeconds ??
             match.Profile.QuestionSeconds;
 
+        return Math.Max(
+            0,
+            rawTime + CalculateTimeModifier(
+                match,
+                player,
+                question));
+    }
+
+    internal static double CalculateTimeModifier(
+        VsMatchSession match,
+        VsMatchPlayerState player,
+        VsMatchQuestionState question)
+    {
         if (match.Game.CurrentRoundNumber >
                 match.Classification.RequiredPartySize ||
             question.CategoryId is
                 <= 0 or >
                 16)
         {
-            return rawTime;
+            return 0;
         }
 
         var modifier = 0d;
@@ -327,7 +340,7 @@ internal static class VsMatchScoring
             }
         }
 
-        return Math.Max(0, rawTime + modifier);
+        return modifier;
     }
 
     private static VsMatchCharacterState? ResolveRoundCharacter(
@@ -415,4 +428,6 @@ internal static class VsMatchScoring
  * gyorsasági döntést, valamint az átmeneti karakter-XP és
  * energiavesztés számítását tartalmazza. Állapotot csak a kapott
  * sessionben módosít, időzítést és SignalR-küldést nem végez.
+ * MÓDOSÍTÁS: ugyanaz az időmódosító-számítás szolgálja a pontozást
+ * és a személyre szabott kijelzést.
  */

@@ -19,8 +19,10 @@
 }
 
 .kc-vs-match-content {
+    height: 100%;
     min-width: 0;
     min-height: 0;
+    overflow: hidden;
 }
 
 .kc-vs-match-error {
@@ -192,6 +194,8 @@
  * a tartalommal. A lobby játékosszámlálója az 01-es terv szaggatott
  * körjelzője, nem LCD-panel. A hibasáv az eredeti manageren belüli,
  * felső pozíciójában marad.
+ * MÓDOSÍTÁS: a content terület teljes magasságú, zárt grid-fogadó,
+ * ezért a játéknézet progressze nem csúszhat a box alá.
  *
  * A VS ranked várólista és meccskeret a SoloGame rögzített
  * játékméretét, katonai paneljeit, LCD-színét és meglévő

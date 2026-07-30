@@ -9,18 +9,28 @@
     @foreach (var player in Players)
     {
         <article class="kc-vs-roster-card @(player.IsMe ? "me" : "") @(!player.IsConnected ? "disconnected" : "")">
-            <div class="kc-vs-roster-avatar">
-                @if (player.ActiveCharacter is not null)
+            <div class="kc-vs-roster-visual">
+                <div class="kc-vs-roster-avatar">
+                    @if (player.ActiveCharacter is not null)
+                    {
+                        <div class="kc-vs-roster-svg-host">
+                            <CharacterView
+                                PicCode="@player.ActiveCharacter.PictureCode" />
+                        </div>
+                    }
+                    else
+                    {
+                        <img src="@player.TeamPictureSrc"
+                             alt="@player.TeamName" />
+                    }
+                </div>
+
+                @if (player.IsMe &&
+                     CurrentTimeModifierSeconds.HasValue)
                 {
-                    <div class="kc-vs-roster-svg-host">
-                        <CharacterView
-                            PicCode="@player.ActiveCharacter.PictureCode" />
-                    </div>
-                }
-                else
-                {
-                    <img src="@player.TeamPictureSrc"
-                         alt="@player.TeamName" />
+                    <small class="kc-vs-roster-modifier @ModifierClass(CurrentTimeModifierSeconds.Value)">
+                        @ModifierText(CurrentTimeModifierSeconds.Value)
+                    </small>
                 }
             </div>
 
@@ -66,6 +76,8 @@
     MÓDOSÍTÁS: normál körben a korlátozott karakter-SVG-t, a többi
     fázisban a csapatavatart mutatja; játéknál összpontot és összidőt
     jelenít meg.
+    MÓDOSÍTÁS: a saját kártya képe alatt, amikor releváns, az aktuális
+    időmódosítót is megjeleníti.
 
     A meccs teljes ideje alatt látható, kompakt ellenfél- és
     csapatkártya-sáv.

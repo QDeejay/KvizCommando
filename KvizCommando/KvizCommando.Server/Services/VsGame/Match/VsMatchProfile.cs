@@ -8,6 +8,7 @@ public sealed class VsMatchProfile
     public int PreparationSeconds { get; init; } = 20;
     public int GuessSeconds { get; init; } = 20;
     public int QuestionSeconds { get; init; } = 15;
+    public int AnswerRevealDelaySeconds { get; init; } = 1;
     public int QuestionPauseSeconds { get; init; } = 10;
     public int RoundResultSeconds { get; init; } = 5;
     public int PhasePauseSeconds { get; init; } = 5;
@@ -27,6 +28,8 @@ public static class VsMatchProfiles
  * kapott. A PausePreparationOnTimeout fejlesztői flag true értéken
  * hagyja nullára futni az órát, de nem lépteti automatikusan tovább
  * a preparációt.
+ * Az utolsó válasz és az eredmény felfedése közötti idő szintén itt
+ * állítható.
  *
  * A VS meccsmotor egy helyen módosítható idő-, pont- és
  * létszámprofilját tartalmazza.

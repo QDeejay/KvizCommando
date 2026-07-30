@@ -120,6 +120,8 @@ public sealed class VsMatchViewBuilder
             CorrectGuess = data.CorrectGuess,
             MyAnswerIndex = data.MyAnswerIndex,
             MyGuess = data.MyGuess,
+            MyTimeModifierSeconds =
+                data.MyTimeModifierSeconds,
             MyRoundPoints = data.MyRoundPoints,
             MyRoundTimeSeconds =
                 data.MyRoundTimeSeconds,
@@ -420,6 +422,7 @@ public sealed class VsMatchViewBuilder
  * MÓDOSÍTÁS: a gameplay snapshotot is megjelenítési modellekké
  * alakítja; a kapitányi kérdésekhez ugyanazt a meglévő kategória-
  * kép- és névfeloldást használja.
+ * A szerveren számolt saját időmódosítót változtatás nélkül viszi át.
  *
  * A szerver snapshotjából lokalizált neveket, meglévő Solo képeket
  * és VS view modelleket épít. DI-be nem kerül.

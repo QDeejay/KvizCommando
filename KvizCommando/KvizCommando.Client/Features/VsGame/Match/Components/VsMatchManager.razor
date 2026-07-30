@@ -16,6 +16,7 @@
             <VsMatchRoster
                 Players="@_match.Players"
                 ShowScore="@IsGamePhase"
+                CurrentTimeModifierSeconds="@_match.Game.MyTimeModifierSeconds"
                 Title="@Lang["vsgame.Match.Roster.Match"]" />
 
             <main class="kc-vs-match-content">
@@ -109,6 +110,8 @@
     száma külön felirattal, egyértelműen azonosítva jelenik meg.
     MÓDOSÍTÁS: a preparáció után a snapshot-alapú játéknézetet
     rendereli és annak három explicit parancsát továbbítja.
+    MÓDOSÍTÁS: a szerver által küldött saját időmódosítót átadja a
+    rosternek.
     A meccs- és lobby-roster
     címe közvetlen szöveg helyett a vsgame lokalizációból érkezik.
     A várólistát, a MatchLocked betöltést, a rostert és az aktuális

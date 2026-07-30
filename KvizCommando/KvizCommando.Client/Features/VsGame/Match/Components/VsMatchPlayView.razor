@@ -4,23 +4,34 @@
 <section class="kc-vs-play">
     <header class="kc-vs-play-title">
         <strong>@Data.InfoText</strong>
-        <div>
-            <span>@RoundText</span>
-            <small title="@Data.MatchId">#@MatchReference</small>
-        </div>
+        <span title="@Data.MatchId">
+            @RoundText · #@MatchReference
+        </span>
     </header>
 
-    @if (Data.DeadlineUtc.HasValue)
-    {
-        <div class="kc-vs-play-timer @(RemainingSeconds <= 5 ? "warning" : "")">
-            <i class="bi bi-stopwatch-fill"></i>
-            <strong>@RemainingSeconds</strong>
-            <div class="kc-vs-play-timer-track">
-                <div class="kc-vs-play-timer-value"
-                     style="@TimerStyle"></div>
+    <div class="kc-vs-play-timer-slot">
+        @if (ShowWaitTimer)
+        {
+            <div class="kc-vs-wait-timer"
+                 style="@WaitTimerStyle">
+                <strong>@RemainingSeconds</strong>
             </div>
-        </div>
-    }
+        }
+        else if (ShowAnswerTimer)
+        {
+            <div class="kc-vs-play-timer @(RemainingSeconds <= 5 ? "warning" : "")">
+                <i class="bi bi-stopwatch"></i>
+                <div class="kc-vs-play-timer-display">
+                    <strong>@RemainingSeconds</strong>
+                    <span>@Lang["vsgame.Match.Timer.SecondsShort"]</span>
+                </div>
+                <div class="kc-vs-play-timer-track">
+                    <div class="kc-vs-play-timer-value"
+                         style="@TimerStyle"></div>
+                </div>
+            </div>
+        }
+    </div>
 
     <div class="kc-vs-play-body">
         @if (Data.Phase == VsMatchPhase.GameStarting)
@@ -161,23 +172,29 @@
                     <div class="kc-vs-guess">
                         @if (Data.Game.CorrectGuess.HasValue)
                         {
-                            <strong>
-                                @Lang["vsgame.Match.Game.CorrectGuess"]:
-                                @Data.Game.CorrectGuess.Value.ToString("0.##")
-                            </strong>
+                            <div class="kc-vs-guess-result">
+                                <span>
+                                    @Lang["vsgame.Match.Game.CorrectGuess"]
+                                </span>
+                                <strong>
+                                    @Data.Game.CorrectGuess.Value.ToString("0.##")
+                                </strong>
+                            </div>
                         }
                         else
                         {
                             <input type="number"
                                    step="any"
                                    @bind="_guessValue"
+                                   @bind:event="oninput"
                                    disabled="@(!Data.Game.CanAnswer || _sending)" />
                             <button type="button"
-                                    class="kc-lcd-button"
+                                    class="button-on-lcd"
                                     disabled="@(!CanSubmitGuess)"
+                                    aria-label="@Lang["vsgame.Match.Game.Submit"]"
+                                    title="@Lang["vsgame.Match.Game.Submit"]"
                                     @onclick="SubmitGuessAsync">
-                                <i class="bi bi-check-lg"></i>
-                                <span>@Lang["vsgame.Match.Game.Submit"]</span>
+                                <i class="bi @(CanSubmitGuess ? "bi-check-lg" : "bi-shield-lock-fill")"></i>
                             </button>
                         }
                     </div>
@@ -236,10 +253,9 @@
         }
     </div>
 
-    @if (Data.Game.CurrentRoundNumber > 0 &&
-         Data.Phase != VsMatchPhase.GameCompleted)
-    {
-        <footer class="kc-vs-progress">
+    <footer class="kc-vs-progress @(ShowProgress ? string.Empty : "empty")">
+        @if (ShowProgress)
+        {
             @foreach (var step in Data.Game.Progress)
             {
                 <span class="@(step.IsCompleted ? "completed" : "") @(step.IsCurrent ? "current" : "")">
@@ -263,8 +279,8 @@
                 @MyRoundPoints
                 <small>@Seconds(MyRoundTime)</small>
             </strong>
-        </footer>
-    }
+        }
+    </footer>
 </section>
 
 @*
@@ -273,4 +289,7 @@
     jelennek meg; lokálisan csak a bevitelt és a küldés idejére
     szükséges gombreteszt tartja. A rövid meccshivatkozás végig
     látható, a teljes MatchId a tooltipben olvasható.
+    MÓDOSÍTÁS: a bevált title- és időstruktúrát, ikon-only BI
+    beküldőgombot, külön tipp-eredménymezőt és állandó progresszsort
+    használja.
 *@
