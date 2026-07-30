@@ -184,21 +184,34 @@
                         }
                         else
                         {
-                            <input type="text"
-                                   inputmode="decimal"
-                                   @ref="_guessInput"
-                                   @bind="_guessText"
-                                   @bind:event="oninput"
-                                   @onkeydown="HandleGuessKeyDownAsync"
-                                   disabled="@(!Data.Game.CanAnswer || _sending)" />
-                            <button type="button"
-                                    class="button-on-lcd"
-                                    disabled="@(!CanSubmitGuess)"
-                                    aria-label="@Lang["vsgame.Match.Game.Submit"]"
-                                    title="@Lang["vsgame.Match.Game.Submit"]"
-                                    @onclick="SubmitGuessAsync">
-                                <i class="bi @(CanSubmitGuess ? "bi-check-lg" : "bi-shield-lock-fill")"></i>
-                            </button>
+                            @if (HasGuessRange)
+                            {
+                                <div class="kc-vs-guess-range">
+                                    <i class="bi bi-arrows-expand-vertical"></i>
+                                    <span>
+                                        @Lang["vsgame.Match.Game.GuessRangeHelp"]:
+                                    </span>
+                                    <strong>@GuessRangeText</strong>
+                                </div>
+                            }
+
+                            <div class="kc-vs-guess-controls">
+                                <input type="text"
+                                       inputmode="decimal"
+                                       @ref="_guessInput"
+                                       @bind="_guessText"
+                                       @bind:event="oninput"
+                                       @onkeydown="HandleGuessKeyDownAsync"
+                                       disabled="@(!Data.Game.CanAnswer || _sending)" />
+                                <button type="button"
+                                        class="button-on-lcd"
+                                        disabled="@(!CanSubmitGuess)"
+                                        aria-label="@Lang["vsgame.Match.Game.Submit"]"
+                                        title="@Lang["vsgame.Match.Game.Submit"]"
+                                        @onclick="SubmitGuessAsync">
+                                    <i class="bi @(CanSubmitGuess ? "bi-check-lg" : "bi-shield-lock-fill")"></i>
+                                </button>
+                            </div>
                         }
                     </div>
                 }
@@ -213,12 +226,19 @@
 
                             <button type="button"
                                     class="@AnswerClass(answerIndex)"
-                                    disabled="@(!Data.Game.CanAnswer || _sending)"
+                                    disabled="@(!Data.Game.CanAnswer ||
+                                                _sending ||
+                                                IsAnswerEliminated(answerIndex))"
                                     @onclick="() => SubmitChoiceAsync(answerIndex)">
                                 <span>@((char)('A' + answerIndex))</span>
                                 <strong>
                                     @Data.Game.Answers[answerIndex]
                                 </strong>
+
+                                @if (IsSuggestedAnswer(answerIndex))
+                                {
+                                    <i class="bi bi-cpu-fill kc-vs-ai-suggestion"></i>
+                                }
                             </button>
                         }
                     </div>
@@ -262,11 +282,27 @@
 
                 @if (CurrentHelp is not null)
                 {
-                    <span class="kc-vs-play-help"
-                          title="@CurrentHelp.Name">
-                        <i class="@CurrentHelp.IconCss"></i>
-                        @CurrentHelp.Name
-                    </span>
+                    @if (CurrentHelp.HelpType ==
+                         VsHelpType.GuessRange)
+                    {
+                        <span class="kc-vs-play-help"
+                              title="@CurrentHelp.Name">
+                            <i class="@CurrentHelp.IconCss"></i>
+                            @CurrentHelp.Name
+                        </span>
+                    }
+                    else
+                    {
+                        <button type="button"
+                                class="kc-vs-play-help @(Data.Game.CanUseHelp ? "available" : "")"
+                                disabled="@(!Data.Game.CanUseHelp || _sending)"
+                                title="@CurrentHelp.Name"
+                                @onclick="UseHelpAsync">
+                            <i class="@CurrentHelp.IconCss"></i>
+                            <span>@CurrentHelp.Name</span>
+                            <strong>@HelpUseMarker</strong>
+                        </button>
+                    }
                 }
             </div>
         }
@@ -320,4 +356,8 @@
     MÓDOSÍTÁS: a natív számléptető nélküli tippmező a kérdés első
     renderelése után automatikusan fókuszt kap. A preparáció előtt
     ugyanebben a nézetben jelenik meg a szerveres kezdési várakozás.
+    MÓDOSÍTÁS: a tippsávot, a szerver által kizárt 50-50 válaszokat,
+    a felülírható AI-javaslatot és a help használati jelét közvetlenül
+    a személyre szabott snapshotból jeleníti meg. Az 50-50 válaszok
+    láthatók maradnak, de halványak és nem nyomhatók meg.
 *@

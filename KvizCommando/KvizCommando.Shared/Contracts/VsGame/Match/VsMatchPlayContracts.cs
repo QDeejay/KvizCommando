@@ -19,6 +19,11 @@ public sealed class VsCaptainQuestionRequest
     public int LoadoutPosition { get; set; }
 }
 
+public sealed class VsUseHelpRequest
+{
+    public int QuestionNumber { get; set; }
+}
+
 public sealed class VsGameDto
 {
     public int CurrentRoundNumber { get; set; }
@@ -33,6 +38,13 @@ public sealed class VsGameDto
     public int? MyAnswerIndex { get; set; }
     public double? MyGuess { get; set; }
     public double? MyTimeModifierSeconds { get; set; }
+    public double? MyGuessRangeMinimum { get; set; }
+    public double? MyGuessRangeMaximum { get; set; }
+    public int[] MyHiddenAnswerIndices { get; set; } = [];
+    public int? MySuggestedAnswerIndex { get; set; }
+    public int MyHelpUsesRemaining { get; set; }
+    public bool IsMyHelpUnlimited { get; set; }
+    public bool CanUseHelp { get; set; }
     public int MyRoundPoints { get; set; }
     public double MyRoundTimeSeconds { get; set; }
     public bool CanAnswer { get; set; }
@@ -95,4 +107,8 @@ public sealed class VsCaptainQuestionDto
  * tartalmazza. A válaszparancsot kizárólag a növekvő QuestionNumber
  * köti az aktuális kérdéshez; technikai kérésazonosítót nem használ.
  * MÓDOSÍTÁS: a saját aktuális időmódosító külön megjelenítési adat.
+ * MÓDOSÍTÁS: a segítség használata szintén csak az aktuális
+ * QuestionNumber értéket küldi. A személyre szabott játék DTO
+ * tartalmazza a tippsávot, a 50-50 által elvett válaszokat, az
+ * AI-javaslatot és az aktuális help használhatóságát.
  */

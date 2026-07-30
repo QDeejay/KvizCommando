@@ -74,6 +74,7 @@ public sealed class VsMatchSetupService
                 player.TeamName = seed.TeamName;
                 player.TeamLevel = seed.TeamLevel;
                 player.Characters = seed.Characters;
+                player.HelpLevels = seed.HelpLevels;
                 player.HelpCounts = seed.HelpCounts;
                 player.Loadout =
                     questions.Loadouts[seed.PlayerId];
@@ -178,6 +179,7 @@ public sealed class VsMatchSetupService
                     [
                         .. loadout.Take(loadoutSize)
                     ],
+                    HelpLevels = BuildHelpLevels(helpData),
                     HelpCounts = BuildHelpCounts(helpData),
                     Characters =
                     [
@@ -339,6 +341,20 @@ public sealed class VsMatchSetupService
 
         return result;
     }
+
+    private static int[] BuildHelpLevels(int[] helpData)
+    {
+        var result = new int[4];
+
+        for (var index = 0; index < result.Length; index++)
+        {
+            result[index] = index < helpData.Length
+                ? helpData[index]
+                : 0;
+        }
+
+        return result;
+    }
 }
 
 /**
@@ -347,4 +363,6 @@ public sealed class VsMatchSetupService
  * betöltését, valamint a karakterek aktuális energiáját és
  * infrastruktúrahiba esetén a tétek visszatérítését kezeli. SignalR-
  * üzenetet és fázisváltást nem végez.
+ * MÓDOSÍTÁS: a segítségek darabszáma mellett a négy fejlesztési
+ * szintet is ugyanebbe az egyszeri meccssnapshotba másolja.
  */

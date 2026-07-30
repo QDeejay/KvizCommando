@@ -112,6 +112,13 @@ public sealed class VsGameViewData
     public int? MyAnswerIndex { get; set; }
     public double? MyGuess { get; set; }
     public double? MyTimeModifierSeconds { get; set; }
+    public double? MyGuessRangeMinimum { get; set; }
+    public double? MyGuessRangeMaximum { get; set; }
+    public int[] MyHiddenAnswerIndices { get; set; } = [];
+    public int? MySuggestedAnswerIndex { get; set; }
+    public int MyHelpUsesRemaining { get; set; }
+    public bool IsMyHelpUnlimited { get; set; }
+    public bool CanUseHelp { get; set; }
     public int MyRoundPoints { get; set; }
     public double MyRoundTimeSeconds { get; set; }
     public bool CanAnswer { get; set; }
@@ -180,6 +187,8 @@ public sealed class VsCaptainQuestionVm
  * progressz, köreredmény és kapitányi kérdésválasztás kizárólag
  * megjelenítési célú modelljeit.
  * A saját aktuális időmódosító szintén csak megjelenítési adat.
+ * MÓDOSÍTÁS: a saját tippsáv, elrejtett és AI-javasolt válasz,
+ * valamint a help felhasználhatósága közvetlen snapshot-adat.
  * MÓDOSÍTÁS: a karaktermodell csak az SVG PictureCode-ot és a
  * preparációban használt orientációnevet tartja; külön orientációs
  * képútvonalra nincs szüksége.

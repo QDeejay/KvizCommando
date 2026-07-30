@@ -78,6 +78,7 @@
   "Match.Game.RewardPending": "A teljes jutalomösszesítés a következő fejlesztési részben készül el.",
   "Match.Game.Questioner": "Kérdező",
   "Match.Game.CorrectGuess": "Helyes érték",
+  "Match.Game.GuessRangeHelp": "Tippsáv segítség",
   "Match.Game.Submit": "Beküldés",
   "Match.Game.EnergyShort": "EP",
   "Modal.Quit.Content": "Ha kilépsz, elhagyod az aktuális VS játékot. Biztosan ki szeretnél lépni?"

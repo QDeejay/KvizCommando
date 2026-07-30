@@ -426,6 +426,49 @@ public sealed class VsMatchService : IVsMatchService
         await SendBroadcastMessagesAsync(messages);
     }
 
+    public async Task UseHelpAsync(
+        string connectionId,
+        VsUseHelpRequest request,
+        CancellationToken ct = default)
+    {
+        ct.ThrowIfCancellationRequested();
+
+        if (!_store.TryGetByConnection(connectionId, out var match) ||
+            match is null)
+        {
+            return;
+        }
+
+        (string ConnectionId, VsMatchSnapshot Snapshot)[] messages;
+
+        lock (match.SyncRoot)
+        {
+            var player = match.FindByConnection(connectionId);
+            var receivedUtc = DateTime.UtcNow;
+
+            if (!VsMatchGameRules.UseHelp(
+                    match,
+                    player,
+                    request,
+                    receivedUtc))
+            {
+                return;
+            }
+
+            AddLog(
+                match,
+                player!.PlayerId,
+                "HelpUsed",
+                $"Question={request.QuestionNumber};" +
+                $"Help={player.ActiveQuestionHelp}");
+
+            messages =
+                VsMatchSnapshotBuilder.BuildMessages(match);
+        }
+
+        await SendBroadcastMessagesAsync(messages);
+    }
+
     public async Task SelectCaptainQuestionAsync(
         string connectionId,
         VsCaptainQuestionRequest request,
@@ -985,6 +1028,9 @@ public sealed class VsMatchService : IVsMatchService
  * időtartamával külön kezdési visszaszámlálás előzi meg a preparációt.
  * MÓDOSÍTÁS: a kapitány kérdésválasztását a profil külön
  * CaptainSelectionSeconds beállítása időzíti.
+ * MÓDOSÍTÁS: a segítséghasználat ugyanabban a rövid,
+ * lock–validálás–naplózás–snapshot koordinációban fut, mint a
+ * válaszbeküldés.
  *
  * A fájl a MatchLocked session létrehozását, a parancsok authoritative
  * feldolgozását, a fázisváltást, a szerverórát és a disconnect miatti

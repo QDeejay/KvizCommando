@@ -48,6 +48,7 @@
                         Data="@_match"
                         OnGuessSubmitted="SubmitGuessAsync"
                         OnChoiceSubmitted="SubmitChoiceAsync"
+                        OnHelpUsed="UseHelpAsync"
                         OnCaptainQuestionSelected="SelectCaptainQuestionAsync" />
                 }
             </main>
@@ -109,7 +110,9 @@
     számláló és az alapfeltételek látszanak. A normál és kapitánykörök
     száma külön felirattal, egyértelműen azonosítva jelenik meg.
     MÓDOSÍTÁS: a preparáció után a snapshot-alapú játéknézetet
-    rendereli és annak három explicit parancsát továbbítja.
+    rendereli és annak explicit játékmeneti parancsait továbbítja.
+    MÓDOSÍTÁS: a segítség használatát ugyanazon a vékony callback-
+    láncon adja át, mint a választ és a tippet.
     MÓDOSÍTÁS: a szerver által küldött saját időmódosítót átadja a
     rosternek.
     A meccs- és lobby-roster

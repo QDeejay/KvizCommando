@@ -44,6 +44,7 @@ public sealed class VsMatchPlayerState
     public string TeamPictureCode { get; set; } = string.Empty;
     public VsMatchCharacterState[] Characters { get; set; } = [];
     public VsMatchLoadoutItemState[] Loadout { get; set; } = [];
+    public int[] HelpLevels { get; set; } = new int[4];
     public int[] HelpCounts { get; set; } = new int[4];
     public VsMatchRoundState[] Rounds { get; init; } = [];
     public bool IsConnected { get; set; } = true;
@@ -54,6 +55,11 @@ public sealed class VsMatchPlayerState
     public int RoundPoints { get; set; }
     public double RoundTimeSeconds { get; set; }
     public VsMatchPlayerAnswerState? CurrentAnswer { get; set; }
+    public VsHelpType ActiveQuestionHelp { get; set; }
+    public double? GuessRangeMinimum { get; set; }
+    public double? GuessRangeMaximum { get; set; }
+    public int[] HiddenAnswerIndices { get; set; } = [];
+    public int? SuggestedAnswerIndex { get; set; }
     public List<int> RoundProgress { get; } = [];
     public HashSet<int> CaptainUsedLoadoutPositions { get; } = [];
 }
@@ -89,6 +95,7 @@ public sealed class VsMatchRoundState
     public int? CharacterSlotNumber { get; set; }
     public int? LoadoutPosition { get; set; }
     public VsHelpType HelpType { get; set; }
+    public bool HelpUsed { get; set; }
 }
 
 public sealed class VsMatchPlayerSeed
@@ -101,6 +108,7 @@ public sealed class VsMatchPlayerSeed
     public string TeamName { get; init; } = string.Empty;
     public int TeamLevel { get; init; }
     public int[] LoadoutCategories { get; init; } = [];
+    public int[] HelpLevels { get; init; } = new int[4];
     public int[] HelpCounts { get; init; } = new int[4];
     public VsMatchCharacterState[] Characters { get; init; } = [];
     public VsOwnQuestionSeed[] OwnQuestions { get; init; } = [];
@@ -199,6 +207,9 @@ public sealed class VsMatchRoundResultState
  * A loadoutelem külön tárolja a választott megjelenítési kategóriát
  * és a ténylegesen betöltött kérdés kategóriáját; ez az „összes”
  * választásnál szükséges a helyes időmódosítóhoz.
+ * MÓDOSÍTÁS: a meccs eleji snapshot a segítségek szintjét is
+ * megőrzi. A round az egyszer használható help állapotát, a játékos
+ * pedig csak az aktuális kérdés személyre szabott help-hatását tárolja.
  *
  * Egy lezárt meccs teljes, szerveroldali authoritative állapotát
  * tartalmazza. A SignalR Hub nem őriz játékállapotot.

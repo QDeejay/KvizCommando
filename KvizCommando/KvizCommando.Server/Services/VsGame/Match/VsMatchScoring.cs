@@ -1,3 +1,5 @@
+using KvizCommando.Shared.Models.Enums.VsGame;
+
 namespace KvizCommando.Server.Services.VsGame.Match;
 
 internal static class VsMatchScoring
@@ -21,13 +23,8 @@ internal static class VsMatchScoring
             .. ordered.Select(player => player.Position)
         ];
 
-        var winner = match.Players
-            .Where(player =>
-                player.CurrentAnswer?.Guess.HasValue == true)
-            .OrderBy(player =>
-                player.CurrentAnswer!.AnswerTimeSeconds)
-            .ThenBy(player => player.Position)
-            .FirstOrDefault();
+        var winner = ordered.FirstOrDefault(player =>
+            player.CurrentAnswer?.Guess.HasValue == true);
         var results = new List<VsMatchQuestionPlayerResultState>(
             match.Players.Count);
 
@@ -109,7 +106,13 @@ internal static class VsMatchScoring
                 question.CorrectOptionIndex;
             var answerTime = isCorrect
                 ? answer!.AnswerTimeSeconds
-                : match.Profile.QuestionSeconds;
+                : match.Profile.QuestionSeconds +
+                  (hasAnswer &&
+                   player.ActiveQuestionHelp ==
+                       VsHelpType.TimeFreeze
+                      ? match.Profile
+                          .TimeFreezeWrongAnswerPenaltySeconds
+                      : 0);
             var points = player == questioner
                 ? ResolveQuestionerPoints(
                     hasAnswer,
@@ -315,6 +318,13 @@ internal static class VsMatchScoring
         VsMatchPlayerState player,
         VsMatchQuestionState question)
     {
+        if (player.ActiveQuestionHelp ==
+            VsHelpType.TimeFreeze)
+        {
+            return match.Profile
+                .TimeFreezeModifierSeconds;
+        }
+
         if (match.Game.CurrentRoundNumber >
                 match.Classification.RequiredPartySize ||
             question.CategoryId is
@@ -430,4 +440,9 @@ internal static class VsMatchScoring
  * sessionben módosít, időzítést és SignalR-küldést nem végez.
  * MÓDOSÍTÁS: ugyanaz az időmódosító-számítás szolgálja a pontozást
  * és a személyre szabott kijelzést.
+ * MÓDOSÍTÁS: a tippkör pontját a helyes értékhez legközelebbi tipp
+ * kapja; az idő csak azonos eltérés esetén dönt.
+ * MÓDOSÍTÁS: az időtlenítő az aktuális alkör módosítóját -99
+ * másodpercre állítja; hibás beküldésnél a profil szerinti húsz
+ * másodperces büntetés hozzáadódik a normál hibásválasz-időhöz.
  */

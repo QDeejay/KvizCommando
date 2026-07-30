@@ -45,6 +45,11 @@ public interface IVsMatchService
         VsChoiceAnswerRequest request,
         CancellationToken ct = default);
 
+    Task UseHelpAsync(
+        string connectionId,
+        VsUseHelpRequest request,
+        CancellationToken ct = default);
+
     Task SelectCaptainQuestionAsync(
         string connectionId,
         VsCaptainQuestionRequest request,
@@ -63,6 +68,8 @@ public interface IVsMatchService
  *
  * MÓDOSÍTÁS: felvette a három szándék szerinti játékmeneti parancsot:
  * tipp, feleletválasztós válasz és kapitánykérdés kiválasztása.
+ * MÓDOSÍTÁS: a játékkörben használható segítség külön, explicit
+ * szerverparancs.
  *
  * A lezárt VS meccs létrehozásának, preparációs és játékmeneti
  * parancsainak szerveroldali szerződése.

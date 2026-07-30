@@ -40,6 +40,10 @@ public interface IVsMatchClientService : IAsyncDisposable
         VsChoiceAnswerRequest request,
         CancellationToken ct = default);
 
+    Task UseHelpAsync(
+        VsUseHelpRequest request,
+        CancellationToken ct = default);
+
     Task SelectCaptainQuestionAsync(
         VsCaptainQuestionRequest request,
         CancellationToken ct = default);
@@ -54,6 +58,8 @@ public interface IVsMatchClientService : IAsyncDisposable
  *
  * MÓDOSÍTÁS: a tipp-, válasz- és kapitánykérdés-parancsot külön,
  * explicit metódusként továbbítja.
+ * MÓDOSÍTÁS: a segítség használata ugyancsak explicit SignalR-
+ * parancs, állapotot a kliensszerviz nem tart hozzá.
  *
  * A VS dynamic manager által használt SignalR klienskapcsolat
  * szerződése. Automatikus reconnectet szándékosan nem tartalmaz.

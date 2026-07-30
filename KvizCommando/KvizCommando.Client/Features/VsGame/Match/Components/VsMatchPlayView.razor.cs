@@ -25,6 +25,10 @@ public partial class VsMatchPlayView : IDisposable
         OnChoiceSubmitted { get; set; }
 
     [Parameter]
+    public EventCallback<VsUseHelpRequest>
+        OnHelpUsed { get; set; }
+
+    [Parameter]
     public EventCallback<VsCaptainQuestionRequest>
         OnCaptainQuestionSelected { get; set; }
 
@@ -148,6 +152,19 @@ public partial class VsMatchPlayView : IDisposable
                 Data.Game.CurrentRoundNumber)
             ?.Help;
 
+    private bool HasGuessRange =>
+        Data.Game.MyGuessRangeMinimum.HasValue &&
+        Data.Game.MyGuessRangeMaximum.HasValue;
+
+    private string GuessRangeText =>
+        $"({FormatNumber(Data.Game.MyGuessRangeMinimum!.Value)} - " +
+        $"{FormatNumber(Data.Game.MyGuessRangeMaximum!.Value)})";
+
+    private string HelpUseMarker =>
+        Data.Game.IsMyHelpUnlimited
+            ? "∞"
+            : Data.Game.MyHelpUsesRemaining.ToString();
+
     private int MyRoundPoints =>
         Data.Game.MyRoundPoints;
 
@@ -166,21 +183,47 @@ public partial class VsMatchPlayView : IDisposable
     private static string Seconds(double value) =>
         $"{value:0.0}s";
 
+    private static string FormatNumber(double value) =>
+        value.ToString(
+            "0.##",
+            CultureInfo.CurrentCulture);
+
+    private bool IsAnswerEliminated(int answerIndex) =>
+        !Data.Game.CorrectAnswerIndex.HasValue &&
+        Data.Game.MyHiddenAnswerIndices.Contains(answerIndex);
+
+    private bool IsSuggestedAnswer(int answerIndex) =>
+        !Data.Game.CorrectAnswerIndex.HasValue &&
+        Data.Game.MySuggestedAnswerIndex == answerIndex;
+
     private string AnswerClass(int answerIndex)
     {
+        string css;
+
         if (!Data.Game.CorrectAnswerIndex.HasValue)
         {
-            return Data.Game.MyAnswerIndex == answerIndex
+            css = Data.Game.MyAnswerIndex == answerIndex
                 ? "selected"
                 : string.Empty;
         }
+        else if (Data.Game.CorrectAnswerIndex == answerIndex)
+        {
+            css = "correct";
+        }
+        else
+        {
+            css = Data.Game.MyAnswerIndex == answerIndex
+                ? "wrong"
+                : string.Empty;
+        }
 
-        if (Data.Game.CorrectAnswerIndex == answerIndex)
-            return "correct";
+        if (IsAnswerEliminated(answerIndex))
+            css = $"{css} eliminated".Trim();
 
-        return Data.Game.MyAnswerIndex == answerIndex
-            ? "wrong"
-            : string.Empty;
+        if (IsSuggestedAnswer(answerIndex))
+            css = $"{css} suggested".Trim();
+
+        return css;
     }
 
     private async Task SubmitGuessAsync()
@@ -226,8 +269,12 @@ public partial class VsMatchPlayView : IDisposable
 
     private async Task SubmitChoiceAsync(int answerIndex)
     {
-        if (!Data.Game.CanAnswer || _sending)
+        if (!Data.Game.CanAnswer ||
+            IsAnswerEliminated(answerIndex) ||
+            _sending)
+        {
             return;
+        }
 
         _sending = true;
 
@@ -239,6 +286,28 @@ public partial class VsMatchPlayView : IDisposable
                     QuestionNumber =
                         Data.Game.QuestionNumber,
                     AnswerIndex = answerIndex
+                });
+        }
+        finally
+        {
+            _sending = false;
+        }
+    }
+
+    private async Task UseHelpAsync()
+    {
+        if (!Data.Game.CanUseHelp || _sending)
+            return;
+
+        _sending = true;
+
+        try
+        {
+            await OnHelpUsed.InvokeAsync(
+                new VsUseHelpRequest
+                {
+                    QuestionNumber =
+                        Data.Game.QuestionNumber
                 });
         }
         finally
@@ -281,13 +350,16 @@ public partial class VsMatchPlayView : IDisposable
 
 /**
  * ÚJ FÁJL: a VS játéknézet visszaszámlálását, lokális beviteli
- * állapotát és a három explicit EventCallback parancsát kezeli.
+ * állapotát és az explicit EventCallback parancsokat kezeli.
  * Pontot, sorrendet vagy válaszjogosultságot nem számol kliensoldalon.
  * A teljes MatchId-ből csak megjelenítési célú rövid hivatkozást képez.
  * MÓDOSÍTÁS: külön kezeli a válaszadási idősort és a színezés nélküli,
  * kör alakú várakozási visszaszámlálót.
  * MÓDOSÍTÁS: Enter esetén ugyanazt az ellenőrzött tippbeküldő
  * handlert hívja, mint a megjelenített BI gomb.
+ * MÓDOSÍTÁS: a snapshot szerinti tippsávot, 50-50 kizárást és
+ * felülírható AI-javaslatot jeleníti meg; a segítség gombja
+ * kizárólag az explicit UseHelp EventCallbackot hívja.
  * MÓDOSÍTÁS: a tippkérdés inputját kérdésenként egyszer, közvetlenül
  * render után Blazor ElementReference segítségével fókuszálja.
  * A részben begépelt értéket szövegként őrzi, és csak a közös

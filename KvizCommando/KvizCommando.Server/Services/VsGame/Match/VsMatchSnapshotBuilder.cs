@@ -101,6 +101,27 @@ internal static class VsMatchSnapshotBuilder
                     match,
                     currentPlayer,
                     question),
+            MyGuessRangeMinimum =
+                currentPlayer.GuessRangeMinimum,
+            MyGuessRangeMaximum =
+                currentPlayer.GuessRangeMaximum,
+            MyHiddenAnswerIndices =
+                currentPlayer.HiddenAnswerIndices,
+            MySuggestedAnswerIndex =
+                currentPlayer.SuggestedAnswerIndex,
+            MyHelpUsesRemaining =
+                ResolveHelpUsesRemaining(
+                    match,
+                    currentPlayer),
+            IsMyHelpUnlimited =
+                ResolveCurrentHelpType(
+                    match,
+                    currentPlayer) ==
+                VsHelpType.TimeFreeze,
+            CanUseHelp = VsMatchGameRules.CanUseHelp(
+                match,
+                currentPlayer,
+                DateTime.UtcNow),
             MyRoundPoints = currentPlayer.RoundPoints,
             MyRoundTimeSeconds =
                 currentPlayer.RoundTimeSeconds,
@@ -140,12 +161,28 @@ internal static class VsMatchSnapshotBuilder
             question.QuestionerPosition == currentPlayer.Position ||
             match.Game.CurrentRoundNumber <= 0 ||
             match.Game.CurrentRoundNumber >
-                match.Classification.RequiredPartySize ||
-            question.CategoryId is
-                < VsLoadoutCategoryIds.MinimumFactoryCategory or
-                > VsLoadoutCategoryIds.MaximumFactoryCategory)
+                match.Classification.RequiredPartySize)
         {
             return null;
+        }
+
+        if (match.Phase == VsMatchPhase.QuestionResult &&
+            currentPlayer.ActiveQuestionHelp ==
+                VsHelpType.TimeFreeze)
+        {
+            var result = match.Game.QuestionResult
+                ?.Players.FirstOrDefault(item =>
+                    item.Position == currentPlayer.Position);
+
+            if (result is
+                {
+                    AnswerIndex: not null,
+                    IsCorrect: false
+                })
+            {
+                return match.Profile
+                    .TimeFreezeWrongAnswerPenaltySeconds;
+            }
         }
 
         var seconds = VsMatchScoring.CalculateTimeModifier(
@@ -154,6 +191,43 @@ internal static class VsMatchSnapshotBuilder
             question);
 
         return Math.Truncate(seconds * 10) / 10;
+    }
+
+    private static int ResolveHelpUsesRemaining(
+        VsMatchSession match,
+        VsMatchPlayerState currentPlayer)
+    {
+        var round = ResolveCurrentRound(
+            match,
+            currentPlayer);
+
+        return round is
+            {
+                HelpType:
+                    VsHelpType.FiftyFifty or
+                    VsHelpType.AiSuggestion,
+                HelpUsed: false
+            }
+                ? 1
+                : 0;
+    }
+
+    private static VsHelpType ResolveCurrentHelpType(
+        VsMatchSession match,
+        VsMatchPlayerState currentPlayer) =>
+        ResolveCurrentRound(match, currentPlayer)
+            ?.HelpType ?? VsHelpType.None;
+
+    private static VsMatchRoundState? ResolveCurrentRound(
+        VsMatchSession match,
+        VsMatchPlayerState currentPlayer)
+    {
+        if (match.Game.CurrentRoundNumber <= 0)
+            return null;
+
+        return currentPlayer.Rounds.FirstOrDefault(round =>
+            round.RoundNumber ==
+            match.Game.CurrentRoundNumber);
     }
 
     private static VsQuestionPlayerDto[] BuildQuestionPlayers(
@@ -646,6 +720,11 @@ internal static class VsMatchSnapshotBuilder
  * és a meglévő fázisszünet hosszát küldi.
  * MÓDOSÍTÁS: a kapitány kérdésválasztásánál a külön
  * CaptainSelectionSeconds időtartamot küldi a kliensnek.
+ * MÓDOSÍTÁS: a saját snapshot tartalmazza a tippsávot, az elrejtett
+ * és javasolt választ, a segítség használhatóságát, valamint az
+ * időtlenítőből eredő aktuális módosítót.
+ * MÓDOSÍTÁS: hibás, beküldött időtlenítős válasz eredményfázisában
+ * a saját kártya a -99 helyett a profil szerinti +20 büntetést kapja.
  *
  * A szerveroldali meccsállapotból játékosonként tiszta SignalR-
  * snapshotokat épít. Nem módosít állapotot és nem küld üzenetet.

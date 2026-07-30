@@ -107,6 +107,19 @@ public sealed class VsMatchViewBuilder
             MyGuess = data.MyGuess,
             MyTimeModifierSeconds =
                 data.MyTimeModifierSeconds,
+            MyGuessRangeMinimum =
+                data.MyGuessRangeMinimum,
+            MyGuessRangeMaximum =
+                data.MyGuessRangeMaximum,
+            MyHiddenAnswerIndices =
+                data.MyHiddenAnswerIndices,
+            MySuggestedAnswerIndex =
+                data.MySuggestedAnswerIndex,
+            MyHelpUsesRemaining =
+                data.MyHelpUsesRemaining,
+            IsMyHelpUnlimited =
+                data.IsMyHelpUnlimited,
+            CanUseHelp = data.CanUseHelp,
             MyRoundPoints = data.MyRoundPoints,
             MyRoundTimeSeconds =
                 data.MyRoundTimeSeconds,
@@ -390,6 +403,8 @@ public sealed class VsMatchViewBuilder
  * alakítja; a kapitányi kérdésekhez ugyanazt a meglévő kategória-
  * kép- és névfeloldást használja.
  * A szerveren számolt saját időmódosítót változtatás nélkül viszi át.
+ * MÓDOSÍTÁS: a személyre szabott segítségállapotot számítás nélkül
+ * másolja a játéknézet view modeljébe.
  * MÓDOSÍTÁS: a garantáltan érvényes csapat- és karakterszinteket,
  * illetve orientációt közvetlenül használja; nem clampeli őket.
  * A karakter view modelből kikerült a sehol nem használt orientációs

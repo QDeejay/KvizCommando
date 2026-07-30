@@ -91,6 +91,13 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
             request,
             Context.ConnectionAborted);
 
+    public Task UseHelp(
+        VsUseHelpRequest request) =>
+        _matches.UseHelpAsync(
+            Context.ConnectionId,
+            request,
+            Context.ConnectionAborted);
+
     public Task SelectCaptainQuestion(
         VsCaptainQuestionRequest request) =>
         _matches.SelectCaptainQuestionAsync(
@@ -130,8 +137,8 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
  * MÓDOSÍTÁS: a queue-belépés várható eredményét közvetlenül visszaadja
  * a hívó kliensnek. A Hub továbbra sem tart fenn játékállapotot.
  *
- * MÓDOSÍTÁS: a tipp-, válasz- és kapitánykérdés-parancsot ugyanúgy,
- * állapot nélkül továbbítja a match service felé.
+ * MÓDOSÍTÁS: a tipp-, válasz-, segítség- és kapitánykérdés-parancsot
+ * ugyanúgy, állapot nélkül továbbítja a match service felé.
  *
  * A VS kliens parancsait azonosítja és továbbítja a queue- vagy
  * match-szerviznek. Saját játékállapotot és adatbázislogikát nem

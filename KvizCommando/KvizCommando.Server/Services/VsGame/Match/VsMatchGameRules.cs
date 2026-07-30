@@ -1,4 +1,5 @@
 using KvizCommando.Shared.Contracts.VsGame.Match;
+using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Enums.VsGame;
 
 namespace KvizCommando.Server.Services.VsGame.Match;
@@ -153,6 +154,8 @@ internal static class VsMatchGameRules
             request.QuestionNumber !=
                 match.Game.QuestionNumber ||
             request.AnswerIndex is < 0 or > 3 ||
+            player.HiddenAnswerIndices.Contains(
+                request.AnswerIndex) ||
             player.CurrentAnswer is not null ||
             IsLate(match, receivedUtc))
         {
@@ -168,6 +171,101 @@ internal static class VsMatchGameRules
         };
 
         return true;
+    }
+
+    internal static bool UseHelp(
+        VsMatchSession match,
+        VsMatchPlayerState? player,
+        VsUseHelpRequest request,
+        DateTime receivedUtc)
+    {
+        if (request.QuestionNumber !=
+                match.Game.QuestionNumber ||
+            !CanUseHelp(match, player, receivedUtc))
+        {
+            return false;
+        }
+
+        var currentPlayer = player!;
+        var round = ResolveCurrentRound(match, currentPlayer);
+        var question = match.Game.CurrentQuestion!;
+
+        switch (round.HelpType)
+        {
+            case VsHelpType.FiftyFifty:
+                currentPlayer.HiddenAnswerIndices =
+                [
+                    .. Enumerable.Range(0, 4)
+                        .Where(index =>
+                            index !=
+                            question.CorrectOptionIndex)
+                        .OrderBy(_ => Random.Shared.Next())
+                        .Take(2)
+                ];
+                round.HelpUsed = true;
+                break;
+
+            case VsHelpType.TimeFreeze:
+                break;
+
+            case VsHelpType.AiSuggestion:
+                var accuracy = ResolveHelpValue(
+                    currentPlayer,
+                    VsHelpType.AiSuggestion);
+                var suggestsCorrect =
+                    Random.Shared.Next(100) < accuracy;
+
+                currentPlayer.SuggestedAnswerIndex =
+                    suggestsCorrect
+                        ? question.CorrectOptionIndex
+                        : Enumerable.Range(0, 4)
+                            .Where(index =>
+                                index !=
+                                question.CorrectOptionIndex)
+                            .OrderBy(_ => Random.Shared.Next())
+                            .First();
+                round.HelpUsed = true;
+                break;
+
+            default:
+                return false;
+        }
+
+        currentPlayer.ActiveQuestionHelp = round.HelpType;
+        return true;
+    }
+
+    internal static bool CanUseHelp(
+        VsMatchSession match,
+        VsMatchPlayerState? player,
+        DateTime receivedUtc)
+    {
+        if (match.Phase is not
+                (VsMatchPhase.NormalRoundQuestion or
+                 VsMatchPhase.CaptainQuestion) ||
+            player is null ||
+            !player.IsConnected ||
+            player.CurrentAnswer is not null ||
+            match.Game.CurrentQuestion is not
+                { Kind: VsQuestionKind.Choice } question ||
+            question.QuestionerPosition == player.Position ||
+            IsLate(match, receivedUtc))
+        {
+            return false;
+        }
+
+        var round = ResolveCurrentRound(match, player);
+
+        return round.HelpType switch
+        {
+            VsHelpType.FiftyFifty or
+            VsHelpType.AiSuggestion =>
+                !round.HelpUsed,
+            VsHelpType.TimeFreeze =>
+                player.ActiveQuestionHelp !=
+                VsHelpType.TimeFreeze,
+            _ => false
+        };
     }
 
     internal static bool HaveAllConnectedPlayersAnswered(
@@ -283,6 +381,8 @@ internal static class VsMatchGameRules
         match.Game.CurrentQuestionerIndex = 0;
         match.Game.QuestionResult = null;
         match.Game.RoundResult = [];
+
+        BuildGuessRanges(match);
     }
 
     private static void BeginCaptainQuestion(
@@ -331,8 +431,68 @@ internal static class VsMatchGameRules
     private static void ClearAnswers(VsMatchSession match)
     {
         foreach (var player in match.Players)
+        {
             player.CurrentAnswer = null;
+            player.ActiveQuestionHelp = VsHelpType.None;
+            player.GuessRangeMinimum = null;
+            player.GuessRangeMaximum = null;
+            player.HiddenAnswerIndices = [];
+            player.SuggestedAnswerIndex = null;
+        }
     }
+
+    private static void BuildGuessRanges(VsMatchSession match)
+    {
+        var correctGuess =
+            match.Game.CurrentQuestion!.CorrectGuess;
+
+        foreach (var player in match.Players)
+        {
+            var round = ResolveCurrentRound(match, player);
+
+            if (round.HelpType != VsHelpType.GuessRange)
+                continue;
+
+            var errorPercent = ResolveHelpValue(
+                player,
+                VsHelpType.GuessRange);
+            var width = Math.Max(
+                1,
+                Math.Ceiling(
+                    Math.Abs(correctGuess) *
+                    errorPercent /
+                    100));
+            var minimum = Math.Floor(
+                correctGuess -
+                Random.Shared.NextDouble() * width);
+
+            if (minimum < 1)
+                minimum = 1;
+
+            player.GuessRangeMinimum = minimum;
+            player.GuessRangeMaximum =
+                Math.Ceiling(minimum + width);
+        }
+    }
+
+    private static double ResolveHelpValue(
+        VsMatchPlayerState player,
+        VsHelpType helpType)
+    {
+        var helpIndex = (int)helpType - 1;
+        var level = player.HelpLevels[helpIndex];
+
+        return ModifierTable.Data[level]
+                   .Modifier[helpIndex + 8] ??
+               0;
+    }
+
+    private static VsMatchRoundState ResolveCurrentRound(
+        VsMatchSession match,
+        VsMatchPlayerState player) =>
+        player.Rounds.First(round =>
+            round.RoundNumber ==
+            match.Game.CurrentRoundNumber);
 
     private static VsMatchPlayerState FindByPosition(
         VsMatchSession match,
@@ -363,4 +523,8 @@ internal static class VsMatchGameRules
  * MÓDOSÍTÁS: a játékkérdés a loadout megjelenítési kategóriája
  * helyett a tényleges kérdéskategóriát kapja, így az „összes”
  * választás időmódosítója is ugyanúgy működik.
+ * MÓDOSÍTÁS: szerveroldalon aktiválja és validálja a 50-50,
+ * időtlenítő és AI segítséget. A tippsávot a nagy kör elején
+ * automatikusan építi fel; a help-szint százaléka közvetlenül a
+ * teljes sáv helyes válaszhoz viszonyított szélességét adja.
  */

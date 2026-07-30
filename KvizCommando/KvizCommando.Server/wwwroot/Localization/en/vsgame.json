@@ -78,6 +78,7 @@
   "Match.Game.RewardPending": "The complete reward settlement will be added in the next development step.",
   "Match.Game.Questioner": "Questioner",
   "Match.Game.CorrectGuess": "Correct value",
+  "Match.Game.GuessRangeHelp": "Guess range help",
   "Match.Game.Submit": "Submit",
   "Match.Game.EnergyShort": "EN",
   "Modal.Quit.Content": "Leaving will exit the current VS game. Are you sure you want to leave?"

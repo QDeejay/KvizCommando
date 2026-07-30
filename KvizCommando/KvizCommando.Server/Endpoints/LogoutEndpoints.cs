@@ -4,6 +4,7 @@ using KvizCommando.Server.Identity;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.Players;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace KvizCommando.Server.Endpoints;
@@ -18,7 +19,7 @@ public static class LogoutEndpoints
            
         // POST /api/logout
         group.MapPost("", async (
-            string? sessionId,
+            [FromBody] string sessionId,
             HttpContext httpContext,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,

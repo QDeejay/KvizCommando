@@ -32,28 +32,30 @@ namespace KvizCommando.Server.Services.Players
                 _logger.LogDebug("Logout: Player not found for UserId={UserId}", playerId);
                 return;
             }
-           
-            await _cache.LogoutLockedRequestAsync(playerId.Value, sessionId, ct);
+
+            var logoutRequested =  await _cache.LogoutLockedRequestAsync( playerId.Value, sessionId,  ct);
+
             _idCasche.Invalidate(userId);
-            _logger.LogDebug($"Logout: Cache removed for PlayerId={playerId}, UserId={userId}, SessionId:{sessionId}");
-        }
-        /*
-        public async Task<int> GetPlayerIdAsync(string userId, CancellationToken ct = default)
-        {
-            var playerId = await _db.Set<Player>()
-                .Where(p => p.UserId == userId)
-                .Select(p => p.PlayerId)
-                .FirstOrDefaultAsync(ct);
 
-            if (playerId == 0)
+            if (logoutRequested is null)
             {
-                _logger.LogDebug("GetPlayerId: Player not found for UserId={UserId}", userId);
+                _logger.LogWarning(
+                    "Logout: Session mismatch. PlayerId={PlayerId}, UserId={UserId}, SessionId={SessionId}",
+                    playerId,
+                    userId,
+                    sessionId);
 
+                return;
             }
-            _logger.LogDebug("GetPlayerId: Found PlayerId={PlayerId} for UserId={UserId}", playerId, userId);
-            return playerId;
 
+            _logger.LogDebug(
+                logoutRequested.Value
+                    ? "Logout: Cache logout requested. PlayerId={PlayerId}, UserId={UserId}, SessionId={SessionId}"
+                    : "Logout: Player was not present in cache. PlayerId={PlayerId}, UserId={UserId}, SessionId={SessionId}",
+                playerId,
+                userId,
+                sessionId);
         }
-        */
+       
     }
 }

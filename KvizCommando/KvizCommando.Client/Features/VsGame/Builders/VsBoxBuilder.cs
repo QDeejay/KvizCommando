@@ -5,12 +5,14 @@ using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
+using Microsoft.AspNetCore.Components;
 
 namespace KvizCommando.Client.Features.VsGame.Builders;
 
 public sealed class VsComponentParameters
 {
     public Func<Task>? OnTeamSaved { get; init; }
+    public EventCallback<bool> OnQuitConfirmationChanged { get; init; }
     public int ClassificationId { get; init; }
 }
 
@@ -109,7 +111,8 @@ public static class VsBoxBuilder
 
 /**
  * MÓDOSÍTÁS: a ranked meccs dinamikus komponense már csak a valóban
- * szükséges ClassificationId paramétert kapja; a kapcsolat- és
+ * szükséges ClassificationId paramétert és a visszalépési
+ * megerősítés állapotát közlő EventCallbacket kapja; a kapcsolat- és
  * hibaállapot nem utazik builder callbackeken keresztül.
  *
  * A fájl a VS spec-ekből ContentBox view modelleket épít.

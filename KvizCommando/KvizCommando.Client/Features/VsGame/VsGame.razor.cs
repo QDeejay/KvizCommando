@@ -20,6 +20,7 @@ public partial class VsGame : KcComponentBase, IDisposable
     private string[] _boxOrder = [];
     private int _classificationId;
     private bool _isReady;
+    private bool _requiresQuitConfirmation;
 
     private string Culture => AppStates.Culture;
     private VsGameDtos VsData => AppStates.VsGame!;
@@ -40,6 +41,10 @@ public partial class VsGame : KcComponentBase, IDisposable
         var parameters = new VsComponentParameters
         {
             OnTeamSaved = RefreshRankedAsync,
+            OnQuitConfirmationChanged =
+                EventCallback.Factory.Create<bool>(
+                    this,
+                    SetQuitConfirmation),
             ClassificationId = _classificationId
         };
 
@@ -93,17 +98,24 @@ public partial class VsGame : KcComponentBase, IDisposable
     {
         if (Ui.Header.PageIndex is >= 311 and <= 315)
         {
-            var modal = MBoxBuilder.BuildParam(
-                ModalTypes.DialogConfirm,
-                Ui.Lang);
+            if (_requiresQuitConfirmation)
+            {
+                var modal = MBoxBuilder.BuildParam(
+                    ModalTypes.DialogConfirm,
+                    Ui.Lang);
 
-            modal.BodyParameters.Add(
-                nameof(DBoxModalRender.DialogBoxType),
-                DBoxConfirmTypes.VsGameQuitConfirm);
+                modal.BodyParameters.Add(
+                    nameof(DBoxModalRender.DialogBoxType),
+                    DBoxConfirmTypes.VsGameQuitConfirm);
 
-            if (await Ui.Modal.ShowAsync(modal) != ModalResult.Button1)
-                return;
+                if (await Ui.Modal.ShowAsync(modal) !=
+                    ModalResult.Button1)
+                {
+                    return;
+                }
+            }
 
+            _requiresQuitConfirmation = false;
             BuildBoxes();
             OnBoxClick(303);
             return;
@@ -119,6 +131,9 @@ public partial class VsGame : KcComponentBase, IDisposable
         OnBoxClick(3);
     }
 
+    private void SetQuitConfirmation(bool value) =>
+        _requiresQuitConfirmation = value;
+
     public void Dispose()
     {
         Ui.Header.OnBackBtnClicked -= HandleBack;
@@ -128,7 +143,10 @@ public partial class VsGame : KcComponentBase, IDisposable
 
 /**
  * MÓDOSÍTÁS: a VS lap többé nem tulajdonosa a SignalR-kapcsolatnak és
- * nem közvetít match lock- vagy hibacallbacket. Visszalépéskor
+ * nem közvetít match lock- vagy hibacallbacket. A manager kizárólag
+ * azt jelzi, hogy az aktuális fázis igényel-e kilépési megerősítést;
+ * queue-ban és befejezett meccsnél a visszalépés közvetlen.
+ * Visszalépéskor
  * eltávolítja a DynamicComponentet; annak DisposeAsync metódusa
  * végzi a hivatalos queue-kilépést és kapcsolatlezárást.
  *

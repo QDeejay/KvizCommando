@@ -249,6 +249,9 @@
   <data name="Match.Game.CorrectGuess" xml:space="preserve">
     <value>Helyes érték</value>
   </data>
+  <data name="Match.Game.GuessRangeHelp" xml:space="preserve">
+    <value>Tippsáv segítség</value>
+  </data>
   <data name="Match.Game.Submit" xml:space="preserve">
     <value>Beküldés</value>
   </data>
@@ -260,6 +263,7 @@
     preparációs fázis, az ismétlésmentes preparációs fejléc, az
     inventory, játékmenet, eredmény, roster és az üres körhely magyar
     feliratait.
+    MÓDOSÍTÁS: felvette a tippsáv játékközbeni magyar feliratát.
 
     A fájl a VS kliens magyar lokalizációs forrása; Debug buildkor
     a ResxExporter ebből készíti el a vsgame.json fájlt.

@@ -1,6 +1,7 @@
 using KvizCommando.Client.Features.VsGame.Match.Builders;
 using KvizCommando.Client.Features.VsGame.Match.Services;
 using KvizCommando.Client.Features.VsGame.Match.ViewModels;
+using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.VsGame.Match;
@@ -17,17 +18,28 @@ public partial class VsMatchManager : IAsyncDisposable
     [Inject]
     private ILanguageService Lang { get; set; } = default!;
 
+    [Inject]
+    private AudioService Audio { get; set; } = default!;
+
+    [Inject]
+    private ILogger<VsMatchManager> Logger { get; set; } = default!;
+
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
 
     [Parameter, EditorRequired]
     public int ClassificationId { get; set; }
 
+    [Parameter]
+    public EventCallback<bool> OnQuitConfirmationChanged { get; set; }
+
     private VsMatchViewBuilder _builder = default!;
     private VsQueueViewData? _queue;
     private VsMatchViewData? _match;
     private string _errorText = string.Empty;
     private readonly CancellationTokenSource _lifetimeCts = new();
+    private bool _battleMusicStarted;
+    private bool _requiresQuitConfirmation;
     private bool _disposed;
 
     protected override async Task OnInitializedAsync()
@@ -44,7 +56,7 @@ public partial class VsMatchManager : IAsyncDisposable
 
             if (result.IsAccepted)
             {
-                BuildViewData();
+                await BuildViewDataAsync();
             }
             else
             {
@@ -63,19 +75,19 @@ public partial class VsMatchManager : IAsyncDisposable
 
     private void OnMatchClientChanged()
     {
-        _ = InvokeAsync(RefreshFromSnapshot);
+        _ = InvokeAsync(RefreshFromSnapshotAsync);
     }
 
-    private void RefreshFromSnapshot()
+    private async Task RefreshFromSnapshotAsync()
     {
         if (_disposed)
             return;
 
-        BuildViewData();
+        await BuildViewDataAsync();
         StateHasChanged();
     }
 
-    private void BuildViewData()
+    private async Task BuildViewDataAsync()
     {
         _queue = MatchClient.QueueSnapshot is null
             ? null
@@ -93,6 +105,31 @@ public partial class VsMatchManager : IAsyncDisposable
                 MatchClient.ErrorMessageKey)
                 ? string.Empty
                 : Lang[MatchClient.ErrorMessageKey];
+
+        var phase = _match?.Phase;
+
+        if (!_battleMusicStarted &&
+            phase == VsMatchPhase.PreparationStarting)
+        {
+            _battleMusicStarted = true;
+            await Audio.PlayMusicAsync("Battle01.webm");
+        }
+
+        var requiresQuitConfirmation =
+            phase.HasValue &&
+            phase != VsMatchPhase.GameCompleted;
+
+        if (_requiresQuitConfirmation ==
+            requiresQuitConfirmation)
+        {
+            return;
+        }
+
+        _requiresQuitConfirmation =
+            requiresQuitConfirmation;
+
+        await OnQuitConfirmationChanged.InvokeAsync(
+            requiresQuitConfirmation);
     }
 
     private Task SelectCharacterAsync(int slotNumber) =>
@@ -119,6 +156,10 @@ public partial class VsMatchManager : IAsyncDisposable
     private Task SubmitChoiceAsync(
         VsChoiceAnswerRequest request) =>
         MatchClient.SubmitChoiceAsync(request);
+
+    private Task UseHelpAsync(
+        VsUseHelpRequest request) =>
+        MatchClient.UseHelpAsync(request);
 
     private Task SelectCaptainQuestionAsync(
         VsCaptainQuestionRequest request) =>
@@ -158,6 +199,17 @@ public partial class VsMatchManager : IAsyncDisposable
         }
         finally
         {
+            try
+            {
+                await Audio.PlayMusicAsync("Menu02.webm");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogWarning(
+                    ex,
+                    "Failed to restore menu music.");
+            }
+
             _lifetimeCts.Dispose();
         }
 
@@ -172,9 +224,14 @@ public partial class VsMatchManager : IAsyncDisposable
  * VS lap, builder vagy spec felé. Dispose során hivatalosan kilép a
  * queue-ból, majd minden esetben lezárja a kapcsolatot. A saját
  * életciklus-token megszakítja a még folyamatban lévő csatlakozást.
+ * A minden játékost összegyűjtő visszaszámlálás kezdetén a Solo
+ * játékkal azonos harci zenét indítja, kilépéskor pedig visszaállítja
+ * a menüzenét. Queue-ban és befejezett meccsnél nem kér kilépési
+ * megerősítést.
  *
- * MÓDOSÍTÁS: a három explicit játékmeneti parancsot is változtatás
- * nélkül továbbítja, és kijelöli a roster pontnézetének fázisait.
+ * MÓDOSÍTÁS: az explicit játékmeneti parancsokat, köztük a segítség
+ * használatát is változtatás nélkül továbbítja, és kijelöli a roster
+ * pontnézetének fázisait.
  *
  * A VS ranked DynamicComponent életciklusát kezeli, snapshotból view
  * modelleket készít és továbbítja a preparációs/játékparancsokat.
