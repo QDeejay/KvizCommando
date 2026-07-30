@@ -26,6 +26,7 @@
   "Match.Status.Connecting": "Kapcsolódás a rangsorolt várólistához",
   "Match.Info.Locked": "A meccs lezárva",
   "Match.Info.LoadingQuestions": "A meccs kérdéseinek egyszeri betöltése",
+  "Match.Info.PreparationStarting": "Mindenki csatlakozott... kezdünk.",
   "Match.Info.Order": "Válassz sorrendet!",
   "Match.Info.Categories": "Párosítsd a kategóriáid a körökhöz!",
   "Match.Info.Helps": "Párosítsd a segítségeid!",

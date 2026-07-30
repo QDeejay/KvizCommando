@@ -1,4 +1,5 @@
 @using KvizCommando.Client.Features.VsGame.Match.ViewModels
+@using KvizCommando.Client.Components.CharacterComponent
 
 <aside class="kc-vs-roster">
     <header>
@@ -14,8 +15,9 @@
                     @if (player.ActiveCharacter is not null)
                     {
                         <div class="kc-vs-roster-svg-host">
-                            <CharacterView
+                            <CharacterView 
                                 PicCode="@player.ActiveCharacter.PictureCode" />
+                     
                         </div>
                     }
                     else

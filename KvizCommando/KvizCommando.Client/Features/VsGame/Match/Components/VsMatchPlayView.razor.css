@@ -295,17 +295,11 @@
     border-radius: 4px;
     font-family: 'Share Tech Mono', monospace;
     font-size: 1.25rem;
+    cursor: url('/Images/cursors/IBeam.cur'), text;
 }
 
-.kc-vs-guess input[type="number"] {
-    appearance: textfield;
-    -moz-appearance: textfield;
-}
-
-.kc-vs-guess input[type="number"]::-webkit-inner-spin-button,
-.kc-vs-guess input[type="number"]::-webkit-outer-spin-button {
-    margin: 0;
-    -webkit-appearance: none;
+.kc-vs-guess input:disabled {
+    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
 }
 
 .kc-vs-guess .button-on-lcd {
@@ -624,6 +618,7 @@
  * ténylegesen látható, és nem footer elemként jelenik meg. A subkör
  * eredménysorában kompakt nyers/módosított idő és gyorsasági jelzés
  * magyarázza a kizárólag ott kiosztott pluszpontot.
- * MÓDOSÍTÁS: a számbecslés beviteli mezőjén a böngésző natív
- * léptetőnyilai nem jelennek meg.
+ * MÓDOSÍTÁS: a számbecslés natív léptető nélküli szövegmezőként
+ * jelenik meg, decimal inputmóddal és a projekt saját IBeam
+ * kurzorával.
  */

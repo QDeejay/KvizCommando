@@ -34,7 +34,9 @@
     </div>
 
     <div class="kc-vs-play-body">
-        @if (Data.Phase == VsMatchPhase.GameStarting)
+        @if (Data.Phase is
+                VsMatchPhase.PreparationStarting or
+                VsMatchPhase.GameStarting)
         {
             <div class="kc-vs-play-message">
                 <i class="bi bi-shield-shaded"></i>
@@ -183,9 +185,10 @@
                         }
                         else
                         {
-                            <input type="number"
-                                   step="any"
-                                   @bind="_guessValue"
+                            <input type="text"
+                                   inputmode="decimal"
+                                   @ref="_guessInput"
+                                   @bind="_guessText"
                                    @bind:event="oninput"
                                    @onkeydown="HandleGuessKeyDownAsync"
                                    disabled="@(!Data.Game.CanAnswer || _sending)" />
@@ -315,4 +318,7 @@
     és a megszerzett villámbónusz jelenik meg.
     MÓDOSÍTÁS: a számbecslés ugyanazzal a handlerrel küldhető be a
     BI gombbal és az Enter billentyűvel.
+    MÓDOSÍTÁS: a natív számléptető nélküli tippmező a kérdés első
+    renderelése után automatikusan fókuszt kap. A preparáció előtt
+    ugyanebben a nézetben jelenik meg a szerveres kezdési várakozás.
 *@

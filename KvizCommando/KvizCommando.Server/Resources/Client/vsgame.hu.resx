@@ -93,6 +93,9 @@
   <data name="Match.Info.LoadingQuestions" xml:space="preserve">
     <value>A meccs kérdéseinek egyszeri betöltése</value>
   </data>
+  <data name="Match.Info.PreparationStarting" xml:space="preserve">
+    <value>Mindenki csatlakozott... kezdünk.</value>
+  </data>
   <data name="Match.Info.Order" xml:space="preserve">
     <value>Válassz sorrendet!</value>
   </data>

@@ -29,8 +29,10 @@ public partial class VsMatchPlayView : IDisposable
         OnCaptainQuestionSelected { get; set; }
 
     private System.Threading.Timer? _timer;
-    private double? _guessValue;
+    private ElementReference _guessInput;
+    private string _guessText = string.Empty;
     private int _lastQuestionNumber;
+    private int _focusedGuessQuestionNumber = -1;
     private bool _sending;
 
     protected override void OnInitialized()
@@ -52,8 +54,25 @@ public partial class VsMatchPlayView : IDisposable
 
         _lastQuestionNumber =
             Data.Game.QuestionNumber;
-        _guessValue = null;
+        _guessText = string.Empty;
         _sending = false;
+    }
+
+    protected override async Task OnAfterRenderAsync(
+        bool firstRender)
+    {
+        if (Data.Game.QuestionKind != VsQuestionKind.Guess ||
+            !Data.Game.CanAnswer ||
+            _focusedGuessQuestionNumber ==
+                Data.Game.QuestionNumber)
+        {
+            return;
+        }
+
+        await _guessInput.FocusAsync();
+
+        _focusedGuessQuestionNumber =
+            Data.Game.QuestionNumber;
     }
 
     private int RemainingSeconds => !Data.DeadlineUtc.HasValue
@@ -93,6 +112,7 @@ public partial class VsMatchPlayView : IDisposable
     private bool ShowWaitTimer =>
         Data.DeadlineUtc.HasValue &&
         Data.Phase is
+            VsMatchPhase.PreparationStarting or
             VsMatchPhase.GameStarting or
             VsMatchPhase.QuestionResult or
             VsMatchPhase.NormalRoundResult or
@@ -118,8 +138,7 @@ public partial class VsMatchPlayView : IDisposable
 
     private bool CanSubmitGuess =>
         Data.Game.CanAnswer &&
-        _guessValue.HasValue &&
-        double.IsFinite(_guessValue.Value) &&
+        TryGetGuessValue(out _) &&
         !_sending;
 
     private VsHelpCardVm? CurrentHelp =>
@@ -166,8 +185,11 @@ public partial class VsMatchPlayView : IDisposable
 
     private async Task SubmitGuessAsync()
     {
-        if (!CanSubmitGuess)
+        if (!CanSubmitGuess ||
+            !TryGetGuessValue(out var guessValue))
+        {
             return;
+        }
 
         _sending = true;
 
@@ -178,7 +200,7 @@ public partial class VsMatchPlayView : IDisposable
                 {
                     QuestionNumber =
                         Data.Game.QuestionNumber,
-                    Value = _guessValue!.Value
+                    Value = guessValue
                 });
         }
         finally
@@ -192,6 +214,15 @@ public partial class VsMatchPlayView : IDisposable
         args.Key == "Enter"
             ? SubmitGuessAsync()
             : Task.CompletedTask;
+
+    private bool TryGetGuessValue(
+        out double value) =>
+        double.TryParse(
+            _guessText,
+            NumberStyles.Float,
+            CultureInfo.CurrentCulture,
+            out value) &&
+        double.IsFinite(value);
 
     private async Task SubmitChoiceAsync(int answerIndex)
     {
@@ -257,4 +288,8 @@ public partial class VsMatchPlayView : IDisposable
  * kör alakú várakozási visszaszámlálót.
  * MÓDOSÍTÁS: Enter esetén ugyanazt az ellenőrzött tippbeküldő
  * handlert hívja, mint a megjelenített BI gomb.
+ * MÓDOSÍTÁS: a tippkérdés inputját kérdésenként egyszer, közvetlenül
+ * render után Blazor ElementReference segítségével fókuszálja.
+ * A részben begépelt értéket szövegként őrzi, és csak a közös
+ * beküldési útvonalon alakítja véges double értékké.
  */

@@ -18,7 +18,8 @@ public enum VsMatchPhase
     CaptainQuestionSelection = 13,
     CaptainQuestion = 14,
     CaptainRoundResult = 15,
-    GameCompleted = 16
+    GameCompleted = 16,
+    PreparationStarting = 17
 }
 
 public enum VsQuestionKind
@@ -49,6 +50,8 @@ public static class VsLoadoutCategoryIds
  * MÓDOSÍTÁS: a preparáció után felvette a játékindítás, tipp,
  * normál kérdés, kérdéseredmény, köreredmény, kapitányi kérdésválasztás
  * és kapitánykör fázisait. A kérdés típusa külön, kétértékű domain-enum.
+ * MÓDOSÍTÁS: a lezárt meccs inicializálása és az első preparációs
+ * kör közé külön, szerveridőzített kezdési fázis került.
  *
  * A VS meccs kliens és szerver között közösen használt fázis-,
  * kérdés- és segítségtípusait, valamint a speciális

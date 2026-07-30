@@ -13,11 +13,7 @@ public sealed class VsMatchService : IVsMatchService
     private readonly IHubContext<VsMatchHub, IVsMatchHubClient> _hub;
     private readonly ILogger<VsMatchService> _logger;
 
-    public VsMatchService(
-        VsMatchStore store,
-        VsMatchSetupService setup,
-        IHubContext<VsMatchHub, IVsMatchHubClient> hub,
-        ILogger<VsMatchService> logger)
+    public VsMatchService( VsMatchStore store,  VsMatchSetupService setup, IHubContext<VsMatchHub, IVsMatchHubClient> hub, ILogger<VsMatchService> logger)
     {
         _store = store;
         _setup = setup;
@@ -106,7 +102,7 @@ public sealed class VsMatchService : IVsMatchService
                 {
                     StartPhaseLocked(
                         match,
-                        VsMatchPhase.PreparationOrder);
+                        VsMatchPhase.PreparationStarting);
 
                     messages =
                         VsMatchSnapshotBuilder.BuildMessages(match);
@@ -218,12 +214,7 @@ public sealed class VsMatchService : IVsMatchService
             if (target is null)
                 return;
 
-            AddLog(
-                match,
-                player!.PlayerId,
-                "PreparationLoadoutAssigned",
-                $"Round={target.RoundNumber};" +
-                $"Position={request.LoadoutPosition}");
+            AddLog( match, player!.PlayerId, "PreparationLoadoutAssigned", $"Round={target.RoundNumber};" + $"Position={request.LoadoutPosition}");
 
             messages = VsMatchSnapshotBuilder.BuildMessages(match);
         }
@@ -709,6 +700,12 @@ public sealed class VsMatchService : IVsMatchService
     {
         switch (match.Phase)
         {
+            case VsMatchPhase.PreparationStarting:
+                StartPhaseLocked(
+                    match,
+                    VsMatchPhase.PreparationOrder);
+                break;
+
             case VsMatchPhase.PreparationOrder:
             case VsMatchPhase.PreparationCategories:
             case VsMatchPhase.PreparationHelps:
@@ -797,22 +794,17 @@ public sealed class VsMatchService : IVsMatchService
 
         var answerResultUtc = DateTime.UtcNow.AddSeconds(
             match.Profile.AnswerRevealDelaySeconds);
-        var closeUtc = match.DeadlineUtc.HasValue &&
-                       match.DeadlineUtc.Value < answerResultUtc
+        var closeUtc = match.DeadlineUtc.HasValue &&  match.DeadlineUtc.Value < answerResultUtc
             ? match.DeadlineUtc.Value
             : answerResultUtc;
 
-        _ = RunPhaseTimerAsync(
-            match.MatchId,
-            closeUtc,
-            match.PhaseTimerCts.Token);
+        _ = RunPhaseTimerAsync(  match.MatchId,  closeUtc, match.PhaseTimerCts.Token);
     }
 
     private void ContinueAfterQuestionResultLocked(
         VsMatchSession match)
     {
-        if (match.Game.QuestionKind ==
-            VsQuestionKind.Guess)
+        if (match.Game.QuestionKind ==  VsQuestionKind.Guess)
         {
             VsMatchGameRules.BeginNormalQuestion(match);
             StartPhaseLocked(
@@ -821,9 +813,7 @@ public sealed class VsMatchService : IVsMatchService
             return;
         }
 
-        var isCaptainRound =
-            match.Game.CurrentRoundNumber >
-            match.Classification.RequiredPartySize;
+        var isCaptainRound = match.Game.CurrentRoundNumber >  match.Classification.RequiredPartySize;
 
         if (!isCaptainRound &&
             VsMatchGameRules.HasNextNormalQuestion(match))
@@ -838,19 +828,15 @@ public sealed class VsMatchService : IVsMatchService
         if (!isCaptainRound)
         {
             VsMatchGameRules.BuildNormalRoundResult(match);
-            StartPhaseLocked(
-                match,
-                VsMatchPhase.NormalRoundResult);
+            StartPhaseLocked(match, VsMatchPhase.NormalRoundResult);
             return;
         }
 
         if (VsMatchGameRules.HasNextCaptainQuestion(match))
         {
-            VsMatchGameRules
-                .MoveToNextCaptainSelection(match);
-            StartPhaseLocked(
-                match,
-                VsMatchPhase.CaptainQuestionSelection);
+            VsMatchGameRules .MoveToNextCaptainSelection(match);
+
+            StartPhaseLocked(  match, VsMatchPhase.CaptainQuestionSelection);
             return;
         }
 
@@ -860,8 +846,7 @@ public sealed class VsMatchService : IVsMatchService
             VsMatchPhase.CaptainRoundResult);
     }
 
-    private void ContinueAfterNormalRoundLocked(
-        VsMatchSession match)
+    private void ContinueAfterNormalRoundLocked( VsMatchSession match)
     {
         VsMatchGameRules.CommitRoundResult(match);
 
@@ -890,6 +875,7 @@ public sealed class VsMatchService : IVsMatchService
             VsMatchPhase.PreparationHelps =>
                 match.Profile.PreparationSeconds,
 
+            VsMatchPhase.PreparationStarting or
             VsMatchPhase.GameStarting =>
                 match.Profile.PhasePauseSeconds,
 
@@ -908,7 +894,7 @@ public sealed class VsMatchService : IVsMatchService
                 match.Profile.RoundResultSeconds,
 
             VsMatchPhase.CaptainQuestionSelection =>
-                match.Profile.PhasePauseSeconds,
+                match.Profile.CaptainSelectionSeconds,
 
             _ => 0
         };
@@ -967,11 +953,7 @@ public sealed class VsMatchService : IVsMatchService
         }
     }
 
-    private static void AddLog(
-        VsMatchSession match,
-        int? playerId,
-        string eventType,
-        string data)
+    private static void AddLog( VsMatchSession match, int? playerId, string eventType, string data)
     {
         match.EventLog.Add(new VsMatchEventLogEntry
         {
@@ -999,6 +981,10 @@ public sealed class VsMatchService : IVsMatchService
  * Az utolsó válasz után a profilban megadott rövid ideig az eredeti
  * kérdésóra fut tovább; ha abból kevesebb maradt, a nulla a határ.
  * Ezután ugyanaz a fázisidőzítő zárja a kérdést.
+ * MÓDOSÍTÁS: a meccs inicializálása után a meglévő fázisszünet
+ * időtartamával külön kezdési visszaszámlálás előzi meg a preparációt.
+ * MÓDOSÍTÁS: a kapitány kérdésválasztását a profil külön
+ * CaptainSelectionSeconds beállítása időzíti.
  *
  * A fájl a MatchLocked session létrehozását, a parancsok authoritative
  * feldolgozását, a fázisváltást, a szerverórát és a disconnect miatti

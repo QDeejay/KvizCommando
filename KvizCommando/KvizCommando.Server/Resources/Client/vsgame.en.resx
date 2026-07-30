@@ -93,6 +93,9 @@
   <data name="Match.Info.LoadingQuestions" xml:space="preserve">
     <value>Loading the match questions once</value>
   </data>
+  <data name="Match.Info.PreparationStarting" xml:space="preserve">
+    <value>Everyone is connected... starting.</value>
+  </data>
   <data name="Match.Info.Order" xml:space="preserve">
     <value>Choose the order!</value>
   </data>

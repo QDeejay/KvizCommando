@@ -9,9 +9,10 @@ public sealed class VsMatchProfile
     public int GuessSeconds { get; init; } = 20;
     public int QuestionSeconds { get; init; } = 15;
     public int AnswerRevealDelaySeconds { get; init; } = 1;
-    public int QuestionPauseSeconds { get; init; } = 10;
+    public int QuestionPauseSeconds { get; init; } = 2;
     public int RoundResultSeconds { get; init; } = 5;
-    public int PhasePauseSeconds { get; init; } = 5;
+    public int PhasePauseSeconds { get; init; } = 3;
+    public int CaptainSelectionSeconds { get; init; } = 5;
     public int PointUnit { get; init; } = 1;
     public int CaptainMultiplier { get; init; } = 2;
     public int LoadoutSize { get; init; } = 10;
@@ -30,6 +31,8 @@ public static class VsMatchProfiles
  * a preparációt.
  * Az utolsó válasz és az eredmény felfedése közötti idő szintén itt
  * állítható.
+ * A kapitánykör előtti kérdésválasztás külön
+ * CaptainSelectionSeconds időkeretet használ.
  *
  * A VS meccsmotor egy helyen módosítható idő-, pont- és
  * létszámprofilját tartalmazza.

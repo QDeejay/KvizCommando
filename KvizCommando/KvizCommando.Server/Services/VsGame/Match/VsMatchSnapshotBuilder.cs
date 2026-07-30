@@ -547,6 +547,8 @@ internal static class VsMatchSnapshotBuilder
         {
             VsMatchPhase.MatchLocked =>
                 "vsgame.Match.Info.Locked",
+            VsMatchPhase.PreparationStarting =>
+                "vsgame.Match.Info.PreparationStarting",
             VsMatchPhase.PreparationOrder =>
                 "vsgame.Match.Info.Order",
             VsMatchPhase.PreparationCategories =>
@@ -603,6 +605,7 @@ internal static class VsMatchSnapshotBuilder
             VsMatchPhase.PreparationCategories or
             VsMatchPhase.PreparationHelps =>
                 match.Profile.PreparationSeconds,
+            VsMatchPhase.PreparationStarting or
             VsMatchPhase.GameStarting =>
                 match.Profile.PhasePauseSeconds,
             VsMatchPhase.NormalRoundGuess =>
@@ -616,7 +619,7 @@ internal static class VsMatchSnapshotBuilder
             VsMatchPhase.CaptainRoundResult =>
                 match.Profile.RoundResultSeconds,
             VsMatchPhase.CaptainQuestionSelection =>
-                match.Profile.PhasePauseSeconds,
+                match.Profile.CaptainSelectionSeconds,
             _ => 0
         };
 
@@ -639,6 +642,10 @@ internal static class VsMatchSnapshotBuilder
  * fázisban jelenik meg.
  * MÓDOSÍTÁS: normál kérdésnél a saját időmódosítót csak a nem
  * kérdező játékos személyre szabott snapshotja tartalmazza.
+ * MÓDOSÍTÁS: a preparáció előtti kezdési fázishoz lokalizációs kulcsot
+ * és a meglévő fázisszünet hosszát küldi.
+ * MÓDOSÍTÁS: a kapitány kérdésválasztásánál a külön
+ * CaptainSelectionSeconds időtartamot küldi a kliensnek.
  *
  * A szerveroldali meccsállapotból játékosonként tiszta SignalR-
  * snapshotokat épít. Nem módosít állapotot és nem küld üzenetet.

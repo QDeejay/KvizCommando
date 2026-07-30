@@ -26,6 +26,7 @@
   "Match.Status.Connecting": "Connecting to the ranked queue",
   "Match.Info.Locked": "Match locked",
   "Match.Info.LoadingQuestions": "Loading the match questions once",
+  "Match.Info.PreparationStarting": "Everyone is connected... starting.",
   "Match.Info.Order": "Choose the order!",
   "Match.Info.Categories": "Assign your categories to the rounds!",
   "Match.Info.Helps": "Assign your helps!",
