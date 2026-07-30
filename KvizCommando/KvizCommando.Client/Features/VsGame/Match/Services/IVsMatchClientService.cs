@@ -31,6 +31,19 @@ public interface IVsMatchClientService : IAsyncDisposable
 
     Task ResetPreparationAsync(CancellationToken ct = default);
     Task FinishPreparationAsync(CancellationToken ct = default);
+
+    Task SubmitGuessAsync(
+        VsGuessAnswerRequest request,
+        CancellationToken ct = default);
+
+    Task SubmitChoiceAsync(
+        VsChoiceAnswerRequest request,
+        CancellationToken ct = default);
+
+    Task SelectCaptainQuestionAsync(
+        VsCaptainQuestionRequest request,
+        CancellationToken ct = default);
+
     Task StopAsync(CancellationToken ct = default);
 }
 
@@ -38,6 +51,9 @@ public interface IVsMatchClientService : IAsyncDisposable
  * MÓDOSÍTÁS: a StartAsync közvetlen queue-belépési eredményt ad, a
  * játékmeneti parancsok pedig nem nyelhetik el a megszakadt kapcsolat
  * hibáját.
+ *
+ * MÓDOSÍTÁS: a tipp-, válasz- és kapitánykérdés-parancsot külön,
+ * explicit metódusként továbbítja.
  *
  * A VS dynamic manager által használt SignalR klienskapcsolat
  * szerződése. Automatikus reconnectet szándékosan nem tartalmaz.

@@ -186,10 +186,77 @@
   <data name="Match.Error.Disconnected" xml:space="preserve">
     <value>The match connection was closed; this match does not support reconnecting.</value>
   </data>
+  <data name="Match.Info.GameStarting" xml:space="preserve">
+    <value>The game is starting</value>
+  </data>
+  <data name="Match.Info.Guess" xml:space="preserve">
+    <value>Make your guess!</value>
+  </data>
+  <data name="Match.Info.Question" xml:space="preserve">
+    <value>Answer the question!</value>
+  </data>
+  <data name="Match.Info.QuestionResult" xml:space="preserve">
+    <value>Question result</value>
+  </data>
+  <data name="Match.Info.RoundResult" xml:space="preserve">
+    <value>Round result</value>
+  </data>
+  <data name="Match.Info.CaptainSelection" xml:space="preserve">
+    <value>Captain question selection</value>
+  </data>
+  <data name="Match.Info.CaptainQuestion" xml:space="preserve">
+    <value>Captain round</value>
+  </data>
+  <data name="Match.Info.CaptainResult" xml:space="preserve">
+    <value>Captain round result</value>
+  </data>
+  <data name="Match.Info.GameCompleted" xml:space="preserve">
+    <value>The game has ended</value>
+  </data>
+  <data name="Match.Game.WaitingCaptain" xml:space="preserve">
+    <value>Waiting for the questioner's selection</value>
+  </data>
+  <data name="Match.Game.Team" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="Match.Game.RoundPoints" xml:space="preserve">
+    <value>Round points</value>
+  </data>
+  <data name="Match.Game.Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="Match.Game.Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Match.Game.Reward" xml:space="preserve">
+    <value>Reward</value>
+  </data>
+  <data name="Match.Game.WinnerBonus" xml:space="preserve">
+    <value>Round winner bonus</value>
+  </data>
+  <data name="Match.Game.FastestBonus" xml:space="preserve">
+    <value>Best round time bonus</value>
+  </data>
+  <data name="Match.Game.RewardPending" xml:space="preserve">
+    <value>The complete reward settlement will be added in the next development step.</value>
+  </data>
+  <data name="Match.Game.Questioner" xml:space="preserve">
+    <value>Questioner</value>
+  </data>
+  <data name="Match.Game.CorrectGuess" xml:space="preserve">
+    <value>Correct value</value>
+  </data>
+  <data name="Match.Game.Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="Match.Game.EnergyShort" xml:space="preserve">
+    <value>EN</value>
+  </data>
   <!--
     MÓDOSÍTÁS: hozzáadja a ranked várólista, MatchLocked, a három
     preparációs fázis, az ismétlésmentes preparációs fejléc, az
-    inventory, időegység, roster és az üres körhely angol feliratait.
+    inventory, játékmenet, eredmény, roster és az üres körhely angol
+    feliratait.
 
     A fájl a VS kliens angol lokalizációs forrása; Debug buildkor
     a ResxExporter ebből készíti el a vsgame.json fájlt.

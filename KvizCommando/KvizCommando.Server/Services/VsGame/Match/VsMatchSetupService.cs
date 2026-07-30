@@ -51,9 +51,10 @@ public sealed class VsMatchSetupService
                 ct));
         }
 
-        var loadouts = await _questionLoader.LoadAsync(
+        var questions = await _questionLoader.LoadAsync(
             seeds,
             match.Profile.LoadoutSize,
+            match.Classification.RequiredPartySize,
             ct);
 
         lock (match.SyncRoot)
@@ -74,8 +75,11 @@ public sealed class VsMatchSetupService
                 player.TeamLevel = seed.TeamLevel;
                 player.Characters = seed.Characters;
                 player.HelpCounts = seed.HelpCounts;
-                player.Loadout = loadouts[seed.PlayerId];
+                player.Loadout =
+                    questions.Loadouts[seed.PlayerId];
             }
+
+            match.GuessQuestions = questions.GuessQuestions;
         }
 
         return true;
@@ -295,6 +299,7 @@ public sealed class VsMatchSetupService
             Name = character.Name,
             PictureCode = character.PictureCode,
             Level = character.Rank,
+            EnergyPoints = character.EnergyPoints,
             OrientationId = orientationId,
             CategoryModifiers = modifiers
         };
@@ -338,7 +343,8 @@ public sealed class VsMatchSetupService
 
 /**
  * ÚJ FÁJL: a MatchLocked meccs téteinek lefoglalását, a játékos-cache
- * egyszeri snapshotolását, a kérdés-loadout betöltését és
+ * egyszeri snapshotolását, a kérdés-loadout és tippkérdések
+ * betöltését, valamint a karakterek aktuális energiáját és
  * infrastruktúrahiba esetén a tétek visszatérítését kezeli. SignalR-
  * üzenetet és fázisváltást nem végez.
  */

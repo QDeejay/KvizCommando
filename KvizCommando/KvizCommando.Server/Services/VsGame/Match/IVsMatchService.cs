@@ -35,6 +35,21 @@ public interface IVsMatchService
         string connectionId,
         CancellationToken ct = default);
 
+    Task SubmitGuessAsync(
+        string connectionId,
+        VsGuessAnswerRequest request,
+        CancellationToken ct = default);
+
+    Task SubmitChoiceAsync(
+        string connectionId,
+        VsChoiceAnswerRequest request,
+        CancellationToken ct = default);
+
+    Task SelectCaptainQuestionAsync(
+        string connectionId,
+        VsCaptainQuestionRequest request,
+        CancellationToken ct = default);
+
     Task DisconnectAsync(
         string connectionId,
         CancellationToken ct = default);
@@ -46,6 +61,9 @@ public interface IVsMatchService
  * tölt adatot. Így nincs queue és match store közötti láthatatlan
  * disconnect-időablak.
  *
- * A lezárt VS meccs létrehozásának és a preparációs parancsoknak a
- * szerveroldali szerződése.
+ * MÓDOSÍTÁS: felvette a három szándék szerinti játékmeneti parancsot:
+ * tipp, feleletválasztós válasz és kapitánykérdés kiválasztása.
+ *
+ * A lezárt VS meccs létrehozásának, preparációs és játékmeneti
+ * parancsainak szerveroldali szerződése.
  */

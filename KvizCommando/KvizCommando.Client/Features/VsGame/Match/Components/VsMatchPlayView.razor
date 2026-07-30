@@ -1,0 +1,276 @@
+@using KvizCommando.Client.Features.VsGame.Match.ViewModels
+@using KvizCommando.Shared.Models.Enums.VsGame
+
+<section class="kc-vs-play">
+    <header class="kc-vs-play-title">
+        <strong>@Data.InfoText</strong>
+        <div>
+            <span>@RoundText</span>
+            <small title="@Data.MatchId">#@MatchReference</small>
+        </div>
+    </header>
+
+    @if (Data.DeadlineUtc.HasValue)
+    {
+        <div class="kc-vs-play-timer @(RemainingSeconds <= 5 ? "warning" : "")">
+            <i class="bi bi-stopwatch-fill"></i>
+            <strong>@RemainingSeconds</strong>
+            <div class="kc-vs-play-timer-track">
+                <div class="kc-vs-play-timer-value"
+                     style="@TimerStyle"></div>
+            </div>
+        </div>
+    }
+
+    <div class="kc-vs-play-body">
+        @if (Data.Phase == VsMatchPhase.GameStarting)
+        {
+            <div class="kc-vs-play-message">
+                <i class="bi bi-shield-shaded"></i>
+                <strong>@Data.InfoText</strong>
+            </div>
+        }
+        else if (Data.Phase ==
+                 VsMatchPhase.CaptainQuestionSelection)
+        {
+            <div class="kc-vs-captain-selection">
+                <div class="kc-vs-captain-order">
+                    @for (var index = 0;
+                          index < Data.Game.CaptainOrder.Length;
+                          index++)
+                    {
+                        var position =
+                            Data.Game.CaptainOrder[index];
+
+                        <span class="@(index == Data.Game.CaptainOrderIndex ? "current" : "")">
+                            @(index + 1). @PlayerName(position)
+                        </span>
+                    }
+                </div>
+
+                @if (Data.Game.CanChooseCaptainQuestion)
+                {
+                    <div class="kc-vs-captain-questions">
+                        @foreach (var item in
+                                  Data.Game.CaptainQuestions)
+                        {
+                            <button type="button"
+                                    disabled="@_sending"
+                                    title="@item.CategoryName"
+                                    @onclick="() => SelectCaptainQuestionAsync(item.LoadoutPosition)">
+                                <img src="@item.ImageSrc"
+                                     alt="@item.CategoryName" />
+                                <span>@item.Question</span>
+                            </button>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="kc-vs-play-waiting">
+                        <i class="bi bi-hourglass-split"></i>
+                        <span>
+                            @Lang["vsgame.Match.Game.WaitingCaptain"]
+                        </span>
+                    </div>
+                }
+            </div>
+        }
+        else if (Data.Phase is
+                 VsMatchPhase.NormalRoundResult or
+                 VsMatchPhase.CaptainRoundResult)
+        {
+            <div class="kc-vs-round-result">
+                <div class="kc-vs-round-result-head">
+                    <span>@Lang["vsgame.Match.Game.Team"]</span>
+                    <span>@Lang["vsgame.Match.Game.RoundPoints"]</span>
+                    <span>@Lang["vsgame.Match.Game.Time"]</span>
+                    <span>@Lang["vsgame.Match.Game.Total"]</span>
+                    <span>@Lang["vsgame.Match.Game.Reward"]</span>
+                </div>
+
+                @foreach (var result in Data.Game.RoundResult)
+                {
+                    <div class="kc-vs-round-result-row">
+                        <strong>@PlayerName(result.Position)</strong>
+                        <span class="points">
+                            @Signed(result.RoundPoints)
+                        </span>
+                        <span>
+                            @Seconds(result.RoundTimeSeconds)
+                        </span>
+                        <span>
+                            @result.TotalBefore
+                            <i class="bi bi-arrow-right-short"></i>
+                            @result.TotalAfter
+                        </span>
+                        <span class="reward">
+                            @if (result.HasWinnerBonus)
+                            {
+                                <i class="bi bi-trophy-fill"
+                                   title="@Lang["vsgame.Match.Game.WinnerBonus"]"></i>
+                            }
+                            @if (result.HasFastestBonus)
+                            {
+                                <i class="bi bi-lightning-charge-fill"
+                                   title="@Lang["vsgame.Match.Game.FastestBonus"]"></i>
+                            }
+                            @if (result.CharacterXp > 0)
+                            {
+                                <small>+@result.CharacterXp XP</small>
+                            }
+                            @if (result.EnergyLoss > 0)
+                            {
+                                <small>
+                                    -@result.EnergyLoss
+                                    @Lang["vsgame.Match.Game.EnergyShort"]
+                                </small>
+                            }
+                        </span>
+                    </div>
+                }
+            </div>
+        }
+        else if (Data.Phase == VsMatchPhase.GameCompleted)
+        {
+            <div class="kc-vs-play-message">
+                <i class="bi bi-flag-fill"></i>
+                <strong>@Data.InfoText</strong>
+                <span>@Lang["vsgame.Match.Game.RewardPending"]</span>
+            </div>
+        }
+        else
+        {
+            <div class="kc-vs-question">
+                @if (Data.Game.QuestionerPosition > 0)
+                {
+                    <small>
+                        @Lang["vsgame.Match.Game.Questioner"]:
+                        <strong>
+                            @PlayerName(
+                                Data.Game.QuestionerPosition)
+                        </strong>
+                    </small>
+                }
+
+                <h3>@Data.Game.Question</h3>
+
+                @if (Data.Game.QuestionKind ==
+                     VsQuestionKind.Guess)
+                {
+                    <div class="kc-vs-guess">
+                        @if (Data.Game.CorrectGuess.HasValue)
+                        {
+                            <strong>
+                                @Lang["vsgame.Match.Game.CorrectGuess"]:
+                                @Data.Game.CorrectGuess.Value.ToString("0.##")
+                            </strong>
+                        }
+                        else
+                        {
+                            <input type="number"
+                                   step="any"
+                                   @bind="_guessValue"
+                                   disabled="@(!Data.Game.CanAnswer || _sending)" />
+                            <button type="button"
+                                    class="kc-lcd-button"
+                                    disabled="@(!CanSubmitGuess)"
+                                    @onclick="SubmitGuessAsync">
+                                <i class="bi bi-check-lg"></i>
+                                <span>@Lang["vsgame.Match.Game.Submit"]</span>
+                            </button>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="kc-vs-answers">
+                        @for (var index = 0;
+                              index < Data.Game.Answers.Length;
+                              index++)
+                        {
+                            var answerIndex = index;
+
+                            <button type="button"
+                                    class="@AnswerClass(answerIndex)"
+                                    disabled="@(!Data.Game.CanAnswer || _sending)"
+                                    @onclick="() => SubmitChoiceAsync(answerIndex)">
+                                <span>@((char)('A' + answerIndex))</span>
+                                <strong>
+                                    @Data.Game.Answers[answerIndex]
+                                </strong>
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="kc-vs-question-status">
+                @foreach (var player in Data.Game.QuestionPlayers)
+                {
+                    <span class="@(player.HasAnswered ? "answered" : "")">
+                        @PlayerName(player.Position)
+
+                        @if (Data.Phase == VsMatchPhase.QuestionResult)
+                        {
+                            <strong class="@(player.Points >= 0 ? "positive" : "negative")">
+                                @Signed(player.Points)
+                            </strong>
+                        }
+                        else
+                        {
+                            <i class="bi @(player.HasAnswered ? "bi-check-circle-fill" : "bi-hourglass")"></i>
+                        }
+                    </span>
+                }
+
+                @if (CurrentHelp is not null)
+                {
+                    <span class="kc-vs-play-help"
+                          title="@CurrentHelp.Name">
+                        <i class="@CurrentHelp.IconCss"></i>
+                        @CurrentHelp.Name
+                    </span>
+                }
+            </div>
+        }
+    </div>
+
+    @if (Data.Game.CurrentRoundNumber > 0 &&
+         Data.Phase != VsMatchPhase.GameCompleted)
+    {
+        <footer class="kc-vs-progress">
+            @foreach (var step in Data.Game.Progress)
+            {
+                <span class="@(step.IsCompleted ? "completed" : "") @(step.IsCurrent ? "current" : "")">
+                    @if (step.IsGuess)
+                    {
+                        <i class="bi bi-bullseye"></i>
+                    }
+                    else
+                    {
+                        @(step.StepNumber)
+                    }
+
+                    @if (step.IsCompleted)
+                    {
+                        <small>@Signed(step.Points)</small>
+                    }
+                </span>
+            }
+
+            <strong>
+                @MyRoundPoints
+                <small>@Seconds(MyRoundTime)</small>
+            </strong>
+        </footer>
+    }
+</section>
+
+@*
+    ÚJ FÁJL: a normál- és kapitánykör snapshot-alapú megjelenítése.
+    A válaszok egymás alatt, a szerver által küldött állapotból
+    jelennek meg; lokálisan csak a bevitelt és a küldés idejére
+    szükséges gombreteszt tartja. A rövid meccshivatkozás végig
+    látható, a teljes MatchId a tooltipben olvasható.
+*@

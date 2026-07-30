@@ -8,6 +8,8 @@ namespace KvizCommando.Server.Services.VsGame.Match;
 
 public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
 {
+    private const int GuessCategoryId = 99;
+
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ICategoryQuestionIndexCache _questionIndex;
 
@@ -19,10 +21,10 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
         _questionIndex = questionIndex;
     }
 
-    public async Task<IReadOnlyDictionary<int, VsMatchLoadoutItemState[]>>
-        LoadAsync(
+    public async Task<VsMatchQuestionSet> LoadAsync(
             IReadOnlyCollection<VsMatchPlayerSeed> players,
             int loadoutSize,
+            int normalRoundCount,
             CancellationToken ct = default)
     {
         var usedFactoryIds = new HashSet<int>();
@@ -46,6 +48,10 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
         var factoryQuestions = await repository.LoadByIdsAsync(
             factoryIds,
             ct);
+        var guessIds = SelectGuessQuestionIds(normalRoundCount);
+        var guessQuestions = await repository.LoadGuessByIdsAsync(
+            guessIds,
+            ct);
 
         if (factoryQuestions.Count != factoryIds.Length)
         {
@@ -56,11 +62,43 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
         var factoryMap = factoryQuestions.ToDictionary(
             question => question.Id);
 
-        return plans.ToDictionary(
-            item => item.Key,
-            item => item.Value
-                .Select(plan => BuildLoadoutItem(plan, factoryMap))
-                .ToArray());
+        if (guessQuestions.Count != guessIds.Length)
+        {
+            throw new InvalidOperationException(
+                "The VS guess-question index and GuessQuestions table are inconsistent.");
+        }
+
+        var guessMap = guessQuestions.ToDictionary(
+            question => question.Id);
+
+        return new VsMatchQuestionSet
+        {
+            Loadouts = plans.ToDictionary(
+                item => item.Key,
+                item => item.Value
+                    .Select(plan => BuildLoadoutItem(plan, factoryMap))
+                    .ToArray()),
+            GuessQuestions =
+            [
+                .. guessIds.Select(id =>
+                    new VsMatchGuessQuestionState
+                    {
+                        QuestionId = id,
+                        Question = guessMap[id].Question,
+                        CorrectAnswer = guessMap[id].Answer
+                    })
+            ]
+        };
+    }
+
+    private int[] SelectGuessQuestionIds(int count)
+    {
+        var ids = _questionIndex
+            .GetQuestionIds(GuessCategoryId)
+            .ToArray();
+
+        Shuffle(ids);
+        return [.. ids.Take(count)];
     }
 
     private VsQuestionLoadPlan[] BuildPlan(
@@ -240,7 +278,11 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
  * MÓDOSÍTÁS: a betöltött loadoutelemeket a már meglévő, játékoson
  * belül egyedi LoadoutPosition azonosítja; külön GUID nem készül.
  *
+ * MÓDOSÍTÁS: a 99-es indexből a normál körök számának megfelelő,
+ * egyedi tippkérdést is kiválaszt, és ugyanabban az inicializálási
+ * lépésben kötegelve betölti őket.
+ *
  * A kategóriánkénti ID-indexből kiválasztja a meccs kérdéseit,
- * majd egyetlen adatbázis-lekéréssel betölti a szükséges gyári
- * rekordokat és meccsszintű, kevert snapshotot készít.
+ * majd kötegelt adatbázis-lekéréssel meccsszintű, kevert állapotot
+ * készít.
  */

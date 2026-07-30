@@ -4,6 +4,7 @@ using KvizCommando.Client.Features.VsGame.Match.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.VsGame.Match;
+using KvizCommando.Shared.Models.Enums.VsGame;
 using Microsoft.AspNetCore.Components;
 
 namespace KvizCommando.Client.Features.VsGame.Match.Components;
@@ -111,6 +112,30 @@ public partial class VsMatchManager : IAsyncDisposable
     private Task FinishPreparationAsync() =>
         MatchClient.FinishPreparationAsync();
 
+    private Task SubmitGuessAsync(
+        VsGuessAnswerRequest request) =>
+        MatchClient.SubmitGuessAsync(request);
+
+    private Task SubmitChoiceAsync(
+        VsChoiceAnswerRequest request) =>
+        MatchClient.SubmitChoiceAsync(request);
+
+    private Task SelectCaptainQuestionAsync(
+        VsCaptainQuestionRequest request) =>
+        MatchClient.SelectCaptainQuestionAsync(request);
+
+    private bool IsGamePhase =>
+        _match?.Phase is
+            VsMatchPhase.GameStarting or
+            VsMatchPhase.NormalRoundGuess or
+            VsMatchPhase.NormalRoundQuestion or
+            VsMatchPhase.QuestionResult or
+            VsMatchPhase.NormalRoundResult or
+            VsMatchPhase.CaptainQuestionSelection or
+            VsMatchPhase.CaptainQuestion or
+            VsMatchPhase.CaptainRoundResult or
+            VsMatchPhase.GameCompleted;
+
     public async ValueTask DisposeAsync()
     {
         if (_disposed)
@@ -148,6 +173,9 @@ public partial class VsMatchManager : IAsyncDisposable
  * queue-ból, majd minden esetben lezárja a kapcsolatot. A saját
  * életciklus-token megszakítja a még folyamatban lévő csatlakozást.
  *
+ * MÓDOSÍTÁS: a három explicit játékmeneti parancsot is változtatás
+ * nélkül továbbítja, és kijelöli a roster pontnézetének fázisait.
+ *
  * A VS ranked DynamicComponent életciklusát kezeli, snapshotból view
- * modelleket készít és továbbítja a preparációs parancsokat.
+ * modelleket készít és továbbítja a preparációs/játékparancsokat.
  */

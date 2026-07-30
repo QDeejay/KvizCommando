@@ -77,6 +77,27 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
             Context.ConnectionId,
             Context.ConnectionAborted);
 
+    public Task SubmitGuess(
+        VsGuessAnswerRequest request) =>
+        _matches.SubmitGuessAsync(
+            Context.ConnectionId,
+            request,
+            Context.ConnectionAborted);
+
+    public Task SubmitChoice(
+        VsChoiceAnswerRequest request) =>
+        _matches.SubmitChoiceAsync(
+            Context.ConnectionId,
+            request,
+            Context.ConnectionAborted);
+
+    public Task SelectCaptainQuestion(
+        VsCaptainQuestionRequest request) =>
+        _matches.SelectCaptainQuestionAsync(
+            Context.ConnectionId,
+            request,
+            Context.ConnectionAborted);
+
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         await _queue.LeaveAsync(
@@ -108,6 +129,9 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
 /**
  * MÓDOSÍTÁS: a queue-belépés várható eredményét közvetlenül visszaadja
  * a hívó kliensnek. A Hub továbbra sem tart fenn játékállapotot.
+ *
+ * MÓDOSÍTÁS: a tipp-, válasz- és kapitánykérdés-parancsot ugyanúgy,
+ * állapot nélkül továbbítja a match service felé.
  *
  * A VS kliens parancsait azonosítja és továbbítja a queue- vagy
  * match-szerviznek. Saját játékállapotot és adatbázislogikát nem

@@ -76,6 +76,9 @@
 }
 
 .kc-vs-roster-avatar {
+    position: relative;
+    z-index: 0;
+    isolation: isolate;
     width: 52px;
     height: 66px;
     display: grid;
@@ -86,10 +89,36 @@
     border-radius: 4px;
 }
 
+.kc-vs-roster-svg-host {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+}
+
 .kc-vs-roster-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.kc-vs-roster-score {
+    position: absolute;
+    right: 7px;
+    bottom: 5px;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    color: #c6ef39;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.kc-vs-roster-score strong {
+    font-size: 1rem;
+}
+
+.kc-vs-roster-score small {
+    color: #aaa99f;
+    font-size: .58rem;
 }
 
 .kc-vs-roster-data {
@@ -147,6 +176,9 @@
  * csapatkártya-sávját követi. A csapatavatar marad placeholder, amíg
  * a szerver nem tölti a TeamPictureCode mezőt. Lobbyban a hiányzó
  * játékoshelyek csak egy szaggatott, forgó keresőjelzőt mutatnak.
+ *
+ * MÓDOSÍTÁS: a karakter-SVG hostja a bevált portréarányú szülőben
+ * marad, a játéknézet pedig kompakt pont/idő mezőt kapott.
  *
  * A fájl kizárólag a VS meccs publikus játékoslistáját formázza.
  */

@@ -9,7 +9,23 @@ public enum VsMatchPhase
     PreparationHelps = 4,
     PreparationCompleted = 5,
     Disconnected = 6,
-    Aborted = 7
+    Aborted = 7,
+    GameStarting = 8,
+    NormalRoundGuess = 9,
+    NormalRoundQuestion = 10,
+    QuestionResult = 11,
+    NormalRoundResult = 12,
+    CaptainQuestionSelection = 13,
+    CaptainQuestion = 14,
+    CaptainRoundResult = 15,
+    GameCompleted = 16
+}
+
+public enum VsQuestionKind
+{
+    None = 0,
+    Guess = 1,
+    Choice = 2
 }
 
 public enum VsHelpType
@@ -30,8 +46,11 @@ public static class VsLoadoutCategoryIds
 }
 
 /**
- * A VS meccs kliens és szerver között közösen használt fázis- és
- * segítségtípusait, valamint a speciális loadout-kategóriákat
- * tartalmazza. Az Összes kategória a loadout meglévő alapértékével
- * egyezően 0; az 1–16 gyári, a 17 saját kérdés.
+ * MÓDOSÍTÁS: a preparáció után felvette a játékindítás, tipp,
+ * normál kérdés, kérdéseredmény, köreredmény, kapitányi kérdésválasztás
+ * és kapitánykör fázisait. A kérdés típusa külön, kétértékű domain-enum.
+ *
+ * A VS meccs kliens és szerver között közösen használt fázis-,
+ * kérdés- és segítségtípusait, valamint a speciális
+ * loadout-kategóriákat tartalmazza.
  */

@@ -142,6 +142,21 @@ public sealed class VsMatchClientService : IVsMatchClientService
     public Task FinishPreparationAsync(CancellationToken ct = default) =>
         InvokeAsync("FinishPreparation", ct);
 
+    public Task SubmitGuessAsync(
+        VsGuessAnswerRequest request,
+        CancellationToken ct = default) =>
+        InvokeAsync("SubmitGuess", request, ct);
+
+    public Task SubmitChoiceAsync(
+        VsChoiceAnswerRequest request,
+        CancellationToken ct = default) =>
+        InvokeAsync("SubmitChoice", request, ct);
+
+    public Task SelectCaptainQuestionAsync(
+        VsCaptainQuestionRequest request,
+        CancellationToken ct = default) =>
+        InvokeAsync("SelectCaptainQuestion", request, ct);
+
     public async Task StopAsync(CancellationToken ct = default)
     {
         var connection = _connection;
@@ -228,7 +243,10 @@ public sealed class VsMatchClientService : IVsMatchClientService
  * sikeresnek megszakadt kapcsolat mellett. A MatchClosed esemény
  * kizárólag aszinkron, több játékost érintő meccslezárást közvetít.
  *
+ * MÓDOSÍTÁS: külön metódusban továbbítja a három játékmeneti
+ * szándékot; további technikai azonosítót nem ad hozzájuk.
+ *
  * Egyetlen, automatikusan újra nem kapcsolódó SignalR kapcsolatot
  * kezel, fogadja a queue/match snapshotokat és továbbítja a
- * preparációs parancsokat.
+ * preparációs és játékmeneti parancsokat.
  */

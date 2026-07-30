@@ -338,6 +338,147 @@ public sealed class VsMatchService : IVsMatchService
         await SendBroadcastMessagesAsync(messages);
     }
 
+    public async Task SubmitGuessAsync(
+        string connectionId,
+        VsGuessAnswerRequest request,
+        CancellationToken ct = default)
+    {
+        ct.ThrowIfCancellationRequested();
+
+        if (!_store.TryGetByConnection(connectionId, out var match) ||
+            match is null)
+        {
+            return;
+        }
+
+        (string ConnectionId, VsMatchSnapshot Snapshot)[] messages;
+
+        lock (match.SyncRoot)
+        {
+            var player = match.FindByConnection(connectionId);
+            var receivedUtc = DateTime.UtcNow;
+
+            if (!VsMatchGameRules.SubmitGuess(
+                    match,
+                    player,
+                    request,
+                    receivedUtc))
+            {
+                return;
+            }
+
+            AddLog(
+                match,
+                player!.PlayerId,
+                "GuessSubmitted",
+                $"Question={request.QuestionNumber}");
+
+            if (VsMatchGameRules
+                .HaveAllConnectedPlayersAnswered(match))
+            {
+                CloseQuestionLocked(match);
+            }
+
+            messages =
+                VsMatchSnapshotBuilder.BuildMessages(match);
+        }
+
+        await SendBroadcastMessagesAsync(messages);
+    }
+
+    public async Task SubmitChoiceAsync(
+        string connectionId,
+        VsChoiceAnswerRequest request,
+        CancellationToken ct = default)
+    {
+        ct.ThrowIfCancellationRequested();
+
+        if (!_store.TryGetByConnection(connectionId, out var match) ||
+            match is null)
+        {
+            return;
+        }
+
+        (string ConnectionId, VsMatchSnapshot Snapshot)[] messages;
+
+        lock (match.SyncRoot)
+        {
+            var player = match.FindByConnection(connectionId);
+            var receivedUtc = DateTime.UtcNow;
+
+            if (!VsMatchGameRules.SubmitChoice(
+                    match,
+                    player,
+                    request,
+                    receivedUtc))
+            {
+                return;
+            }
+
+            AddLog(
+                match,
+                player!.PlayerId,
+                "ChoiceSubmitted",
+                $"Question={request.QuestionNumber};" +
+                $"Answer={request.AnswerIndex}");
+
+            if (VsMatchGameRules
+                .HaveAllConnectedPlayersAnswered(match))
+            {
+                CloseQuestionLocked(match);
+            }
+
+            messages =
+                VsMatchSnapshotBuilder.BuildMessages(match);
+        }
+
+        await SendBroadcastMessagesAsync(messages);
+    }
+
+    public async Task SelectCaptainQuestionAsync(
+        string connectionId,
+        VsCaptainQuestionRequest request,
+        CancellationToken ct = default)
+    {
+        ct.ThrowIfCancellationRequested();
+
+        if (!_store.TryGetByConnection(connectionId, out var match) ||
+            match is null)
+        {
+            return;
+        }
+
+        (string ConnectionId, VsMatchSnapshot Snapshot)[] messages;
+
+        lock (match.SyncRoot)
+        {
+            var player = match.FindByConnection(connectionId);
+
+            if (!VsMatchGameRules.SelectCaptainQuestion(
+                    match,
+                    player,
+                    request))
+            {
+                return;
+            }
+
+            AddLog(
+                match,
+                player!.PlayerId,
+                "CaptainQuestionSelected",
+                $"Position={request.LoadoutPosition}");
+
+            StartPhaseLocked(
+                match,
+                VsMatchPhase.CaptainQuestion);
+
+            messages =
+                VsMatchSnapshotBuilder.BuildMessages(match);
+        }
+
+        await SendBroadcastMessagesAsync(messages);
+    }
+
     public async Task DisconnectAsync(
         string connectionId,
         CancellationToken ct = default)
@@ -365,9 +506,13 @@ public sealed class VsMatchService : IVsMatchService
             }
 
             player.IsConnected = false;
-            VsMatchPreparationRules.ApplyTimeoutDefaults(
-                match,
-                player);
+            if (IsPreparationPhase(match.Phase))
+            {
+                VsMatchPreparationRules.ApplyTimeoutDefaults(
+                    match,
+                    player);
+            }
+
             player.IsFinished = true;
 
             AddLog(
@@ -376,7 +521,16 @@ public sealed class VsMatchService : IVsMatchService
                 "Disconnected",
                 string.Empty);
 
-            AdvanceIfReadyLocked(match);
+            if (IsPreparationPhase(match.Phase))
+            {
+                AdvanceIfReadyLocked(match);
+            }
+            else if (IsAnswerPhase(match.Phase) &&
+                     VsMatchGameRules
+                         .HaveAllConnectedPlayersAnswered(match))
+            {
+                CloseQuestionLocked(match);
+            }
 
             removeMatch =
                 !match.IsInitializing &&
@@ -427,17 +581,29 @@ public sealed class VsMatchService : IVsMatchService
         VsMatchSession match,
         VsMatchPhase phase)
     {
+        if (phase == VsMatchPhase.PreparationCompleted)
+        {
+            AddLog(
+                match,
+                null,
+                "PreparationCompleted",
+                string.Empty);
+
+            foreach (var player in match.Players)
+                player.IsFinished = !player.IsConnected;
+
+            phase = VsMatchPhase.GameStarting;
+        }
+
         match.PhaseTimerCts.Cancel();
         match.PhaseTimerCts.Dispose();
         match.PhaseTimerCts = new CancellationTokenSource();
         match.Phase = phase;
-        VsMatchPreparationRules.BeginPhase(match, phase);
+        match.PhaseStartedUtc = DateTime.UtcNow;
 
-        if (phase == VsMatchPhase.PreparationCompleted)
+        if (IsPreparationPhase(phase))
         {
-            match.DeadlineUtc = null;
-            AddLog(match, null, "PreparationCompleted", string.Empty);
-            return;
+            VsMatchPreparationRules.BeginPhase(match, phase);
         }
 
         if (phase == VsMatchPhase.PreparationHelps &&
@@ -449,8 +615,18 @@ public sealed class VsMatchService : IVsMatchService
             return;
         }
 
-        match.DeadlineUtc = DateTime.UtcNow.AddSeconds(
-            match.Profile.PreparationSeconds);
+        var durationSeconds =
+            ResolvePhaseDuration(match, phase);
+
+        if (durationSeconds <= 0)
+        {
+            match.DeadlineUtc = null;
+            AddLog(match, null, "PhaseStarted", phase.ToString());
+            return;
+        }
+
+        match.DeadlineUtc =
+            match.PhaseStartedUtc.AddSeconds(durationSeconds);
 
         AddLog(match, null, "PhaseStarted", phase.ToString());
 
@@ -488,7 +664,8 @@ public sealed class VsMatchService : IVsMatchService
                     match.IsClosed)
                     return;
 
-                if (match.Profile.PausePreparationOnTimeout)
+                if (IsPreparationPhase(match.Phase) &&
+                    match.Profile.PausePreparationOnTimeout)
                 {
                     AddLog(
                         match,
@@ -498,21 +675,7 @@ public sealed class VsMatchService : IVsMatchService
                     return;
                 }
 
-                foreach (var player in match.Players
-                             .Where(player => !player.IsFinished))
-                {
-                    VsMatchPreparationRules.ApplyTimeoutDefaults(
-                        match,
-                        player);
-                    player.IsFinished = true;
-                    AddLog(
-                        match,
-                        player.PlayerId,
-                        "PreparationTimeout",
-                        match.Phase.ToString());
-                }
-
-                AdvanceIfReadyLocked(match);
+                HandlePhaseTimeoutLocked(match);
 
                 messages =
                     VsMatchSnapshotBuilder.BuildMessages(match);
@@ -540,6 +703,209 @@ public sealed class VsMatchService : IVsMatchService
         if (nextPhase.HasValue)
             StartPhaseLocked(match, nextPhase.Value);
     }
+
+    private void HandlePhaseTimeoutLocked(
+        VsMatchSession match)
+    {
+        switch (match.Phase)
+        {
+            case VsMatchPhase.PreparationOrder:
+            case VsMatchPhase.PreparationCategories:
+            case VsMatchPhase.PreparationHelps:
+                FinishPreparationPhaseLocked(match);
+                break;
+
+            case VsMatchPhase.GameStarting:
+                VsMatchGameRules.BeginFirstNormalRound(match);
+                StartPhaseLocked(
+                    match,
+                    VsMatchPhase.NormalRoundGuess);
+                break;
+
+            case VsMatchPhase.NormalRoundGuess:
+            case VsMatchPhase.NormalRoundQuestion:
+            case VsMatchPhase.CaptainQuestion:
+                CloseQuestionLocked(match);
+                break;
+
+            case VsMatchPhase.QuestionResult:
+                ContinueAfterQuestionResultLocked(match);
+                break;
+
+            case VsMatchPhase.NormalRoundResult:
+                ContinueAfterNormalRoundLocked(match);
+                break;
+
+            case VsMatchPhase.CaptainQuestionSelection:
+                VsMatchGameRules
+                    .SelectDefaultCaptainQuestion(match);
+                StartPhaseLocked(
+                    match,
+                    VsMatchPhase.CaptainQuestion);
+                break;
+
+            case VsMatchPhase.CaptainRoundResult:
+                VsMatchGameRules.CommitRoundResult(match);
+                StartPhaseLocked(
+                    match,
+                    VsMatchPhase.GameCompleted);
+                break;
+        }
+    }
+
+    private void FinishPreparationPhaseLocked(
+        VsMatchSession match)
+    {
+        foreach (var player in match.Players
+                     .Where(player => !player.IsFinished))
+        {
+            VsMatchPreparationRules.ApplyTimeoutDefaults(
+                match,
+                player);
+            player.IsFinished = true;
+            AddLog(
+                match,
+                player.PlayerId,
+                "PreparationTimeout",
+                match.Phase.ToString());
+        }
+
+        AdvanceIfReadyLocked(match);
+    }
+
+    private void CloseQuestionLocked(VsMatchSession match)
+    {
+        VsMatchGameRules.CloseCurrentQuestion(match);
+
+        AddLog(
+            match,
+            null,
+            "QuestionClosed",
+            $"Question={match.Game.QuestionNumber}");
+
+        StartPhaseLocked(
+            match,
+            VsMatchPhase.QuestionResult);
+    }
+
+    private void ContinueAfterQuestionResultLocked(
+        VsMatchSession match)
+    {
+        if (match.Game.QuestionKind ==
+            VsQuestionKind.Guess)
+        {
+            VsMatchGameRules.BeginNormalQuestion(match);
+            StartPhaseLocked(
+                match,
+                VsMatchPhase.NormalRoundQuestion);
+            return;
+        }
+
+        var isCaptainRound =
+            match.Game.CurrentRoundNumber >
+            match.Classification.RequiredPartySize;
+
+        if (!isCaptainRound &&
+            VsMatchGameRules.HasNextNormalQuestion(match))
+        {
+            VsMatchGameRules.MoveToNextNormalQuestion(match);
+            StartPhaseLocked(
+                match,
+                VsMatchPhase.NormalRoundQuestion);
+            return;
+        }
+
+        if (!isCaptainRound)
+        {
+            VsMatchGameRules.BuildNormalRoundResult(match);
+            StartPhaseLocked(
+                match,
+                VsMatchPhase.NormalRoundResult);
+            return;
+        }
+
+        if (VsMatchGameRules.HasNextCaptainQuestion(match))
+        {
+            VsMatchGameRules
+                .MoveToNextCaptainSelection(match);
+            StartPhaseLocked(
+                match,
+                VsMatchPhase.CaptainQuestionSelection);
+            return;
+        }
+
+        VsMatchGameRules.BuildCaptainRoundResult(match);
+        StartPhaseLocked(
+            match,
+            VsMatchPhase.CaptainRoundResult);
+    }
+
+    private void ContinueAfterNormalRoundLocked(
+        VsMatchSession match)
+    {
+        VsMatchGameRules.CommitRoundResult(match);
+
+        if (VsMatchGameRules.HasNextNormalRound(match))
+        {
+            VsMatchGameRules.BeginNextNormalRound(match);
+            StartPhaseLocked(
+                match,
+                VsMatchPhase.NormalRoundGuess);
+            return;
+        }
+
+        VsMatchGameRules.BeginCaptainRound(match);
+        StartPhaseLocked(
+            match,
+            VsMatchPhase.CaptainQuestionSelection);
+    }
+
+    private static int ResolvePhaseDuration(
+        VsMatchSession match,
+        VsMatchPhase phase) =>
+        phase switch
+        {
+            VsMatchPhase.PreparationOrder or
+            VsMatchPhase.PreparationCategories or
+            VsMatchPhase.PreparationHelps =>
+                match.Profile.PreparationSeconds,
+
+            VsMatchPhase.GameStarting =>
+                match.Profile.PhasePauseSeconds,
+
+            VsMatchPhase.NormalRoundGuess =>
+                match.Profile.GuessSeconds,
+
+            VsMatchPhase.NormalRoundQuestion or
+            VsMatchPhase.CaptainQuestion =>
+                match.Profile.QuestionSeconds,
+
+            VsMatchPhase.QuestionResult =>
+                match.Profile.QuestionPauseSeconds,
+
+            VsMatchPhase.NormalRoundResult or
+            VsMatchPhase.CaptainRoundResult =>
+                match.Profile.RoundResultSeconds,
+
+            VsMatchPhase.CaptainQuestionSelection =>
+                match.Profile.PhasePauseSeconds,
+
+            _ => 0
+        };
+
+    private static bool IsPreparationPhase(
+        VsMatchPhase phase) =>
+        phase is
+            VsMatchPhase.PreparationOrder or
+            VsMatchPhase.PreparationCategories or
+            VsMatchPhase.PreparationHelps;
+
+    private static bool IsAnswerPhase(
+        VsMatchPhase phase) =>
+        phase is
+            VsMatchPhase.NormalRoundGuess or
+            VsMatchPhase.NormalRoundQuestion or
+            VsMatchPhase.CaptainQuestion;
 
     private async Task BroadcastMatchAsync(
         VsMatchSession match)
@@ -607,7 +973,11 @@ public sealed class VsMatchService : IVsMatchService
  * Az in-memory állapot csak await nélküli lock alatt változik, a
  * SignalR-küldés a lockon kívül történik.
  *
- * A fájl a MatchLocked session létrehozását, a preparációs parancsok
- * authoritative feldolgozását, a fázisváltást, a szerverórát és a
- * disconnect miatti takarítást koordinálja.
+ * MÓDOSÍTÁS: ugyanazzal az egy szerveridőzítővel koordinálja a tipp-,
+ * normál-, eredmény- és kapitányfázisokat, miközben a szabályokat és
+ * a pontozást a két statikus domain-segédben hagyja.
+ *
+ * A fájl a MatchLocked session létrehozását, a parancsok authoritative
+ * feldolgozását, a fázisváltást, a szerverórát és a disconnect miatti
+ * takarítást koordinálja.
  */

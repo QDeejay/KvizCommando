@@ -13,6 +13,7 @@ public sealed class VsMatchViewData
     public int Stake { get; set; }
     public VsRosterPlayerVm[] Players { get; set; } = [];
     public VsPreparationViewData Preparation { get; set; } = new();
+    public VsGameViewData Game { get; set; } = new();
 }
 
 public sealed class VsQueueViewData
@@ -36,6 +37,9 @@ public sealed class VsRosterPlayerVm
     public bool IsMe { get; set; }
     public bool IsConnected { get; set; }
     public bool IsFinished { get; set; }
+    public int TotalPoints { get; set; }
+    public double TotalTimeSeconds { get; set; }
+    public VsCharacterCardVm? ActiveCharacter { get; set; }
 }
 
 public sealed class VsPreparationViewData
@@ -95,12 +99,87 @@ public sealed class VsCategoryModifierVm
     public double Seconds { get; set; }
 }
 
+public sealed class VsGameViewData
+{
+    public int CurrentRoundNumber { get; set; }
+    public int NormalRoundCount { get; set; }
+    public int QuestionNumber { get; set; }
+    public VsQuestionKind QuestionKind { get; set; }
+    public int QuestionerPosition { get; set; }
+    public string Question { get; set; } = string.Empty;
+    public string[] Answers { get; set; } = [];
+    public int? CorrectAnswerIndex { get; set; }
+    public double? CorrectGuess { get; set; }
+    public int? MyAnswerIndex { get; set; }
+    public double? MyGuess { get; set; }
+    public int MyRoundPoints { get; set; }
+    public double MyRoundTimeSeconds { get; set; }
+    public bool CanAnswer { get; set; }
+    public bool CanChooseCaptainQuestion { get; set; }
+    public VsQuestionPlayerVm[] QuestionPlayers { get; set; } = [];
+    public VsRoundProgressVm[] Progress { get; set; } = [];
+    public VsRoundResultVm[] RoundResult { get; set; } = [];
+    public VsCaptainQuestionVm[] CaptainQuestions { get; set; } = [];
+    public int[] CaptainOrder { get; set; } = [];
+    public int CaptainOrderIndex { get; set; }
+}
+
+public sealed class VsQuestionPlayerVm
+{
+    public int Position { get; set; }
+    public bool HasAnswered { get; set; }
+    public int? AnswerIndex { get; set; }
+    public double? Guess { get; set; }
+    public bool IsCorrect { get; set; }
+    public double AnswerTimeSeconds { get; set; }
+    public double? ModifiedTimeSeconds { get; set; }
+    public int Points { get; set; }
+    public bool HasSpeedBonus { get; set; }
+}
+
+public sealed class VsRoundProgressVm
+{
+    public int StepNumber { get; set; }
+    public int PlayerPosition { get; set; }
+    public bool IsGuess { get; set; }
+    public bool IsCompleted { get; set; }
+    public bool IsCurrent { get; set; }
+    public int Points { get; set; }
+}
+
+public sealed class VsRoundResultVm
+{
+    public int Position { get; set; }
+    public int TotalBefore { get; set; }
+    public int RoundPoints { get; set; }
+    public int TotalAfter { get; set; }
+    public double RoundTimeSeconds { get; set; }
+    public bool HasWinnerBonus { get; set; }
+    public bool HasFastestBonus { get; set; }
+    public int CharacterSlotNumber { get; set; }
+    public int CharacterXp { get; set; }
+    public int EnergyLoss { get; set; }
+}
+
+public sealed class VsCaptainQuestionVm
+{
+    public int LoadoutPosition { get; set; }
+    public int CategoryId { get; set; }
+    public string CategoryName { get; set; } = string.Empty;
+    public string ImageSrc { get; set; } = string.Empty;
+    public string Question { get; set; } = string.Empty;
+}
+
 /**
  * MÓDOSÍTÁS: a MatchId megmarad a későbbi reklamációs hivatkozáshoz,
  * a LoadoutPosition mellett felesleges LoadoutToken viszont kikerült.
  * A queue view model továbbra is tartalmazza a lobby rosterét és a
  * kötelező csapatméretét.
  *
- * A VS lobby, roster és preparáció komponenseinek kizárólag
- * megjelenítési célú view modeljeit tartalmazza.
+ * MÓDOSÍTÁS: felvette az élő rangsor, kérdés, válaszállapot,
+ * progressz, köreredmény és kapitányi kérdésválasztás kizárólag
+ * megjelenítési célú modelljeit.
+ *
+ * A VS lobby, roster, preparáció és játéknézet view modeljeit
+ * tartalmazza.
  */

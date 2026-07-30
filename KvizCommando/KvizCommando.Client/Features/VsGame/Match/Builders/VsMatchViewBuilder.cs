@@ -70,7 +70,8 @@ public sealed class VsMatchViewBuilder
             Stake = snapshot.Stake,
             Players =
             [
-                .. snapshot.Players.Select(BuildPlayer)
+                .. snapshot.Players.Select(player =>
+                    BuildPlayer(player))
             ]
         };
     }
@@ -94,13 +95,112 @@ public sealed class VsMatchViewBuilder
             Players =
             [
                 .. snapshot.Players.Select(player =>
-                    BuildPlayer(player))
+                    BuildPlayer(player, culture))
             ],
             Preparation = BuildPreparation(
                 snapshot.Preparation,
-                culture)
+                culture),
+            Game = BuildGame(snapshot.Game, culture)
         };
     }
+
+    private VsGameViewData BuildGame(
+        VsGameDto data,
+        string culture) =>
+        new()
+        {
+            CurrentRoundNumber = data.CurrentRoundNumber,
+            NormalRoundCount = data.NormalRoundCount,
+            QuestionNumber = data.QuestionNumber,
+            QuestionKind = data.QuestionKind,
+            QuestionerPosition = data.QuestionerPosition,
+            Question = data.Question,
+            Answers = data.Answers,
+            CorrectAnswerIndex = data.CorrectAnswerIndex,
+            CorrectGuess = data.CorrectGuess,
+            MyAnswerIndex = data.MyAnswerIndex,
+            MyGuess = data.MyGuess,
+            MyRoundPoints = data.MyRoundPoints,
+            MyRoundTimeSeconds =
+                data.MyRoundTimeSeconds,
+            CanAnswer = data.CanAnswer,
+            CanChooseCaptainQuestion =
+                data.CanChooseCaptainQuestion,
+            QuestionPlayers =
+            [
+                .. data.QuestionPlayers.Select(item =>
+                    new VsQuestionPlayerVm
+                    {
+                        Position = item.Position,
+                        HasAnswered = item.HasAnswered,
+                        AnswerIndex = item.AnswerIndex,
+                        Guess = item.Guess,
+                        IsCorrect = item.IsCorrect,
+                        AnswerTimeSeconds =
+                            item.AnswerTimeSeconds,
+                        ModifiedTimeSeconds =
+                            item.ModifiedTimeSeconds,
+                        Points = item.Points,
+                        HasSpeedBonus =
+                            item.HasSpeedBonus
+                    })
+            ],
+            Progress =
+            [
+                .. data.Progress.Select(item =>
+                    new VsRoundProgressVm
+                    {
+                        StepNumber = item.StepNumber,
+                        PlayerPosition =
+                            item.PlayerPosition,
+                        IsGuess = item.IsGuess,
+                        IsCompleted = item.IsCompleted,
+                        IsCurrent = item.IsCurrent,
+                        Points = item.Points
+                    })
+            ],
+            RoundResult =
+            [
+                .. data.RoundResult.Select(item =>
+                    new VsRoundResultVm
+                    {
+                        Position = item.Position,
+                        TotalBefore = item.TotalBefore,
+                        RoundPoints = item.RoundPoints,
+                        TotalAfter = item.TotalAfter,
+                        RoundTimeSeconds =
+                            item.RoundTimeSeconds,
+                        HasWinnerBonus =
+                            item.HasWinnerBonus,
+                        HasFastestBonus =
+                            item.HasFastestBonus,
+                        CharacterSlotNumber =
+                            item.CharacterSlotNumber,
+                        CharacterXp = item.CharacterXp,
+                        EnergyLoss = item.EnergyLoss
+                    })
+            ],
+            CaptainQuestions =
+            [
+                .. data.CaptainQuestions.Select(item =>
+                    new VsCaptainQuestionVm
+                    {
+                        LoadoutPosition =
+                            item.LoadoutPosition,
+                        CategoryId = item.CategoryId,
+                        CategoryName =
+                            ResolveCategoryName(
+                                item.CategoryId,
+                                culture),
+                        ImageSrc =
+                            ResolveCategoryImage(
+                                item.CategoryId),
+                        Question = item.Question
+                    })
+            ],
+            CaptainOrder = data.CaptainOrder,
+            CaptainOrderIndex = data.CaptainOrderIndex
+        };
 
     private VsPreparationViewData BuildPreparation(
         VsPreparationDto data,
@@ -172,7 +272,8 @@ public sealed class VsMatchViewBuilder
     }
 
     private VsRosterPlayerVm BuildPlayer(
-        VsMatchPlayerDto player)
+        VsMatchPlayerDto player,
+        string? culture = null)
     {
         var rankIndex = Math.Clamp(
             player.TeamLevel,
@@ -191,7 +292,16 @@ public sealed class VsMatchViewBuilder
                 "images/avatars/basic.webp",
             IsMe = player.IsMe,
             IsConnected = player.IsConnected,
-            IsFinished = player.IsFinished
+            IsFinished = player.IsFinished,
+            TotalPoints = player.TotalPoints,
+            TotalTimeSeconds = player.TotalTimeSeconds,
+            ActiveCharacter =
+                player.ActiveCharacter is null ||
+                string.IsNullOrWhiteSpace(culture)
+                    ? null
+                    : BuildCharacter(
+                        player.ActiveCharacter,
+                        culture)
         };
     }
 
@@ -307,7 +417,10 @@ public sealed class VsMatchViewBuilder
  * megszűnt. A queue publikus játékosadataiból továbbra is ugyanazzal a
  * BuildPlayer leképezéssel készít lobby rostert.
  *
- * A szerver snapshotjából lokalizált neveket, meglévő Solo
- * kategória-/orientációképeket és VS megjelenítési view modelleket
- * épít. DI-be nem kerül, kizárólag a manager példányosítja.
+ * MÓDOSÍTÁS: a gameplay snapshotot is megjelenítési modellekké
+ * alakítja; a kapitányi kérdésekhez ugyanazt a meglévő kategória-
+ * kép- és névfeloldást használja.
+ *
+ * A szerver snapshotjából lokalizált neveket, meglévő Solo képeket
+ * és VS view modelleket épít. DI-be nem kerül.
  */

@@ -186,10 +186,77 @@
   <data name="Match.Error.Disconnected" xml:space="preserve">
     <value>A meccskapcsolat megszakadt; ehhez a meccshez nincs újracsatlakozás.</value>
   </data>
+  <data name="Match.Info.GameStarting" xml:space="preserve">
+    <value>A játék indul</value>
+  </data>
+  <data name="Match.Info.Guess" xml:space="preserve">
+    <value>Tippelj!</value>
+  </data>
+  <data name="Match.Info.Question" xml:space="preserve">
+    <value>Válaszolj a kérdésre!</value>
+  </data>
+  <data name="Match.Info.QuestionResult" xml:space="preserve">
+    <value>A kérdés eredménye</value>
+  </data>
+  <data name="Match.Info.RoundResult" xml:space="preserve">
+    <value>A kör eredménye</value>
+  </data>
+  <data name="Match.Info.CaptainSelection" xml:space="preserve">
+    <value>Kapitánykérdés kiválasztása</value>
+  </data>
+  <data name="Match.Info.CaptainQuestion" xml:space="preserve">
+    <value>Kapitánykör</value>
+  </data>
+  <data name="Match.Info.CaptainResult" xml:space="preserve">
+    <value>A kapitánykör eredménye</value>
+  </data>
+  <data name="Match.Info.GameCompleted" xml:space="preserve">
+    <value>A játék véget ért</value>
+  </data>
+  <data name="Match.Game.WaitingCaptain" xml:space="preserve">
+    <value>Várakozás a kérdező választására</value>
+  </data>
+  <data name="Match.Game.Team" xml:space="preserve">
+    <value>Csapat</value>
+  </data>
+  <data name="Match.Game.RoundPoints" xml:space="preserve">
+    <value>Körpont</value>
+  </data>
+  <data name="Match.Game.Time" xml:space="preserve">
+    <value>Idő</value>
+  </data>
+  <data name="Match.Game.Total" xml:space="preserve">
+    <value>Összesen</value>
+  </data>
+  <data name="Match.Game.Reward" xml:space="preserve">
+    <value>Jutalom</value>
+  </data>
+  <data name="Match.Game.WinnerBonus" xml:space="preserve">
+    <value>Körgyőztes bónusz</value>
+  </data>
+  <data name="Match.Game.FastestBonus" xml:space="preserve">
+    <value>Legjobb köridő bónusz</value>
+  </data>
+  <data name="Match.Game.RewardPending" xml:space="preserve">
+    <value>A teljes jutalomösszesítés a következő fejlesztési részben készül el.</value>
+  </data>
+  <data name="Match.Game.Questioner" xml:space="preserve">
+    <value>Kérdező</value>
+  </data>
+  <data name="Match.Game.CorrectGuess" xml:space="preserve">
+    <value>Helyes érték</value>
+  </data>
+  <data name="Match.Game.Submit" xml:space="preserve">
+    <value>Beküldés</value>
+  </data>
+  <data name="Match.Game.EnergyShort" xml:space="preserve">
+    <value>EP</value>
+  </data>
   <!--
     MÓDOSÍTÁS: hozzáadja a ranked várólista, MatchLocked, a három
     preparációs fázis, az ismétlésmentes preparációs fejléc, az
-    inventory, időegység, roster és az üres körhely magyar feliratait.
+    inventory, játékmenet, eredmény, roster és az üres körhely magyar
+    feliratait.
 
     A fájl a VS kliens magyar lokalizációs forrása; Debug buildkor
     a ResxExporter ebből készíti el a vsgame.json fájlt.

@@ -13,6 +13,7 @@ public sealed class VsMatchSnapshot
     public string InfoKey { get; set; } = string.Empty;
     public VsMatchPlayerDto[] Players { get; set; } = [];
     public VsPreparationDto Preparation { get; set; } = new();
+    public VsGameDto Game { get; set; } = new();
 }
 
 public sealed class VsMatchPlayerDto
@@ -25,6 +26,9 @@ public sealed class VsMatchPlayerDto
     public bool IsMe { get; set; }
     public bool IsConnected { get; set; }
     public bool IsFinished { get; set; }
+    public int TotalPoints { get; set; }
+    public double TotalTimeSeconds { get; set; }
+    public VsCharacterCardDto? ActiveCharacter { get; set; }
 }
 
 public sealed class VsPreparationDto
@@ -85,7 +89,10 @@ public sealed class VsCategoryModifierDto
  * felesleges LoadoutToken kikerült. A MatchId publikus hivatkozási
  * számként megmarad a későbbi reklamációhoz és admin-visszakereséshez.
  *
+ * MÓDOSÍTÁS: a snapshot felvette a játék állását, a rendezett
+ * összpont-/összidőadatokat és a normál kör aktív karakterét. A
+ * helyes válasz kizárólag lezárt kérdésnél kerül a címzetthez.
+ *
  * Egy játékosra szabott VS snapshot. Csak a megjelenítéshez és az
- * aktuálisan engedélyezett preparációs műveletekhez szükséges adatokat
- * küldi ki; kérdésszöveget és helyes választ nem tartalmaz.
+ * aktuálisan engedélyezett műveletekhez szükséges adatokat küldi ki.
  */

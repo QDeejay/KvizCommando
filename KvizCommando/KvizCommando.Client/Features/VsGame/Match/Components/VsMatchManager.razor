@@ -15,6 +15,7 @@
         <div class="kc-vs-match-stage">
             <VsMatchRoster
                 Players="@_match.Players"
+                ShowScore="@IsGamePhase"
                 Title="@Lang["vsgame.Match.Roster.Match"]" />
 
             <main class="kc-vs-match-content">
@@ -26,7 +27,11 @@
                         <span>@Lang["vsgame.Match.Info.LoadingQuestions"]</span>
                     </div>
                 }
-                else
+                else if (_match.Phase is
+                         VsMatchPhase.PreparationOrder or
+                         VsMatchPhase.PreparationCategories or
+                         VsMatchPhase.PreparationHelps or
+                         VsMatchPhase.PreparationCompleted)
                 {
                     <VsMatchPreparationView
                         Data="@_match"
@@ -35,6 +40,14 @@
                         OnHelpAssigned="AssignHelpAsync"
                         OnReset="ResetPreparationAsync"
                         OnFinish="FinishPreparationAsync" />
+                }
+                else
+                {
+                    <VsMatchPlayView
+                        Data="@_match"
+                        OnGuessSubmitted="SubmitGuessAsync"
+                        OnChoiceSubmitted="SubmitChoiceAsync"
+                        OnCaptainQuestionSelected="SelectCaptainQuestionAsync" />
                 }
             </main>
         </div>
@@ -94,6 +107,8 @@
     bal oldalt a várakozók és hiányzó helyek, jobb oldalt a kör alakú
     számláló és az alapfeltételek látszanak. A normál és kapitánykörök
     száma külön felirattal, egyértelműen azonosítva jelenik meg.
+    MÓDOSÍTÁS: a preparáció után a snapshot-alapú játéknézetet
+    rendereli és annak három explicit parancsát továbbítja.
     A meccs- és lobby-roster
     címe közvetlen szöveg helyett a vsgame lokalizációból érkezik.
     A várólistát, a MatchLocked betöltést, a rostert és az aktuális

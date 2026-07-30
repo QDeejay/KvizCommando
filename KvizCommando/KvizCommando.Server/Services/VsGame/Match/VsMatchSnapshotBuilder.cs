@@ -29,16 +29,11 @@ internal static class VsMatchSnapshotBuilder
             Phase = match.Phase,
             DeadlineUtc = match.DeadlineUtc,
             PhaseDurationSeconds =
-                match.Phase is
-                    VsMatchPhase.PreparationOrder or
-                    VsMatchPhase.PreparationCategories or
-                    VsMatchPhase.PreparationHelps
-                    ? match.Profile.PreparationSeconds
-                    : 0,
+                ResolvePhaseDuration(match),
             InfoKey = ResolveInfoKey(match, currentPlayer),
             Players =
             [
-                .. match.Players.Select(player =>
+                .. OrderPlayers(match).Select(player =>
                     new VsMatchPlayerDto
                     {
                         Position = player.Position,
@@ -51,12 +46,249 @@ internal static class VsMatchSnapshotBuilder
                             player.PlayerId ==
                             currentPlayer.PlayerId,
                         IsConnected = player.IsConnected,
-                        IsFinished = player.IsFinished
+                        IsFinished = player.IsFinished,
+                        TotalPoints = player.TotalPoints,
+                        TotalTimeSeconds =
+                            player.TotalTimeSeconds,
+                        ActiveCharacter =
+                            BuildActiveCharacter(
+                                match,
+                                player)
                     })
             ],
             Preparation = BuildPreparation(
                 match,
-                currentPlayer)
+                currentPlayer),
+            Game = BuildGame(match, currentPlayer)
+        };
+
+    private static VsGameDto BuildGame(
+        VsMatchSession match,
+        VsMatchPlayerState currentPlayer)
+    {
+        var game = match.Game;
+        var question = game.CurrentQuestion;
+        var showResult =
+            match.Phase == VsMatchPhase.QuestionResult &&
+            game.QuestionResult is not null;
+
+        return new VsGameDto
+        {
+            CurrentRoundNumber = game.CurrentRoundNumber,
+            NormalRoundCount =
+                match.Classification.RequiredPartySize,
+            QuestionNumber = game.QuestionNumber,
+            QuestionKind = game.QuestionKind,
+            QuestionerPosition =
+                question?.QuestionerPosition ?? 0,
+            Question = question?.Question ?? string.Empty,
+            Answers = question?.Answers ?? [],
+            CorrectAnswerIndex = showResult &&
+                                 question?.Kind ==
+                                 VsQuestionKind.Choice
+                ? question!.CorrectOptionIndex
+                : null,
+            CorrectGuess = showResult &&
+                           question?.Kind ==
+                           VsQuestionKind.Guess
+                ? question!.CorrectGuess
+                : null,
+            MyAnswerIndex =
+                currentPlayer.CurrentAnswer?.AnswerIndex,
+            MyGuess = currentPlayer.CurrentAnswer?.Guess,
+            MyRoundPoints = currentPlayer.RoundPoints,
+            MyRoundTimeSeconds =
+                currentPlayer.RoundTimeSeconds,
+            CanAnswer =
+                IsAnswerPhase(match.Phase) &&
+                currentPlayer.IsConnected &&
+                currentPlayer.CurrentAnswer is null &&
+                (!match.DeadlineUtc.HasValue ||
+                 DateTime.UtcNow <= match.DeadlineUtc.Value),
+            CanChooseCaptainQuestion =
+                CanChooseCaptainQuestion(match, currentPlayer),
+            QuestionPlayers = BuildQuestionPlayers(
+                match,
+                showResult),
+            Progress = BuildProgress(match, currentPlayer),
+            RoundResult =
+            [
+                .. game.RoundResult.Select(ToRoundResultDto)
+            ],
+            CaptainQuestions =
+                BuildCaptainQuestions(match, currentPlayer),
+            CaptainOrder = game.CaptainOrder,
+            CaptainOrderIndex = game.CaptainOrderIndex
+        };
+    }
+
+    private static VsQuestionPlayerDto[] BuildQuestionPlayers(
+        VsMatchSession match,
+        bool showResult)
+    {
+        if (showResult)
+        {
+            return
+            [
+                .. match.Game.QuestionResult!.Players.Select(
+                    result => new VsQuestionPlayerDto
+                    {
+                        Position = result.Position,
+                        HasAnswered =
+                            result.AnswerIndex.HasValue ||
+                            result.Guess.HasValue,
+                        AnswerIndex = result.AnswerIndex,
+                        Guess = result.Guess,
+                        IsCorrect = result.IsCorrect,
+                        AnswerTimeSeconds =
+                            result.AnswerTimeSeconds,
+                        ModifiedTimeSeconds =
+                            result.ModifiedTimeSeconds,
+                        Points = result.Points,
+                        HasSpeedBonus =
+                            result.HasSpeedBonus
+                    })
+            ];
+        }
+
+        return
+        [
+            .. match.Players.Select(player =>
+                new VsQuestionPlayerDto
+                {
+                    Position = player.Position,
+                    HasAnswered =
+                        player.CurrentAnswer
+                            ?.QuestionNumber ==
+                        match.Game.QuestionNumber
+                })
+        ];
+    }
+
+    private static VsRoundProgressDto[] BuildProgress(
+        VsMatchSession match,
+        VsMatchPlayerState currentPlayer)
+    {
+        var isCaptain =
+            match.Game.CurrentRoundNumber >
+            match.Classification.RequiredPartySize;
+        var stepCount = isCaptain
+            ? match.Players.Count
+            : match.Players.Count + 1;
+        var completedCount =
+            currentPlayer.RoundProgress.Count;
+        var currentStep = ResolveCurrentProgressStep(
+            match,
+            isCaptain);
+        var questionOrder = ResolveQuestionOrder(match);
+        var result = new List<VsRoundProgressDto>(stepCount);
+
+        for (var index = 0; index < stepCount; index++)
+        {
+            var isGuess = !isCaptain && index == 0;
+            var orderIndex = isCaptain ? index : index - 1;
+            var playerPosition =
+                isGuess ||
+                orderIndex < 0 ||
+                orderIndex >= questionOrder.Length
+                    ? 0
+                    : questionOrder[orderIndex];
+
+            result.Add(new VsRoundProgressDto
+            {
+                StepNumber = index + 1,
+                PlayerPosition = playerPosition,
+                IsGuess = isGuess,
+                IsCompleted = index < completedCount,
+                IsCurrent = index == currentStep,
+                Points = index < completedCount
+                    ? currentPlayer.RoundProgress[index]
+                    : 0
+            });
+        }
+
+        return [.. result];
+    }
+
+    private static int ResolveCurrentProgressStep(
+        VsMatchSession match,
+        bool isCaptain)
+    {
+        if (match.Phase is
+            VsMatchPhase.NormalRoundResult or
+            VsMatchPhase.CaptainRoundResult or
+            VsMatchPhase.GameCompleted)
+        {
+            return -1;
+        }
+
+        if (!isCaptain &&
+            match.Game.QuestionKind ==
+            VsQuestionKind.Guess)
+        {
+            return 0;
+        }
+
+        return isCaptain
+            ? match.Game.CaptainOrderIndex
+            : match.Game.CurrentQuestionerIndex + 1;
+    }
+
+    private static int[] ResolveQuestionOrder(
+        VsMatchSession match) =>
+        match.Game.CurrentRoundNumber >
+        match.Classification.RequiredPartySize
+            ? match.Game.CaptainOrder
+            : match.Game.QuestionerOrder;
+
+    private static VsCaptainQuestionDto[] BuildCaptainQuestions(
+        VsMatchSession match,
+        VsMatchPlayerState currentPlayer)
+    {
+        if (!CanChooseCaptainQuestion(match, currentPlayer))
+            return [];
+
+        return
+        [
+            .. VsMatchGameRules
+                .GetCaptainChoices(match, currentPlayer)
+                .Select(item => new VsCaptainQuestionDto
+                {
+                    LoadoutPosition =
+                        item.LoadoutPosition,
+                    CategoryId = item.CategoryId,
+                    Question = item.Question
+                })
+        ];
+    }
+
+    private static bool CanChooseCaptainQuestion(
+        VsMatchSession match,
+        VsMatchPlayerState currentPlayer) =>
+        match.Phase ==
+            VsMatchPhase.CaptainQuestionSelection &&
+        currentPlayer.IsConnected &&
+        match.Game.CaptainOrder.Length >
+            match.Game.CaptainOrderIndex &&
+        currentPlayer.Position ==
+            match.Game.CaptainOrder[
+                match.Game.CaptainOrderIndex];
+
+    private static VsRoundResultDto ToRoundResultDto(
+        VsMatchRoundResultState result) =>
+        new()
+        {
+            Position = result.Position,
+            TotalBefore = result.TotalBefore,
+            RoundPoints = result.RoundPoints,
+            TotalAfter = result.TotalAfter,
+            RoundTimeSeconds = result.RoundTimeSeconds,
+            HasWinnerBonus = result.HasWinnerBonus,
+            HasFastestBonus = result.HasFastestBonus,
+            CharacterSlotNumber =
+                result.CharacterSlotNumber,
+            CharacterXp = result.CharacterXp,
+            EnergyLoss = result.EnergyLoss
         };
 
     private static VsPreparationDto BuildPreparation(
@@ -222,6 +454,37 @@ internal static class VsMatchSnapshotBuilder
             OrientationId = character.OrientationId
         };
 
+    private static VsCharacterCardDto? BuildActiveCharacter(
+        VsMatchSession match,
+        VsMatchPlayerState player)
+    {
+        if (match.Game.CurrentRoundNumber <= 0 ||
+            match.Game.CurrentRoundNumber >
+                match.Classification.RequiredPartySize ||
+            match.Phase is
+                VsMatchPhase.MatchLocked or
+                VsMatchPhase.PreparationOrder or
+                VsMatchPhase.PreparationCategories or
+                VsMatchPhase.PreparationHelps or
+                VsMatchPhase.GameStarting)
+        {
+            return null;
+        }
+
+        var round = player.Rounds.First(item =>
+            item.RoundNumber ==
+            match.Game.CurrentRoundNumber);
+
+        if (!round.CharacterSlotNumber.HasValue)
+            return null;
+
+        var character = player.Characters.First(item =>
+            item.SlotNumber ==
+            round.CharacterSlotNumber.Value);
+
+        return ToCharacterDto(character);
+    }
+
     private static VsLoadoutCardDto ToLoadoutDto(
         VsMatchLoadoutItemState item) =>
         new()
@@ -258,9 +521,77 @@ internal static class VsMatchSnapshotBuilder
                 "vsgame.Match.Info.Helps",
             VsMatchPhase.PreparationCompleted =>
                 "vsgame.Match.Info.PreparationCompleted",
+            VsMatchPhase.GameStarting =>
+                "vsgame.Match.Info.GameStarting",
+            VsMatchPhase.NormalRoundGuess =>
+                "vsgame.Match.Info.Guess",
+            VsMatchPhase.NormalRoundQuestion =>
+                "vsgame.Match.Info.Question",
+            VsMatchPhase.QuestionResult =>
+                "vsgame.Match.Info.QuestionResult",
+            VsMatchPhase.NormalRoundResult =>
+                "vsgame.Match.Info.RoundResult",
+            VsMatchPhase.CaptainQuestionSelection =>
+                "vsgame.Match.Info.CaptainSelection",
+            VsMatchPhase.CaptainQuestion =>
+                "vsgame.Match.Info.CaptainQuestion",
+            VsMatchPhase.CaptainRoundResult =>
+                "vsgame.Match.Info.CaptainResult",
+            VsMatchPhase.GameCompleted =>
+                "vsgame.Match.Info.GameCompleted",
             _ => "vsgame.Match.Info.Aborted"
         };
     }
+
+    private static IEnumerable<VsMatchPlayerState> OrderPlayers(
+        VsMatchSession match) =>
+        IsGamePhase(match.Phase)
+            ? VsMatchScoring.OrderByStanding(match.Players)
+            : match.Players.OrderBy(player => player.Position);
+
+    private static bool IsGamePhase(VsMatchPhase phase) =>
+        phase is
+            VsMatchPhase.GameStarting or
+            VsMatchPhase.NormalRoundGuess or
+            VsMatchPhase.NormalRoundQuestion or
+            VsMatchPhase.QuestionResult or
+            VsMatchPhase.NormalRoundResult or
+            VsMatchPhase.CaptainQuestionSelection or
+            VsMatchPhase.CaptainQuestion or
+            VsMatchPhase.CaptainRoundResult or
+            VsMatchPhase.GameCompleted;
+
+    private static int ResolvePhaseDuration(
+        VsMatchSession match) =>
+        match.Phase switch
+        {
+            VsMatchPhase.PreparationOrder or
+            VsMatchPhase.PreparationCategories or
+            VsMatchPhase.PreparationHelps =>
+                match.Profile.PreparationSeconds,
+            VsMatchPhase.GameStarting =>
+                match.Profile.PhasePauseSeconds,
+            VsMatchPhase.NormalRoundGuess =>
+                match.Profile.GuessSeconds,
+            VsMatchPhase.NormalRoundQuestion or
+            VsMatchPhase.CaptainQuestion =>
+                match.Profile.QuestionSeconds,
+            VsMatchPhase.QuestionResult =>
+                match.Profile.QuestionPauseSeconds,
+            VsMatchPhase.NormalRoundResult or
+            VsMatchPhase.CaptainRoundResult =>
+                match.Profile.RoundResultSeconds,
+            VsMatchPhase.CaptainQuestionSelection =>
+                match.Profile.PhasePauseSeconds,
+            _ => 0
+        };
+
+    private static bool IsAnswerPhase(
+        VsMatchPhase phase) =>
+        phase is
+            VsMatchPhase.NormalRoundGuess or
+            VsMatchPhase.NormalRoundQuestion or
+            VsMatchPhase.CaptainQuestion;
 }
 
 /**
@@ -268,8 +599,11 @@ internal static class VsMatchSnapshotBuilder
  * MatchId hivatkozást, technikai fázisverziót nem küld. A
  * loadoutkiosztást a stabil LoadoutPosition alapján építi.
  *
- * A szerveroldali meccsállapotból játékosonként
- * személyre szabott, tiszta SignalR-snapshotokat épít. Nem módosít
- * állapotot és nem küld hálózati üzenetet. A kategóriamódosító
- * lekérése explicit TryGetValue-t használ.
+ * MÓDOSÍTÁS: személyre szabott játéksnapshotot, aktuális karaktert,
+ * élő rangsort, kérdésállapotot, progresszt és köreredményt épít. A
+ * helyes válasz és az ellenfelek választása csak QuestionResult
+ * fázisban jelenik meg.
+ *
+ * A szerveroldali meccsállapotból játékosonként tiszta SignalR-
+ * snapshotokat épít. Nem módosít állapotot és nem küld üzenetet.
  */

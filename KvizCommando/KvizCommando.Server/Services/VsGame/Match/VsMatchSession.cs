@@ -11,8 +11,11 @@ public sealed class VsMatchSession : IDisposable
     public object SyncRoot { get; } = new();
     public List<VsMatchPlayerState> Players { get; init; } = [];
     public List<VsMatchEventLogEntry> EventLog { get; } = [];
+    public VsMatchGuessQuestionState[] GuessQuestions { get; set; } = [];
+    public VsMatchGameState Game { get; } = new();
 
     public VsMatchPhase Phase { get; set; } = VsMatchPhase.MatchLocked;
+    public DateTime PhaseStartedUtc { get; set; }
     public DateTime? DeadlineUtc { get; set; }
     public CancellationTokenSource PhaseTimerCts { get; set; } = new();
     public bool IsInitializing { get; set; } = true;
@@ -46,6 +49,13 @@ public sealed class VsMatchPlayerState
     public bool IsConnected { get; set; } = true;
     public bool IsFinished { get; set; }
     public bool StakeLocked { get; set; }
+    public int TotalPoints { get; set; }
+    public double TotalTimeSeconds { get; set; }
+    public int RoundPoints { get; set; }
+    public double RoundTimeSeconds { get; set; }
+    public VsMatchPlayerAnswerState? CurrentAnswer { get; set; }
+    public List<int> RoundProgress { get; } = [];
+    public HashSet<int> CaptainUsedLoadoutPositions { get; } = [];
 }
 
 public sealed class VsMatchCharacterState
@@ -54,6 +64,7 @@ public sealed class VsMatchCharacterState
     public string Name { get; init; } = string.Empty;
     public string PictureCode { get; init; } = string.Empty;
     public int Level { get; init; }
+    public int EnergyPoints { get; init; }
     public int OrientationId { get; init; }
     public Dictionary<int, double> CategoryModifiers { get; init; } = [];
 }
@@ -102,11 +113,89 @@ public sealed class VsOwnQuestionSeed
     public string AnswersJson { get; init; } = string.Empty;
 }
 
+public sealed class VsMatchGuessQuestionState
+{
+    public int QuestionId { get; init; }
+    public string Question { get; init; } = string.Empty;
+    public double CorrectAnswer { get; init; }
+}
+
+public sealed class VsMatchGameState
+{
+    public int CurrentRoundNumber { get; set; }
+    public int QuestionNumber { get; set; }
+    public VsQuestionKind QuestionKind { get; set; }
+    public VsMatchQuestionState? CurrentQuestion { get; set; }
+    public int[] QuestionerOrder { get; set; } = [];
+    public int CurrentQuestionerIndex { get; set; }
+    public int[] CaptainOrder { get; set; } = [];
+    public int CaptainOrderIndex { get; set; }
+    public VsMatchQuestionResultState? QuestionResult { get; set; }
+    public VsMatchRoundResultState[] RoundResult { get; set; } = [];
+}
+
+public sealed class VsMatchQuestionState
+{
+    public VsQuestionKind Kind { get; init; }
+    public string Question { get; init; } = string.Empty;
+    public string[] Answers { get; init; } = [];
+    public int CorrectOptionIndex { get; init; }
+    public double CorrectGuess { get; init; }
+    public int QuestionerPosition { get; init; }
+    public int CategoryId { get; init; }
+}
+
+public sealed class VsMatchPlayerAnswerState
+{
+    public int QuestionNumber { get; init; }
+    public int? AnswerIndex { get; init; }
+    public double? Guess { get; init; }
+    public double AnswerTimeSeconds { get; init; }
+}
+
+public sealed class VsMatchQuestionResultState
+{
+    public VsQuestionKind Kind { get; init; }
+    public int CorrectOptionIndex { get; init; }
+    public double CorrectGuess { get; init; }
+    public VsMatchQuestionPlayerResultState[] Players { get; init; } = [];
+}
+
+public sealed class VsMatchQuestionPlayerResultState
+{
+    public int Position { get; init; }
+    public int? AnswerIndex { get; init; }
+    public double? Guess { get; init; }
+    public bool IsCorrect { get; init; }
+    public double AnswerTimeSeconds { get; init; }
+    public double? ModifiedTimeSeconds { get; init; }
+    public int Points { get; init; }
+    public bool HasSpeedBonus { get; init; }
+}
+
+public sealed class VsMatchRoundResultState
+{
+    public int Position { get; init; }
+    public int TotalBefore { get; init; }
+    public int RoundPoints { get; init; }
+    public int TotalAfter { get; init; }
+    public double RoundTimeSeconds { get; init; }
+    public bool HasWinnerBonus { get; init; }
+    public bool HasFastestBonus { get; init; }
+    public int CharacterSlotNumber { get; init; }
+    public int CharacterXp { get; init; }
+    public int EnergyLoss { get; init; }
+}
+
 /**
  * MÓDOSÍTÁS: a fázis időzítőjét kizárólag a saját cancellation tokenje
  * azonosítja, ezért a PhaseVersion megszűnt. A kiosztott loadout elem
  * az eleve egyedi LoadoutPosition értékkel szerepel a sessionben.
  *
- * Egy lezárt meccs teljes, szerveroldali és authoritative állapotát
+ * MÓDOSÍTÁS: a session felvette a normál- és kapitánykör minimális,
+ * szerveroldali állapotát, a növekvő QuestionNumbert, a játékosok
+ * pont-/időadatait és a lezárt kérdés, illetve kör eredményét.
+ *
+ * Egy lezárt meccs teljes, szerveroldali authoritative állapotát
  * tartalmazza. A SignalR Hub nem őriz játékállapotot.
  */

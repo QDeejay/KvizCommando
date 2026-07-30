@@ -10,9 +10,13 @@ public partial class VsMatchRoster
 
     [Parameter] public int ExpectedPlayers { get; set; }
     [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public bool ShowScore { get; set; }
 
     private int MissingPlayers =>
         Math.Max(0, ExpectedPlayers - Players.Length);
+
+    private static string Seconds(double value) =>
+        $"{value:0.0}s";
 }
 
 /**
@@ -20,6 +24,9 @@ public partial class VsMatchRoster
  * a lobby a még hiányzó helyeket is ugyanebben a komponensben mutatja.
  * A címhez nincs beégetett nyelvi alapérték; azt a szülő lokalizált
  * feliratként adja át.
+ *
+ * MÓDOSÍTÁS: a szülő fázis szerint bekapcsolhatja az összpont és
+ * összidő megjelenítését.
  *
  * A VS meccs publikus játékoslistáját megjelenítő komponens
  * paramétereit tartalmazza.

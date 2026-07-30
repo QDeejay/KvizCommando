@@ -10,17 +10,42 @@
     {
         <article class="kc-vs-roster-card @(player.IsMe ? "me" : "") @(!player.IsConnected ? "disconnected" : "")">
             <div class="kc-vs-roster-avatar">
-                <img src="@player.TeamPictureSrc"
-                     alt="@player.TeamName" />
+                @if (player.ActiveCharacter is not null)
+                {
+                    <div class="kc-vs-roster-svg-host">
+                        <CharacterView
+                            PicCode="@player.ActiveCharacter.PictureCode" />
+                    </div>
+                }
+                else
+                {
+                    <img src="@player.TeamPictureSrc"
+                         alt="@player.TeamName" />
+                }
             </div>
 
             <div class="kc-vs-roster-data">
                 <strong title="@player.TeamName">@player.TeamName</strong>
                 <span title="@player.DisplayName">@player.DisplayName</span>
-                <small>@player.TeamLevel</small>
+                <small>
+                    @(player.ActiveCharacter?.Name ??
+                      player.TeamLevel)
+                </small>
             </div>
 
-            <span class="kc-vs-roster-state @(player.IsFinished ? "ready" : "")"></span>
+            @if (ShowScore)
+            {
+                <div class="kc-vs-roster-score">
+                    <strong>@player.TotalPoints</strong>
+                    <small>
+                        @Seconds(player.TotalTimeSeconds)
+                    </small>
+                </div>
+            }
+            else
+            {
+                <span class="kc-vs-roster-state @(player.IsFinished ? "ready" : "")"></span>
+            }
         </article>
     }
 
@@ -38,7 +63,10 @@
     játékoskiemelést és a lobbyban hiányzó helyekhez egyetlen forgó
     keresőjelzőt használ.
 
+    MÓDOSÍTÁS: normál körben a korlátozott karakter-SVG-t, a többi
+    fázisban a csapatavatart mutatja; játéknál összpontot és összidőt
+    jelenít meg.
+
     A meccs teljes ideje alatt látható, kompakt ellenfél- és
-    csapatkártya-sáv. Preparációban a csapatavatar placeholderét
-    mutatja.
+    csapatkártya-sáv.
 *@
