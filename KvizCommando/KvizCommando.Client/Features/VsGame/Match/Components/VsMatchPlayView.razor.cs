@@ -66,7 +66,7 @@ public partial class VsMatchPlayView : IDisposable
         bool firstRender)
     {
         if (Data.Game.QuestionKind != VsQuestionKind.Guess ||
-            !Data.Game.CanAnswer ||
+            !IsAnswerTimeActive ||
             _focusedGuessQuestionNumber ==
                 Data.Game.QuestionNumber)
         {
@@ -99,6 +99,13 @@ public partial class VsMatchPlayView : IDisposable
         $"width: {TimerPercent.ToString(
             "0.##",
             CultureInfo.InvariantCulture)}%";
+
+    private string TimerStateClass => RemainingSeconds switch
+    {
+        <= 0 => "zero",
+        1 => "warning",
+        _ => string.Empty
+    };
 
     private string WaitTimerStyle =>
         $"--kc-vs-wait-progress: {TimerPercent.ToString(
@@ -141,9 +148,21 @@ public partial class VsMatchPlayView : IDisposable
                     Data.Game.CurrentRoundNumber);
 
     private bool CanSubmitGuess =>
-        Data.Game.CanAnswer &&
+        IsAnswerTimeActive &&
         TryGetGuessValue(out _) &&
         !_sending;
+
+    private bool IsAnswerTimeActive =>
+        Data.Game.CanAnswer &&
+        RemainingSeconds > 0;
+
+    private bool CanUseHelpNow =>
+        Data.Game.CanUseHelp &&
+        RemainingSeconds > 0;
+
+    private bool ShowPlayerChoices =>
+        Data.Phase == VsMatchPhase.QuestionResult &&
+        Data.Game.QuestionKind == VsQuestionKind.Choice;
 
     private VsHelpCardVm? CurrentHelp =>
         Data.Preparation.Rounds
@@ -196,6 +215,16 @@ public partial class VsMatchPlayView : IDisposable
         !Data.Game.CorrectAnswerIndex.HasValue &&
         Data.Game.MySuggestedAnswerIndex == answerIndex;
 
+    private IEnumerable<VsQuestionPlayerVm> PlayersOnAnswer(
+        int answerIndex) =>
+        Data.Game.QuestionPlayers
+            .Where(player =>
+                player.AnswerIndex == answerIndex)
+            .OrderBy(player => player.Position);
+
+    private static string PlayerToneClass(int position) =>
+        $"player-tone-{position}";
+
     private string AnswerClass(int answerIndex)
     {
         string css;
@@ -215,6 +244,8 @@ public partial class VsMatchPlayView : IDisposable
             css = Data.Game.MyAnswerIndex == answerIndex
                 ? "wrong"
                 : string.Empty;
+
+            css = $"{css} result-muted".Trim();
         }
 
         if (IsAnswerEliminated(answerIndex))
@@ -222,6 +253,13 @@ public partial class VsMatchPlayView : IDisposable
 
         if (IsSuggestedAnswer(answerIndex))
             css = $"{css} suggested".Trim();
+
+        if (!Data.Game.CorrectAnswerIndex.HasValue &&
+            !IsAnswerTimeActive &&
+            Data.Game.MyAnswerIndex != answerIndex)
+        {
+            css = $"{css} locked-muted".Trim();
+        }
 
         return css;
     }
@@ -269,7 +307,7 @@ public partial class VsMatchPlayView : IDisposable
 
     private async Task SubmitChoiceAsync(int answerIndex)
     {
-        if (!Data.Game.CanAnswer ||
+        if (!IsAnswerTimeActive ||
             IsAnswerEliminated(answerIndex) ||
             _sending)
         {
@@ -296,7 +334,7 @@ public partial class VsMatchPlayView : IDisposable
 
     private async Task UseHelpAsync()
     {
-        if (!Data.Game.CanUseHelp || _sending)
+        if (!CanUseHelpNow || _sending)
             return;
 
         _sending = true;
@@ -364,4 +402,10 @@ public partial class VsMatchPlayView : IDisposable
  * render után Blazor ElementReference segítségével fókuszálja.
  * A részben begépelt értéket szövegként őrzi, és csak a közös
  * beküldési útvonalon alakítja véges double értékké.
+ * MÓDOSÍTÁS: a szerveres deadline elérésekor azonnal lezárja a
+ * kliensinterakciókat, a számlálót nullán tartja a felfedési
+ * késleltetés alatt, és külön warning/zero megjelenítést ad.
+ * MÓDOSÍTÁS: lezáráskor halványítja a nem választott válaszokat,
+ * eredménykor pedig pozíció szerinti játékosszínnel jeleníti meg,
+ * hogy az egyes válaszokat kik jelölték.
  */

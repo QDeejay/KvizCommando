@@ -154,9 +154,20 @@
     transition: width .25s linear;
 }
 
-.kc-vs-play-timer.warning .kc-vs-play-timer-display,
 .kc-vs-play-timer.warning .kc-vs-play-timer-value {
-    background: #e78c35;
+    background: rgba(231, 140, 53, 1);
+}
+
+.kc-vs-play-timer.warning .kc-vs-play-timer-display {
+    background: rgba(231, 140, 53, .9);
+}
+
+.kc-vs-play-timer.zero .kc-vs-play-timer-value {
+    background: rgba(200, 59, 50, 1);
+}
+
+.kc-vs-play-timer.zero .kc-vs-play-timer-display {
+    background: rgba(200, 59, 50, .9);
 }
 
 .kc-vs-wait-timer {
@@ -257,10 +268,17 @@
     cursor: url('/Images/cursors/normal.cur'), default;
 }
 
-.kc-vs-answers button > span {
+.kc-vs-answer-letter {
+    position: relative;
+    z-index: 1;
     color: #c6ef39;
     font-family: 'Share Tech Mono', monospace;
     font-size: 1.1rem;
+}
+
+.kc-vs-answers button > strong {
+    position: relative;
+    z-index: 1;
 }
 
 .kc-vs-answers button.selected {
@@ -290,10 +308,32 @@
     filter: grayscale(.72);
 }
 
+.kc-vs-answers button.locked-muted,
+.kc-vs-answers button.result-muted {
+    opacity: .38;
+}
+
+.kc-vs-answer-player-fill {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    display: flex;
+    overflow: hidden;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+.kc-vs-answer-player-fill > i {
+    min-width: 0;
+    flex: 1 1 0;
+    background: var(--kc-vs-player-color);
+}
+
 .kc-vs-ai-suggestion {
     position: absolute;
     top: 50%;
     right: 11px;
+    z-index: 2;
     color: #63a9c7;
     transform: translateY(-50%);
 }
@@ -412,6 +452,30 @@
 .kc-vs-question-status > span.answered,
 .kc-vs-question-status .positive {
     color: #51b36d;
+}
+
+.kc-vs-question-status > span.kc-vs-player-status {
+    background:
+        linear-gradient(
+            var(--kc-vs-player-color),
+            var(--kc-vs-player-color)),
+        rgba(17, 22, 16, .94);
+}
+
+.player-tone-1 {
+    --kc-vs-player-color: rgba(72, 132, 190, .32);
+}
+
+.player-tone-2 {
+    --kc-vs-player-color: rgba(202, 169, 62, .3);
+}
+
+.player-tone-3 {
+    --kc-vs-player-color: rgba(145, 92, 177, .31);
+}
+
+.player-tone-4 {
+    --kc-vs-player-color: rgba(146, 151, 158, .28);
 }
 
 .kc-vs-question-status .negative {
@@ -626,16 +690,22 @@
     box-shadow: 0 0 7px rgba(210, 255, 57, .45);
 }
 
-.kc-vs-progress > span small {
-    position: absolute;
-    right: -5px;
-    bottom: -6px;
-    padding: 1px 3px;
-    color: #eee9dc;
-    background: #171910;
-    border-radius: 2px;
-    font-size: .6rem;
-}
+    .kc-vs-progress > span small {
+        position: absolute;
+        right: -5px;
+        bottom: -6px;
+        width: 3ch;
+        height: 15px;
+        display: grid;
+        place-items: center;
+        color: #eee9dc;
+        background: #171910;
+        border: 1px solid rgba(198, 239, 57, 1);
+        border-radius: 2px;
+        box-sizing: content-box;
+        font-size: .6rem;
+        line-height: 1;
+    }
 
 .kc-vs-progress > strong {
     width: 62px;
@@ -692,4 +762,10 @@
  * MÓDOSÍTÁS: a tippsáv LCD-szerű sorban jelenik meg. A 50-50 kizárt
  * válaszai halványan a helyükön maradnak, az AI-javaslat kék keretet
  * és ikont kap, de továbbra sem reteszeli a választást.
+ * MÓDOSÍTÁS: a válaszóra egy másodpercnél a Solo warning-, nullán
+ * pedig a Solo zero-színét használja.
+ * MÓDOSÍTÁS: a lezárt és hibás válaszok visszafogottan halványulnak.
+ * A kiértékeléskor a válaszgombok egyenlő szélességű, pozícióhoz
+ * kötött játékosszín-szegmenseket, az alsó minikártyák ugyanilyen
+ * halvány hátteret kapnak.
  */

@@ -664,9 +664,14 @@ public sealed class VsMatchService : IVsMatchService
 
         AddLog(match, null, "PhaseStarted", phase.ToString());
 
+        var timerDeadlineUtc = IsAnswerPhase(phase)
+            ? match.DeadlineUtc.Value.AddSeconds(
+                match.Profile.AnswerRevealDelaySeconds)
+            : match.DeadlineUtc.Value;
+
         _ = RunPhaseTimerAsync(
             match.MatchId,
-            match.DeadlineUtc.Value,
+            timerDeadlineUtc,
             match.PhaseTimerCts.Token);
     }
 
@@ -1023,7 +1028,9 @@ public sealed class VsMatchService : IVsMatchService
  * a pontozást a két statikus domain-segédben hagyja.
  * Az utolsó válasz után a profilban megadott rövid ideig az eredeti
  * kérdésóra fut tovább; ha abból kevesebb maradt, a nulla a határ.
- * Ezután ugyanaz a fázisidőzítő zárja a kérdést.
+ * Hiányzó válasz esetén az óra eléri a nullát, ott marad az
+ * AnswerRevealDelaySeconds ideig, és csak ezután zárja a kérdést.
+ * A QuestionResult külön QuestionPauseSeconds ideig látható.
  * MÓDOSÍTÁS: a meccs inicializálása után a meglévő fázisszünet
  * időtartamával külön kezdési visszaszámlálás előzi meg a preparációt.
  * MÓDOSÍTÁS: a kapitány kérdésválasztását a profil külön
