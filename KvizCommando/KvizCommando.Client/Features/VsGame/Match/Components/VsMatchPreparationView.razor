@@ -154,7 +154,7 @@
                     @foreach (var loadout in Data.Preparation.Loadout)
                     {
                         <button type="button"
-                                class="kc-vs-prep-loadout-card @(_selectedLoadoutToken == loadout.LoadoutToken ? "selected" : "") @(!loadout.IsSelectable ? "locked" : "")"
+                                class="kc-vs-prep-loadout-card @(_selectedLoadoutPosition == loadout.LoadoutPosition ? "selected" : "") @(!loadout.IsSelectable ? "locked" : "")"
                                 disabled="@(!loadout.IsSelectable || Data.Preparation.IsFinished)"
                                 @onclick="() => SelectLoadout(loadout)">
                             <img src="@loadout.ImageSrc"
@@ -225,6 +225,8 @@
     emeli ki. A kapitánysor üres kategóriaboxa megmarad, kizárólag a
     teljes sort körberajzoló, túlnyúló outline került ki. Az inventory
     főcíme és a visszaszámláló rövid időegysége is lokalizált.
+    A kategóriakártya kijelölését a loadout egyedi pozíciója azonosítja,
+    külön kliens-token nélkül.
 
     A három VS preparáció közös, snapshot-alapú nézete. Karaktersorrendet,
     kategóriakiosztást, segítségkiosztást és szerverhatáridőt jelenít meg.

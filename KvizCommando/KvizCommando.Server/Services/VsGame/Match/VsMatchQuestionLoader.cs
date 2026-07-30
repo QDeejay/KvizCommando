@@ -237,6 +237,9 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
 }
 
 /**
+ * MÓDOSÍTÁS: a betöltött loadoutelemeket a már meglévő, játékoson
+ * belül egyedi LoadoutPosition azonosítja; külön GUID nem készül.
+ *
  * A kategóriánkénti ID-indexből kiválasztja a meccs kérdéseit,
  * majd egyetlen adatbázis-lekéréssel betölti a szükséges gyári
  * rekordokat és meccsszintű, kevert snapshotot készít.

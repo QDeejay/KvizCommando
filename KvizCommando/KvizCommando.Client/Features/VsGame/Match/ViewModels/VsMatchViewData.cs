@@ -72,7 +72,6 @@ public sealed class VsCharacterCardVm
 
 public sealed class VsLoadoutCardVm
 {
-    public Guid LoadoutToken { get; set; }
     public int LoadoutPosition { get; set; }
     public int CategoryId { get; set; }
     public string CategoryName { get; set; } = string.Empty;
@@ -97,8 +96,10 @@ public sealed class VsCategoryModifierVm
 }
 
 /**
- * MÓDOSÍTÁS: a queue view model a lobby rosterét és kötelező
- * csapatméretét is tartalmazza.
+ * MÓDOSÍTÁS: a MatchId megmarad a későbbi reklamációs hivatkozáshoz,
+ * a LoadoutPosition mellett felesleges LoadoutToken viszont kikerült.
+ * A queue view model továbbra is tartalmazza a lobby rosterét és a
+ * kötelező csapatméretét.
  *
  * A VS lobby, roster és preparáció komponenseinek kizárólag
  * megjelenítési célú view modeljeit tartalmazza.

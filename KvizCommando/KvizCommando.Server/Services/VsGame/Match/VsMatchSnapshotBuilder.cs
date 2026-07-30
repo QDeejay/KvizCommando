@@ -23,7 +23,6 @@ internal static class VsMatchSnapshotBuilder
         new()
         {
             MatchId = match.MatchId,
-            PhaseVersion = match.PhaseVersion,
             ClassificationId =
                 match.Classification.ClassificationId,
             Stake = match.Classification.Stake,
@@ -71,9 +70,9 @@ internal static class VsMatchSnapshotBuilder
                 round.CharacterSlotNumber!.Value)
             .ToHashSet();
 
-        var assignedLoadoutTokens = currentPlayer.Rounds
-            .Where(round => round.LoadoutToken.HasValue)
-            .Select(round => round.LoadoutToken!.Value)
+        var assignedLoadoutPositions = currentPlayer.Rounds
+            .Where(round => round.LoadoutPosition.HasValue)
+            .Select(round => round.LoadoutPosition!.Value)
             .ToHashSet();
 
         return new VsPreparationDto
@@ -104,7 +103,8 @@ internal static class VsMatchSnapshotBuilder
             [
                 .. currentPlayer.Loadout
                     .Where(item =>
-                        !assignedLoadoutTokens.Contains(item.Token))
+                        !assignedLoadoutPositions.Contains(
+                            item.LoadoutPosition))
                     .OrderBy(item => item.LoadoutPosition)
                     .Select(ToLoadoutDto)
             ],
@@ -139,9 +139,10 @@ internal static class VsMatchSnapshotBuilder
                 round.CharacterSlotNumber.Value)
             : null;
 
-        var loadout = round.LoadoutToken.HasValue
+        var loadout = round.LoadoutPosition.HasValue
             ? player.Loadout.FirstOrDefault(item =>
-                item.Token == round.LoadoutToken.Value)
+                item.LoadoutPosition ==
+                round.LoadoutPosition.Value)
             : null;
 
         return new VsPreparationRoundDto
@@ -225,7 +226,6 @@ internal static class VsMatchSnapshotBuilder
         VsMatchLoadoutItemState item) =>
         new()
         {
-            LoadoutToken = item.Token,
             LoadoutPosition = item.LoadoutPosition,
             CategoryId = item.CategoryId,
             IsOwnQuestion = item.IsOwnQuestion,
@@ -264,7 +264,11 @@ internal static class VsMatchSnapshotBuilder
 }
 
 /**
- * ÚJ FÁJL: a szerveroldali meccsállapotból játékosonként
+ * MÓDOSÍTÁS: a snapshot a későbbi reklamációhoz megtartja a publikus
+ * MatchId hivatkozást, technikai fázisverziót nem küld. A
+ * loadoutkiosztást a stabil LoadoutPosition alapján építi.
+ *
+ * A szerveroldali meccsállapotból játékosonként
  * személyre szabott, tiszta SignalR-snapshotokat épít. Nem módosít
  * állapotot és nem küld hálózati üzenetet. A kategóriamódosító
  * lekérése explicit TryGetValue-t használ.

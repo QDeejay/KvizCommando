@@ -171,33 +171,17 @@ public sealed class VsMatchService : IVsMatchService
         lock (match.SyncRoot)
         {
             var player = match.FindByConnection(connectionId);
-
-            if (match.IsClosed ||
-                match.Phase != VsMatchPhase.PreparationOrder ||
-                player is null ||
-                !player.IsConnected ||
-                player.IsFinished ||
-                HasExpired(match) ||
-                player.Characters.All(character =>
-                    character.SlotNumber != slotNumber) ||
-                player.Rounds.Any(round =>
-                    round.CharacterSlotNumber == slotNumber))
-            {
-                return;
-            }
-
-            var target = player.Rounds.FirstOrDefault(round =>
-                !round.IsCaptainRound &&
-                !round.CharacterSlotNumber.HasValue);
+            var target = VsMatchPreparationRules.SelectCharacter(
+                match,
+                player,
+                slotNumber);
 
             if (target is null)
                 return;
 
-            target.CharacterSlotNumber = slotNumber;
-
             AddLog(
                 match,
-                player.PlayerId,
+                player!.PlayerId,
                 "PreparationCharacterSelected",
                 $"Round={target.RoundNumber};Slot={slotNumber}");
 
@@ -225,42 +209,21 @@ public sealed class VsMatchService : IVsMatchService
         lock (match.SyncRoot)
         {
             var player = match.FindByConnection(connectionId);
+            var target = VsMatchPreparationRules.AssignLoadout(
+                match,
+                player,
+                request.LoadoutPosition,
+                request.RoundNumber);
 
-            if (match.IsClosed ||
-                match.Phase != VsMatchPhase.PreparationCategories ||
-                player is null ||
-                !player.IsConnected ||
-                player.IsFinished ||
-                HasExpired(match))
-            {
+            if (target is null)
                 return;
-            }
-
-            var loadout = player.Loadout.FirstOrDefault(item =>
-                item.Token == request.LoadoutToken);
-
-            var target = player.Rounds.FirstOrDefault(round =>
-                !round.IsCaptainRound &&
-                round.RoundNumber == request.RoundNumber);
-
-            if (loadout is null ||
-                target is null ||
-                loadout.IsOwnQuestion ||
-                target.LoadoutToken.HasValue ||
-                player.Rounds.Any(round =>
-                    round.LoadoutToken ==
-                    request.LoadoutToken))
-            {
-                return;
-            }
-
-            target.LoadoutToken = request.LoadoutToken;
 
             AddLog(
                 match,
-                player.PlayerId,
+                player!.PlayerId,
                 "PreparationLoadoutAssigned",
-                $"Round={target.RoundNumber};Token={request.LoadoutToken}");
+                $"Round={target.RoundNumber};" +
+                $"Position={request.LoadoutPosition}");
 
             messages = VsMatchSnapshotBuilder.BuildMessages(match);
         }
@@ -286,46 +249,18 @@ public sealed class VsMatchService : IVsMatchService
         lock (match.SyncRoot)
         {
             var player = match.FindByConnection(connectionId);
+            var target = VsMatchPreparationRules.AssignHelp(
+                match,
+                player,
+                request.HelpType,
+                request.RoundNumber);
 
-            if (match.IsClosed ||
-                match.Phase != VsMatchPhase.PreparationHelps ||
-                player is null ||
-                !player.IsConnected ||
-                player.IsFinished ||
-                HasExpired(match) ||
-                request.HelpType is <= VsHelpType.None or >
-                    VsHelpType.AiSuggestion)
-            {
+            if (target is null)
                 return;
-            }
-
-            var target = player.Rounds.FirstOrDefault(round =>
-                round.RoundNumber == request.RoundNumber);
-
-            if (target is null ||
-                target.HelpType != VsHelpType.None ||
-                !CanUseHelpInRound(
-                    request.HelpType,
-                    target.IsCaptainRound))
-            {
-                return;
-            }
-
-            var available = player.HelpCounts[
-                (int)request.HelpType - 1];
-
-            if (available <= 0 ||
-                player.Rounds.Any(round =>
-                    round.HelpType == request.HelpType))
-            {
-                return;
-            }
-
-            target.HelpType = request.HelpType;
 
             AddLog(
                 match,
-                player.PlayerId,
+                player!.PlayerId,
                 "PreparationHelpAssigned",
                 $"Round={target.RoundNumber};Help={request.HelpType}");
 
@@ -353,39 +288,12 @@ public sealed class VsMatchService : IVsMatchService
         {
             var player = match.FindByConnection(connectionId);
 
-            if (match.IsClosed ||
-                player is null ||
-                !player.IsConnected ||
-                player.IsFinished ||
-                HasExpired(match))
-            {
+            if (!VsMatchPreparationRules.Reset(match, player))
                 return;
-            }
-
-            switch (match.Phase)
-            {
-                case VsMatchPhase.PreparationOrder:
-                    foreach (var round in player.Rounds)
-                        round.CharacterSlotNumber = null;
-                    break;
-
-                case VsMatchPhase.PreparationCategories:
-                    foreach (var round in player.Rounds)
-                        round.LoadoutToken = null;
-                    break;
-
-                case VsMatchPhase.PreparationHelps:
-                    foreach (var round in player.Rounds)
-                        round.HelpType = VsHelpType.None;
-                    break;
-
-                default:
-                    return;
-            }
 
             AddLog(
                 match,
-                player.PlayerId,
+                player!.PlayerId,
                 "PreparationReset",
                 string.Empty);
 
@@ -413,23 +321,12 @@ public sealed class VsMatchService : IVsMatchService
         {
             var player = match.FindByConnection(connectionId);
 
-            if (match.IsClosed ||
-                player is null ||
-                !player.IsConnected ||
-                player.IsFinished ||
-                HasExpired(match) ||
-                !VsMatchPreparationRules.CanFinish(
-                    match.Phase,
-                    player))
-            {
+            if (!VsMatchPreparationRules.Finish(match, player))
                 return;
-            }
-
-            player.IsFinished = true;
 
             AddLog(
                 match,
-                player.PlayerId,
+                player!.PlayerId,
                 "PreparationFinished",
                 string.Empty);
 
@@ -468,7 +365,9 @@ public sealed class VsMatchService : IVsMatchService
             }
 
             player.IsConnected = false;
-            ApplyTimeoutDefaults(match, player);
+            VsMatchPreparationRules.ApplyTimeoutDefaults(
+                match,
+                player);
             player.IsFinished = true;
 
             AddLog(
@@ -532,15 +431,7 @@ public sealed class VsMatchService : IVsMatchService
         match.PhaseTimerCts.Dispose();
         match.PhaseTimerCts = new CancellationTokenSource();
         match.Phase = phase;
-        match.PhaseVersion++;
-
-        foreach (var player in match.Players)
-        {
-            player.IsFinished =
-                !player.IsConnected ||
-                (phase == VsMatchPhase.PreparationHelps &&
-                 player.HelpCounts.All(count => count <= 0));
-        }
+        VsMatchPreparationRules.BeginPhase(match, phase);
 
         if (phase == VsMatchPhase.PreparationCompleted)
         {
@@ -565,14 +456,12 @@ public sealed class VsMatchService : IVsMatchService
 
         _ = RunPhaseTimerAsync(
             match.MatchId,
-            match.PhaseVersion,
             match.DeadlineUtc.Value,
             match.PhaseTimerCts.Token);
     }
 
     private async Task RunPhaseTimerAsync(
         Guid matchId,
-        long phaseVersion,
         DateTime deadlineUtc,
         CancellationToken ct)
     {
@@ -581,6 +470,9 @@ public sealed class VsMatchService : IVsMatchService
             var delay = deadlineUtc - DateTime.UtcNow;
             if (delay > TimeSpan.Zero)
                 await Task.Delay(delay, ct);
+
+            if (ct.IsCancellationRequested)
+                return;
 
             if (!_store.TryGet(matchId, out var match) ||
                 match is null)
@@ -592,12 +484,9 @@ public sealed class VsMatchService : IVsMatchService
 
             lock (match.SyncRoot)
             {
-                if (match.IsClosed ||
-                    match.PhaseVersion != phaseVersion ||
-                    match.DeadlineUtc != deadlineUtc)
-                {
+                if (ct.IsCancellationRequested ||
+                    match.IsClosed)
                     return;
-                }
 
                 if (match.Profile.PausePreparationOnTimeout)
                 {
@@ -612,7 +501,9 @@ public sealed class VsMatchService : IVsMatchService
                 foreach (var player in match.Players
                              .Where(player => !player.IsFinished))
                 {
-                    ApplyTimeoutDefaults(match, player);
+                    VsMatchPreparationRules.ApplyTimeoutDefaults(
+                        match,
+                        player);
                     player.IsFinished = true;
                     AddLog(
                         match,
@@ -643,110 +534,12 @@ public sealed class VsMatchService : IVsMatchService
 
     private void AdvanceIfReadyLocked(VsMatchSession match)
     {
-        if (match.Players.Any(player => !player.IsFinished))
-            return;
+        var nextPhase =
+            VsMatchPreparationRules.GetNextPhase(match);
 
-        switch (match.Phase)
-        {
-            case VsMatchPhase.PreparationOrder:
-                StartPhaseLocked(
-                    match,
-                    VsMatchPhase.PreparationCategories);
-                break;
-
-            case VsMatchPhase.PreparationCategories:
-                StartPhaseLocked(
-                    match,
-                    match.Players.Any(player =>
-                        player.HelpCounts.Any(count => count > 0))
-                        ? VsMatchPhase.PreparationHelps
-                        : VsMatchPhase.PreparationCompleted);
-                break;
-
-            case VsMatchPhase.PreparationHelps:
-                StartPhaseLocked(
-                    match,
-                    VsMatchPhase.PreparationCompleted);
-                break;
-        }
+        if (nextPhase.HasValue)
+            StartPhaseLocked(match, nextPhase.Value);
     }
-
-    private static void ApplyTimeoutDefaults(
-        VsMatchSession match,
-        VsMatchPlayerState player)
-    {
-        switch (match.Phase)
-        {
-            case VsMatchPhase.PreparationOrder:
-            {
-                var usedSlots = player.Rounds
-                    .Where(round =>
-                        round.CharacterSlotNumber.HasValue)
-                    .Select(round =>
-                        round.CharacterSlotNumber!.Value)
-                    .ToHashSet();
-
-                var remainingSlots = player.Characters
-                    .Where(character =>
-                        !usedSlots.Contains(character.SlotNumber))
-                    .Select(character => character.SlotNumber)
-                    .ToQueue();
-
-                foreach (var round in player.Rounds.Where(round =>
-                             !round.IsCaptainRound &&
-                             !round.CharacterSlotNumber.HasValue))
-                {
-                    round.CharacterSlotNumber =
-                        remainingSlots.Dequeue();
-                }
-
-                break;
-            }
-
-            case VsMatchPhase.PreparationCategories:
-            {
-                var usedTokens = player.Rounds
-                    .Where(round => round.LoadoutToken.HasValue)
-                    .Select(round => round.LoadoutToken!.Value)
-                    .ToHashSet();
-
-                var remainingTokens = player.Loadout
-                    .Where(item =>
-                        !item.IsOwnQuestion &&
-                        !usedTokens.Contains(item.Token))
-                    .OrderBy(item => item.LoadoutPosition)
-                    .Select(item => item.Token)
-                    .ToQueue();
-
-                foreach (var round in player.Rounds.Where(round =>
-                             !round.IsCaptainRound &&
-                             !round.LoadoutToken.HasValue))
-                {
-                    round.LoadoutToken =
-                        remainingTokens.Dequeue();
-                }
-
-                break;
-            }
-        }
-    }
-
-    private static bool CanUseHelpInRound(
-        VsHelpType helpType,
-        bool isCaptainRound) =>
-        helpType switch
-        {
-            VsHelpType.FiftyFifty => true,
-            VsHelpType.GuessRange => !isCaptainRound,
-            VsHelpType.TimeFreeze => !isCaptainRound,
-            VsHelpType.AiSuggestion => true,
-            _ => false
-        };
-
-    private static bool HasExpired(VsMatchSession match) =>
-        !match.Profile.PausePreparationOnTimeout &&
-        match.DeadlineUtc.HasValue &&
-        DateTime.UtcNow >= match.DeadlineUtc.Value;
 
     private async Task BroadcastMatchAsync(
         VsMatchSession match)
@@ -804,21 +597,15 @@ public sealed class VsMatchService : IVsMatchService
     }
 }
 
-internal static class VsMatchEnumerableExtensions
-{
-    internal static Queue<T> ToQueue<T>(
-        this IEnumerable<T> source) =>
-        new(source);
-}
-
 /**
- * MÓDOSÍTÁS: megszűnt az általános Func-delegáltas
- * ExecuteCommand-metóduslánc. Minden kliensparancsnak rövid, explicit,
- * szerveroldali validációs és állapotmódosító útja van. Az in-memory
- * állapot csak await nélküli lock alatt változik; a személyre szabott
- * snapshotok elkészítése még ugyanott, a SignalR-küldés már a lockon
- * kívül történik. A meccs inicializálását a VsMatchSetupService, a DTO-
- * építést a VsMatchSnapshotBuilder végzi.
+ * MÓDOSÍTÁS: a preparáció feltételei és állapotmódosításai a
+ * VsMatchPreparationRules osztályba kerültek. A service publikus
+ * műveletei rövid, explicit koordinátorok maradtak: sessionkeresés,
+ * lock, naplózás, fázisváltás és snapshot-küldés. A fázis időzítőjét
+ * kizárólag a saját CancellationTokenje érvényteleníti; technikai
+ * PhaseVersion és az egyszer használatos ToQueue segéd megszűnt.
+ * Az in-memory állapot csak await nélküli lock alatt változik, a
+ * SignalR-küldés a lockon kívül történik.
  *
  * A fájl a MatchLocked session létrehozását, a preparációs parancsok
  * authoritative feldolgozását, a fázisváltást, a szerverórát és a

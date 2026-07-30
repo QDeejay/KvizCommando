@@ -233,7 +233,6 @@ public sealed class VsMatchViewBuilder
     {
         return new VsLoadoutCardVm
         {
-            LoadoutToken = loadout.LoadoutToken,
             LoadoutPosition = loadout.LoadoutPosition,
             CategoryId = loadout.CategoryId,
             CategoryName = ResolveCategoryName(
@@ -303,7 +302,9 @@ public sealed class VsMatchViewBuilder
 }
 
 /**
- * MÓDOSÍTÁS: a queue publikus játékosadataiból is ugyanazzal a
+ * MÓDOSÍTÁS: a meccsazonosító a későbbi reklamációhoz megmaradt, a
+ * LoadoutPosition mellett felesleges loadout-token leképezése
+ * megszűnt. A queue publikus játékosadataiból továbbra is ugyanazzal a
  * BuildPlayer leképezéssel készít lobby rostert.
  *
  * A szerver snapshotjából lokalizált neveket, meglévő Solo

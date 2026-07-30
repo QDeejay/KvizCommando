@@ -13,7 +13,6 @@ public sealed class VsMatchSession : IDisposable
     public List<VsMatchEventLogEntry> EventLog { get; } = [];
 
     public VsMatchPhase Phase { get; set; } = VsMatchPhase.MatchLocked;
-    public long PhaseVersion { get; set; }
     public DateTime? DeadlineUtc { get; set; }
     public CancellationTokenSource PhaseTimerCts { get; set; } = new();
     public bool IsInitializing { get; set; } = true;
@@ -61,7 +60,6 @@ public sealed class VsMatchCharacterState
 
 public sealed class VsMatchLoadoutItemState
 {
-    public Guid Token { get; init; } = Guid.NewGuid();
     public int LoadoutPosition { get; init; }
     public int CategoryId { get; init; }
     public int QuestionId { get; init; }
@@ -77,7 +75,7 @@ public sealed class VsMatchRoundState
     public int RoundNumber { get; init; }
     public bool IsCaptainRound { get; init; }
     public int? CharacterSlotNumber { get; set; }
-    public Guid? LoadoutToken { get; set; }
+    public int? LoadoutPosition { get; set; }
     public VsHelpType HelpType { get; set; }
 }
 
@@ -105,11 +103,9 @@ public sealed class VsOwnQuestionSeed
 }
 
 /**
- * MÓDOSÍTÁS: az in-memory állapot rövid, await nélküli kritikus
- * szakaszai egyszerű SyncRoot lockot használnak. Az IsInitializing
- * megakadályozza, hogy a match lock közbeni disconnect félbehagyott
- * tétfoglalást hozzon létre; az IsClosed kizárja a törölt session
- * további módosítását.
+ * MÓDOSÍTÁS: a fázis időzítőjét kizárólag a saját cancellation tokenje
+ * azonosítja, ezért a PhaseVersion megszűnt. A kiosztott loadout elem
+ * az eleve egyedi LoadoutPosition értékkel szerepel a sessionben.
  *
  * Egy lezárt meccs teljes, szerveroldali és authoritative állapotát
  * tartalmazza. A SignalR Hub nem őriz játékállapotot.

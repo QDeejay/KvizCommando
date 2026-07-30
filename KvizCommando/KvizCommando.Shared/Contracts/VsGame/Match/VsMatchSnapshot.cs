@@ -5,7 +5,6 @@ namespace KvizCommando.Shared.Contracts.VsGame.Match;
 public sealed class VsMatchSnapshot
 {
     public Guid MatchId { get; set; }
-    public long PhaseVersion { get; set; }
     public int ClassificationId { get; set; }
     public int Stake { get; set; }
     public VsMatchPhase Phase { get; set; }
@@ -61,7 +60,6 @@ public sealed class VsCharacterCardDto
 
 public sealed class VsLoadoutCardDto
 {
-    public Guid LoadoutToken { get; set; }
     public int LoadoutPosition { get; set; }
     public int CategoryId { get; set; }
     public bool IsOwnQuestion { get; set; }
@@ -83,6 +81,10 @@ public sealed class VsCategoryModifierDto
 }
 
 /**
+ * MÓDOSÍTÁS: a technikai PhaseVersion és a LoadoutPosition mellett
+ * felesleges LoadoutToken kikerült. A MatchId publikus hivatkozási
+ * számként megmarad a későbbi reklamációhoz és admin-visszakereséshez.
+ *
  * Egy játékosra szabott VS snapshot. Csak a megjelenítéshez és az
  * aktuálisan engedélyezett preparációs műveletekhez szükséges adatokat
  * küldi ki; kérdésszöveget és helyes választ nem tartalmaz.

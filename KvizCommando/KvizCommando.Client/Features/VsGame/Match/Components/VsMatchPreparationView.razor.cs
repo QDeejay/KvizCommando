@@ -30,7 +30,7 @@ public partial class VsMatchPreparationView : IDisposable
 
     private System.Threading.Timer? _timer;
 
-    private Guid? _selectedLoadoutToken;
+    private int? _selectedLoadoutPosition;
     private int? _selectedCategoryId;
     private VsHelpType _selectedHelp = VsHelpType.None;
     private VsMatchPhase? _lastPhase;
@@ -70,16 +70,17 @@ public partial class VsMatchPreparationView : IDisposable
         if (_lastPhase != Data.Phase)
         {
             _lastPhase = Data.Phase;
-            _selectedLoadoutToken = null;
+            _selectedLoadoutPosition = null;
             _selectedCategoryId = null;
             _selectedHelp = VsHelpType.None;
         }
 
-        if (_selectedLoadoutToken.HasValue &&
+        if (_selectedLoadoutPosition.HasValue &&
             Data.Preparation.Loadout.All(item =>
-                item.LoadoutToken != _selectedLoadoutToken.Value))
+                item.LoadoutPosition !=
+                _selectedLoadoutPosition.Value))
         {
-            _selectedLoadoutToken = null;
+            _selectedLoadoutPosition = null;
             _selectedCategoryId = null;
         }
 
@@ -148,7 +149,7 @@ public partial class VsMatchPreparationView : IDisposable
             return;
         }
 
-        _selectedLoadoutToken = loadout.LoadoutToken;
+        _selectedLoadoutPosition = loadout.LoadoutPosition;
         _selectedCategoryId = loadout.CategoryId;
     }
 
@@ -158,7 +159,7 @@ public partial class VsMatchPreparationView : IDisposable
         !Data.Preparation.IsFinished &&
         !round.IsCaptainRound &&
         round.Loadout is null &&
-        _selectedLoadoutToken.HasValue;
+        _selectedLoadoutPosition.HasValue;
 
     private async Task AssignCategoryAsync(
         VsPreparationRoundVm round)
@@ -169,12 +170,12 @@ public partial class VsMatchPreparationView : IDisposable
         await OnLoadoutAssigned.InvokeAsync(
             new VsLoadoutAssignmentRequest
             {
-                LoadoutToken =
-                    _selectedLoadoutToken!.Value,
+                LoadoutPosition =
+                    _selectedLoadoutPosition!.Value,
                 RoundNumber = round.RoundNumber
             });
 
-        _selectedLoadoutToken = null;
+        _selectedLoadoutPosition = null;
         _selectedCategoryId = null;
     }
 
@@ -258,7 +259,7 @@ public partial class VsMatchPreparationView : IDisposable
 
     private async Task ResetAsync()
     {
-        _selectedLoadoutToken = null;
+        _selectedLoadoutPosition = null;
         _selectedCategoryId = null;
         _selectedHelp = VsHelpType.None;
         await OnReset.InvokeAsync();
@@ -272,7 +273,9 @@ public partial class VsMatchPreparationView : IDisposable
 }
 
 /**
- * MÓDOSÍTÁS: fázisváltáskor törli az előző fázis lokális kijelölését,
+ * MÓDOSÍTÁS: a kategóriakijelölés a szerver által kiosztott, egyedi
+ * LoadoutPosition értéket használja; a külön GUID-token megszűnt.
+ * Fázisváltáskor törli az előző fázis lokális kijelölését,
  * a kiválasztott vagy már kiosztott kategória alapján jeleníti meg a
  * körönkénti módosítót, és a markup számára előállítja a prep/inventory
  * feliratokat, a fázishoz tartozó inventory CSS-osztályt és a
