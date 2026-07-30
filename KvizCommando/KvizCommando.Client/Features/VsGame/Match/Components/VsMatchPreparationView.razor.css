@@ -334,7 +334,7 @@
 }
 
 .kc-vs-prep-inventory {
-    height: 158px;
+    height: 215px;
     margin: 0 6px;
     padding: 7px 10px 9px;
     display: grid;
@@ -348,10 +348,7 @@
     box-shadow: inset 0 0 9px rgba(0, 0, 0, .55);
 }
 
-.kc-vs-prep-inventory.characters,
-.kc-vs-prep-inventory.categories {
-    height: 215px;
-}
+
 
 .kc-vs-prep-inventory > header {
     height: 20px;

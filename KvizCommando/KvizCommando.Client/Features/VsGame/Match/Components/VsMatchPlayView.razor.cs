@@ -158,7 +158,7 @@ public partial class VsMatchPlayView : IDisposable
         Data.Players
             .FirstOrDefault(player =>
                 player.Position == position)
-            ?.TeamName ?? position.ToString();
+            ?.DisplayName ?? position.ToString();
 
     private static string Signed(int value) =>
         value > 0 ? $"+{value}" : value.ToString();

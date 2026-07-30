@@ -20,7 +20,7 @@ public partial class VsMatchRoster
         $"{value:0.0}s";
 
     private static string ModifierText(double value) =>
-        $"({(value > 0 ? "+" : string.Empty)}{value:0.0}s)";
+        $"{(value > 0 ? "+" : string.Empty)}{value:0.0}s";
 
     private static string ModifierClass(double value) =>
         value > 0

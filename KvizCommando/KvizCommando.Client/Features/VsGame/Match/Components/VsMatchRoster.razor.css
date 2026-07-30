@@ -80,7 +80,6 @@
     min-width: 0;
     display: grid;
     justify-items: center;
-    gap: 2px;
 }
 
 .kc-vs-roster-avatar {
@@ -113,9 +112,12 @@
 }
 
 .kc-vs-roster-modifier {
+    position: absolute;
+    top: 7px;
+    right: 7px;
     line-height: 1;
     font-family: 'Share Tech Mono', monospace;
-    font-size: .62rem;
+    font-size: 1rem;
 }
 
 .kc-vs-roster-modifier.positive {
@@ -159,6 +161,10 @@
     font-size: .76rem;
 }
 
+.kc-vs-roster-card.has-modifier .kc-vs-roster-data > strong {
+    padding-right: 58px;
+}
+
 .kc-vs-roster-data strong,
 .kc-vs-roster-data span,
 .kc-vs-roster-data small {
@@ -177,6 +183,14 @@
     color: #b9b9af;
     font-size: .7rem;
 }
+
+    .kc-vs-roster-data small.male {
+        color: lightblue;
+    }
+
+    .kc-vs-roster-data small.female {
+        color: pink;
+    }
 
 .kc-vs-roster-state {
     position: absolute;
@@ -209,7 +223,9 @@
  * MÓDOSÍTÁS: a karakter-SVG hostja a bevált portréarányú szülőben
  * marad, a játéknézet pedig kompakt pont/idő mezőt kapott.
  * A CharacterView a teljes portrékerethez igazodik; az időmódosító
- * csak a már használt piros, zöld vagy szürke szövegszínt kapja.
+ * a kártya jobb felső sarkában, a pontszám méretével és a már
+ * használt piros, zöld vagy szürke szövegszínnel jelenik meg.
+ * A karakter neve a RecruitCard férfi/női színeit használja.
  *
  * MÓDOSÍTÁS: a karakterportré rétegzése a SoloGame működő
  * szülő/abszolút SVG-host megoldását követi. A CharacterView negatív

@@ -9,7 +9,7 @@
 
     @foreach (var player in Players)
     {
-        <article class="kc-vs-roster-card @(player.IsMe ? "me" : "") @(!player.IsConnected ? "disconnected" : "")">
+        <article class="kc-vs-roster-card @(player.IsMe ? "me" : "") @(!player.IsConnected ? "disconnected" : "") @(player.IsMe && CurrentTimeModifierSeconds.HasValue ? "has-modifier" : "")">
             <div class="kc-vs-roster-visual">
                 <div class="kc-vs-roster-avatar">
                     @if (player.ActiveCharacter is not null)
@@ -26,24 +26,30 @@
                              alt="@player.TeamName" />
                     }
                 </div>
-
-                @if (player.IsMe &&
-                     CurrentTimeModifierSeconds.HasValue)
-                {
-                    <small class="kc-vs-roster-modifier @ModifierClass(CurrentTimeModifierSeconds.Value)">
-                        @ModifierText(CurrentTimeModifierSeconds.Value)
-                    </small>
-                }
             </div>
 
             <div class="kc-vs-roster-data">
                 <strong title="@player.TeamName">@player.TeamName</strong>
                 <span title="@player.DisplayName">@player.DisplayName</span>
-                <small>
-                    @(player.ActiveCharacter?.Name ??
-                      player.TeamLevel)
-                </small>
+                @if (player.ActiveCharacter is not null)
+                {
+                    <small class="@(player.ActiveCharacter.PictureCode[0] == 'M' ? "male" : "female")">
+                        @player.ActiveCharacter.Name
+                    </small>
+                }
+                else
+                {
+                    <small>@player.TeamLevel</small>
+                }
             </div>
+
+            @if (player.IsMe &&
+                 CurrentTimeModifierSeconds.HasValue)
+            {
+                <strong class="kc-vs-roster-modifier @ModifierClass(CurrentTimeModifierSeconds.Value)">
+                    @ModifierText(CurrentTimeModifierSeconds.Value)
+                </strong>
+            }
 
             @if (ShowScore)
             {
@@ -78,8 +84,10 @@
     MÓDOSÍTÁS: normál körben a korlátozott karakter-SVG-t, a többi
     fázisban a csapatavatart mutatja; játéknál összpontot és összidőt
     jelenít meg.
-    MÓDOSÍTÁS: a saját kártya képe alatt, amikor releváns, az aktuális
-    időmódosítót is megjeleníti.
+    MÓDOSÍTÁS: a saját kártya jobb felső sarkában, amikor releváns,
+    az aktuális időmódosítót is megjeleníti. Aktív karakter esetén
+    annak neve a PictureCode első betűje alapján férfi/női színt kap;
+    a csapatszint színe változatlan.
 
     A meccs teljes ideje alatt látható, kompakt ellenfél- és
     csapatkártya-sáv.
