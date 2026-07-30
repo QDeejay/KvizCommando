@@ -200,6 +200,7 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
             return CreateState(
                 plan.LoadoutPosition,
                 plan.DisplayCategoryId,
+                plan.OwnQuestion.CategoryId,
                 plan.OwnQuestion.QuestionId,
                 true,
                 false,
@@ -212,6 +213,7 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
         return CreateState(
             plan.LoadoutPosition,
             plan.DisplayCategoryId,
+            question.CategoryNo,
             question.Id,
             false,
             plan.DisplayCategoryId ==
@@ -223,6 +225,7 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
     private static VsMatchLoadoutItemState CreateState(
         int loadoutPosition,
         int categoryId,
+        int questionCategoryId,
         int questionId,
         bool isOwnQuestion,
         bool isAllCategories,
@@ -244,6 +247,7 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
         {
             LoadoutPosition = loadoutPosition,
             CategoryId = categoryId,
+            QuestionCategoryId = questionCategoryId,
             QuestionId = questionId,
             IsOwnQuestion = isOwnQuestion,
             IsAllCategories = isAllCategories,
@@ -281,6 +285,9 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
  * MÓDOSÍTÁS: a 99-es indexből a normál körök számának megfelelő,
  * egyedi tippkérdést is kiválaszt, és ugyanabban az inicializálási
  * lépésben kötegelve betölti őket.
+ * Az „összes kategória” loadoutelemén megőrzi a 0-s megjelenítési
+ * értéket, a játékhoz viszont a kisorsolt kérdés valódi kategóriáját
+ * adja tovább.
  *
  * A kategóriánkénti ID-indexből kiválasztja a meccs kérdéseit,
  * majd kötegelt adatbázis-lekéréssel meccsszintű, kevert állapotot

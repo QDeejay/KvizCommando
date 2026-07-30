@@ -4,6 +4,7 @@ using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.VsGame.Match;
 using KvizCommando.Shared.Models.Enums.VsGame;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using System.Globalization;
 
 namespace KvizCommando.Client.Features.VsGame.Match.Components;
@@ -186,6 +187,12 @@ public partial class VsMatchPlayView : IDisposable
         }
     }
 
+    private Task HandleGuessKeyDownAsync(
+        KeyboardEventArgs args) =>
+        args.Key == "Enter"
+            ? SubmitGuessAsync()
+            : Task.CompletedTask;
+
     private async Task SubmitChoiceAsync(int answerIndex)
     {
         if (!Data.Game.CanAnswer || _sending)
@@ -248,4 +255,6 @@ public partial class VsMatchPlayView : IDisposable
  * A teljes MatchId-ből csak megjelenítési célú rövid hivatkozást képez.
  * MÓDOSÍTÁS: külön kezeli a válaszadási idősort és a színezés nélküli,
  * kör alakú várakozási visszaszámlálót.
+ * MÓDOSÍTÁS: Enter esetén ugyanazt az ellenőrzött tippbeküldő
+ * handlert hívja, mint a megjelenített BI gomb.
  */

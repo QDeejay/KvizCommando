@@ -6,12 +6,11 @@
     min-height: 0;
     padding: 10px;
     display: grid;
-    grid-template-rows: 42px 58px minmax(0, 1fr) 64px;
+    grid-template-rows: 42px 58px minmax(0, 1fr);
     grid-template-areas:
         "title"
         "timer"
-        "body"
-        "progress";
+        "body";
     gap: 8px;
     overflow: hidden;
     box-sizing: border-box;
@@ -22,6 +21,15 @@
     box-shadow:
         inset 0 0 0 1px #55584a,
         inset 0 0 16px rgba(0, 0, 0, .75);
+}
+
+.kc-vs-play.with-progress {
+    grid-template-rows: 42px 58px minmax(0, 1fr) 64px;
+    grid-template-areas:
+        "title"
+        "timer"
+        "body"
+        "progress";
 }
 
 .kc-vs-play-title {
@@ -289,6 +297,17 @@
     font-size: 1.25rem;
 }
 
+.kc-vs-guess input[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.kc-vs-guess input[type="number"]::-webkit-inner-spin-button,
+.kc-vs-guess input[type="number"]::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+}
+
 .kc-vs-guess .button-on-lcd {
     width: 50px;
     height: 42px;
@@ -345,6 +364,15 @@
 
 .kc-vs-question-status .negative {
     color: #d15f52;
+}
+
+.kc-vs-question-time {
+    color: #aaa99f;
+    white-space: nowrap;
+}
+
+.kc-vs-speed-bonus {
+    color: #c6ef39;
 }
 
 .kc-vs-question-status > .kc-vs-play-help {
@@ -500,10 +528,6 @@
     box-sizing: border-box;
 }
 
-.kc-vs-progress.empty {
-    visibility: hidden;
-}
-
 .kc-vs-progress > span {
     position: relative;
     width: 38px;
@@ -591,9 +615,15 @@
 /*
  * ÚJ FÁJL: a SoloGame katonai/LCD világára épülő VS játéknézet
  * formázása. A válaszok egy oszlopban, a kérdések és köreredmények
- * görgethető belső testben, a progressz pedig rögzített láblécben
- * jelenik meg.
+ * görgethető belső testben, a progressz pedig a komponens saját
+ * alsó grid-sorában jelenik meg.
  * MÓDOSÍTÁS: a title és a válaszidő a bevált Solo/VS struktúrát
  * követi; a stabil grid-sorok a progresszt a content boxban tartják.
  * A várakozási idő egyszínű, kör alakú visszaszámláló.
+ * MÓDOSÍTÁS: a progressz csak akkor kap saját grid-sort, amikor
+ * ténylegesen látható, és nem footer elemként jelenik meg. A subkör
+ * eredménysorában kompakt nyers/módosított idő és gyorsasági jelzés
+ * magyarázza a kizárólag ott kiosztott pluszpontot.
+ * MÓDOSÍTÁS: a számbecslés beviteli mezőjén a böngésző natív
+ * léptetőnyilai nem jelennek meg.
  */

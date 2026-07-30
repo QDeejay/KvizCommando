@@ -85,8 +85,6 @@
 
 .kc-vs-roster-avatar {
     position: relative;
-    z-index: 0;
-    isolation: isolate;
     width: 52px;
     height: 66px;
     display: grid;
@@ -104,14 +102,6 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-}
-
-.kc-vs-roster-svg-host ::deep .pic-display {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    box-sizing: border-box;
 }
 
 .kc-vs-roster-avatar img {
@@ -218,6 +208,10 @@
  * marad, a játéknézet pedig kompakt pont/idő mezőt kapott.
  * A CharacterView a teljes portrékerethez igazodik; az időmódosító
  * csak a már használt piros, zöld vagy szürke szövegszínt kapja.
+ *
+ * MÓDOSÍTÁS: a karakterportré rétegzése a SoloGame működő
+ * szülő/abszolút SVG-host megoldását követi; külön stacking context
+ * és a CharacterView belső stílusának felülírása nélkül.
  *
  * A fájl kizárólag a VS meccs publikus játékoslistáját formázza.
  */

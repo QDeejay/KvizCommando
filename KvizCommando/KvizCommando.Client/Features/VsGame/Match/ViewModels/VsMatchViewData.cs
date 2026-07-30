@@ -71,7 +71,6 @@ public sealed class VsCharacterCardVm
     public string PictureCode { get; set; } = string.Empty;
     public string LevelText { get; set; } = string.Empty;
     public string OrientationName { get; set; } = string.Empty;
-    public string OrientationImageSrc { get; set; } = string.Empty;
 }
 
 public sealed class VsLoadoutCardVm
@@ -181,6 +180,9 @@ public sealed class VsCaptainQuestionVm
  * progressz, köreredmény és kapitányi kérdésválasztás kizárólag
  * megjelenítési célú modelljeit.
  * A saját aktuális időmódosító szintén csak megjelenítési adat.
+ * MÓDOSÍTÁS: a karaktermodell csak az SVG PictureCode-ot és a
+ * preparációban használt orientációnevet tartja; külön orientációs
+ * képútvonalra nincs szüksége.
  *
  * A VS lobby, roster, preparáció és játéknézet view modeljeit
  * tartalmazza.

@@ -11,8 +11,6 @@ public sealed class VsMatchViewBuilder
 {
     private const string CATEGORY_IMAGE_ROOT =
         "images/buttons/solo/categories";
-    private const string ORIENTATION_IMAGE_ROOT =
-        "images/buttons/solo/orients";
 
     private static readonly string[] CategoryFileNames =
     [
@@ -33,19 +31,6 @@ public sealed class VsMatchViewBuilder
         "geo_astro",
         "fashion",
         "literature"
-    ];
-
-    private static readonly string[] OrientationFileNames =
-    [
-        "",
-        "teologist",
-        "historian",
-        "artist",
-        "gamer",
-        "engineer",
-        "scientist",
-        "trendy",
-        "educated"
     ];
 
     private readonly ILanguageService _lang;
@@ -277,18 +262,13 @@ public sealed class VsMatchViewBuilder
         VsMatchPlayerDto player,
         string? culture = null)
     {
-        var rankIndex = Math.Clamp(
-            player.TeamLevel,
-            0,
-            RankNameTable.Data.Count - 1);
-
         return new VsRosterPlayerVm
         {
             Position = player.Position,
             DisplayName = player.DisplayName,
             TeamName = player.TeamName,
             TeamLevel =
-                RankNameTable.Data[rankIndex].PublicLevel ??
+                RankNameTable.Data[player.TeamLevel].PublicLevel ??
                 string.Empty,
             TeamPictureSrc =
                 "images/avatars/basic.webp",
@@ -311,31 +291,18 @@ public sealed class VsMatchViewBuilder
         VsCharacterCardDto character,
         string culture)
     {
-        var levelIndex = Math.Clamp(
-            character.Level,
-            0,
-            RankNameTable.Data.Count - 1);
-
-        var orientationId = Math.Clamp(
-            character.OrientationId,
-            1,
-            OrientationFileNames.Length - 1);
-
         return new VsCharacterCardVm
         {
             SlotNumber = character.SlotNumber,
             Name = character.Name,
             PictureCode = character.PictureCode,
             LevelText =
-                RankNameTable.Data[levelIndex].PublicLevel ??
+                RankNameTable.Data[character.Level].PublicLevel ??
                 string.Empty,
             OrientationName =
                 OrientationLocalizer.GetOrientation(
-                    orientationId,
-                    culture),
-            OrientationImageSrc =
-                $"{ORIENTATION_IMAGE_ROOT}/" +
-                $"{OrientationFileNames[orientationId]}.webp"
+                    character.OrientationId,
+                    culture)
         };
     }
 
@@ -423,6 +390,10 @@ public sealed class VsMatchViewBuilder
  * alakítja; a kapitányi kérdésekhez ugyanazt a meglévő kategória-
  * kép- és névfeloldást használja.
  * A szerveren számolt saját időmódosítót változtatás nélkül viszi át.
+ * MÓDOSÍTÁS: a garantáltan érvényes csapat- és karakterszinteket,
+ * illetve orientációt közvetlenül használja; nem clampeli őket.
+ * A karakter view modelből kikerült a sehol nem használt orientációs
+ * képútvonal, mert a kártyákon a CharacterView SVG jelenik meg.
  *
  * A szerver snapshotjából lokalizált neveket, meglévő Solo képeket
  * és VS view modelleket épít. DI-be nem kerül.

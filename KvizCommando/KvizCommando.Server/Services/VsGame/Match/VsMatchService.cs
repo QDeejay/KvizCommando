@@ -794,12 +794,17 @@ public sealed class VsMatchService : IVsMatchService
         match.PhaseTimerCts.Cancel();
         match.PhaseTimerCts.Dispose();
         match.PhaseTimerCts = new CancellationTokenSource();
-        match.DeadlineUtc = DateTime.UtcNow.AddSeconds(
+
+        var answerResultUtc = DateTime.UtcNow.AddSeconds(
             match.Profile.AnswerRevealDelaySeconds);
+        var closeUtc = match.DeadlineUtc.HasValue &&
+                       match.DeadlineUtc.Value < answerResultUtc
+            ? match.DeadlineUtc.Value
+            : answerResultUtc;
 
         _ = RunPhaseTimerAsync(
             match.MatchId,
-            match.DeadlineUtc.Value,
+            closeUtc,
             match.PhaseTimerCts.Token);
     }
 
@@ -991,8 +996,9 @@ public sealed class VsMatchService : IVsMatchService
  * MÓDOSÍTÁS: ugyanazzal az egy szerveridőzítővel koordinálja a tipp-,
  * normál-, eredmény- és kapitányfázisokat, miközben a szabályokat és
  * a pontozást a két statikus domain-segédben hagyja.
- * Az utolsó válasz után egy másodperces eredmény-előkészítési időt
- * hagy, majd ugyanaz a fázisidőzítő zárja a kérdést.
+ * Az utolsó válasz után a profilban megadott rövid ideig az eredeti
+ * kérdésóra fut tovább; ha abból kevesebb maradt, a nulla a határ.
+ * Ezután ugyanaz a fázisidőzítő zárja a kérdést.
  *
  * A fájl a MatchLocked session létrehozását, a parancsok authoritative
  * feldolgozását, a fázisváltást, a szerverórát és a disconnect miatti

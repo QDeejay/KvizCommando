@@ -314,7 +314,7 @@ internal static class VsMatchGameRules
             CorrectOptionIndex =
                 loadout.CorrectOptionIndex,
             QuestionerPosition = questionerPosition,
-            CategoryId = loadout.CategoryId
+            CategoryId = loadout.QuestionCategoryId
         };
 
     private static void ResetRoundState(VsMatchSession match)
@@ -360,4 +360,7 @@ internal static class VsMatchGameRules
  * publikus parancs szerveroldali validálását tartalmazza. Nem kezel
  * hálózatot, időzítőt vagy adatbázist; a válasz kizárólag az aktuális
  * fázis és QuestionNumber esetén kerül a sessionbe.
+ * MÓDOSÍTÁS: a játékkérdés a loadout megjelenítési kategóriája
+ * helyett a tényleges kérdéskategóriát kapja, így az „összes”
+ * választás időmódosítója is ugyanúgy működik.
  */

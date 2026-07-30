@@ -1,7 +1,7 @@
 @using KvizCommando.Client.Features.VsGame.Match.ViewModels
 @using KvizCommando.Shared.Models.Enums.VsGame
 
-<section class="kc-vs-play">
+<section class="kc-vs-play @(ShowProgress ? "with-progress" : "")">
     <header class="kc-vs-play-title">
         <strong>@Data.InfoText</strong>
         <span title="@Data.MatchId">
@@ -187,6 +187,7 @@
                                    step="any"
                                    @bind="_guessValue"
                                    @bind:event="oninput"
+                                   @onkeydown="HandleGuessKeyDownAsync"
                                    disabled="@(!Data.Game.CanAnswer || _sending)" />
                             <button type="button"
                                     class="button-on-lcd"
@@ -230,6 +231,22 @@
 
                         @if (Data.Phase == VsMatchPhase.QuestionResult)
                         {
+                            @if (player.ModifiedTimeSeconds.HasValue)
+                            {
+                                <small class="kc-vs-question-time"
+                                       title="@Lang["vsgame.Match.Game.FastestBonus"]">
+                                    @Seconds(player.AnswerTimeSeconds)
+                                    <i class="bi bi-arrow-right-short"></i>
+                                    @Seconds(player.ModifiedTimeSeconds.Value)
+                                </small>
+                            }
+
+                            @if (player.HasSpeedBonus)
+                            {
+                                <i class="bi bi-lightning-charge-fill kc-vs-speed-bonus"
+                                   title="@Lang["vsgame.Match.Game.FastestBonus"]"></i>
+                            }
+
                             <strong class="@(player.Points >= 0 ? "positive" : "negative")">
                                 @Signed(player.Points)
                             </strong>
@@ -253,9 +270,9 @@
         }
     </div>
 
-    <footer class="kc-vs-progress @(ShowProgress ? string.Empty : "empty")">
-        @if (ShowProgress)
-        {
+    @if (ShowProgress)
+    {
+        <div class="kc-vs-progress">
             @foreach (var step in Data.Game.Progress)
             {
                 <span class="@(step.IsCompleted ? "completed" : "") @(step.IsCurrent ? "current" : "")">
@@ -279,8 +296,8 @@
                 @MyRoundPoints
                 <small>@Seconds(MyRoundTime)</small>
             </strong>
-        }
-    </footer>
+        </div>
+    }
 </section>
 
 @*
@@ -292,4 +309,10 @@
     MÓDOSÍTÁS: a bevált title- és időstruktúrát, ikon-only BI
     beküldőgombot, külön tipp-eredménymezőt és állandó progresszsort
     használja.
+    MÓDOSÍTÁS: a progressz normál grid-elem, ezért nem érinti a
+    globális footer pozicionálás. A subkör eredményében a nyers idő
+    mellett kizárólag a gyorsasági pontnál használt módosított idő
+    és a megszerzett villámbónusz jelenik meg.
+    MÓDOSÍTÁS: a számbecslés ugyanazzal a handlerrel küldhető be a
+    BI gombbal és az Enter billentyűvel.
 *@

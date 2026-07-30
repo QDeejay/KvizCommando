@@ -73,6 +73,7 @@ public sealed class VsMatchLoadoutItemState
 {
     public int LoadoutPosition { get; init; }
     public int CategoryId { get; init; }
+    public int QuestionCategoryId { get; init; }
     public int QuestionId { get; init; }
     public bool IsOwnQuestion { get; init; }
     public bool IsAllCategories { get; init; }
@@ -195,6 +196,9 @@ public sealed class VsMatchRoundResultState
  * MÓDOSÍTÁS: a session felvette a normál- és kapitánykör minimális,
  * szerveroldali állapotát, a növekvő QuestionNumbert, a játékosok
  * pont-/időadatait és a lezárt kérdés, illetve kör eredményét.
+ * A loadoutelem külön tárolja a választott megjelenítési kategóriát
+ * és a ténylegesen betöltött kérdés kategóriáját; ez az „összes”
+ * választásnál szükséges a helyes időmódosítóhoz.
  *
  * Egy lezárt meccs teljes, szerveroldali authoritative állapotát
  * tartalmazza. A SignalR Hub nem őriz játékállapotot.
