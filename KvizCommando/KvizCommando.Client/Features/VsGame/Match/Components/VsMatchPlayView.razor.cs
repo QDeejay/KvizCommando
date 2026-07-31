@@ -180,8 +180,9 @@ public partial class VsMatchPlayView : IDisposable
         HasTimeRemaining;
 
     private bool ShowPlayerChoices =>
-        Data.Phase == VsMatchPhase.QuestionResult &&
-        Data.Game.QuestionKind == VsQuestionKind.Choice;
+        Data.Game.QuestionKind == VsQuestionKind.Choice &&
+        (Data.Phase == VsMatchPhase.QuestionResult ||
+         Data.Game.MyAnswerIndex.HasValue);
 
     private VsHelpCardVm? CurrentHelp =>
         Data.Preparation.Rounds
@@ -226,6 +227,13 @@ public partial class VsMatchPlayView : IDisposable
             "0.##",
             CultureInfo.CurrentCulture);
 
+    private string GuessText(VsQuestionPlayerVm player) =>
+        !Data.Game.CorrectGuess.HasValue
+            ? "•••"
+            : player.Guess.HasValue
+                ? FormatNumber(player.Guess.Value)
+                : "—";
+
     private bool IsAnswerEliminated(int answerIndex) =>
         !Data.Game.CorrectAnswerIndex.HasValue &&
         Data.Game.MyHiddenAnswerIndices.Contains(answerIndex);
@@ -235,11 +243,27 @@ public partial class VsMatchPlayView : IDisposable
         Data.Game.MySuggestedAnswerIndex == answerIndex;
 
     private IEnumerable<VsQuestionPlayerVm> PlayersOnAnswer(
-        int answerIndex) =>
-        Data.Game.QuestionPlayers
+        int answerIndex)
+    {
+        if (Data.Phase == VsMatchPhase.QuestionResult)
+        {
+            return Data.Game.QuestionPlayers
+                .Where(player =>
+                    player.AnswerIndex == answerIndex)
+                .OrderBy(player => player.Position);
+        }
+
+        if (Data.Game.MyAnswerIndex != answerIndex)
+            return [];
+
+        var myPosition = Data.Players
+            .First(player => player.IsMe)
+            .Position;
+
+        return Data.Game.QuestionPlayers
             .Where(player =>
-                player.AnswerIndex == answerIndex)
-            .OrderBy(player => player.Position);
+                player.Position == myPosition);
+    }
 
     private static string PlayerToneClass(int position) =>
         $"player-tone-{position}";
@@ -433,6 +457,10 @@ public partial class VsMatchPlayView : IDisposable
  * MÓDOSÍTÁS: a tippfelfedéshez a snapshotban már meglévő játékos-
  * tippeket használja; a kérdező pozícióját csak vizuális osztályhoz
  * hasonlítja össze, pontot vagy jogosultságot továbbra sem számol.
+ * MÓDOSÍTÁS: eredmény előtt a tippérték helyén semleges jelölést ad,
+ * a saját választ pedig a MyAnswerIndex és a meglévő saját roster-
+ * pozíció alapján ugyanazzal a színnel jeleníti meg. Más játékos
+ * válaszát továbbra sem következteti ki és nem fedi fel kliensoldalon.
  * MÓDOSÍTÁS: a kérdéseredmény rövid szünete számláló nélkül telik;
  * a kapitányi kérdésválasztás kijelzője a 0 értéket is megmutatja.
  */

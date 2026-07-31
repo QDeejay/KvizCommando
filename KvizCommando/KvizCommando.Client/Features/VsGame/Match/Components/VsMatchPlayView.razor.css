@@ -311,7 +311,10 @@
     filter: grayscale(.72);
 }
 
-.kc-vs-answers button.locked-muted,
+.kc-vs-answers button.locked-muted {
+    opacity: .53;
+}
+
 .kc-vs-answers button.result-muted {
     opacity: .38;
 }
@@ -463,6 +466,12 @@
     flex: 0 0 auto;
     color: #eee9dc;
     font-size: .92rem;
+    opacity: .42;
+    transition: opacity .18s ease;
+}
+
+.kc-vs-guess-player-results strong.revealed {
+    opacity: 1;
 }
 
 .kc-vs-question-status {
@@ -470,6 +479,12 @@
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
+}
+
+.kc-vs-question-status.guess-status {
+    margin-top: 11px;
+    padding-top: 9px;
+    border-top: 1px solid rgba(119, 120, 80, .38);
 }
 
 .kc-vs-question-status > span,
@@ -524,7 +539,7 @@
 }
 
 .player-tone-2 {
-    --kc-vs-player-color: rgba(202, 169, 62, .3);
+    --kc-vs-player-color: rgba(67, 170, 214, .32);
 }
 
 .player-tone-3 {
@@ -816,6 +831,11 @@
  * rugalmas kártyasorban fedődnek fel; a nyertes finom zöld keretet
  * kap. A kérdező mini eredménykártyáját arany kérdésikon és keret
  * különíti el a válaszolókétól.
+ * MÓDOSÍTÁS: a tippkártyák eredmény előtt is stabilan kint maradnak,
+ * az érték rövid áttűnéssel jelenik meg, az alsó státuszcímkéket pedig
+ * halvány elválasztó helyezi lejjebb. A zárolt, nem kijelölt válaszok
+ * opacityje .38-ról .53-ra nőtt. A saját kijelölés színrétege azonnal
+ * látható; a második játékos tónusa sárga helyett azúr.
  * magyarázza a kizárólag ott kiosztott pluszpontot.
  * MÓDOSÍTÁS: a számbecslés natív léptető nélküli szövegmezőként
  * jelenik meg, decimal inputmóddal és a projekt saját IBeam

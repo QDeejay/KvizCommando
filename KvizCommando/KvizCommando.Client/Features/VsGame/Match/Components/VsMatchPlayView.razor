@@ -174,21 +174,6 @@
                                 </strong>
                             </div>
 
-                            <div class="kc-vs-guess-player-results">
-                                @foreach (var player in
-                                          Data.Game.QuestionPlayers
-                                              .OrderBy(item => item.Position))
-                                {
-                                    <span class="@PlayerToneClass(player.Position) @(player.Points > 0 ? "winner" : "")">
-                                        <small>@PlayerName(player.Position)</small>
-                                        <strong>
-                                            @(player.Guess.HasValue
-                                                ? FormatNumber(player.Guess.Value)
-                                                : "—")
-                                        </strong>
-                                    </span>
-                                }
-                            </div>
                         }
                         else
                         {
@@ -221,6 +206,20 @@
                                 </button>
                             </div>
                         }
+
+                        <div class="kc-vs-guess-player-results">
+                            @foreach (var player in
+                                      Data.Game.QuestionPlayers
+                                          .OrderBy(item => item.Position))
+                            {
+                                <span class="@PlayerToneClass(player.Position) @(player.Points > 0 ? "winner" : "")">
+                                    <small>@PlayerName(player.Position)</small>
+                                    <strong class="@(Data.Game.CorrectGuess.HasValue ? "revealed" : "")">
+                                        @GuessText(player)
+                                    </strong>
+                                </span>
+                            }
+                        </div>
                     </div>
                 }
                 else
@@ -267,7 +266,7 @@
                 }
             </div>
 
-            <div class="kc-vs-question-status">
+            <div class="kc-vs-question-status @(Data.Game.QuestionKind == VsQuestionKind.Guess ? "guess-status" : "")">
                 @foreach (var player in Data.Game.QuestionPlayers)
                 {
                     <span class="kc-vs-player-status @PlayerToneClass(player.Position) @(player.HasAnswered ? "answered" : "") @(IsQuestioner(player.Position) ? "questioner" : "")">
@@ -396,4 +395,7 @@
     MÓDOSÍTÁS: a tippelők számai csak az eredményfázisban, a saját
     pozíciószínükkel fedődnek fel. A válaszok alatti mini kártyákon a
     kérdező külön kérdésikont és keretkiemelést kap.
+    MÓDOSÍTÁS: a tippkártyák már a válaszadás alatt is a helyükön
+    maradnak, és csak az értékük fedődik fel. A saját kijelölt válasz
+    játékosszínét azonnal megkapja, a közös felfedés előtt is.
 *@
