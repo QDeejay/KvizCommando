@@ -228,6 +228,10 @@ namespace KvizCommando.Server.Services.DtoMapping
                     RankClass =
                         VsBattleClassificationRules.ResolveRankClass(
                             item.Member.Rank),
+                    OrientationId =
+                        item.Member.Attitude.Main.CatNo[0] > 8
+                            ? item.Member.Attitude.Main.CatNo[0] - 8
+                            : item.Member.Attitude.Main.CatNo[0],
                     EnergyPoints = item.Member.EnergyPoints,
                     IsSelectable =
                         VsBattleClassificationRules.CanSelectMember(
@@ -374,7 +378,8 @@ namespace KvizCommando.Server.Services.DtoMapping
 
 /**
  * MÓDOSÍTÁS: a VS képernyő besorolási DTO-jába bemásolja a
- * szerveroldali szabálytábla tétértékét.
+ * szerveroldali szabálytábla tétértékét és a csapattag normalizált
+ * fő orientációazonosítóját.
  *
  * A fájl a Home, Solo és VS képernyők PlayerCache-alapú
  * snapshotjait állítja össze.

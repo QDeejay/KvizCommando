@@ -16,6 +16,7 @@ public sealed class VsBattleMemberVm
     public string RankName { get; set; } = string.Empty;
     public string RankClassName { get; set; } = string.Empty;
     public string ClassificationText { get; set; } = string.Empty;
+    public string OrientationShort { get; set; } = string.Empty;
     public bool IsSelected { get; set; }
     public bool IsSelectable { get; set; }
 }
@@ -30,3 +31,8 @@ public sealed class VsClassificationLampVm
     public string RankClassZoneText { get; set; } = string.Empty;
     public string RequiredMembersText { get; set; } = string.Empty;
 }
+
+/**
+ * MÓDOSÍTÁS: a ranking csapatkártya megjelenítési modellje a már
+ * lokalizált rövid orientáció-feliratot is tartalmazza.
+ */

@@ -345,7 +345,17 @@
 }
 
 .kc-vs-guess {
-    min-height: 92px;
+    min-height: 148px;
+    display: grid;
+    grid-template-rows: 100px auto;
+    place-items: center;
+    align-content: start;
+    gap: 10px;
+}
+
+.kc-vs-guess-stage {
+    width: 100%;
+    height: 100px;
     display: grid;
     place-items: center;
     align-content: center;
@@ -379,17 +389,28 @@
     color: #c6ef39;
 }
 
-.kc-vs-guess input {
+.kc-vs-guess input.lcd-input {
     width: min(280px, 55%);
     height: 42px;
-    padding: 4px 10px;
-    color: #222f16;
-    background: rgba(210, 255, 57, .9);
-    border: inset 2px #777;
-    border-radius: 4px;
+    box-sizing: border-box;
     font-family: 'Share Tech Mono', monospace;
     font-size: 1.25rem;
-    cursor: url('/Images/cursors/IBeam.cur'), text;
+    text-align: center;
+    transition:
+        background-color .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease,
+        color .2s ease;
+}
+
+.kc-vs-guess input.lcd-input.submitted,
+.kc-vs-guess input.lcd-input.submitted:disabled {
+    color: #222f16;
+    background-color: rgba(210, 255, 57, .9);
+    border: inset 2px #777;
+    box-shadow:
+        0 0 7px rgba(198, 239, 57, .18),
+        inset 0 3px 6px rgba(0, 0, 0, .62);
 }
 
 .kc-vs-guess input:disabled {
@@ -539,7 +560,7 @@
 }
 
 .player-tone-2 {
-    --kc-vs-player-color: rgba(67, 170, 214, .32);
+    --kc-vs-player-color: rgba(218, 133, 62, .32);
 }
 
 .player-tone-3 {
@@ -835,7 +856,15 @@
  * az érték rövid áttűnéssel jelenik meg, az alsó státuszcímkéket pedig
  * halvány elválasztó helyezi lejjebb. A zárolt, nem kijelölt válaszok
  * opacityje .38-ról .53-ra nőtt. A saját kijelölés színrétege azonnal
- * látható; a második játékos tónusa sárga helyett azúr.
+ * látható; a második játékos tónusa narancs.
+ * MÓDOSÍTÁS: a tipp bevitele, a tippsáv és a helyes érték ugyanabban
+ * a 100 px magas stage-ben cserélődik, ezért a teljes tippblokk
+ * magassága a felfedéskor változatlan. A saját visszaigazolt tipp
+ * azonnali megjelenése ugyanazt a rövid áttűnést használja.
+ * A beviteli mező a központi, kékes lcd-input megjelenést örökli;
+ * helyben csak a mérete, a Share Tech Mono és a középre igazítás tér el.
+ * Szerver-visszaigazolás után ugyanaz a változatlan méretű input rövid
+ * áttűnéssel a játék zöld kijelzőállapotára vált.
  * magyarázza a kizárólag ott kiosztott pluszpontot.
  * MÓDOSÍTÁS: a számbecslés natív léptető nélküli szövegmezőként
  * jelenik meg, decimal inputmóddal és a projekt saját IBeam

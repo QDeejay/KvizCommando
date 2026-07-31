@@ -29,7 +29,7 @@
     align-items: center;
     min-width: 0;
     min-height: 173px;
-    padding: 4px 5px 20px;
+    padding: 4px 5px 22px;
     color: #222f16;
     background: rgba(120, 120, 120, 0.08);
     border: 1px solid rgba(34, 47, 22, 0.45);
@@ -93,8 +93,24 @@
     font-weight: bold;
 }
 
+.kc-ranked-member-orientation {
+    position: absolute;
+    right: 30px;
+    bottom: 5px;
+    left: 6px;
+    overflow: hidden;
+    color: rgba(34, 47, 22, 0.78);
+    font-size: 0.67rem;
+    font-weight: bold;
+    line-height: 1;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .kc-ranked-member.not-selectable .kc-ranked-member-picture,
-.kc-ranked-member.not-selectable .kc-ranked-member-data {
+.kc-ranked-member.not-selectable .kc-ranked-member-data,
+.kc-ranked-member.not-selectable .kc-ranked-member-orientation {
     opacity: 0.38;
     filter: grayscale(0.85);
 }
@@ -181,3 +197,9 @@
         overflow-y: auto;
     }
 }
+
+/*
+ * MÓDOSÍTÁS: a rövid orientáció a kártya alsó, ikon előtti sávjába
+ * került. A kijelölési pipa és a blokkoló X változatlanul abszolút
+ * pozícióval a jobb alsó sarokban marad.
+ */

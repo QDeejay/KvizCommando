@@ -210,6 +210,9 @@ public partial class VsMatchPlayView : IDisposable
     private double MyRoundTime =>
         Data.Game.MyRoundTimeSeconds;
 
+    private int MyPosition =>
+        Data.Players.First(player => player.IsMe).Position;
+
     private string PlayerName(int position) =>
         Data.Players
             .FirstOrDefault(player =>
@@ -227,12 +230,25 @@ public partial class VsMatchPlayView : IDisposable
             "0.##",
             CultureInfo.CurrentCulture);
 
-    private string GuessText(VsQuestionPlayerVm player) =>
-        !Data.Game.CorrectGuess.HasValue
-            ? "•••"
-            : player.Guess.HasValue
+    private string GuessText(VsQuestionPlayerVm player)
+    {
+        if (Data.Game.CorrectGuess.HasValue)
+        {
+            return player.Guess.HasValue
                 ? FormatNumber(player.Guess.Value)
                 : "—";
+        }
+
+        return player.Position == MyPosition &&
+               Data.Game.MyGuess.HasValue
+            ? FormatNumber(Data.Game.MyGuess.Value)
+            : "•••";
+    }
+
+    private bool IsGuessRevealed(VsQuestionPlayerVm player) =>
+        Data.Game.CorrectGuess.HasValue ||
+        (player.Position == MyPosition &&
+         Data.Game.MyGuess.HasValue);
 
     private bool IsAnswerEliminated(int answerIndex) =>
         !Data.Game.CorrectAnswerIndex.HasValue &&
@@ -256,13 +272,9 @@ public partial class VsMatchPlayView : IDisposable
         if (Data.Game.MyAnswerIndex != answerIndex)
             return [];
 
-        var myPosition = Data.Players
-            .First(player => player.IsMe)
-            .Position;
-
         return Data.Game.QuestionPlayers
             .Where(player =>
-                player.Position == myPosition);
+                player.Position == MyPosition);
     }
 
     private static string PlayerToneClass(int position) =>
@@ -461,6 +473,9 @@ public partial class VsMatchPlayView : IDisposable
  * a saját választ pedig a MyAnswerIndex és a meglévő saját roster-
  * pozíció alapján ugyanazzal a színnel jeleníti meg. Más játékos
  * válaszát továbbra sem következteti ki és nem fedi fel kliensoldalon.
+ * MÓDOSÍTÁS: a saját tipp szövegét és felfedési állapotát közvetlenül
+ * a személyre szabott MyGuess snapshotmezőből adja; a többiek tippje
+ * a közös eredményig változatlanul rejtett marad.
  * MÓDOSÍTÁS: a kérdéseredmény rövid szünete számláló nélkül telik;
  * a kapitányi kérdésválasztás kijelzője a 0 értéket is megmutatja.
  */

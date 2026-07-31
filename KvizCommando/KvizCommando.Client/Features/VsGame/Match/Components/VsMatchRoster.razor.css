@@ -58,7 +58,7 @@
 }
 
 .kc-vs-roster-card.player-tone-2 {
-    --kc-vs-roster-player-color: rgba(67, 170, 214, .14);
+    --kc-vs-roster-player-color: rgba(218, 133, 62, .14);
 }
 
 .kc-vs-roster-card.player-tone-3 {
@@ -280,9 +280,10 @@
  * katonai bélyegként formázott BOT jelzés marad olvasható.
  * A mini kiértékelők pozíciószíneinek azonos RGB-tónusai enyhébb
  * fedettséggel a nagyobb rosterkártyák hátterén is megjelennek.
- * MÓDOSÍTÁS: a második játékos korábbi sárgás tónusa a kérdés-LCD-től
- * jól elkülönülő azúr színre váltott. Kizárólag a BOT bélyeg kapott
- * enyhe, 0.8-as opacityt; a botkártya többi rétege változatlan.
+ * MÓDOSÍTÁS: a második játékos tónusa a kérdés-LCD-től és az első
+ * játékos kékjétől jól elkülönülő narancs színre váltott. Kizárólag
+ * a BOT bélyeg kapott enyhe, 0.8-as opacityt; a botkártya többi
+ * rétege változatlan.
  *
  * MÓDOSÍTÁS: a karakterportré rétegzése a SoloGame működő
  * szülő/abszolút SVG-host megoldását követi. A CharacterView negatív

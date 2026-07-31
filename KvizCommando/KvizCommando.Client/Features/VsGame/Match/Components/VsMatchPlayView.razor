@@ -163,49 +163,51 @@
                      VsQuestionKind.Guess)
                 {
                     <div class="kc-vs-guess">
-                        @if (Data.Game.CorrectGuess.HasValue)
-                        {
-                            <div class="kc-vs-guess-result">
-                                <span>
-                                    @Lang["vsgame.Match.Game.CorrectGuess"]
-                                </span>
-                                <strong>
-                                    @Data.Game.CorrectGuess.Value.ToString("0.##")
-                                </strong>
-                            </div>
-
-                        }
-                        else
-                        {
-                            @if (HasGuessRange)
+                        <div class="kc-vs-guess-stage">
+                            @if (Data.Game.CorrectGuess.HasValue)
                             {
-                                <div class="kc-vs-guess-range">
-                                    <i class="bi bi-arrows-expand-vertical"></i>
+                                <div class="kc-vs-guess-result">
                                     <span>
-                                        @Lang["vsgame.Match.Game.GuessRangeHelp"]:
+                                        @Lang["vsgame.Match.Game.CorrectGuess"]
                                     </span>
-                                    <strong>@GuessRangeText</strong>
+                                    <strong>
+                                        @Data.Game.CorrectGuess.Value.ToString("0.##")
+                                    </strong>
                                 </div>
                             }
+                            else
+                            {
+                                @if (HasGuessRange)
+                                {
+                                    <div class="kc-vs-guess-range">
+                                        <i class="bi bi-arrows-expand-vertical"></i>
+                                        <span>
+                                            @Lang["vsgame.Match.Game.GuessRangeHelp"]:
+                                        </span>
+                                        <strong>@GuessRangeText</strong>
+                                    </div>
+                                }
 
-                            <div class="kc-vs-guess-controls">
-                                <input type="text"
-                                       inputmode="decimal"
-                                       @ref="_guessInput"
-                                       @bind="_guessText"
-                                       @bind:event="oninput"
-                                       @onkeydown="HandleGuessKeyDownAsync"
-                                       disabled="@(!IsAnswerTimeActive || _sending)" />
-                                <button type="button"
-                                        class="button-on-lcd"
-                                        disabled="@(!CanSubmitGuess)"
-                                        aria-label="@Lang["vsgame.Match.Game.Submit"]"
-                                        title="@Lang["vsgame.Match.Game.Submit"]"
-                                        @onclick="SubmitGuessAsync">
-                                    <i class="bi bi-check-lg"></i>
-                                </button>
-                            </div>
-                        }
+                                <div class="kc-vs-guess-controls">
+                                    <input type="text"
+                                           class="lcd-input @(Data.Game.MyGuess.HasValue ? "submitted" : string.Empty)"
+                                           inputmode="decimal"
+                                           @ref="_guessInput"
+                                           @bind="_guessText"
+                                           @bind:event="oninput"
+                                           @onkeydown="HandleGuessKeyDownAsync"
+                                           disabled="@(!IsAnswerTimeActive || _sending)" />
+                                    <button type="button"
+                                            class="button-on-lcd"
+                                            disabled="@(!CanSubmitGuess)"
+                                            aria-label="@Lang["vsgame.Match.Game.Submit"]"
+                                            title="@Lang["vsgame.Match.Game.Submit"]"
+                                            @onclick="SubmitGuessAsync">
+                                        <i class="bi bi-check-lg"></i>
+                                    </button>
+                                </div>
+                            }
+                        </div>
 
                         <div class="kc-vs-guess-player-results">
                             @foreach (var player in
@@ -214,7 +216,7 @@
                             {
                                 <span class="@PlayerToneClass(player.Position) @(player.Points > 0 ? "winner" : "")">
                                     <small>@PlayerName(player.Position)</small>
-                                    <strong class="@(Data.Game.CorrectGuess.HasValue ? "revealed" : "")">
+                                    <strong class="@(IsGuessRevealed(player) ? "revealed" : "")">
                                         @GuessText(player)
                                     </strong>
                                 </span>
@@ -398,4 +400,11 @@
     MÓDOSÍTÁS: a tippkártyák már a válaszadás alatt is a helyükön
     maradnak, és csak az értékük fedődik fel. A saját kijelölt válasz
     játékosszínét azonnal megkapja, a közös felfedés előtt is.
+    MÓDOSÍTÁS: a tipp beviteli/eredményterülete közös, fix magasságú
+    stage-ben marad, ezért a helyes érték felfedésekor nem nyúlik meg.
+    A saját szerver által visszaigazolt tipp már az eredmény előtt a
+    saját játékoskártyán látható.
+    MÓDOSÍTÁS: a tippmező a központi lcd-input megjelenést használja,
+    majd a szerver által visszaigazolt tippnél méretváltás nélkül
+    áttűnik a játék zöld kijelzőállapotába.
 *@

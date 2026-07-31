@@ -42,6 +42,10 @@ public sealed class VsBattleTeamBuilder
                 ClassificationText =
                     _lang["vsgame.Manager.Member.Classification"]
                         .FormatSafe(member.RankClass),
+                OrientationShort =
+                    OrientationLocalizer.GetOrientShort(
+                        member.OrientationId,
+                        culture),
                 IsSelected =
                     member.IsSelectable &&
                     selectedSlots.Contains(member.SlotNumber),
@@ -158,3 +162,8 @@ public sealed class VsBattleTeamBuilder
             ? RomanNumbers[id]
             : id.ToString();
 }
+
+/**
+ * MÓDOSÍTÁS: a meglévő OrientationLocalizer.GetOrientShort metódussal
+ * készíti el a ranking csapatkártya rövid orientáció-feliratát.
+ */

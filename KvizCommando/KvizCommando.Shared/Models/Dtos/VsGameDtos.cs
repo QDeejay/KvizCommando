@@ -36,6 +36,7 @@ public sealed class VsBattleMemberDto
     public string PictureCode { get; set; } = string.Empty;
     public int Rank { get; set; }
     public int RankClass { get; set; }
+    public int OrientationId { get; set; }
     public int EnergyPoints { get; set; }
     public bool IsSelectable { get; set; }
 }
@@ -62,6 +63,8 @@ public sealed class VsBattleClassificationDto
  * MÓDOSÍTÁS: a harci besorolás DTO megkapta a szerver által
  * meghatározott ranked tétet, valamint a képernyő lekérésekor
  * rögzített privát, összes ranked és besorolásonkénti létszámot.
+ * MÓDOSÍTÁS: a csapatösszeállító karakterkártyájához a tag fő
+ * orientációazonosítóját is továbbítja.
  *
  * A fájl a VS menü, a mentett harci csapat és a besorolási
  * feltételrendszer képernyő-snapshotjait tartalmazza.
