@@ -163,7 +163,7 @@
 
 .kc-vs-roster-modifier {
     position: absolute;
-    top: 7px;
+    top: 5px;
     right: 7px;
     line-height: 1;
     font-family: 'Share Tech Mono', monospace;
@@ -209,10 +209,6 @@
     gap: 4px;
     font-family: 'Courier New', monospace;
     font-size: .76rem;
-}
-
-.kc-vs-roster-card.has-modifier .kc-vs-roster-data > strong {
-    padding-right: 58px;
 }
 
 .kc-vs-roster-data strong,
@@ -275,6 +271,9 @@
  * A CharacterView a teljes portrékerethez igazodik; az időmódosító
  * a kártya jobb felső sarkában, a pontszám méretével és a már
  * használt piros, zöld vagy szürke szövegszínnel jelenik meg.
+ * A modifier az alsó pont/idő blokk ellentétes felső párjaként,
+ * azonos jobb oldali és függőleges peremtávolsággal jelenik meg.
+ * Abszolút rétegen marad, ezért nem rövidíti a saját csapatnevet.
  * A karakter neve a RecruitCard férfi/női színeit használja.
  * A botkártya belső tartalma halvány, felette külön, nem interaktív,
  * katonai bélyegként formázott BOT jelzés marad olvasható.
