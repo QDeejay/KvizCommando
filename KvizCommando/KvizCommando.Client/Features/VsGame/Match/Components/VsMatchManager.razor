@@ -1,7 +1,7 @@
 @using KvizCommando.Client.Helpers
 @using KvizCommando.Shared.Models.Enums.VsGame
 
-<div class="kc-vs-match-manager">
+<div class="kc-vs-match-manager @(IsPreparationPhase ? "preparation" : "")">
     @if (!string.IsNullOrWhiteSpace(_errorText))
     {
         <div class="kc-vs-match-error" role="alert">
@@ -125,4 +125,6 @@
     preparációs nézetet a SignalR snapshot alapján cseréli.
     MÓDOSÍTÁS: GameCompleted fázisban a placeholder helyett a külön,
     snapshot-alapú rewardkomponenst rendereli.
+    MÓDOSÍTÁS: preparációban célzott állapotosztály engedi, hogy a
+    meccskeret a tartalommal együtt függőlegesen tovább nőjön.
 *@

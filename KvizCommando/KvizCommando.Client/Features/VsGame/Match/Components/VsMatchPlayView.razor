@@ -14,7 +14,7 @@
         {
             <div class="kc-vs-wait-timer"
                  style="@WaitTimerStyle">
-                <strong>@RemainingSeconds</strong>
+                <strong>@DisplaySeconds</strong>
             </div>
         }
         else if (ShowAnswerTimer)
@@ -22,7 +22,7 @@
             <div class="kc-vs-play-timer @TimerStateClass">
                 <i class="bi bi-stopwatch"></i>
                 <div class="kc-vs-play-timer-display">
-                    <strong>@RemainingSeconds</strong>
+                    <strong>@DisplaySeconds</strong>
                     <span>@Lang["vsgame.Match.Timer.SecondsShort"]</span>
                 </div>
                 <div class="kc-vs-play-timer-track">

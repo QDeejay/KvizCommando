@@ -25,9 +25,11 @@ public sealed class VsMatchPlayerRewardState
     public int StakeReturn { get; init; }
     public int BaseCreditReward { get; init; }
     public int TeamBonusCredit { get; init; }
+    public int TeamBonusPercent { get; init; }
     public int CreditReward { get; init; }
     public int[] ConsumedHelps { get; init; } = new int[4];
     public VsMatchCharacterRewardState[] Characters { get; init; } = [];
+    public VsMatchStatisticsState Statistics { get; init; } = new();
 }
 
 public sealed class VsMatchCharacterRewardState
@@ -45,4 +47,6 @@ public sealed class VsMatchCharacterRewardState
  * PlayerCache-íráshoz szükséges játékos-, session-, segítség-,
  * karakter-, XP-, energia-, nyugdíj- és kreditadatokat akkor is
  * megőrzi, amikor egy bot zárolása már feloldható.
+ * A később egy lépésben menthető meccsstatisztika és team bonus
+ * százalék szintén itt áll rendelkezésre.
  */

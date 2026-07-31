@@ -26,6 +26,8 @@ public sealed partial class VsMatchService
         // adatot tartalmaz. Itt kell majd egyetlen cache-tranzakcióban
         // jóváírni a pozitív rewardot, levonni a segítségeket és az
         // energiát, illetve menteni a highscore-t.
+        // A reward.Statistics tartalmazza a pont-/idő-, kategória-,
+        // kérdezői és sajátkérdés-statisztikák növekményeit is.
         AddLog(
             match,
             null,

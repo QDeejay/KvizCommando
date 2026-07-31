@@ -25,6 +25,17 @@
     overflow: hidden;
 }
 
+.kc-vs-match-manager.preparation,
+.kc-vs-match-manager.preparation .kc-vs-match-stage,
+.kc-vs-match-manager.preparation .kc-vs-match-content {
+    height: auto;
+    min-height: 560px;
+}
+
+.kc-vs-match-manager.preparation .kc-vs-match-content {
+    overflow: visible;
+}
+
 .kc-vs-match-error {
     position: absolute;
     z-index: 9999;
@@ -196,6 +207,9 @@
  * felső pozíciójában marad.
  * MÓDOSÍTÁS: a content terület teljes magasságú, zárt grid-fogadó,
  * ezért a játéknézet progressze nem csúszhat a box alá.
+ * Preparációban kizárólag a manager/content magasságkorlátja nyílik
+ * meg, így a komponens a ContentBoxszal együtt nő és nem fut annak
+ * lábléce alá.
  *
  * A VS ranked várólista és meccskeret a SoloGame rögzített
  * játékméretét, katonai paneljeit, LCD-színét és meglévő

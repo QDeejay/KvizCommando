@@ -94,8 +94,31 @@ internal static class VsMatchScoring
             unit * (match.Players.Count - 1) -
             unit * otherCorrect +
             unit * otherNoAnswer;
+        var correctAnswerCount = match.Players.Count(player =>
+            player.CurrentAnswer?.AnswerIndex ==
+            question.CorrectOptionIndex);
         var results = new List<VsMatchQuestionPlayerResultState>(
             match.Players.Count);
+
+        questioner.Statistics.QuestionsAsked++;
+        questioner.Statistics.CorrectAnswersToAskedQuestions +=
+            correctAnswerCount;
+
+        if (question.IsOwnQuestion)
+        {
+            if (!questioner.Statistics.OwnQuestions.TryGetValue(
+                    question.QuestionId,
+                    out var ownQuestion))
+            {
+                ownQuestion = new VsMatchOwnQuestionStatisticsState();
+                questioner.Statistics.OwnQuestions.Add(
+                    question.QuestionId,
+                    ownQuestion);
+            }
+
+            ownQuestion.Asked += match.Players.Count;
+            ownQuestion.CorrectAnswers += correctAnswerCount;
+        }
 
         foreach (var player in match.Players)
         {
@@ -124,6 +147,27 @@ internal static class VsMatchScoring
                     isCorrect,
                     unit);
             var hasSpeedBonus = player == speedWinner;
+
+            if (hasAnswer && question.CategoryId is >= 1 and <= 16)
+            {
+                if (!player.Statistics.Categories.TryGetValue(
+                        question.CategoryId,
+                        out var category))
+                {
+                    category = new VsMatchCategoryStatisticsState();
+                    player.Statistics.Categories.Add(
+                        question.CategoryId,
+                        category);
+                }
+
+                category.Answered++;
+
+                if (isCorrect)
+                    category.Correct++;
+            }
+
+            if (isCorrect)
+                player.Statistics.CorrectAnswers++;
 
             if (hasSpeedBonus)
                 points += unit;
@@ -462,4 +506,6 @@ internal static class VsMatchScoring
  * MÓDOSÍTÁS: nagykör commitkor a karakter-XP és energiaveszteség
  * karakterhelyenként akkumulálódik, ezért a következő kör eredménye
  * nem írja felül a későbbi rewardhoz szükséges adatot.
+ * MÓDOSÍTÁS: ugyanitt gyűlik a válaszoló kategória-/helyesválasz-,
+ * a kérdezői és a saját kérdéshez tartozó Ask/OkAnswer növekmény.
  */

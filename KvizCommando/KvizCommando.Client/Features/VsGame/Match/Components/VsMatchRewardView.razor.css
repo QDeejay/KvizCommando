@@ -20,6 +20,7 @@
 
 .kc-vs-reward-title {
     min-width: 0;
+    min-height: 40px;
     padding: 0 8px;
     display: flex;
     align-items: center;
@@ -32,17 +33,31 @@
         0 4px 16px rgba(0, 0, 0, .4),
         inset 0 4px 8px rgba(0, 0, 0, .7);
     font-family: 'Special Elite', cursive;
+    font-size: clamp(1rem, 1.35vw, 1.35rem);
     text-transform: uppercase;
 }
 
 .kc-vs-reward-title > strong,
 .kc-vs-reward-title > span {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
     transform: translateY(3px);
 }
 
+.kc-vs-reward-title > strong {
+    min-width: 0;
+    overflow: hidden;
+    letter-spacing: .04em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .kc-vs-reward-title > span {
+    flex: 0 0 auto;
     color: #c6ef39;
     font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
 }
 
 .kc-vs-reward-body {
@@ -64,13 +79,16 @@
     align-items: center;
     justify-content: center;
     gap: 12px;
-    color: #202414;
-    background: #c6ef39;
+    color: #222f16;
+    background-color: rgba(210, 255, 57, .9);
     border: inset 2px #777;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(198, 239, 57, .24);
-    font-family: 'Special Elite', cursive;
-    font-size: clamp(1rem, 1.8vw, 1.35rem);
+    border-radius: 4px;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, .4),
+        inset 0 4px 8px rgba(0, 0, 0, .7);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(1.15rem, 2vw, 1.55rem);
+    font-weight: 700;
     text-align: center;
     text-transform: uppercase;
 }
@@ -251,4 +269,6 @@
  * ÚJ FÁJL: a jóváhagyott katonai/LCD szín- és tipográfiavilágban
  * formázza a rewardnézetet. A tartalom a meglévő fix meccskeretben
  * görgethető, a karakter-SVG saját korlátozott portréhostban marad.
+ * A title a bevált Solo/VS címsor pontos méreteit használja; a fő
+ * rewardkijelző a Solo kérdés-LCD betűjét, keretét és árnyékát.
  */

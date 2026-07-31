@@ -105,10 +105,13 @@ internal static class VsMatchSnapshotBuilder
             {
                 FinalPosition = myReward.FinalPosition,
                 IsBot = myReward.IsBot,
+                IsTeamXpAvailable =
+                    !myReward.IsBot && myReward.TeamLevel <= 21,
                 TeamXp = myReward.TeamXp,
                 StakeReturn = myReward.StakeReturn,
                 BaseCreditReward = myReward.BaseCreditReward,
                 TeamBonusCredit = myReward.TeamBonusCredit,
+                TeamBonusPercent = myReward.TeamBonusPercent,
                 CreditReward = myReward.CreditReward,
                 ConsumedHelps = myReward.ConsumedHelps,
                 Characters =
@@ -817,6 +820,8 @@ internal static class VsMatchSnapshotBuilder
  * MÓDOSÍTÁS: GameCompleted fázisban a reward végső sorrendjét és
  * pont-/időadatait használja, a címzettnek csak a saját részletes
  * jutalmát küldi; a bot nyilvános neve és jelzője is innen kerül ki.
+ * A team bonus százalékát és a csapat-XP sor szerveroldali
+ * láthatóságát szintén a személyre szabott reward tartalmazza.
  *
  * A szerveroldali meccsállapotból játékosonként tiszta SignalR-
  * snapshotokat épít. Nem módosít állapotot és nem küld üzenetet.

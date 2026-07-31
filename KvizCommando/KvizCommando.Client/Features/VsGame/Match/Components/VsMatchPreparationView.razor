@@ -121,9 +121,31 @@
 
         <section class="kc-vs-prep-inventory @InventoryCssClass">
             <header>
-                <strong>@Lang["vsgame.Match.Inventory.Title"]</strong>
-                <span>•</span>
-                <small>@InventoryTitle</small>
+                <div class="kc-vs-prep-inventory-title">
+                    <strong>@Lang["vsgame.Match.Inventory.Title"]</strong>
+                    <span>•</span>
+                    <small>@InventoryTitle</small>
+                </div>
+
+                <div class="kc-vs-prep-actions">
+                    <button type="button"
+                            class="button-on-lcd"
+                            disabled="@(!Data.Preparation.CanReset)"
+                            aria-label="@Lang["vsgame.Match.Button.Reset"]"
+                            title="@Lang["vsgame.Match.Button.Reset"]"
+                            @onclick="ResetAsync">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                    </button>
+
+                    <button type="button"
+                            class="button-on-lcd @(Data.Preparation.IsFinished ? "finished" : "")"
+                            disabled="@(!Data.Preparation.CanFinish || Data.Preparation.IsFinished)"
+                            aria-label="@Lang["vsgame.Match.Button.Finish"]"
+                            title="@Lang["vsgame.Match.Button.Finish"]"
+                            @onclick="OnFinish">
+                        <i class="bi bi-check2"></i>
+                    </button>
+                </div>
             </header>
 
             @if (Data.Phase == VsMatchPhase.PreparationOrder)
@@ -189,25 +211,6 @@
                 </div>
             }
 
-            <div class="kc-vs-prep-actions">
-                <button type="button"
-                        class="button-on-lcd"
-                        disabled="@(!Data.Preparation.CanReset)"
-                        aria-label="@Lang["vsgame.Match.Button.Reset"]"
-                        title="@Lang["vsgame.Match.Button.Reset"]"
-                        @onclick="ResetAsync">
-                    <i class="bi bi-arrow-counterclockwise"></i>
-                </button>
-
-                <button type="button"
-                        class="button-on-lcd @(Data.Preparation.IsFinished ? "finished" : "")"
-                        disabled="@(!Data.Preparation.CanFinish || Data.Preparation.IsFinished)"
-                        aria-label="@Lang["vsgame.Match.Button.Finish"]"
-                        title="@Lang["vsgame.Match.Button.Finish"]"
-                        @onclick="OnFinish">
-                    <i class="bi bi-check2"></i>
-                </button>
-            </div>
         </section>
     }
 </section>
@@ -221,7 +224,9 @@
     gomb az inventory alsó sorába került; a kész állapotot a letiltott,
     zölden kiemelt Finish gomb jelzi; a gomb minden fázisban látható,
     de csak a szerver által engedélyezett állapotban nyomható meg.
-    A kijelölt segítség csak a ténylegesen fogadó segítségcellákat
+    A Reset és Finish az inventory fejlécében, normál dokumentum-
+    folyamban marad, ezért nem fedhet el tartalmat. A kijelölt
+    segítség csak a ténylegesen fogadó segítségcellákat
     emeli ki. A kapitánysor üres kategóriaboxa megmarad, kizárólag a
     teljes sort körberajzoló, túlnyúló outline került ki. Az inventory
     főcíme és a visszaszámláló rövid időegysége is lokalizált.

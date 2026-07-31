@@ -231,12 +231,15 @@
     display: grid;
     place-items: center;
     color: #222f16;
-    background: rgba(210, 255, 57, .88);
+    background-color: rgba(210, 255, 57, .9);
     border: inset 2px #777;
     border-radius: 4px;
-    box-shadow: inset 0 4px 8px rgba(0, 0, 0, .7);
-    font-family: 'Special Elite', cursive;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, .4),
+        inset 0 4px 8px rgba(0, 0, 0, .7);
+    font-family: 'Share Tech Mono', monospace;
     font-size: clamp(1rem, 1.7vw, 1.35rem);
+    font-weight: 700;
     text-align: center;
 }
 
@@ -762,8 +765,10 @@
  * MÓDOSÍTÁS: a tippsáv LCD-szerű sorban jelenik meg. A 50-50 kizárt
  * válaszai halványan a helyükön maradnak, az AI-javaslat kék keretet
  * és ikont kap, de továbbra sem reteszeli a választást.
- * MÓDOSÍTÁS: a válaszóra egy másodpercnél a Solo warning-, nullán
- * pedig a Solo zero-színét használja.
+ * MÓDOSÍTÁS: a válaszóra normál kérdésnél öt, kapitányi választásnál
+ * három másodperctől a Solo warning-, nullán a Solo zero-színét
+ * használja. A kérdés LCD-je a Solo Share Tech Mono betűjét,
+ * keretét és kettős árnyékát követi.
  * MÓDOSÍTÁS: a lezárt és hibás válaszok visszafogottan halványulnak.
  * A kiértékeléskor a válaszgombok egyenlő szélességű, pozícióhoz
  * kötött játékosszín-szegmenseket, az alsó minikártyák ugyanilyen

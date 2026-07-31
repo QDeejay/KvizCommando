@@ -65,6 +65,9 @@ internal static class VsMatchRewardCalculator
                 player.TeamLevel)
             : new CreditReward();
 
+        player.Statistics.Points = player.TotalPoints;
+        player.Statistics.TimeSeconds = player.TotalTimeSeconds;
+
         return new VsMatchPlayerRewardState
         {
             PlayerId = player.PlayerId,
@@ -86,8 +89,11 @@ internal static class VsMatchRewardCalculator
             StakeReturn = credit.StakeReturn,
             BaseCreditReward = credit.BaseReward,
             TeamBonusCredit = credit.TeamBonus,
+            TeamBonusPercent =
+                RankRewards.List[player.TeamLevel].WinBonus,
             CreditReward = credit.Total,
             ConsumedHelps = consumedHelps,
+            Statistics = player.Statistics,
             Characters =
             [
                 .. player.Characters.Select(character =>
@@ -127,13 +133,18 @@ internal static class VsMatchRewardCalculator
         if (player.IsBot || player.TeamLevel > 21)
             return 0;
 
-        return Math.Max(
+        var baseXp = Math.Max(
             0,
             (int)Math.Floor(
                 (double)player.TotalPoints *
                 match.Players.Count *
                 player.TeamLevel /
                 10));
+        var averageCharacterXp = (int)Math.Floor(
+            player.CharacterRewardTotals.Average(item =>
+                item.CharacterXp));
+
+        return baseXp + averageCharacterXp;
     }
 
     private static CreditReward CalculateCreditReward(
@@ -170,5 +181,8 @@ internal static class VsMatchRewardCalculator
  * játék közben rendesen pontozódik, a végső jutalomsorrendben viszont
  * 0 ponttal és 9999 másodperccel az emberek mögé kerül, pozitív
  * jutalmat nem kap; a segítség- és energiavesztesége megmarad.
+ * A 21-es szintig járó csapat-XP a korábbi pontképlet és a meccsben
+ * szerzett karakter-XP-k lefelé kerekített átlagának összege; 21
+ * fölött 0. A team bonus százaléka is a rewardállapot része.
  * PlayerCache-t és adatbázist nem érint.
  */

@@ -67,17 +67,26 @@
 }
 
 .kc-vs-roster-card.bot::after {
-    content: "– BOT –";
+    content: "BOT";
     position: absolute;
     z-index: 2;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    color: rgba(238, 233, 220, .72);
-    background: rgba(10, 11, 9, .18);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 1rem;
-    letter-spacing: .16em;
+    top: 50%;
+    left: 50%;
+    padding: 5px 13px 3px;
+    color: rgba(238, 233, 220, .86);
+    background: rgba(63, 24, 18, .88);
+    border: 2px solid rgba(209, 95, 82, .8);
+    border-radius: 4px;
+    box-shadow:
+        inset 0 0 0 1px rgba(238, 233, 220, .16),
+        0 3px 8px rgba(0, 0, 0, .55);
+    font-family: 'Special Elite', cursive;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: .2em;
+    line-height: 1;
+    text-shadow: 0 1px 2px #000;
+    transform: translate(-50%, -50%) rotate(-3deg);
     pointer-events: none;
 }
 
@@ -246,8 +255,8 @@
  * a kártya jobb felső sarkában, a pontszám méretével és a már
  * használt piros, zöld vagy szürke szövegszínnel jelenik meg.
  * A karakter neve a RecruitCard férfi/női színeit használja.
- * A botkártya belső tartalma halvány, felette külön, nem interaktív
- * BOT jelzés marad olvasható.
+ * A botkártya belső tartalma halvány, felette külön, nem interaktív,
+ * katonai bélyegként formázott BOT jelzés marad olvasható.
  *
  * MÓDOSÍTÁS: a karakterportré rétegzése a SoloGame működő
  * szülő/abszolút SVG-host megoldását követi. A CharacterView negatív

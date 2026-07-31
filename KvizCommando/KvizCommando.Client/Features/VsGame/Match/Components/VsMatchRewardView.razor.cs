@@ -26,7 +26,9 @@ public partial class VsMatchRewardView
             : string.Join(
                 ", ",
                 MyReward.ConsumedHelps.Select(help =>
-                    $"-{help.Count} {help.Name}"));
+                    help.Count > 1
+                        ? $"{help.Name} ×{help.Count}"
+                        : help.Name));
 
     private static string Signed(int value) =>
         $"{(value > 0 ? "+" : string.Empty)}{value}";
@@ -44,5 +46,6 @@ public partial class VsMatchRewardView
 /**
  * ÚJ FÁJL: a jutalomkomponens paraméterét és kizárólag formázási
  * segédeit tartalmazza. A szerveren számolt értékeket nem számolja
- * újra és nem indít kliensoldali mentést.
+ * újra és nem indít kliensoldali mentést. A segítségeket levonási
+ * előjel nélkül, többszörös előfordulásnál darabszámmal formázza.
  */

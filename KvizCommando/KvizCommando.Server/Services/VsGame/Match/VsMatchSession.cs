@@ -66,6 +66,7 @@ public sealed class VsMatchPlayerState
     public List<int> RoundProgress { get; } = [];
     public HashSet<int> CaptainUsedLoadoutPositions { get; } = [];
     public VsMatchCharacterRewardTotal[] CharacterRewardTotals { get; set; } = [];
+    public VsMatchStatisticsState Statistics { get; } = new();
 }
 
 public sealed class VsMatchCharacterRewardTotal
@@ -163,6 +164,8 @@ public sealed class VsMatchQuestionState
     public double CorrectGuess { get; init; }
     public int QuestionerPosition { get; init; }
     public int CategoryId { get; init; }
+    public int QuestionId { get; init; }
+    public bool IsOwnQuestion { get; init; }
 }
 
 public sealed class VsMatchPlayerAnswerState
@@ -223,7 +226,9 @@ public sealed class VsMatchRoundResultState
  * pedig csak az aktuális kérdés személyre szabott help-hatását tárolja.
  * MÓDOSÍTÁS: a session tárolja a kapcsolatot elvesztő játékos
  * szerveroldali botállapotát, a karakterenként akkumulált körjutalmat
- * és a meccs végén egyszer elkészülő jutalomeredményt.
+ * és a meccs végén egyszer elkészülő jutalomeredményt. A választási
+ * kérdés azonosítója/saját jelzője és a játékos meccsstatisztikája a
+ * későbbi egyetlen cache-mentéshez szintén itt marad.
  *
  * Egy lezárt meccs teljes, szerveroldali authoritative állapotát
  * tartalmazza. A SignalR Hub nem őriz játékállapotot.

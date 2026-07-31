@@ -261,6 +261,8 @@
     display: grid;
     place-items: center;
     overflow: hidden;
+    min-height: 0;
+    box-sizing: border-box;
     cursor: url('/Images/cursors/active.cur'), pointer;
 }
 
@@ -284,9 +286,13 @@
 .kc-vs-prep-round-category > img {
     width: 100%;
     height: 100%;
-    max-height: 58px;
+    min-width: 0;
+    min-height: 0;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: cover;
     border: inset 1px #777;
+    box-sizing: border-box;
 }
 
 .kc-vs-prep-round-category > i,
@@ -338,7 +344,7 @@
     margin: 0 6px;
     padding: 7px 10px 9px;
     display: grid;
-    grid-template-rows: 20px minmax(0, 1fr) 50px;
+    grid-template-rows: 42px minmax(0, 1fr);
     row-gap: 7px;
     overflow: visible;
     color: #cccccc;
@@ -351,21 +357,30 @@
 
 
 .kc-vs-prep-inventory > header {
-    height: 20px;
+    min-width: 0;
+    height: 42px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: space-between;
+    gap: 12px;
     color: #c6ef39;
     font-family: 'Share Tech Mono', monospace;
     letter-spacing: .04em;
     text-transform: uppercase;
 }
 
-.kc-vs-prep-inventory > header strong {
+.kc-vs-prep-inventory-title {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.kc-vs-prep-inventory-title strong {
     font-size: .92rem;
 }
 
-.kc-vs-prep-inventory > header small {
+.kc-vs-prep-inventory-title small {
     overflow: hidden;
     font-size: .75rem;
     text-overflow: ellipsis;
@@ -532,17 +547,14 @@
 }
 
 .kc-vs-prep-actions {
-    position: static;
-    width: 100%;
-    height: 50px;
+    flex: 0 0 auto;
     display: flex;
-    align-self: stretch;
-    justify-content: space-between;
+    gap: 7px;
 }
 
 .kc-vs-prep-actions .button-on-lcd {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
 }
 
 .kc-vs-prep-actions .button-on-lcd.finished:disabled,
@@ -597,10 +609,11 @@
  * módosító zöld, a negatív piros. Kategóriakijelöléskor kizárólag az
  * üres, fogadó kategóriacella kap halványsárga keretet. Ugyanez a
  * célhelykiemelés változtatás nélkül, pontosan ugyanezzel a szabállyal
- * működik a segítségeknél is. Az inventory rögzített alsó rácssora
- * tartalmazza a meglévő
- * LCD-gombos Reset/Finish sort; a Finish mindig látható, a kész Finish
- * pedig zöld állapotjelzőként marad a helyén. A kapitány üres
+ * működik a segítségeknél is. Az LCD-gombos Reset/Finish az inventory
+ * fejlécének jobb oldalán, normál rácssorban marad; a Finish mindig
+ * látható, a kész Finish pedig zöld állapotjelzőként marad a helyén.
+ * A kategóriakép követi a fogadó cellát, de annak magasságát nem
+ * változtathatja meg. A kapitány üres
  * kategóriacellája megmaradt; csak a teljes sor túlnyúló outline-ja
  * került ki. A kategóriatooltip helyi 1/2 rétegsorrenddel az
  * inventory címsora fölött jelenik meg; alkalmazásszintű z-indexet

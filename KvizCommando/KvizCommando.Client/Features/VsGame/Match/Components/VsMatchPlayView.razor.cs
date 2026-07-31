@@ -87,6 +87,21 @@ public partial class VsMatchPlayView : IDisposable
                 (Data.DeadlineUtc.Value - DateTime.UtcNow)
                 .TotalSeconds));
 
+    private int DisplaySeconds =>
+        Data.Phase == VsMatchPhase.CaptainQuestionSelection &&
+        Data.DeadlineUtc.HasValue
+            ? Math.Max(
+                0,
+                (int)Math.Round(
+                    (Data.DeadlineUtc.Value - DateTime.UtcNow)
+                    .TotalSeconds,
+                    MidpointRounding.AwayFromZero))
+            : RemainingSeconds;
+
+    private bool HasTimeRemaining =>
+        Data.DeadlineUtc.HasValue &&
+        DateTime.UtcNow < Data.DeadlineUtc.Value;
+
     private double TimerPercent => Data.PhaseDurationSeconds <= 0
         ? 0
         : Math.Clamp(
@@ -100,10 +115,15 @@ public partial class VsMatchPlayView : IDisposable
             "0.##",
             CultureInfo.InvariantCulture)}%";
 
-    private string TimerStateClass => RemainingSeconds switch
+    private int WarningSeconds =>
+        Data.Phase == VsMatchPhase.CaptainQuestionSelection
+            ? 3
+            : 5;
+
+    private string TimerStateClass => DisplaySeconds switch
     {
         <= 0 => "zero",
-        1 => "warning",
+        _ when DisplaySeconds <= WarningSeconds => "warning",
         _ => string.Empty
     };
 
@@ -125,7 +145,6 @@ public partial class VsMatchPlayView : IDisposable
         Data.Phase is
             VsMatchPhase.PreparationStarting or
             VsMatchPhase.GameStarting or
-            VsMatchPhase.QuestionResult or
             VsMatchPhase.NormalRoundResult or
             VsMatchPhase.CaptainRoundResult;
 
@@ -154,11 +173,11 @@ public partial class VsMatchPlayView : IDisposable
 
     private bool IsAnswerTimeActive =>
         Data.Game.CanAnswer &&
-        RemainingSeconds > 0;
+        HasTimeRemaining;
 
     private bool CanUseHelpNow =>
         Data.Game.CanUseHelp &&
-        RemainingSeconds > 0;
+        HasTimeRemaining;
 
     private bool ShowPlayerChoices =>
         Data.Phase == VsMatchPhase.QuestionResult &&
@@ -408,4 +427,6 @@ public partial class VsMatchPlayView : IDisposable
  * MÓDOSÍTÁS: lezáráskor halványítja a nem választott válaszokat,
  * eredménykor pedig pozíció szerinti játékosszínnel jeleníti meg,
  * hogy az egyes válaszokat kik jelölték.
+ * MÓDOSÍTÁS: a kérdéseredmény rövid szünete számláló nélkül telik;
+ * a kapitányi kérdésválasztás kijelzője a 0 értéket is megmutatja.
  */

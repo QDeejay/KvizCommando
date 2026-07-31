@@ -25,10 +25,12 @@ public sealed class VsMyRewardDto
 {
     public int FinalPosition { get; set; }
     public bool IsBot { get; set; }
+    public bool IsTeamXpAvailable { get; set; }
     public int TeamXp { get; set; }
     public int StakeReturn { get; set; }
     public int BaseCreditReward { get; set; }
     public int TeamBonusCredit { get; set; }
+    public int TeamBonusPercent { get; set; }
     public int CreditReward { get; set; }
     public int[] ConsumedHelps { get; set; } = new int[4];
     public VsCharacterRewardDto[] Characters { get; set; } = [];
@@ -48,4 +50,6 @@ public sealed class VsCharacterRewardDto
  * ÚJ FÁJL: a meccs végi nyilvános sorrend és a címzett saját
  * jutalmának kliensre küldhető contractjai. PlayerId, SessionId és
  * más szerveroldali mentési adat nem kerül a böngészőbe.
+ * A kliens külön jogosultságot kap a csapat-XP sor megjelenítéséhez,
+ * valamint a team bonus százalékát is megkapja.
  */

@@ -177,6 +177,13 @@ public partial class VsMatchManager : IAsyncDisposable
             VsMatchPhase.CaptainRoundResult or
             VsMatchPhase.GameCompleted;
 
+    private bool IsPreparationPhase =>
+        _match?.Phase is
+            VsMatchPhase.PreparationOrder or
+            VsMatchPhase.PreparationCategories or
+            VsMatchPhase.PreparationHelps or
+            VsMatchPhase.PreparationCompleted;
+
     public async ValueTask DisposeAsync()
     {
         if (_disposed)
@@ -231,7 +238,8 @@ public partial class VsMatchManager : IAsyncDisposable
  *
  * MÓDOSÍTÁS: az explicit játékmeneti parancsokat, köztük a segítség
  * használatát is változtatás nélkül továbbítja, és kijelöli a roster
- * pontnézetének fázisait.
+ * pontnézetének, valamint a természetes magasságú preparációnak a
+ * fázisait.
  *
  * A VS ranked DynamicComponent életciklusát kezeli, snapshotból view
  * modelleket készít és továbbítja a preparációs/játékparancsokat.

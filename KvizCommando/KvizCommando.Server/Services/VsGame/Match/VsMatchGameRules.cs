@@ -414,7 +414,9 @@ internal static class VsMatchGameRules
             CorrectOptionIndex =
                 loadout.CorrectOptionIndex,
             QuestionerPosition = questionerPosition,
-            CategoryId = loadout.QuestionCategoryId
+            CategoryId = loadout.QuestionCategoryId,
+            QuestionId = loadout.QuestionId,
+            IsOwnQuestion = loadout.IsOwnQuestion
         };
 
     private static void ResetRoundState(VsMatchSession match)
@@ -522,7 +524,8 @@ internal static class VsMatchGameRules
  * fázis és QuestionNumber esetén kerül a sessionbe.
  * MÓDOSÍTÁS: a játékkérdés a loadout megjelenítési kategóriája
  * helyett a tényleges kérdéskategóriát kapja, így az „összes”
- * választás időmódosítója is ugyanúgy működik.
+ * választás időmódosítója is ugyanúgy működik. Az eredeti kérdés-
+ * azonosító és a sajátkérdés-jelző a statisztikához szintén megmarad.
  * MÓDOSÍTÁS: szerveroldalon aktiválja és validálja a 50-50,
  * időtlenítő és AI segítséget. A tippsávot a nagy kör elején
  * automatikusan építi fel; a help-szint százaléka közvetlenül a

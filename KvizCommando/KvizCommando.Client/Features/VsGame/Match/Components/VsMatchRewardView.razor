@@ -42,10 +42,13 @@
                 <h3>@Lang["vsgame.Match.Reward.Team"]</h3>
 
                 <dl>
-                    <div>
-                        <dt>@Lang["vsgame.Match.Reward.TeamXp"]</dt>
-                        <dd>@Signed(MyReward.TeamXp)</dd>
-                    </div>
+                    @if (MyReward.IsTeamXpAvailable)
+                    {
+                        <div>
+                            <dt>@Lang["vsgame.Match.Reward.TeamXp"]</dt>
+                            <dd>@Signed(MyReward.TeamXp)</dd>
+                        </div>
+                    }
                     <div>
                         <dt>@Lang["vsgame.Match.Reward.StakeReturn"]</dt>
                         <dd>@Credits(MyReward.StakeReturn)</dd>
@@ -56,7 +59,10 @@
                     </div>
                     <div>
                         <dt>@Lang["vsgame.Match.Reward.TeamBonus"]</dt>
-                        <dd>@Credits(MyReward.TeamBonusCredit)</dd>
+                        <dd>
+                            @Credits(MyReward.TeamBonusCredit)
+                            (@($"{MyReward.TeamBonusPercent}%"))
+                        </dd>
                     </div>
                     <div class="total">
                         <dt>@Lang["vsgame.Match.Reward.CreditTotal"]</dt>
@@ -84,8 +90,13 @@
                             <div>
                                 <strong>@character.Name</strong>
                                 <small>
-                                    @Signed(character.CharacterXp) XP ·
-                                    @Energy(character.EnergyLoss)
+                                    @Signed(character.CharacterXp) XP
+                                    @if (character.EnergyLoss > 0)
+                                    {
+                                        <span>
+                                            · @Energy(character.EnergyLoss)
+                                        </span>
+                                    }
                                 </small>
                             </div>
                             <strong class="pension">
@@ -103,5 +114,7 @@
 @*
     ÚJ FÁJL: a GameCompleted snapshot végső tabelláját, saját
     csapatjutalmát, felhasznált segítségeit és karakterenkénti XP-,
-    energia- és nyugdíjváltozását jeleníti meg. Állapotot nem módosít.
+    energia- és nyugdíjváltozását jeleníti meg. Nulla energiavesztést
+    és 21-es csapatszint felett csapat-XP sort nem ír ki; a team bonus
+    százalékát az összeg mellett mutatja. Állapotot nem módosít.
 *@
