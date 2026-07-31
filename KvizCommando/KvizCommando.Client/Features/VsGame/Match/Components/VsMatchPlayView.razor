@@ -164,20 +164,9 @@
                 {
                     <div class="kc-vs-guess">
                         <div class="kc-vs-guess-stage">
-                            @if (Data.Game.CorrectGuess.HasValue)
-                            {
-                                <div class="kc-vs-guess-result">
-                                    <span>
-                                        @Lang["vsgame.Match.Game.CorrectGuess"]
-                                    </span>
-                                    <strong>
-                                        @Data.Game.CorrectGuess.Value.ToString("0.##")
-                                    </strong>
-                                </div>
-                            }
-                            else
-                            {
-                                @if (HasGuessRange)
+                            <div class="kc-vs-guess-range-slot">
+                                @if (HasGuessRange &&
+                                     !Data.Game.CorrectGuess.HasValue)
                                 {
                                     <div class="kc-vs-guess-range">
                                         <i class="bi bi-arrows-expand-vertical"></i>
@@ -187,26 +176,26 @@
                                         <strong>@GuessRangeText</strong>
                                     </div>
                                 }
+                            </div>
 
-                                <div class="kc-vs-guess-controls">
-                                    <input type="text"
-                                           class="lcd-input @(Data.Game.MyGuess.HasValue ? "submitted" : string.Empty)"
-                                           inputmode="decimal"
-                                           @ref="_guessInput"
-                                           @bind="_guessText"
-                                           @bind:event="oninput"
-                                           @onkeydown="HandleGuessKeyDownAsync"
-                                           disabled="@(!IsAnswerTimeActive || _sending)" />
-                                    <button type="button"
-                                            class="button-on-lcd"
-                                            disabled="@(!CanSubmitGuess)"
-                                            aria-label="@Lang["vsgame.Match.Game.Submit"]"
-                                            title="@Lang["vsgame.Match.Game.Submit"]"
-                                            @onclick="SubmitGuessAsync">
-                                        <i class="bi bi-check-lg"></i>
-                                    </button>
-                                </div>
-                            }
+                            <div class="kc-vs-guess-controls">
+                                <input type="text"
+                                       class="lcd-input @GuessInputClass"
+                                       inputmode="decimal"
+                                       @ref="_guessInput"
+                                       @bind="GuessInputText"
+                                       @bind:event="oninput"
+                                       @onkeydown="HandleGuessKeyDownAsync"
+                                       disabled="@(!IsAnswerTimeActive || _sending || IsGuessLocked)" />
+                                <button type="button"
+                                        class="button-on-lcd @(Data.Game.CorrectGuess.HasValue ? "hidden" : string.Empty)"
+                                        disabled="@(!CanSubmitGuess)"
+                                        aria-label="@Lang["vsgame.Match.Game.Submit"]"
+                                        title="@Lang["vsgame.Match.Game.Submit"]"
+                                        @onclick="SubmitGuessAsync">
+                                    <i class="bi bi-check-lg"></i>
+                                </button>
+                            </div>
                         </div>
 
                         <div class="kc-vs-guess-player-results">
@@ -404,7 +393,9 @@
     stage-ben marad, ezért a helyes érték felfedésekor nem nyúlik meg.
     A saját szerver által visszaigazolt tipp már az eredmény előtt a
     saját játékoskártyán látható.
-    MÓDOSÍTÁS: a tippmező a központi lcd-input megjelenést használja,
-    majd a szerver által visszaigazolt tippnél méretváltás nélkül
-    áttűnik a játék zöld kijelzőállapotába.
+    MÓDOSÍTÁS: a tippmező a központi lcd-input megjelenést használja.
+    Beküldés után ugyanaz az elem méretváltás nélkül a kérdéskijelző
+    közös stílusára vált; felfedéskor ebben jelenik meg a helyes érték.
+    A tippsávnak mindig fenntartott fix sora van. A visszaigazolt saját
+    tipp 0,3 másodperc alatt áttűnik az inputból a játékoskártyára.
 *@

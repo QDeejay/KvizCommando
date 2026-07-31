@@ -168,6 +168,7 @@ public partial class VsMatchPlayView : IDisposable
 
     private bool CanSubmitGuess =>
         IsAnswerTimeActive &&
+        !IsGuessLocked &&
         TryGetGuessValue(out _) &&
         !_sending;
 
@@ -194,6 +195,32 @@ public partial class VsMatchPlayView : IDisposable
     private bool HasGuessRange =>
         Data.Game.MyGuessRangeMinimum.HasValue &&
         Data.Game.MyGuessRangeMaximum.HasValue;
+
+    private bool IsGuessLocked =>
+        Data.Game.MyGuess.HasValue ||
+        Data.Game.CorrectGuess.HasValue;
+
+    private string GuessInputClass =>
+        Data.Game.CorrectGuess.HasValue
+            ? "game-display"
+            : Data.Game.MyGuess.HasValue
+                ? "game-display submitted"
+                : string.Empty;
+
+    private string GuessInputText
+    {
+        get => Data.Game.CorrectGuess.HasValue
+            ? $"{Lang["vsgame.Match.Game.CorrectGuess"]}: " +
+              FormatNumber(Data.Game.CorrectGuess.Value)
+            : Data.Game.MyGuess.HasValue
+                ? FormatNumber(Data.Game.MyGuess.Value)
+                : _guessText;
+        set
+        {
+            if (!IsGuessLocked)
+                _guessText = value;
+        }
+    }
 
     private string GuessRangeText =>
         $"({FormatNumber(Data.Game.MyGuessRangeMinimum!.Value)} - " +
@@ -476,6 +503,9 @@ public partial class VsMatchPlayView : IDisposable
  * MÓDOSÍTÁS: a saját tipp szövegét és felfedési állapotát közvetlenül
  * a személyre szabott MyGuess snapshotmezőből adja; a többiek tippje
  * a közös eredményig változatlanul rejtett marad.
+ * MÓDOSÍTÁS: ugyanaz a bindolt tippmező mutatja a beírt, a szerver
+ * által visszaigazolt, majd a felfedett helyes értéket is.
+ * A felfedett érték elé visszakerül a lokalizált „Helyes érték” címke.
  * MÓDOSÍTÁS: a kérdéseredmény rövid szünete számláló nélkül telik;
  * a kapitányi kérdésválasztás kijelzője a 0 értéket is megmutatja.
  */

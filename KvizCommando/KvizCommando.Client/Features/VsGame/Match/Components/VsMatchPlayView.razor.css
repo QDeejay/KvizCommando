@@ -230,6 +230,11 @@
     padding: 13px 16px;
     display: grid;
     place-items: center;
+    font-size: clamp(1rem, 1.7vw, 1.35rem);
+}
+
+.kc-vs-question h3,
+.kc-vs-guess input.lcd-input.game-display {
     color: #222f16;
     background-color: rgba(210, 255, 57, .9);
     border: inset 2px #777;
@@ -238,7 +243,6 @@
         0 4px 16px rgba(0, 0, 0, .4),
         inset 0 4px 8px rgba(0, 0, 0, .7);
     font-family: 'Share Tech Mono', monospace;
-    font-size: clamp(1rem, 1.7vw, 1.35rem);
     font-weight: 700;
     text-align: center;
 }
@@ -370,8 +374,17 @@
     gap: 10px;
 }
 
+.kc-vs-guess-range-slot {
+    width: 100%;
+    height: 34px;
+    min-width: 0;
+    display: grid;
+    place-items: center;
+}
+
 .kc-vs-guess-range {
-    min-height: 34px;
+    height: 34px;
+    max-width: 100%;
     padding: 5px 10px;
     display: flex;
     align-items: center;
@@ -381,6 +394,7 @@
     background: rgba(17, 22, 16, .94);
     border: 1px solid #55583f;
     border-radius: 4px;
+    box-sizing: border-box;
     font-family: 'Share Tech Mono', monospace;
 }
 
@@ -397,20 +411,16 @@
     font-size: 1.25rem;
     text-align: center;
     transition:
-        background-color .2s ease,
-        border-color .2s ease,
-        box-shadow .2s ease,
-        color .2s ease;
+        background-color .3s ease,
+        border-color .3s ease,
+        box-shadow .3s ease,
+        color .3s ease;
 }
 
 .kc-vs-guess input.lcd-input.submitted,
 .kc-vs-guess input.lcd-input.submitted:disabled {
-    color: #222f16;
-    background-color: rgba(210, 255, 57, .9);
-    border: inset 2px #777;
-    box-shadow:
-        0 0 7px rgba(198, 239, 57, .18),
-        inset 0 3px 6px rgba(0, 0, 0, .62);
+    color: transparent;
+    caret-color: transparent;
 }
 
 .kc-vs-guess input:disabled {
@@ -423,26 +433,8 @@
     flex: 0 0 50px;
 }
 
-.kc-vs-guess-result {
-    min-width: min(100%, 320px);
-    min-height: 58px;
-    padding: 8px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    color: #222f16;
-    background: rgba(210, 255, 57, .9);
-    border: inset 2px #777;
-    border-radius: 4px;
-    box-shadow:
-        0 4px 16px rgba(0, 0, 0, .4),
-        inset 0 4px 8px rgba(0, 0, 0, .7);
-    font-family: 'Share Tech Mono', monospace;
-}
-
-.kc-vs-guess-result strong {
-    font-size: 1.45rem;
+.kc-vs-guess .button-on-lcd.hidden {
+    visibility: hidden;
 }
 
 .kc-vs-guess-player-results {
@@ -488,7 +480,7 @@
     color: #eee9dc;
     font-size: .92rem;
     opacity: .42;
-    transition: opacity .18s ease;
+    transition: opacity .3s ease;
 }
 
 .kc-vs-guess-player-results strong.revealed {
@@ -864,7 +856,12 @@
  * A beviteli mező a központi, kékes lcd-input megjelenést örökli;
  * helyben csak a mérete, a Share Tech Mono és a középre igazítás tér el.
  * Szerver-visszaigazolás után ugyanaz a változatlan méretű input rövid
- * áttűnéssel a játék zöld kijelzőállapotára vált.
+ * áttűnéssel a kérdéskijelzővel közös CSS-szabályra vált. A helyes
+ * érték felfedése sem hoz létre másik mezőt, csak az input értékét írja.
+ * A tippsávnak segítség nélkül is megmarad a 34 px magas üres sora,
+ * ezért a segítség megjelenése és eltűnése sem mozgatja a mezőt.
+ * A visszaigazolt tipp szövege 0,3 másodperc alatt elhalványul az
+ * inputban, miközben ugyanilyen áttűnéssel megjelenik a saját kártyán.
  * magyarázza a kizárólag ott kiosztott pluszpontot.
  * MÓDOSÍTÁS: a számbecslés natív léptető nélküli szövegmezőként
  * jelenik meg, decimal inputmóddal és a projekt saját IBeam

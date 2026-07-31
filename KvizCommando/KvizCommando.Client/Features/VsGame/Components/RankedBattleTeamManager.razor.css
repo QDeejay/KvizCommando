@@ -29,7 +29,7 @@
     align-items: center;
     min-width: 0;
     min-height: 173px;
-    padding: 4px 5px 22px;
+    padding: 4px 5px 29px;
     color: #222f16;
     background: rgba(120, 120, 120, 0.08);
     border: 1px solid rgba(34, 47, 22, 0.45);
@@ -95,11 +95,22 @@
 
 .kc-ranked-member-orientation {
     position: absolute;
-    right: 30px;
-    bottom: 5px;
+    right: 6px;
+    bottom: 4px;
     left: 6px;
+    height: 21px;
+    padding: 2px 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
     color: rgba(34, 47, 22, 0.78);
+    background: rgba(34, 47, 22, 0.08);
+    border: 1px solid rgba(34, 47, 22, 0.32);
+    border-radius: 3px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.18);
+    box-sizing: border-box;
+    font-family: 'Share Tech Mono', monospace;
     font-size: 0.67rem;
     font-weight: bold;
     line-height: 1;
@@ -117,9 +128,10 @@
 
 .kc-ranked-member-state {
     position: absolute;
-    right: 6px;
-    bottom: 3px;
-    font-size: 1.25rem;
+    right: 10px;
+    bottom: 7px;
+    z-index: 1;
+    font-size: 1rem;
     font-weight: bold;
     line-height: 1;
 }
@@ -199,7 +211,7 @@
 }
 
 /*
- * MÓDOSÍTÁS: a rövid orientáció a kártya alsó, ikon előtti sávjába
- * került. A kijelölési pipa és a blokkoló X változatlanul abszolút
- * pozícióval a jobb alsó sarokban marad.
+ * MÓDOSÍTÁS: a rövid orientáció rendezett, teljes szélességű alsó
+ * címkesávot kapott. A kijelölési pipa és a blokkoló X a címkében
+ * fenntartott helyen, abszolút pozícióval a jobb alsó sarokban marad.
  */
