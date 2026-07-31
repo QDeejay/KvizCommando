@@ -207,10 +207,13 @@ internal static class VsMatchPreparationRules
     {
         foreach (var player in match.Players)
         {
-            player.IsFinished =
-                !player.IsConnected ||
-                (phase == VsMatchPhase.PreparationHelps &&
-                 player.HelpCounts.All(count => count <= 0));
+            if (player.IsBot)
+                ApplyTimeoutDefaults(match, player);
+
+            player.IsFinished = player.IsBot ||
+                                !player.IsConnected ||
+                                (phase == VsMatchPhase.PreparationHelps &&
+                                 player.HelpCounts.All(count => count <= 0));
         }
     }
 
@@ -245,63 +248,53 @@ internal static class VsMatchPreparationRules
         switch (match.Phase)
         {
             case VsMatchPhase.PreparationOrder:
-            {
-                var usedSlots = player.Rounds
-                    .Where(round =>
-                        round.CharacterSlotNumber.HasValue)
-                    .Select(round =>
-                        round.CharacterSlotNumber!.Value)
-                    .ToHashSet();
-
-                var remainingSlots = new Queue<int>(
-                    player.Characters
-                        .Where(character =>
-                            !usedSlots.Contains(
-                                character.SlotNumber))
-                        .Select(character =>
-                            character.SlotNumber));
-
-                foreach (var round in player.Rounds.Where(round =>
-                             !round.IsCaptainRound &&
-                             !round.CharacterSlotNumber.HasValue))
-                {
-                    round.CharacterSlotNumber =
-                        remainingSlots.Dequeue();
-                }
-
+                FillCharacterDefaults(player);
                 break;
-            }
 
             case VsMatchPhase.PreparationCategories:
-            {
-                var usedPositions = player.Rounds
-                    .Where(round =>
-                        round.LoadoutPosition.HasValue)
-                    .Select(round =>
-                        round.LoadoutPosition!.Value)
-                    .ToHashSet();
-
-                var remainingPositions = new Queue<int>(
-                    player.Loadout
-                        .Where(item =>
-                            !item.IsOwnQuestion &&
-                            !usedPositions.Contains(
-                                item.LoadoutPosition))
-                        .OrderBy(item =>
-                            item.LoadoutPosition)
-                        .Select(item =>
-                            item.LoadoutPosition));
-
-                foreach (var round in player.Rounds.Where(round =>
-                             !round.IsCaptainRound &&
-                             !round.LoadoutPosition.HasValue))
-                {
-                    round.LoadoutPosition =
-                        remainingPositions.Dequeue();
-                }
-
+                FillLoadoutDefaults(player);
                 break;
-            }
+        }
+    }
+
+    private static void FillCharacterDefaults(VsMatchPlayerState player)
+    {
+        var usedSlots = player.Rounds
+            .Where(round => round.CharacterSlotNumber.HasValue)
+            .Select(round => round.CharacterSlotNumber!.Value)
+            .ToHashSet();
+        var remainingSlots = new Queue<int>(
+            player.Characters
+                .Where(character => !usedSlots.Contains(character.SlotNumber))
+                .Select(character => character.SlotNumber));
+
+        foreach (var round in player.Rounds.Where(round =>
+                     !round.IsCaptainRound &&
+                     !round.CharacterSlotNumber.HasValue))
+        {
+            round.CharacterSlotNumber = remainingSlots.Dequeue();
+        }
+    }
+
+    private static void FillLoadoutDefaults(VsMatchPlayerState player)
+    {
+        var usedPositions = player.Rounds
+            .Where(round => round.LoadoutPosition.HasValue)
+            .Select(round => round.LoadoutPosition!.Value)
+            .ToHashSet();
+        var remainingPositions = new Queue<int>(
+            player.Loadout
+                .Where(item =>
+                    !item.IsOwnQuestion &&
+                    !usedPositions.Contains(item.LoadoutPosition))
+                .OrderBy(item => item.LoadoutPosition)
+                .Select(item => item.LoadoutPosition));
+
+        foreach (var round in player.Rounds.Where(round =>
+                     !round.IsCaptainRound &&
+                     !round.LoadoutPosition.HasValue))
+        {
+            round.LoadoutPosition = remainingPositions.Dequeue();
         }
     }
 
@@ -345,4 +338,7 @@ internal static class VsMatchPreparationRules
  * a karakter-, kategória- és segítségkiosztást, a Reset/Finish
  * parancsokat, a timeout alapértékeit és a következő prep fázist.
  * SignalR-, adatbázis- és aszinkron függősége nincs.
+ * MÓDOSÍTÁS: a bot minden preparációs fázisban ugyanazt az
+ * inventory-sorrendű alapkitöltést kapja, mint a timeout; új,
+ * párhuzamos kiosztási szabály nincs.
  */

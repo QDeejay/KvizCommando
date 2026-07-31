@@ -268,10 +268,10 @@ internal static class VsMatchGameRules
         };
     }
 
-    internal static bool HaveAllConnectedPlayersAnswered(
+    internal static bool HaveAllParticipantsAnswered(
         VsMatchSession match) =>
         match.Players
-            .Where(player => player.IsConnected)
+            .Where(player => player.IsConnected || player.IsBot)
             .All(player =>
                 player.CurrentAnswer?.QuestionNumber ==
                 match.Game.QuestionNumber);
@@ -527,4 +527,7 @@ internal static class VsMatchGameRules
  * időtlenítő és AI segítséget. A tippsávot a nagy kör elején
  * automatikusan építi fel; a help-szint százaléka közvetlenül a
  * teljes sáv helyes válaszhoz viszonyított szélességét adja.
+ * MÓDOSÍTÁS: egy kérdés akkor zárható korábban, ha minden aktív
+ * ember vagy szerveroldali bot válaszolt; a lecsatlakozott bot nem
+ * rövidíti le tévesen a többiek kérdésidejét.
  */

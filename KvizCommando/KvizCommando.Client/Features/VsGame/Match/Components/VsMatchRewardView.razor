@@ -1,0 +1,107 @@
+@using KvizCommando.Client.Components.CharacterComponent
+@using KvizCommando.Client.Features.VsGame.Match.ViewModels
+
+<section class="kc-vs-reward">
+    <header class="kc-vs-reward-title">
+        <strong>@Data.InfoText</strong>
+        <span title="@Data.MatchId">#@MatchReference</span>
+    </header>
+
+    <div class="kc-vs-reward-body">
+        <div class="kc-vs-reward-banner">
+            <i class="bi bi-trophy-fill"></i>
+            <strong>
+                @Winner.TeamName · @Lang["vsgame.Match.Reward.Victory"]
+            </strong>
+        </div>
+
+        <section class="kc-vs-reward-panel standings">
+            <h3>@Lang["vsgame.Match.Reward.FinalStanding"]</h3>
+
+            <div class="kc-vs-reward-standing-grid">
+                @foreach (var player in Data.Reward.Standings)
+                {
+                    <article class="kc-vs-reward-standing @(player.IsMe ? "me" : "") @(player.IsBot ? "bot" : "")">
+                        <strong class="place">@player.FinalPosition.</strong>
+                        <div>
+                            <strong>@player.TeamName</strong>
+                            <small>@player.DisplayName · @player.TeamLevel</small>
+                        </div>
+                        <span class="bot-label">
+                            @(player.IsBot ? "– BOT –" : string.Empty)
+                        </span>
+                        <strong class="points">@player.Points P</strong>
+                        <span class="time">@Seconds(player.TimeSeconds)</span>
+                    </article>
+                }
+            </div>
+        </section>
+
+        <div class="kc-vs-reward-details">
+            <section class="kc-vs-reward-panel team">
+                <h3>@Lang["vsgame.Match.Reward.Team"]</h3>
+
+                <dl>
+                    <div>
+                        <dt>@Lang["vsgame.Match.Reward.TeamXp"]</dt>
+                        <dd>@Signed(MyReward.TeamXp)</dd>
+                    </div>
+                    <div>
+                        <dt>@Lang["vsgame.Match.Reward.StakeReturn"]</dt>
+                        <dd>@Credits(MyReward.StakeReturn)</dd>
+                    </div>
+                    <div>
+                        <dt>@Lang["vsgame.Match.Reward.BaseCredit"]</dt>
+                        <dd>@Credits(MyReward.BaseCreditReward)</dd>
+                    </div>
+                    <div>
+                        <dt>@Lang["vsgame.Match.Reward.TeamBonus"]</dt>
+                        <dd>@Credits(MyReward.TeamBonusCredit)</dd>
+                    </div>
+                    <div class="total">
+                        <dt>@Lang["vsgame.Match.Reward.CreditTotal"]</dt>
+                        <dd>@Credits(MyReward.CreditReward)</dd>
+                    </div>
+                    <div>
+                        <dt>@Lang["vsgame.Match.Reward.ConsumedHelps"]</dt>
+                        <dd>@ConsumedHelpsText</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <section class="kc-vs-reward-panel characters">
+                <h3>@Lang["vsgame.Match.Reward.Characters"]</h3>
+
+                <div class="kc-vs-reward-character-list">
+                    @foreach (var character in MyReward.Characters)
+                    {
+                        <article class="kc-vs-reward-character">
+                            <div class="kc-vs-reward-character-picture">
+                                <div class="kc-vs-reward-character-svg-host">
+                                    <CharacterView PicCode="@character.PictureCode" />
+                                </div>
+                            </div>
+                            <div>
+                                <strong>@character.Name</strong>
+                                <small>
+                                    @Signed(character.CharacterXp) XP ·
+                                    @Energy(character.EnergyLoss)
+                                </small>
+                            </div>
+                            <strong class="pension">
+                                @Signed(character.Pension)
+                                @Lang["vsgame.Match.Reward.Pension"]
+                            </strong>
+                        </article>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+
+@*
+    ÚJ FÁJL: a GameCompleted snapshot végső tabelláját, saját
+    csapatjutalmát, felhasznált segítségeit és karakterenkénti XP-,
+    energia- és nyugdíjváltozását jeleníti meg. Állapotot nem módosít.
+*@

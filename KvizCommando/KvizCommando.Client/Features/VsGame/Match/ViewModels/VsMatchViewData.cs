@@ -14,6 +14,7 @@ public sealed class VsMatchViewData
     public VsRosterPlayerVm[] Players { get; set; } = [];
     public VsPreparationViewData Preparation { get; set; } = new();
     public VsGameViewData Game { get; set; } = new();
+    public VsMatchRewardViewData Reward { get; set; } = new();
 }
 
 public sealed class VsQueueViewData
@@ -36,6 +37,7 @@ public sealed class VsRosterPlayerVm
     public string TeamPictureSrc { get; set; } = string.Empty;
     public bool IsMe { get; set; }
     public bool IsConnected { get; set; }
+    public bool IsBot { get; set; }
     public bool IsFinished { get; set; }
     public int TotalPoints { get; set; }
     public double TotalTimeSeconds { get; set; }
@@ -192,6 +194,8 @@ public sealed class VsCaptainQuestionVm
  * MÓDOSÍTÁS: a karaktermodell csak az SVG PictureCode-ot és a
  * preparációban használt orientációnevet tartja; külön orientációs
  * képútvonalra nincs szüksége.
+ * MÓDOSÍTÁS: a fő view data felvette a külön fájlban definiált
+ * rewardnézetet, a rosterjátékos pedig a szerver botjelzőjét.
  *
  * A VS lobby, roster, preparáció és játéknézet view modeljeit
  * tartalmazza.

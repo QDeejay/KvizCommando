@@ -14,6 +14,7 @@ public sealed class VsMatchSnapshot
     public VsMatchPlayerDto[] Players { get; set; } = [];
     public VsPreparationDto Preparation { get; set; } = new();
     public VsGameDto Game { get; set; } = new();
+    public VsMatchRewardDto Reward { get; set; } = new();
 }
 
 public sealed class VsMatchPlayerDto
@@ -25,6 +26,7 @@ public sealed class VsMatchPlayerDto
     public string TeamPictureCode { get; set; } = string.Empty;
     public bool IsMe { get; set; }
     public bool IsConnected { get; set; }
+    public bool IsBot { get; set; }
     public bool IsFinished { get; set; }
     public int TotalPoints { get; set; }
     public double TotalTimeSeconds { get; set; }
@@ -92,6 +94,9 @@ public sealed class VsCategoryModifierDto
  * MÓDOSÍTÁS: a snapshot felvette a játék állását, a rendezett
  * összpont-/összidőadatokat és a normál kör aktív karakterét. A
  * helyes válasz kizárólag lezárt kérdésnél kerül a címzetthez.
+ * MÓDOSÍTÁS: a roster külön botjelzőt, a GameCompleted snapshot pedig
+ * nyilvános végső sorrendet és kizárólag a címzett saját rewardját
+ * tartalmazza.
  *
  * Egy játékosra szabott VS snapshot. Csak a megjelenítéshez és az
  * aktuálisan engedélyezett műveletekhez szükséges adatokat küldi ki.

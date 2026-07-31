@@ -240,9 +240,6 @@
   <data name="Match.Game.FastestBonus" xml:space="preserve">
     <value>Best round time bonus</value>
   </data>
-  <data name="Match.Game.RewardPending" xml:space="preserve">
-    <value>The complete reward settlement will be added in the next development step.</value>
-  </data>
   <data name="Match.Game.Questioner" xml:space="preserve">
     <value>Questioner</value>
   </data>
@@ -258,12 +255,27 @@
   <data name="Match.Game.EnergyShort" xml:space="preserve">
     <value>EN</value>
   </data>
+  <data name="Match.Reward.Victory" xml:space="preserve"><value>victory</value></data>
+  <data name="Match.Reward.FinalStanding" xml:space="preserve"><value>Final standing</value></data>
+  <data name="Match.Reward.Team" xml:space="preserve"><value>Team reward</value></data>
+  <data name="Match.Reward.TeamXp" xml:space="preserve"><value>Team XP</value></data>
+  <data name="Match.Reward.StakeReturn" xml:space="preserve"><value>Stake returned</value></data>
+  <data name="Match.Reward.BaseCredit" xml:space="preserve"><value>Prize</value></data>
+  <data name="Match.Reward.TeamBonus" xml:space="preserve"><value>Team bonus</value></data>
+  <data name="Match.Reward.CreditTotal" xml:space="preserve"><value>Total credit</value></data>
+  <data name="Match.Reward.ConsumedHelps" xml:space="preserve"><value>Consumed help</value></data>
+  <data name="Match.Reward.Characters" xml:space="preserve"><value>Character reward</value></data>
+  <data name="Match.Reward.Pension" xml:space="preserve"><value>pension</value></data>
+  <data name="Match.Reward.None" xml:space="preserve"><value>None</value></data>
+  <data name="Match.Reward.CreditUnit" xml:space="preserve"><value>credit</value></data>
   <!--
     MÓDOSÍTÁS: hozzáadja a ranked várólista, MatchLocked, a három
     preparációs fázis, az ismétlésmentes preparációs fejléc, az
     inventory, játékmenet, eredmény, roster és az üres körhely angol
     feliratait.
     MÓDOSÍTÁS: felvette a tippsáv játékközbeni angol feliratát.
+    MÓDOSÍTÁS: felvette a végső tabella és a csapat-/karakterreward
+    angol megjelenítési feliratait.
 
     A fájl a VS kliens angol lokalizációs forrása; Debug buildkor
     a ResxExporter ebből készíti el a vsgame.json fájlt.

@@ -61,6 +61,26 @@
     filter: grayscale(.85);
 }
 
+.kc-vs-roster-card.bot > * {
+    opacity: .38;
+    filter: grayscale(.8);
+}
+
+.kc-vs-roster-card.bot::after {
+    content: "– BOT –";
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: rgba(238, 233, 220, .72);
+    background: rgba(10, 11, 9, .18);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+    letter-spacing: .16em;
+    pointer-events: none;
+}
+
 .kc-vs-roster-card.searching {
     display: flex;
     justify-content: center;
@@ -226,6 +246,8 @@
  * a kártya jobb felső sarkában, a pontszám méretével és a már
  * használt piros, zöld vagy szürke szövegszínnel jelenik meg.
  * A karakter neve a RecruitCard férfi/női színeit használja.
+ * A botkártya belső tartalma halvány, felette külön, nem interaktív
+ * BOT jelzés marad olvasható.
  *
  * MÓDOSÍTÁS: a karakterportré rétegzése a SoloGame működő
  * szülő/abszolút SVG-host megoldását követi. A CharacterView negatív

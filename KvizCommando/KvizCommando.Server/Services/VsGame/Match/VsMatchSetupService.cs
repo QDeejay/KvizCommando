@@ -36,7 +36,8 @@ public sealed class VsMatchSetupService
 
         lock (match.SyncRoot)
         {
-            if (match.Players.All(player => !player.IsConnected))
+            if (match.Players.All(player =>
+                    !player.IsConnected && !player.IsBot))
                 return false;
         }
 
@@ -60,7 +61,8 @@ public sealed class VsMatchSetupService
         lock (match.SyncRoot)
         {
             if (match.IsClosed ||
-                match.Players.All(player => !player.IsConnected))
+                match.Players.All(player =>
+                    !player.IsConnected && !player.IsBot))
             {
                 return false;
             }
@@ -78,6 +80,14 @@ public sealed class VsMatchSetupService
                 player.HelpCounts = seed.HelpCounts;
                 player.Loadout =
                     questions.Loadouts[seed.PlayerId];
+                player.CharacterRewardTotals =
+                [
+                    .. seed.Characters.Select(character =>
+                        new VsMatchCharacterRewardTotal
+                        {
+                            SlotNumber = character.SlotNumber
+                        })
+                ];
             }
 
             match.GuessQuestions = questions.GuessQuestions;
@@ -365,4 +375,7 @@ public sealed class VsMatchSetupService
  * üzenetet és fázisváltást nem végez.
  * MÓDOSÍTÁS: a segítségek darabszáma mellett a négy fejlesztési
  * szintet is ugyanebbe az egyszeri meccssnapshotba másolja.
+ * MÓDOSÍTÁS: inicializálja a karakterenkénti reward-akkumulátort,
+ * és a már bottá vált, de tovább futó játékost aktív résztvevőnek
+ * tekinti a kérdések egyszeri betöltésekor.
  */

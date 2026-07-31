@@ -70,6 +70,25 @@ public sealed class VsMatchStore
                _matches.TryGetValue(matchId, out match);
     }
 
+    public void ReleasePlayer(VsMatchSession match, VsMatchPlayerState player)
+    {
+        if (_connectionMatches.TryGetValue(
+                player.ConnectionId,
+                out var connectionMatchId) &&
+            connectionMatchId == match.MatchId)
+        {
+            _connectionMatches.TryRemove(player.ConnectionId, out _);
+        }
+
+        if (_playerMatches.TryGetValue(
+                player.PlayerId,
+                out var playerMatchId) &&
+            playerMatchId == match.MatchId)
+        {
+            _playerMatches.TryRemove(player.PlayerId, out _);
+        }
+    }
+
     public (int PlayerId, int ClassificationId)[]
         GetConnectedPlayers()
     {
@@ -132,6 +151,9 @@ public sealed class VsMatchStore
  * erőforrás, így nincs SemaphoreSlim-dispose versenyhelyzet.
  * A kapcsolódott játékosokról rövid, lockolt pillanatképet ad a
  * ranked létszám képernyő-DTO-ba töltéséhez.
+ * MÓDOSÍTÁS: egy befejezett meccs játékoszárolása külön is
+ * feloldható anélkül, hogy a többi, reward képernyőt még néző
+ * játékos sessionjét törölné.
  *
  * A futó VS meccsek és a connection/player hozzárendelések
  * folyamaton belüli, konkurens tárolója.

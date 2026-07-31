@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace KvizCommando.Server.Services.VsGame.Match;
 
-public sealed class VsMatchService : IVsMatchService
+public sealed partial class VsMatchService : IVsMatchService
 {
     private readonly VsMatchStore _store;
     private readonly VsMatchSetupService _setup;
@@ -92,7 +92,7 @@ public sealed class VsMatchService : IVsMatchService
                 hasConnectedPlayer =
                     hasConnectedPlayer &&
                     match.Players.Any(player =>
-                        player.IsConnected);
+                        player.IsConnected || player.IsBot);
 
                 if (!hasConnectedPlayer)
                 {
@@ -365,7 +365,7 @@ public sealed class VsMatchService : IVsMatchService
                 $"Question={request.QuestionNumber}");
 
             if (VsMatchGameRules
-                .HaveAllConnectedPlayersAnswered(match))
+                .HaveAllParticipantsAnswered(match))
             {
                 StartAnswerResultDelayLocked(match);
             }
@@ -414,7 +414,7 @@ public sealed class VsMatchService : IVsMatchService
                 $"Answer={request.AnswerIndex}");
 
             if (VsMatchGameRules
-                .HaveAllConnectedPlayersAnswered(match))
+                .HaveAllParticipantsAnswered(match))
             {
                 StartAnswerResultDelayLocked(match);
             }
@@ -526,6 +526,7 @@ public sealed class VsMatchService : IVsMatchService
         ct.ThrowIfCancellationRequested();
 
         var removeMatch = false;
+        var releasePlayer = false;
         (string ConnectionId, VsMatchSnapshot Snapshot)[] messages = [];
 
         lock (match.SyncRoot)
@@ -539,15 +540,25 @@ public sealed class VsMatchService : IVsMatchService
                 return;
             }
 
-            player.IsConnected = false;
-            if (IsPreparationPhase(match.Phase))
+            if (match.Phase == VsMatchPhase.GameCompleted)
             {
-                VsMatchPreparationRules.ApplyTimeoutDefaults(
-                    match,
-                    player);
+                player.IsConnected = false;
+                releasePlayer = true;
+                removeMatch = match.Players.All(item => !item.IsConnected);
             }
+            else
+            {
+                VsMatchBotRules.Activate(match, player);
 
-            player.IsFinished = true;
+                if (IsPreparationPhase(match.Phase))
+                {
+                    VsMatchPreparationRules.ApplyTimeoutDefaults(
+                        match,
+                        player);
+                }
+
+                player.IsFinished = true;
+            }
 
             AddLog(
                 match,
@@ -555,28 +566,32 @@ public sealed class VsMatchService : IVsMatchService
                 "Disconnected",
                 string.Empty);
 
-            if (IsPreparationPhase(match.Phase))
+            if (!releasePlayer && IsPreparationPhase(match.Phase))
             {
                 AdvanceIfReadyLocked(match);
             }
-            else if (IsAnswerPhase(match.Phase) &&
+            else if (!releasePlayer && IsAnswerPhase(match.Phase) &&
                      VsMatchGameRules
-                         .HaveAllConnectedPlayersAnswered(match))
+                         .HaveAllParticipantsAnswered(match))
             {
-                CloseQuestionLocked(match);
+                StartAnswerResultDelayLocked(match);
+            }
+            else if (!releasePlayer && IsAnswerPhase(match.Phase))
+            {
+                ScheduleBotAnswerLocked(match, player);
             }
 
-            removeMatch =
-                !match.IsInitializing &&
-                match.Players.All(item => !item.IsConnected);
-
-            if (!removeMatch &&
+            if (!releasePlayer &&
                 match.Players.Any(item => item.IsConnected))
             {
                 messages =
                     VsMatchSnapshotBuilder.BuildMessages(match);
             }
         }
+
+        if (releasePlayer)
+            _store.ReleasePlayer(match, match.Players.First(player =>
+                player.ConnectionId == connectionId));
 
         if (removeMatch)
         {
@@ -673,6 +688,8 @@ public sealed class VsMatchService : IVsMatchService
             match.MatchId,
             timerDeadlineUtc,
             match.PhaseTimerCts.Token);
+
+        ScheduleBotAnswersLocked(match);
     }
 
     private async Task RunPhaseTimerAsync(
@@ -720,7 +737,14 @@ public sealed class VsMatchService : IVsMatchService
                     VsMatchSnapshotBuilder.BuildMessages(match);
             }
 
-            await SendBroadcastMessagesAsync(messages);
+            try
+            {
+                await SendBroadcastMessagesAsync(messages);
+            }
+            finally
+            {
+                ReleaseCompletedBots(match);
+            }
         }
         catch (OperationCanceledException) when (ct.IsCancellationRequested)
         {
@@ -791,9 +815,7 @@ public sealed class VsMatchService : IVsMatchService
 
             case VsMatchPhase.CaptainRoundResult:
                 VsMatchGameRules.CommitRoundResult(match);
-                StartPhaseLocked(
-                    match,
-                    VsMatchPhase.GameCompleted);
+                CompleteMatchLocked(match);
                 break;
         }
     }
@@ -1042,4 +1064,8 @@ public sealed class VsMatchService : IVsMatchService
  * A fájl a MatchLocked session létrehozását, a parancsok authoritative
  * feldolgozását, a fázisváltást, a szerverórát és a disconnect miatti
  * takarítást koordinálja.
+ * MÓDOSÍTÁS: a lock utáni disconnect nem törli a résztvevőt, hanem
+ * szerveroldali botra váltja. A bot- és reward-részletek külön
+ * partial service-fájlokban maradnak, így ez a koordinátor nem nő
+ * újabb szabálytömeggel.
  */

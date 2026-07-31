@@ -237,6 +237,20 @@ internal static class VsMatchScoring
     {
         foreach (var player in match.Players)
         {
+            var roundReward = match.Game.RoundResult.First(result =>
+                result.Position == player.Position);
+
+            if (roundReward.CharacterSlotNumber > 0)
+            {
+                var characterTotal =
+                    player.CharacterRewardTotals.First(item =>
+                        item.SlotNumber ==
+                        roundReward.CharacterSlotNumber);
+
+                characterTotal.CharacterXp += roundReward.CharacterXp;
+                characterTotal.EnergyLoss += roundReward.EnergyLoss;
+            }
+
             player.TotalPoints += player.RoundPoints;
             player.TotalTimeSeconds += player.RoundTimeSeconds;
         }
@@ -445,4 +459,7 @@ internal static class VsMatchScoring
  * MÓDOSÍTÁS: az időtlenítő az aktuális alkör módosítóját -99
  * másodpercre állítja; hibás beküldésnél a profil szerinti húsz
  * másodperces büntetés hozzáadódik a normál hibásválasz-időhöz.
+ * MÓDOSÍTÁS: nagykör commitkor a karakter-XP és energiaveszteség
+ * karakterhelyenként akkumulálódik, ezért a következő kör eredménye
+ * nem írja felül a későbbi rewardhoz szükséges adatot.
  */

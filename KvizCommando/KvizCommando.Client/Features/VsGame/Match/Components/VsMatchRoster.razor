@@ -9,7 +9,7 @@
 
     @foreach (var player in Players)
     {
-        <article class="kc-vs-roster-card @(player.IsMe ? "me" : "") @(!player.IsConnected ? "disconnected" : "") @(player.IsMe && CurrentTimeModifierSeconds.HasValue ? "has-modifier" : "")">
+        <article class="kc-vs-roster-card @(player.IsMe ? "me" : "") @(!player.IsConnected && !player.IsBot ? "disconnected" : "") @(player.IsBot ? "bot" : "") @(player.IsMe && CurrentTimeModifierSeconds.HasValue ? "has-modifier" : "")">
             <div class="kc-vs-roster-visual">
                 <div class="kc-vs-roster-avatar">
                     @if (player.ActiveCharacter is not null)
@@ -88,6 +88,9 @@
     az aktuális időmódosítót is megjeleníti. Aktív karakter esetén
     annak neve a PictureCode első betűje alapján férfi/női színt kap;
     a csapatszint színe változatlan.
+    MÓDOSÍTÁS: a szerveroldali bot külön, halvány rosterállapotot és
+    jól olvasható BOT feliratot kap; nem egyszerű kapcsolatvesztésként
+    jelenik meg.
 
     A meccs teljes ideje alatt látható, kompakt ellenfél- és
     csapatkártya-sáv.

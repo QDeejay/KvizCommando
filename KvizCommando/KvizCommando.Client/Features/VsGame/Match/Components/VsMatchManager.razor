@@ -42,6 +42,10 @@
                         OnReset="ResetPreparationAsync"
                         OnFinish="FinishPreparationAsync" />
                 }
+                else if (_match.Phase == VsMatchPhase.GameCompleted)
+                {
+                    <VsMatchRewardView Data="@_match" />
+                }
                 else
                 {
                     <VsMatchPlayView
@@ -119,4 +123,6 @@
     címe közvetlen szöveg helyett a vsgame lokalizációból érkezik.
     A várólistát, a MatchLocked betöltést, a rostert és az aktuális
     preparációs nézetet a SignalR snapshot alapján cseréli.
+    MÓDOSÍTÁS: GameCompleted fázisban a placeholder helyett a külön,
+    snapshot-alapú rewardkomponenst rendereli.
 *@

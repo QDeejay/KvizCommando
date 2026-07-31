@@ -37,7 +37,9 @@ internal static class VsMatchSnapshotBuilder
                     new VsMatchPlayerDto
                     {
                         Position = player.Position,
-                        DisplayName = player.DisplayName,
+                        DisplayName = player.IsBot
+                            ? player.BotName
+                            : player.DisplayName,
                         TeamName = player.TeamName,
                         TeamLevel = player.TeamLevel,
                         TeamPictureCode =
@@ -46,10 +48,13 @@ internal static class VsMatchSnapshotBuilder
                             player.PlayerId ==
                             currentPlayer.PlayerId,
                         IsConnected = player.IsConnected,
+                        IsBot = player.IsBot,
                         IsFinished = player.IsFinished,
-                        TotalPoints = player.TotalPoints,
+                        TotalPoints = ResolveDisplayedPoints(
+                            match,
+                            player),
                         TotalTimeSeconds =
-                            player.TotalTimeSeconds,
+                            ResolveDisplayedTime(match, player),
                         ActiveCharacter =
                             BuildActiveCharacter(
                                 match,
@@ -59,8 +64,83 @@ internal static class VsMatchSnapshotBuilder
             Preparation = BuildPreparation(
                 match,
                 currentPlayer),
-            Game = BuildGame(match, currentPlayer)
+            Game = BuildGame(match, currentPlayer),
+            Reward = BuildReward(match, currentPlayer)
         };
+
+    private static VsMatchRewardDto BuildReward(
+        VsMatchSession match,
+        VsMatchPlayerState currentPlayer)
+    {
+        if (match.Phase != VsMatchPhase.GameCompleted ||
+            match.Reward is null)
+        {
+            return new VsMatchRewardDto();
+        }
+
+        var myReward = match.Reward.Players.First(player =>
+            player.PlayerId == currentPlayer.PlayerId);
+
+        return new VsMatchRewardDto
+        {
+            PrizePool = match.Reward.PrizePool,
+            Standings =
+            [
+                .. match.Reward.Players.Select(player =>
+                    new VsRewardStandingDto
+                    {
+                        FinalPosition = player.FinalPosition,
+                        PlayerPosition = player.OriginalPosition,
+                        DisplayName = player.DisplayName,
+                        TeamName = player.TeamName,
+                        TeamLevel = player.TeamLevel,
+                        IsMe = player.PlayerId == currentPlayer.PlayerId,
+                        IsBot = player.IsBot,
+                        IsWinner = player.IsWinner,
+                        Points = player.FinalPoints,
+                        TimeSeconds = player.FinalTimeSeconds
+                    })
+            ],
+            MyReward = new VsMyRewardDto
+            {
+                FinalPosition = myReward.FinalPosition,
+                IsBot = myReward.IsBot,
+                TeamXp = myReward.TeamXp,
+                StakeReturn = myReward.StakeReturn,
+                BaseCreditReward = myReward.BaseCreditReward,
+                TeamBonusCredit = myReward.TeamBonusCredit,
+                CreditReward = myReward.CreditReward,
+                ConsumedHelps = myReward.ConsumedHelps,
+                Characters =
+                [
+                    .. myReward.Characters.Select(character =>
+                        new VsCharacterRewardDto
+                        {
+                            SlotNumber = character.SlotNumber,
+                            Name = character.Name,
+                            PictureCode = character.PictureCode,
+                            CharacterXp = character.CharacterXp,
+                            EnergyLoss = character.EnergyLoss,
+                            Pension = character.Pension
+                        })
+                ]
+            }
+        };
+    }
+
+    private static int ResolveDisplayedPoints(
+        VsMatchSession match,
+        VsMatchPlayerState player) =>
+        match.Reward?.Players.FirstOrDefault(item =>
+            item.PlayerId == player.PlayerId)?.FinalPoints ??
+        player.TotalPoints;
+
+    private static double ResolveDisplayedTime(
+        VsMatchSession match,
+        VsMatchPlayerState player) =>
+        match.Reward?.Players.FirstOrDefault(item =>
+            item.PlayerId == player.PlayerId)?.FinalTimeSeconds ??
+        player.TotalTimeSeconds;
 
     private static VsGameDto BuildGame(
         VsMatchSession match,
@@ -654,10 +734,19 @@ internal static class VsMatchSnapshotBuilder
     }
 
     private static IEnumerable<VsMatchPlayerState> OrderPlayers(
-        VsMatchSession match) =>
-        IsGamePhase(match.Phase)
+        VsMatchSession match)
+    {
+        if (match.Reward is not null)
+        {
+            return match.Reward.Players.Select(reward =>
+                match.Players.First(player =>
+                    player.PlayerId == reward.PlayerId));
+        }
+
+        return IsGamePhase(match.Phase)
             ? VsMatchScoring.OrderByStanding(match.Players)
             : match.Players.OrderBy(player => player.Position);
+    }
 
     private static bool IsGamePhase(VsMatchPhase phase) =>
         phase is
@@ -725,6 +814,9 @@ internal static class VsMatchSnapshotBuilder
  * időtlenítőből eredő aktuális módosítót.
  * MÓDOSÍTÁS: hibás, beküldött időtlenítős válasz eredményfázisában
  * a saját kártya a -99 helyett a profil szerinti +20 büntetést kapja.
+ * MÓDOSÍTÁS: GameCompleted fázisban a reward végső sorrendjét és
+ * pont-/időadatait használja, a címzettnek csak a saját részletes
+ * jutalmát küldi; a bot nyilvános neve és jelzője is innen kerül ki.
  *
  * A szerveroldali meccsállapotból játékosonként tiszta SignalR-
  * snapshotokat épít. Nem módosít állapotot és nem küld üzenetet.

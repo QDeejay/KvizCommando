@@ -85,7 +85,8 @@ public sealed class VsMatchViewBuilder
             Preparation = BuildPreparation(
                 snapshot.Preparation,
                 culture),
-            Game = BuildGame(snapshot.Game, culture)
+            Game = BuildGame(snapshot.Game, culture),
+            Reward = BuildReward(snapshot.Reward)
         };
     }
 
@@ -202,6 +203,70 @@ public sealed class VsMatchViewBuilder
             CaptainOrderIndex = data.CaptainOrderIndex
         };
 
+    private VsMatchRewardViewData BuildReward(VsMatchRewardDto data)
+    {
+        var myReward = data.MyReward;
+
+        return new VsMatchRewardViewData
+        {
+            PrizePool = data.PrizePool,
+            Standings =
+            [
+                .. data.Standings.Select(item =>
+                    new VsRewardStandingVm
+                    {
+                        FinalPosition = item.FinalPosition,
+                        PlayerPosition = item.PlayerPosition,
+                        DisplayName = item.DisplayName,
+                        TeamName = item.TeamName,
+                        TeamLevel = RankNameTable.Data[item.TeamLevel]
+                            .PublicLevel ?? string.Empty,
+                        IsMe = item.IsMe,
+                        IsBot = item.IsBot,
+                        IsWinner = item.IsWinner,
+                        Points = item.Points,
+                        TimeSeconds = item.TimeSeconds
+                    })
+            ],
+            MyReward = myReward is null
+                ? null
+                : new VsMyRewardVm
+                {
+                    FinalPosition = myReward.FinalPosition,
+                    TeamXp = myReward.TeamXp,
+                    StakeReturn = myReward.StakeReturn,
+                    BaseCreditReward = myReward.BaseCreditReward,
+                    TeamBonusCredit = myReward.TeamBonusCredit,
+                    CreditReward = myReward.CreditReward,
+                    ConsumedHelps =
+                    [
+                        .. myReward.ConsumedHelps
+                            .Select((count, index) =>
+                                new VsConsumedHelpVm
+                                {
+                                    Name = _lang[
+                                        $"vsgame.Match.Help.{index + 1}"],
+                                    Count = count
+                                })
+                            .Where(item => item.Count > 0)
+                    ],
+                    Characters =
+                    [
+                        .. myReward.Characters.Select(character =>
+                            new VsCharacterRewardVm
+                            {
+                                SlotNumber = character.SlotNumber,
+                                Name = character.Name,
+                                PictureCode = character.PictureCode,
+                                CharacterXp = character.CharacterXp,
+                                EnergyLoss = character.EnergyLoss,
+                                Pension = character.Pension
+                            })
+                    ]
+                }
+        };
+    }
+
     private VsPreparationViewData BuildPreparation(
         VsPreparationDto data,
         string culture)
@@ -287,6 +352,7 @@ public sealed class VsMatchViewBuilder
                 "images/avatars/basic.webp",
             IsMe = player.IsMe,
             IsConnected = player.IsConnected,
+            IsBot = player.IsBot,
             IsFinished = player.IsFinished,
             TotalPoints = player.TotalPoints,
             TotalTimeSeconds = player.TotalTimeSeconds,
@@ -409,6 +475,9 @@ public sealed class VsMatchViewBuilder
  * illetve orientációt közvetlenül használja; nem clampeli őket.
  * A karakter view modelből kikerült a sehol nem használt orientációs
  * képútvonal, mert a kártyákon a CharacterView SVG jelenik meg.
+ * MÓDOSÍTÁS: a reward contractot külön reward view modellekre képezi,
+ * a segítségneveket ugyanabból a meglévő lokalizációból oldja fel,
+ * mint a preparáció, és átviszi a roster botjelzőjét.
  *
  * A szerver snapshotjából lokalizált neveket, meglévő Solo képeket
  * és VS view modelleket épít. DI-be nem kerül.

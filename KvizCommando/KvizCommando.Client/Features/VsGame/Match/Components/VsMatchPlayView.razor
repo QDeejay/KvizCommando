@@ -144,14 +144,6 @@
                 }
             </div>
         }
-        else if (Data.Phase == VsMatchPhase.GameCompleted)
-        {
-            <div class="kc-vs-play-message">
-                <i class="bi bi-flag-fill"></i>
-                <strong>@Data.InfoText</strong>
-                <span>@Lang["vsgame.Match.Game.RewardPending"]</span>
-            </div>
-        }
         else
         {
             <div class="kc-vs-question">
@@ -377,4 +369,6 @@
     MÓDOSÍTÁS: a lezárt válaszokat halványítja, a QuestionResult
     fázisban pedig pozíciószínnel és arányosan osztott háttérrel
     fedi fel, hogy mely játékosok melyik választ jelölték.
+    MÓDOSÍTÁS: a korábbi GameCompleted reward-placeholder kikerült;
+    a lezárt meccset a manager külön rewardkomponensben jeleníti meg.
 *@

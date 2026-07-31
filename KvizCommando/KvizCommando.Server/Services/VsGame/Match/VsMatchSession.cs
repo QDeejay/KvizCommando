@@ -13,6 +13,7 @@ public sealed class VsMatchSession : IDisposable
     public List<VsMatchEventLogEntry> EventLog { get; } = [];
     public VsMatchGuessQuestionState[] GuessQuestions { get; set; } = [];
     public VsMatchGameState Game { get; } = new();
+    public VsMatchRewardState? Reward { get; set; }
 
     public VsMatchPhase Phase { get; set; } = VsMatchPhase.MatchLocked;
     public DateTime PhaseStartedUtc { get; set; }
@@ -48,6 +49,8 @@ public sealed class VsMatchPlayerState
     public int[] HelpCounts { get; set; } = new int[4];
     public VsMatchRoundState[] Rounds { get; init; } = [];
     public bool IsConnected { get; set; } = true;
+    public bool IsBot { get; set; }
+    public string BotName { get; set; } = string.Empty;
     public bool IsFinished { get; set; }
     public bool StakeLocked { get; set; }
     public int TotalPoints { get; set; }
@@ -62,6 +65,14 @@ public sealed class VsMatchPlayerState
     public int? SuggestedAnswerIndex { get; set; }
     public List<int> RoundProgress { get; } = [];
     public HashSet<int> CaptainUsedLoadoutPositions { get; } = [];
+    public VsMatchCharacterRewardTotal[] CharacterRewardTotals { get; set; } = [];
+}
+
+public sealed class VsMatchCharacterRewardTotal
+{
+    public int SlotNumber { get; init; }
+    public int CharacterXp { get; set; }
+    public int EnergyLoss { get; set; }
 }
 
 public sealed class VsMatchCharacterState
@@ -210,6 +221,9 @@ public sealed class VsMatchRoundResultState
  * MÓDOSÍTÁS: a meccs eleji snapshot a segítségek szintjét is
  * megőrzi. A round az egyszer használható help állapotát, a játékos
  * pedig csak az aktuális kérdés személyre szabott help-hatását tárolja.
+ * MÓDOSÍTÁS: a session tárolja a kapcsolatot elvesztő játékos
+ * szerveroldali botállapotát, a karakterenként akkumulált körjutalmat
+ * és a meccs végén egyszer elkészülő jutalomeredményt.
  *
  * Egy lezárt meccs teljes, szerveroldali authoritative állapotát
  * tartalmazza. A SignalR Hub nem őriz játékállapotot.
