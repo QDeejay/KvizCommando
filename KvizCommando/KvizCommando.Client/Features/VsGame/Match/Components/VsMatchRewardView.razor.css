@@ -197,6 +197,13 @@
     color: #aaa99f;
 }
 
+.kc-vs-reward-panel dt small {
+    color: #c6ef39;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .72rem;
+    white-space: nowrap;
+}
+
 .kc-vs-reward-panel dd {
     margin: 0;
     color: #eee9dc;
@@ -271,4 +278,7 @@
  * görgethető, a karakter-SVG saját korlátozott portréhostban marad.
  * A title a bevált Solo/VS címsor pontos méreteit használja; a fő
  * rewardkijelző a Solo kérdés-LCD betűjét, keretét és árnyékát.
+ * MÓDOSÍTÁS: a csapatbónusz százaléka a felirat részeként, a már
+ * használt LCD-zöld színnel jelenik meg; az értékmező csak a kreditet
+ * tartalmazza.
  */

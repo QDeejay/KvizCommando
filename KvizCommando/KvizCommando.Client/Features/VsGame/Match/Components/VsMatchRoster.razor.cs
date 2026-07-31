@@ -28,6 +28,9 @@ public partial class VsMatchRoster
             : value < 0
                 ? "negative"
                 : "neutral";
+
+    private static string PlayerToneClass(int position) =>
+        $"player-tone-{position}";
 }
 
 /**
@@ -40,6 +43,8 @@ public partial class VsMatchRoster
  * összidő megjelenítését.
  * MÓDOSÍTÁS: az opcionális saját időmódosító feliratát és előjel
  * szerinti megjelenítési osztályát adja.
+ * MÓDOSÍTÁS: a szerver által kiosztott játékospozícióból kizárólag
+ * megjelenítési célú, stabil roster-színosztályt képez.
  *
  * A VS meccs publikus játékoslistáját megjelenítő komponens
  * paramétereit tartalmazza.

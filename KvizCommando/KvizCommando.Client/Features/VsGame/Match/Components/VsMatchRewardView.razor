@@ -58,11 +58,11 @@
                         <dd>@Credits(MyReward.BaseCreditReward)</dd>
                     </div>
                     <div>
-                        <dt>@Lang["vsgame.Match.Reward.TeamBonus"]</dt>
-                        <dd>
-                            @Credits(MyReward.TeamBonusCredit)
-                            (@($"{MyReward.TeamBonusPercent}%"))
-                        </dd>
+                        <dt>
+                            @Lang["vsgame.Match.Reward.TeamBonus"]
+                            <small>(@($"{MyReward.TeamBonusPercent}%"))</small>
+                        </dt>
+                        <dd>@Credits(MyReward.TeamBonusCredit)</dd>
                     </div>
                     <div class="total">
                         <dt>@Lang["vsgame.Match.Reward.CreditTotal"]</dt>
@@ -116,5 +116,6 @@
     csapatjutalmát, felhasznált segítségeit és karakterenkénti XP-,
     energia- és nyugdíjváltozását jeleníti meg. Nulla energiavesztést
     és 21-es csapatszint felett csapat-XP sort nem ír ki; a team bonus
-    százalékát az összeg mellett mutatja. Állapotot nem módosít.
+    százalékát a Csapatbónusz felirat részeként mutatja. Állapotot
+    nem módosít.
 *@

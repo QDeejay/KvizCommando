@@ -257,14 +257,14 @@
   </data>
   <data name="Match.Reward.Victory" xml:space="preserve"><value>győzelem</value></data>
   <data name="Match.Reward.FinalStanding" xml:space="preserve"><value>Végeredmény</value></data>
-  <data name="Match.Reward.Team" xml:space="preserve"><value>Csapat reward</value></data>
+  <data name="Match.Reward.Team" xml:space="preserve"><value>Csapatjutalmak</value></data>
   <data name="Match.Reward.TeamXp" xml:space="preserve"><value>Csapat XP</value></data>
   <data name="Match.Reward.StakeReturn" xml:space="preserve"><value>Tét vissza</value></data>
   <data name="Match.Reward.BaseCredit" xml:space="preserve"><value>Nyeremény</value></data>
   <data name="Match.Reward.TeamBonus" xml:space="preserve"><value>Csapatbónusz</value></data>
   <data name="Match.Reward.CreditTotal" xml:space="preserve"><value>Összes kredit</value></data>
   <data name="Match.Reward.ConsumedHelps" xml:space="preserve"><value>Felhasznált segítség</value></data>
-  <data name="Match.Reward.Characters" xml:space="preserve"><value>Karakter reward</value></data>
+  <data name="Match.Reward.Characters" xml:space="preserve"><value>Karakterjutalmak</value></data>
   <data name="Match.Reward.Pension" xml:space="preserve"><value>nyugdíj</value></data>
   <data name="Match.Reward.None" xml:space="preserve"><value>Nincs</value></data>
   <data name="Match.Reward.CreditUnit" xml:space="preserve"><value>kredit</value></data>
@@ -274,7 +274,7 @@
     inventory, játékmenet, eredmény, roster és az üres körhely magyar
     feliratait.
     MÓDOSÍTÁS: felvette a tippsáv játékközbeni magyar feliratát.
-    MÓDOSÍTÁS: felvette a végső tabella és a csapat-/karakterreward
+    MÓDOSÍTÁS: felvette a végső tabella és a csapat-/karakterjutalmak
     magyar megjelenítési feliratait.
 
     A fájl a VS kliens magyar lokalizációs forrása; Debug buildkor

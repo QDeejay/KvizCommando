@@ -244,6 +244,9 @@ public partial class VsMatchPlayView : IDisposable
     private static string PlayerToneClass(int position) =>
         $"player-tone-{position}";
 
+    private bool IsQuestioner(int position) =>
+        Data.Game.QuestionerPosition == position;
+
     private string AnswerClass(int answerIndex)
     {
         string css;
@@ -427,6 +430,9 @@ public partial class VsMatchPlayView : IDisposable
  * MÓDOSÍTÁS: lezáráskor halványítja a nem választott válaszokat,
  * eredménykor pedig pozíció szerinti játékosszínnel jeleníti meg,
  * hogy az egyes válaszokat kik jelölték.
+ * MÓDOSÍTÁS: a tippfelfedéshez a snapshotban már meglévő játékos-
+ * tippeket használja; a kérdező pozícióját csak vizuális osztályhoz
+ * hasonlítja össze, pontot vagy jogosultságot továbbra sem számol.
  * MÓDOSÍTÁS: a kérdéseredmény rövid szünete számláló nélkül telik;
  * a kapitányi kérdésválasztás kijelzője a 0 értéket is megmutatja.
  */

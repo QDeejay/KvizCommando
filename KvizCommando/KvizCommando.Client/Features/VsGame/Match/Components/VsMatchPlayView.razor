@@ -173,6 +173,22 @@
                                     @Data.Game.CorrectGuess.Value.ToString("0.##")
                                 </strong>
                             </div>
+
+                            <div class="kc-vs-guess-player-results">
+                                @foreach (var player in
+                                          Data.Game.QuestionPlayers
+                                              .OrderBy(item => item.Position))
+                                {
+                                    <span class="@PlayerToneClass(player.Position) @(player.Points > 0 ? "winner" : "")">
+                                        <small>@PlayerName(player.Position)</small>
+                                        <strong>
+                                            @(player.Guess.HasValue
+                                                ? FormatNumber(player.Guess.Value)
+                                                : "—")
+                                        </strong>
+                                    </span>
+                                }
+                            </div>
                         }
                         else
                         {
@@ -254,7 +270,13 @@
             <div class="kc-vs-question-status">
                 @foreach (var player in Data.Game.QuestionPlayers)
                 {
-                    <span class="kc-vs-player-status @PlayerToneClass(player.Position) @(player.HasAnswered ? "answered" : "")">
+                    <span class="kc-vs-player-status @PlayerToneClass(player.Position) @(player.HasAnswered ? "answered" : "") @(IsQuestioner(player.Position) ? "questioner" : "")">
+                        @if (IsQuestioner(player.Position))
+                        {
+                            <i class="bi bi-patch-question-fill kc-vs-questioner-mark"
+                               title="@Lang["vsgame.Match.Game.Questioner"]"></i>
+                        }
+
                         @PlayerName(player.Position)
 
                         @if (Data.Phase == VsMatchPhase.QuestionResult)
@@ -371,4 +393,7 @@
     fedi fel, hogy mely játékosok melyik választ jelölték.
     MÓDOSÍTÁS: a korábbi GameCompleted reward-placeholder kikerült;
     a lezárt meccset a manager külön rewardkomponensben jeleníti meg.
+    MÓDOSÍTÁS: a tippelők számai csak az eredményfázisban, a saját
+    pozíciószínükkel fedődnek fel. A válaszok alatti mini kártyákon a
+    kérdező külön kérdésikont és keretkiemelést kap.
 *@

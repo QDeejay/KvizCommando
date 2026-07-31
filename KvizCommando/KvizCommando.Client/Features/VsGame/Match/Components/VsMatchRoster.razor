@@ -9,7 +9,7 @@
 
     @foreach (var player in Players)
     {
-        <article class="kc-vs-roster-card @(player.IsMe ? "me" : "") @(!player.IsConnected && !player.IsBot ? "disconnected" : "") @(player.IsBot ? "bot" : "") @(player.IsMe && CurrentTimeModifierSeconds.HasValue ? "has-modifier" : "")">
+        <article class="kc-vs-roster-card @PlayerToneClass(player.Position) @(player.IsMe ? "me" : "") @(!player.IsConnected && !player.IsBot ? "disconnected" : "") @(player.IsBot ? "bot" : "") @(player.IsMe && CurrentTimeModifierSeconds.HasValue ? "has-modifier" : "")">
             <div class="kc-vs-roster-visual">
                 <div class="kc-vs-roster-avatar">
                     @if (player.ActiveCharacter is not null)
@@ -91,6 +91,9 @@
     MÓDOSÍTÁS: a szerveroldali bot külön, halvány rosterállapotot és
     jól olvasható BOT feliratot kap; nem egyszerű kapcsolatvesztésként
     jelenik meg.
+    MÓDOSÍTÁS: a játékos pozíciójához tartozó, kiértékelésnél is
+    használt kék/sárga/lila/szürke tónus finom kártyaháttérként a
+    rosterben is végig látható.
 
     A meccs teljes ideje alatt látható, kompakt ellenfél- és
     csapatkártya-sáv.
