@@ -1,4 +1,5 @@
 using KvizCommando.Client.Features.VsGame.Match.ViewModels;
+using KvizCommando.Client.Features.VsGame.Match.Services;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.VsGame.Match;
 using KvizCommando.Shared.Models.Enums.VsGame;
@@ -10,6 +11,8 @@ namespace KvizCommando.Client.Features.VsGame.Match.Components;
 public partial class VsMatchPreparationView : IDisposable
 {
     [Inject] private ILanguageService Lang { get; set; } = default!;
+    [Inject]
+    private IVsMatchClientService MatchClient { get; set; } = default!;
 
     [Parameter, EditorRequired]
     public VsMatchViewData Data { get; set; } = new();
@@ -49,7 +52,7 @@ public partial class VsMatchPreparationView : IDisposable
         : Math.Max(
             0,
             (int)Math.Ceiling(
-                (Data.DeadlineUtc.Value - DateTime.UtcNow)
+                (Data.DeadlineUtc.Value - MatchClient.ServerUtcNow)
                 .TotalSeconds));
 
     private double TimerPercent => Data.PhaseDurationSeconds <= 0
@@ -285,6 +288,8 @@ public partial class VsMatchPreparationView : IDisposable
  * csak üres, a kiválasztott típus számára engedélyezett körslotba
  * küldhető; ez csak megjelenítési szabály, a korlátozást a szerver
  * érvényesíti a match lock alatt.
+ * MÓDOSÍTÁS: a visszaszámlálás a SignalR-kapcsolat elején
+ * szinkronizált szerverórát használja a készülék órája helyett.
  *
  * A preparációs nézet lokális kijelöléseit, visszaszámlálását és
  * EventCallback-alapú parancstovábbítását kezeli.

@@ -258,7 +258,7 @@
             </div>
 
             <div class="kc-vs-question-status @(Data.Game.QuestionKind == VsQuestionKind.Guess ? "guess-status" : "")">
-                @foreach (var player in Data.Game.QuestionPlayers)
+                @foreach (var player in QuestionStatusPlayers)
                 {
                     <span class="kc-vs-player-status @PlayerToneClass(player.Position) @(player.HasAnswered ? "answered" : "") @(IsQuestioner(player.Position) ? "questioner" : "")">
                         @if (IsQuestioner(player.Position))
@@ -398,4 +398,6 @@
     közös stílusára vált; felfedéskor ebben jelenik meg a helyes érték.
     A tippsávnak mindig fenntartott fix sora van. A visszaigazolt saját
     tipp 0,3 másodperc alatt áttűnik az inputból a játékoskártyára.
+    MÓDOSÍTÁS: választós kérdésnél a kérdező mini státuszkártyája kerül
+    előre; a tippelős kör eredeti játékossorrendje változatlan marad.
 *@

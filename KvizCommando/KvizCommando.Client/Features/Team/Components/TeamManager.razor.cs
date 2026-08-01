@@ -195,12 +195,19 @@ public partial class TeamManager
             return;
         }
 
-        var refreshTarget = requestType is
+        ReqStates[] refreshTypes = requestType is
             ManageType.Retire or ManageType.Fire
-                ? ReqStates.All
-                : ReqStates.TeamVsGame;
+                ? [
+                    ReqStates.Question,
+                    ReqStates.Home,
+                    ReqStates.Team
+                ]
+                : [
+                    ReqStates.Team,
+                    ReqStates.VsGame
+                ];
 
-        await Ui.ReloadAsync(refreshTarget);
+        await Ui.ReloadAsync(refreshTypes);
     }
 
     private void RebuildDevelopmentView()

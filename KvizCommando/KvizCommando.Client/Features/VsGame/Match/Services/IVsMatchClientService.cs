@@ -10,6 +10,7 @@ public interface IVsMatchClientService : IAsyncDisposable
     VsMatchSnapshot? MatchSnapshot { get; }
     string ErrorMessageKey { get; }
     bool IsConnected { get; }
+    DateTime ServerUtcNow { get; }
 
     Task<VsQueueJoinResult> StartAsync(
         int classificationId,
@@ -60,6 +61,8 @@ public interface IVsMatchClientService : IAsyncDisposable
  * explicit metódusként továbbítja.
  * MÓDOSÍTÁS: a segítség használata ugyancsak explicit SignalR-
  * parancs, állapotot a kliensszerviz nem tart hozzá.
+ * MÓDOSÍTÁS: a VS-időzítők számára a kapcsolat elején szinkronizált,
+ * monotón módon továbbhaladó becsült szerveridőt teszi elérhetővé.
  *
  * A VS dynamic manager által használt SignalR klienskapcsolat
  * szerződése. Automatikus reconnectet szándékosan nem tartalmaz.

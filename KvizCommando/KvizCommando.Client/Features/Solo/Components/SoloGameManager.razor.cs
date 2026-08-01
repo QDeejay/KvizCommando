@@ -233,7 +233,10 @@ public partial class SoloGameManager : IAsyncDisposable
         }
 
         _activeGameId = null;
-        await Ui.ReloadAsync(ReqStates.All);
+        await Ui.ReloadAsync(
+            ReqStates.Home,
+            ReqStates.Team,
+            ReqStates.SoloGame);
         await Audio.PlayMusicAsync("Menu02.webm");
         await ShowStatusAsync("solo.Label.GameProcess.Evaluating", 1000, ct);
         await ShowStatusAsync("solo.Label.GameProcess.EvaluationReady", 1000, ct);

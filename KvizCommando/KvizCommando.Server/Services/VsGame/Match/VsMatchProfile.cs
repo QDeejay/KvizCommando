@@ -2,7 +2,7 @@ namespace KvizCommando.Server.Services.VsGame.Match;
 
 public sealed class VsMatchProfile
 {
-    public int RequiredPlayers { get; init; } = 2;
+    public int RequiredPlayers { get; init; } = 4;
     public int MinimumPlayers { get; init; } = 2;
     public int MaximumPlayers { get; init; } = 4;
     public int PreparationSeconds { get; init; } = 20;
@@ -20,7 +20,7 @@ public sealed class VsMatchProfile
     public int PointUnit { get; init; } = 1;
     public int CaptainMultiplier { get; init; } = 2;
     public int LoadoutSize { get; init; } = 10;
-    public bool PausePreparationOnTimeout { get; init; } = true;
+    public bool PausePreparationOnTimeout { get; init; } = false;
 }
 
 public static class VsMatchProfiles

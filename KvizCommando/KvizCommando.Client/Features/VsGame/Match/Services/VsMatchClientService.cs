@@ -2,6 +2,7 @@ using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Shared.Contracts.VsGame.Match;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
+using System.Diagnostics;
 
 namespace KvizCommando.Client.Features.VsGame.Match.Services;
 
@@ -11,8 +12,10 @@ public sealed class VsMatchClientService : IVsMatchClientService
     private readonly SessionService _session;
     private readonly ILogger<VsMatchClientService> _logger;
     private readonly List<IDisposable> _handlers = [];
+    private readonly Stopwatch _serverClock = new();
 
     private HubConnection? _connection;
+    private DateTime _serverUtcAtSync;
 
     public VsMatchClientService(
         NavigationManager navigation,
@@ -31,6 +34,8 @@ public sealed class VsMatchClientService : IVsMatchClientService
     public string ErrorMessageKey { get; private set; } = string.Empty;
     public bool IsConnected =>
         _connection?.State == HubConnectionState.Connected;
+    public DateTime ServerUtcNow =>
+        _serverUtcAtSync + _serverClock.Elapsed;
 
     public async Task<VsQueueJoinResult> StartAsync(
         int classificationId,
@@ -87,6 +92,7 @@ public sealed class VsMatchClientService : IVsMatchClientService
         try
         {
             await _connection.StartAsync(ct);
+            await SynchronizeServerClockAsync(ct);
 
             var result =
                 await _connection.InvokeAsync<VsQueueJoinResult>(
@@ -215,6 +221,19 @@ public sealed class VsMatchClientService : IVsMatchClientService
             : throw new InvalidOperationException(
                 "The VS SignalR connection is not active.");
 
+    private async Task SynchronizeServerClockAsync(
+        CancellationToken ct)
+    {
+        var roundTrip = Stopwatch.StartNew();
+        var serverUtc = await GetConnectedConnection()
+            .InvokeAsync<DateTime>("GetServerUtc", ct);
+        roundTrip.Stop();
+
+        _serverUtcAtSync = serverUtc.AddTicks(
+            roundTrip.Elapsed.Ticks / 2);
+        _serverClock.Restart();
+    }
+
     private Task HandleClosedAsync(Exception? exception)
     {
         if (exception is not null)
@@ -251,6 +270,10 @@ public sealed class VsMatchClientService : IVsMatchClientService
  * MÓDOSÍTÁS: külön metódusokban továbbítja a játékmeneti
  * szándékokat, köztük a segítség használatát; további technikai
  * azonosítót nem ad hozzájuk.
+ * MÓDOSÍTÁS: kapcsolódáskor egyetlen SignalR-kéréssel megméri a
+ * szerver UTC-idejét és a válaszút felével korrigálja. Ezután
+ * Stopwatch alapján szolgáltatja az időt, ezért a kliens rendszerórája
+ * és annak későbbi módosítása nem tolja el a visszaszámlálókat.
  *
  * Egyetlen, automatikusan újra nem kapcsolódó SignalR kapcsolatot
  * kezel, fogadja a queue/match snapshotokat és továbbítja a

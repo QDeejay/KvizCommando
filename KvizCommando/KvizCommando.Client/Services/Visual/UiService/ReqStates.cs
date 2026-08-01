@@ -8,6 +8,5 @@ public enum ReqStates
     Team,
     SoloGame,
     VsGame,
-    TeamVsGame,
     LocalSotrage
 }

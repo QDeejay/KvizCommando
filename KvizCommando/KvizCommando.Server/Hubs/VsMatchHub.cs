@@ -41,6 +41,8 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
             ct);
     }
 
+    public DateTime GetServerUtc() => DateTime.UtcNow;
+
     public Task LeaveRankedQueue() =>
         _queue.LeaveAsync(
             Context.ConnectionId,
@@ -139,6 +141,8 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
  *
  * MÓDOSÍTÁS: a tipp-, válasz-, segítség- és kapitánykérdés-parancsot
  * ugyanúgy, állapot nélkül továbbítja a match service felé.
+ * MÓDOSÍTÁS: a kliens egyszeri óraszinkronjához visszaadja az aktuális
+ * szerver UTC-időt; folyamatos időüzenetet nem tart fenn.
  *
  * A VS kliens parancsait azonosítja és továbbítja a queue- vagy
  * match-szerviznek. Saját játékállapotot és adatbázislogikát nem

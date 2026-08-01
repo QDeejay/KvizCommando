@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace KvizCommando.Shared.Models
+﻿namespace KvizCommando.Shared.Models
 {
     public static class RankRewards
     {
-        public static readonly List<RankRewardRow> List = new()
-        {
+        public static readonly List<RankRewardRow> List =
+        [
             new(  0,  0,     100,   0, 0, 0, 2, null ),
             new(  1, 10,     300,   2, 1, 2, 3, null ),
             new(  2, 12,     500,   2, 1, 0, 3, 1 ),
@@ -42,7 +36,7 @@ namespace KvizCommando.Shared.Models
             new( 28,100,     255,  10, 10, 5, 8, null ),
             new( 29,100,     255,  10, 10, 5, 8, null ),
             new( 30,100,       0,  10, 10, 5, 8, null )
-        };
+        ];
     }
     public class RankRewardRow
     {

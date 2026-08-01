@@ -81,7 +81,7 @@ namespace KvizCommando.Client.Layout
             if (!string.IsNullOrWhiteSpace(sessionId))
             {
                 SessionService.SessionId = sessionId;
-                await InitStatesAsync(0);
+                await InitStatesAsync(ReqStates.All);
                 _isLoggedIn = true;
             }
             else
@@ -166,51 +166,61 @@ namespace KvizCommando.Client.Layout
             await User.LogoutAsync(false);
             Console.WriteLine("User logged out.");
         }
-        private async Task OnRefreshRequired(ReqStates reqType)
+        private Task OnRefreshRequired(ReqStates[] reqTypes) =>
+            InitStatesAsync(reqTypes);
+
+        private async Task InitStatesAsync(params ReqStates[] reqTypes)
         {
-            await InitStatesAsync(reqType);
-        }
-        private async Task InitStatesAsync(ReqStates state)
-        {
+            if (reqTypes[0] == ReqStates.All)
+                reqTypes = Enum.GetValues<ReqStates>()[1..];
+
             _appState.Culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-            if (state == ReqStates.All || state == ReqStates.Home)
+
+            foreach (var reqType in reqTypes)
             {
-                HState.Invalidate();
-                await HState.EnsureLoadedAsync();
-                _appState.Home = HState.Snapshot;
+                switch (reqType)
+                {
+                    case ReqStates.Home:
+                        HState.Invalidate();
+                        await HState.EnsureLoadedAsync();
+                        _appState.Home = HState.Snapshot;
+                        break;
+
+                    case ReqStates.Question:
+                        QState.Invalidate();
+                        await QState.EnsureLoadedAsync();
+                        _appState.Question = QState.Snapshot;
+                        break;
+
+                    case ReqStates.Team:
+                        TState.Invalidate();
+                        await TState.EnsureLoadedAsync();
+                        _appState.Team = TState.Snapshot;
+                        break;
+
+                    case ReqStates.SoloGame:
+                        SState.Invalidate();
+                        await SState.EnsureLoadedAsync();
+                        _appState.SoloGame = SState.Snapshot;
+                        break;
+
+                    case ReqStates.VsGame:
+                        VState.Invalidate();
+                        await VState.EnsureLoadedAsync();
+                        _appState.VsGame = VState.Snapshot;
+                        break;
+
+                    case ReqStates.LocalSotrage:
+                        _appState.LocStoreStates.ChkBxNotShowDel =
+                            await LocalStorage.GetItemAsync<bool>(_localNotShowDel);
+                        _appState.LocStoreStates.ChkBxNotShowNew =
+                            await LocalStorage.GetItemAsync<bool>(_localNotShowNew);
+                        _appState.LocStoreStates.LastBboardChk =
+                            await LocalStorage.GetItemAsync<DateTime>(LOCAL_LAST_B_BOARD);
+                        break;
+                }
             }
-            if (state == ReqStates.All || state == ReqStates.Question)
-            {
-                QState.Invalidate();
-                await QState.EnsureLoadedAsync();
-                _appState.Question = QState.Snapshot;
-            }
-            if (state == ReqStates.All || state == ReqStates.Team || state == ReqStates.TeamVsGame )
-            {
-                TState.Invalidate();
-                await TState.EnsureLoadedAsync();
-                _appState.Team = TState.Snapshot;
-            }
-            if (state == ReqStates.All || state == ReqStates.SoloGame)
-            {
-                SState.Invalidate();
-                await SState.EnsureLoadedAsync();
-                _appState.SoloGame = SState.Snapshot;
-            }
-            if (state == ReqStates.All ||
-                state == ReqStates.VsGame ||
-                state == ReqStates.TeamVsGame)
-            {
-                VState.Invalidate();
-                await VState.EnsureLoadedAsync();
-                _appState.VsGame = VState.Snapshot;
-            }
-            if (state == ReqStates.All || state == ReqStates.LocalSotrage)
-            {
-                _appState.LocStoreStates.ChkBxNotShowDel = await LocalStorage.GetItemAsync<bool>(_localNotShowDel);
-                _appState.LocStoreStates.ChkBxNotShowNew = await LocalStorage.GetItemAsync<bool>(_localNotShowNew);
-                _appState.LocStoreStates.LastBboardChk = await LocalStorage.GetItemAsync<DateTime>(LOCAL_LAST_B_BOARD);
-            }
+
             await InvokeAsync(StateHasChanged);
         }
         private async Task<string> InitCultureAsync()

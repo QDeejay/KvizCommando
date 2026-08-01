@@ -3,6 +3,7 @@ using KvizCommando.Client.Features.VsGame.Match.Services;
 using KvizCommando.Client.Features.VsGame.Match.ViewModels;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.VsGame.Match;
 using KvizCommando.Shared.Models.Enums.VsGame;
@@ -20,6 +21,9 @@ public partial class VsMatchManager : IAsyncDisposable
 
     [Inject]
     private AudioService Audio { get; set; } = default!;
+
+    [Inject]
+    private UiServices Ui { get; set; } = default!;
 
     [Inject]
     private ILogger<VsMatchManager> Logger { get; set; } = default!;
@@ -107,6 +111,15 @@ public partial class VsMatchManager : IAsyncDisposable
                 : Lang[MatchClient.ErrorMessageKey];
 
         var phase = _match?.Phase;
+
+        if (phase == VsMatchPhase.GameCompleted)
+        {
+            await Ui.ReloadAsync(
+                ReqStates.Home,
+                ReqStates.Question,
+                ReqStates.Team,
+                ReqStates.VsGame);
+        }
 
         if (!_battleMusicStarted &&
             phase == VsMatchPhase.PreparationStarting)

@@ -1,6 +1,7 @@
 using KvizCommando.Client.Features.Question.Services;
-using KvizCommando.Client.Helpers;
+using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Features.Shared.Modal.Dynamic;
+using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Services.Visual.UiService;
@@ -8,7 +9,6 @@ using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.Question;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using KvizCommando.Client.Features.Shared.Modal.Builders;
 
 namespace KvizCommando.Client.Features.Question.Components;
 
@@ -84,7 +84,13 @@ public partial class NewQuestionManager
         if (!await QuestionService.SendNewQuestionAsync(_formData))
             return;
 
-        await Ui.ReloadAsync(ReqStates.All);
+        ReqStates[] refreshTypes = LocNotShowStateNew
+            ? [ReqStates.Question]
+            : [ReqStates.Question, ReqStates.LocalSotrage];
+
+
+        await Ui.ReloadAsync(refreshTypes);
+
         _formData = new NewQuestionRequest();
     }
 

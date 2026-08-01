@@ -70,10 +70,12 @@ internal static class VsMatchGameRules
     internal static bool SelectCaptainQuestion(
         VsMatchSession match,
         VsMatchPlayerState? player,
-        VsCaptainQuestionRequest request)
+        VsCaptainQuestionRequest request,
+        DateTime receivedUtc)
     {
         if (match.Phase !=
                 VsMatchPhase.CaptainQuestionSelection ||
+            IsLate(match, receivedUtc) ||
             player is null ||
             !player.IsConnected ||
             player.Position !=
@@ -533,4 +535,6 @@ internal static class VsMatchGameRules
  * MÓDOSÍTÁS: egy kérdés akkor zárható korábban, ha minden aktív
  * ember vagy szerveroldali bot válaszolt; a lecsatlakozott bot nem
  * rövidíti le tévesen a többiek kérdésidejét.
+ * MÓDOSÍTÁS: a kapitánykérdés kiválasztása csak a szerveres deadline
+ * előtt fogadható el.
  */

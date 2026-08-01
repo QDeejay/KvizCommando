@@ -1,4 +1,5 @@
 using KvizCommando.Client.Features.VsGame.Match.ViewModels;
+using KvizCommando.Client.Features.VsGame.Match.Services;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.VsGame.Match;
@@ -12,6 +13,8 @@ namespace KvizCommando.Client.Features.VsGame.Match.Components;
 public partial class VsMatchPlayView : IDisposable
 {
     [Inject] private ILanguageService Lang { get; set; } = default!;
+    [Inject]
+    private IVsMatchClientService MatchClient { get; set; } = default!;
 
     [Parameter, EditorRequired]
     public VsMatchViewData Data { get; set; } = new();
@@ -84,23 +87,14 @@ public partial class VsMatchPlayView : IDisposable
         : Math.Max(
             0,
             (int)Math.Ceiling(
-                (Data.DeadlineUtc.Value - DateTime.UtcNow)
+                (Data.DeadlineUtc.Value - MatchClient.ServerUtcNow)
                 .TotalSeconds));
 
-    private int DisplaySeconds =>
-        Data.Phase == VsMatchPhase.CaptainQuestionSelection &&
-        Data.DeadlineUtc.HasValue
-            ? Math.Max(
-                0,
-                (int)Math.Round(
-                    (Data.DeadlineUtc.Value - DateTime.UtcNow)
-                    .TotalSeconds,
-                    MidpointRounding.AwayFromZero))
-            : RemainingSeconds;
+    private int DisplaySeconds => RemainingSeconds;
 
     private bool HasTimeRemaining =>
         Data.DeadlineUtc.HasValue &&
-        DateTime.UtcNow < Data.DeadlineUtc.Value;
+        MatchClient.ServerUtcNow < Data.DeadlineUtc.Value;
 
     private double TimerPercent => Data.PhaseDurationSeconds <= 0
         ? 0
@@ -191,6 +185,18 @@ public partial class VsMatchPlayView : IDisposable
                 round.RoundNumber ==
                 Data.Game.CurrentRoundNumber)
             ?.Help;
+
+    private IEnumerable<VsQuestionPlayerVm> QuestionStatusPlayers =>
+        Data.Game.QuestionKind == VsQuestionKind.Guess ||
+        Data.Game.QuestionerPosition <= 0
+            ? Data.Game.QuestionPlayers
+            : Data.Game.QuestionPlayers
+                .OrderBy(player =>
+                    player.Position ==
+                    Data.Game.QuestionerPosition
+                        ? 0
+                        : 1)
+                .ThenBy(player => player.Position);
 
     private bool HasGuessRange =>
         Data.Game.MyGuessRangeMinimum.HasValue &&
@@ -508,4 +514,9 @@ public partial class VsMatchPlayView : IDisposable
  * A felfedett érték elé visszakerül a lokalizált „Helyes érték” címke.
  * MÓDOSÍTÁS: a kérdéseredmény rövid szünete számláló nélkül telik;
  * a kapitányi kérdésválasztás kijelzője a 0 értéket is megmutatja.
+ * MÓDOSÍTÁS: minden visszaszámlálás a kliensszerviz szinkronizált
+ * szerveróráját használja. A kapitányválasztás külön kerekítése
+ * megszűnt, ezért ugyanúgy fut nulláig, mint a kérdésóra.
+ * Választós kérdésnél a mini státuszsor egyszerű rendezéssel a
+ * kérdezőt teszi előre; a tippelős kör sorrendjét nem módosítja.
  */

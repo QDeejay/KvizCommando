@@ -494,11 +494,13 @@ public sealed partial class VsMatchService : IVsMatchService
         lock (match.SyncRoot)
         {
             var player = match.FindByConnection(connectionId);
+            var receivedUtc = DateTime.UtcNow;
 
             if (!VsMatchGameRules.SelectCaptainQuestion(
                     match,
                     player,
-                    request))
+                    request,
+                    receivedUtc))
             {
                 return;
             }
@@ -686,7 +688,9 @@ public sealed partial class VsMatchService : IVsMatchService
 
         AddLog(match, null, "PhaseStarted", phase.ToString());
 
-        var timerDeadlineUtc = IsAnswerPhase(phase)
+        var timerDeadlineUtc =
+            IsAnswerPhase(phase) ||
+            phase == VsMatchPhase.CaptainQuestionSelection
             ? match.DeadlineUtc.Value.AddSeconds(
                 match.Profile.AnswerRevealDelaySeconds)
             : match.DeadlineUtc.Value;
@@ -1073,7 +1077,9 @@ public sealed partial class VsMatchService : IVsMatchService
  * MÓDOSÍTÁS: a meccs inicializálása után a meglévő fázisszünet
  * időtartamával külön kezdési visszaszámlálás előzi meg a preparációt.
  * MÓDOSÍTÁS: a kapitány kérdésválasztását a profil külön
- * CaptainSelectionSeconds beállítása időzíti.
+ * CaptainSelectionSeconds beállítása időzíti. A deadline után ugyanaz
+ * az AnswerRevealDelaySeconds tartja láthatóan nullán az órát, mint a
+ * kérdésfázisoknál, majd jön az alapértelmezett kérdés.
  * MÓDOSÍTÁS: a segítséghasználat ugyanabban a rövid,
  * lock–validálás–naplózás–snapshot koordinációban fut, mint a
  * válaszbeküldés.

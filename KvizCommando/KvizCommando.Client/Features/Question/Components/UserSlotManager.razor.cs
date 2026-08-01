@@ -1,4 +1,5 @@
 using KvizCommando.Client.Features.Question.Services;
+using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Features.Shared.Modal.Dynamic;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
@@ -6,7 +7,6 @@ using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
-using KvizCommando.Client.Features.Shared.Modal.Builders;
 
 namespace KvizCommando.Client.Features.Question.Components;
 
@@ -73,6 +73,11 @@ public partial class UserSlotManager
             return;
 
         _selectedId = 100;
-        await Ui.ReloadAsync(ReqStates.All);
+
+        ReqStates[] refreshTypes = NotShowStat
+            ? [ReqStates.Question]
+            : [ReqStates.Question, ReqStates.LocalSotrage];
+
+        await Ui.ReloadAsync(refreshTypes);
     }
 }

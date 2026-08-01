@@ -16,10 +16,10 @@ namespace KvizCommando.Client.Services.Visual.UiService
 
 
 
-        public event Func<ReqStates, Task>? ReloadRequested;
+        public event Func<ReqStates[], Task>? ReloadRequested;
 
-        public Task ReloadAsync(ReqStates reqType)
-            => ReloadRequested?.Invoke(reqType) ?? Task.CompletedTask;
+        public Task ReloadAsync(params ReqStates[] reqTypes)
+            => ReloadRequested?.Invoke(reqTypes) ?? Task.CompletedTask;
         public UiServices(
             ModalService modal,
             ToastService toast,

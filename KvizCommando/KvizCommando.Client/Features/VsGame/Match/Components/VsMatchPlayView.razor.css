@@ -439,12 +439,15 @@
 
 .kc-vs-guess-player-results {
     width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 6px;
 }
 
 .kc-vs-guess-player-results > span {
+    width: calc(50% - 3px);
+    max-width: calc(50% - 3px);
     min-width: 0;
     min-height: 38px;
     padding: 5px 8px;
@@ -460,6 +463,7 @@
         rgba(17, 22, 16, .94);
     border: 1px solid #55583f;
     border-radius: 4px;
+    box-sizing: border-box;
     font-family: 'Share Tech Mono', monospace;
 }
 
@@ -844,6 +848,9 @@
  * rugalmas kártyasorban fedődnek fel; a nyertes finom zöld keretet
  * kap. A kérdező mini eredménykártyáját arany kérdésikon és keret
  * különíti el a válaszolókétól.
+ * MÓDOSÍTÁS: a nagyméretű tippkártyák legfeljebb kettesével kerülnek
+ * egy sorba. A sorok középre rendezettek, az egyedül maradó kártya
+ * pedig megtartja fél sornyi maximális szélességét.
  * MÓDOSÍTÁS: a tippkártyák eredmény előtt is stabilan kint maradnak,
  * az érték rövid áttűnéssel jelenik meg, az alsó státuszcímkéket pedig
  * halvány elválasztó helyezi lejjebb. A zárolt, nem kijelölt válaszok
