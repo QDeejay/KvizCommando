@@ -20,6 +20,7 @@ public sealed class VsRootBoxInfo
     public int TeamRank { get; set; }
     public int PrivatePlayerCount { get; set; }
     public int RankedPlayerCount { get; set; }
+    public int RankedHighScore { get; set; }
 }
 
 public sealed class VsRankedBattlefieldsDto
@@ -65,6 +66,8 @@ public sealed class VsBattleClassificationDto
  * rögzített privát, összes ranked és besorolásonkénti létszámot.
  * MÓDOSÍTÁS: a csapatösszeállító karakterkártyájához a tag fő
  * orientációazonosítóját is továbbítja.
+ * MÓDOSÍTÁS: a VS root megkapja a játékos egyetlen, minden
+ * ranked létszámra érvényes highscore-ját.
  *
  * A fájl a VS menü, a mentett harci csapat és a besorolási
  * feltételrendszer képernyő-snapshotjait tartalmazza.

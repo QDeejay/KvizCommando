@@ -74,6 +74,8 @@ public sealed class VsMatchCharacterRewardTotal
     public int SlotNumber { get; init; }
     public int CharacterXp { get; set; }
     public int EnergyLoss { get; set; }
+    public int PlayDuels { get; set; }
+    public int WinDuels { get; set; }
 }
 
 public sealed class VsMatchCharacterState
@@ -229,6 +231,8 @@ public sealed class VsMatchRoundResultState
  * és a meccs végén egyszer elkészülő jutalomeredményt. A választási
  * kérdés azonosítója/saját jelzője és a játékos meccsstatisztikája a
  * későbbi egyetlen cache-mentéshez szintén itt marad.
+ * MÓDOSÍTÁS: a karakterenkénti reward-akkumulátor a normál
+ * nagykörök PlayDuels és WinDuels növekményét is megőrzi.
  *
  * Egy lezárt meccs teljes, szerveroldali authoritative állapotát
  * tartalmazza. A SignalR Hub nem őriz játékállapotot.

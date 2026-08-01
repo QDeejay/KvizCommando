@@ -10,13 +10,20 @@ public sealed partial class VsMatchService : IVsMatchService
 {
     private readonly VsMatchStore _store;
     private readonly VsMatchSetupService _setup;
+    private readonly VsMatchRewardPersistenceService _rewardPersistence;
     private readonly IHubContext<VsMatchHub, IVsMatchHubClient> _hub;
     private readonly ILogger<VsMatchService> _logger;
 
-    public VsMatchService( VsMatchStore store,  VsMatchSetupService setup, IHubContext<VsMatchHub, IVsMatchHubClient> hub, ILogger<VsMatchService> logger)
+    public VsMatchService(
+        VsMatchStore store,
+        VsMatchSetupService setup,
+        VsMatchRewardPersistenceService rewardPersistence,
+        IHubContext<VsMatchHub, IVsMatchHubClient> hub,
+        ILogger<VsMatchService> logger)
     {
         _store = store;
         _setup = setup;
+        _rewardPersistence = rewardPersistence;
         _hub = hub;
         _logger = logger;
     }
@@ -713,6 +720,7 @@ public sealed partial class VsMatchService : IVsMatchService
             }
 
             (string ConnectionId, VsMatchSnapshot Snapshot)[] messages;
+            VsMatchRewardState? rewardToSave;
 
             lock (match.SyncRoot)
             {
@@ -731,10 +739,18 @@ public sealed partial class VsMatchService : IVsMatchService
                     return;
                 }
 
-                HandlePhaseTimeoutLocked(match);
+                rewardToSave = HandlePhaseTimeoutLocked(match);
 
                 messages =
                     VsMatchSnapshotBuilder.BuildMessages(match);
+            }
+
+            if (rewardToSave is not null)
+            {
+                await _rewardPersistence.SaveAsync(
+                    match.MatchId,
+                    match.Players.Count,
+                    rewardToSave);
             }
 
             try
@@ -767,7 +783,7 @@ public sealed partial class VsMatchService : IVsMatchService
             StartPhaseLocked(match, nextPhase.Value);
     }
 
-    private void HandlePhaseTimeoutLocked(
+    private VsMatchRewardState? HandlePhaseTimeoutLocked(
         VsMatchSession match)
     {
         switch (match.Phase)
@@ -815,9 +831,10 @@ public sealed partial class VsMatchService : IVsMatchService
 
             case VsMatchPhase.CaptainRoundResult:
                 VsMatchGameRules.CommitRoundResult(match);
-                CompleteMatchLocked(match);
-                break;
+                return CompleteMatchLocked(match);
         }
+
+        return null;
     }
 
     private void FinishPreparationPhaseLocked(
@@ -1068,4 +1085,7 @@ public sealed partial class VsMatchService : IVsMatchService
  * szerveroldali botra váltja. A bot- és reward-részletek külön
  * partial service-fájlokban maradnak, így ez a koordinátor nem nő
  * újabb szabálytömeggel.
+ * MÓDOSÍTÁS: a kapitánykör lezárása után a kiszámolt
+ * rewardot a lock elengedése után, a végső snapshot kiküldése előtt
+ * a külön reward persistence service vezeti át a PlayerCache-be.
  */

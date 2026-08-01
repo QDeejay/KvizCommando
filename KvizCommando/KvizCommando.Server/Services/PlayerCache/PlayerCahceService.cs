@@ -250,7 +250,8 @@ namespace KvizCommando.Server.Services.PlayerCache
                                | DirtyFlags.Characters
                                | DirtyFlags.AskStats
                                | DirtyFlags.CategoryStats
-                               | DirtyFlags.OrientStats);
+                               | DirtyFlags.OrientStats
+                               | DirtyFlags.TeamStats);
 
                 if ((entry.Dirty & DirtyFlags.Logout) != 0 && entry.CachedQ.DirtyMask == 0)
                 {
@@ -304,3 +305,9 @@ namespace KvizCommando.Server.Services.PlayerCache
 
     }
 }
+
+/**
+ * MÓDOSÍTÁS: sikeres perzisztálás után a TeamStats dirty
+ * bitet is törli. A Logout ellenőrzése továbbra is az enum névvel
+ * történik, ezért az 1 << 7 helyre mozgatás biztonságos.
+ */

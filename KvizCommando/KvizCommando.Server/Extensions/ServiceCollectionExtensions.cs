@@ -48,6 +48,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<VsMatchStore>();
         services.AddSingleton<IVsMatchQuestionLoader, VsMatchQuestionLoader>();
         services.AddSingleton<VsMatchSetupService>();
+        services.AddSingleton<VsMatchRewardPersistenceService>();
         services.AddSingleton<IVsMatchService, VsMatchService>();
         services.AddSingleton<IVsRankedQueueService, VsRankedQueueService>();
 
@@ -93,6 +94,8 @@ public static class ServiceCollectionExtensions
 /**
  * MÓDOSÍTÁS: a VS meccs inicializálási felelőssége külön, belső
  * singleton setup service-be került.
+ * MÓDOSÍTÁS: regisztrálja a lezárt VS rewardok PlayerCache-be
+ * vezetését végző singleton szolgáltatást.
  *
  * A fájl az alkalmazás saját szolgáltatásainak központi DI
  * regisztrációját tartalmazza.

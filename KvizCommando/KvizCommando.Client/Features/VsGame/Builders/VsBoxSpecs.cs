@@ -75,8 +75,10 @@ public static class VsGameBoxSpecs
             ClickId = 303,
             CheckEnable = (data, _) =>
                 data.RootBoxInfo.IsRankedBattlefieldsEnabled,
-             BuildFooter = (_, data, _) =>
-                $"Online: {data.RootBoxInfo.RankedPlayerCount}"
+            BuildFooter = (lang, data, _) =>
+                lang["vsgame.Box.Footer.Ranked"].FormatSafe(
+                    data.RootBoxInfo.RankedPlayerCount,
+                    data.RootBoxInfo.RankedHighScore)
         },
         new()
         {
@@ -169,4 +171,8 @@ public static class VsGameBoxSpecs
  *
  * A fájl a VS root-, manager- és rangsorolási dobozok deklaratív
  * megjelenítési szabályait tartalmazza.
+ * MÓDOSÍTÁS: a ranked root gomb lábléce az összes online
+ * ranked játékos mellett a globális személyes highscore-t mutatja.
+ * Az öt harci besorolás saját lábléce továbbra is csak a hozzá
+ * tartozó online létszámot jelzi.
  */

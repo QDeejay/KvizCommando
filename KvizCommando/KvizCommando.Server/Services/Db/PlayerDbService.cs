@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace KvizCommando.Server.Services.Db
@@ -79,6 +80,17 @@ namespace KvizCommando.Server.Services.Db
                 .AsNoTracking()
                 .Where(cs => cs.PlayerId == playerId)
                 .ToListAsync(ct);
+            var teamStats = await _db.Set<TeamStatistic>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(
+                    stat => stat.PlayerId == playerId,
+                    ct) ??
+                new TeamStatistic { PlayerId = playerId };
+
+            teamStats.RankedPlacements =
+                JsonSerializer.Deserialize<RankedPlacementStatistic>(
+                    teamStats.RankedPlacementsJson) ??
+                new RankedPlacementStatistic();
 
             /*
              CharachterSlot?[] tempChars = characters is null
@@ -121,6 +133,7 @@ namespace KvizCommando.Server.Services.Db
                 },
                 CategoryStats = categoryStats,
                 OrientStats = orientStats,
+                TeamStats = teamStats,
                 SessionId = sessionId
             };
 
@@ -194,6 +207,14 @@ namespace KvizCommando.Server.Services.Db
                 {
                     foreach (var stat in player.OrientStats)
                         _db.Update(stat);
+                }
+
+                if ((flags & DirtyFlags.TeamStats) != 0)
+                {
+                    player.TeamStats.RankedPlacementsJson =
+                        JsonSerializer.Serialize(
+                            player.TeamStats.RankedPlacements);
+                    _db.Update(player.TeamStats);
                 }
 
 
@@ -379,6 +400,11 @@ namespace KvizCommando.Server.Services.Db
                     TotalAskPointsEarned = 0
                 });
 
+                _db.Add(new TeamStatistic
+                {
+                    PlayerId = player.PlayerId
+                });
+
                 for (short categoryId = 1; categoryId <= 16; categoryId++)
                 {
                     _db.Add(new PlayerCategoryStat
@@ -489,3 +515,10 @@ namespace KvizCommando.Server.Services.Db
     }
 
 }
+
+/**
+ * MÓDOSÍTÁS: betölti a TeamStats rekordot és kicsomagolja a
+ * helyezési JSON-t; TeamStats dirty bitnél visszacsomagolja és menti.
+ * Az új játékos a többi alapsorral egy tranzakcióban megkapja a
+ * TeamStatistics rekordját is.
+ */

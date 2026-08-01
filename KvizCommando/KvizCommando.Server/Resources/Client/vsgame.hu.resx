@@ -21,6 +21,9 @@
   <data name="Box.Title.RankedBattlefields" xml:space="preserve">
     <value>Rangsorolásos csataterek</value>
   </data>
+  <data name="Box.Footer.Ranked" xml:space="preserve">
+    <value>Online: {0}, Legjobb eredmény: {1} pont</value>
+  </data>
   <data name="Manager.Title" xml:space="preserve">
     <value>Csapat összeállítása</value>
   </data>
@@ -278,6 +281,7 @@
     MÓDOSÍTÁS: felvette a tippsáv játékközbeni magyar feliratát.
     MÓDOSÍTÁS: felvette a végső tabella és a csapat-/karakterjutalmak
     magyar megjelenítési feliratait, köztük a csapat-XP levezetését.
+    MÓDOSÍTÁS: felvette a ranked root online/highscore láblécét.
 
     A fájl a VS kliens magyar lokalizációs forrása; Debug buildkor
     a ResxExporter ebből készíti el a vsgame.json fájlt.

@@ -2,6 +2,7 @@
   "Box.Title.CreateBattlefield": "Csatatér létrehozása",
   "Box.Title.JoinBattlefield": "Csatlakozás csatatérhez",
   "Box.Title.RankedBattlefields": "Rangsorolásos csataterek",
+  "Box.Footer.Ranked": "Online: {0}, Legjobb eredmény: {1} pont",
   "Manager.Title": "Csapat összeállítása",
   "Manager.Message.Initial": "Állítsd össze a mai csapatod!",
   "Manager.Message.Invalidated": "Változott a csapat, állítsd össze újra!",

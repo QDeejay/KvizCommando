@@ -28,6 +28,7 @@ namespace KvizCommando.Server.Services.PlayerCache
         public PlayerAskStats AskStats { get; set; } = default!;
         public List<PlayerCategoryStat> CategoryStats { get; set; } = [];
         public List<PlayerOrientStat> OrientStats { get; set; } = [];
+        public TeamStatistic TeamStats { get; set; } = default!;
         /// <summary>
         /// Session ID azonosító (pl. bejelentkezés után).
         /// </summary>
@@ -36,3 +37,8 @@ namespace KvizCommando.Server.Services.PlayerCache
     }
 
 }
+
+/**
+ * MÓDOSÍTÁS: a cache a TeamStats részben a globális ranked
+ * highscore-t és a JSON-ből kicsomagolt helyezési tömböket is tartja.
+ */

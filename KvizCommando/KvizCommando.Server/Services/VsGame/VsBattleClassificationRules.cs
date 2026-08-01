@@ -20,7 +20,7 @@ public static class VsBattleClassificationRules
             RequiredPartySize = 3,
             MemberMinimumRankClass = 1,
             MemberMaximumRankClass = 3,
-            RequiredMembersInRankClassRange = 3
+            RequiredMembersInRankClassRange = 2
         },
         new()
         {
@@ -47,9 +47,9 @@ public static class VsBattleClassificationRules
             ClassificationId = 4,
             Stake = 500,
             MinimumTeamRank = 19,
-            RequiredPartySize = 4,
+            RequiredPartySize = 5,
             MemberMinimumRankClass = 7,
-            MemberMaximumRankClass = 10,
+            MemberMaximumRankClass = 7,
             RequiredMembersInRankClassRange = 4
         },
         new()
@@ -58,8 +58,8 @@ public static class VsBattleClassificationRules
             Stake = 1000,
             MinimumTeamRank = 28,
             RequiredPartySize = 5,
-            MemberMinimumRankClass = 10,
-            MemberMaximumRankClass = 10,
+            MemberMinimumRankClass = 0,
+            MemberMaximumRankClass = 7,
             RequiredMembersInRankClassRange = 5
         }
     ];

@@ -4,9 +4,10 @@ namespace KvizCommando.Server.Services.VsGame.Match;
 
 public sealed partial class VsMatchService
 {
-    private void CompleteMatchLocked(VsMatchSession match)
+    private VsMatchRewardState CompleteMatchLocked(VsMatchSession match)
     {
-        match.Reward = VsMatchRewardCalculator.Calculate(match);
+        var reward = VsMatchRewardCalculator.Calculate(match);
+        match.Reward = reward;
 
         AddLog(
             match,
@@ -15,24 +16,8 @@ public sealed partial class VsMatchService
             $"Players={match.Reward.Players.Length};" +
             $"PrizePool={match.Reward.PrizePool}");
 
-        SaveRewardsPlaceholderLocked(match);
         StartPhaseLocked(match, VsMatchPhase.GameCompleted);
-    }
-
-    private static void SaveRewardsPlaceholderLocked(VsMatchSession match)
-    {
-        // TODO VS REWARD CACHE:
-        // A match.Reward már minden PlayerCache-módosításhoz szükséges
-        // adatot tartalmaz. Itt kell majd egyetlen cache-tranzakcióban
-        // jóváírni a pozitív rewardot, levonni a segítségeket és az
-        // energiát, illetve menteni a highscore-t.
-        // A reward.Statistics tartalmazza a pont-/idő-, kategória-,
-        // kérdezői és sajátkérdés-statisztikák növekményeit is.
-        AddLog(
-            match,
-            null,
-            "RewardSavePlaceholder",
-            "PlayerCache persistence is not implemented yet.");
+        return reward;
     }
 
     private void ReleaseCompletedBots(VsMatchSession match)
@@ -59,7 +44,9 @@ public sealed partial class VsMatchService
 
 /**
  * ÚJ FÁJL: a kapitánykör commitja után egyszer elkészíti a végleges
- * reward-állapotot, kijelöli a későbbi cache-mentés pontos helyét,
+ * reward-állapotot, visszaadja a cache-mentést végző szolgáltatásnak,
  * majd a reward snapshot kiküldése után feloldja a botjátékosok
  * meccszárolását. A kapcsolódó emberek a saját kilépésükig maradnak.
+ * MÓDOSÍTÁS: a korábbi mentési placeholder megszűnt; a
+ * kiszámolt reward a snapshot előtti PlayerCache-mentés bemenete.
  */

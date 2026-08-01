@@ -3,6 +3,7 @@ using System;
 using KvizCommando.Server.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KvizCommando.Server.Data.Migrations.Identity
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260801150000_AddTeamStatistics")]
+    partial class AddTeamStatistics
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.18");
@@ -816,6 +819,7 @@ namespace KvizCommando.Server.Data.Migrations.Identity
 }
 
 /**
- * MÓDOSÍTÁS: az EF Core modelsnapshot felvette a TeamStatistics
- * táblát, a Players idegen kulcsot és a ranked highscore indexet.
+ * ÚJ FÁJL: az AddTeamStatistics EF Core migráció generált
+ * célmodellje; a migration discoveryhez szükséges azonosítót és
+ * a teljes frissített ApplicationDbContext modellt tartalmazza.
  */

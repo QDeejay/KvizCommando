@@ -94,15 +94,16 @@ internal static class VsMatchScoring
             unit * (match.Players.Count - 1) -
             unit * otherCorrect +
             unit * otherNoAnswer;
-        var correctAnswerCount = match.Players.Count(player =>
-            player.CurrentAnswer?.AnswerIndex ==
-            question.CorrectOptionIndex);
         var results = new List<VsMatchQuestionPlayerResultState>(
             match.Players.Count);
 
-        questioner.Statistics.QuestionsAsked++;
-        questioner.Statistics.CorrectAnswersToAskedQuestions +=
-            correctAnswerCount;
+        if (isCaptain)
+        {
+            questioner.Statistics.QuestionsAsked +=
+                match.Players.Count - 1;
+            questioner.Statistics.CorrectAnswersToAskedQuestions +=
+                otherCorrect;
+        }
 
         if (question.IsOwnQuestion)
         {
@@ -116,8 +117,8 @@ internal static class VsMatchScoring
                     ownQuestion);
             }
 
-            ownQuestion.Asked += match.Players.Count;
-            ownQuestion.CorrectAnswers += correctAnswerCount;
+            ownQuestion.Asked += match.Players.Count - 1;
+            ownQuestion.CorrectAnswers += otherCorrect;
         }
 
         foreach (var player in match.Players)
@@ -141,14 +142,14 @@ internal static class VsMatchScoring
                     hasAnswer,
                     isCorrect,
                     questionerScore,
-                    unit)
+                    unit * (match.Players.Count - 1))
                 : ResolveResponderPoints(
                     hasAnswer,
                     isCorrect,
                     unit);
             var hasSpeedBonus = player == speedWinner;
 
-            if (hasAnswer && question.CategoryId is >= 1 and <= 16)
+            if (question.CategoryId is >= 1 and <= 16)
             {
                 if (!player.Statistics.Categories.TryGetValue(
                         question.CategoryId,
@@ -293,6 +294,10 @@ internal static class VsMatchScoring
 
                 characterTotal.CharacterXp += roundReward.CharacterXp;
                 characterTotal.EnergyLoss += roundReward.EnergyLoss;
+                characterTotal.PlayDuels++;
+
+                if (roundReward.HasWinnerBonus)
+                    characterTotal.WinDuels++;
             }
 
             player.TotalPoints += player.RoundPoints;
@@ -312,10 +317,10 @@ internal static class VsMatchScoring
         bool hasAnswer,
         bool isCorrect,
         int possiblePoints,
-        int unit)
+        int noAnswerPenalty)
     {
         if (!hasAnswer)
-            return -3 * unit;
+            return -noAnswerPenalty;
 
         return isCorrect
             ? possiblePoints
@@ -508,4 +513,9 @@ internal static class VsMatchScoring
  * nem írja felül a későbbi rewardhoz szükséges adatot.
  * MÓDOSÍTÁS: ugyanitt gyűlik a válaszoló kategória-/helyesválasz-,
  * a kérdezői és a saját kérdéshez tartozó Ask/OkAnswer növekmény.
+ * MÓDOSÍTÁS: a kategória Answered a kihagyott választ is
+ * számolja; a kapitány- és sajátkérdés-statisztika csak a többi
+ * játékost veszi figyelembe. A kérdező kihagyási büntetése a
+ * játékosszámból számolódik, nem fix három pont. Normál nagykör
+ * commitjakor a karakter PlayDuels/WinDuels növekménye is gyűlik.
  */

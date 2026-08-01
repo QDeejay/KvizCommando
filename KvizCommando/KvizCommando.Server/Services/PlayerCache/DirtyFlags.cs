@@ -9,5 +9,12 @@ public enum DirtyFlags : byte
     AskStats = 1 << 3,
     CategoryStats = 1 << 4,
     OrientStats = 1 << 5,
-    Logout = 1 << 6
+    TeamStats = 1 << 6,
+    Logout = 1 << 7
 }
+
+/**
+ * MÓDOSÍTÁS: a TeamStats az 1 << 6 dirty bitet kapta, a Logout
+ * pedig az 1 << 7 helyre került. A felhasználás mindenhol az enum
+ * néven keresztül történik.
+ */

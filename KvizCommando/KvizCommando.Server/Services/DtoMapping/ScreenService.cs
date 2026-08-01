@@ -285,7 +285,9 @@ namespace KvizCommando.Server.Services.DtoMapping
                     TeamRank = player.Core.RankEnum,
                     PrivatePlayerCount = 0,
                     RankedPlayerCount =
-                        rankedPlayerCounts.Values.Sum()
+                        rankedPlayerCounts.Values.Sum(),
+                    RankedHighScore =
+                        player.TeamStats.RankedHighScore
                 },
                 RankedBattlefields =
                     new VsRankedBattlefieldsDto
@@ -380,6 +382,8 @@ namespace KvizCommando.Server.Services.DtoMapping
  * MÓDOSÍTÁS: a VS képernyő besorolási DTO-jába bemásolja a
  * szerveroldali szabálytábla tétértékét és a csapattag normalizált
  * fő orientációazonosítóját.
+ * MÓDOSÍTÁS: a VS screen DTO lekérésekor a TeamStats egyetlen,
+ * globális ranked highscore-ját is bemásolja a root adatok közé.
  *
  * A fájl a Home, Solo és VS képernyők PlayerCache-alapú
  * snapshotjait állítja össze.

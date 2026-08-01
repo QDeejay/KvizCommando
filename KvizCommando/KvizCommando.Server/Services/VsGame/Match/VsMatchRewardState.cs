@@ -42,6 +42,8 @@ public sealed class VsMatchCharacterRewardState
     public int CharacterXp { get; init; }
     public int EnergyLoss { get; init; }
     public int Pension { get; init; }
+    public int PlayDuels { get; init; }
+    public int WinDuels { get; init; }
 }
 
 /**
@@ -52,4 +54,6 @@ public sealed class VsMatchCharacterRewardState
  * megőrzi, amikor egy bot zárolása már feloldható.
  * A később egy lépésben menthető meccsstatisztika és team bonus
  * százalék szintén itt áll rendelkezésre.
+ * MÓDOSÍTÁS: karakterenként a PlayDuels/WinDuels növekményt
+ * is továbbítja a PlayerCache-mentésnek.
  */

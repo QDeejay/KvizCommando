@@ -24,6 +24,7 @@ namespace KvizCommando.Server.Infrastructure.Persistence
 
         public DbSet<PlayerOrientStat> PlayerOrientStat => Set<PlayerOrientStat>();
         public DbSet<PlayerAskStats> PlayerAskStats => Set<PlayerAskStats>();
+        public DbSet<TeamStatistic> TeamStatistics => Set<TeamStatistic>();
 
         public DbSet<TermsConsent> TermsConsents => Set<TermsConsent>();
         public DbSet<MarketingConsent> MarketingConsents => Set<MarketingConsent>();
@@ -46,4 +47,9 @@ namespace KvizCommando.Server.Infrastructure.Persistence
 
 /// Add-Migration InitialIdentity -Context ApplicationDbContext -OutputDir "Data\Migrations\Identity"
 /// Update-Database -Context ApplicationDbContext
-/// 
+///
+
+/**
+ * MÓDOSÍTÁS: az ApplicationDbContext az új TeamStatistics
+ * entitást is az EF Core modell részévé teszi.
+ */

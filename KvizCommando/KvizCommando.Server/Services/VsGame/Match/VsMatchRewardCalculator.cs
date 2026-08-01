@@ -125,7 +125,9 @@ internal static class VsMatchRewardCalculator
             PictureCode = character.PictureCode,
             CharacterXp = player.IsBot ? 0 : total.CharacterXp,
             EnergyLoss = total.EnergyLoss,
-            Pension = isWinner ? pensionPerCharacter : 0
+            Pension = isWinner ? pensionPerCharacter : 0,
+            PlayDuels = total.PlayDuels,
+            WinDuels = total.WinDuels
         };
     }
 
@@ -139,11 +141,16 @@ internal static class VsMatchRewardCalculator
         var averageCharacterXp = (int)Math.Floor(
             player.CharacterRewardTotals.Average(item =>
                 item.CharacterXp));
-        var calculatedScoreXp = (int)Math.Floor(
-            (double)player.TotalPoints *
+        var rawScoreXp = (double)player.TotalPoints *
             match.Players.Count *
             player.TeamLevel /
-            10);
+            5;
+        var calculatedScoreXp = rawScoreXp switch
+        {
+            > 0 => Math.Max((int)Math.Floor(rawScoreXp), 1),
+            < 0 => Math.Min((int)Math.Floor(rawScoreXp), -1),
+            _ => 0
+        };
         var scoreXp = Math.Max(
             calculatedScoreXp,
             -averageCharacterXp);
@@ -198,5 +205,9 @@ internal static class VsMatchRewardCalculator
  * szerzett karakter-XP-k lefelé kerekített átlagának összege; a
  * pontszámrész negatív is lehet, de az összes XP-t nem viheti 0 alá.
  * 21 fölött 0. A team bonus százaléka is a rewardállapot része.
+ * MÓDOSÍTÁS: a pontszámból számolt csapat-XP a rögzített
+ * Points * Players * TeamLevel / 5 képletet használja; nem nulla
+ * eredménynél legalább +1 vagy -1. A karakterreward a duel
+ * statisztikai növekményeket is tartalmazza.
  * PlayerCache-t és adatbázist nem érint.
  */
