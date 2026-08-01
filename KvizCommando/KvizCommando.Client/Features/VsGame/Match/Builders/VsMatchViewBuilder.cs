@@ -235,6 +235,9 @@ public sealed class VsMatchViewBuilder
                     FinalPosition = myReward.FinalPosition,
                     IsTeamXpAvailable =
                         myReward.IsTeamXpAvailable,
+                    CharacterAverageXp =
+                        myReward.CharacterAverageXp,
+                    ScoreXp = myReward.ScoreXp,
                     TeamXp = myReward.TeamXp,
                     StakeReturn = myReward.StakeReturn,
                     BaseCreditReward = myReward.BaseCreditReward,
@@ -481,8 +484,8 @@ public sealed class VsMatchViewBuilder
  * képútvonal, mert a kártyákon a CharacterView SVG jelenik meg.
  * MÓDOSÍTÁS: a reward contractot külön reward view modellekre képezi,
  * a segítségneveket ugyanabból a meglévő lokalizációból oldja fel,
- * mint a preparáció, átviszi a roster botjelzőjét, a csapat-XP sor
- * láthatóságát és a team bonus százalékát.
+ * mint a preparáció, átviszi a roster botjelzőjét, a csapat-XP
+ * levezetését, annak láthatóságát és a team bonus százalékát.
  *
  * A szerver snapshotjából lokalizált neveket, meglévő Solo képeket
  * és VS view modelleket épít. DI-be nem kerül.

@@ -45,8 +45,16 @@
                     @if (MyReward.IsTeamXpAvailable)
                     {
                         <div>
-                            <dt>@Lang["vsgame.Match.Reward.TeamXp"]</dt>
-                            <dd>@Signed(MyReward.TeamXp)</dd>
+                            <dt>@Lang["vsgame.Match.Reward.CharacterAverageXp"]</dt>
+                            <dd>@MyReward.CharacterAverageXp</dd>
+                        </div>
+                        <div>
+                            <dt>@Lang["vsgame.Match.Reward.ScoreXp"]</dt>
+                            <dd>@Signed(MyReward.ScoreXp)</dd>
+                        </div>
+                        <div class="total">
+                            <dt>@Lang["vsgame.Match.Reward.XpTotal"]</dt>
+                            <dd>@MyReward.TeamXp</dd>
                         </div>
                     }
                     <div>
@@ -99,10 +107,13 @@
                                     }
                                 </small>
                             </div>
-                            <strong class="pension">
-                                @Signed(character.Pension)
-                                @Lang["vsgame.Match.Reward.Pension"]
-                            </strong>
+                            @if (character.Pension > 0)
+                            {
+                                <strong class="pension">
+                                    @Signed(character.Pension)
+                                    @Lang["vsgame.Match.Reward.Pension"]
+                                </strong>
+                            }
                         </article>
                     }
                 </div>
@@ -114,8 +125,7 @@
 @*
     ÚJ FÁJL: a GameCompleted snapshot végső tabelláját, saját
     csapatjutalmát, felhasznált segítségeit és karakterenkénti XP-,
-    energia- és nyugdíjváltozását jeleníti meg. Nulla energiavesztést
-    és 21-es csapatszint felett csapat-XP sort nem ír ki; a team bonus
-    százalékát a Csapatbónusz felirat részeként mutatja. Állapotot
-    nem módosít.
+    energia- és nyugdíjváltozását jeleníti meg. A csapat-XP eredetét
+    levezeti; nulla energiavesztést, nulla nyugdíjat és 21-es
+    csapatszint felett csapat-XP-t nem ír ki. Állapotot nem módosít.
 *@

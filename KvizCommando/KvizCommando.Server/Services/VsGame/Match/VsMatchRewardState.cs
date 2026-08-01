@@ -21,6 +21,8 @@ public sealed class VsMatchPlayerRewardState
     public double ActualTimeSeconds { get; init; }
     public int FinalPoints { get; init; }
     public double FinalTimeSeconds { get; init; }
+    public int CharacterAverageXp { get; init; }
+    public int ScoreXp { get; init; }
     public int TeamXp { get; init; }
     public int StakeReturn { get; init; }
     public int BaseCreditReward { get; init; }
@@ -45,7 +47,8 @@ public sealed class VsMatchCharacterRewardState
 /**
  * ÚJ FÁJL: a lezárt meccs teljes jutalomeredménye. A későbbi
  * PlayerCache-íráshoz szükséges játékos-, session-, segítség-,
- * karakter-, XP-, energia-, nyugdíj- és kreditadatokat akkor is
+ * karakter-, részletezett csapat-XP-, energia-, nyugdíj- és
+ * kreditadatokat akkor is
  * megőrzi, amikor egy bot zárolása már feloldható.
  * A később egy lépésben menthető meccsstatisztika és team bonus
  * százalék szintén itt áll rendelkezésre.

@@ -25,6 +25,8 @@ public sealed class VsMyRewardVm
 {
     public int FinalPosition { get; set; }
     public bool IsTeamXpAvailable { get; set; }
+    public int CharacterAverageXp { get; set; }
+    public int ScoreXp { get; set; }
     public int TeamXp { get; set; }
     public int StakeReturn { get; set; }
     public int BaseCreditReward { get; set; }
@@ -54,6 +56,6 @@ public sealed class VsCharacterRewardVm
 /**
  * ÚJ FÁJL: a meccs végi tabella és a saját csapat-/karakterjutalom
  * tisztán megjelenítési modelljei. Sem SignalR-, sem cachelogikát nem
- * tartalmaznak. A csapat-XP sor láthatósága és a team bonus százaléka
- * közvetlen szerveres rewardadatból érkezik.
+ * tartalmaznak. A csapat-XP levezetése, láthatósága és a team bonus
+ * százaléka közvetlen szerveres rewardadatból érkezik.
  */

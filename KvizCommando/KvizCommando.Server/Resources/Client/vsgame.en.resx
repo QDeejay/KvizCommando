@@ -258,7 +258,9 @@
   <data name="Match.Reward.Victory" xml:space="preserve"><value>victory</value></data>
   <data name="Match.Reward.FinalStanding" xml:space="preserve"><value>Final standing</value></data>
   <data name="Match.Reward.Team" xml:space="preserve"><value>Team reward</value></data>
-  <data name="Match.Reward.TeamXp" xml:space="preserve"><value>Team XP</value></data>
+  <data name="Match.Reward.CharacterAverageXp" xml:space="preserve"><value>Character Ø XP</value></data>
+  <data name="Match.Reward.ScoreXp" xml:space="preserve"><value>Score XP</value></data>
+  <data name="Match.Reward.XpTotal" xml:space="preserve"><value>Total XP</value></data>
   <data name="Match.Reward.StakeReturn" xml:space="preserve"><value>Stake returned</value></data>
   <data name="Match.Reward.BaseCredit" xml:space="preserve"><value>Prize</value></data>
   <data name="Match.Reward.TeamBonus" xml:space="preserve"><value>Team bonus</value></data>
@@ -275,7 +277,7 @@
     feliratait.
     MÓDOSÍTÁS: felvette a tippsáv játékközbeni angol feliratát.
     MÓDOSÍTÁS: felvette a végső tabella és a csapat-/karakterreward
-    angol megjelenítési feliratait.
+    angol megjelenítési feliratait, köztük a csapat-XP levezetését.
 
     A fájl a VS kliens angol lokalizációs forrása; Debug buildkor
     a ResxExporter ebből készíti el a vsgame.json fájlt.

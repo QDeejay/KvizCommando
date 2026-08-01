@@ -64,6 +64,7 @@ internal static class VsMatchRewardCalculator
                 prizePool,
                 player.TeamLevel)
             : new CreditReward();
+        var teamXp = CalculateTeamXp(match, player);
 
         player.Statistics.Points = player.TotalPoints;
         player.Statistics.TimeSeconds = player.TotalTimeSeconds;
@@ -85,7 +86,9 @@ internal static class VsMatchRewardCalculator
             FinalTimeSeconds = player.IsBot
                 ? BotFinalTimeSeconds
                 : player.TotalTimeSeconds,
-            TeamXp = CalculateTeamXp(match, player),
+            CharacterAverageXp = teamXp.CharacterAverage,
+            ScoreXp = teamXp.Score,
+            TeamXp = teamXp.Total,
             StakeReturn = credit.StakeReturn,
             BaseCreditReward = credit.BaseReward,
             TeamBonusCredit = credit.TeamBonus,
@@ -126,25 +129,28 @@ internal static class VsMatchRewardCalculator
         };
     }
 
-    private static int CalculateTeamXp(
+    private static TeamXpReward CalculateTeamXp(
         VsMatchSession match,
         VsMatchPlayerState player)
     {
         if (player.IsBot || player.TeamLevel > 21)
-            return 0;
+            return new TeamXpReward();
 
-        var baseXp = Math.Max(
-            0,
-            (int)Math.Floor(
-                (double)player.TotalPoints *
-                match.Players.Count *
-                player.TeamLevel /
-                10));
         var averageCharacterXp = (int)Math.Floor(
             player.CharacterRewardTotals.Average(item =>
                 item.CharacterXp));
+        var calculatedScoreXp = (int)Math.Floor(
+            (double)player.TotalPoints *
+            match.Players.Count *
+            player.TeamLevel /
+            10);
+        var scoreXp = Math.Max(
+            calculatedScoreXp,
+            -averageCharacterXp);
 
-        return baseXp + averageCharacterXp;
+        return new TeamXpReward(
+            averageCharacterXp,
+            scoreXp);
     }
 
     private static CreditReward CalculateCreditReward(
@@ -174,6 +180,13 @@ internal static class VsMatchRewardCalculator
     {
         internal int Total => StakeReturn + BaseReward + TeamBonus;
     }
+
+    private readonly record struct TeamXpReward(
+        int CharacterAverage = 0,
+        int Score = 0)
+    {
+        internal int Total => CharacterAverage + Score;
+    }
 }
 
 /**
@@ -182,7 +195,8 @@ internal static class VsMatchRewardCalculator
  * 0 ponttal és 9999 másodperccel az emberek mögé kerül, pozitív
  * jutalmat nem kap; a segítség- és energiavesztesége megmarad.
  * A 21-es szintig járó csapat-XP a korábbi pontképlet és a meccsben
- * szerzett karakter-XP-k lefelé kerekített átlagának összege; 21
- * fölött 0. A team bonus százaléka is a rewardállapot része.
+ * szerzett karakter-XP-k lefelé kerekített átlagának összege; a
+ * pontszámrész negatív is lehet, de az összes XP-t nem viheti 0 alá.
+ * 21 fölött 0. A team bonus százaléka is a rewardállapot része.
  * PlayerCache-t és adatbázist nem érint.
  */
