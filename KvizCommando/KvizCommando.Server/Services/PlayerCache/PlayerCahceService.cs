@@ -1,4 +1,5 @@
 ﻿using KvizCommando.Server.Services.Db;
+using KvizCommando.Server.Services.VsGame;
 using System.Collections.Concurrent;
 
 
@@ -136,7 +137,8 @@ namespace KvizCommando.Server.Services.PlayerCache
                     return false;
 
                 if ((dirty.Value & DirtyFlags.Characters) != 0 &&
-                    entry.Player.BattleTeamSlots.Length > 0)
+                    entry.Player.BattleTeamSlots.Length > 0 &&
+                    !HasEligibleBattleTeam(entry.Player))
                 {
                     Array.Clear(entry.Player.BattleTeamSlots);
                 }
@@ -149,6 +151,42 @@ namespace KvizCommando.Server.Services.PlayerCache
             {
                 entry.Lock.Release();
             }
+        }
+
+        private static bool HasEligibleBattleTeam(CachedPlayer player)
+        {
+            var selectedSlots = player.BattleTeamSlots;
+
+            if (!VsBattleClassificationRules.IsSupportedPartySize(
+                    selectedSlots.Length) ||
+                selectedSlots.Any(slot => slot is < 1 or > 8) ||
+                selectedSlots.Distinct().Count() != selectedSlots.Length)
+            {
+                return false;
+            }
+
+            var selectedMembers = selectedSlots
+                .Select(slot => player.Characters[slot - 1])
+                .ToArray();
+
+            if (selectedMembers.Any(member =>
+                    member is null ||
+                    !VsBattleClassificationRules.CanSelectMember(
+                        player.Core.RankEnum,
+                        member.EnergyPoints,
+                        member.Rank,
+                        member.XP)))
+            {
+                return false;
+            }
+
+            return VsBattleClassificationRules
+                .GetEligibleClassificationIds(
+                    player.Core.RankEnum,
+                    selectedMembers
+                        .Select(member => member!.Rank)
+                        .ToArray())
+                .Length > 0;
         }
 
         public async Task<bool?> UpdateQuestionsLockedAsync(
@@ -310,4 +348,7 @@ namespace KvizCommando.Server.Services.PlayerCache
  * MÓDOSÍTÁS: sikeres perzisztálás után a TeamStats dirty
  * bitet is törli. A Logout ellenőrzése továbbra is az enum névvel
  * történik, ezért az 1 << 7 helyre mozgatás biztonságos.
+ * MÓDOSÍTÁS: Characters dirty esetén a mentett harci csapat csak
+ * akkor nullázódik, ha a módosított karakterállapottal már egyik
+ * ranked besorolás feltételeinek sem felel meg.
  */

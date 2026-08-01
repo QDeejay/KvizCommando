@@ -1,4 +1,5 @@
 using KvizCommando.Shared.Models.Dtos;
+using KvizCommando.Shared.Models;
 
 namespace KvizCommando.Server.Services.VsGame;
 
@@ -86,10 +87,18 @@ public static class VsBattleClassificationRules
     public static bool CanSelectMember(
         int teamRank,
         int energyPoints,
-        int memberRank) =>
+        int memberRank,
+        int memberXp) =>
         energyPoints > 0 &&
+        !IsAwaitingRetirement(memberRank, memberXp) &&
         (memberRank > 0 ||
          teamRank >= UnrankedMemberMinimumTeamRank);
+
+    public static bool IsAwaitingRetirement(
+        int memberRank,
+        int memberXp) =>
+        memberRank == 21 &&
+        memberXp >= RankRewards.List[21].NextLevel;
 
     private static bool IsEligible(
         VsBattleClassificationDto rule,
@@ -123,4 +132,6 @@ public static class VsBattleClassificationRules
  *
  * A fájl a VS harci csapat szerveroldali besorolási és
  * választhatósági szabályait tartalmazza.
+ * MÓDOSÍTÁS: a 21-es szint XP-határát elérő, nyugdíjazásra váró
+ * karakter már nem számít hadra foghatónak.
  */

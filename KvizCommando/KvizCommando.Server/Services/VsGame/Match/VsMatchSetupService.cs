@@ -311,6 +311,7 @@ public sealed class VsMatchSetupService
             Name = character.Name,
             PictureCode = character.PictureCode,
             Level = character.Rank,
+            Xp = character.XP,
             EnergyPoints = character.EnergyPoints,
             OrientationId = orientationId,
             CategoryModifiers = modifiers
@@ -378,4 +379,6 @@ public sealed class VsMatchSetupService
  * MÓDOSÍTÁS: inicializálja a karakterenkénti reward-akkumulátort,
  * és a már bottá vált, de tovább futó játékost aktív résztvevőnek
  * tekinti a kérdések egyszeri betöltésekor.
+ * MÓDOSÍTÁS: a karakter aktuális XP-jét is beemeli a zárolt
+ * meccssnapshotba a szinthatáron történő rewardvágáshoz.
  */

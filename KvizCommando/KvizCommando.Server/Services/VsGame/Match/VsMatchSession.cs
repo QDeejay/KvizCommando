@@ -84,6 +84,7 @@ public sealed class VsMatchCharacterState
     public string Name { get; init; } = string.Empty;
     public string PictureCode { get; init; } = string.Empty;
     public int Level { get; init; }
+    public int Xp { get; init; }
     public int EnergyPoints { get; init; }
     public int OrientationId { get; init; }
     public Dictionary<int, double> CategoryModifiers { get; init; } = [];
@@ -233,6 +234,9 @@ public sealed class VsMatchRoundResultState
  * későbbi egyetlen cache-mentéshez szintén itt marad.
  * MÓDOSÍTÁS: a karakterenkénti reward-akkumulátor a normál
  * nagykörök PlayDuels és WinDuels növekményét is megőrzi.
+ * MÓDOSÍTÁS: a karakter meccskezdéskori XP-je is a snapshot része,
+ * így a végső jutalom a következő szint határán szerveroldalon
+ * levágható.
  *
  * Egy lezárt meccs teljes, szerveroldali authoritative állapotát
  * tartalmazza. A SignalR Hub nem őriz játékállapotot.

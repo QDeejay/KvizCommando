@@ -40,6 +40,7 @@ public sealed class VsMatchCharacterRewardState
     public string Name { get; init; } = string.Empty;
     public string PictureCode { get; init; } = string.Empty;
     public int CharacterXp { get; init; }
+    public bool IsCharacterXpCapped { get; init; }
     public int EnergyLoss { get; init; }
     public int Pension { get; init; }
     public int PlayDuels { get; init; }
@@ -56,4 +57,6 @@ public sealed class VsMatchCharacterRewardState
  * százalék szintén itt áll rendelkezésre.
  * MÓDOSÍTÁS: karakterenként a PlayDuels/WinDuels növekményt
  * is továbbítja a PlayerCache-mentésnek.
+ * MÓDOSÍTÁS: jelzi, ha a megszerzett karakter-XP-ből a következő
+ * szint határa miatt csak a levágott rész írható jóvá.
  */

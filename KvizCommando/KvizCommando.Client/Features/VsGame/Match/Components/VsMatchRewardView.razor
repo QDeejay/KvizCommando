@@ -54,7 +54,16 @@
                         </div>
                         <div class="total">
                             <dt>@Lang["vsgame.Match.Reward.XpTotal"]</dt>
-                            <dd>@MyReward.TeamXp</dd>
+                            <dd class="team-xp-total">
+                                <span>@MyReward.TeamXp</span>
+                                @if (NewTeamLevel > 0)
+                                {
+                                    <span class="team-level-up" aria-live="polite">
+                                        <strong>@Lang["vsgame.Match.Reward.NewTeamLevel"]</strong>
+                                        <strong>@NewTeamLevelCode</strong>
+                                    </span>
+                                }
+                            </dd>
                         </div>
                     }
                     <div>
@@ -98,7 +107,9 @@
                             <div>
                                 <strong>@character.Name</strong>
                                 <small>
-                                    @Signed(character.CharacterXp) XP
+                                    <span class="character-xp @(character.IsCharacterXpCapped ? "capped" : "")">
+                                        @Signed(character.CharacterXp) XP
+                                    </span>
                                     @if (character.EnergyLoss > 0)
                                     {
                                         <span>
@@ -110,13 +121,21 @@
                             @if (character.Pension > 0)
                             {
                                 <strong class="pension">
-                                    @Signed(character.Pension)
-                                    @Lang["vsgame.Match.Reward.Pension"]
+                                    @Credits(character.Pension)
                                 </strong>
                             }
                         </article>
                     }
                 </div>
+                @if (PensionTotal > 0)
+                {
+                    <dl>
+                        <div class="total">
+                            <dt>@Lang["vsgame.Match.Reward.PensionTotal"]</dt>
+                            <dd>@Credits(PensionTotal)</dd>
+                        </div>
+                    </dl>
+                }
             </section>
         </div>
     </div>
@@ -128,4 +147,10 @@
     energia- és nyugdíjváltozását jeleníti meg. A csapat-XP eredetét
     levezeti; nulla energiavesztést, nulla nyugdíjat és 21-es
     csapatszint felett csapat-XP-t nem ír ki. Állapotot nem módosít.
+    MÓDOSÍTÁS: a nyugdíjalap karakterenként kreditként, alatta a
+    ténylegesen szétosztott összeggel jelenik meg. A szinthatáron
+    levágott karakter-XP piros jelzést kap.
+    MÓDOSÍTÁS: a nyugdíjalap összesen sora a bal oldali „Összes
+    kredit” azonos dl/total markupját használja. Az összes XP mellett
+    a jelenleg tesztmódban mindig aktív szintlépés-animáció látszik.
 *@

@@ -214,6 +214,53 @@
     color: #c6ef39;
 }
 
+.kc-vs-reward-panel .team-xp-total {
+    position: relative;
+    min-width: 94px;
+}
+
+.team-level-up {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center end;
+    color: #c6ef39;
+    background: #111610;
+    overflow: hidden;
+    pointer-events: none;
+    animation: team-level-up-container 2.8s linear both;
+}
+
+.team-level-up > strong {
+    grid-area: 1 / 1;
+    white-space: nowrap;
+}
+
+.team-level-up > strong:first-child {
+    animation: team-level-up-label 1.4s steps(2, end) both;
+}
+
+.team-level-up > strong:last-child {
+    animation: team-level-up-value 1.4s ease-out 1.4s both;
+}
+
+@keyframes team-level-up-label {
+    0%, 15% { opacity: 0; }
+    25%, 40%, 65% { opacity: 1; }
+    32%, 55%, 78%, 100% { opacity: 0; }
+}
+
+@keyframes team-level-up-container {
+    0%, 92% { opacity: 1; }
+    100% { opacity: 0; visibility: hidden; }
+}
+
+@keyframes team-level-up-value {
+    0% { opacity: 0; transform: translateY(7px); }
+    22%, 72% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-7px); }
+}
+
 .kc-vs-reward-character-list {
     display: grid;
     gap: 7px;
@@ -258,6 +305,10 @@
     color: #aaa99f;
 }
 
+.kc-vs-reward-character .character-xp.capped {
+    color: #d15f52;
+}
+
 .kc-vs-reward-character .pension {
     color: #eee9dc;
     font-size: .78rem;
@@ -280,4 +331,8 @@
  * MÓDOSÍTÁS: a csapatbónusz százaléka a felirat részeként, a már
  * használt címkével teljesen azonos betűvel és színnel jelenik meg;
  * az értékmező csak a kreditet tartalmazza.
+ * MÓDOSÍTÁS: a levágott karakter-XP figyelmeztető piros, a tényleges
+ * nyugdíjalap-összeg pedig a többi kreditösszeg zöld stílusát kapja.
+ * MÓDOSÍTÁS: az összes XP értéke felett egyszer lefutó, előbb „Új
+ * szint!”, majd PublicLevel feliratot mutató tesztanimáció jelenik meg.
  */

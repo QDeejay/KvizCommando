@@ -1,3 +1,4 @@
+using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.VsGame.Match.ViewModels;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using Microsoft.AspNetCore.Components;
@@ -6,6 +7,8 @@ namespace KvizCommando.Client.Features.VsGame.Match.Components;
 
 public partial class VsMatchRewardView
 {
+    private const int PreviewNewTeamLevel = 1;
+
     [Inject]
     private ILanguageService Lang { get; set; } = default!;
 
@@ -13,6 +16,15 @@ public partial class VsMatchRewardView
     public VsMatchViewData Data { get; set; } = default!;
 
     private VsMyRewardVm MyReward => Data.Reward.MyReward!;
+
+    private int PensionTotal =>
+        MyReward.Characters.Sum(character => character.Pension);
+
+    private int NewTeamLevel => PreviewNewTeamLevel;
+
+    private string NewTeamLevelCode =>
+        RankNameTable.Data[NewTeamLevel].PublicLevel ??
+        string.Empty;
 
     private VsRewardStandingVm Winner =>
         Data.Reward.Standings.First(player => player.IsWinner);
@@ -48,4 +60,9 @@ public partial class VsMatchRewardView
  * segédeit tartalmazza. A szerveren számolt értékeket nem számolja
  * újra és nem indít kliensoldali mentést. A segítségeket levonási
  * előjel nélkül, többszörös előfordulásnál darabszámmal formázza.
+ * MÓDOSÍTÁS: a karakterenként már kiszámolt nyugdíjalap-jóváírások
+ * megjelenített összegét adja vissza; rewardot nem számol újra.
+ * MÓDOSÍTÁS: PreviewNewTeamLevel átmenetileg mindig pozitív, ezért a
+ * szintlépés-animáció tesztelhető. A későbbi szerveres NewTeamLevel
+ * érték ugyanezt a feltételt és a PublicLevel feloldást fogja használni.
  */

@@ -1,24 +1,32 @@
 ﻿.modal-display {
     font-size: 1.1rem;
-    
+    min-width: 0;
+    max-width: 100%;
 }
 .info-block {
     display: grid;
-    grid-template-columns: 60px 340px 80px 70px;
+    grid-template-columns: 60px minmax(0, 1fr) 80px 70px;
     margin-bottom: 10px;
 }
 
 .hire-skillblock {
   
     display: grid;
-    grid-template-columns: 300px 80px;
+    grid-template-columns: minmax(0, 1fr) 80px;
 }
 
 .promote-block {
    
     display: grid;
-    grid-template-columns: 290px 60px 40px 60px;
+    grid-template-columns: minmax(0, 1fr) 60px 40px 60px;
     width: 100%;
+}
+
+.info-block > *,
+.hire-skillblock > *,
+.promote-block > * {
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 .handle-block {
     text-align: center;
@@ -94,3 +102,9 @@
     padding-left:4px;
     color: greenyellow;
 }
+
+/*
+ * MÓDOSÍTÁS: a korábbi fix összszélességű team-modal rácsok első,
+ * szöveges oszlopa a modal aktuális szélességéhez zsugorodik. Az
+ * értékoszlopok és a tartalom jelentése változatlan marad.
+ */

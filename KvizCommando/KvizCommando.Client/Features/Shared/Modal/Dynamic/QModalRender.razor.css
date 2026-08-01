@@ -1,5 +1,8 @@
 ﻿.modal-display {
     font-size: 1.2rem;
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
 }
 .category-label {
    
@@ -60,10 +63,17 @@
 }
 .label-statistic {
     font-size:0.9rem;
-    min-width:160px;
+    display: inline-block;
+    width: min(160px, 55%);
 }
 
 .label-result {
     font-weight:bold;
     font-size:1rem;
 }
+
+/*
+ * MÓDOSÍTÁS: a kérdésmodal hosszú szövegei törhetnek, a statisztika
+ * címke pedig keskeny modalban nem kényszerít 160 px-es minimális
+ * szélességet a tartalomra.
+ */

@@ -42,7 +42,8 @@ public sealed class VsGameService : IVsGameService
                         !VsBattleClassificationRules.CanSelectMember(
                             player.Core.RankEnum,
                             member.EnergyPoints,
-                            member.Rank)))
+                            member.Rank,
+                            member.XP)))
                 {
                     return null;
                 }
@@ -64,3 +65,9 @@ public sealed class VsGameService : IVsGameService
             ct);
     }
 }
+
+/**
+ * MÓDOSÍTÁS: a ranked csapat mentésekor az energián és szinten túl a
+ * karakter aktuális XP-jét is átadja a központi választhatósági
+ * szabálynak, így nyugdíjazásra váró karakter nem menthető el.
+ */

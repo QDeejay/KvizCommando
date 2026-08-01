@@ -266,6 +266,8 @@ public sealed class VsMatchViewBuilder
                                 Name = character.Name,
                                 PictureCode = character.PictureCode,
                                 CharacterXp = character.CharacterXp,
+                                IsCharacterXpCapped =
+                                    character.IsCharacterXpCapped,
                                 EnergyLoss = character.EnergyLoss,
                                 Pension = character.Pension
                             })
@@ -486,6 +488,8 @@ public sealed class VsMatchViewBuilder
  * a segítségneveket ugyanabból a meglévő lokalizációból oldja fel,
  * mint a preparáció, átviszi a roster botjelzőjét, a csapat-XP
  * levezetését, annak láthatóságát és a team bonus százalékát.
+ * MÓDOSÍTÁS: a levágott karakter-XP szerveres jelzését változtatás
+ * nélkül viszi át a reward view modelbe.
  *
  * A szerver snapshotjából lokalizált neveket, meglévő Solo képeket
  * és VS view modelleket épít. DI-be nem kerül.

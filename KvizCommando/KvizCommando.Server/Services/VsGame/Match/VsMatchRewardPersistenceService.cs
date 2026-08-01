@@ -1,4 +1,5 @@
 using KvizCommando.Server.Services.PlayerCache;
+using KvizCommando.Shared.Models;
 using System.Text.Json;
 
 namespace KvizCommando.Server.Services.VsGame.Match;
@@ -89,9 +90,7 @@ public sealed class VsMatchRewardPersistenceService
 
         if (reward.TeamXp != 0 || reward.CreditReward != 0)
         {
-            player.Core.XP = Math.Max(
-                0,
-                player.Core.XP + reward.TeamXp);
+            ApplyTeamXp(player, reward.TeamXp);
             player.Core.Credit = Math.Max(
                 0,
                 player.Core.Credit + reward.CreditReward);
@@ -123,6 +122,23 @@ public sealed class VsMatchRewardPersistenceService
         }
 
         return dirty;
+    }
+
+    private static void ApplyTeamXp(
+        CachedPlayer player,
+        int teamXp)
+    {
+        player.Core.XP = Math.Max(0, player.Core.XP + teamXp);
+
+        while (player.Core.RankEnum <= 21 &&
+               player.Core.XP >=
+               RankRewards.List[player.Core.RankEnum].NextLevel)
+        {
+            player.Core.RankEnum++;
+            player.Core.DevPoint +=
+                RankRewards.List[player.Core.RankEnum]
+                    .DevPointToStore;
+        }
     }
 
     private static void ApplyTeamStatistics(
@@ -280,4 +296,8 @@ public sealed class VsMatchRewardPersistenceService
  * segítséget és energiát veszíti; utolsó helyezett meccsként
  * számolódik, pozitív jutalmat és teljesítménystatisztikát nem kap.
  * Közvetlen adatbázis-írást nem végez; a normál cache flush ment.
+ * MÓDOSÍTÁS: a csapat-XP elérésekor a csapatszint automatikusan
+ * továbblép, és minden elért szint DevPointToStore jutalma bekerül a
+ * csapat fejlesztési pontjai közé. A karakterekhez már a kalkulátor
+ * által szinthatáron levágott XP kerül.
  */

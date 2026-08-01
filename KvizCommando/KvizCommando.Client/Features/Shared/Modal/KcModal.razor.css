@@ -4,6 +4,8 @@
     position: relative;
     z-index: 9999; /* magasabb mint a backdrop (1050) */
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
     margin: auto;
     border: 2px solid #444;
     border-radius: 8px;
@@ -12,6 +14,8 @@
     opacity: 94%;
     color: #d3d3d3;
     box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 /* Header */
@@ -40,6 +44,9 @@
     font-family: 'Courier New', monospace;
     /* mindig a modal keret görget */
     padding: 15px;
+    width: auto;
+    min-width: 0;
+    max-width: calc(100% - 20px);
     color: #d3d3d3;
     margin: 10px;
     border: 2px inset rgba(255,255,255,0.1);
@@ -47,6 +54,22 @@
     background-color: rgba(45,45,45,0.1);
     box-shadow: inset 0 2px 6px rgba(0,0,0,0.6);
     max-height: 65vh; /* limitáljuk a teljes keretet */
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+}
+
+.kc-modal-body ::deep > * {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.kc-modal-body ::deep img,
+.kc-modal-body ::deep svg,
+.kc-modal-body ::deep table {
+    max-width: 100%;
 }
 
 .modal .kc-modal-body h1,
@@ -56,6 +79,10 @@
 /* Footer */
 .modal-footer-custom {
     margin-bottom: 20px;
+    min-width: 0;
+    padding: 0 10px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 /* Scrollbar testreszabás csak a modal body-n belül */
 .kc-modal-body::-webkit-scrollbar {
@@ -87,6 +114,7 @@
 
 .modal-checkbox {
     display: flex;
+    min-width: 0;
     margin-left: 16px;
     justify-content: left;
    
@@ -100,3 +128,10 @@
     align-content: center;
     margin-left:4px;
 }
+
+/*
+ * MÓDOSÍTÁS: a modal kerete és body-ja a Bootstrap aktuális
+ * szélességén belül marad; a dinamikus tartalom zsugorodhat és a
+ * függőleges túlcsordulást a body görgeti. A footer gombjai keskeny
+ * nézetben törhetnek, ezért nem lógnak ki oldalra.
+ */

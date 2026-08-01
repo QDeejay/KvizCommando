@@ -242,7 +242,8 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
                         !VsBattleClassificationRules.CanSelectMember(
                             player.Core.RankEnum,
                             member.EnergyPoints,
-                            member.Rank)))
+                            member.Rank,
+                            member.XP)))
                 {
                     return null;
                 }
@@ -404,6 +405,8 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
  * A DTO-pillanatkép a várólisták és a kapcsolódott meccsjátékosok
  * PlayerId-halmazának unióját számolja, ezért átmozgatáskor sincs
  * kettős számlálás.
+ * MÓDOSÍTÁS: queue-belépéskor a nyugdíjazási XP-határt is ugyanazzal
+ * a központi karakterválaszthatósági szabállyal validálja.
  *
  * Az öt besorolás külön várólistáját kezeli, cache-snapshotból
  * validálja a belépést, majd a profil szerinti játékosszámnál

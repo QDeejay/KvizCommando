@@ -44,6 +44,7 @@ public sealed class VsCharacterRewardDto
     public string Name { get; set; } = string.Empty;
     public string PictureCode { get; set; } = string.Empty;
     public int CharacterXp { get; set; }
+    public bool IsCharacterXpCapped { get; set; }
     public int EnergyLoss { get; set; }
     public int Pension { get; set; }
 }
@@ -54,4 +55,6 @@ public sealed class VsCharacterRewardDto
  * más szerveroldali mentési adat nem kerül a böngészőbe.
  * A kliens külön jogosultságot és levezetést kap a csapat-XP
  * megjelenítéséhez, valamint a team bonus százalékát is megkapja.
+ * MÓDOSÍTÁS: karakterenként továbbítja, ha a megjelenített XP már a
+ * következő szint határán levágott, tényleges jóváírás.
  */

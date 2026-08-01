@@ -65,6 +65,15 @@ public partial class VsMatchManager : IAsyncDisposable
             else
             {
                 _errorText = Lang[result.ErrorKey];
+
+                if (result.ErrorKey ==
+                    "vsgame.Match.Error.QueueValidation")
+                {
+                    await Ui.ReloadAsync(
+                        ReqStates.Question,
+                        ReqStates.Team,
+                        ReqStates.VsGame);
+                }
             }
         }
         catch (OperationCanceledException) when (_disposed)
@@ -248,6 +257,10 @@ public partial class VsMatchManager : IAsyncDisposable
  * játékkal azonos harci zenét indítja, kilépéskor pedig visszaállítja
  * a menüzenét. Queue-ban és befejezett meccsnél nem kér kilépési
  * megerősítést.
+ * MÓDOSÍTÁS: ha egy korábban kilépett játékos elavult kliensadatai
+ * miatt a szerver elutasítja a következő queue-belépést, a kérdés-,
+ * csapat- és VS snapshotot egyszer frissíti. Így a meccs közben
+ * bottá vált kliens a lezáráskori cache-változásokat is megkapja.
  *
  * MÓDOSÍTÁS: az explicit játékmeneti parancsokat, köztük a segítség
  * használatát is változtatás nélkül továbbítja, és kijelöli a roster

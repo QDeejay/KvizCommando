@@ -58,7 +58,12 @@ namespace KvizCommando.Server.Services.DtoMapping
                 {
                     if (ch is null) continue;
 
-                    if (ch.EnergyPoints > 0) activeChars++;
+                    if (ch.EnergyPoints > 0 &&
+                        !VsBattleClassificationRules
+                            .IsAwaitingRetirement(ch.Rank, ch.XP))
+                    {
+                        activeChars++;
+                    }
                 }
             }
 
@@ -237,7 +242,8 @@ namespace KvizCommando.Server.Services.DtoMapping
                         VsBattleClassificationRules.CanSelectMember(
                             player.Core.RankEnum,
                             item.Member.EnergyPoints,
-                            item.Member.Rank)
+                            item.Member.Rank,
+                            item.Member.XP)
                 })
                 .ToArray();
 
@@ -257,7 +263,8 @@ namespace KvizCommando.Server.Services.DtoMapping
                         VsBattleClassificationRules.CanSelectMember(
                             player.Core.RankEnum,
                             member.EnergyPoints,
-                            member.Rank))
+                            member.Rank,
+                            member.XP))
                     .Select(member => member!.Rank)
                     .ToArray()
                 : [];
@@ -384,6 +391,8 @@ namespace KvizCommando.Server.Services.DtoMapping
  * fő orientációazonosítóját.
  * MÓDOSÍTÁS: a VS screen DTO lekérésekor a TeamStats egyetlen,
  * globális ranked highscore-ját is bemásolja a root adatok közé.
+ * MÓDOSÍTÁS: a nyugdíjazásra váró karakter sem a Home aktív
+ * létszámába, sem a VS választható csapattagjai közé nem kerül be.
  *
  * A fájl a Home, Solo és VS képernyők PlayerCache-alapú
  * snapshotjait állítja össze.

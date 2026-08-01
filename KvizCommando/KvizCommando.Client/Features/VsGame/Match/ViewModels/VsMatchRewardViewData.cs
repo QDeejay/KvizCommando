@@ -49,6 +49,7 @@ public sealed class VsCharacterRewardVm
     public string Name { get; set; } = string.Empty;
     public string PictureCode { get; set; } = string.Empty;
     public int CharacterXp { get; set; }
+    public bool IsCharacterXpCapped { get; set; }
     public int EnergyLoss { get; set; }
     public int Pension { get; set; }
 }
@@ -58,4 +59,6 @@ public sealed class VsCharacterRewardVm
  * tisztán megjelenítési modelljei. Sem SignalR-, sem cachelogikát nem
  * tartalmaznak. A csapat-XP levezetése, láthatósága és a team bonus
  * százaléka közvetlen szerveres rewardadatból érkezik.
+ * MÓDOSÍTÁS: a karaktermodell külön megjelenítési jelzést kap a
+ * szinthatáron levágott XP-hez.
  */

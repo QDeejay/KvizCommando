@@ -21,9 +21,6 @@ internal static class VsMatchRewardCalculator
             .ToArray();
         var winner = orderedPlayers.FirstOrDefault(player => !player.IsBot);
         var prizePool = match.Classification.Stake * match.Players.Count;
-        var pensionPerCharacter = winner is null
-            ? 0
-            : prizePool / 8 / winner.Characters.Length;
 
         return new VsMatchRewardState
         {
@@ -36,8 +33,7 @@ internal static class VsMatchRewardCalculator
                         player,
                         index + 1,
                         player == winner,
-                        prizePool,
-                        pensionPerCharacter))
+                        prizePool))
             ]
         };
     }
@@ -47,8 +43,7 @@ internal static class VsMatchRewardCalculator
         VsMatchPlayerState player,
         int finalPosition,
         bool isWinner,
-        int prizePool,
-        int pensionPerCharacter)
+        int prizePool)
     {
         var consumedHelps = new int[4];
 
@@ -64,7 +59,13 @@ internal static class VsMatchRewardCalculator
                 prizePool,
                 player.TeamLevel)
             : new CreditReward();
-        var teamXp = CalculateTeamXp(match, player);
+        var characters = BuildCharacterRewards(
+            player,
+            isWinner ? prizePool / 8 : 0);
+        var teamXp = CalculateTeamXp(
+            match,
+            player,
+            characters);
 
         player.Statistics.Points = player.TotalPoints;
         player.Statistics.TimeSeconds = player.TotalTimeSeconds;
@@ -97,49 +98,70 @@ internal static class VsMatchRewardCalculator
             CreditReward = credit.Total,
             ConsumedHelps = consumedHelps,
             Statistics = player.Statistics,
-            Characters =
-            [
-                .. player.Characters.Select(character =>
-                    BuildCharacterReward(
-                        player,
-                        character,
-                        isWinner,
-                        pensionPerCharacter))
-            ]
+            Characters = characters
         };
     }
 
-    private static VsMatchCharacterRewardState BuildCharacterReward(
+    private static VsMatchCharacterRewardState[] BuildCharacterRewards(
         VsMatchPlayerState player,
-        VsMatchCharacterState character,
-        bool isWinner,
-        int pensionPerCharacter)
+        int pensionPool)
     {
-        var total = player.CharacterRewardTotals.First(item =>
-            item.SlotNumber == character.SlotNumber);
-
-        return new VsMatchCharacterRewardState
+        var rewards = player.Characters.Select(character =>
         {
-            SlotNumber = character.SlotNumber,
-            Name = character.Name,
-            PictureCode = character.PictureCode,
-            CharacterXp = player.IsBot ? 0 : total.CharacterXp,
-            EnergyLoss = total.EnergyLoss,
-            Pension = isWinner ? pensionPerCharacter : 0,
-            PlayDuels = total.PlayDuels,
-            WinDuels = total.WinDuels
-        };
+            var total = player.CharacterRewardTotals.First(item =>
+                item.SlotNumber == character.SlotNumber);
+            var earnedXp = player.IsBot
+                ? 0
+                : Math.Max(total.CharacterXp, 0);
+            var availableXp = Math.Max(
+                RankRewards.List[character.Level].NextLevel -
+                character.Xp,
+                0);
+            var characterXp = Math.Min(earnedXp, availableXp);
+
+            return new
+            {
+                Character = character,
+                Total = total,
+                EarnedXp = earnedXp,
+                CharacterXp = characterXp
+            };
+        }).ToArray();
+        var totalCharacterXp = rewards.Sum(item => item.CharacterXp);
+
+        return
+        [
+            .. rewards.Select(item =>
+                new VsMatchCharacterRewardState
+                {
+                    SlotNumber = item.Character.SlotNumber,
+                    Name = item.Character.Name,
+                    PictureCode = item.Character.PictureCode,
+                    CharacterXp = item.CharacterXp,
+                    IsCharacterXpCapped =
+                        item.CharacterXp < item.EarnedXp,
+                    EnergyLoss = item.Total.EnergyLoss,
+                    Pension = totalCharacterXp == 0
+                        ? 0
+                        : (int)((long)pensionPool *
+                            item.CharacterXp /
+                            totalCharacterXp),
+                    PlayDuels = item.Total.PlayDuels,
+                    WinDuels = item.Total.WinDuels
+                })
+        ];
     }
 
     private static TeamXpReward CalculateTeamXp(
         VsMatchSession match,
-        VsMatchPlayerState player)
+        VsMatchPlayerState player,
+        IReadOnlyCollection<VsMatchCharacterRewardState> characters)
     {
         if (player.IsBot || player.TeamLevel > 21)
             return new TeamXpReward();
 
         var averageCharacterXp = (int)Math.Floor(
-            player.CharacterRewardTotals.Average(item =>
+            characters.Average(item =>
                 item.CharacterXp));
         var rawScoreXp = (double)player.TotalPoints *
             match.Players.Count *
@@ -209,5 +231,9 @@ internal static class VsMatchRewardCalculator
  * Points * Players * TeamLevel / 5 képletet használja; nem nulla
  * eredménynél legalább +1 vagy -1. A karakterreward a duel
  * statisztikai növekményeket is tartalmazza.
+ * MÓDOSÍTÁS: a karakter-XP a következő szint küszöbén levágódik;
+ * a csapat-XP átlaga már ebből a tényleges értékből készül. A győztes
+ * nyugdíjalapja a karakterek jóváírt XP-jének arányában, lefelé
+ * kerekítve oszlik szét.
  * PlayerCache-t és adatbázist nem érint.
  */

@@ -264,13 +264,14 @@
   <data name="Match.Reward.CharacterAverageXp" xml:space="preserve"><value>Karakter Ø XP</value></data>
   <data name="Match.Reward.ScoreXp" xml:space="preserve"><value>Pontszám utáni XP</value></data>
   <data name="Match.Reward.XpTotal" xml:space="preserve"><value>Összes XP</value></data>
+  <data name="Match.Reward.NewTeamLevel" xml:space="preserve"><value>Új szint!</value></data>
   <data name="Match.Reward.StakeReturn" xml:space="preserve"><value>Tét vissza</value></data>
   <data name="Match.Reward.BaseCredit" xml:space="preserve"><value>Nyeremény</value></data>
   <data name="Match.Reward.TeamBonus" xml:space="preserve"><value>Csapatbónusz</value></data>
   <data name="Match.Reward.CreditTotal" xml:space="preserve"><value>Összes kredit</value></data>
   <data name="Match.Reward.ConsumedHelps" xml:space="preserve"><value>Felhasznált segítség</value></data>
   <data name="Match.Reward.Characters" xml:space="preserve"><value>Karakterjutalmak</value></data>
-  <data name="Match.Reward.Pension" xml:space="preserve"><value>nyugdíj</value></data>
+  <data name="Match.Reward.PensionTotal" xml:space="preserve"><value>Nyugdíjalap összesen:</value></data>
   <data name="Match.Reward.None" xml:space="preserve"><value>Nincs</value></data>
   <data name="Match.Reward.CreditUnit" xml:space="preserve"><value>kredit</value></data>
   <!--
@@ -281,6 +282,10 @@
     MÓDOSÍTÁS: felvette a tippsáv játékközbeni magyar feliratát.
     MÓDOSÍTÁS: felvette a végső tabella és a csapat-/karakterjutalmak
     magyar megjelenítési feliratait, köztük a csapat-XP levezetését.
+    MÓDOSÍTÁS: a karakterek alatt megjelenő összes nyugdíjalap
+    feliratát tartalmazza; az egyedi összeg már kreditként jelenik meg.
+    MÓDOSÍTÁS: felvette a reward képernyő csapat-szintlépési animációjának
+    „Új szint!” feliratát.
     MÓDOSÍTÁS: felvette a ranked root online/highscore láblécét.
 
     A fájl a VS kliens magyar lokalizációs forrása; Debug buildkor

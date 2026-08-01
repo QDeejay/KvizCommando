@@ -125,6 +125,8 @@ internal static class VsMatchSnapshotBuilder
                             Name = character.Name,
                             PictureCode = character.PictureCode,
                             CharacterXp = character.CharacterXp,
+                            IsCharacterXpCapped =
+                                character.IsCharacterXpCapped,
                             EnergyLoss = character.EnergyLoss,
                             Pension = character.Pension
                         })
@@ -824,6 +826,8 @@ internal static class VsMatchSnapshotBuilder
  * jutalmát küldi; a bot nyilvános neve és jelzője is innen kerül ki.
  * A team bonus százalékát, valamint a karakterátlag-, pontszám- és
  * összes csapat-XP-t is a személyre szabott reward tartalmazza.
+ * MÓDOSÍTÁS: a kliensnek továbbítja a szinthatár miatt levágott
+ * karakter-XP jelzését is.
  *
  * A szerveroldali meccsállapotból játékosonként tiszta SignalR-
  * snapshotokat épít. Nem módosít állapotot és nem küld üzenetet.
