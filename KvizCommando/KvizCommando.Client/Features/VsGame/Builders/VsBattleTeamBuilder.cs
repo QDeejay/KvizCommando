@@ -46,6 +46,8 @@ public sealed class VsBattleTeamBuilder
                     OrientationLocalizer.GetOrientShort(
                         member.OrientationId,
                         culture),
+                VitalityPercent = ResolveVitalityPercent(member),
+                VitalityCssClass = ResolveVitalityCssClass(member),
                 IsSelected =
                     member.IsSelectable &&
                     selectedSlots.Contains(member.SlotNumber),
@@ -161,9 +163,25 @@ public sealed class VsBattleTeamBuilder
         id >= 1 && id < RomanNumbers.Length
             ? RomanNumbers[id]
             : id.ToString();
+
+    private static int ResolveVitalityPercent(
+        VsBattleMemberDto member) =>
+        member.EnergyPoints * 100 / (36 + member.Rank * 3);
+
+    private static string ResolveVitalityCssClass(
+        VsBattleMemberDto member) =>
+        ResolveVitalityPercent(member) switch
+        {
+            >= 100 => "full",
+            >= 80 => "high",
+            >= 50 => "medium",
+            >= 20 => "low",
+            _ => "critical"
+        };
 }
 
 /**
- * MÓDOSÍTÁS: a meglévő OrientationLocalizer.GetOrientShort metódussal
- * készíti el a ranking csapatkártya rövid orientáció-feliratát.
+ * MÓDOSÍTÁS: a ranking csapatkártyához megtartja a rövid orientációt,
+ * továbbá az aktuális és maximális energiából elkészíti a vitalitássáv
+ * százalékát és színét.
  */

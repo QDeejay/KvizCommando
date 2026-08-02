@@ -26,8 +26,12 @@
                         </span>
                         <span>@member.ClassificationText</span>
                     </span>
-                    <span class="kc-ranked-member-orientation">
-                        &lt;@member.OrientationShort&gt;
+                    <span class="kc-ranked-member-vitality">
+                        <span class="kc-ranked-member-vitality-fill @member.VitalityCssClass"
+                              style="width: @(member.VitalityPercent)%"></span>
+                        <span class="kc-ranked-member-orientation">
+                            &lt;@member.OrientationShort&gt;
+                        </span>
                     </span>
                     @if (!member.IsSelectable)
                     {
@@ -72,6 +76,7 @@
 
 @*
     MÓDOSÍTÁS: a külső ranking csapatösszeállító karakterkártyájának
-    alján megjelenik a rövid orientáció. A zöld pipa vagy piros X a
-    kártya jobb alsó sarkában marad.
+    alsó sávjában a vitalitás kitöltése az orientáció rövidítése mögött,
+    alacsonyabb z-rétegen jelenik meg. A zöld pipa és a blokkoló piros X
+    a jobb felső sarokba került.
 *@
