@@ -30,8 +30,9 @@
         <LanguageSelector />
     }
 
-    
-
+    <div class="kc-unsupported-screen">
+        <ScreenTooSmall />
+    </div>
     <div class="kc-mainlayout-root"  style="@(_isLoggedIn  
                   ? "background-image: url('/images/lobby.webp');" 
                   : "background-image: url('/images/login.webp');")">

@@ -1,5 +1,5 @@
-﻿using KvizCommando.Client.Features.Shared.Modal.ViewModels;
-using KvizCommando.Client.Features.Shared.Modal.Dynamic;
+﻿using KvizCommando.Client.Features.Shared.Modal.Dynamic;
+using KvizCommando.Client.Features.Shared.Modal.ViewModels;
 
 namespace KvizCommando.Client.Features.Shared.Modal.Builders
 {
@@ -19,7 +19,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                 {
                     TitleKey = "PLACEHOLDER",
                     TextKey1 = "checkin.modal.Button.Action",
-                    Size = "modal-lg",
+                    Size = "modal-xl",
                     CheckBottom = true,
                     BodyComponent = null
                     /*
@@ -50,7 +50,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                     CloseTextKey = "common.Modal.Confirm.Cancel",
                     Style1 = "#a64b2a",
                     Style2 = string.Empty,
-                    Size = "modal-sm",
+                    Size = string.Empty,
                     BodyComponent = typeof(DBoxModalRender)
                 },
                 [ModalTypes.QUsrDelet] = new MboxSpecs
@@ -122,6 +122,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                     Style1 = "#4b5320",
                     Style2 = string.Empty,
                     Size = "modal-lg",
+                    SizeLock = true,
                     CheckBoxTextKey = string.Empty,
                     CheckBoxKey = string.Empty,
                     CheckBottom = false,
@@ -137,6 +138,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                     Style1 = "#4b5320",
                     Style2 = string.Empty,
                     Size = "modal-lg",
+                    SizeLock = true,
                     CheckBoxTextKey = string.Empty,
                     CheckBoxKey = string.Empty,
                     CheckBottom = true,
@@ -152,6 +154,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                     Style1 = "#4b5320",
                     Style2 = string.Empty,
                     Size = "modal-lg",
+                    SizeLock = true,
                     CheckBoxTextKey = string.Empty,
                     CheckBoxKey = string.Empty,
                     CheckBottom = false,
@@ -167,6 +170,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                     Style1 = "#a64b2a",
                     Style2 = "#4b5320",
                     Size = "modal-lg",
+                    SizeLock = true,
                     CheckBoxTextKey = string.Empty,
                     CheckBoxKey = string.Empty,
                     CheckBottom = false,

@@ -121,7 +121,7 @@
     <value>Behív</value>
   </data>
   <data name="Label.Attitude.Sec" xml:space="preserve">
-    <value>Másodlagos módosítók:</value>
+    <value>Másodlagos ({0}):</value>
   </data>
   <data name="Label.Help" xml:space="preserve">
     <value>Segítségek</value>
@@ -151,7 +151,7 @@
     <value>Előléptet</value>
   </data>
   <data name="Label.Attitude.3rd" xml:space="preserve">
-    <value>Extra módosítók:</value>
+    <value>Extra módosítók({0}):</value>
   </data>
   <data name="label.TeamDevPointShort" xml:space="preserve">
     <value>Csp:</value>

@@ -1,6 +1,6 @@
 {
   "Button.Hire": "Behív",
-  "Label.Attitude.Sec": "Másodlagos módosítók:",
+  "Label.Attitude.Sec": "Másodlagos ({0}):",
   "Label.Help": "Segítségek",
   "Label.Level": "Szint: ",
   "Label.Attitude.Help": "Segítség módosítók:",
@@ -10,7 +10,7 @@
   "Label.Rank": "Rang:",
   "Label.TeamName": "Csapat",
   "Button.Upgrade": "Előléptet",
-  "Label.Attitude.3rd": "Extra módosítók:",
+  "Label.Attitude.3rd": "Extra módosítók({0}):",
   "label.TeamDevPointShort": "Csp:",
   "Label.SkillPointShort": "Fp<{0}>:",
   "Label.Menbers": "Létszám:",

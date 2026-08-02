@@ -1,6 +1,6 @@
 ﻿using KvizCommando.Client.Data;
-using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Features.Team.ViewModels;
+using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
@@ -37,14 +37,16 @@ namespace KvizCommando.Client.Features.Team.Builders
             vm.Rows.Add(new(_lang["team.Label.Name"], name));
             vm.Rows.Add(new(_lang["team.Label.Rank"], RankNameLocalizer.GetName(m.Level, culture)));
             vm.Rows.Add(new(_lang["team.Label.Class"], RankNameLocalizer.GetClass(rankClass, culture)));
-            vm.Rows.Add(new(_lang["team.Label.Main"] , o1 + $" ({publicLevel})"));
-            vm.Rows.Add(new(_lang["team.Label.Second"], o2));
-            
-            vm.Rows.Add(new(_lang["team.Label.Vitality"], $"{vitAct}/{vitMax}"));
-            vm.Rows.Add(new(_lang["team.Label.SkillPointShort"].FormatSafe(oShort), devPointsDisplay));
-            vm.Rows.Add(new(_lang["team.Label.Pension"], m.Pension.ToString()));
+            vm.Rows.Add(new(_lang["team.Label.Main"], o1 + $" ({publicLevel})"));
             vm.Rows.Add(new(_lang["team.Label.Next"], (m.NextXp - m.Xp).ToString()));
-            vm.Rows.Add(new("",""));
+
+            // vm.Rows.Add(new(_lang["team.Label.Second"], o2));
+
+            vm.Rows.Add(m.Pension == 0 ? new("", "") : new(_lang["team.Label.Pension"], m.Pension.ToString()));
+            vm.Rows.Add(new("", ""));
+            vm.Rows.Add(new("", ""));
+            vm.Rows.Add(new("", ""));
+            vm.Rows.Add(new(_lang["team.Label.SkillPointShort"].FormatSafe(oShort), devPointsDisplay));
 
             return vm;
         }
@@ -65,13 +67,17 @@ namespace KvizCommando.Client.Features.Team.Builders
         }
         public BottomDevVm BuildMemberBottomDevVm(int subPos, TeamMemberDto member, int[] usedPoints, string culture)
         {
-            (string headerType, int skilltype) = subPos == 1 ? ("Sec", 4) : ("3rd", 8);
+            int ori = TeamHelpers.NormalizeCategory(member.SecondAttitude.Category[0]);
+            string gender = member.PictureCode[0] == 'M' ? "♂" : "♀";
+            (string headerType, int skilltype, string modifyType) = subPos == 1
+                ? ("Sec", 4, OrientationLocalizer.GetOrientation(ori, culture))
+                : ("3rd", 8, gender);
 
             var vm = new BottomDevVm
             {
                 UsedPoints = usedPoints,
                 AvailableDevPoints = member.SkillPoints - usedPoints.Sum(),
-                HeaderText = _lang[$"team.Label.Attitude.{headerType}"],
+                HeaderText = _lang[$"team.Label.Attitude.{headerType}"].FormatSafe(modifyType),
                 ResetButtonText = usedPoints.Sum() > 0 ? _lang["team.Button.Modify"].FormatSafe(usedPoints.Sum()) : ""
             };
             // 2) a megfelelő attitude DTO-t kiválasztjuk

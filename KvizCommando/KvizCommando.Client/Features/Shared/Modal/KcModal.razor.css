@@ -128,6 +128,24 @@
     align-content: center;
     margin-left:4px;
 }
+.kc-modal-fixed-modal-sm-lock { 
+    --bs-modal-width: 300px; 
+}
+
+.kc-modal-fixed--lock { 
+    --bs-modal-width: 500px; 
+}
+
+.kc-modal-fixed-modal-lg-lock { 
+    --bs-modal-width: 800px; 
+}
+
+.kc-modal-fixed-modal-xl-lock { 
+    --bs-modal-width: 1140px; 
+}
+
+
+
 
 /*
  * MÓDOSÍTÁS: a modal kerete és body-ja a Bootstrap aktuális

@@ -46,6 +46,23 @@ public partial class MemberManager : IDisposable
     private string PicCode => _currentSubPage == 0
         ? Member?.PictureCode ?? string.Empty
         : string.Empty;
+    private int VitalityCurrent =>
+        Member!.EnergyPoints;
+    private int VitalityMaximum =>
+        36 + Member!.Level * 3;
+    private int VitalityPercent =>
+        VitalityCurrent * 100 / VitalityMaximum;
+    private string VitalityWidth =>
+        $"width: {VitalityPercent}%";
+    private string VitalityCssClass =>
+        VitalityPercent switch
+        {
+            >= 100 => "full",
+            >= 80 => "high",
+            >= 50 => "medium",
+            >= 20 => "low",
+            _ => "critical"
+        };
 
     protected override void OnInitialized()
     {
@@ -258,3 +275,8 @@ public partial class MemberManager : IDisposable
         GC.SuppressFinalize(this);
     }
 }
+
+/**
+ * MÓDOSÍTÁS: a karakter energiasávjához kiszámítja a maximális
+ * energiát, a töltöttségi százalékot és a hozzá tartozó színosztályt.
+ */

@@ -5,7 +5,6 @@ using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using System.Threading.Tasks;
 
 namespace KvizCommando.Client.Features.Shared.Modal
 {
@@ -25,9 +24,11 @@ namespace KvizCommando.Client.Features.Shared.Modal
         private ModalBoxVm Par = new();
         private bool CanAccept { get; set; } = false;
         private bool _bottomReached;
-        private bool CheckBox { get; set; }  = false;
+        private bool CheckBox { get; set; } = false;
         private string? BodyStyle =>
                 Par.CheckBottom ? "overflow-y: auto;" : null;
+
+        private string ModalSizeClass => Par.SizeLock ? $"kc-modal-{Par.Size}-lock" : Par.Size;
         private sealed record ScrollMetrics(
             double ScrollTop, double ScrollHeight, double ClientHeight,
             double OffsetHeight, double BoxHeight);
@@ -38,16 +39,16 @@ namespace KvizCommando.Client.Features.Shared.Modal
             CanAccept = !Par.CheckBottom;
             await InvokeAsync(StateHasChanged);
             await JS.InvokeVoidAsync("kcModal.show", $"#{Id}");
-            if (Par.CheckBottom == true && _bottomReached!=true)
+            if (Par.CheckBottom == true && _bottomReached != true)
             {
-                
+
                 await Task.Delay(500);
                 await CheckBottomAsync();
 
             }
-           //else CanAccept = true;
+            //else CanAccept = true;
         }
-        public async Task HideAsync() 
+        public async Task HideAsync()
         {
             Par = new ModalBoxVm() with { Mode = ModalTypes.None };
             if (OnCloseAction.HasDelegate)
@@ -58,7 +59,7 @@ namespace KvizCommando.Client.Features.Shared.Modal
             CheckBox = false;
             CanAccept = false;
             _bottomReached = false;
-        }  
+        }
         private async Task OnActionClicked1()
         {
             if (CheckBox == true)
@@ -67,14 +68,14 @@ namespace KvizCommando.Client.Features.Shared.Modal
                 if (OnCheckBoxAction.HasDelegate)
                     await OnCheckBoxAction.InvokeAsync();
             }
-            
-            if (OnAction1.HasDelegate) 
+
+            if (OnAction1.HasDelegate)
                 await OnAction1.InvokeAsync();
-       
+
             if (OnModalAction.HasDelegate)
                 await OnModalAction.InvokeAsync(ModalResult.Button1);
 
-            
+
             await HideAsync();
         }
         private async Task OnActionClicked2()
@@ -95,7 +96,7 @@ namespace KvizCommando.Client.Features.Shared.Modal
             }
              */
             await Task.Delay(5);
-           
+
         }
         private Task OnBodyScroll()
         {

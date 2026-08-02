@@ -121,7 +121,7 @@
     <value>Hire</value>
   </data>
   <data name="Label.Attitude.Sec" xml:space="preserve">
-    <value>Secondary modifiers:</value>
+    <value>Secondary ({0}):</value>
   </data>
   <data name="Label.Help" xml:space="preserve">
     <value>Helps</value>
@@ -151,7 +151,7 @@
     <value>Promote</value>
   </data>
   <data name="Label.Attitude.3rd" xml:space="preserve">
-    <value>Extra modifiers:</value>
+    <value>Extra modifiers({0}):</value>
   </data>
   <data name="label.TeamDevPointShort" xml:space="preserve">
     <value>Tp:</value>

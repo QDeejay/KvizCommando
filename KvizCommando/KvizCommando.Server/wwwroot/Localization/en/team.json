@@ -1,6 +1,6 @@
 {
   "Button.Hire": "Hire",
-  "Label.Attitude.Sec": "Secondary modifiers:",
+  "Label.Attitude.Sec": "Secondary ({0}):",
   "Label.Help": "Helps",
   "Label.Level": "Level: ",
   "Label.Attitude.Help": "Help modifiers:",
@@ -10,7 +10,7 @@
   "Label.Rank": "Rank:",
   "Label.TeamName": "Team",
   "Button.Upgrade": "Promote",
-  "Label.Attitude.3rd": "Extra modifiers:",
+  "Label.Attitude.3rd": "Extra modifiers({0}):",
   "label.TeamDevPointShort": "Tp:",
   "Label.SkillPointShort": "Sp<{0}>:",
   "Label.Menbers": "Members:",

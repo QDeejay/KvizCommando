@@ -2,8 +2,8 @@
     position: absolute;
     right: 0px;
     top: 0px;
-    height: 176px;
-    width: 138px;
+    height: 157px;
+    width: 123px;
     border-left: none;
     z-index: 0;
     background: rgba(23,23,255,0.5);
@@ -16,3 +16,62 @@
         height: 0;
         width: 0;
     }
+
+.vitality-display {
+    position: absolute;
+    top: 100%;
+    left: -3px;
+    width: calc(100% + 3px);
+    height: 22px;
+    overflow: hidden;
+    background: transparent;
+    border: 2px solid rgba(51, 51, 51, .8);
+    box-sizing: border-box;
+}
+
+.vitality-display-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    transition: width .25s ease;
+    border-right: 1px black solid;
+}
+
+.vitality-display-fill.full {
+    background-color: rgba(20, 82, 38, .88);
+}
+
+.vitality-display-fill.high {
+    background-color: rgba(55, 145, 52, .82);
+}
+
+.vitality-display-fill.medium {
+    background-color: rgba(191, 168, 0, .82);
+    
+}
+
+.vitality-display-fill.low {
+    background-color: rgba(220, 132, 31, .86);
+}
+
+.vitality-display-fill.critical {
+    background-color: rgba(190, 48, 42, .88);
+}
+
+.vitality-display > strong {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #222f16;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .78rem;
+    line-height: 1;
+    
+}
+
+/**
+ * MÓDOSÍTÁS: a karakterképet változatlanul hagyva közvetlenül
+ * alatta jeleníti meg az LCD-hátterű, színkódolt energiasávot.
+ */
