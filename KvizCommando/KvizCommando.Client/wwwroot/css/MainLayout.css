@@ -21,7 +21,7 @@
 }
 
 
-@media (max-width: 665px), (max-height: 680px) {
+@media (max-width: 665px), (max-height: 780px) {
     .kc-unsupported-screen {
         display: flex;
     }

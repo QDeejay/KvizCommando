@@ -94,17 +94,18 @@
                             <span class="kc-header-greeting">@Greetings</span>
                             </div>           
                         </header>
-                    <SubHeader Tabs="Ui.SubHeader.Tabs"
-                               StartIndex="Ui.SubHeader.Index"
-                               IsVisible="Ui.SubHeader.IsVisible"
-                               ActiveIndexChanged="Ui.SubHeader.Click" />
                     }
                 <div class="kc-mainlayout-content-container">
-                    
-               
-               <CascadingValue Value="_appState">
+                    @if (_isLoggedIn)
+                    {
+                        <SubHeader Tabs="Ui.SubHeader.Tabs"
+                                   StartIndex="Ui.SubHeader.Index"
+                                   IsVisible="Ui.SubHeader.IsVisible"
+                                   ActiveIndexChanged="Ui.SubHeader.Click" />
+                    }
+                    <CascadingValue Value="_appState">
                         @Body
-               </CascadingValue>
+                    </CascadingValue>
                 </div>
             </section>
         </main>
