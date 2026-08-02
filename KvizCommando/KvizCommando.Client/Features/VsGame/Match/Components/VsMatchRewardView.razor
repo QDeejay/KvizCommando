@@ -52,18 +52,19 @@
                             <dt>@Lang["vsgame.Match.Reward.ScoreXp"]</dt>
                             <dd>@Signed(MyReward.ScoreXp)</dd>
                         </div>
+
                         <div class="total">
-                            <dt>@Lang["vsgame.Match.Reward.XpTotal"]</dt>
-                            <dd class="team-xp-total">
-                                <span>@MyReward.TeamXp</span>
+                            <dt class="team-xp-label">
+                                <span>@Lang["vsgame.Match.Reward.XpTotal"]</span>
                                 @if (NewTeamLevel > 0)
                                 {
-                                    <span class="team-level-up" aria-live="polite">
+                                    <span class="team-level-cycle" aria-live="polite">
                                         <strong>@Lang["vsgame.Match.Reward.NewTeamLevel"]</strong>
                                         <strong>@NewTeamLevelCode</strong>
                                     </span>
                                 }
-                            </dd>
+                            </dt>
+                            <dd>@MyReward.TeamXp</dd>
                         </div>
                     }
                     <div>
