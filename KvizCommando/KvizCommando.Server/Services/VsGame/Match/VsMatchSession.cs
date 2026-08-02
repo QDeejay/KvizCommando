@@ -43,6 +43,8 @@ public sealed class VsMatchPlayerState
     public string TeamName { get; set; } = string.Empty;
     public int TeamLevel { get; set; }
     public string TeamPictureCode { get; set; } = string.Empty;
+    public int ResponseTimeMilliseconds { get; init; }
+    public VsConnectionQuality ConnectionQuality { get; init; }
     public VsMatchCharacterState[] Characters { get; set; } = [];
     public VsMatchLoadoutItemState[] Loadout { get; set; } = [];
     public int[] HelpLevels { get; set; } = new int[4];
@@ -237,6 +239,8 @@ public sealed class VsMatchRoundResultState
  * MÓDOSÍTÁS: a karakter meccskezdéskori XP-je is a snapshot része,
  * így a végső jutalom a következő szint határán szerveroldalon
  * levágható.
+ * MÓDOSÍTÁS: a queue-ban egyszer megmért válaszidő és minősítés a
+ * játékos meccsállapotában változatlan marad a meccs végéig.
  *
  * Egy lezárt meccs teljes, szerveroldali authoritative állapotát
  * tartalmazza. A SignalR Hub nem őriz játékállapotot.

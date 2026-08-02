@@ -365,6 +365,10 @@ public sealed class VsMatchViewBuilder
             IsFinished = player.IsFinished,
             TotalPoints = player.TotalPoints,
             TotalTimeSeconds = player.TotalTimeSeconds,
+            ResponseTimeMilliseconds =
+                player.ResponseTimeMilliseconds,
+            ConnectionQuality =
+                player.ConnectionQuality,
             ActiveCharacter =
                 player.ActiveCharacter is null ||
                 string.IsNullOrWhiteSpace(culture)
@@ -490,6 +494,8 @@ public sealed class VsMatchViewBuilder
  * levezetését, annak láthatóságát és a team bonus százalékát.
  * MÓDOSÍTÁS: a levágott karakter-XP szerveres jelzését változtatás
  * nélkül viszi át a reward view modelbe.
+ * MÓDOSÍTÁS: a roster kapcsolati adatait számítás és újraminősítés
+ * nélkül másolja a publikus DTO-ból a view modelbe.
  *
  * A szerver snapshotjából lokalizált neveket, meglévő Solo képeket
  * és VS view modelleket épít. DI-be nem kerül.

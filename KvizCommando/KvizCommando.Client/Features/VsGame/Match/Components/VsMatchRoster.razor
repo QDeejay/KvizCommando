@@ -1,7 +1,7 @@
 @using KvizCommando.Client.Features.VsGame.Match.ViewModels
 @using KvizCommando.Client.Components.CharacterComponent
 
-<aside class="kc-vs-roster">
+<aside class="kc-vs-roster compact-columns-@CompactColumnCount compact-count-@RosterCardCount">
     <header>
         <i class="bi bi-broadcast-pin"></i>
         <strong>@Title</strong>
@@ -9,7 +9,12 @@
 
     @foreach (var player in Players)
     {
-        <article class="kc-vs-roster-card @PlayerToneClass(player.Position) @(player.IsMe ? "me" : "") @(!player.IsConnected && !player.IsBot ? "disconnected" : "") @(player.IsBot ? "bot" : "") @(player.IsMe && CurrentTimeModifierSeconds.HasValue ? "has-modifier" : "")">
+        <article class="kc-vs-roster-card @PlayerToneClass(player.Position) @(player.IsMe ? "me" : "") @(!player.IsConnected && !player.IsBot ? "disconnected" : "") @(player.IsBot ? "bot" : "") @(player.IsMe && CurrentTimeModifierSeconds.HasValue ? "has-modifier" : "") @(ShowScore ? "has-score" : "")">
+            <span class="kc-vs-roster-connection @ConnectionQualityClass(DisplayedConnectionQuality(player))"
+                  title="@ConnectionTitle(player)">
+                <i class="bi @ConnectionIconClass(player)"></i>
+            </span>
+
             <div class="kc-vs-roster-visual">
                 <div class="kc-vs-roster-avatar">
                     @if (player.ActiveCharacter is not null)
@@ -97,4 +102,17 @@
 
     A meccs teljes ideje alatt látható, kompakt ellenfél- és
     csapatkártya-sáv.
+    MÓDOSÍTÁS: az egyszer mért kapcsolatminőség hasábos jelzője álló
+    rosterben a bal felső sarokban, vízszintes rosterben pedig első
+    elemként, függőlegesen középre rendezve jelenik meg.
+    MÓDOSÍTÁS: megszakadt helyi SignalR-kapcsolatnál minden korábbi
+    pingjelző azonnal szürke, ismeretlen állapotba vált.
+    A megfelelő tartományon belül 0–50 ms négy, 51–100 ms három
+    hasábot kap; a közepes kettő, a rossz egy hasáb marad.
+    MÓDOSÍTÁS: keskeny nézetben négy rosterhely 2 × 2 elrendezést,
+    három hely 2 + 1 középre rendezett elrendezést, kettő hely pedig
+    egyetlen sort kap.
+    MÓDOSÍTÁS: kizárólag a keskeny felső rosterben a modifier mellett
+    a csapatnév, a pont/idő mellett pedig a karakternév kap tényleges
+    ellipszishez szükséges helykorlátot.
 *@

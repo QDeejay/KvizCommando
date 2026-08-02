@@ -88,7 +88,19 @@
     <value>Rounds: {0} normal + 1 captain round</value>
   </data>
   <data name="Match.Status.Connecting" xml:space="preserve">
-    <value>Connecting to the ranked queue</value>
+    <value>Checking connection</value>
+  </data>
+  <data name="Match.Connection.ResponseTime" xml:space="preserve">
+    <value>Response time: {0} ms - {1}</value>
+  </data>
+  <data name="Match.Connection.Good" xml:space="preserve">
+    <value>good</value>
+  </data>
+  <data name="Match.Connection.Medium" xml:space="preserve">
+    <value>medium</value>
+  </data>
+  <data name="Match.Connection.Bad" xml:space="preserve">
+    <value>poor</value>
   </data>
   <data name="Match.Info.Locked" xml:space="preserve">
     <value>Match locked</value>
@@ -188,6 +200,9 @@
   </data>
   <data name="Match.Error.Connection" xml:space="preserve">
     <value>The ranked connection was closed.</value>
+  </data>
+  <data name="Match.Error.ConnectionSpeed" xml:space="preserve">
+    <value>The connection speed is not sufficient!</value>
   </data>
   <data name="Match.Error.Disconnected" xml:space="preserve">
     <value>The match connection was closed; this match does not support reconnecting.</value>

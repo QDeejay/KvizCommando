@@ -1,6 +1,7 @@
 using KvizCommando.Client.Features.VsGame.Match.Builders;
 using KvizCommando.Client.Features.VsGame.Match.Services;
 using KvizCommando.Client.Features.VsGame.Match.ViewModels;
+using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
@@ -206,6 +207,44 @@ public partial class VsMatchManager : IAsyncDisposable
             VsMatchPhase.PreparationHelps or
             VsMatchPhase.PreparationCompleted;
 
+    private string ConnectionResultText
+    {
+        get
+        {
+            var check = MatchClient.ConnectionCheck;
+
+            return check is null
+                ? string.Empty
+                : Lang["vsgame.Match.Connection.ResponseTime"]
+                    .FormatSafe(
+                        check.ResponseTimeMilliseconds,
+                        Lang[ConnectionQualityTextKey(
+                            check.Quality)]);
+        }
+    }
+
+    private string ConnectionResultClass =>
+        MatchClient.ConnectionCheck?.Quality switch
+        {
+            VsConnectionQuality.Good => "good",
+            VsConnectionQuality.Medium => "medium",
+            VsConnectionQuality.Bad => "bad",
+            _ => string.Empty
+        };
+
+    private static string ConnectionQualityTextKey(
+        VsConnectionQuality quality) =>
+        quality switch
+        {
+            VsConnectionQuality.Good =>
+                "vsgame.Match.Connection.Good",
+            VsConnectionQuality.Medium =>
+                "vsgame.Match.Connection.Medium",
+            VsConnectionQuality.Bad =>
+                "vsgame.Match.Connection.Bad",
+            _ => string.Empty
+        };
+
     public async ValueTask DisposeAsync()
     {
         if (_disposed)
@@ -269,4 +308,7 @@ public partial class VsMatchManager : IAsyncDisposable
  *
  * A VS ranked DynamicComponent életciklusát kezeli, snapshotból view
  * modelleket készít és továbbítja a preparációs/játékparancsokat.
+ * MÓDOSÍTÁS: az egyszeri kapcsolatellenőrzés lokalizált válaszidejét
+ * és szerveroldali minősítését közvetlenül megjelenítési szöveggé
+ * alakítja; a minősítési határokat nem ismétli meg kliensoldalon.
  */

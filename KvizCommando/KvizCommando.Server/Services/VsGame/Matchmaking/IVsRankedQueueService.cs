@@ -1,4 +1,5 @@
 using KvizCommando.Shared.Contracts.VsGame.Match;
+using KvizCommando.Shared.Models.Enums.VsGame;
 
 namespace KvizCommando.Server.Services.VsGame.Matchmaking;
 
@@ -11,10 +12,17 @@ public interface IVsRankedQueueService
         string sessionId,
         string connectionId,
         int classificationId,
+        int responseTimeMilliseconds,
+        VsConnectionQuality connectionQuality,
         CancellationToken ct = default);
 
     Task LeaveAsync(
         string connectionId,
+        CancellationToken ct = default);
+
+    Task LeavePlayerAsync(
+        int playerId,
+        string sessionId,
         CancellationToken ct = default);
 }
 
@@ -27,6 +35,8 @@ public sealed class VsRankedQueueEntry
     public string DisplayName { get; init; } = string.Empty;
     public string TeamName { get; init; } = string.Empty;
     public int TeamLevel { get; init; }
+    public int ResponseTimeMilliseconds { get; init; }
+    public VsConnectionQuality ConnectionQuality { get; init; }
 }
 
 /**
@@ -36,4 +46,8 @@ public sealed class VsRankedQueueEntry
  *
  * A rangsorolt várólista műveleteit és egy várakozó játékos
  * minimális, még nem meccssnapshotolt adatait írja le.
+ * MÓDOSÍTÁS: a belépéskor már szerveroldalon megmért válaszidőt és
+ * minősítést a queue-entry továbbviszi a későbbi roster snapshotokba.
+ * MÓDOSÍTÁS: logoutkor PlayerId és SessionId alapján is eltávolítható
+ * a várakozó játékos.
  */

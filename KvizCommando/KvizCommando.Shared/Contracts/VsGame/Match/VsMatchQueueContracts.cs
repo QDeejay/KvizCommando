@@ -1,4 +1,12 @@
+using KvizCommando.Shared.Models.Enums.VsGame;
+
 namespace KvizCommando.Shared.Contracts.VsGame.Match;
+
+public sealed class VsConnectionCheckResult
+{
+    public int ResponseTimeMilliseconds { get; set; }
+    public VsConnectionQuality Quality { get; set; }
+}
 
 public sealed class VsQueueJoinResult
 {
@@ -23,4 +31,6 @@ public sealed class VsRankedQueueSnapshot
  *
  * A fájl a rangsorolt queue belépési eredményét és a kliensnek
  * küldhető, kizárólag publikus várólista-snapshotot tartalmazza.
+ * MÓDOSÍTÁS: az egyszeri, szerveroldali kapcsolatellenőrzés eredménye
+ * ugyanebben a queue-szerződésben utazik vissza a klienshez.
  */

@@ -72,6 +72,8 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
         string sessionId,
         string connectionId,
         int classificationId,
+        int responseTimeMilliseconds,
+        VsConnectionQuality connectionQuality,
         CancellationToken ct = default)
     {
         var rule = VsBattleClassificationRules.List.FirstOrDefault(
@@ -100,6 +102,8 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
             sessionId,
             connectionId,
             rule,
+            responseTimeMilliseconds,
+            connectionQuality,
             ct);
 
         if (entry is null)
@@ -204,11 +208,42 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
             await BroadcastQueueAsync(changedClassification.Value);
     }
 
+    public async Task LeavePlayerAsync(
+        int playerId,
+        string sessionId,
+        CancellationToken ct = default)
+    {
+        int? changedClassification = null;
+
+        ct.ThrowIfCancellationRequested();
+
+        lock (_syncRoot)
+        {
+            foreach (var queue in _queues)
+            {
+                var removed = queue.Value.RemoveAll(entry =>
+                    entry.PlayerId == playerId &&
+                    entry.SessionId == sessionId);
+
+                if (removed > 0)
+                {
+                    changedClassification = queue.Key;
+                    break;
+                }
+            }
+        }
+
+        if (changedClassification.HasValue)
+            await BroadcastQueueAsync(changedClassification.Value);
+    }
+
     private async Task<VsRankedQueueEntry?> BuildQueueEntryAsync(
         int playerId,
         string sessionId,
         string connectionId,
         VsBattleClassificationDto rule,
+        int responseTimeMilliseconds,
+        VsConnectionQuality connectionQuality,
         CancellationToken ct)
     {
         using var scope = _scopeFactory.CreateScope();
@@ -281,7 +316,10 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
                     ClassificationId = rule.ClassificationId,
                     DisplayName = player.Core.DisplayName,
                     TeamName = player.Core.TeamName,
-                    TeamLevel = player.Core.RankEnum
+                    TeamLevel = player.Core.RankEnum,
+                    ResponseTimeMilliseconds =
+                        responseTimeMilliseconds,
+                    ConnectionQuality = connectionQuality
                 };
 
                 return 0u;
@@ -384,6 +422,10 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
                                 DisplayName = entry.DisplayName,
                                 TeamName = entry.TeamName,
                                 TeamLevel = entry.TeamLevel,
+                                ResponseTimeMilliseconds =
+                                    entry.ResponseTimeMilliseconds,
+                                ConnectionQuality =
+                                    entry.ConnectionQuality,
                                 IsMe =
                                     entry.PlayerId ==
                                     currentEntry.PlayerId,
@@ -407,6 +449,10 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
  * kettős számlálás.
  * MÓDOSÍTÁS: queue-belépéskor a nyugdíjazási XP-határt is ugyanazzal
  * a központi karakterválaszthatósági szabállyal validálja.
+ * MÓDOSÍTÁS: a Hub által mért kapcsolati adat a queue entryből minden
+ * várakozó címzett publikus roster-snapshotjába bekerül.
+ * MÓDOSÍTÁS: logoutkor PlayerId és SessionId alapján azonnal törli a
+ * várakozót és kiküldi a friss queue-snapshotot.
  *
  * Az öt besorolás külön várólistáját kezeli, cache-snapshotból
  * validálja a belépést, majd a profil szerinti játékosszámnál

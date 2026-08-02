@@ -8,6 +8,7 @@ public interface IVsMatchClientService : IAsyncDisposable
 
     VsRankedQueueSnapshot? QueueSnapshot { get; }
     VsMatchSnapshot? MatchSnapshot { get; }
+    VsConnectionCheckResult? ConnectionCheck { get; }
     string ErrorMessageKey { get; }
     bool IsConnected { get; }
     DateTime ServerUtcNow { get; }
@@ -63,6 +64,8 @@ public interface IVsMatchClientService : IAsyncDisposable
  * parancs, állapotot a kliensszerviz nem tart hozzá.
  * MÓDOSÍTÁS: a VS-időzítők számára a kapcsolat elején szinkronizált,
  * monotón módon továbbhaladó becsült szerveridőt teszi elérhetővé.
+ * MÓDOSÍTÁS: az egyszeri kapcsolatellenőrzés típusos eredményét a
+ * manager számára olvashatóvá teszi.
  *
  * A VS dynamic manager által használt SignalR klienskapcsolat
  * szerződése. Automatikus reconnectet szándékosan nem tartalmaz.

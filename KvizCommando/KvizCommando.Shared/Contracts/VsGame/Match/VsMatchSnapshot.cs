@@ -30,6 +30,8 @@ public sealed class VsMatchPlayerDto
     public bool IsFinished { get; set; }
     public int TotalPoints { get; set; }
     public double TotalTimeSeconds { get; set; }
+    public int ResponseTimeMilliseconds { get; set; }
+    public VsConnectionQuality ConnectionQuality { get; set; }
     public VsCharacterCardDto? ActiveCharacter { get; set; }
 }
 
@@ -97,6 +99,8 @@ public sealed class VsCategoryModifierDto
  * MÓDOSÍTÁS: a roster külön botjelzőt, a GameCompleted snapshot pedig
  * nyilvános végső sorrendet és kizárólag a címzett saját rewardját
  * tartalmazza.
+ * MÓDOSÍTÁS: a játékos egyszer mért válaszideje és annak szerveroldali
+ * minősítése a queue- és meccssnapshotban is elérhető a rosternek.
  *
  * Egy játékosra szabott VS snapshot. Csak a megjelenítéshez és az
  * aktuálisan engedélyezett műveletekhez szükséges adatokat küldi ki.

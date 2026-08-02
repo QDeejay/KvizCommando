@@ -88,7 +88,19 @@
     <value>Körök: {0} normál + 1 kapitánykör</value>
   </data>
   <data name="Match.Status.Connecting" xml:space="preserve">
-    <value>Kapcsolódás a rangsorolt várólistához</value>
+    <value>Kapcsolat ellenőrzése</value>
+  </data>
+  <data name="Match.Connection.ResponseTime" xml:space="preserve">
+    <value>Válaszidő: {0}ms - {1}</value>
+  </data>
+  <data name="Match.Connection.Good" xml:space="preserve">
+    <value>megfelelő</value>
+  </data>
+  <data name="Match.Connection.Medium" xml:space="preserve">
+    <value>közepes</value>
+  </data>
+  <data name="Match.Connection.Bad" xml:space="preserve">
+    <value>rossz</value>
   </data>
   <data name="Match.Info.Locked" xml:space="preserve">
     <value>A meccs lezárva</value>
@@ -188,6 +200,9 @@
   </data>
   <data name="Match.Error.Connection" xml:space="preserve">
     <value>A rangsorolt kapcsolat megszakadt.</value>
+  </data>
+  <data name="Match.Error.ConnectionSpeed" xml:space="preserve">
+    <value>A kapcsolati sebesség nem megfelelő!</value>
   </data>
   <data name="Match.Error.Disconnected" xml:space="preserve">
     <value>A meccskapcsolat megszakadt; ehhez a meccshez nincs újracsatlakozás.</value>

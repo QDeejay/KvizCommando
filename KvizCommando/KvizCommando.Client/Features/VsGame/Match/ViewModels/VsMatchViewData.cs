@@ -41,6 +41,8 @@ public sealed class VsRosterPlayerVm
     public bool IsFinished { get; set; }
     public int TotalPoints { get; set; }
     public double TotalTimeSeconds { get; set; }
+    public int ResponseTimeMilliseconds { get; set; }
+    public VsConnectionQuality ConnectionQuality { get; set; }
     public VsCharacterCardVm? ActiveCharacter { get; set; }
 }
 
@@ -196,6 +198,8 @@ public sealed class VsCaptainQuestionVm
  * képútvonalra nincs szüksége.
  * MÓDOSÍTÁS: a fő view data felvette a külön fájlban definiált
  * rewardnézetet, a rosterjátékos pedig a szerver botjelzőjét.
+ * MÓDOSÍTÁS: a roster view model változtatás nélkül továbbviszi az
+ * egyszer mért válaszidőt és annak szerveroldali minősítését.
  *
  * A VS lobby, roster, preparáció és játéknézet view modeljeit
  * tartalmazza.

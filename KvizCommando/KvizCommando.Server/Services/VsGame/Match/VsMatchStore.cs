@@ -70,6 +70,16 @@ public sealed class VsMatchStore
                _matches.TryGetValue(matchId, out match);
     }
 
+    public bool TryGetByPlayer(
+        int playerId,
+        out VsMatchSession? match)
+    {
+        match = null;
+
+        return _playerMatches.TryGetValue(playerId, out var matchId) &&
+               _matches.TryGetValue(matchId, out match);
+    }
+
     public void ReleasePlayer(VsMatchSession match, VsMatchPlayerState player)
     {
         if (_connectionMatches.TryGetValue(
@@ -154,6 +164,8 @@ public sealed class VsMatchStore
  * MÓDOSÍTÁS: egy befejezett meccs játékoszárolása külön is
  * feloldható anélkül, hogy a többi, reward képernyőt még néző
  * játékos sessionjét törölné.
+ * MÓDOSÍTÁS: logoutkor PlayerId alapján is megkereshető a játékos
+ * aktuális VS meccse.
  *
  * A futó VS meccsek és a connection/player hozzárendelések
  * folyamaton belüli, konkurens tárolója.

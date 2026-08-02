@@ -16,6 +16,7 @@
             <VsMatchRoster
                 Players="@_match.Players"
                 ShowScore="@IsGamePhase"
+                IsConnectionActive="@MatchClient.IsConnected"
                 CurrentTimeModifierSeconds="@_match.Game.MyTimeModifierSeconds"
                 Title="@Lang["vsgame.Match.Roster.Match"]" />
 
@@ -64,6 +65,7 @@
             <VsMatchRoster
                 Players="@_queue.Players"
                 ExpectedPlayers="@_queue.RequiredPlayers"
+                IsConnectionActive="@MatchClient.IsConnected"
                 Title="@Lang["vsgame.Match.Roster.Lobby"]" />
 
             <main class="kc-vs-match-content">
@@ -93,13 +95,22 @@
             </main>
         </div>
     }
-    else if (string.IsNullOrWhiteSpace(_errorText))
+    else
     {
         <section class="kc-vs-queue connecting">
             <div class="kc-vs-queue-emblem">
                 <i class="bi bi-broadcast"></i>
             </div>
-            <h3>@Lang["vsgame.Match.Status.Connecting"]</h3>
+            @if (MatchClient.ConnectionCheck is null)
+            {
+                <h3>@Lang["vsgame.Match.Status.Connecting"]</h3>
+            }
+            else
+            {
+                <h3 class="kc-vs-connection-result @ConnectionResultClass">
+                    @ConnectionResultText
+                </h3>
+            }
         </section>
     }
 </div>
@@ -125,6 +136,13 @@
     preparációs nézetet a SignalR snapshot alapján cseréli.
     MÓDOSÍTÁS: GameCompleted fázisban a placeholder helyett a külön,
     snapshot-alapú rewardkomponenst rendereli.
+    MÓDOSÍTÁS: mérés közben kizárólag a kapcsolatellenőrzés felirata,
+    utána a válaszidő és minősítés legalább egy másodpercig látszik.
+    Rossz kapcsolatnál az eredmény a szerverhiba mellett a helyén
+    marad, és queue-nézet nem nyílik.
+    MÓDOSÍTÁS: a roster megkapja az aktuális klienskapcsolat állapotát,
+    ezért a SignalR Closed esemény után a régi pingjelzések nem
+    maradhatnak aktív színűek.
     MÓDOSÍTÁS: preparációban célzott állapotosztály engedi, hogy a
     meccskeret a tartalommal együtt függőlegesen tovább nőjön.
 *@

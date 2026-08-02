@@ -30,7 +30,8 @@ public sealed class VsMatchRewardPersistenceService
                 var cache = scope.ServiceProvider
                     .GetRequiredService<IPlayerCacheService>();
 
-                var playerSaved = await cache.UpdatePlayerLockedAsync(
+                var playerSaved =
+                    await cache.UpdateRewardPlayerLockedAsync(
                     playerReward.PlayerId,
                     playerReward.SessionId,
                     player => ApplyPlayerReward(
@@ -52,7 +53,7 @@ public sealed class VsMatchRewardPersistenceService
                 }
 
                 var questionsSaved =
-                    await cache.UpdateQuestionsLockedAsync(
+                    await cache.UpdateRewardQuestionsLockedAsync(
                         playerReward.PlayerId,
                         playerReward.SessionId,
                         (_, questions) => ApplyOwnQuestionStatistics(
@@ -296,6 +297,9 @@ public sealed class VsMatchRewardPersistenceService
  * segítséget és energiát veszíti; utolsó helyezett meccsként
  * számolódik, pozitív jutalmat és teljesítménystatisztikát nem kap.
  * Közvetlen adatbázis-írást nem végez; a normál cache flush ment.
+ * MÓDOSÍTÁS: a szerver által már hitelesített meccseredményt a
+ * PlayerId alapján, az időközben megváltozott klienssessiontől
+ * független reward-cache műveletekkel vezeti át.
  * MÓDOSÍTÁS: a csapat-XP elérésekor a csapatszint automatikusan
  * továbblép, és minden elért szint DevPointToStore jutalma bekerül a
  * csapat fejlesztési pontjai közé. A karakterekhez már a kalkulátor

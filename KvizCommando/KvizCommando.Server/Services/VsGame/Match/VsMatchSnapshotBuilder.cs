@@ -55,6 +55,10 @@ internal static class VsMatchSnapshotBuilder
                             player),
                         TotalTimeSeconds =
                             ResolveDisplayedTime(match, player),
+                        ResponseTimeMilliseconds =
+                            player.ResponseTimeMilliseconds,
+                        ConnectionQuality =
+                            player.ConnectionQuality,
                         ActiveCharacter =
                             BuildActiveCharacter(
                                 match,
@@ -828,6 +832,8 @@ internal static class VsMatchSnapshotBuilder
  * összes csapat-XP-t is a személyre szabott reward tartalmazza.
  * MÓDOSÍTÁS: a kliensnek továbbítja a szinthatár miatt levágott
  * karakter-XP jelzését is.
+ * MÓDOSÍTÁS: minden publikus rosterjátékoshoz hozzáadja az egyszer
+ * mért válaszidőt és annak szerveroldali minősítését.
  *
  * A szerveroldali meccsállapotból játékosonként tiszta SignalR-
  * snapshotokat épít. Nem módosít állapotot és nem küld üzenetet.

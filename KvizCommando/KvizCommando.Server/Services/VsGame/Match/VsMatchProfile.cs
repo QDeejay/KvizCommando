@@ -2,7 +2,7 @@ namespace KvizCommando.Server.Services.VsGame.Match;
 
 public sealed class VsMatchProfile
 {
-    public int RequiredPlayers { get; init; } = 4;
+    public int RequiredPlayers { get; init; } = 2;
     public int MinimumPlayers { get; init; } = 2;
     public int MaximumPlayers { get; init; } = 4;
     public int PreparationSeconds { get; init; } = 20;
@@ -20,6 +20,8 @@ public sealed class VsMatchProfile
     public int PointUnit { get; init; } = 1;
     public int CaptainMultiplier { get; init; } = 2;
     public int LoadoutSize { get; init; } = 10;
+    public int GoodResponseTimeMilliseconds { get; init; } = 100;
+    public int MaximumResponseTimeMilliseconds { get; init; } = 250;
     public bool PausePreparationOnTimeout { get; init; } = false;
 }
 
@@ -41,6 +43,9 @@ public static class VsMatchProfiles
  * módosítható, külön kliens- vagy SignalR-állapot nélkül.
  * Az időtlenítő -99 másodperces módosítója és hibás válasz esetén
  * járó 20 másodperces büntetése szintén itt állítható.
+ * A jó és még elfogadható kapcsolat válaszidő-határa ugyanebben a
+ * profilban módosítható; a maximum feletti kapcsolat nem léphet
+ * rangsorolt várólistába.
  *
  * A VS meccsmotor egy helyen módosítható idő-, pont- és
  * létszámprofilját tartalmazza.

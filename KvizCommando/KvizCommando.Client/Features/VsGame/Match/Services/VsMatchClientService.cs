@@ -1,5 +1,6 @@
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Shared.Contracts.VsGame.Match;
+using KvizCommando.Shared.Models.Enums.VsGame;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Diagnostics;
@@ -31,6 +32,7 @@ public sealed class VsMatchClientService : IVsMatchClientService
 
     public VsRankedQueueSnapshot? QueueSnapshot { get; private set; }
     public VsMatchSnapshot? MatchSnapshot { get; private set; }
+    public VsConnectionCheckResult? ConnectionCheck { get; private set; }
     public string ErrorMessageKey { get; private set; } = string.Empty;
     public bool IsConnected =>
         _connection?.State == HubConnectionState.Connected;
@@ -45,6 +47,7 @@ public sealed class VsMatchClientService : IVsMatchClientService
 
         QueueSnapshot = null;
         MatchSnapshot = null;
+        ConnectionCheck = null;
         ErrorMessageKey = string.Empty;
 
         var sessionId = _session.SessionId;
@@ -87,12 +90,40 @@ public sealed class VsMatchClientService : IVsMatchClientService
                 NotifyChanged();
             }));
 
+        _handlers.Add(_connection.On<long, long>(
+            "LatencyProbe",
+            token => Task.FromResult(token)));
+
         _connection.Closed += HandleClosedAsync;
 
         try
         {
             await _connection.StartAsync(ct);
             await SynchronizeServerClockAsync(ct);
+
+            ConnectionCheck =
+                await _connection
+                    .InvokeAsync<VsConnectionCheckResult>(
+                        "CheckConnection",
+                        ct);
+
+            NotifyChanged();
+            await Task.Delay(
+                TimeSpan.FromSeconds(1),
+                ct);
+
+            if (ConnectionCheck.Quality ==
+                VsConnectionQuality.Bad)
+            {
+                var rejected = new VsQueueJoinResult
+                {
+                    ErrorKey =
+                        "vsgame.Match.Error.ConnectionSpeed"
+                };
+
+                await StopAsync(CancellationToken.None);
+                return rejected;
+            }
 
             var result =
                 await _connection.InvokeAsync<VsQueueJoinResult>(
@@ -274,6 +305,9 @@ public sealed class VsMatchClientService : IVsMatchClientService
  * szerver UTC-idejét és a válaszút felével korrigálja. Ezután
  * Stopwatch alapján szolgáltatja az időt, ezért a kliens rendszerórája
  * és annak későbbi módosítása nem tolja el a visszaszámlálókat.
+ * MÓDOSÍTÁS: az öt szerveroldali SignalR-próbához visszaadja a kapott
+ * tokent, majd a mérés eredményét legalább egy másodpercig megmutatja
+ * a queue-belépés előtt. Rossz minősítésnél nem küld belépési parancsot.
  *
  * Egyetlen, automatikusan újra nem kapcsolódó SignalR kapcsolatot
  * kezel, fogadja a queue/match snapshotokat és továbbítja a

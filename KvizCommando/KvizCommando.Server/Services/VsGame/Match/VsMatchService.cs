@@ -536,6 +536,7 @@ public sealed partial class VsMatchService : IVsMatchService
 
         var removeMatch = false;
         var releasePlayer = false;
+        VsMatchRewardState? abandonedReward = null;
         (string ConnectionId, VsMatchSnapshot Snapshot)[] messages = [];
 
         lock (match.SyncRoot)
@@ -575,7 +576,23 @@ public sealed partial class VsMatchService : IVsMatchService
                 "Disconnected",
                 string.Empty);
 
-            if (!releasePlayer && IsPreparationPhase(match.Phase))
+            if (!releasePlayer &&
+                match.Players.All(item => item.IsBot))
+            {
+                match.IsClosed = true;
+                match.PhaseTimerCts.Cancel();
+                abandonedReward =
+                    VsMatchRewardCalculator.Calculate(match);
+                match.Reward = abandonedReward;
+                removeMatch = true;
+
+                AddLog(
+                    match,
+                    null,
+                    "AllPlayersDisconnected",
+                    string.Empty);
+            }
+            else if (!releasePlayer && IsPreparationPhase(match.Phase))
             {
                 AdvanceIfReadyLocked(match);
             }
@@ -602,6 +619,14 @@ public sealed partial class VsMatchService : IVsMatchService
             _store.ReleasePlayer(match, match.Players.First(player =>
                 player.ConnectionId == connectionId));
 
+        if (abandonedReward is not null)
+        {
+            await _rewardPersistence.SaveAsync(
+                match.MatchId,
+                match.Players.Count,
+                abandonedReward);
+        }
+
         if (removeMatch)
         {
             _store.TryRemove(match.MatchId, out _);
@@ -609,6 +634,31 @@ public sealed partial class VsMatchService : IVsMatchService
         }
 
         await SendBroadcastMessagesAsync(messages);
+    }
+
+    public Task DisconnectPlayerAsync(
+        int playerId,
+        string sessionId,
+        CancellationToken ct = default)
+    {
+        if (!_store.TryGetByPlayer(playerId, out var match) ||
+            match is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        string? connectionId;
+
+        lock (match.SyncRoot)
+        {
+            connectionId = match.Players.FirstOrDefault(player =>
+                player.PlayerId == playerId &&
+                player.SessionId == sessionId)?.ConnectionId;
+        }
+
+        return connectionId is null
+            ? Task.CompletedTask
+            : DisconnectAsync(connectionId, ct);
     }
 
     private static VsMatchPlayerState CreateLockedPlayer(
@@ -624,6 +674,9 @@ public sealed partial class VsMatchService : IVsMatchService
             DisplayName = entry.DisplayName,
             TeamName = entry.TeamName,
             TeamLevel = entry.TeamLevel,
+            ResponseTimeMilliseconds =
+                entry.ResponseTimeMilliseconds,
+            ConnectionQuality = entry.ConnectionQuality,
             Rounds =
             [
                 .. Enumerable.Range(1, teamSize + 1)
@@ -1094,4 +1147,12 @@ public sealed partial class VsMatchService : IVsMatchService
  * MÓDOSÍTÁS: a kapitánykör lezárása után a kiszámolt
  * rewardot a lock elengedése után, a végső snapshot kiküldése előtt
  * a külön reward persistence service vezeti át a PlayerCache-be.
+ * MÓDOSÍTÁS: meccslockkor a queue-entry kapcsolati adatait egyszerűen
+ * átmásolja a játékos meccsállapotába.
+ * MÓDOSÍTÁS: logoutkor PlayerId és SessionId alapján ugyanazt a
+ * disconnect/bot folyamatot indítja, mint a SignalR kapcsolatbontás.
+ * MÓDOSÍTÁS: ha az utolsó kapcsolódott játékos is bottá válik, a
+ * meglévő bot-reward szabályokkal azonnal kiszámolja és elmenti a
+ * büntetéseket, leállítja a fázist, majd felszabadítja a meccset és
+ * valamennyi PlayerId-zárolását.
  */

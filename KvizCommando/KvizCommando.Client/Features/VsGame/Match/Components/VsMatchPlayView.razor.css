@@ -479,7 +479,32 @@
     white-space: nowrap;
 }
 
-.kc-vs-guess-player-results strong {
+.kc-vs-guess-player-name {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.kc-vs-guess-player-state,
+.kc-vs-guess-player-points {
+    flex: 0 0 auto;
+}
+
+.kc-vs-guess-player-state {
+    color: #aaa99f;
+}
+
+.kc-vs-guess-player-state.answered,
+.kc-vs-guess-player-points.positive {
+    color: #51b36d;
+}
+
+.kc-vs-guess-player-points.negative {
+    color: #d15f52;
+}
+
+.kc-vs-guess-player-results > span > strong {
     flex: 0 0 auto;
     color: #eee9dc;
     font-size: .92rem;
@@ -487,7 +512,7 @@
     transition: opacity .3s ease;
 }
 
-.kc-vs-guess-player-results strong.revealed {
+.kc-vs-guess-player-results > span > strong.revealed {
     opacity: 1;
 }
 
@@ -504,6 +529,20 @@
     border-top: 1px solid rgba(119, 120, 80, .38);
 }
 
+.kc-vs-question-status-players {
+    min-width: 0;
+    display: grid;
+    gap: 5px;
+}
+
+.kc-vs-question-status-player-row {
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.kc-vs-question-status-player-row > span,
 .kc-vs-question-status > span,
 .kc-vs-question-status > button {
     min-height: 28px;
@@ -528,12 +567,12 @@
     opacity: .58;
 }
 
-.kc-vs-question-status > span.answered,
+.kc-vs-question-status-player-row > span.answered,
 .kc-vs-question-status .positive {
     color: #51b36d;
 }
 
-.kc-vs-question-status > span.kc-vs-player-status {
+.kc-vs-question-status-player-row > span.kc-vs-player-status {
     background:
         linear-gradient(
             var(--kc-vs-player-color),
@@ -541,7 +580,7 @@
         rgba(17, 22, 16, .94);
 }
 
-.kc-vs-question-status > span.kc-vs-player-status.questioner {
+.kc-vs-question-status-player-row > span.kc-vs-player-status.questioner {
     border-color: #d8bb43;
     box-shadow: inset 0 0 0 1px rgba(216, 187, 67, .28);
 }
@@ -846,8 +885,11 @@
  * eredménysorában kompakt nyers/módosított idő és gyorsasági jelzés
  * MÓDOSÍTÁS: a tipp eredményénél a játékosok számai pozíciószínű,
  * rugalmas kártyasorban fedődnek fel; a nyertes finom zöld keretet
- * kap. A kérdező mini eredménykártyáját arany kérdésikon és keret
- * különíti el a válaszolókétól.
+ * kap. A hosszú játékossáv közvetlenül a név után mutatja a
+ * várakozás/kész állapotot, kiértékeléskor pedig a pontot; emiatt a
+ * tipp alatti külön játékos-minikártyák megszűntek.
+ * A feleletválasztós kiértékelésben a kérdező külön első sorban
+ * marad, a válaszolók pedig a következő sorban jelennek meg.
  * MÓDOSÍTÁS: a nagyméretű tippkártyák legfeljebb kettesével kerülnek
  * egy sorba. A sorok középre rendezettek, az egyedül maradó kártya
  * pedig megtartja fél sornyi maximális szélességét.

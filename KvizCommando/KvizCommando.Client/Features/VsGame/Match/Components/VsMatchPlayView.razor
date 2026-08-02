@@ -204,7 +204,22 @@
                                           .OrderBy(item => item.Position))
                             {
                                 <span class="@PlayerToneClass(player.Position) @(player.Points > 0 ? "winner" : "")">
-                                    <small>@PlayerName(player.Position)</small>
+                                    <span class="kc-vs-guess-player-name">
+                                        <small>@PlayerName(player.Position)</small>
+
+                                        @if (Data.Phase ==
+                                             VsMatchPhase.QuestionResult)
+                                        {
+                                            <strong class="kc-vs-guess-player-points @(player.Points >= 0 ? "positive" : "negative")">
+                                                @Signed(player.Points)
+                                            </strong>
+                                        }
+                                        else
+                                        {
+                                            <i class="kc-vs-guess-player-state bi @(player.HasAnswered ? "bi-check-circle-fill answered" : "bi-hourglass")"></i>
+                                        }
+                                    </span>
+
                                     <strong class="@(IsGuessRevealed(player) ? "revealed" : "")">
                                         @GuessText(player)
                                     </strong>
@@ -257,72 +272,92 @@
                 }
             </div>
 
-            <div class="kc-vs-question-status @(Data.Game.QuestionKind == VsQuestionKind.Guess ? "guess-status" : "")">
-                @foreach (var player in QuestionStatusPlayers)
-                {
-                    <span class="kc-vs-player-status @PlayerToneClass(player.Position) @(player.HasAnswered ? "answered" : "") @(IsQuestioner(player.Position) ? "questioner" : "")">
-                        @if (IsQuestioner(player.Position))
-                        {
-                            <i class="bi bi-patch-question-fill kc-vs-questioner-mark"
-                               title="@Lang["vsgame.Match.Game.Questioner"]"></i>
-                        }
-
-                        @PlayerName(player.Position)
-
-                        @if (Data.Phase == VsMatchPhase.QuestionResult)
-                        {
-                            @if (player.ModifiedTimeSeconds.HasValue)
+            @if (Data.Game.QuestionKind != VsQuestionKind.Guess ||
+                 CurrentHelp is not null)
+            {
+                <div class="kc-vs-question-status @(Data.Game.QuestionKind == VsQuestionKind.Guess ? "guess-status" : "")">
+                    @if (Data.Game.QuestionKind !=
+                         VsQuestionKind.Guess)
+                    {
+                        <div class="kc-vs-question-status-players">
+                            @foreach (var group in QuestionStatusPlayers
+                                          .GroupBy(player =>
+                                              IsQuestioner(player.Position))
+                                          .OrderByDescending(group =>
+                                              group.Key))
                             {
-                                <small class="kc-vs-question-time"
-                                       title="@Lang["vsgame.Match.Game.FastestBonus"]">
-                                    @Seconds(player.AnswerTimeSeconds)
-                                    <i class="bi bi-arrow-right-short"></i>
-                                    @Seconds(player.ModifiedTimeSeconds.Value)
-                                </small>
-                            }
+                                <div class="kc-vs-question-status-player-row @(group.Key ? "questioner-row" : "answerer-row")">
+                                    @foreach (var player in group)
+                                    {
+                                        <span class="kc-vs-player-status @PlayerToneClass(player.Position) @(player.HasAnswered ? "answered" : "") @(IsQuestioner(player.Position) ? "questioner" : "")">
+                                            @if (IsQuestioner(player.Position))
+                                            {
+                                                <i class="bi bi-patch-question-fill kc-vs-questioner-mark"
+                                                   title="@Lang["vsgame.Match.Game.Questioner"]"></i>
+                                            }
 
-                            @if (player.HasSpeedBonus)
-                            {
-                                <i class="bi bi-lightning-charge-fill kc-vs-speed-bonus"
-                                   title="@Lang["vsgame.Match.Game.FastestBonus"]"></i>
-                            }
+                                            @PlayerName(player.Position)
 
-                            <strong class="@(player.Points >= 0 ? "positive" : "negative")">
-                                @Signed(player.Points)
-                            </strong>
+                                            @if (Data.Phase ==
+                                                 VsMatchPhase.QuestionResult)
+                                            {
+                                                @if (player.ModifiedTimeSeconds.HasValue)
+                                                {
+                                                    <small class="kc-vs-question-time"
+                                                           title="@Lang["vsgame.Match.Game.FastestBonus"]">
+                                                        @Seconds(player.AnswerTimeSeconds)
+                                                        <i class="bi bi-arrow-right-short"></i>
+                                                        @Seconds(player.ModifiedTimeSeconds.Value)
+                                                    </small>
+                                                }
+
+                                                @if (player.HasSpeedBonus)
+                                                {
+                                                    <i class="bi bi-lightning-charge-fill kc-vs-speed-bonus"
+                                                       title="@Lang["vsgame.Match.Game.FastestBonus"]"></i>
+                                                }
+
+                                                <strong class="@(player.Points >= 0 ? "positive" : "negative")">
+                                                    @Signed(player.Points)
+                                                </strong>
+                                            }
+                                            else
+                                            {
+                                                <i class="bi @(player.HasAnswered ? "bi-check-circle-fill" : "bi-hourglass")"></i>
+                                            }
+                                        </span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @if (CurrentHelp is not null)
+                    {
+                        @if (CurrentHelp.HelpType ==
+                             VsHelpType.GuessRange)
+                        {
+                            <span class="kc-vs-play-help"
+                                  title="@CurrentHelp.Name">
+                                <i class="@CurrentHelp.IconCss"></i>
+                                @CurrentHelp.Name
+                            </span>
                         }
                         else
                         {
-                            <i class="bi @(player.HasAnswered ? "bi-check-circle-fill" : "bi-hourglass")"></i>
+                            <button type="button"
+                                    class="kc-vs-play-help @(CanUseHelpNow ? "available" : "")"
+                                    disabled="@(!CanUseHelpNow || _sending)"
+                                    title="@CurrentHelp.Name"
+                                    @onclick="UseHelpAsync">
+                                <i class="@CurrentHelp.IconCss"></i>
+                                <span>@CurrentHelp.Name</span>
+                                <strong>@HelpUseMarker</strong>
+                            </button>
                         }
-                    </span>
-                }
-
-                @if (CurrentHelp is not null)
-                {
-                    @if (CurrentHelp.HelpType ==
-                         VsHelpType.GuessRange)
-                    {
-                        <span class="kc-vs-play-help"
-                              title="@CurrentHelp.Name">
-                            <i class="@CurrentHelp.IconCss"></i>
-                            @CurrentHelp.Name
-                        </span>
                     }
-                    else
-                    {
-                        <button type="button"
-                                class="kc-vs-play-help @(CanUseHelpNow ? "available" : "")"
-                                disabled="@(!CanUseHelpNow || _sending)"
-                                title="@CurrentHelp.Name"
-                                @onclick="UseHelpAsync">
-                            <i class="@CurrentHelp.IconCss"></i>
-                            <span>@CurrentHelp.Name</span>
-                            <strong>@HelpUseMarker</strong>
-                        </button>
-                    }
-                }
-            </div>
+                </div>
+            }
         }
     </div>
 

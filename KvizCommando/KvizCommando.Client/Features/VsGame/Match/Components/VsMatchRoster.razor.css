@@ -161,6 +161,36 @@
     object-fit: cover;
 }
 
+.kc-vs-roster-connection {
+    position: absolute;
+    z-index: 2;
+    top: 5px;
+    left: 7px;
+    width: 18px;
+    height: 18px;
+    display: grid;
+    place-items: center;
+    font-size: .9rem;
+    line-height: 1;
+    text-shadow: 0 1px 2px #000;
+}
+
+.kc-vs-roster-connection.good {
+    color: #51b36d;
+}
+
+.kc-vs-roster-connection.medium {
+    color: #d7bd4f;
+}
+
+.kc-vs-roster-connection.bad {
+    color: #d15f52;
+}
+
+.kc-vs-roster-connection.unknown {
+    color: #777850;
+}
+
 .kc-vs-roster-modifier {
     position: absolute;
     top: 5px;
@@ -254,6 +284,71 @@
     box-shadow: 0 0 6px rgba(210, 255, 57, .8);
 }
 
+@media (max-width: 860px) {
+    .kc-vs-roster {
+        display: grid;
+        overflow: visible;
+    }
+
+    .kc-vs-roster.compact-columns-1 {
+        grid-template-columns: 1fr;
+    }
+
+    .kc-vs-roster.compact-columns-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kc-vs-roster.compact-columns-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .kc-vs-roster > header {
+        grid-column: 1 / -1;
+    }
+
+    .kc-vs-roster.compact-count-3 >
+        .kc-vs-roster-card:last-child {
+        width: calc((100% - 9px) / 2);
+        grid-column: 1 / -1;
+        justify-self: center;
+    }
+
+    .kc-vs-roster-card {
+        min-height: 92px;
+        max-height: none;
+        grid-template-columns: 18px 54px minmax(0, 1fr);
+        gap: 7px;
+    }
+
+    .kc-vs-roster-connection {
+        position: static;
+        grid-column: 1;
+        grid-row: 1;
+        align-self: center;
+        justify-self: center;
+    }
+
+    .kc-vs-roster-visual {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .kc-vs-roster-data {
+        grid-column: 3;
+        grid-row: 1;
+    }
+
+    .kc-vs-roster-card.has-modifier
+        .kc-vs-roster-data > strong {
+        max-width: calc(100% - 52px);
+    }
+
+    .kc-vs-roster-card.has-score
+        .kc-vs-roster-data > small {
+        max-width: calc(100% - 62px);
+    }
+}
+
 @keyframes kc-vs-roster-search {
     to {
         transform: rotate(360deg);
@@ -288,6 +383,16 @@
  * szülő/abszolút SVG-host megoldását követi. A CharacterView negatív
  * kép-rétegét a preparációban is használt helyi stacking context
  * tartja a portrékeretben; belső stílusfelülírás nincs.
+ * MÓDOSÍTÁS: a kapcsolati hasáb álló rosterben a kártya bal felső
+ * sarkának abszolút státuszeleme. A manager 860 px alatti
+ * kártyarácsában külön első gridoszlopot kap, és függőlegesen középre
+ * kerül; a meglévő avatar-, adat- és sarokelemek sorrendje változatlan.
+ * Négy rosterhely keskeny nézetben két oszlopban és két sorban,
+ * három hely 2 + 1 elrendezésben, fél sornyi szélességű középső alsó
+ * kártyával, kettő hely pedig egyetlen sorban oszlik el.
+ * Ugyanebben a keskeny nézetben a sarokban lévő modifier és pont/idő
+ * számára a csapatnév, illetve a karakternév célzott helyet hagy,
+ * ezért szükség esetén a már meglévő ellipszis ténylegesen működik.
  *
  * A fájl kizárólag a VS meccs publikus játékoslistáját formázza.
  */

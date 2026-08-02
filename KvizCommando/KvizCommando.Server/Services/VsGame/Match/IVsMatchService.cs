@@ -58,6 +58,11 @@ public interface IVsMatchService
     Task DisconnectAsync(
         string connectionId,
         CancellationToken ct = default);
+
+    Task DisconnectPlayerAsync(
+        int playerId,
+        string sessionId,
+        CancellationToken ct = default);
 }
 
 /**
@@ -70,6 +75,8 @@ public interface IVsMatchService
  * tipp, feleletválasztós válasz és kapitánykérdés kiválasztása.
  * MÓDOSÍTÁS: a játékkörben használható segítség külön, explicit
  * szerverparancs.
+ * MÓDOSÍTÁS: logoutkor PlayerId és SessionId alapján is elérhető a
+ * normál disconnect/bot folyamat.
  *
  * A lezárt VS meccs létrehozásának, preparációs és játékmeneti
  * parancsainak szerveroldali szerződése.

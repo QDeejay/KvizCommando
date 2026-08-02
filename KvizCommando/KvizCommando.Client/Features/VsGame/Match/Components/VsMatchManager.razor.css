@@ -100,6 +100,23 @@
     font-family: 'Courier New', monospace;
 }
 
+.kc-vs-connection-result {
+    font-family: 'Share Tech Mono', monospace !important;
+    letter-spacing: .03em;
+}
+
+.kc-vs-connection-result.good {
+    color: #51b36d;
+}
+
+.kc-vs-connection-result.medium {
+    color: #d7bd4f;
+}
+
+.kc-vs-connection-result.bad {
+    color: #d15f52;
+}
+
 .kc-vs-queue-counter {
     width: 158px;
     aspect-ratio: 1;
@@ -210,6 +227,8 @@
  * Preparációban kizárólag a manager/content magasságkorlátja nyílik
  * meg, így a komponens a ContentBoxszal együtt nő és nem fut annak
  * lábléce alá.
+ * Az egyszer mért válaszidő a játékban már használt zöld, sárga és
+ * piros színekkel jelzi a megfelelő, közepes és rossz minősítést.
  *
  * A VS ranked várólista és meccskeret a SoloGame rögzített
  * játékméretét, katonai paneljeit, LCD-színét és meglévő

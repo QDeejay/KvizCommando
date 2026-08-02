@@ -132,25 +132,55 @@ namespace KvizCommando.Server.Services.PlayerCache
                 if (entry.Player.SessionId != sessionId)
                     return null;
 
-                var dirty = update(entry.Player);
-                if (dirty is null)
-                    return false;
-
-                if ((dirty.Value & DirtyFlags.Characters) != 0 &&
-                    entry.Player.BattleTeamSlots.Length > 0 &&
-                    !HasEligibleBattleTeam(entry.Player))
-                {
-                    Array.Clear(entry.Player.BattleTeamSlots);
-                }
-
-                entry.Dirty |= dirty.Value;
-                entry.LastAccessUtc = DateTime.UtcNow;
-                return true;
+                return ApplyPlayerUpdate(entry, update);
             }
             finally
             {
                 entry.Lock.Release();
             }
+        }
+
+        public async Task<bool> UpdateRewardPlayerLockedAsync(
+            int playerId,
+            string loadSessionId,
+            Func<CachedPlayer, DirtyFlags?> update,
+            CancellationToken ct = default)
+        {
+            var entry = await GetOrCreateEntryAsync(
+                playerId,
+                loadSessionId,
+                ct);
+            if (entry is null) return false;
+
+            await entry.Lock.WaitAsync(ct);
+            try
+            {
+                return ApplyPlayerUpdate(entry, update);
+            }
+            finally
+            {
+                entry.Lock.Release();
+            }
+        }
+
+        private static bool ApplyPlayerUpdate(
+            CacheEntry entry,
+            Func<CachedPlayer, DirtyFlags?> update)
+        {
+            var dirty = update(entry.Player);
+            if (dirty is null)
+                return false;
+
+            if ((dirty.Value & DirtyFlags.Characters) != 0 &&
+                entry.Player.BattleTeamSlots.Length > 0 &&
+                !HasEligibleBattleTeam(entry.Player))
+            {
+                Array.Clear(entry.Player.BattleTeamSlots);
+            }
+
+            entry.Dirty |= dirty.Value;
+            entry.LastAccessUtc = DateTime.UtcNow;
+            return true;
         }
 
         private static bool HasEligibleBattleTeam(CachedPlayer player)
@@ -204,18 +234,48 @@ namespace KvizCommando.Server.Services.PlayerCache
                 if (entry.Player.SessionId != sessionId)
                     return null;
 
-                var dirtyMask = update(entry.Player, entry.CachedQ);
-                if (dirtyMask is null)
-                    return false;
-
-                entry.CachedQ.DirtyMask |= dirtyMask.Value;
-                entry.LastAccessUtc = DateTime.UtcNow;
-                return true;
+                return ApplyQuestionUpdate(entry, update);
             }
             finally
             {
                 entry.Lock.Release();
             }
+        }
+
+        public async Task<bool> UpdateRewardQuestionsLockedAsync(
+            int playerId,
+            string loadSessionId,
+            Func<CachedPlayer, CachedQuestion, uint?> update,
+            CancellationToken ct = default)
+        {
+            var entry = await GetOrCreateEntryAsync(
+                playerId,
+                loadSessionId,
+                ct);
+            if (entry is null) return false;
+
+            await entry.Lock.WaitAsync(ct);
+            try
+            {
+                return ApplyQuestionUpdate(entry, update);
+            }
+            finally
+            {
+                entry.Lock.Release();
+            }
+        }
+
+        private static bool ApplyQuestionUpdate(
+            CacheEntry entry,
+            Func<CachedPlayer, CachedQuestion, uint?> update)
+        {
+            var dirtyMask = update(entry.Player, entry.CachedQ);
+            if (dirtyMask is null)
+                return false;
+
+            entry.CachedQ.DirtyMask |= dirtyMask.Value;
+            entry.LastAccessUtc = DateTime.UtcNow;
+            return true;
         }
 
         // --------------------------------------------------------
@@ -351,4 +411,8 @@ namespace KvizCommando.Server.Services.PlayerCache
  * MÓDOSÍTÁS: Characters dirty esetén a mentett harci csapat csak
  * akkor nullázódik, ha a módosított karakterállapottal már egyik
  * ranked besorolás feltételeinek sem felel meg.
+ * MÓDOSÍTÁS: a szerveroldalon már hitelesített reward játékos- és
+ * kérdésmódosításai külön műveleten, sessionegyezés nélkül futnak.
+ * A normál kliensmódosítások sessionellenőrzése változatlan maradt;
+ * a közös update-logika mindkét útvonalon azonos dirty-kezelést ad.
  */
