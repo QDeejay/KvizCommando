@@ -96,6 +96,11 @@
     font-size: 1.3rem;
 }
 
+.kc-back-button-slot {
+    display: flex;
+    align-items: center;
+}
+
     .kc-back-button:hover {
         background-color: rgba(255,255,255,0.1);
         color: whitesmoke;
@@ -192,9 +197,10 @@ main {
 
 .kc-collapse-btn {
     background-color: transparent;
-    border: none;
+    border: 1px solid transparent;
+    box-sizing: border-box;
     flex: 0 0 60px;
-    width: 58px;
+    width: 60px;
     height: 60px;
     padding: 0;
     display: flex;
@@ -205,7 +211,7 @@ main {
     .kc-collapse-btn:not(:disabled):hover {
         background-color: rgba(255,255,255,0.1);
         cursor: url('/Images/cursors/active.cur'), pointer;
-        border: grey 1px solid;
+        border-color: grey;
     }
 
 .nav-logo {
@@ -215,3 +221,46 @@ main {
     object-fit: cover;
     z-index: 0;
 }
+
+@media (max-width: 800px) {
+    .kc-mainlayout-root {
+        --kc-main-header-height: 100px;
+    }
+
+    .kc-mainlayout-content-header {
+        grid-template-columns: 60px minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: 60px 40px;
+        grid-template-areas:
+            "nav title right"
+            "back center center";
+        height: 100px;
+        gap: 0;
+    }
+
+    .kc-mainlayout-content-header--left-warper {
+        display: contents;
+       
+    }
+
+    .kc-collapse-btn {
+        grid-area: nav;
+    }
+
+    .kc-mainlayout-content-header--left { display: contents;  }
+
+    .kc-actual-page-title { grid-area: title; width: 100%; height: 86%; padding: 0 10px 0 5px; box-sizing: border-box; display: flex; align-items: center; box-shadow: inset 0 4px 8px rgba(0,0,0,0.7); border: inset 2px rgba(23,23,23,0.4); }
+
+    .kc-back-button-slot {
+        grid-area: back;
+        width: 100%;
+     
+        box-sizing: border-box;
+        justify-content: center;
+       
+    }
+    .kc-header-lcd-display { width: 100%; }
+        .kc-mainlayout-content-header--center { grid-area: center; width: 100%; box-sizing: border-box; justify-content: center; }
+        .kc-mainlayout-content-header--right { grid-area: right; height: 80%; }
+
+        .kc-mainlayout-content-container { height: calc(100% - 140px); }
+    }

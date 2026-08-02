@@ -69,10 +69,12 @@
                                   <div class="kc-mainlayout-content-header--left">
 
 
-                                <div class="kc-back-button @(BackNavigationEna ? "" : "btn-hidden")"
-                                                 @onclick="OnBackClick">
-                                                @("◀")
-                                            </div>
+                                <div class="kc-back-button-slot">
+                                    <div class="kc-back-button @(BackNavigationEna ? "" : "btn-hidden")"
+                                         @onclick="OnBackClick">
+                                        @("◀")
+                                    </div>
+                                </div>
                                             <div class="kc-actual-page-title">
                                                 <h2>@_currentTitle</h2>
                                             </div>
