@@ -26,6 +26,22 @@
     .kc-mainlayout-root.desktop-nav-open .kc-mainlayout-content-container {
         margin-left: var(--kc-nav-width);
     }
+
+    .kc-mainlayout-root.desktop-nav-open .kc-mainlayout-content-header {
+        grid-template-columns: minmax(0, 1fr) var(--kc-nav-width) auto minmax(0, 1fr);
+    }
+
+    .kc-mainlayout-root.desktop-nav-open .kc-mainlayout-content-header--left-warper {
+        grid-column: 1 / 3;
+    }
+
+    .kc-mainlayout-root.desktop-nav-open .kc-mainlayout-content-header--center {
+        grid-column: 3;
+    }
+
+    .kc-mainlayout-root.desktop-nav-open .kc-mainlayout-content-header--right {
+        grid-column: 4;
+    }
 }
 
 .kc-mainlayout-nav-backdrop {

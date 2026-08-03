@@ -14,9 +14,6 @@ html, body {
     cursor: url('/Images/cursors/normal.cur'), default;
 }
 
-#app {
-    height: calc(100% - 60px);
-}
 /* Linkek, gombok, hover */
 /* interaktív elemek (hover) */
 a:hover,
@@ -251,7 +248,6 @@ input[type="checkbox"].custom-checkbox:checked {
         font-size: 16px;
         color: #000; /* pipa színe */
     }
-
 
 
 
