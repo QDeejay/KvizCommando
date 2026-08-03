@@ -32,6 +32,16 @@ public sealed class TeamStatisticConfiguration :
             .IsRequired();
         builder.Property(statistic => statistic.RankedHighScoreTime)
             .IsRequired();
+        builder.Property(statistic => statistic.RankedGuessCount)
+            .IsRequired();
+        builder.Property(statistic => statistic.RankedGuessErrorTotal)
+            .HasColumnType("REAL")
+            .IsRequired();
+        builder.Property(statistic => statistic.RankedGuessErrorRatio)
+            .HasColumnType("REAL")
+            .HasComputedColumnSql(
+                "CASE WHEN [RankedGuessCount] = 0 THEN 0.0 ELSE (1.0 * [RankedGuessErrorTotal] / [RankedGuessCount]) END",
+                stored: false);
         builder.Property(statistic => statistic.RankedPlacementsJson)
             .IsRequired()
             .HasColumnType("TEXT");
@@ -44,13 +54,17 @@ public sealed class TeamStatisticConfiguration :
             .IsDescending(true, false)
             .HasDatabaseName(
                 "IX_TeamStatistics_RankedHighScore_Time");
+
+        builder.HasIndex(statistic => statistic.RankedGuessErrorRatio)
+            .HasDatabaseName(
+                "IX_TeamStatistics_RankedGuessErrorRatio");
     }
 }
 
 /**
  * ÚJ FÁJL: az EF Core modellben a TeamStatistics tábla kulcsát,
- * Player-kapcsolatát, JSON mezőjét és a későbbi highscore-listához
- * használható, pont szerint csökkenő és idő szerint növekvő
- * indexét írja le. A PlayerId-t a Players rekord adja, nem az
- * adatbázis generálja. A sémát a szabályos EF Core migráció telepíti.
+ * Player-kapcsolatát, JSON mezőjét, highscore-indexét és a ranked
+ * tippeltérés automatikusan számított, indexelt arányát írja le.
+ * A PlayerId-t a Players rekord adja, nem az adatbázis generálja.
+ * A sémát a szabályos EF Core migráció telepíti.
  */

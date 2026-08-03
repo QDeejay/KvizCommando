@@ -169,6 +169,11 @@ public sealed class VsMatchRewardPersistenceService
         if (reward.IsBot)
             return;
 
+        statistics.RankedGuessCount +=
+            reward.Statistics.GuessCount;
+        statistics.RankedGuessErrorTotal +=
+            (decimal)reward.Statistics.GuessErrorTotal;
+
         if (reward.IsWinner)
             statistics.RankedWon++;
 
@@ -304,4 +309,7 @@ public sealed class VsMatchRewardPersistenceService
  * továbblép, és minden elért szint DevPointToStore jutalma bekerül a
  * csapat fejlesztési pontjai közé. A karakterekhez már a kalkulátor
  * által szinthatáron levágott XP kerül.
+ * MÓDOSÍTÁS: a meccset emberként befejező játékos ranked
+ * tippkérdéseinek darabszámát és összesített abszolút eltérési
+ * arányát is a TeamStats cache-részbe vezeti át.
  */

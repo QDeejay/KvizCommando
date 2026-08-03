@@ -7,6 +7,8 @@ public sealed class VsMatchStatisticsState
     public int CorrectAnswers { get; set; }
     public int QuestionsAsked { get; set; }
     public int CorrectAnswersToAskedQuestions { get; set; }
+    public int GuessCount { get; set; }
+    public double GuessErrorTotal { get; set; }
     public Dictionary<int, VsMatchCategoryStatisticsState>
         Categories { get; } = [];
     public Dictionary<int, VsMatchOwnQuestionStatisticsState>
@@ -27,6 +29,7 @@ public sealed class VsMatchOwnQuestionStatisticsState
 
 /**
  * ÚJ FÁJL: a ranked meccs közben összegyűjtött, későbbi cache-
- * mentéshez szükséges statisztikai növekményeket tartalmazza.
+ * mentéshez szükséges statisztikai növekményeket, köztük a ranked
+ * tippkérdések darabszámát és összesített abszolút eltérését tartalmazza.
  * Adatbázist és PlayerCache-t nem módosít.
  */

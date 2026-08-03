@@ -38,6 +38,17 @@ internal static class VsMatchScoring
                 answer?.AnswerTimeSeconds ??
                 match.Profile.GuessSeconds;
 
+            if (!player.IsBot && question.CorrectGuess != 0)
+            {
+                var errorRatio = answer?.Guess is double guess
+                    ? Math.Abs(guess - question.CorrectGuess) /
+                      Math.Abs(question.CorrectGuess)
+                    : 1.0;
+
+                player.Statistics.GuessCount++;
+                player.Statistics.GuessErrorTotal += errorRatio;
+            }
+
             player.RoundPoints += points;
             player.RoundTimeSeconds += answerTime;
             player.RoundProgress.Add(points);
@@ -518,4 +529,7 @@ internal static class VsMatchScoring
  * játékost veszi figyelembe. A kérdező kihagyási büntetése a
  * játékosszámból számolódik, nem fix három pont. Normál nagykör
  * commitjakor a karakter PlayDuels/WinDuels növekménye is gyűlik.
+ * MÓDOSÍTÁS: a tippkör lezárásakor a nem bot játékosok pozitív vagy
+ * negatív, de nem nulla helyes értékhez viszonyított abszolút
+ * eltérési aránya gyűlik; a kihagyott tipp 1.0 eltérésnek számít.
  */
