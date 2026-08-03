@@ -4,51 +4,59 @@
     @if (Hs.NavBarEnable)
     {
         <nav class="side-nav">
-            <NavLink class=@btnNavClass[0] href="home" Match="NavLinkMatch.All">
+            <div class="nav-drawer-header">
+                <img src="images/logo.webp" alt="Logo" class="nav-drawer-logo" />
+                <strong>Kvíz Commando</strong>
+                <button type="button" class="nav-drawer-close" aria-label="Close" @onclick="CloseAsync">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <NavLink class=@btnNavClass[0] href="home" Match="NavLinkMatch.All" @onclick="CloseAsync">
                 <i class="bi bi-house-door"></i>
                 <span>@Lang["nav.Button.Home"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[1] href="team" Match="NavLinkMatch.All">
+            <NavLink class=@btnNavClass[1] href="team" Match="NavLinkMatch.All" @onclick="CloseAsync">
                 <i class="bi bi-person-badge-fill"></i>
                 <span>@Lang["nav.Button.Team"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[2] href="question" Match=" NavLinkMatch.All">
+            <NavLink class=@btnNavClass[2] href="question" Match=" NavLinkMatch.All" @onclick="CloseAsync">
                 <i class="bi bi-patch-question"></i>
                 <span>@Lang["nav.Button.Question"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[3] href="solo-game" Match=" NavLinkMatch.All">
+            <NavLink class=@btnNavClass[3] href="solo-game" Match=" NavLinkMatch.All" @onclick="CloseAsync">
                 <i class="bi bi-controller"></i>
                 <span>@Lang["nav.Button.Game"]</span>
             </NavLink>
-            <NavLink class=@btnNavClass[3] href="vs-game" Match=" NavLinkMatch.All">
+            <NavLink class=@btnNavClass[3] href="vs-game" Match=" NavLinkMatch.All" @onclick="CloseAsync">
                 <i class="bi bi-lightning-charge-fill"></i>
                 <span>@Lang["nav.Button.Game"] VS</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[5] href="#">
+            <NavLink class=@btnNavClass[5] href="#" @onclick="CloseAsync">
                 <i class="bi bi-shop"></i>
                 <span>@Lang["nav.Button.Shop"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[6] href="#">
+            <NavLink class=@btnNavClass[6] href="#" @onclick="CloseAsync">
                 <i class="bi bi-graph-up"></i>
                 <span>@Lang["nav.Button.Statistic"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[7] href="#">
+            <NavLink class=@btnNavClass[7] href="#" @onclick="CloseAsync">
                 <i class="bi bi-calendar-event"></i>
                 <span>@Lang["nav.Button.Events"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[8] href="#">
+            <NavLink class=@btnNavClass[8] href="#" @onclick="CloseAsync">
                 <i class="bi bi-chat-left-text"></i>
                 <span>@Lang["nav.Button.Messages"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[9] href="#">
+            <NavLink class=@btnNavClass[9] href="#" @onclick="CloseAsync">
                 <i class="bi bi-people"></i>
                 <span>@Lang["nav.Button.Community"]</span>
             </NavLink>

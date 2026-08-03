@@ -3,7 +3,8 @@
     top: 0px;
     right: 0px;
     display: flex;
-    height: 5%;
+    width: 60px;
+    height: 60px;
     align-items: center;
     justify-content: right;
     justify-content: space-between;
@@ -47,6 +48,8 @@
 
 /* 🌐 Nyelvváltó gomb (földgömb ikon) */
 #langToggle {
+    width: 60px;
+    height: 60px;
     background-color: transparent !important;
     border: none;
     padding: .375rem;

@@ -13,6 +13,10 @@ html, body {
     overflow: hidden;
     cursor: url('/Images/cursors/normal.cur'), default;
 }
+
+#app {
+    height: calc(100% - 60px);
+}
 /* Linkek, gombok, hover */
 /* interaktív elemek (hover) */
 a:hover,
@@ -31,12 +35,20 @@ textarea:disabled {
 label {
     cursor: url('/Images/cursors/normal.cur'), default;
 }
+.shell-game-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}
 .company-logo {
-    position:absolute;
-    top:4px;
-    left:0;
-    height:4%;
-    width:auto;
+    position: absolute;
+    top: 0;
+    left: 60px;
+    width: auto;
+    height: 60px;
 }
 *, *::before, *::after {
     box-sizing: inherit;
@@ -120,6 +132,12 @@ header {
     font-family: 'Special Elite', cursive;
     
     
+}
+
+.kc-shell-header {
+    position: relative;
+    height: 60px;
+    flex: 0 0 60px;
 }
     header .left {
         
@@ -233,8 +251,6 @@ input[type="checkbox"].custom-checkbox:checked {
         font-size: 16px;
         color: #000; /* pipa színe */
     }
-
-
 
 
 

@@ -1,5 +1,6 @@
 ﻿.kc-mainlayout-root {
     --kc-main-header-height: 60px;
+    --kc-nav-width: 130px;
     position: relative;
 }
 
@@ -8,27 +9,27 @@
     top: var(--kc-main-header-height);
     bottom: 0;
     left: 0;
-    width: max(80px, 6vw);
+    width: var(--kc-nav-width);
     z-index: 103;
     visibility: hidden;
     pointer-events: none;
     transform: translateX(-100%);
     transition: transform 0.25s ease-out, visibility 0.25s;
 }
-    .kc-mainlayout-nav-side.open {
+@media (min-width: 801px) {
+    .kc-mainlayout-nav-side.desktop-open {
         visibility: visible;
         pointer-events: auto;
         transform: translateX(0);
     }
 
+    .kc-mainlayout-root.desktop-nav-open .kc-mainlayout-content-container {
+        margin-left: var(--kc-nav-width);
+    }
+}
+
 .kc-mainlayout-nav-backdrop {
-    position: absolute;
-    top: var(--kc-main-header-height);
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 102;
-    background-color: rgba(0, 0, 0, 0.12);
+    display: none;
 }
 
 .kc-mainlayout-content-side {
@@ -200,6 +201,10 @@ main {
     }
 
 .kc-collapse-btn {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1002;
     background-color: transparent;
     border: 1px solid transparent;
     box-sizing: border-box;
@@ -210,6 +215,10 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.kc-mobile-nav-toggle {
+    display: none;
 }
 
     .kc-collapse-btn:not(:disabled):hover {
@@ -232,37 +241,58 @@ main {
     }
 
     .kc-mainlayout-content-header {
-        grid-template-columns: 60px minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         grid-template-rows: 60px 40px;
         grid-template-areas:
-            "nav title right"
-            "back center center";
+            "left right"
+            "center center";
         height: 100px;
         gap: 0;
     }
 
     .kc-mainlayout-content-header--left-warper {
-        display: contents;
-       
+        grid-area: left;
+        display: flex;
     }
 
-    .kc-collapse-btn {
-        grid-area: nav;
+    .kc-desktop-nav-toggle {
+        display: none;
     }
 
-    .kc-mainlayout-content-header--left { display: contents;  }
+    .kc-mobile-nav-toggle {
+        display: flex;
+    }
 
-    .kc-actual-page-title { grid-area: title; width: 100%; height: 86%; padding: 0 10px 0 5px; box-sizing: border-box; display: flex; align-items: center; box-shadow: inset 0 4px 8px rgba(0,0,0,0.7); border: inset 2px rgba(23,23,23,0.4); }
+    .kc-mainlayout-nav-side {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        width: min(320px, 86vw);
+        z-index: 1201;
+    }
+
+    .kc-mainlayout-nav-side.mobile-open {
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateX(0);
+    }
+
+    .kc-mainlayout-nav-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 1200;
+        display: block;
+        background-color: rgba(0, 0, 0, 0.52);
+    }
+
+    .kc-mainlayout-content-header--left {
+        display: flex;
+    }
 
     .kc-back-button-slot {
-        grid-area: back;
-        width: 100%;
-     
-        box-sizing: border-box;
-        justify-content: center;
-       
+        width: auto;
     }
-    .kc-header-lcd-display { width: 100%; }
+    .kc-header-lcd-display { width: auto; flex: 1 1 auto; }
         .kc-mainlayout-content-header--center { grid-area: center; width: 100%; box-sizing: border-box; justify-content: center; }
         .kc-mainlayout-content-header--right { grid-area: right; height: 80%; }
 

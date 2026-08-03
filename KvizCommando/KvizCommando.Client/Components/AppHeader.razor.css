@@ -7,7 +7,8 @@
     border-bottom: 1px solid rgba(0,0,0,.1);
     top: 0;
     right: 0;
-    height:5vh;
+    width: 60px;
+    height: 60px;
     z-index: 101;
     
 }
@@ -47,6 +48,8 @@
 
 /* toggle button */
 #userToggle {
+    width: 60px;
+    height: 60px;
     background-color: transparent !important; /* minden körülmények között áttetsző */
     border: none;
     padding: .375rem;

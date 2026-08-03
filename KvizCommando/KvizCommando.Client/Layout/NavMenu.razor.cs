@@ -8,6 +8,7 @@ namespace KvizCommando.Client.Layout
     {
         [Inject] private ILanguageService Lang { get; set; } = default!;
         [Parameter] public HomeScreen Hs { get; set; } = default!;
+        [Parameter] public EventCallback OnClose { get; set; }
 
 
         private bool _isReady;
@@ -34,5 +35,7 @@ namespace KvizCommando.Client.Layout
                 _isReady = true;
             }
         }
+
+        private Task CloseAsync() => OnClose.InvokeAsync();
     }
 }

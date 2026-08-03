@@ -40,7 +40,8 @@ namespace KvizCommando.Client.Layout
         private bool _isMusicOn;
         private bool _isBckBtnEna = false;
         private string _currentTitle = string.Empty;
-        private bool _isNavOpen;
+        private bool _isDesktopNavOpen = true;
+        private bool _isMobileNavOpen;
 
         private string Greetings => _isLoggedIn
             ? Ui.Lang["mainlayout.Text.Greetings"].FormatSafe(RankNameLocalizer.GetName(_appState.Home!.UserMainData.RankEnum, _culture))
@@ -50,19 +51,25 @@ namespace KvizCommando.Client.Layout
             Ui.Header.PageIndex is >= 420 and <= 470 ||
             Ui.Header.PageIndex is >= 311 and <= 315;
         private bool CanToggleSidebar => _isLoggedIn && Hs.NavBarEnable;
-        private bool BackNavigationEna => (!_isNavOpen && Ui.Header.PageIndex != 0) || _isBckBtnEna;
+        private bool BackNavigationEna => (!_isMobileNavOpen && Ui.Header.PageIndex != 0) || _isBckBtnEna;
         private HomeScreen Hs =>
             _isLoggedIn && !IsFullScreenGame
                 ? _appState.Home!.HomeScreen
                 : new();
 
-        private void ToggleSidebar()
+        private void ToggleDesktopSidebar()
         {
             if (CanToggleSidebar)
-                _isNavOpen = !_isNavOpen;
+                _isDesktopNavOpen = !_isDesktopNavOpen;
         }
 
-        private void CloseSidebar() => _isNavOpen = false;
+        private void ToggleMobileSidebar()
+        {
+            if (CanToggleSidebar)
+                _isMobileNavOpen = !_isMobileNavOpen;
+        }
+
+        private void CloseMobileSidebar() => _isMobileNavOpen = false;
 
         protected override async Task OnInitializedAsync()
         {
@@ -125,7 +132,7 @@ namespace KvizCommando.Client.Layout
             _currentTitle = Ui.Header.Title;
 
             if (IsFullScreenGame)
-                _isNavOpen = false;
+                _isMobileNavOpen = false;
 
             InvokeAsync(StateHasChanged);
         }

@@ -33,20 +33,37 @@
     <div class="kc-unsupported-screen">
         <ScreenTooSmall />
     </div>
-    <div class="kc-mainlayout-root"  style="@(_isLoggedIn  
+    <div class="kc-mainlayout-root @(_isDesktopNavOpen && CanToggleSidebar ? "desktop-nav-open" : "")"
+         style="@(_isLoggedIn
                   ? "background-image: url('/images/lobby.webp');" 
                   : "background-image: url('/images/login.webp');")">
         
         @if (_isLoggedIn)
         {
-            @if (_isNavOpen)
+            <button type="button"
+                    class="kc-collapse-btn kc-desktop-nav-toggle"
+                    disabled="@(!CanToggleSidebar)"
+                    aria-label="Navigation"
+                    aria-expanded="@_isDesktopNavOpen"
+                    @onclick="ToggleDesktopSidebar">
+            </button>
+
+            <button type="button"
+                    class="kc-collapse-btn kc-mobile-nav-toggle"
+                    disabled="@(!CanToggleSidebar)"
+                    aria-label="Navigation"
+                    aria-expanded="@_isMobileNavOpen"
+                    @onclick="ToggleMobileSidebar">
+            </button>
+
+            @if (_isMobileNavOpen)
             {
-                <div class="kc-mainlayout-nav-backdrop" @onclick="CloseSidebar"></div>
+                <div class="kc-mainlayout-nav-backdrop" @onclick="CloseMobileSidebar"></div>
             }
 
             <LangGuard Culture="@_culture" Module="nav">
-                <div class="kc-mainlayout-nav-side @(_isNavOpen ? "open" : "")">
-                    <NavMenu Hs="@Hs" />
+                <div class="kc-mainlayout-nav-side @(_isDesktopNavOpen ? "desktop-open" : "") @(_isMobileNavOpen ? "mobile-open" : "")">
+                    <NavMenu Hs="@Hs" OnClose="CloseMobileSidebar" />
                 </div>
             </LangGuard>
         }
@@ -58,14 +75,6 @@
                         <header class="kc-mainlayout-content-header">
 
                             <div class="kc-mainlayout-content-header--left-warper">
-                            <button type="button"
-                                    class="kc-collapse-btn"
-                                    disabled="@(!CanToggleSidebar)"
-                                    aria-label="Navigation"
-                                    aria-expanded="@_isNavOpen"
-                                    @onclick="ToggleSidebar">
-                                <img src="images/logo.webp" alt="Logo" class="nav-logo" />
-                            </button>
                                   <div class="kc-mainlayout-content-header--left">
 
 
