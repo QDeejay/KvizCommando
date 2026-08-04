@@ -1,5 +1,5 @@
 using KvizCommando.Client.Features.Shared.Modal.Builders;
-using KvizCommando.Client.Features.Shared.Modal.Dynamic;
+using KvizCommando.Client.Features.Shared.Modal.Components;
 using KvizCommando.Client.Features.Solo.Builders;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
@@ -61,14 +61,14 @@ public partial class SoloGame : KcComponentBase, IDisposable
         switch (boxId)
         {
             case >= 420 and <= 436:
-                _boxOrder = boxId==420 ? SgameBoxBuilder.SubCat : SgameBoxBuilder.GameCat;
+                _boxOrder = boxId == 420 ? SgameBoxBuilder.SubCat : SgameBoxBuilder.GameCat;
                 _gameMode = SoloGameMode.Category;
                 _selectionId = boxId - 420;
-                 headerTitle = _boxes[ SgameBoxKeyRoot.RtBtnCategory.ToString()].Header;
+                headerTitle = _boxes[SgameBoxKeyRoot.RtBtnCategory.ToString()].Header;
                 break;
 
             case >= 450 and <= 458:
-                _boxOrder = boxId==450 ? SgameBoxBuilder.SubOri : SgameBoxBuilder.GameOri;
+                _boxOrder = boxId == 450 ? SgameBoxBuilder.SubOri : SgameBoxBuilder.GameOri;
                 _gameMode = SoloGameMode.Orientation;
                 _selectionId = boxId - 450;
                 headerTitle = _boxes[SgameBoxKeyRoot.RtBtnOrient.ToString()].Header;
@@ -78,7 +78,7 @@ public partial class SoloGame : KcComponentBase, IDisposable
                 headerTitle = _boxes[SgameBoxKeyRoot.RtBtnCampaign.ToString()].Header;
                 break;
 
-            
+
         }
 
         Ui.Header.SetTitle(headerTitle, boxId);

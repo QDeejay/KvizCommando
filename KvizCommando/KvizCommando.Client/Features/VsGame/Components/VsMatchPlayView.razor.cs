@@ -1,5 +1,3 @@
-using KvizCommando.Client.Features.VsGame.Match.ViewModels;
-using KvizCommando.Client.Features.VsGame.Match.Services;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.VsGame.Match;
@@ -7,8 +5,10 @@ using KvizCommando.Shared.Models.Enums.VsGame;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System.Globalization;
+using KvizCommando.Client.Features.VsGame.ViewModels;
+using KvizCommando.Client.Features.VsGame.Services;
 
-namespace KvizCommando.Client.Features.VsGame.Match.Components;
+namespace KvizCommando.Client.Features.VsGame.Components;
 
 public partial class VsMatchPlayView : IDisposable
 {

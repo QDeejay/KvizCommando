@@ -1,15 +1,15 @@
+using KvizCommando.Client.Features.Shared.Modal.Builders;
+using KvizCommando.Client.Features.Shared.Modal.Components;
 using KvizCommando.Client.Features.Team.Builders;
 using KvizCommando.Client.Features.Team.Services;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Features.Shared.Modal.Dynamic;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.Team;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
-using KvizCommando.Client.Features.Shared.Modal.Builders;
 
 namespace KvizCommando.Client.Features.Team.Components;
 
@@ -62,11 +62,11 @@ public partial class RecruitManager : IDisposable
 
     protected override void OnParametersSet()
     {
-        var snapshotChanged =  !ReferenceEquals(_previousTeam, TeamData);
+        var snapshotChanged = !ReferenceEquals(_previousTeam, TeamData);
 
         var cultureChanged = _previousCulture != Culture;
 
-        var resolvedPosition = TeamHelpers.ResolvePosition(CanHireMask,_selectedPosition);
+        var resolvedPosition = TeamHelpers.ResolvePosition(CanHireMask, _selectedPosition);
 
         var selectionChanged = resolvedPosition != _selectedPosition;
 

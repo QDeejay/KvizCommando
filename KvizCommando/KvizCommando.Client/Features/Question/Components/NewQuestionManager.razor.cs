@@ -1,6 +1,6 @@
 using KvizCommando.Client.Features.Question.Services;
 using KvizCommando.Client.Features.Shared.Modal.Builders;
-using KvizCommando.Client.Features.Shared.Modal.Dynamic;
+using KvizCommando.Client.Features.Shared.Modal.Components;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual;

@@ -1,7 +1,8 @@
+using KvizCommando.Client.Features.Shared.Modal.Builders;
+using KvizCommando.Client.Features.Shared.Modal.Components;
 using KvizCommando.Client.Features.Team.Builders;
 using KvizCommando.Client.Features.Team.Services;
 using KvizCommando.Client.Features.Team.ViewModels;
-using KvizCommando.Client.Features.Shared.Modal.Dynamic;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Services.Visual.UiService.Language;
@@ -9,7 +10,6 @@ using KvizCommando.Shared.Contracts.Team;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Enums;
 using Microsoft.AspNetCore.Components;
-using KvizCommando.Client.Features.Shared.Modal.Builders;
 
 namespace KvizCommando.Client.Features.Team.Components;
 
@@ -152,8 +152,8 @@ public partial class TeamManager
 
         var modalType = action.Remark switch
         {
-            MembRemark.Promote => ModalTypes.TPromote,
-            MembRemark.Retire => ModalTypes.TRetire,
+            MembRemark.Promote => ModalTypes.TPromoteMember,
+            MembRemark.Retire => ModalTypes.TPromoteTeam, /// temporary, until we have a modal for this
             MembRemark.Fire or MembRemark.Heal =>
                 ModalTypes.THandle,
             _ => ModalTypes.None
@@ -212,11 +212,7 @@ public partial class TeamManager
 
     private void RebuildDevelopmentView()
     {
-        _vmDev = _builder.BuildTeamBottomDevVm(
-            Info,
-            _usedPoints,
-            Help,
-            Culture);
+        _vmDev = _builder.BuildTeamBottomDevVm(Info, _usedPoints, Help, Culture);
     }
 
     private void ResetUsedPoints()
@@ -226,17 +222,17 @@ public partial class TeamManager
 
     private static string GetActionStyle(
         MembRemark remark) => remark switch
-    {
-        MembRemark.Heal =>
-            "background-color: darkslateblue;",
-        MembRemark.Fire =>
-            "background-color: #a64b2a;",
-        MembRemark.Retire =>
-            "background-color: forestgreen;",
-        MembRemark.Promote =>
-            "background-color: darkolivegreen;",
-        _ => string.Empty
-    };
+        {
+            MembRemark.Heal =>
+                "background-color: darkslateblue;",
+            MembRemark.Fire =>
+                "background-color: #a64b2a;",
+            MembRemark.Retire =>
+                "background-color: forestgreen;",
+            MembRemark.Promote =>
+                "background-color: darkolivegreen;",
+            _ => string.Empty
+        };
 
     private static ManageType? ResolveManageType(
         MembRemark remark,

@@ -1,17 +1,16 @@
 ﻿using KvizCommando.Client.Models.DataModels;
-using KvizCommando.Client.Services.Visual;
 
 namespace KvizCommando.Server.Data.StaticData
 {
     public static class CategoryTable
     {
-        
+
 
         public static readonly Dictionary<int, CategoryRow> Data = new()
         {
             [0] = new(0, "Összes", "All", "<--->", "<--->"),
-            [1] = new(1, "Vallás", "Religion","<Val>", "<Rel>"),
-            [2] = new(2, "Nevezetes dátumok", "Famous dates", "<Dat>", "<Dat>"  ),
+            [1] = new(1, "Vallás", "Religion", "<Val>", "<Rel>"),
+            [2] = new(2, "Nevezetes dátumok", "Famous dates", "<Dat>", "<Dat>"),
             [3] = new(3, "Zene", "Music", "<Zen>", "<Mus>"),
             [4] = new(4, "Sport", "Sport", "<Spo>", "<Spo>"),
             [5] = new(5, "Technologia", "Technology", "<Tec>", "<Tec>"),
@@ -32,6 +31,7 @@ namespace KvizCommando.Server.Data.StaticData
             [102] = new(102, "Tipp sáv", "Guess snipe", "", ""),
             [103] = new(103, "Időtlenítő", "Time reset", "", ""),
             [104] = new(104, "AI javaslat", "AI suggest", "", ""),
+            [200] = new(200, "Új csapatnév", "New team name", "", ""),
         };
 
     }

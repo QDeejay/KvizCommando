@@ -1,6 +1,6 @@
 using KvizCommando.Shared.Contracts.VsGame.Match;
 
-namespace KvizCommando.Client.Features.VsGame.Match.Services;
+namespace KvizCommando.Client.Features.VsGame.Services;
 
 public interface IVsMatchClientService : IAsyncDisposable
 {

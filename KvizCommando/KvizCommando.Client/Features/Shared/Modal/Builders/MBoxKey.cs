@@ -16,9 +16,10 @@
         QNewRules = 103,
         QCheckQuestion = 104,
         THire = 201,
-        TPromote = 202,
+        TPromoteMember = 202,
         TRetire = 203,
-        THandle = 204
+        THandle = 204,
+        TPromoteTeam = 205
     }
-   
+
 }

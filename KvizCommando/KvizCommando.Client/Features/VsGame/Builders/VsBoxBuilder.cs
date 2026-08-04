@@ -1,7 +1,3 @@
-using KvizCommando.Client.Features.VsGame.Components;
-using KvizCommando.Client.Features.VsGame.Match.Components;
-using KvizCommando.Client.Data;
-using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
@@ -9,12 +5,6 @@ using Microsoft.AspNetCore.Components;
 
 namespace KvizCommando.Client.Features.VsGame.Builders;
 
-public sealed class VsComponentParameters
-{
-    public Func<Task>? OnTeamSaved { get; init; }
-    public EventCallback<bool> OnQuitConfirmationChanged { get; init; }
-    public int ClassificationId { get; init; }
-}
 
 public static class VsBoxBuilder
 {
@@ -107,6 +97,12 @@ public static class VsBoxBuilder
         return names;
     }
 
+}
+public sealed class VsComponentParameters
+{
+    public Func<Task>? OnTeamSaved { get; init; }
+    public EventCallback<bool> OnQuitConfirmationChanged { get; init; }
+    public int ClassificationId { get; init; }
 }
 
 /**

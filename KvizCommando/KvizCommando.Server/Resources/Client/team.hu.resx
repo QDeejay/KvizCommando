@@ -286,12 +286,36 @@
     <value>Toborzás</value>
   </data>
   <data name="Label.Org" xml:space="preserve">
-    <value>Szervezet:</value>
+    <value>Szerv.:</value>
   </data>
   <data name="Label.Main" xml:space="preserve">
     <value>Orientáció:</value>
   </data>
   <data name="Label.Second" xml:space="preserve">
     <value>Másodlagos:</value>
+  </data>
+  <data name="modal.Title.PromoteTeam" xml:space="preserve">
+    <value>Csapat előrelépés</value>
+  </data>
+  <data name="modal.Button.Ack" xml:space="preserve">
+    <value>Értettem</value>
+  </data>
+  <data name="modal.Label.Bonus" xml:space="preserve">
+    <value>Győzelmi bonusz:</value>
+  </data>
+  <data name="modal.Label.TeamSize" xml:space="preserve">
+    <value>Csapat létszám:</value>
+  </data>
+  <data name="modal.Label.LoadoutSize" xml:space="preserve">
+    <value>Felszerelés tároló:</value>
+  </data>
+  <data name="modal.Label.OwnSlotSize" xml:space="preserve">
+    <value>Saját kérdések:</value>
+  </data>
+  <data name="modal.Label.UnlocksExtras" xml:space="preserve">
+    <value>Extra Jutalom:</value>
+  </data>
+  <data name="modal.Label.UnlocksHelps" xml:space="preserve">
+    <value>Segítség módosítók:</value>
   </data>
 </root>

@@ -6,7 +6,7 @@ using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 
 
-namespace KvizCommando.Client.Features.Shared.Modal.Dynamic
+namespace KvizCommando.Client.Features.Shared.Modal.Components
 {
     public partial class TModalRender
     {
@@ -22,6 +22,9 @@ namespace KvizCommando.Client.Features.Shared.Modal.Dynamic
         [Parameter] public int SelectedMember { get; set; } = default!;
         private bool _isLoaded = false;
         private string Culture => AppStates.Culture;
+        private TeamExtendedInfo TeamInfo => AppStates.Team!.TeamInfo;
+        private HelpDto Help => AppStates.Team!.Help;
+
         private TeamMemberDto Member => SelectedMember > 0 && SelectedMember <= 8 ? AppStates.Team.TeamMembers[SelectedMember] : new();
         private CandidateDto Candidate => CanDidateNo > 0 && CanDidateNo <= 8 ? AppStates.Team.Candidates[SelectedMember] : new();
 
@@ -29,10 +32,13 @@ namespace KvizCommando.Client.Features.Shared.Modal.Dynamic
         private RankHeader rh = default!;
 
         private TBuilderModal? _builder;
+
         ModalHireVm _vmHir = new();
         ModalPromoteVm _vmPro = new();
         ModalRetireVm _vmRet = new();
         ModalHandleVm _vmHan = new();
+        ModalTeamPromoteVm _vmTpro = new();
+
         protected override void OnParametersSet()
         {
             switch (Mode)
@@ -45,7 +51,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Dynamic
                         rh = new RankHeader();
                     }
                     break;
-                case ModalTypes.TPromote:
+                case ModalTypes.TPromoteMember:
                     _vmPro = _builder!.BuildPromoteVm(Member, Culture);
                     Info = _vmPro.Info;
                     rh = new RankHeader()
@@ -71,6 +77,18 @@ namespace KvizCommando.Client.Features.Shared.Modal.Dynamic
                     _vmHan = _builder!.BuildHandleVm(Member, Culture);
                     Info = _vmHan.Info;
                     rh = new RankHeader();
+                    break;
+
+                case ModalTypes.TPromoteTeam:
+                    _vmTpro = _builder!.BuildTeamPromoteVm(TeamInfo, Help, Culture);
+                    Info = _vmTpro.Info;
+                    rh = new RankHeader()
+                    {
+                        Rank = _vmTpro.UnlocksOrg,
+                        RankClass = string.Empty,
+                        Level = _vmTpro.UnlocksLevel,
+                        NewClass = false
+                    };
                     break;
             }
         }

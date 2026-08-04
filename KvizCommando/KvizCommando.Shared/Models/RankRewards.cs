@@ -5,7 +5,7 @@
         public static readonly List<RankRewardRow> List =
         [
             new(  0,  0,     100,   0, 0, 0, 2, null ),
-            new(  1,  0,     300,   2, 1, 2, 3, null ),
+            new(  1,  0,     300,   2, 1, 2, 3, 200 ),
             new(  2, 10,     500,   2, 1, 0, 3, 1 ),
             new(  3, 15,     700,   2, 1, 0, 3, 2 ),
             new(  4, 20,    1200,   3, 2, 5, 3, null ),

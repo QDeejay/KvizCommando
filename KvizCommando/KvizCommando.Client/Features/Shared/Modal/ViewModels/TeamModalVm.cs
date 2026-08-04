@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
-using System.ComponentModel;
-
-namespace KvizCommando.Client.Models.ViewModels
+﻿namespace KvizCommando.Client.Models.ViewModels
 {
     public abstract class TeamModalVm
     {
@@ -9,6 +6,16 @@ namespace KvizCommando.Client.Models.ViewModels
         public InfoBlock Info { get; set; } = default!;
         public string Infotext1 { get; set; } = string.Empty;
 
+    }
+    public sealed class ModalTeamPromoteVm : TeamModalVm
+    {
+        public int StartOfHelps { get; set; } = 0;
+        public string Unlocks { get; set; } = string.Empty;
+        public string UnlocksLevel { get; set; } = string.Empty;
+        public string UnlocksOrg { get; set; } = string.Empty;
+
+        public string UnlockHelps { get; set; } = string.Empty;
+        public string UnlockExtras { get; set; } = string.Empty;
     }
     public sealed record ModalRow(
         string CategoryName,
@@ -46,25 +53,25 @@ namespace KvizCommando.Client.Models.ViewModels
         public string RankClass { get; set; } = string.Empty;
         public bool RankClassChanged { get; set; } = false;
     }
-    public sealed class ModalPromoteVm: ModalRetireVm
+    public sealed class ModalPromoteVm : ModalRetireVm
     {
-        
+
         public string UnlockMaxLevels1 { get; set; } = string.Empty;
         public string UnlockMaxLevels2 { get; set; } = string.Empty;
     }
     public sealed class ModalHandleVm : TeamModalVm
     {
-        
-        public string Infotext2 { get; set;} =string.Empty;
-        public string Infotext3 { get; set;} = string.Empty;
+
+        public string Infotext2 { get; set; } = string.Empty;
+        public string Infotext3 { get; set; } = string.Empty;
         public string Infotext4 { get; set; } = string.Empty;
     }
     public static class ModalConstants
     {
-        public static readonly int[] HireVal = 
-        { 
-           0, 0, 4,0, 1, 5 
+        public static readonly int[] HireVal =
+        {
+           0, 0, 4,0, 1, 5
         };
-       
+
     }
 }

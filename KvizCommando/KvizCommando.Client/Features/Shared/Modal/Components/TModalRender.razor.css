@@ -5,7 +5,7 @@
 }
 .info-block {
     display: grid;
-    grid-template-columns: 60px minmax(0, 1fr) 85px 70px;
+    grid-template-columns: 70px minmax(0, 1fr) 85px 70px;
     margin-bottom: 10px;
 }
 
@@ -21,6 +21,7 @@
     grid-template-columns: minmax(0, 1fr) 60px 40px 60px;
     width: 100%;
 }
+.team-promote-block { display: grid; grid-template-columns: minmax(0, 1fr) 60px 40px 60px; width: 100%; }
 
 .info-block > *,
 .hire-skillblock > *,
@@ -65,9 +66,7 @@
 .modal-separator {
     padding-left:10px
 }
-.modal-value {
-    font-weight: bold;
-}
+.modal-value { font-weight: bold; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
 .right {
     align-content: center;
     text-align: right;

@@ -2,7 +2,7 @@ using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using Microsoft.AspNetCore.Components;
 
-namespace KvizCommando.Client.Features.Shared.Modal.Dynamic
+namespace KvizCommando.Client.Features.Shared.Modal.Components
 {
     public partial class DBoxModalRender
     {

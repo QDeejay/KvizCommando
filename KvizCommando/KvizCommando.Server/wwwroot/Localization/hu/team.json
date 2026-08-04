@@ -55,7 +55,15 @@
   "Box.Title.TeamOverview": "Csapat áttekintés",
   "Box.Title.Members": "Csapat tagok",
   "Box.Title.Recruit": "Toborzás",
-  "Label.Org": "Szervezet:",
+  "Label.Org": "Szerv.:",
   "Label.Main": "Orientáció:",
-  "Label.Second": "Másodlagos:"
+  "Label.Second": "Másodlagos:",
+  "modal.Title.PromoteTeam": "Csapat előrelépés",
+  "modal.Button.Ack": "Értettem",
+  "modal.Label.Bonus": "Győzelmi bonusz:",
+  "modal.Label.TeamSize": "Csapat létszám:",
+  "modal.Label.LoadoutSize": "Felszerelés tároló:",
+  "modal.Label.OwnSlotSize": "Saját kérdések:",
+  "modal.Label.UnlocksExtras": "Extra Jutalom:",
+  "modal.Label.UnlocksHelps": "Segítség módosítók:"
 }

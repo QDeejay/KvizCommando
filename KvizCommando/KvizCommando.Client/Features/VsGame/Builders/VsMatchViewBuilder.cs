@@ -1,11 +1,11 @@
 using KvizCommando.Client.Data;
-using KvizCommando.Client.Features.VsGame.Match.ViewModels;
+using KvizCommando.Client.Features.VsGame.ViewModels;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.VsGame.Match;
 using KvizCommando.Shared.Models.Enums.VsGame;
 
-namespace KvizCommando.Client.Features.VsGame.Match.Builders;
+namespace KvizCommando.Client.Features.VsGame.Builders;
 
 public sealed class VsMatchViewBuilder
 {

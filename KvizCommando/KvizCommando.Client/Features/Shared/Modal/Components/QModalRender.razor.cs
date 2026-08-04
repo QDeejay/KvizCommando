@@ -5,7 +5,7 @@ using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 
-namespace KvizCommando.Client.Features.Shared.Modal.Dynamic
+namespace KvizCommando.Client.Features.Shared.Modal.Components
 {
     public partial class QModalRender : IDisposable
     {

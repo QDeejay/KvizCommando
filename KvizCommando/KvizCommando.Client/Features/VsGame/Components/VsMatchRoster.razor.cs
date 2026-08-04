@@ -1,8 +1,8 @@
-using KvizCommando.Client.Features.VsGame.Match.ViewModels;
+using KvizCommando.Client.Features.VsGame.ViewModels;
 using KvizCommando.Shared.Models.Enums.VsGame;
 using Microsoft.AspNetCore.Components;
 
-namespace KvizCommando.Client.Features.VsGame.Match.Components;
+namespace KvizCommando.Client.Features.VsGame.Components;
 
 public partial class VsMatchRoster
 {

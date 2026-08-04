@@ -1,4 +1,4 @@
-﻿using KvizCommando.Client.Features.Shared.Modal.Dynamic;
+﻿using KvizCommando.Client.Features.Shared.Modal.Components;
 using KvizCommando.Client.Features.Shared.Modal.ViewModels;
 
 namespace KvizCommando.Client.Features.Shared.Modal.Builders
@@ -129,7 +129,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                     BodyComponent = typeof(TModalRender)
                 },
 
-                [ModalTypes.TPromote] = new MboxSpecs
+                [ModalTypes.TPromoteMember] = new MboxSpecs
                 {
                     TitleKey = "team.modal.Title.Promote",
                     TextKey1 = "team.modal.Button.Promote",
@@ -175,7 +175,22 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                     CheckBoxKey = string.Empty,
                     CheckBottom = false,
                     BodyComponent = typeof(TModalRender)
-                }
+                },
+                [ModalTypes.TPromoteTeam] = new MboxSpecs
+                {
+                    TitleKey = "team.modal.Title.PromoteTeam",
+                    TextKey1 = string.Empty,
+                    TextKey2 = string.Empty,
+                    CloseTextKey = "team.modal.Button.Ack",
+                    Style1 = string.Empty,
+                    Style2 = string.Empty,
+                    Size = "modal-xl",
+                    SizeLock = true,
+                    CheckBoxTextKey = string.Empty,
+                    CheckBoxKey = string.Empty,
+                    CheckBottom = true,
+                    BodyComponent = typeof(TModalRender)
+                },
             };
     }
 }

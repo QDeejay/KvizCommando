@@ -1,7 +1,7 @@
 ﻿@using KvizCommando.Client.Features.Shared.Modal.Builders;
 
 
-@if (_isLoaded && (int)Mode > 200 && (int)Mode < 205)
+@if (_isLoaded && (int)Mode > 200 && (int)Mode < 206)
 {
     <div class="modal-display">
         <div class="info-block">
@@ -9,10 +9,13 @@
             <div class="modal-value" style="color: @(Info.Color)">@Info.NameValue</div>
             <div>@Info.Level</div>
             <div class="modal-value right">@Info.LevelValue</div>
+
             <div>@Info.Rank</div>
             <div class="modal-value">@Info.RankValue</div>
             <div>@Info.Devpoints</div>
             <div class="modal-value right">@Info.DevPointsValue</div>
+
+
             <div>@Info.Orient1</div>
             <div class="modal-value">@Info.Orient1Value</div>
             <div></div>
@@ -21,11 +24,14 @@
             <div class="modal-value">@Info.Orient2Value</div>
            
         </div>
-        @if (Mode == ModalTypes.TPromote || Mode == ModalTypes.TRetire)
+        @if (Mode == ModalTypes.TPromoteMember || Mode == ModalTypes.TRetire || Mode == ModalTypes.TPromoteTeam)
         {
-            <div class="divider">
-                <span class="modal-@(rh.NewClass ? "promrank" : "promlevel")">@rh.RankClass</span>
-            </div>
+            if (!string.IsNullOrEmpty(rh.RankClass))
+            {
+                <div class="divider">
+                    <span class="modal-@(rh.NewClass ? "promrank" : "promlevel")">@rh.RankClass</span>
+                </div>
+            }
             <div class="divider">
                 <span class="modal-promlevel">@rh.Level</span>
                 <span class="modal-promrank">@rh.Rank</span>
@@ -51,7 +57,7 @@
                 }
                 </div>
                 break;
-            case ModalTypes.TPromote:
+            case ModalTypes.TPromoteMember:
                 var label =string.Empty;
                 var color = "color: ";
                 <div class="promote-block">
@@ -102,6 +108,34 @@
                 <div class="info-row3">@_vmHan.Infotext3</div>
                 <div class="info-row4">@_vmHan.Infotext4</div>
             </div>
+                break;
+            case ModalTypes.TPromoteTeam:
+                var subTitle = string.Empty;
+                var colorMod = "color: ";
+                <div class="team-promote-block">
+                    @for (int i = 0; i < _vmTpro.Rows.Count; i++)
+                    {
+                        @if (i == 0 || i==1 || i == _vmTpro.StartOfHelps)
+                        {
+                            if (i == 0)
+                                label = _vmTpro.UnlockExtras;
+                            else if (i == 1)
+                                label = _vmTpro.Unlocks;
+                            else
+                                label = _vmTpro.UnlockHelps;
+                            <div class="modal-subtitle"> @label </div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        }
+                        colorMod = $"color: {_vmTpro.Rows[i].color};";
+                        <div>@_vmTpro.Rows[i].CategoryName</div>
+                        <div class="modal-value right" style="@colorMod">@_vmTpro.Rows[i].ValueDisplay</div>
+                        <div class="modal-separator">@_vmTpro.Rows[i].separator</div>
+                        <div class="modal-value right" style="@colorMod">@_vmTpro.Rows[i].ValueChangeDisplay</div>
+                    }
+                </div>
+                
                 break;
 
     }

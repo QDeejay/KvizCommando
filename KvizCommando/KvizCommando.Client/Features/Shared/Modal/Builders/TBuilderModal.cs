@@ -1,7 +1,7 @@
 ﻿using KvizCommando.Client.Data;
+using KvizCommando.Client.Features.Team;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Features.Team;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
@@ -25,12 +25,12 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             //string orientkeys = RecruitData.OrientKeys[hpos - 1];
             var bi = new BasicInfo()
             {
-                _name = candidate.Name[candno - 1] ?? string.Empty,
-                _piccode = candidate.PictureCode[candno - 1] ?? string.Empty,
-                _devpoints = "0",
-                _orient1 = oriData.Item1,
-                _orient2 = oriData.Item2,
-                _level = 0
+                Name = candidate.Name[candno - 1] ?? string.Empty,
+                Piccode = candidate.PictureCode[candno - 1] ?? string.Empty,
+                Devpoints = "0",
+                Orient1 = oriData.Item1,
+                Orient2 = oriData.Item2,
+                Level = 0
             };
             int[] orientcats = oriData.Item3;
 
@@ -44,11 +44,11 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             {
                 index++;
                 if (index == 0)
-                    val = -2 - 0.4 * (bi._level - 1);
+                    val = -2 - 0.4 * (bi.Level - 1);
                 else if (index == 3)
-                    val = 10 - 0.4 * (bi._level - 1);
+                    val = 10 - 0.4 * (bi.Level - 1);
                 else
-                    val = ModifierTable.Data[bi._level].Modifier[ModalConstants.HireVal[index]] ?? 0.0;
+                    val = ModifierTable.Data[bi.Level].Modifier[ModalConstants.HireVal[index]] ?? 0.0;
 
 
                 pref = val > 0 ? "+" : "";
@@ -62,12 +62,114 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             }
             return vm;
         }
+
+        public ModalTeamPromoteVm BuildTeamPromoteVm(TeamExtendedInfo info, HelpDto help, string culture)
+        {
+            var vm = new ModalTeamPromoteVm();
+            var bi = new BasicInfo()
+            {
+                IsMember = false,
+                Name = info.Name,
+                Devpoints = info.DevPoints.ToString(),
+                //Level = info.Level,
+                Level = 30,
+            };
+            int newLevel = Math.Min(bi.Level + 1, 30);
+            int addDevPoints = RankRewards.List[newLevel].DevPointToStore;
+
+            int newBonus =
+                RankRewards.List[newLevel].WinBonus > RankRewards.List[bi.Level].WinBonus
+                    ? RankRewards.List[newLevel].WinBonus
+                    : 0;
+
+            int newTeamSize =
+                RankRewards.List[newLevel].MaxCharacters > RankRewards.List[bi.Level].MaxCharacters
+                    ? RankRewards.List[newLevel].MaxCharacters
+                    : 0;
+
+            int newLoadOutSize = newTeamSize > 0 && newTeamSize <= 5 ? newTeamSize * 2 : 0;
+
+            int newOwnSlotSize =
+              RankRewards.List[newLevel].OwnQuestSlot > RankRewards.List[bi.Level].OwnQuestSlot
+                  ? RankRewards.List[newLevel].OwnQuestSlot
+                  : 0;
+            int newExtra = (RankRewards.List[newLevel].HelpRewardNo >= 200 ? RankRewards.List[newLevel].HelpRewardNo : 0) ?? 0;
+
+            vm.Info = BuildInfoRow(bi, addDevPoints, culture, _lang);
+
+            vm.Unlocks = _lang["team.modal.Label.Unlocks"];
+            vm.UnlocksLevel = (RankNameTable.Data[newLevel].PublicLevel ?? "") + ": ";
+            vm.UnlocksOrg = RankNameLocalizer.GetTeam(newLevel, culture);
+            vm.UnlockExtras = newExtra > 0 ? _lang["team.modal.Label.UnlocksExtras"] : string.Empty;
+            vm.UnlockHelps = _lang["team.modal.Label.UnlocksHelps"];
+
+
+            vm.Rows.Add(newExtra >= 200
+                ? new ModalRow(
+                    CategoryName: CategoryNameLocalizer.GetCategory(newExtra, culture),
+                    ValueDisplay: string.Empty,
+                    separator: string.Empty,
+                    ValueChangeDisplay: string.Empty,
+                    color: string.Empty)
+                : new ModalRow(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty));
+
+            if (newBonus > 0)
+                vm.Rows.Add(new ModalRow(
+                    CategoryName: _lang["team.modal.Label.Bonus"],
+                    ValueDisplay: $"{RankRewards.List[bi.Level].WinBonus}%",
+                    separator: UNLOCK_SEP,
+                    ValueChangeDisplay: $"{newBonus}%",
+                    color: "green"
+                    ));
+
+            if (addDevPoints > 0)
+                vm.Rows.Add(new ModalRow(
+                    CategoryName: _lang["team.label.TeamDevPoint"],
+                    ValueDisplay: string.Empty,
+                    separator: UNLOCK_SEP,
+                    ValueChangeDisplay: "+" + addDevPoints,
+                    color: "green"
+                    ));
+
+            if (newTeamSize > 0)
+                vm.Rows.Add(new ModalRow(
+                    CategoryName: _lang["team.modal.Label.TeamSize"],
+                    ValueDisplay: $"{RankRewards.List[bi.Level].MaxCharacters}",
+                    separator: UNLOCK_SEP,
+                    ValueChangeDisplay: $"{newTeamSize}",
+                    color: "green"
+                    ));
+
+            if (newLoadOutSize > 0)
+                vm.Rows.Add(new ModalRow(
+                    CategoryName: _lang["team.modal.Label.LoadoutSize"],
+                    ValueDisplay: $"{RankRewards.List[bi.Level].MaxCharacters * 2}",
+                    separator: UNLOCK_SEP,
+                    ValueChangeDisplay: $"{newLoadOutSize}",
+                    color: "green"
+                    ));
+
+            if (newOwnSlotSize > 0)
+                vm.Rows.Add(new ModalRow(
+                    CategoryName: _lang["team.modal.Label.OwnSlotSize"],
+                    ValueDisplay: $"{RankRewards.List[bi.Level].OwnQuestSlot * 2}",
+                    separator: UNLOCK_SEP,
+                    ValueChangeDisplay: $"{newOwnSlotSize}",
+                    color: "green"
+                    ));
+
+            vm.StartOfHelps = vm.Rows.Count;
+
+            HelpLineResolver(help, vm, RankConstants.startLevels[12..16], RankConstants.maxLevels[12..16], newLevel, culture);
+
+            return vm;
+        }
         public ModalPromoteVm BuildPromoteVm(TeamMemberDto member, string culture)
         {
             var vm = new ModalPromoteVm();
             var bi = BasicInfoResolver(member);
-            int rc = bi._level == 0 ? 0 : (bi._level - 1) / 3 + 1;
-            int newLevel = Math.Min(bi._level + 1, 21);
+            int rc = bi.Level == 0 ? 0 : (bi.Level - 1) / 3 + 1;
+            int newLevel = Math.Min(bi.Level + 1, 21);
             int newRc = (newLevel - 1) / 3 + 1;
             int addDevPoints = RankRewards.List[newLevel].DevPointRevard;
             vm.Info = BuildInfoRow(bi, addDevPoints, culture, _lang);
@@ -154,38 +256,78 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             return vm;
         }
 
-        private static InfoBlock BuildInfoRow(BasicInfo inforowdata, int adddevpoints, string culture, ILanguageService lang)
+        private static InfoBlock BuildInfoRow(BasicInfo infoRowData, int adddevpoints, string culture, ILanguageService lang)
         {
 
-            return new InfoBlock(
-                Name: lang["team.Label.Name"],
-                Color: GenreColorResolver(inforowdata._piccode),
-                NameValue: inforowdata._name,
-                Rank: lang["team.Label.Rank"],
-                RankValue: RankNameLocalizer.GetName(inforowdata._level, culture),
-                Level: lang["team.Label.Level"],
-                LevelValue: RankNameTable.Data[inforowdata._level].PublicLevel ?? "",
-                Orient1: lang["team.modal.Label.Orient1"],
-                Orient2: lang["team.modal.Label.Orient2"],
-                Orient1Value: OrientationLocalizer.GetOrientation(inforowdata._orient1, culture),
-                Orient2Value: OrientationLocalizer.GetOrientation(inforowdata._orient2, culture),
-                Devpoints: lang["team.Label.SkillPointShort"].FormatSafe(OrientationLocalizer.GetOrientShort(inforowdata._orient1, culture)),
-                DevPointsValue: inforowdata._devpoints,
-                AddedDevPoints: adddevpoints > 0 ? "+" + adddevpoints.ToString() : ""
+            if (infoRowData.IsMember)
+                return new InfoBlock(
+                    Name: lang["team.Label.Name"],
+                    Color: GenreColorResolver(infoRowData.Piccode),
+                    NameValue: infoRowData.Name,
+                    Rank: lang["team.Label.Rank"],
+                    RankValue: RankNameLocalizer.GetName(infoRowData.Level, culture),
+                    Level: lang["team.Label.Level"],
+                    LevelValue: RankNameTable.Data[infoRowData.Level].PublicLevel ?? "",
+                    Orient1: lang["team.modal.Label.Orient1"],
+                    Orient2: lang["team.modal.Label.Orient2"],
+                    Orient1Value: OrientationLocalizer.GetOrientation(infoRowData.Orient1, culture),
+                    Orient2Value: OrientationLocalizer.GetOrientation(infoRowData.Orient2, culture),
+                    Devpoints: lang["team.Label.SkillPointShort"].FormatSafe(OrientationLocalizer.GetOrientShort(infoRowData.Orient1, culture)),
+                    DevPointsValue: infoRowData.Devpoints,
+                    AddedDevPoints: adddevpoints > 0 ? "+" + adddevpoints.ToString() : ""
                 );
+            else
+                return new InfoBlock(
+                    Name: lang["team.Label.Name"],
+                    Color: GenreColorResolver(infoRowData.Piccode),
+                    NameValue: infoRowData.Name,
+                    Rank: lang["team.Label.Org"],
+                    RankValue: RankNameLocalizer.GetTeam(infoRowData.Level, culture),
+                    Level: lang["team.Label.Level"],
+                    LevelValue: RankNameTable.Data[infoRowData.Level].PublicLevel ?? "",
+                    Orient1: string.Empty,
+                    Orient2: string.Empty,
+                    Orient1Value: string.Empty,
+                    Orient2Value: string.Empty,
+                    Devpoints: lang["team.label.TeamDevPointShort"],
+                    DevPointsValue: infoRowData.Devpoints,
+                    AddedDevPoints: adddevpoints > 0 ? "+" + adddevpoints.ToString() : ""
+                );
+
         }
         private static BasicInfo BasicInfoResolver(TeamMemberDto member)
         {
 
             return new BasicInfo()
             {
-                _name = member.Name,
-                _piccode = member.PictureCode,
-                _devpoints = member.SkillPoints.ToString(),
-                _level = member.Level,
-                _orient1 = member.MaintAttitude.Category[0] > 8 ? member.MaintAttitude.Category[2] : member.MaintAttitude.Category[0],
-                _orient2 = member.SecondAttitude.Category[0] > 8 ? member.SecondAttitude.Category[2] : member.SecondAttitude.Category[0]
+                IsMember = true,
+                Name = member.Name,
+                Piccode = member.PictureCode,
+                Devpoints = member.SkillPoints.ToString(),
+                Level = member.Level,
+                Orient1 = member.MaintAttitude.Category[0] > 8 ? member.MaintAttitude.Category[2] : member.MaintAttitude.Category[0],
+                Orient2 = member.SecondAttitude.Category[0] > 8 ? member.SecondAttitude.Category[2] : member.SecondAttitude.Category[0]
             };
+        }
+
+        private static void HelpLineResolver(HelpDto help, ModalTeamPromoteVm vm, int[] slevel, int[] maxLevel, int level, string culture)
+        {
+            int actL = level - 1;
+            int newL = level;
+            for (int i = 0; i < 4; i++)
+            {
+                if (newL >= slevel[i])
+                {
+                    vm.Rows.Add(new ModalRow(
+                     CategoryName: CategoryNameLocalizer.GetCategory(help.Category[i], culture),
+                     ValueDisplay: $"{help.Skill[i].LvlCurrent}/{help.Skill[i].LvlCurMax}",
+                     separator: UNLOCK_SEP,
+                     ValueChangeDisplay: $"{help.Skill[i].LvlCurrent}/{help.Skill[i].LvlCurMax + 1}",
+                     color: string.Empty
+                    ));
+                }
+
+            }
         }
         private static void AttitudeLineResolver(AttidtudeDto att, ModalPromoteVm vm, int[] slevel, int level, string culture, int[]? correctors = null)
         {
@@ -221,18 +363,19 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
         private static string GenreColorResolver(string pictureCode)
         {
             if (string.IsNullOrEmpty(pictureCode))
-                return "unknown";
+                return "#cccccc";
             return pictureCode.StartsWith
                     ("M") ? "lightblue" : "pink";
         }
         private sealed class BasicInfo
         {
-            public string _name = string.Empty;
-            public string _piccode = string.Empty;
-            public string _devpoints = string.Empty;
-            public int _level = 0;
-            public int _orient1 = 0;
-            public int _orient2 = 0;
+            public bool IsMember = true;
+            public string Name = string.Empty;
+            public string Piccode = string.Empty;
+            public string Devpoints = string.Empty;
+            public int Level = 0;
+            public int Orient1 = 0;
+            public int Orient2 = 0;
         }
 
     }

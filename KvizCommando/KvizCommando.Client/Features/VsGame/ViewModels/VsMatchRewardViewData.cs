@@ -1,4 +1,4 @@
-namespace KvizCommando.Client.Features.VsGame.Match.ViewModels;
+namespace KvizCommando.Client.Features.VsGame.ViewModels;
 
 public sealed class VsMatchRewardViewData
 {

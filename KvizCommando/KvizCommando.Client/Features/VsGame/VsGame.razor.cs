@@ -1,5 +1,5 @@
 using KvizCommando.Client.Features.Shared.Modal.Builders;
-using KvizCommando.Client.Features.Shared.Modal.Dynamic;
+using KvizCommando.Client.Features.Shared.Modal.Components;
 using KvizCommando.Client.Features.VsGame.Builders;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
@@ -28,9 +28,7 @@ public partial class VsGame : KcComponentBase, IDisposable
     protected override void OnInitialized()
     {
         Ui.Header.OnBackBtnClicked += HandleBack;
-        Ui.Header.SetTitle(
-            Ui.Lang["mainlayout.Header.GameVs"],
-            3);
+        Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.GameVs"], 3);
         _boxOrder = VsBoxBuilder.Root;
     }
 

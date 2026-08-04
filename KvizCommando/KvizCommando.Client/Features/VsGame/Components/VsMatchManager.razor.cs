@@ -1,6 +1,6 @@
-using KvizCommando.Client.Features.VsGame.Match.Builders;
-using KvizCommando.Client.Features.VsGame.Match.Services;
-using KvizCommando.Client.Features.VsGame.Match.ViewModels;
+using KvizCommando.Client.Features.VsGame.Builders;
+using KvizCommando.Client.Features.VsGame.Services;
+using KvizCommando.Client.Features.VsGame.ViewModels;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
@@ -10,33 +10,25 @@ using KvizCommando.Shared.Contracts.VsGame.Match;
 using KvizCommando.Shared.Models.Enums.VsGame;
 using Microsoft.AspNetCore.Components;
 
-namespace KvizCommando.Client.Features.VsGame.Match.Components;
+namespace KvizCommando.Client.Features.VsGame.Components;
 
 public partial class VsMatchManager : IAsyncDisposable
 {
-    [Inject]
-    private IVsMatchClientService MatchClient { get; set; } = default!;
+    [Inject] private IVsMatchClientService MatchClient { get; set; } = default!;
 
-    [Inject]
-    private ILanguageService Lang { get; set; } = default!;
+    [Inject] private ILanguageService Lang { get; set; } = default!;
 
-    [Inject]
-    private AudioService Audio { get; set; } = default!;
+    [Inject] private AudioService Audio { get; set; } = default!;
 
-    [Inject]
-    private UiServices Ui { get; set; } = default!;
+    [Inject] private UiServices Ui { get; set; } = default!;
 
-    [Inject]
-    private ILogger<VsMatchManager> Logger { get; set; } = default!;
+    [Inject] private ILogger<VsMatchManager> Logger { get; set; } = default!;
 
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
 
-    [Parameter, EditorRequired]
-    public int ClassificationId { get; set; }
-
-    [Parameter]
-    public EventCallback<bool> OnQuitConfirmationChanged { get; set; }
+    [Parameter, EditorRequired] public int ClassificationId { get; set; }
+    [Parameter] public EventCallback<bool> OnQuitConfirmationChanged { get; set; }
 
     private VsMatchViewBuilder _builder = default!;
     private VsQueueViewData? _queue;

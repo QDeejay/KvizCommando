@@ -1,6 +1,6 @@
 ﻿using KvizCommando.Client.Models.DataModels;
 
-namespace KvizCommando.Client.Data  
+namespace KvizCommando.Client.Data
 {
     public static class RankNameTable
     {
@@ -66,7 +66,7 @@ namespace KvizCommando.Client.Data
         public static readonly List<TeamNameRow> Data =
         [
             new(0,  "Újonc Csapat",        "Recruit Team"),
-            new(1,  "Járőr",               "Patrol"),
+            new(1,  "Járőr Csapat",        "Patrol Team"),
             new(2,  "Tűzcsoport",          "Fire Team"),
             new(3,  "Raj",                 "Squad"),
             new(4,  "Erősített Raj",       "Heavy Squad"),

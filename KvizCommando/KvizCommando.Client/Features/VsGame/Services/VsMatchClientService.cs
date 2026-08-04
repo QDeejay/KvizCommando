@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Diagnostics;
 
-namespace KvizCommando.Client.Features.VsGame.Match.Services;
+namespace KvizCommando.Client.Features.VsGame.Services;
 
 public sealed class VsMatchClientService : IVsMatchClientService
 {

@@ -1,6 +1,6 @@
 using KvizCommando.Shared.Models.Enums.VsGame;
 
-namespace KvizCommando.Client.Features.VsGame.Match.ViewModels;
+namespace KvizCommando.Client.Features.VsGame.ViewModels;
 
 public sealed class VsMatchViewData
 {

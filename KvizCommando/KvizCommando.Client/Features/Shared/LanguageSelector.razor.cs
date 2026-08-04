@@ -1,6 +1,6 @@
 using Blazored.LocalStorage;
 using KvizCommando.Client.Features.Shared.Modal.Builders;
-using KvizCommando.Client.Features.Shared.Modal.Dynamic;
+using KvizCommando.Client.Features.Shared.Modal.Components;
 using KvizCommando.Client.Services.Visual.UiService;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;

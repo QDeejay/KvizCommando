@@ -57,5 +57,13 @@
   "Box.Title.Recruit": "Recruiting",
   "Label.Org": "Command:",
   "Label.Main": "Orient:",
-  "Label.Second": "Secondary:"
+  "Label.Second": "Secondary:",
+  "modal.Title.PromoteTeam": "Team promotion",
+  "modal.Button.Ack": "Acknowledge",
+  "modal.Label.Bonus": "Wining bonus:",
+  "modal.Label.TeamSize": "Size of team:",
+  "modal.Label.LoadoutSize": "Loadout size:",
+  "modal.Label.OwnSlotSize": "Own slots size:",
+  "modal.Label.UnlocksExtras": "Unlock extras:",
+  "modal.Label.UnlocksHelps": "Help modifiers"
 }

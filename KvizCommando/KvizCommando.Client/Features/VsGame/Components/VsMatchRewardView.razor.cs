@@ -1,9 +1,9 @@
 using KvizCommando.Client.Data;
-using KvizCommando.Client.Features.VsGame.Match.ViewModels;
+using KvizCommando.Client.Features.VsGame.ViewModels;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using Microsoft.AspNetCore.Components;
 
-namespace KvizCommando.Client.Features.VsGame.Match.Components;
+namespace KvizCommando.Client.Features.VsGame.Components;
 
 public partial class VsMatchRewardView
 {
