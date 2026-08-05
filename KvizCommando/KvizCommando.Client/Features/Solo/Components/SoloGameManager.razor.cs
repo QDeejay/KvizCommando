@@ -111,12 +111,12 @@ public partial class SoloGameManager : IAsyncDisposable
                 return;
             }
 
+            _hasActiveGame = true;
             await ShowStatusAsync(
                 "solo.Label.GameProcess.Preparing",
                 1000,
                 ct);
 
-            _hasActiveGame = true;
             _answers = [.. _game.Questions.Select(question => new SoloAnswerDto
             {
                 SelectedOptionIndex = -1
@@ -472,7 +472,26 @@ public partial class SoloGameManager : IAsyncDisposable
             : InvokeAsync(StateHasChanged);
 
     private void HandleConnectionChanged() =>
-        _ = RenderAsync();
+        _ = InvokeAsync(RefreshConnectionState);
+
+    private void RefreshConnectionState()
+    {
+        if (_isDisposed)
+            return;
+
+        if (_hasActiveGame &&
+            !string.IsNullOrWhiteSpace(
+                GameService.ErrorMessageKey))
+        {
+            _questionWatch.Stop();
+            _answerEnabled = false;
+            _phase = SoloGamePhase.Failed;
+            _statusKey = GameService.ErrorMessageKey;
+            _lifetimeCts.Cancel();
+        }
+
+        StateHasChanged();
+    }
 
     private static int CalculateAnswerPoints(
         int maximumPoints,
@@ -542,4 +561,6 @@ public partial class SoloGameManager : IAsyncDisposable
  * A befejezett játék Team XP-szintlépését a szülő oldalnak jelzi.
  * MÓDOSÍTÁS: a kapcsolatellenőrzési státuszt külön megjelenítési módon
  * adja át, így a mérés eredménye a VS nézettel azonos módon látható.
+ * MÓDOSÍTÁS: aktív játék közbeni SignalR-hibánál azonnal megállítja a
+ * kérdésórát, megszakítja a játékmenetet és hibastátuszra vált.
  */

@@ -39,8 +39,8 @@ public sealed class SoloGameClientService : ISoloGameClientService
     {
         await StopAsync(ct);
 
-        ConnectionCheck = null;
         ErrorMessageKey = string.Empty;
+        NotifyChanged();
 
         var sessionId = _session.SessionId;
         if (string.IsNullOrWhiteSpace(sessionId))
@@ -186,6 +186,8 @@ public sealed class SoloGameClientService : ISoloGameClientService
         CancellationToken ct = default)
     {
         var connection = _connection;
+        ConnectionCheck = null;
+
         if (connection is null)
             return;
 
@@ -248,4 +250,6 @@ public sealed class SoloGameClientService : ISoloGameClientService
  * előbb elvégzi az ötpróbás pinget és kivárja az eredmény megjelenítési
  * idejét, majd ugyanazon a kapcsolaton kéri a szerveroldali startot.
  * A válaszok után átveszi az egypróbás friss értéket.
+ * MÓDOSÍTÁS: új indításkor azonnal jelzi a nullázott mérési állapotot,
+ * lezáráskor pedig eldobja az előző játék pingértékét.
  */
