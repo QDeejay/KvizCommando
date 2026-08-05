@@ -65,7 +65,7 @@ public sealed class SoloGameHub : Hub<ISoloGameHubClient>
 
         var playerId = await ResolvePlayerIdAsync(
             Context.ConnectionAborted);
-        var result = await _games.StartSignalRAsync(
+        var result = await _games.StartAsync(
             playerId,
             request,
             Context.ConnectionAborted);

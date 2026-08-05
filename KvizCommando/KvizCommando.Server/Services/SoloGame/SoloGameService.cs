@@ -8,673 +8,548 @@ using KvizCommando.Shared.Contracts.SoloGame;
 using KvizCommando.Shared.Models;
 using System.Text.Json;
 
-namespace KvizCommando.Server.Services.SoloGame
+namespace KvizCommando.Server.Services.SoloGame;
+
+public sealed class SoloGameService : ISoloGameService
 {
-    public sealed class SoloGameService : ISoloGameService
+    private const int ANSWER_SECONDS = 20;
+    private const int FEEDBACK_SECONDS = 2;
+    private const int EXPIRATION_ALLOWANCE_SECONDS = 10;
+
+    private readonly IPlayerCacheService _playerCache;
+    private readonly ICategoryQuestionIndexCache _questionIndex;
+    private readonly ISoloQuestionRepository _questionRepository;
+    private readonly ISoloGameCache _gameCache;
+
+    public SoloGameService(
+        IPlayerCacheService playerCache,
+        ICategoryQuestionIndexCache questionIndex,
+        ISoloQuestionRepository questionRepository,
+        ISoloGameCache gameCache)
     {
-        private const int ANSWER_SECONDS = 20;
-        private const int FEEDBACK_SECONDS = 2;
-        private const int GRACE_SECONDS = 60;
-        private const int SIGNALR_ALLOWANCE_SECONDS = 10;
+        _playerCache = playerCache;
+        _questionIndex = questionIndex;
+        _questionRepository = questionRepository;
+        _gameCache = gameCache;
+    }
 
-        private readonly IPlayerCacheService _playerCache;
-        private readonly ICategoryQuestionIndexCache _questionIndex;
-        private readonly ISoloQuestionRepository _questionRepository;
-        private readonly ISoloGameCache _gameCache;
+    public async Task<(StartSoloGameResponse? Response, bool? Success)>
+        StartAsync(
+            int playerId,
+            StartSoloGameRequest request,
+            CancellationToken ct = default)
+    {
+        var (player, _) = await _playerCache.GetOrLoadLockedAsync(
+            playerId,
+            request.SessionId,
+            ct);
 
-        public SoloGameService(
-            IPlayerCacheService playerCache,
-            ICategoryQuestionIndexCache questionIndex,
-            ISoloQuestionRepository questionRepository,
-            ISoloGameCache gameCache)
+        if (player is null)
+            return (null, false);
+
+        if (player.SessionId == "denied")
+            return (null, null);
+
+        if (request.Mode is not SoloGameMode.Category and
+            not SoloGameMode.Orientation ||
+            request.SelectionId < 1 ||
+            request.Mode == SoloGameMode.Orientation &&
+            request.SelectionId > player.Characters.Length)
         {
-            _playerCache = playerCache;
-            _questionIndex = questionIndex;
-            _questionRepository = questionRepository;
-            _gameCache = gameCache;
+            return (null, false);
         }
 
-        public Task<(StartSoloGameResponse? Response, bool? Success)> StartAsync(
-            int playerId,
-            StartSoloGameRequest request,
-            CancellationToken ct = default) =>
-            StartCoreAsync(playerId, request, GRACE_SECONDS, ct);
-
-        public Task<(StartSoloGameResponse? Response, bool? Success)> StartSignalRAsync(
-            int playerId,
-            StartSoloGameRequest request,
-            CancellationToken ct = default) =>
-            StartCoreAsync(
-                playerId,
-                request,
-                SIGNALR_ALLOWANCE_SECONDS,
-                ct);
-
-        private async Task<(StartSoloGameResponse? Response, bool? Success)> StartCoreAsync(
-            int playerId,
-            StartSoloGameRequest request,
-            int expirationAllowanceSeconds,
-            CancellationToken ct)
+        if (_gameCache.TryGetActiveGame(playerId, out var activeGame) &&
+            activeGame is not null)
         {
-            var (player, _) = await _playerCache.GetOrLoadLockedAsync(playerId, request.SessionId, ct);
-
-            if (player is null)
-                return (null, false);
-
-            if (player.SessionId == "denied")
-                return (null, null);
-
-            if (_gameCache.TryGetActiveGame(
-                    playerId,
-                    out var activeGame) &&
-                    activeGame is not null)
+            await activeGame.Lock.WaitAsync(ct);
+            try
             {
-                await activeGame.Lock.WaitAsync(ct);
-                try
-                {
-                    activeGame.Status = SoloGameStatus.Abandoned;
-                    _gameCache.Remove(activeGame.GameId);
-                }
-                finally
-                {
-                    activeGame.Lock.Release();
-                }
-
-                return (null, false);
+                activeGame.Status = SoloGameStatus.Abandoned;
+                _gameCache.Remove(activeGame.GameId);
+            }
+            finally
+            {
+                activeGame.Lock.Release();
             }
 
-            var level = request.Mode == SoloGameMode.Category
-                ? player.Core.RankEnum
-                : player.Characters[request.SelectionId - 1].Rank;
+            return (null, false);
+        }
 
-            if (level < 0)
+        var character = request.Mode == SoloGameMode.Orientation
+            ? player.Characters[request.SelectionId - 1]
+            : null;
+
+        if (request.Mode == SoloGameMode.Orientation &&
+            character is null)
+        {
+            return (null, false);
+        }
+
+        var level = request.Mode == SoloGameMode.Category
+            ? player.Core.RankEnum
+            : character!.Rank;
+        var categoryIds = request.Mode == SoloGameMode.Category
+            ? [request.SelectionId]
+            : GetOrientationCategories(character!.Attitude.Main.CatNo);
+
+        if (level < 0 || categoryIds.Length == 0)
+            return (null, false);
+
+        var questionCount = GetQuestionCount(level);
+        var questionIds = GetQuestionIds(categoryIds, questionCount);
+
+        if (questionIds.Count != questionCount)
+            return (null, false);
+
+        var entities = await _questionRepository.LoadByIdsAsync(
+            questionIds,
+            ct);
+
+        if (entities.Count != questionCount)
+            return (null, false);
+
+        var entityMap = entities.ToDictionary(question => question.Id);
+        var questions = new List<CachedSoloQuestion>(questionCount);
+
+        foreach (var questionId in questionIds)
+        {
+            var question = CreateQuestion(entityMap[questionId]);
+            if (question is null)
                 return (null, false);
 
-            var isHealing = request.Mode == SoloGameMode.Orientation && player.Characters[request.SelectionId - 1].EnergyPoints == 0;
+            questions.Add(question);
+        }
 
-            var categoryIds = request.Mode == SoloGameMode.Category
-                ? [request.SelectionId]
-                : GetOrientationCategories(player, request.SelectionId);
+        var now = DateTime.UtcNow;
+        var gameTime = TimeSpan.FromSeconds(
+            questionCount * (ANSWER_SECONDS + FEEDBACK_SECONDS));
+        var game = new SoloGameSession
+        {
+            GameId = Guid.NewGuid(),
+            PlayerId = playerId,
+            SessionId = request.SessionId,
+            Mode = request.Mode,
+            SelectionId = request.SelectionId,
+            Level = level,
+            isHealing = character?.EnergyPoints == 0,
+            PointsPerLevel = 100 + level / 2 * 10,
+            ExpiresAtUtc = now.Add(gameTime)
+                .AddSeconds(EXPIRATION_ALLOWANCE_SECONDS),
+            Questions = questions
+        };
 
-            if (categoryIds.Length == 0)
-                return (null, false);
+        if (!_gameCache.TryCreate(game))
+            return (null, false);
 
-            var questionCount = GetQuestionCount(level);
-
-            var selectedIds = GetQuestionIds(categoryIds, questionCount);
-
-            if (selectedIds.Count != questionCount)
-                return (null, false);
-
-            var entities = await _questionRepository.LoadByIdsAsync(selectedIds, ct);
-            if (entities.Count != questionCount)
-                return (null, false);
-
-            var entityMap = entities.ToDictionary(question => question.Id);
-
-            var cachedQuestions = new List<CachedSoloQuestion>();
-
-            foreach (var questionId in selectedIds)
-            {
-                var cachedQuestion = CreateCachedQuestion(entityMap[questionId]);
-
-                if (cachedQuestion is null)
-                    return (null, false);
-
-                cachedQuestions.Add(cachedQuestion);
-            }
-
-            var now = DateTime.UtcNow;
-            var gameTime = TimeSpan.FromSeconds(questionCount * (ANSWER_SECONDS + FEEDBACK_SECONDS));
-
-            var maxPointPerQuestion = 100 + level / 2 * 10;
-
-            var game = new SoloGameSession
-            {
-                GameId = Guid.NewGuid(),
-                PlayerId = playerId,
-                SessionId = request.SessionId,
-                Mode = request.Mode,
-                SelectionId = request.SelectionId,
-                Level = level,
-                isHealing = isHealing,
-                StartedAtUtc = now,
-                PointsPerLevel = maxPointPerQuestion,
-                GameplayDeadlineUtc = now.Add(gameTime),
-                ExpiresAtUtc = now.Add(gameTime)
-                    .AddSeconds(expirationAllowanceSeconds),
-                Questions = cachedQuestions
-            };
-
-            if (_gameCache.TryCreate(game) == false)
-                return (null, false);
-
-            var response = new StartSoloGameResponse
-            {
-                GameId = game.GameId,
-                QuestionCount = questionCount,
-                AnswerTimeSeconds = ANSWER_SECONDS,
-                FeedbackTimeSeconds = FEEDBACK_SECONDS,
-                MaxPointsPerQuestion = maxPointPerQuestion,
-                Questions = [.. cachedQuestions.Select(question => new SoloQuestionDto
+        return (new StartSoloGameResponse
+        {
+            GameId = game.GameId,
+            QuestionCount = questionCount,
+            AnswerTimeSeconds = ANSWER_SECONDS,
+            FeedbackTimeSeconds = FEEDBACK_SECONDS,
+            MaxPointsPerQuestion = game.PointsPerLevel,
+            Questions =
+            [
+                .. questions.Select(question => new SoloQuestionDto
                 {
-                    QuestionToken = question.QuestionToken,
                     Question = question.Question,
                     Answers = question.Answers
-                })]
-            };
+                })
+            ]
+        }, true);
+    }
 
-            return (response, true);
-        }
-
-        public async Task<(FinishSoloGameResponse? Response, bool? Success)> SubmitAnswerAsync(
+    public async Task<(FinishSoloGameResponse? Response, bool? Success)>
+        SubmitAnswerAsync(
             int playerId,
             Guid gameId,
             SoloAnswerDto answer,
             CancellationToken ct = default)
+    {
+        if (!_gameCache.TryGet(gameId, out var game) || game is null)
+            return (null, false);
+
+        await game.Lock.WaitAsync(ct);
+        try
         {
-            if (_gameCache.TryGet(gameId, out var game) == false ||
-                game is null)
+            if (game.PlayerId != playerId ||
+                game.Status != SoloGameStatus.Active ||
+                DateTime.UtcNow > game.ExpiresAtUtc ||
+                game.Answers.Count >= game.Questions.Count ||
+                answer.SelectedOptionIndex is < -1 or > 3 ||
+                answer.AnswerTimeMs is < 0 or > ANSWER_SECONDS * 1000)
             {
                 return (null, false);
             }
 
-            SoloAnswerDto[]? completedAnswers = null;
-
-            await game.Lock.WaitAsync(ct);
-            try
+            game.Answers.Add(new SoloAnswerDto
             {
-                if (game.PlayerId != playerId ||
-                    game.Status != SoloGameStatus.Active ||
-                    DateTime.UtcNow > game.ExpiresAtUtc ||
-                    game.Answers.Count >= game.Questions.Count)
-                {
-                    return (null, false);
-                }
+                SelectedOptionIndex = answer.SelectedOptionIndex,
+                AnswerTimeMs = answer.AnswerTimeMs
+            });
 
-                var expectedQuestion =
-                    game.Questions[game.Answers.Count];
-
-                if (answer.QuestionToken !=
-                        expectedQuestion.QuestionToken ||
-                    answer.SelectedOptionIndex < -1 ||
-                    answer.SelectedOptionIndex > 3 ||
-                    answer.AnswerTimeMs < 0 ||
-                    answer.AnswerTimeMs > ANSWER_SECONDS * 1000)
-                {
-                    return (null, false);
-                }
-
-                game.Answers.Add(new SoloAnswerDto
-                {
-                    QuestionToken = answer.QuestionToken,
-                    SelectedOptionIndex =
-                        answer.SelectedOptionIndex,
-                    AnswerTimeMs = answer.AnswerTimeMs
-                });
-
-                if (game.Answers.Count == game.Questions.Count)
-                    completedAnswers = [.. game.Answers];
-            }
-            finally
-            {
-                game.Lock.Release();
-            }
-
-            if (completedAnswers is null)
+            if (game.Answers.Count < game.Questions.Count)
                 return (null, true);
 
-            return await FinishAsync(
-                playerId,
-                gameId,
-                new FinishSoloGameRequest
-                {
-                    SessionId = game.SessionId,
-                    ClientElapsedMs =
-                        completedAnswers.Sum(item =>
-                            item.AnswerTimeMs) +
-                        completedAnswers.Length *
-                            FEEDBACK_SECONDS * 1000,
-                    Answers = completedAnswers
-                },
-                ct);
-        }
+            game.Status = SoloGameStatus.Finishing;
+            var result = await CompleteAsync(game, ct);
 
-
-
-        public async Task<(FinishSoloGameResponse? Response, bool? Success)> FinishAsync(
-            int playerId,
-            Guid gameId,
-            FinishSoloGameRequest request,
-            CancellationToken ct = default)
-        {
-            if (_gameCache.TryGet(gameId, out var game) == false || game is null)
-                return (null, false);
-
-            await game.Lock.WaitAsync(ct);
-            try
+            if (result.Success == true)
             {
-                if (game.PlayerId != playerId || game.SessionId != request.SessionId)
-                    return (null, null);
-
-                if (game.Status != SoloGameStatus.Active || ValidateFinish(game, request) == false)
-                    return (null, false);
-
-                game.Status = SoloGameStatus.Finishing;
-
-                var submittedAnswers = request.Answers.ToDictionary(answer => answer.QuestionToken);
-
-                var answerResults = game.Questions
-                                         .Select(question =>
-                                         {
-                                             var answer = submittedAnswers[question.QuestionToken];
-
-                                             if (answer.SelectedOptionIndex == -1)
-                                                 return (bool?)null;
-
-                                             return answer.SelectedOptionIndex ==
-                                                    question.CorrectOptionIndex;
-                                         })
-                                         .ToArray();
-                var correctAnswers =
-                     answerResults.Count(result => result == true);
-
-                var wrongAnswers =
-                    answerResults.Count(result => result == false);
-
-                var unansweredAnswers =
-                    answerResults.Count(result => result == null);
-
-                var Points = game.Questions
-                        .Select((question, index) =>
-                        {
-                            var answer =
-                                submittedAnswers[question.QuestionToken];
-
-                            return CalculateAnswerPoints(
-                                game.PointsPerLevel,
-                                answer.AnswerTimeMs,
-                                answerResults[index]);
-                        }).ToArray();
-
-                var clientResults = answerResults
-                                        .Select(result => result == true)
-                                        .ToArray();
-
-                var totalTimeMs = request.Answers.Sum(answer => answer.AnswerTimeMs);
-
-                var highScoreResult = await SaveResultAsync(game, Points.Sum(), totalTimeMs, ct);
-
-                if (highScoreResult.Success != true)
-                    return (null, highScoreResult.Success);
-
-                var rewards = await CreateRewardsAsync(game, Points.Sum(), highScoreResult.OldScore, ct);
-
-                if (rewards.Success != true)
-                    return (null, rewards.Success);
-
-                var response = new FinishSoloGameResponse
-                {
-                    TotalPoints = Points,
-                    AnswerResults = clientResults,
-                    CorrectAnswers = correctAnswers,
-                    WrongAnswers = wrongAnswers + unansweredAnswers,
-                    TotalAnswerTimeMs = totalTimeMs,
-                    IsNewHighScore = highScoreResult.IsNewHighScore,
-                    Rewards = rewards.Reward
-                };
-
                 game.Status = SoloGameStatus.Completed;
                 _gameCache.Remove(gameId);
-                return (response, true);
-            }
-            finally
-            {
-                game.Lock.Release();
-            }
-        }
-
-        public async Task<bool?> AbandonAsync(
-            int playerId,
-            Guid gameId,
-            string sessionId,
-            CancellationToken ct = default)
-        {
-            if (_gameCache.TryGet(gameId, out var game) == false || game is null)
-                return false;
-
-            await game.Lock.WaitAsync(ct);
-            try
-            {
-                if (game.PlayerId != playerId || game.SessionId != sessionId)
-                    return null;
-
-                game.Status = SoloGameStatus.Abandoned;
-                _gameCache.Remove(gameId);
-                return true;
-            }
-            finally
-            {
-                game.Lock.Release();
-            }
-        }
-
-
-        private static int[] GetOrientationCategories(CachedPlayer player, int orientationId)
-        {
-            // PLACEHOLDER: ide kerül a végleges két kategória kinyerése.
-            var character = player.Characters.ElementAtOrDefault(orientationId - 1);
-            if (character is null)
-                return [];
-
-            var first = character.Attitude.Main.CatNo[0];
-            var second = character.Attitude.Main.CatNo[2];
-
-            return first > 0 && second > 0 ? [first, second] : [];
-        }
-        private static int GetQuestionCount(int level)
-        {
-            if (level <= 0) return 8;
-            if (level >= 19) return 20;
-            return 10 + ((level - 1) / 4) * 2;
-        }
-
-
-
-
-        private List<int> GetQuestionIds(int[] categoryIds, int questionCount)
-        {
-            var result = new List<int>(questionCount);
-            var categoryQuestionCount = questionCount / categoryIds.Length;
-
-            foreach (var categoryId in categoryIds)
-            {
-                var ids = _questionIndex.GetQuestionIds(categoryId);
-                if (ids.Count < categoryQuestionCount)
-                    return [];
-
-                var selectedIndexes = new HashSet<int>(categoryQuestionCount);
-
-                while (selectedIndexes.Count < categoryQuestionCount)
-                {
-                    var index = Random.Shared.Next(ids.Count);
-
-                    if (selectedIndexes.Add(index))
-                        result.Add(ids[index]);
-                }
             }
 
-            Shuffle(result);
             return result;
         }
-
-        private static CachedSoloQuestion? CreateCachedQuestion(FactoryQuestion question)
+        finally
         {
-            var answers = JsonSerializer.Deserialize<string[]>(question.AnswersJson);
-            if (answers is null || answers.Length != 4)
+            game.Lock.Release();
+        }
+    }
+
+    public async Task<bool?> AbandonAsync(
+        int playerId,
+        Guid gameId,
+        string sessionId,
+        CancellationToken ct = default)
+    {
+        if (!_gameCache.TryGet(gameId, out var game) || game is null)
+            return false;
+
+        await game.Lock.WaitAsync(ct);
+        try
+        {
+            if (game.PlayerId != playerId || game.SessionId != sessionId)
                 return null;
 
-            var correctAnswer = answers[0];
-            Shuffle(answers);
-
-            return new CachedSoloQuestion
-            {
-                QuestionToken = Guid.NewGuid(),
-                QuestionId = question.Id,
-                Question = question.Question,
-                Answers = answers,
-                CorrectOptionIndex = Array.IndexOf(answers, correctAnswer)
-            };
+            game.Status = SoloGameStatus.Abandoned;
+            _gameCache.Remove(gameId);
+            return true;
         }
-
-        private static bool ValidateFinish(SoloGameSession game, FinishSoloGameRequest request)
+        finally
         {
-            if (request.Answers.Length != game.Questions.Count)
-                return false;
-
-            if (request.Answers.Select(answer => answer.QuestionToken).Distinct().Count() != game.Questions.Count)
-                return false;
-
-            var validTokens = game.Questions.Select(question => question.QuestionToken).ToHashSet();
-            if (request.Answers.Any(answer =>
-                validTokens.Contains(answer.QuestionToken) == false ||
-                answer.SelectedOptionIndex < -1 || answer.SelectedOptionIndex > 3 ||
-                answer.AnswerTimeMs < 0 || answer.AnswerTimeMs > ANSWER_SECONDS * 1000))
-                return false;
-
-            var answerTimeMs = request.Answers.Sum(answer => answer.AnswerTimeMs);
-            var maximumElapsedMs = game.Questions.Count * (ANSWER_SECONDS + FEEDBACK_SECONDS) * 1000;
-
-            return request.ClientElapsedMs >= answerTimeMs &&
-                   request.ClientElapsedMs <= maximumElapsedMs &&
-                   request.ClientElapsedMs <= answerTimeMs +
-                       game.Questions.Count * FEEDBACK_SECONDS * 1000 + 1000;
+            game.Lock.Release();
         }
+    }
 
-        private async Task<(bool? Success, bool IsNewHighScore, int OldScore)> SaveResultAsync(
+    private async Task<(FinishSoloGameResponse? Response, bool? Success)>
+        CompleteAsync(
+            SoloGameSession game,
+            CancellationToken ct)
+    {
+        var answerResults = game.Questions.Select((question, index) =>
+        {
+            var answer = game.Answers[index];
+            return answer.SelectedOptionIndex == -1
+                ? (bool?)null
+                : answer.SelectedOptionIndex ==
+                  question.CorrectOptionIndex;
+        }).ToArray();
+        var points = game.Questions.Select((question, index) =>
+            CalculateAnswerPoints(
+                game.PointsPerLevel,
+                game.Answers[index].AnswerTimeMs,
+                answerResults[index])).ToArray();
+        var totalTimeMs = game.Answers.Sum(answer => answer.AnswerTimeMs);
+        var highScore = await SaveResultAsync(
+            game,
+            points.Sum(),
+            totalTimeMs,
+            ct);
+
+        if (highScore.Success != true)
+            return (null, highScore.Success);
+
+        var reward = await CreateRewardAsync(
+            game,
+            points.Sum(),
+            highScore.OldScore,
+            ct);
+
+        if (reward.Success != true)
+            return (null, reward.Success);
+
+        return (new FinishSoloGameResponse
+        {
+            TotalPoints = points,
+            AnswerResults =
+            [
+                .. answerResults.Select(result => result == true)
+            ],
+            CorrectAnswers = answerResults.Count(result => result == true),
+            WrongAnswers = answerResults.Count(result => result != true),
+            TotalAnswerTimeMs = totalTimeMs,
+            IsNewHighScore = highScore.IsNewHighScore,
+            Rewards = reward.Reward
+        }, true);
+    }
+
+    private async Task<(bool? Success, bool IsNewHighScore, int OldScore)>
+        SaveResultAsync(
             SoloGameSession game,
             int newScore,
             int totalTimeMs,
             CancellationToken ct)
-        {
-            var oldScore = 0;
-            var isHighScore = false;
-            var totalSeconds = totalTimeMs / 1000d;
+    {
+        var oldScore = 0;
+        var isNewHighScore = false;
+        var totalSeconds = totalTimeMs / 1000d;
 
-            if (game.Mode == SoloGameMode.Category)
+        var success = await _playerCache.UpdatePlayerLockedAsync(
+            game.PlayerId,
+            game.SessionId,
+            player =>
             {
-                var success = await _playerCache.UpdatePlayerLockedAsync(
-                    game.PlayerId,
-                    game.SessionId,
-                    player =>
-                    {
-                        var stat = player.CategoryStats
-                            .FirstOrDefault(item => item.CategoryId == game.SelectionId);
-
-                        if (stat is null)
-                        {
-                            stat = new PlayerCategoryStat
-                            {
-                                PlayerId = game.PlayerId,
-                                CategoryId = (short)game.SelectionId
-                            };
-                            player.CategoryStats.Add(stat);
-                        }
-
-                        oldScore = stat.HighScore;
-                        isHighScore = IsBetter(
-                            newScore,
-                            totalSeconds,
-                            stat.HighScore,
-                            stat.HighScoreTime);
-
-                        if (isHighScore)
-                        {
-                            stat.HighScore = newScore;
-                            stat.HighScoreTime = totalSeconds;
-                        }
-
-                        return DirtyFlags.CategoryStats;
-                    },
-                    ct);
-
-                return (success, isHighScore, oldScore);
-            }
-
-            var orientSuccess = await _playerCache.UpdatePlayerLockedAsync(
-                game.PlayerId,
-                game.SessionId,
-                player =>
+                if (game.Mode == SoloGameMode.Category)
                 {
-                    var stat = player.OrientStats
-                        .FirstOrDefault(item => item.OrientId == game.SelectionId);
+                    var statistic = player.CategoryStats.FirstOrDefault(
+                        item => item.CategoryId == game.SelectionId);
 
-                    if (stat is null)
+                    if (statistic is null)
                     {
-                        stat = new PlayerOrientStat
+                        statistic = new PlayerCategoryStat
                         {
                             PlayerId = game.PlayerId,
-                            OrientId = (short)game.SelectionId
+                            CategoryId = (short)game.SelectionId
                         };
-                        player.OrientStats.Add(stat);
+                        player.CategoryStats.Add(statistic);
                     }
 
-                    oldScore = stat.HighScore;
-                    isHighScore = IsBetter(
+                    oldScore = statistic.HighScore;
+                    isNewHighScore = IsBetter(
                         newScore,
                         totalSeconds,
-                        stat.HighScore,
-                        stat.HighScoreTime);
+                        statistic.HighScore,
+                        statistic.HighScoreTime);
 
-                    if (isHighScore)
+                    if (isNewHighScore)
                     {
-                        stat.HighScore = newScore;
-                        stat.HighScoreTime = totalSeconds;
+                        statistic.HighScore = newScore;
+                        statistic.HighScoreTime = totalSeconds;
                     }
 
-                    return DirtyFlags.OrientStats;
-                },
-                ct);
+                    return DirtyFlags.CategoryStats;
+                }
 
-            return (orientSuccess, isHighScore, oldScore);
-        }
-        private static int CalculateAnswerPoints(
-                                    int magicNumberMax,
-                                    int elapsedMs,
-                                    bool? isCorrect)
-        {
-            if (isCorrect == null)
-                return 0;
+                var orientationStatistic = player.OrientStats
+                    .FirstOrDefault(item =>
+                        item.OrientId == game.SelectionId);
 
-            var decreasingTimeMs = Math.Clamp(
-                elapsedMs - 5000,
-                0,
-                15000);
-
-            var multiplier =
-                1.0 - decreasingTimeMs / 15000.0;
-
-            var points = (int)Math.Round(
-                magicNumberMax * multiplier,
-                MidpointRounding.AwayFromZero);
-
-            return isCorrect.Value
-                ? points
-                : -points;
-        }
-
-        private async Task<(bool? Success, SoloRewardDto? Reward)> CreateRewardsAsync(SoloGameSession game, int pointsNew, int pointsOld, CancellationToken ct)
-        {
-            int dev = Math.Max(ScoreConstants.ScorLimits.Count(value => pointsNew >= value) -
-                            ScoreConstants.ScorLimits.Count(value => pointsOld >= value),
-                            0);
-
-            int xpTeam = 0;
-            int xpMember = 0;
-            int devTeam = 0;
-            int devMember = 0;
-            int newTeamLevel = 0;
-
-            var success = await _playerCache.UpdatePlayerLockedAsync(
-                game.PlayerId,
-                game.SessionId,
-                player =>
+                if (orientationStatistic is null)
                 {
-                    if (game.Mode == SoloGameMode.Category)
+                    orientationStatistic = new PlayerOrientStat
                     {
-                        devTeam = dev;
-                        player.Core.DevPoint += devTeam;
-                    }
-                    else
-                    {
-                        var member =
-                            player.Characters[game.SelectionId - 1];
-                        if (member is null)
-                            return null;
+                        PlayerId = game.PlayerId,
+                        OrientId = (short)game.SelectionId
+                    };
+                    player.OrientStats.Add(orientationStatistic);
+                }
 
-                        devMember =
-                            dev + (game.isHealing ? 1 : 0);
+                oldScore = orientationStatistic.HighScore;
+                isNewHighScore = IsBetter(
+                    newScore,
+                    totalSeconds,
+                    orientationStatistic.HighScore,
+                    orientationStatistic.HighScoreTime);
 
-                        if (game.Level == 0 && pointsNew > 0)
-                        {
-                            xpMember = pointsNew / 10;
-                            xpTeam = xpMember / 2;
-                        }
+                if (isNewHighScore)
+                {
+                    orientationStatistic.HighScore = newScore;
+                    orientationStatistic.HighScoreTime = totalSeconds;
+                }
 
-                        member.DevPoints += devMember;
-                        member.XP += xpMember;
-                    }
+                return DirtyFlags.OrientStats;
+            },
+            ct);
 
-                    if (xpTeam > 0)
-                    {
-                        var oldTeamLevel = player.Core.RankEnum;
-                        player.Core.XP += xpTeam;
-
-                        while (player.Core.RankEnum <= 21 &&
-                               player.Core.XP >=
-                               RankRewards.List[player.Core.RankEnum]
-                                   .NextLevel)
-                        {
-                            player.Core.RankEnum++;
-                            var levelDevPoints =
-                                RankRewards.List[player.Core.RankEnum]
-                                    .DevPointToStore;
-                            player.Core.DevPoint += levelDevPoints;
-                            devTeam += levelDevPoints;
-                        }
-
-                        if (player.Core.RankEnum > oldTeamLevel)
-                            newTeamLevel = player.Core.RankEnum;
-                    }
-
-                    return game.Mode == SoloGameMode.Category
-                        ? DirtyFlags.Core
-                        : xpTeam > 0
-                            ? DirtyFlags.Core |
-                              DirtyFlags.Characters
-                            : DirtyFlags.Characters;
-                },
-                ct);
-
-            if (success != true)
-                return (success, new SoloRewardDto());
-
-            return (true, new SoloRewardDto
-            {
-                TeamXp = xpTeam,
-                TeamDevPoints = devTeam,
-                NewTeamLevel = newTeamLevel,
-                MemberXp = xpMember,
-                MemberDevPoints = devMember,
-            });
-        }
-
-        private static bool IsBetter(int score, double time, int oldScore, double oldTime)
-            => score > oldScore || score == oldScore && (oldTime <= 0 || time < oldTime);
-
-        private static void Shuffle<T>(IList<T> values)
-        {
-            for (var i = values.Count - 1; i > 0; i--)
-            {
-                var j = Random.Shared.Next(i + 1);
-                (values[i], values[j]) = (values[j], values[i]);
-            }
-        }
+        return (success, isNewHighScore, oldScore);
     }
 
-    /**
-     * MÓDOSÍTÁS: a HTTP start változatlan 60 másodperces grace idejét
-     * megtartja, a SignalR start viszont csak 10 másodperc hálózati és
-     * megjelenítési ráhagyást kap. Az aktív Solo-zár playerenként közös,
-     * ezért másik mód vagy új session első próbálkozása is lezárja a
-     * félbehagyott játékot és elutasítást kap.
-     *
-     * MÓDOSÍTÁS: SignalR-en a válaszokat szigorúan a kiosztott sorrendben
-     * gyűjti, az utolsó után a meglévő kiértékelést és rewardmentést
-     * használja. A játék közben nincs reconnect vagy kliens-visszaállítás.
-     *
-     * MÓDOSÍTÁS: bármely Solo módból származó pozitív csapat-XP átlépi a
-     * szükséges szinthatárokat, jóváírja minden új szint DevPointToStore
-     * jutalmát, és a tényleges új szintet visszaadja a kliensnek.
-     */
+    private async Task<(bool? Success, SoloRewardDto Reward)>
+        CreateRewardAsync(
+            SoloGameSession game,
+            int newScore,
+            int oldScore,
+            CancellationToken ct)
+    {
+        var earnedDevelopmentPoints = Math.Max(
+            ScoreConstants.ScorLimits.Count(value => newScore >= value) -
+            ScoreConstants.ScorLimits.Count(value => oldScore >= value),
+            0);
+        var teamXp = 0;
+        var memberXp = 0;
+        var teamDevelopmentPoints = 0;
+        var memberDevelopmentPoints = 0;
+        var newTeamLevel = 0;
+
+        var success = await _playerCache.UpdatePlayerLockedAsync(
+            game.PlayerId,
+            game.SessionId,
+            player =>
+            {
+                if (game.Mode == SoloGameMode.Category)
+                {
+                    teamDevelopmentPoints = earnedDevelopmentPoints;
+                    player.Core.DevPoint += teamDevelopmentPoints;
+                }
+                else
+                {
+                    var member = player.Characters[game.SelectionId - 1];
+                    if (member is null)
+                        return null;
+
+                    memberDevelopmentPoints =
+                        earnedDevelopmentPoints + (game.isHealing ? 1 : 0);
+
+                    if (game.Level == 0 && newScore > 0)
+                    {
+                        memberXp = newScore / 10;
+                        teamXp = memberXp / 2;
+                    }
+
+                    member.DevPoints += memberDevelopmentPoints;
+                    member.XP += memberXp;
+                }
+
+                if (teamXp > 0)
+                {
+                    var oldTeamLevel = player.Core.RankEnum;
+                    player.Core.XP += teamXp;
+
+                    while (player.Core.RankEnum <= 21 &&
+                           player.Core.XP >= RankRewards
+                               .List[player.Core.RankEnum].NextLevel)
+                    {
+                        player.Core.RankEnum++;
+                        var storedDevelopmentPoints = RankRewards
+                            .List[player.Core.RankEnum].DevPointToStore;
+                        player.Core.DevPoint += storedDevelopmentPoints;
+                        teamDevelopmentPoints += storedDevelopmentPoints;
+                    }
+
+                    if (player.Core.RankEnum > oldTeamLevel)
+                        newTeamLevel = player.Core.RankEnum;
+                }
+
+                return game.Mode == SoloGameMode.Category
+                    ? DirtyFlags.Core
+                    : teamXp > 0
+                        ? DirtyFlags.Core | DirtyFlags.Characters
+                        : DirtyFlags.Characters;
+            },
+            ct);
+
+        return (success, new SoloRewardDto
+        {
+            TeamXp = teamXp,
+            TeamDevPoints = teamDevelopmentPoints,
+            NewTeamLevel = newTeamLevel,
+            MemberXp = memberXp,
+            MemberDevPoints = memberDevelopmentPoints
+        });
+    }
+
+    private List<int> GetQuestionIds(int[] categoryIds, int questionCount)
+    {
+        var result = new List<int>(questionCount);
+        var categoryQuestionCount = questionCount / categoryIds.Length;
+
+        foreach (var categoryId in categoryIds)
+        {
+            var ids = _questionIndex.GetQuestionIds(categoryId);
+            if (ids.Count < categoryQuestionCount)
+                return [];
+
+            var selectedIndexes = new HashSet<int>();
+            while (selectedIndexes.Count < categoryQuestionCount)
+            {
+                var index = Random.Shared.Next(ids.Count);
+                if (selectedIndexes.Add(index))
+                    result.Add(ids[index]);
+            }
+        }
+
+        Shuffle(result);
+        return result;
+    }
+
+    private static CachedSoloQuestion? CreateQuestion(
+        FactoryQuestion question)
+    {
+        var answers = JsonSerializer.Deserialize<string[]>(
+            question.AnswersJson);
+
+        if (answers is null || answers.Length != 4)
+            return null;
+
+        var correctAnswer = answers[0];
+        Shuffle(answers);
+
+        return new CachedSoloQuestion
+        {
+            QuestionId = question.Id,
+            Question = question.Question,
+            Answers = answers,
+            CorrectOptionIndex = Array.IndexOf(answers, correctAnswer)
+        };
+    }
+
+    private static int[] GetOrientationCategories(int[] categoryIds)
+    {
+        var first = categoryIds[0];
+        var second = categoryIds[2];
+        return first > 0 && second > 0 ? [first, second] : [];
+    }
+
+    private static int GetQuestionCount(int level) =>
+        level switch
+        {
+            <= 0 => 8,
+            >= 19 => 20,
+            _ => 10 + (level - 1) / 4 * 2
+        };
+
+    private static int CalculateAnswerPoints(
+        int maximumPoints,
+        int elapsedMs,
+        bool? isCorrect)
+    {
+        if (isCorrect is null)
+            return 0;
+
+        var decreasingTimeMs = Math.Clamp(elapsedMs - 5000, 0, 15000);
+        var multiplier = 1.0 - decreasingTimeMs / 15000.0;
+        var points = (int)Math.Round(
+            maximumPoints * multiplier,
+            MidpointRounding.AwayFromZero);
+
+        return isCorrect.Value ? points : -points;
+    }
+
+    private static bool IsBetter(
+        int score,
+        double time,
+        int oldScore,
+        double oldTime) =>
+        score > oldScore ||
+        score == oldScore && (oldTime <= 0 || time < oldTime);
+
+    private static void Shuffle<T>(IList<T> values)
+    {
+        for (var index = values.Count - 1; index > 0; index--)
+        {
+            var other = Random.Shared.Next(index + 1);
+            (values[index], values[other]) =
+                (values[other], values[index]);
+        }
+    }
 }
+
+/**
+ * MÓDOSÍTÁS: a Solo játék kizárólag SignalR parancsokat kezel. A régi
+ * HTTP start/finish út, a teljes finish request, elapsed validáció és
+ * kérdéstoken megszűnt. A kapcsolat sorrendje azonosítja az aktuális
+ * kérdést; az utolsó elfogadott válasz közvetlenül lezárja a játékot.
+ */

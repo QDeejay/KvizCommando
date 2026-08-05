@@ -6,7 +6,6 @@ public enum SoloGameStatus { Active, Finishing, Completed, Abandoned }
 
 public sealed class CachedSoloQuestion
 {
-    public required Guid QuestionToken { get; init; }
     public required int QuestionId { get; init; }
     public required string Question { get; init; }
     public required string[] Answers { get; init; }
@@ -23,8 +22,6 @@ public sealed class SoloGameSession
     public required int Level { get; init; }
     public bool isHealing { get; init; }
     public required int PointsPerLevel { get; init; }
-    public required DateTime StartedAtUtc { get; init; }
-    public required DateTime GameplayDeadlineUtc { get; init; }
     public required DateTime ExpiresAtUtc { get; init; }
     public required IReadOnlyList<CachedSoloQuestion> Questions { get; init; }
     public List<SoloAnswerDto> Answers { get; } = [];
@@ -34,5 +31,5 @@ public sealed class SoloGameSession
 
 /**
  * MÓDOSÍTÁS: a Solo session kérdéssorrendben gyűjti a SignalR-en
- * egyenként elfogadott válaszokat. Nincs külön kör- vagy kérésazonosító.
+ * egyenként elfogadott válaszokat. Nincs kérdéstoken vagy HTTP finish.
  */

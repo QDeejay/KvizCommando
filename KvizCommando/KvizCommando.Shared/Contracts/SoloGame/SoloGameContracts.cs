@@ -17,7 +17,6 @@ namespace KvizCommando.Shared.Contracts.SoloGame
 
     public sealed class SoloQuestionDto
     {
-        public Guid QuestionToken { get; set; }
         public string Question { get; set; } = string.Empty;
         public string[] Answers { get; set; } = [];
     }
@@ -42,16 +41,8 @@ namespace KvizCommando.Shared.Contracts.SoloGame
 
     public sealed class SoloAnswerDto
     {
-        public Guid QuestionToken { get; set; }
         public int SelectedOptionIndex { get; set; }
         public int AnswerTimeMs { get; set; }
-    }
-
-    public sealed class FinishSoloGameRequest
-    {
-        public string SessionId { get; set; } = string.Empty;
-        public int ClientElapsedMs { get; set; }
-        public SoloAnswerDto[] Answers { get; set; } = [];
     }
 
     public sealed class SoloRewardDto
@@ -76,11 +67,6 @@ namespace KvizCommando.Shared.Contracts.SoloGame
         public SoloRewardDto Rewards { get; set; } = new();
     }
 
-    public sealed class AbandonSoloGameRequest
-    {
-        public string SessionId { get; set; } = string.Empty;
-    }
-
     public sealed class SoloHubAnswerResponse
     {
         public bool IsAccepted { get; set; }
@@ -91,8 +77,7 @@ namespace KvizCommando.Shared.Contracts.SoloGame
 }
 
 /**
- * MÓDOSÍTÁS: a meglévő HTTP contractok mellett felveszi az egyetlen
- * Solo SignalR hub közvetlen start- és válaszeredményét. A válasz
- * friss kapcsolatmérést, az utolsó válasz pedig a kész eredményt
- * hordozza. A reward a ténylegesen elért új csapatszintet is jelzi.
+ * MÓDOSÍTÁS: kizárólag az egyetlen Solo SignalR hub start-, válasz- és
+ * eredménycontractjait tartalmazza. A kapcsolat sorrendje miatt nincs
+ * kérdéstoken, batch finish request vagy HTTP abandon request.
  */

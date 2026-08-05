@@ -116,7 +116,6 @@ public partial class SoloGameManager : IAsyncDisposable
             _hasActiveGame = true;
             _answers = [.. _game.Questions.Select(question => new SoloAnswerDto
             {
-                QuestionToken = question.QuestionToken,
                 SelectedOptionIndex = -1
             })];
             _progress = [.. Enumerable.Repeat(
