@@ -16,26 +16,26 @@
 
 .modal-section,
 .info-block {
-    width: min(100%, 52rem);
+    width: 100%;
     min-width: 0;
     margin-inline: auto;
 }
 
 .info-block {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 1.25rem;
+    grid-template-columns: max-content minmax(0, 1fr) max-content max-content;
+    column-gap: 0.5rem;
     row-gap: 0.25rem;
     margin-bottom: 10px;
 }
 
 .info-pair {
-    display: grid;
-    grid-template-columns: minmax(4.5rem, 0.8fr) minmax(0, 1.2fr);
-    column-gap: 0.5rem;
-    min-width: 0;
+    display: contents;
 }
-
+    .info-pair:nth-child(even) > .info-label,
+    .info-pair:nth-child(even) > .modal-value {
+        text-align: right;
+    }
 .info-label,
 .row-name {
     min-width: 0;
@@ -70,7 +70,7 @@
 
 .change-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(3.5rem, auto) 2.5rem minmax(3.5rem, auto);
+    grid-template-columns: minmax(0, 1fr) max-content 4ch 5ch;
     column-gap: 0.35rem;
     align-items: center;
     min-width: 0;
@@ -162,22 +162,17 @@
 
 @container team-modal-render (max-width: 26rem) {
     .modal-layout {
-        font-size: 0.88rem;
+        font-size: 0.9rem;
         line-height: 1.32;
     }
 
     .info-block {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns: max-content minmax(0, 1fr);
         row-gap: 0.2rem;
     }
 
-    .info-pair {
-        grid-template-columns: minmax(4.5rem, 0.8fr) minmax(0, 1.2fr);
-        column-gap: 0.4rem;
-    }
-
     .change-row {
-        grid-template-columns: minmax(0, 1fr) auto 1.5rem auto;
+        grid-template-columns: minmax(0, 1fr) max-content 4ch max-content;
         grid-template-areas:
             "name name name name"
             ". old separator new";
@@ -230,8 +225,9 @@
 }
 
 /*
- * MÓDOSÍTÁS: a Team modal tartalma logikai sorokra épül. Keskeny
- * modalban a változás neve teljes sort kap, az értékek alatta maradnak;
- * alap, lg és xl méretben a sor egyben marad. A tartalom és a builder
- * által adott piros/zöld színek változatlanok.
+ * MÓDOSÍTÁS: a Team modal rövid címke-, érték- és elválasztó oszlopai
+ * a tényleges tartalmuk szélességét veszik fel. A változó hosszúságú
+ * nevek, rangok, orientációk és kategóriák kapják a maradék helyet.
+ * Keskeny modalban a változás neve külön sorra kerül; a tartalom és a
+ * builder által adott piros/zöld színek változatlanok.
  */
