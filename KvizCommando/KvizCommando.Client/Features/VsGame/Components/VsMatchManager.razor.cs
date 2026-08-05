@@ -29,6 +29,7 @@ public partial class VsMatchManager : IAsyncDisposable
 
     [Parameter, EditorRequired] public int ClassificationId { get; set; }
     [Parameter] public EventCallback<bool> OnQuitConfirmationChanged { get; set; }
+    [Parameter] public EventCallback<int> OnTeamLevelChanged { get; set; }
 
     private VsMatchViewBuilder _builder = default!;
     private VsQueueViewData? _queue;
@@ -37,6 +38,7 @@ public partial class VsMatchManager : IAsyncDisposable
     private readonly CancellationTokenSource _lifetimeCts = new();
     private bool _battleMusicStarted;
     private bool _requiresQuitConfirmation;
+    private bool _completionHandled;
     private bool _disposed;
 
     protected override async Task OnInitializedAsync()
@@ -114,13 +116,20 @@ public partial class VsMatchManager : IAsyncDisposable
 
         var phase = _match?.Phase;
 
-        if (phase == VsMatchPhase.GameCompleted)
+        if (phase == VsMatchPhase.GameCompleted && !_completionHandled)
         {
+            _completionHandled = true;
             await Ui.ReloadAsync(
                 ReqStates.Home,
                 ReqStates.Question,
                 ReqStates.Team,
                 ReqStates.VsGame);
+
+            var newTeamLevel =
+                _match?.Reward.MyReward?.NewTeamLevel ?? 0;
+
+            if (newTeamLevel > 0)
+                await OnTeamLevelChanged.InvokeAsync(newTeamLevel);
         }
 
         if (!_battleMusicStarted &&
@@ -303,4 +312,6 @@ public partial class VsMatchManager : IAsyncDisposable
  * MÓDOSÍTÁS: az egyszeri kapcsolatellenőrzés lokalizált válaszidejét
  * és szerveroldali minősítését közvetlenül megjelenítési szöveggé
  * alakítja; a minősítési határokat nem ismétli meg kliensoldalon.
+ * MÓDOSÍTÁS: a GameCompleted snapshotot egyszer dolgozza fel, majd a
+ * tényleges új csapatszintet továbbítja a VS oldal előléptetési modaljához.
  */

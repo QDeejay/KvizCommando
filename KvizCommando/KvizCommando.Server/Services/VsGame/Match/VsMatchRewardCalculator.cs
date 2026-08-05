@@ -90,6 +90,9 @@ internal static class VsMatchRewardCalculator
             CharacterAverageXp = teamXp.CharacterAverage,
             ScoreXp = teamXp.Score,
             TeamXp = teamXp.Total,
+            NewTeamLevel = CalculateNewTeamLevel(
+                player,
+                teamXp.Total),
             StakeReturn = credit.StakeReturn,
             BaseCreditReward = credit.BaseReward,
             TeamBonusCredit = credit.TeamBonus,
@@ -197,6 +200,25 @@ internal static class VsMatchRewardCalculator
             stake,
             quarterPrize,
             teamBonus);
+    }
+
+    private static int CalculateNewTeamLevel(
+        VsMatchPlayerState player,
+        int teamXp)
+    {
+        if (teamXp <= 0)
+            return 0;
+
+        var level = player.TeamLevel;
+        var totalXp = player.TeamXp + teamXp;
+
+        while (level <= 21 &&
+               totalXp >= RankRewards.List[level].NextLevel)
+        {
+            level++;
+        }
+
+        return level > player.TeamLevel ? level : 0;
     }
 
     private static double RoundToTenth(double value) =>

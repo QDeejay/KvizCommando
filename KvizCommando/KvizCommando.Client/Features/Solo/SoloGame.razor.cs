@@ -23,6 +23,8 @@ public partial class SoloGame : KcComponentBase, IDisposable
     private int _selectionId;
     private string _gameTitle = string.Empty;
     private bool _isReady;
+    private bool _gameCompleted;
+    private int _newTeamLevel;
 
     private string Culture => AppStates.Culture;
     private SoloGameDtos SoloData => AppStates.SoloGame!;
@@ -55,6 +57,12 @@ public partial class SoloGame : KcComponentBase, IDisposable
 
     private void OnBoxClick(int boxId)
     {
+        if (boxId is >= 421 and <= 436 or >= 451 and <= 458)
+        {
+            _gameCompleted = false;
+            _newTeamLevel = 0;
+        }
+
         _boxOrder = SgameBoxBuilder.Root;
         var headerTitle = Ui.Lang["mainlayout.Header.GameSolo"];
 
@@ -94,16 +102,34 @@ public partial class SoloGame : KcComponentBase, IDisposable
 
         if (isActiveGame)
         {
-            var modal = MBoxBuilder.BuildParam(
-                ModalTypes.DialogConfirm,
-                Ui.Lang);
+            if (!_gameCompleted)
+            {
+                var modal = MBoxBuilder.BuildParam(
+                    ModalTypes.DialogConfirm,
+                    Ui.Lang);
 
-            modal.BodyParameters.Add(
-                nameof(DBoxModalRender.DialogBoxType),
-                DBoxConfirmTypes.SoloGameQuitConfirm);
+                modal.BodyParameters.Add(
+                    nameof(DBoxModalRender.DialogBoxType),
+                    DBoxConfirmTypes.SoloGameQuitConfirm);
 
-            if (await Ui.Modal.ShowAsync(modal) != ModalResult.Button1)
-                return;
+                if (await Ui.Modal.ShowAsync(modal) != ModalResult.Button1)
+                    return;
+            }
+            else if (_newTeamLevel > 0)
+            {
+                await Ui.Lang.LoadModuleAsync(Culture, "team");
+
+                var modal = MBoxBuilder.BuildParam(
+                    ModalTypes.TPromoteTeam,
+                    Ui.Lang);
+
+                modal.BodyParameters.Add(
+                    nameof(TModalRender.AchievedTeamLevel),
+                    _newTeamLevel);
+
+                await Ui.Modal.ShowAsync(modal);
+                _newTeamLevel = 0;
+            }
         }
         if (Ui.Header.PageIndex == 4)
         {
@@ -113,7 +139,14 @@ public partial class SoloGame : KcComponentBase, IDisposable
 
         BuildBoxes();
         OnBoxClick(4);
+        _gameCompleted = false;
     }
+
+    private void SetGameCompleted(bool value) =>
+        _gameCompleted = value;
+
+    private void SetNewTeamLevel(int value) =>
+        _newTeamLevel = value;
 
     public void Dispose()
     {
@@ -121,3 +154,9 @@ public partial class SoloGame : KcComponentBase, IDisposable
         GC.SuppressFinalize(this);
     }
 }
+
+/**
+ * MÓDOSÍTÁS: a Solo oldal külön kezeli a folyamatban lévő és a már
+ * befejezett játék visszalépését. Tényleges csapatszintlépés után a
+ * meglévő csapat-előléptetési modalt mutatja, majd folytatja a kilépést.
+ */

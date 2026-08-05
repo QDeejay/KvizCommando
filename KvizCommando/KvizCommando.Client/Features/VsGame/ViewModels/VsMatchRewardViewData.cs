@@ -28,6 +28,7 @@ public sealed class VsMyRewardVm
     public int CharacterAverageXp { get; set; }
     public int ScoreXp { get; set; }
     public int TeamXp { get; set; }
+    public int NewTeamLevel { get; set; }
     public int StakeReturn { get; set; }
     public int BaseCreditReward { get; set; }
     public int TeamBonusCredit { get; set; }

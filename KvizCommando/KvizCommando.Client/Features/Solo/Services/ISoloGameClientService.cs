@@ -1,19 +1,31 @@
 using KvizCommando.Shared.Contracts.SoloGame;
+using KvizCommando.Shared.Contracts.VsGame.Match;
 
 namespace KvizCommando.Client.Features.Solo.Services;
 
-public interface ISoloGameClientService
+public interface ISoloGameClientService : IAsyncDisposable
 {
+    event Action? OnChanged;
+
+    VsConnectionCheckResult? ConnectionCheck { get; }
+    string ErrorMessageKey { get; }
+    bool IsConnected { get; }
+
     Task<StartSoloGameResponse?> StartAsync(
         StartSoloGameRequest request,
         CancellationToken ct = default);
 
-    Task<FinishSoloGameResponse?> FinishAsync(
-        Guid gameId,
-        FinishSoloGameRequest request,
+    Task<SoloHubAnswerResponse?> SubmitAnswerAsync(
+        SoloAnswerDto answer,
         CancellationToken ct = default);
 
     Task<bool> AbandonAsync(
-        Guid gameId,
         CancellationToken ct = default);
+
+    Task StopAsync(CancellationToken ct = default);
 }
+
+/**
+ * MÓDOSÍTÁS: a Solo manager SignalR szerződése a kapcsolatállapotot,
+ * startot, kérdésenkénti választ, abortot és lezárást teszi elérhetővé.
+ */

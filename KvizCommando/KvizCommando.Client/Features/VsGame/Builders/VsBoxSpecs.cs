@@ -113,7 +113,9 @@ public static class VsGameBoxSpecs
                 [nameof(VsMatchManager.ClassificationId)] =
                     parameters.ClassificationId,
                 [nameof(VsMatchManager.OnQuitConfirmationChanged)] =
-                    parameters.OnQuitConfirmationChanged
+                    parameters.OnQuitConfirmationChanged,
+                [nameof(VsMatchManager.OnTeamLevelChanged)] =
+                    parameters.OnTeamLevelChanged
             }
         }
     ];

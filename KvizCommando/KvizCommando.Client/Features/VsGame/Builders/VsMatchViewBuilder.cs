@@ -239,6 +239,7 @@ public sealed class VsMatchViewBuilder
                         myReward.CharacterAverageXp,
                     ScoreXp = myReward.ScoreXp,
                     TeamXp = myReward.TeamXp,
+                    NewTeamLevel = myReward.NewTeamLevel,
                     StakeReturn = myReward.StakeReturn,
                     BaseCreditReward = myReward.BaseCreditReward,
                     TeamBonusCredit = myReward.TeamBonusCredit,

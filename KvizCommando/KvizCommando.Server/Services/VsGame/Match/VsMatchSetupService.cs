@@ -75,6 +75,7 @@ public sealed class VsMatchSetupService
                 player.DisplayName = seed.DisplayName;
                 player.TeamName = seed.TeamName;
                 player.TeamLevel = seed.TeamLevel;
+                player.TeamXp = seed.TeamXp;
                 player.Characters = seed.Characters;
                 player.HelpLevels = seed.HelpLevels;
                 player.HelpCounts = seed.HelpCounts;
@@ -185,6 +186,7 @@ public sealed class VsMatchSetupService
                     DisplayName = player.Core.DisplayName,
                     TeamName = player.Core.TeamName,
                     TeamLevel = player.Core.RankEnum,
+                    TeamXp = player.Core.XP,
                     LoadoutCategories =
                     [
                         .. loadout.Take(loadoutSize)

@@ -1,3 +1,5 @@
+using KvizCommando.Shared.Contracts.VsGame.Match;
+
 namespace KvizCommando.Shared.Contracts.SoloGame
 {
     public enum SoloGameMode
@@ -31,6 +33,13 @@ namespace KvizCommando.Shared.Contracts.SoloGame
         public SoloQuestionDto[] Questions { get; set; } = [];
     }
 
+    public sealed class StartSoloHubResponse
+    {
+        public bool IsAccepted { get; set; }
+        public string ErrorKey { get; set; } = string.Empty;
+        public StartSoloGameResponse? Game { get; set; }
+    }
+
     public sealed class SoloAnswerDto
     {
         public Guid QuestionToken { get; set; }
@@ -49,6 +58,7 @@ namespace KvizCommando.Shared.Contracts.SoloGame
     {
         public int TeamXp { get; set; }
         public int TeamDevPoints { get; set; }
+        public int NewTeamLevel { get; set; }
 
         public int MemberXp { get; set; }
         public int MemberDevPoints { get; set; }
@@ -70,4 +80,19 @@ namespace KvizCommando.Shared.Contracts.SoloGame
     {
         public string SessionId { get; set; } = string.Empty;
     }
+
+    public sealed class SoloHubAnswerResponse
+    {
+        public bool IsAccepted { get; set; }
+        public string ErrorKey { get; set; } = string.Empty;
+        public VsConnectionCheckResult Connection { get; set; } = new();
+        public FinishSoloGameResponse? Result { get; set; }
+    }
 }
+
+/**
+ * MÓDOSÍTÁS: a meglévő HTTP contractok mellett felveszi az egyetlen
+ * Solo SignalR hub közvetlen start- és válaszeredményét. A válasz
+ * friss kapcsolatmérést, az utolsó válasz pedig a kész eredményt
+ * hordozza. A reward a ténylegesen elért új csapatszintet is jelzi.
+ */

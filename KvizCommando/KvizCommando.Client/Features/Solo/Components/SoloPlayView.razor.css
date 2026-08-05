@@ -18,12 +18,40 @@
     box-shadow: inset 0 0 0 1px #55584a, inset 0 0 16px rgba(0, 0, 0, .75);
 }
 
+.kc-solo-reward-host {
+    grid-row: 2 / -1;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    overflow: auto;
+}
+
 .kc-solo-player-panel {
+    position: relative;
     padding: 10px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
+
+.kc-solo-connection {
+    position: absolute;
+    z-index: 2;
+    top: 14px;
+    left: 14px;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    color: #777;
+    background: rgba(17, 19, 15, .82);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .65);
+}
+
+.kc-solo-connection.good { color: #aeca35; }
+.kc-solo-connection.medium { color: #d6ba54; }
+.kc-solo-connection.bad { color: #c83b32; }
 
 .kc-solo-player-image-box {
     position: relative;
@@ -270,55 +298,6 @@
     box-shadow: 0 4px 16px rgba(0,0,0,0.4), inset 0 4px 8px rgba(0,0,0,0.7);
     color: #222F16;
     font-family: 'Share Tech Mono', monospace;
-}
-
-.kc-solo-question-text.reward {
-    grid-row: 3 / 5;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    gap: 10px;
-    text-align: left;
-    animation: kc-solo-reward-in .45s ease-out both;
-}
-
-.kc-solo-question-text.reward > div {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    opacity: 0;
-    animation: kc-solo-reward-line-in .3s ease-out forwards;
-}
-
-.kc-solo-question-text.reward .emphasized {
-    color: #756000;
-    font-weight: 700;
-}
-
-/* Az alábbi két animáció új, ezeket add a fenti szabályok után. */
-
-@keyframes kc-solo-reward-in {
-    from {
-        opacity: 0;
-        transform: translateY(12px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes kc-solo-reward-line-in {
-    from {
-        opacity: 0;
-        transform: translateX(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
 }
 
 .kc-solo-answer-list {

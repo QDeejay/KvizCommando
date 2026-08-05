@@ -19,7 +19,9 @@
 
                                 <SoloGameManager Mode="@_gameMode"
                                                  SelectionId="@_selectionId"
-                                                 Title="@_gameTitle" />
+                                                 Title="@_gameTitle"
+                                                 OnGameCompletedChanged="SetGameCompleted"
+                                                 OnTeamLevelChanged="SetNewTeamLevel" />
 
                         </ContentBody>
                     </ContentBox>

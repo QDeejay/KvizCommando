@@ -102,14 +102,15 @@ public sealed class VsComponentParameters
 {
     public Func<Task>? OnTeamSaved { get; init; }
     public EventCallback<bool> OnQuitConfirmationChanged { get; init; }
+    public EventCallback<int> OnTeamLevelChanged { get; init; }
     public int ClassificationId { get; init; }
 }
 
 /**
  * MÓDOSÍTÁS: a ranked meccs dinamikus komponense már csak a valóban
- * szükséges ClassificationId paramétert és a visszalépési
- * megerősítés állapotát közlő EventCallbacket kapja; a kapcsolat- és
- * hibaállapot nem utazik builder callbackeken keresztül.
+ * szükséges ClassificationId paramétert, a visszalépési megerősítés
+ * állapotát és a tényleges szintlépést közlő EventCallbacket kapja;
+ * a kapcsolat- és hibaállapot nem utazik builder callbackeken keresztül.
  *
  * A fájl a VS spec-ekből ContentBox view modelleket épít.
  */

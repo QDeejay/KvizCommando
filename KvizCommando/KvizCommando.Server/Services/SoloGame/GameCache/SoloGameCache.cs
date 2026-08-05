@@ -26,9 +26,8 @@ public sealed class SoloGameCache : ISoloGameCache
         => _cache.TryGetValue(CacheKey(gameId), out session);
 
     public bool TryGetActiveGame(
-     int playerId,
-     string sessionId,
-     out SoloGameSession? session)
+        int playerId,
+        out SoloGameSession? session)
     {
         session = null;
 
@@ -37,7 +36,6 @@ public sealed class SoloGameCache : ISoloGameCache
 
         if (TryGet(gameId, out var game) &&
             game is not null &&
-            game.SessionId == sessionId &&
             game.Status == SoloGameStatus.Active)
         {
             session = game;

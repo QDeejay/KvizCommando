@@ -286,7 +286,7 @@
     <value>Recruiting</value>
   </data>
   <data name="Label.Org" xml:space="preserve">
-    <value>Command:</value>
+    <value>Org.:</value>
   </data>
   <data name="Label.Main" xml:space="preserve">
     <value>Orient:</value>

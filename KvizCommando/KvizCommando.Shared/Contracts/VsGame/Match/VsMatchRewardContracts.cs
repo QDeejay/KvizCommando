@@ -29,6 +29,7 @@ public sealed class VsMyRewardDto
     public int CharacterAverageXp { get; set; }
     public int ScoreXp { get; set; }
     public int TeamXp { get; set; }
+    public int NewTeamLevel { get; set; }
     public int StakeReturn { get; set; }
     public int BaseCreditReward { get; set; }
     public int TeamBonusCredit { get; set; }
@@ -57,4 +58,5 @@ public sealed class VsCharacterRewardDto
  * megjelenítéséhez, valamint a team bonus százalékát is megkapja.
  * MÓDOSÍTÁS: karakterenként továbbítja, ha a megjelenített XP már a
  * következő szint határán levágott, tényleges jóváírás.
+ * MÓDOSÍTÁS: tényleges szintlépéskor az új csapatszintet is továbbítja.
  */

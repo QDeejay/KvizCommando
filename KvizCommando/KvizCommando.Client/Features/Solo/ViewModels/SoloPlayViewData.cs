@@ -1,5 +1,7 @@
 ﻿
 
+using KvizCommando.Shared.Models.Enums.VsGame;
+
 namespace KvizCommando.Client.Features.Solo.ViewModels
 {
     public sealed class SoloPlayViewData
@@ -27,17 +29,36 @@ namespace KvizCommando.Client.Features.Solo.ViewModels
         public int TotalQuestions { get; init; }
         public int TotalSeconds { get; init; }
         public int RemainingSeconds { get; init; }
+        public int ResponseTimeMilliseconds { get; init; }
+        public VsConnectionQuality ConnectionQuality { get; init; }
+        public bool IsConnectionActive { get; init; }
     }
 
     public sealed class SoloPanelViewData
     {
         public SoloPanelMode Mode { get; init; }
+        public SoloRewardViewData? Reward { get; init; }
         public IReadOnlyList<SoloDisplayLine> DisplayLines { get; init; } = [];
         public IReadOnlyList<string> Answers { get; init; } = [];
         public IReadOnlyList<SoloQuestionState> Progress { get; init; } = [];
         public int SelectedAnswerIndex { get; init; } = -1;
         public bool? CurrentAnswerResult { get; init; }
         public bool AnswerEnabled { get; init; }
+    }
+
+    public sealed class SoloRewardViewData
+    {
+        public int Answered { get; init; }
+        public int TotalQuestions { get; init; }
+        public int Correct { get; init; }
+        public string Time { get; init; } = string.Empty;
+        public int TotalPoints { get; init; }
+        public bool IsNewHighScore { get; init; }
+        public int TeamXp { get; init; }
+        public int TeamDevPoints { get; init; }
+        public int MemberXp { get; init; }
+        public int MemberDevPoints { get; init; }
+        public int NewTeamLevel { get; init; }
     }
     public sealed class SoloDisplayLine
     {
@@ -48,3 +69,8 @@ namespace KvizCommando.Client.Features.Solo.ViewModels
     }
 
 }
+
+/**
+ * MÓDOSÍTÁS: a Solo nézet megkapja a hubon mért válaszidőt és a szerver
+ * által minősített kapcsolat állapotát.
+ */

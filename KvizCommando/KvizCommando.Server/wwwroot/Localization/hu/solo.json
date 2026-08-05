@@ -24,7 +24,9 @@
   "Label.GameProcess.Evaluating": "Kiértékelés folyamatban",
   "Label.GameProcess.EvaluationReady": "Kiértékelés kész",
   "Label.GameProcess.Aborted": "Művelet megszakadt",
-  "Label.Game.Reward.Title": "Megjelenített reward",
+  "Label.Game.Reward.Title": "Jutalmak",
+  "Label.Game.Reward.Performance": "Eredmény",
+  "Label.Game.Reward.NewTeamLevel": "Új szint!",
   "Label.Game.Reward.Answered": "Megválaszolt kérdések",
   "Label.Game.Reward.Correct": "Helyes válaszok",
   "Label.Game.Reward.Time": "Teljesített idő",
@@ -33,5 +35,13 @@
   "Label.Game.Reward.TeamDev": "Csapat fejlesztési pont",
   "Label.Game.Reward.MemberXp": "Karakter XP",
   "Label.Game.Reward.MemberDev": "Karakter fejlesztési pont",
-  "Modal.Quit.Content": "Ha kilépsz, az aktuális játék eredménye elveszik. Biztosan ki szeretnél lépni?"
+  "Modal.Quit.Content": "Ha kilépsz, az aktuális játék eredménye elveszik. Biztosan ki szeretnél lépni?",
+  "Error.Connection": "A szerverkapcsolat megszakadt.",
+  "Error.ConnectionSpeed": "A kapcsolati sebesség nem megfelelő.",
+  "Error.ActiveGame": "Az előző félbehagyott játék lezárult. Indítsd el újra a játékot.",
+  "Error.InvalidData": "A játék indítási adatai érvénytelenek.",
+  "Error.Session": "A munkamenet már nem érvényes.",
+  "Error.InvalidAnswer": "A válasz nem fogadható el.",
+  "Error.Identity": "A játékos nem azonosítható.",
+  "Error.Player": "A játékos adatai nem érhetők el."
 }

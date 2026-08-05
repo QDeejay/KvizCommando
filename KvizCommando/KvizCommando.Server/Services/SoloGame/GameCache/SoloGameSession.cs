@@ -27,6 +27,12 @@ public sealed class SoloGameSession
     public required DateTime GameplayDeadlineUtc { get; init; }
     public required DateTime ExpiresAtUtc { get; init; }
     public required IReadOnlyList<CachedSoloQuestion> Questions { get; init; }
+    public List<SoloAnswerDto> Answers { get; } = [];
     public SoloGameStatus Status { get; set; } = SoloGameStatus.Active;
     public SemaphoreSlim Lock { get; } = new(1, 1);
 }
+
+/**
+ * MÓDOSÍTÁS: a Solo session kérdéssorrendben gyűjti a SignalR-en
+ * egyenként elfogadott válaszokat. Nincs külön kör- vagy kérésazonosító.
+ */

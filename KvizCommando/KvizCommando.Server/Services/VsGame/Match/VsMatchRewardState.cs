@@ -24,6 +24,7 @@ public sealed class VsMatchPlayerRewardState
     public int CharacterAverageXp { get; init; }
     public int ScoreXp { get; init; }
     public int TeamXp { get; init; }
+    public int NewTeamLevel { get; init; }
     public int StakeReturn { get; init; }
     public int BaseCreditReward { get; init; }
     public int TeamBonusCredit { get; init; }

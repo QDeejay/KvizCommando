@@ -20,6 +20,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Components
         
         [Parameter] public int CanDidateNo { get; set; } = default!;
         [Parameter] public int SelectedMember { get; set; } = default!;
+        [Parameter] public int AchievedTeamLevel { get; set; }
         private bool _isLoaded = false;
         private string Culture => AppStates.Culture;
         private TeamExtendedInfo TeamInfo => AppStates.Team!.TeamInfo;
@@ -89,7 +90,11 @@ namespace KvizCommando.Client.Features.Shared.Modal.Components
                     break;
 
                 case ModalTypes.TPromoteTeam:
-                    _vmTpro = _builder!.BuildTeamPromoteVm(TeamInfo, Help, Culture);
+                    _vmTpro = _builder!.BuildTeamPromoteVm(
+                        TeamInfo,
+                        Help,
+                        Culture,
+                        AchievedTeamLevel);
                     Info = _vmTpro.Info;
                     rh = new RankHeader()
                     {

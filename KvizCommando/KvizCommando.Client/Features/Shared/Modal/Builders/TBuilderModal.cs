@@ -63,18 +63,25 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             return vm;
         }
 
-        public ModalTeamPromoteVm BuildTeamPromoteVm(TeamExtendedInfo info, HelpDto help, string culture)
+        public ModalTeamPromoteVm BuildTeamPromoteVm(
+            TeamExtendedInfo info,
+            HelpDto help,
+            string culture,
+            int achievedLevel = 0)
         {
+            int newLevel = achievedLevel > 0
+                ? achievedLevel
+                : Math.Min(info.Level + 1, 30);
+            int previousLevel = Math.Max(newLevel - 1, 0);
+
             var vm = new ModalTeamPromoteVm();
             var bi = new BasicInfo()
             {
                 IsMember = false,
                 Name = info.Name,
                 Devpoints = info.DevPoints.ToString(),
-                //Level = info.Level,
-                Level = 29,
+                Level = previousLevel,
             };
-            int newLevel = Math.Min(bi.Level + 1, 30);
             int addDevPoints = RankRewards.List[newLevel].DevPointToStore;
 
             int newBonus =

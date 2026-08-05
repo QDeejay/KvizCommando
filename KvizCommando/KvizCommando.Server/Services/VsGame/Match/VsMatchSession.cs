@@ -42,6 +42,7 @@ public sealed class VsMatchPlayerState
     public string DisplayName { get; set; } = string.Empty;
     public string TeamName { get; set; } = string.Empty;
     public int TeamLevel { get; set; }
+    public int TeamXp { get; set; }
     public string TeamPictureCode { get; set; } = string.Empty;
     public int ResponseTimeMilliseconds { get; init; }
     public VsConnectionQuality ConnectionQuality { get; init; }
@@ -124,6 +125,7 @@ public sealed class VsMatchPlayerSeed
     public string DisplayName { get; init; } = string.Empty;
     public string TeamName { get; init; } = string.Empty;
     public int TeamLevel { get; init; }
+    public int TeamXp { get; init; }
     public int[] LoadoutCategories { get; init; } = [];
     public int[] HelpLevels { get; init; } = new int[4];
     public int[] HelpCounts { get; init; } = new int[4];

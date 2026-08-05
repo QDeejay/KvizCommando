@@ -5,6 +5,7 @@ using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
 using KvizCommando.Server.Services.SoloGame.GameCache;
 using KvizCommando.Shared.Constants;
 using KvizCommando.Shared.Contracts.SoloGame;
+using KvizCommando.Shared.Models;
 using System.Text.Json;
 
 namespace KvizCommando.Server.Services.SoloGame
@@ -14,6 +15,7 @@ namespace KvizCommando.Server.Services.SoloGame
         private const int ANSWER_SECONDS = 20;
         private const int FEEDBACK_SECONDS = 2;
         private const int GRACE_SECONDS = 60;
+        private const int SIGNALR_ALLOWANCE_SECONDS = 10;
 
         private readonly IPlayerCacheService _playerCache;
         private readonly ICategoryQuestionIndexCache _questionIndex;
@@ -32,10 +34,27 @@ namespace KvizCommando.Server.Services.SoloGame
             _gameCache = gameCache;
         }
 
-        public async Task<(StartSoloGameResponse? Response, bool? Success)> StartAsync(
+        public Task<(StartSoloGameResponse? Response, bool? Success)> StartAsync(
             int playerId,
             StartSoloGameRequest request,
-            CancellationToken ct = default)
+            CancellationToken ct = default) =>
+            StartCoreAsync(playerId, request, GRACE_SECONDS, ct);
+
+        public Task<(StartSoloGameResponse? Response, bool? Success)> StartSignalRAsync(
+            int playerId,
+            StartSoloGameRequest request,
+            CancellationToken ct = default) =>
+            StartCoreAsync(
+                playerId,
+                request,
+                SIGNALR_ALLOWANCE_SECONDS,
+                ct);
+
+        private async Task<(StartSoloGameResponse? Response, bool? Success)> StartCoreAsync(
+            int playerId,
+            StartSoloGameRequest request,
+            int expirationAllowanceSeconds,
+            CancellationToken ct)
         {
             var (player, _) = await _playerCache.GetOrLoadLockedAsync(playerId, request.SessionId, ct);
 
@@ -47,15 +66,19 @@ namespace KvizCommando.Server.Services.SoloGame
 
             if (_gameCache.TryGetActiveGame(
                     playerId,
-                    request.SessionId,
                     out var activeGame) &&
                     activeGame is not null)
             {
-                await AbandonAsync(
-                    playerId,
-                    activeGame.GameId,
-                    request.SessionId,
-                    ct);
+                await activeGame.Lock.WaitAsync(ct);
+                try
+                {
+                    activeGame.Status = SoloGameStatus.Abandoned;
+                    _gameCache.Remove(activeGame.GameId);
+                }
+                finally
+                {
+                    activeGame.Lock.Release();
+                }
 
                 return (null, false);
             }
@@ -118,7 +141,8 @@ namespace KvizCommando.Server.Services.SoloGame
                 StartedAtUtc = now,
                 PointsPerLevel = maxPointPerQuestion,
                 GameplayDeadlineUtc = now.Add(gameTime),
-                ExpiresAtUtc = now.Add(gameTime).AddSeconds(GRACE_SECONDS),
+                ExpiresAtUtc = now.Add(gameTime)
+                    .AddSeconds(expirationAllowanceSeconds),
                 Questions = cachedQuestions
             };
 
@@ -141,6 +165,79 @@ namespace KvizCommando.Server.Services.SoloGame
             };
 
             return (response, true);
+        }
+
+        public async Task<(FinishSoloGameResponse? Response, bool? Success)> SubmitAnswerAsync(
+            int playerId,
+            Guid gameId,
+            SoloAnswerDto answer,
+            CancellationToken ct = default)
+        {
+            if (_gameCache.TryGet(gameId, out var game) == false ||
+                game is null)
+            {
+                return (null, false);
+            }
+
+            SoloAnswerDto[]? completedAnswers = null;
+
+            await game.Lock.WaitAsync(ct);
+            try
+            {
+                if (game.PlayerId != playerId ||
+                    game.Status != SoloGameStatus.Active ||
+                    DateTime.UtcNow > game.ExpiresAtUtc ||
+                    game.Answers.Count >= game.Questions.Count)
+                {
+                    return (null, false);
+                }
+
+                var expectedQuestion =
+                    game.Questions[game.Answers.Count];
+
+                if (answer.QuestionToken !=
+                        expectedQuestion.QuestionToken ||
+                    answer.SelectedOptionIndex < -1 ||
+                    answer.SelectedOptionIndex > 3 ||
+                    answer.AnswerTimeMs < 0 ||
+                    answer.AnswerTimeMs > ANSWER_SECONDS * 1000)
+                {
+                    return (null, false);
+                }
+
+                game.Answers.Add(new SoloAnswerDto
+                {
+                    QuestionToken = answer.QuestionToken,
+                    SelectedOptionIndex =
+                        answer.SelectedOptionIndex,
+                    AnswerTimeMs = answer.AnswerTimeMs
+                });
+
+                if (game.Answers.Count == game.Questions.Count)
+                    completedAnswers = [.. game.Answers];
+            }
+            finally
+            {
+                game.Lock.Release();
+            }
+
+            if (completedAnswers is null)
+                return (null, true);
+
+            return await FinishAsync(
+                playerId,
+                gameId,
+                new FinishSoloGameRequest
+                {
+                    SessionId = game.SessionId,
+                    ClientElapsedMs =
+                        completedAnswers.Sum(item =>
+                            item.AnswerTimeMs) +
+                        completedAnswers.Length *
+                            FEEDBACK_SECONDS * 1000,
+                    Answers = completedAnswers
+                },
+                ct);
         }
 
 
@@ -476,6 +573,7 @@ namespace KvizCommando.Server.Services.SoloGame
             int xpMember = 0;
             int devTeam = 0;
             int devMember = 0;
+            int newTeamLevel = 0;
 
             var success = await _playerCache.UpdatePlayerLockedAsync(
                 game.PlayerId,
@@ -486,28 +584,55 @@ namespace KvizCommando.Server.Services.SoloGame
                     {
                         devTeam = dev;
                         player.Core.DevPoint += devTeam;
-                        return DirtyFlags.Core;
                     }
-
-                    var member = player.Characters[game.SelectionId - 1];
-                    if (member is null)
-                        return null;
-
-                    devMember = dev + (game.isHealing ? 1 : 0);
-
-                    if (game.Level == 0 && pointsNew > 0)
+                    else
                     {
-                        xpMember = pointsNew / 10;
-                        xpTeam = xpMember / 2;
-                        player.Core.XP += xpTeam;
+                        var member =
+                            player.Characters[game.SelectionId - 1];
+                        if (member is null)
+                            return null;
+
+                        devMember =
+                            dev + (game.isHealing ? 1 : 0);
+
+                        if (game.Level == 0 && pointsNew > 0)
+                        {
+                            xpMember = pointsNew / 10;
+                            xpTeam = xpMember / 2;
+                        }
+
+                        member.DevPoints += devMember;
+                        member.XP += xpMember;
                     }
 
-                    member.DevPoints += devMember;
-                    member.XP += xpMember;
+                    if (xpTeam > 0)
+                    {
+                        var oldTeamLevel = player.Core.RankEnum;
+                        player.Core.XP += xpTeam;
 
-                    return xpTeam > 0
-                        ? DirtyFlags.Core | DirtyFlags.Characters
-                        : DirtyFlags.Characters;
+                        while (player.Core.RankEnum <= 21 &&
+                               player.Core.XP >=
+                               RankRewards.List[player.Core.RankEnum]
+                                   .NextLevel)
+                        {
+                            player.Core.RankEnum++;
+                            var levelDevPoints =
+                                RankRewards.List[player.Core.RankEnum]
+                                    .DevPointToStore;
+                            player.Core.DevPoint += levelDevPoints;
+                            devTeam += levelDevPoints;
+                        }
+
+                        if (player.Core.RankEnum > oldTeamLevel)
+                            newTeamLevel = player.Core.RankEnum;
+                    }
+
+                    return game.Mode == SoloGameMode.Category
+                        ? DirtyFlags.Core
+                        : xpTeam > 0
+                            ? DirtyFlags.Core |
+                              DirtyFlags.Characters
+                            : DirtyFlags.Characters;
                 },
                 ct);
 
@@ -518,6 +643,7 @@ namespace KvizCommando.Server.Services.SoloGame
             {
                 TeamXp = xpTeam,
                 TeamDevPoints = devTeam,
+                NewTeamLevel = newTeamLevel,
                 MemberXp = xpMember,
                 MemberDevPoints = devMember,
             });
@@ -535,4 +661,20 @@ namespace KvizCommando.Server.Services.SoloGame
             }
         }
     }
+
+    /**
+     * MÓDOSÍTÁS: a HTTP start változatlan 60 másodperces grace idejét
+     * megtartja, a SignalR start viszont csak 10 másodperc hálózati és
+     * megjelenítési ráhagyást kap. Az aktív Solo-zár playerenként közös,
+     * ezért másik mód vagy új session első próbálkozása is lezárja a
+     * félbehagyott játékot és elutasítást kap.
+     *
+     * MÓDOSÍTÁS: SignalR-en a válaszokat szigorúan a kiosztott sorrendben
+     * gyűjti, az utolsó után a meglévő kiértékelést és rewardmentést
+     * használja. A játék közben nincs reconnect vagy kliens-visszaállítás.
+     *
+     * MÓDOSÍTÁS: bármely Solo módból származó pozitív csapat-XP átlépi a
+     * szükséges szinthatárokat, jóváírja minden új szint DevPointToStore
+     * jutalmát, és a tényleges új szintet visszaadja a kliensnek.
+     */
 }

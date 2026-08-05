@@ -4,6 +4,11 @@
 
 <div class="kc-solo-play">
     <aside class="kc-solo-player-panel">
+        <span class="kc-solo-connection @ConnectionQualityClass"
+              title="@ConnectionTitle">
+            <i class="bi @ConnectionIconClass"></i>
+        </span>
+
         <div class="kc-solo-player-image-box">
             @if (!string.IsNullOrWhiteSpace(Data.Player.PictureCode))
             {
@@ -43,6 +48,14 @@
             <div class="kc-solo-question-count">@Data.Game.CurrentQuestion / @Data.Game.TotalQuestions</div>
         </header>
 
+        @if (Data.Panel.Reward is not null)
+        {
+            <div class="kc-solo-reward-host">
+                <SoloRewardView Data="@Data.Panel.Reward" />
+            </div>
+        }
+        else
+        {
         <div class="kc-solo-timer @TimerStateClass">
             <i class="bi bi-stopwatch"></i>
             <div class="kc-solo-timer-display">
@@ -54,7 +67,7 @@
             </div>
         </div>
 
-        <div class="@QuestionPanelClass">
+        <div class="kc-solo-question-text">
             @for (var i = 0; i < Data.Panel.DisplayLines.Count; i++)
             {
                 var line = Data.Panel.DisplayLines[i];
@@ -136,5 +149,6 @@
                 </button>
             }
         </div>
+        }
     </section>
 </div>

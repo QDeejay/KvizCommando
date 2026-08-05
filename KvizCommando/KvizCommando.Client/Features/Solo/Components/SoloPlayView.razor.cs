@@ -1,5 +1,6 @@
 using KvizCommando.Client.Features.Solo.ViewModels;
 using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Shared.Models.Enums.VsGame;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
 
@@ -7,6 +8,8 @@ namespace KvizCommando.Client.Features.Solo.Components;
 
 public partial class SoloPlayView
 {
+    private const int EXCELLENT_RESPONSE_TIME_MS = 50;
+
     [Inject] private ILanguageService Lang { get; set; } = default!;
 
     [Parameter, EditorRequired]
@@ -14,6 +17,30 @@ public partial class SoloPlayView
 
     [Parameter] public EventCallback<int> OnAnswerSelected { get; set; }
     [Parameter] public EventCallback OnSkipEvaluation { get; set; }
+
+    private VsConnectionQuality DisplayedConnectionQuality =>
+        Data.Game.IsConnectionActive
+            ? Data.Game.ConnectionQuality
+            : VsConnectionQuality.Unknown;
+
+    private string ConnectionQualityClass =>
+        DisplayedConnectionQuality.ToString().ToLowerInvariant();
+
+    private string ConnectionIconClass =>
+        DisplayedConnectionQuality switch
+        {
+            VsConnectionQuality.Good
+                when Data.Game.ResponseTimeMilliseconds <=
+                     EXCELLENT_RESPONSE_TIME_MS =>
+                "bi-reception-4",
+            VsConnectionQuality.Good => "bi-reception-3",
+            VsConnectionQuality.Medium => "bi-reception-2",
+            VsConnectionQuality.Bad => "bi-reception-1",
+            _ => "bi-reception-0"
+        };
+
+    private string ConnectionTitle =>
+        $"{Data.Game.ResponseTimeMilliseconds} ms";
     private double TimerPercent => Data.Game.TotalSeconds <= 0
         ? 0
         : Math.Clamp((double)Data.Game.RemainingSeconds / Data.Game.TotalSeconds * 100, 0, 100);
@@ -28,10 +55,6 @@ public partial class SoloPlayView
         > 15 => "kc-solo-timer-high",
         _ => string.Empty
     };
-    private string QuestionPanelClass => Data.Panel.Mode == SoloPanelMode.Reward
-        ? "kc-solo-question-text reward"
-        : "kc-solo-question-text";
-
     private string GetAnswerClass(int answerIndex)
     {
         if (answerIndex != Data.Panel.SelectedAnswerIndex)

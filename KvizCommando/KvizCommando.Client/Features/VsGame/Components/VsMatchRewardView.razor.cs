@@ -7,8 +7,6 @@ namespace KvizCommando.Client.Features.VsGame.Components;
 
 public partial class VsMatchRewardView
 {
-    private const int PreviewNewTeamLevel = 1;
-
     [Inject]
     private ILanguageService Lang { get; set; } = default!;
 
@@ -20,7 +18,7 @@ public partial class VsMatchRewardView
     private int PensionTotal =>
         MyReward.Characters.Sum(character => character.Pension);
 
-    private int NewTeamLevel => PreviewNewTeamLevel;
+    private int NewTeamLevel => MyReward.NewTeamLevel;
 
     private string NewTeamLevelCode =>
         RankNameTable.Data[NewTeamLevel].PublicLevel ??
@@ -62,7 +60,6 @@ public partial class VsMatchRewardView
  * előjel nélkül, többszörös előfordulásnál darabszámmal formázza.
  * MÓDOSÍTÁS: a karakterenként már kiszámolt nyugdíjalap-jóváírások
  * megjelenített összegét adja vissza; rewardot nem számol újra.
- * MÓDOSÍTÁS: PreviewNewTeamLevel átmenetileg mindig pozitív, ezért a
- * szintlépés-animáció tesztelhető. A későbbi szerveres NewTeamLevel
- * érték ugyanezt a feltételt és a PublicLevel feloldást fogja használni.
+ * MÓDOSÍTÁS: a szintlépés-animációt a szerver tényleges NewTeamLevel
+ * eredménye vezérli, amelyből a komponens csak a PublicLevel kódot oldja fel.
  */

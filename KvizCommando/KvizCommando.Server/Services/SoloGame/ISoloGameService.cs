@@ -9,6 +9,17 @@ namespace KvizCommando.Server.Services.SoloGame
             StartSoloGameRequest request,
             CancellationToken ct = default);
 
+        Task<(StartSoloGameResponse? Response, bool? Success)> StartSignalRAsync(
+            int playerId,
+            StartSoloGameRequest request,
+            CancellationToken ct = default);
+
+        Task<(FinishSoloGameResponse? Response, bool? Success)> SubmitAnswerAsync(
+            int playerId,
+            Guid gameId,
+            SoloAnswerDto answer,
+            CancellationToken ct = default);
+
         Task<(FinishSoloGameResponse? Response, bool? Success)> FinishAsync(
             int playerId,
             Guid gameId,
@@ -22,3 +33,8 @@ namespace KvizCommando.Server.Services.SoloGame
             CancellationToken ct = default);
     }
 }
+
+/**
+ * MÓDOSÍTÁS: a HTTP műveletek változatlanul megmaradnak, mellettük
+ * a hub rövidebb lejáratú startot és kérdésenkénti válaszküldést kap.
+ */

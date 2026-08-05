@@ -193,7 +193,13 @@
     <value>Művelet megszakadt</value>
   </data>
   <data name="Label.Game.Reward.Title" xml:space="preserve">
-    <value>Megjelenített reward</value>
+    <value>Jutalmak</value>
+  </data>
+  <data name="Label.Game.Reward.Performance" xml:space="preserve">
+    <value>Eredmény</value>
+  </data>
+  <data name="Label.Game.Reward.NewTeamLevel" xml:space="preserve">
+    <value>Új szint!</value>
   </data>
   <data name="Label.Game.Reward.Answered" xml:space="preserve">
     <value>Megválaszolt kérdések</value>
@@ -222,4 +228,12 @@
   <data name="Modal.Quit.Content" xml:space="preserve">
     <value>Ha kilépsz, az aktuális játék eredménye elveszik. Biztosan ki szeretnél lépni?</value>
   </data>
+  <data name="Error.Connection" xml:space="preserve"><value>A szerverkapcsolat megszakadt.</value></data>
+  <data name="Error.ConnectionSpeed" xml:space="preserve"><value>A kapcsolati sebesség nem megfelelő.</value></data>
+  <data name="Error.ActiveGame" xml:space="preserve"><value>Az előző félbehagyott játék lezárult. Indítsd el újra a játékot.</value></data>
+  <data name="Error.InvalidData" xml:space="preserve"><value>A játék indítási adatai érvénytelenek.</value></data>
+  <data name="Error.Session" xml:space="preserve"><value>A munkamenet már nem érvényes.</value></data>
+  <data name="Error.InvalidAnswer" xml:space="preserve"><value>A válasz nem fogadható el.</value></data>
+  <data name="Error.Identity" xml:space="preserve"><value>A játékos nem azonosítható.</value></data>
+  <data name="Error.Player" xml:space="preserve"><value>A játékos adatai nem érhetők el.</value></data>
 </root>

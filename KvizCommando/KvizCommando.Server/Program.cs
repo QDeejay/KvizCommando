@@ -207,6 +207,7 @@ app.MapRazorPages();
 
 app.MapControllers();
 app.MapHub<VsMatchHub>("/hubs/vs-match");
+app.MapHub<SoloGameHub>("/hubs/solo-game");
 
 // Identity API endpointok (login, register, confirm, reset)
 app.MapGroup("/")
@@ -223,6 +224,8 @@ app.Run();
 /**
  * MÓDOSÍTÁS: bekapcsolja a SignalR szolgáltatást és publikálja a
  * /hubs/vs-match VS multiplayer végpontot.
+ * MÓDOSÍTÁS: publikálja a kategória- és orientációs Solo mód közös
+ * /hubs/solo-game SignalR végpontját is.
  *
  * A fájl a KvizCommando szerver indulását, middleware-láncát és
  * endpoint-regisztrációját állítja össze.

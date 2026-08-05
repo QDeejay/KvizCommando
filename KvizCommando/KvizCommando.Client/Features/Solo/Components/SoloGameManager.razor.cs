@@ -7,6 +7,7 @@ using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Shared.Contracts.SoloGame;
 using KvizCommando.Shared.Models.Dtos;
+using KvizCommando.Shared.Models.Enums.VsGame;
 using KvizCommando.Shared.Models.User;
 using Microsoft.AspNetCore.Components;
 using System.Diagnostics;
@@ -26,9 +27,10 @@ public partial class SoloGameManager : IAsyncDisposable
     [Parameter] public SoloGameMode Mode { get; set; }
     [Parameter] public int SelectionId { get; set; }
     [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public EventCallback<bool> OnGameCompletedChanged { get; set; }
+    [Parameter] public EventCallback<int> OnTeamLevelChanged { get; set; }
 
     private readonly CancellationTokenSource _lifetimeCts = new();
-    private readonly Stopwatch _gameWatch = new();
     private readonly Stopwatch _questionWatch = new();
 
     private SoloPlayerViewData _player = new();
@@ -39,7 +41,7 @@ public partial class SoloGameManager : IAsyncDisposable
     private TaskCompletionSource<int>? _answerSignal;
     private TaskCompletionSource? _skipSignal;
     private Task? _gameTask;
-    private Guid? _activeGameId;
+    private bool _hasActiveGame;
     private SoloGamePhase _phase = SoloGamePhase.Status;
     private int _questionIndex;
     private int _remainingSeconds;
@@ -65,7 +67,14 @@ public partial class SoloGameManager : IAsyncDisposable
                 : Math.Min(_questionIndex + 1, _game.QuestionCount),
             TotalQuestions = _game?.QuestionCount ?? 0,
             TotalSeconds = _game?.AnswerTimeSeconds ?? 0,
-            RemainingSeconds = _remainingSeconds
+            RemainingSeconds = _remainingSeconds,
+            ResponseTimeMilliseconds =
+                GameService.ConnectionCheck
+                    ?.ResponseTimeMilliseconds ?? 0,
+            ConnectionQuality =
+                GameService.ConnectionCheck?.Quality ??
+                VsConnectionQuality.Unknown,
+            IsConnectionActive = GameService.IsConnected
         },
         Panel = BuildPanelData()
     };
@@ -73,6 +82,7 @@ public partial class SoloGameManager : IAsyncDisposable
     protected override void OnInitialized()
     {
         _player = BuildPlayerProfile();
+        GameService.OnChanged += HandleConnectionChanged;
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -103,7 +113,7 @@ public partial class SoloGameManager : IAsyncDisposable
                 return;
             }
 
-            _activeGameId = _game.GameId;
+            _hasActiveGame = true;
             _answers = [.. _game.Questions.Select(question => new SoloAnswerDto
             {
                 QuestionToken = question.QuestionToken,
@@ -131,7 +141,6 @@ public partial class SoloGameManager : IAsyncDisposable
     private async Task PlayAsync(CancellationToken ct)
     {
         _phase = SoloGamePhase.Playing;
-        _gameWatch.Restart();
 
         for (_questionIndex = 0; _questionIndex < _answers.Length; _questionIndex++)
         {
@@ -145,7 +154,6 @@ public partial class SoloGameManager : IAsyncDisposable
                 ct);
         }
 
-        _gameWatch.Stop();
         await FinishGameAsync(ct);
     }
 
@@ -163,9 +171,10 @@ public partial class SoloGameManager : IAsyncDisposable
         {
             if (_answerSignal.Task.IsCompleted)
             {
-                SaveAnswer(
+                await SaveAnswerAsync(
                     await _answerSignal.Task,
-                    (int)_questionWatch.ElapsedMilliseconds);
+                    (int)_questionWatch.ElapsedMilliseconds,
+                    ct);
                 return;
             }
 
@@ -184,10 +193,16 @@ public partial class SoloGameManager : IAsyncDisposable
         }
 
         _remainingSeconds = 0;
-        SaveAnswer(-1, _game.AnswerTimeSeconds * 1000);
+        await SaveAnswerAsync(
+            -1,
+            _game.AnswerTimeSeconds * 1000,
+            ct);
     }
 
-    private void SaveAnswer(int selectedOptionIndex, int answerTimeMs)
+    private async Task SaveAnswerAsync(
+        int selectedOptionIndex,
+        int answerTimeMs,
+        CancellationToken ct)
     {
         _questionWatch.Stop();
         _answerEnabled = false;
@@ -197,6 +212,19 @@ public partial class SoloGameManager : IAsyncDisposable
             0,
             _game!.AnswerTimeSeconds * 1000);
         _progress[_questionIndex] = SoloQuestionState.Pending;
+
+        var submission = await GameService.SubmitAnswerAsync(
+            _answers[_questionIndex],
+            ct);
+
+        if (submission is null || !submission.IsAccepted)
+        {
+            throw new InvalidOperationException(
+                "Solo answer was rejected by the server.");
+        }
+
+        if (submission.Result is not null)
+            _result = submission.Result;
     }
 
     private Task SelectAnswerAsync(int answerIndex)
@@ -217,26 +245,24 @@ public partial class SoloGameManager : IAsyncDisposable
         _points = 0;
         await RenderAsync();
 
-        _result = await GameService.FinishAsync(
-            _game!.GameId,
-            new FinishSoloGameRequest
-            {
-                ClientElapsedMs = (int)_gameWatch.ElapsedMilliseconds,
-                Answers = _answers
-            },
-            ct);
-
         if (_result is null)
         {
             await ShowFailureAsync();
             return;
         }
 
-        _activeGameId = null;
+        _hasActiveGame = false;
         await Ui.ReloadAsync(
             ReqStates.Home,
             ReqStates.Team,
             ReqStates.SoloGame);
+        await OnGameCompletedChanged.InvokeAsync(true);
+
+        if (_result.Rewards.NewTeamLevel > 0)
+        {
+            await OnTeamLevelChanged.InvokeAsync(
+                _result.Rewards.NewTeamLevel);
+        }
         await Audio.PlayMusicAsync("Menu02.webm");
         await ShowStatusAsync("solo.Label.GameProcess.Evaluating", 1000, ct);
         await ShowStatusAsync("solo.Label.GameProcess.EvaluationReady", 1000, ct);
@@ -328,7 +354,10 @@ public partial class SoloGameManager : IAsyncDisposable
     private async Task ShowFailureAsync()
     {
         _phase = SoloGamePhase.Failed;
-        _statusKey = "solo.Label.GameProcess.Aborted";
+        _statusKey = string.IsNullOrWhiteSpace(
+            GameService.ErrorMessageKey)
+                ? "solo.Label.GameProcess.Aborted"
+                : GameService.ErrorMessageKey;
         _answerEnabled = false;
         await RenderAsync();
     }
@@ -377,62 +406,24 @@ public partial class SoloGameManager : IAsyncDisposable
     private SoloPanelViewData BuildRewardPanel()
     {
         var answered = _answers.Count(answer => answer.SelectedOptionIndex >= 0);
-        var totalPoints = _result?.TotalPoints.Sum() ?? 0;
-
-        var lines = new List<SoloDisplayLine>
-        {
-            new()
-            {
-                ResourceKey = "solo.Label.Game.Reward.Answered",
-                Value = $"{answered} / {_answers.Length}"
-            },
-            new()
-            {
-                ResourceKey = "solo.Label.Game.Reward.Correct",
-                Value = (_result?.CorrectAnswers ?? 0).ToString()
-            },
-            new()
-            {
-                ResourceKey = "solo.Label.Game.Reward.Time",
-                Value = FormatTime(_result?.TotalAnswerTimeMs ?? 0)
-            },
-            new()
-            {
-                ResourceKey = "solo.Label.Game.Reward.TotalPoints",
-                Value = totalPoints.ToString()
-            }
-        };
-
-        if (_result?.IsNewHighScore == true)
-        {
-            lines.Add(new SoloDisplayLine
-            {
-                ResourceKey = "solo.Label.Game.Message.NewRecord",
-                Emphasized = true
-            });
-        }
-
-        AddRewardLine(
-            lines,
-            "solo.Label.Game.Reward.TeamXp",
-            _result?.Rewards.TeamXp ?? 0);
-        AddRewardLine(
-            lines,
-            "solo.Label.Game.Reward.TeamDev",
-            _result?.Rewards.TeamDevPoints ?? 0);
-        AddRewardLine(
-            lines,
-            "solo.Label.Game.Reward.MemberXp",
-            _result?.Rewards.MemberXp ?? 0);
-        AddRewardLine(
-            lines,
-            "solo.Label.Game.Reward.MemberDev",
-            _result?.Rewards.MemberDevPoints ?? 0);
 
         return new SoloPanelViewData
         {
             Mode = SoloPanelMode.Reward,
-            DisplayLines = lines,
+            Reward = new SoloRewardViewData
+            {
+                Answered = answered,
+                TotalQuestions = _answers.Length,
+                Correct = _result?.CorrectAnswers ?? 0,
+                Time = FormatTime(_result?.TotalAnswerTimeMs ?? 0),
+                TotalPoints = _result?.TotalPoints.Sum() ?? 0,
+                IsNewHighScore = _result?.IsNewHighScore == true,
+                TeamXp = _result?.Rewards.TeamXp ?? 0,
+                TeamDevPoints = _result?.Rewards.TeamDevPoints ?? 0,
+                MemberXp = _result?.Rewards.MemberXp ?? 0,
+                MemberDevPoints = _result?.Rewards.MemberDevPoints ?? 0,
+                NewTeamLevel = _result?.Rewards.NewTeamLevel ?? 0
+            },
             Progress = _progress
         };
     }
@@ -475,20 +466,8 @@ public partial class SoloGameManager : IAsyncDisposable
             ? Task.CompletedTask
             : InvokeAsync(StateHasChanged);
 
-    private static void AddRewardLine(
-        ICollection<SoloDisplayLine> lines,
-        string resourceKey,
-        int value)
-    {
-        if (value != 0)
-        {
-            lines.Add(new SoloDisplayLine
-            {
-                ResourceKey = resourceKey,
-                Value = value.ToString()
-            });
-        }
-    }
+    private void HandleConnectionChanged() =>
+        _ = RenderAsync();
 
     private static int CalculateAnswerPoints(
         int maximumPoints,
@@ -511,6 +490,7 @@ public partial class SoloGameManager : IAsyncDisposable
             return;
 
         _isDisposed = true;
+        GameService.OnChanged -= HandleConnectionChanged;
         _answerEnabled = false;
         _lifetimeCts.Cancel();
         _answerSignal?.TrySetCanceled();
@@ -519,11 +499,13 @@ public partial class SoloGameManager : IAsyncDisposable
         if (_gameTask is not null)
             await _gameTask;
 
-        var activeGameId = _activeGameId;
-        _activeGameId = null;
+        var hasActiveGame = _hasActiveGame;
+        _hasActiveGame = false;
 
-        if (activeGameId.HasValue)
-            await GameService.AbandonAsync(activeGameId.Value);
+        if (hasActiveGame)
+            await GameService.AbandonAsync();
+
+        await GameService.StopAsync();
 
         try
         {
@@ -547,3 +529,10 @@ public partial class SoloGameManager : IAsyncDisposable
         Failed
     }
 }
+
+/**
+ * MÓDOSÍTÁS: a Solo manager a SignalR kliens egyszerű kérdésenkénti
+ * válaszfolyamát kezeli. A kapcsolat állapotát megjelenítésre továbbítja,
+ * hivatalos kilépéskor abortálja az aktív játékot, majd lezárja a hubot.
+ * A befejezett játék Team XP-szintlépését a szülő oldalnak jelzi.
+ */
