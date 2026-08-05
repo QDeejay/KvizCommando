@@ -1,5 +1,5 @@
 ﻿.modal-display {
-    container-name: modal-render;
+    container-name: team-modal-render;
     container-type: inline-size;
     width: 100%;
     min-width: 0;
@@ -12,57 +12,99 @@
     max-width: 100%;
     font-size: 1.1rem;
     line-height: 1.4;
-    overflow-wrap: anywhere;
 }
 
-.member-info-block,
-.team-info-block {
-    display: grid;
-    grid-template-columns: 70px minmax(0, 1fr) 85px 70px;
-    column-gap: 0.35rem;
-    row-gap: 0.15rem;
-    width: 100%;
+.modal-section,
+.info-block {
+    width: min(100%, 52rem);
     min-width: 0;
+    margin-inline: auto;
+}
+
+.info-block {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.25rem;
+    row-gap: 0.25rem;
     margin-bottom: 10px;
 }
 
-.hire-skillblock {
+.info-pair {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(60px, 80px);
+    grid-template-columns: minmax(4.5rem, 0.8fr) minmax(0, 1.2fr);
     column-gap: 0.5rem;
-    width: 100%;
     min-width: 0;
 }
 
+.info-label,
+.row-name {
+    min-width: 0;
+    overflow-wrap: break-word;
+}
+
+.modal-value {
+    min-width: 0;
+    font-weight: bold;
+    overflow-wrap: break-word;
+}
+
+.right {
+    text-align: right;
+}
+
+.hire-skillblock,
 .promote-block,
 .team-promote-block {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.hire-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(44px, 60px) 40px minmax(44px, 60px);
-    column-gap: 0.25rem;
-    width: 100%;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 0.75rem;
+    align-items: center;
     min-width: 0;
 }
 
-.member-info-block > *,
-.team-info-block > *,
-.hire-skillblock > *,
-.promote-block > *,
-.team-promote-block > * {
+.change-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(3.5rem, auto) 2.5rem minmax(3.5rem, auto);
+    column-gap: 0.35rem;
+    align-items: center;
     min-width: 0;
-    overflow-wrap: anywhere;
 }
 
-.handle-block {
-    min-width: 0;
-    margin-bottom: 30px;
+.change-old,
+.change-new,
+.modal-separator,
+.times {
+    white-space: nowrap;
+}
+
+.change-old,
+.change-new,
+.times {
+    text-align: right;
+}
+
+.modal-separator {
     text-align: center;
 }
 
 .modal-subtitle {
+    width: 100%;
     min-width: 0;
-    margin-top: 20px;
+    margin-top: 18px;
+    margin-bottom: 3px;
     text-decoration: underline;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+}
+
+.handle-block {
+    margin-bottom: 30px;
+    text-align: center;
 }
 
 .info-row1 {
@@ -83,27 +125,12 @@
     text-align: center;
 }
 
-.modal-separator {
-    align-content: center;
-    text-align: center;
-}
-
-.modal-value {
-    min-width: 0;
-    font-weight: bold;
-    overflow-wrap: anywhere;
-}
-
-.right {
-    align-content: center;
-    text-align: right;
-}
-
 .divider {
     display: flex;
     align-items: center;
     min-width: 0;
-    margin: 2px 0 4px;
+    margin-top: 2px;
+    margin-bottom: 4px;
     font-weight: bold;
     text-align: center;
 }
@@ -133,33 +160,51 @@
     color: greenyellow;
 }
 
-@container modal-render (max-width: 32rem) {
+@container team-modal-render (max-width: 26rem) {
     .modal-layout {
-        font-size: 0.9rem;
+        font-size: 0.88rem;
         line-height: 1.32;
     }
 
-    .member-info-block,
-    .team-info-block {
-        grid-template-columns: minmax(72px, 0.8fr) minmax(0, 1.2fr);
-        column-gap: 0.5rem;
-        row-gap: 0.25rem;
+    .info-block {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 0.2rem;
     }
 
-    .hire-skillblock {
-        grid-template-columns: minmax(0, 1fr) auto;
-        column-gap: 0.35rem;
+    .info-pair {
+        grid-template-columns: minmax(4.5rem, 0.8fr) minmax(0, 1.2fr);
+        column-gap: 0.4rem;
     }
 
-    .promote-block,
-    .team-promote-block {
-        grid-template-columns: minmax(0, 1fr) minmax(38px, auto) 24px minmax(38px, auto);
-        column-gap: 0.15rem;
-        font-size: 0.82rem;
+    .change-row {
+        grid-template-columns: minmax(0, 1fr) auto 1.5rem auto;
+        grid-template-areas:
+            "name name name name"
+            ". old separator new";
+        column-gap: 0.25rem;
+        row-gap: 0.05rem;
+        padding-block: 0.12rem;
+    }
+
+    .change-row .row-name {
+        grid-area: name;
+    }
+
+    .change-old {
+        grid-area: old;
+    }
+
+    .modal-separator {
+        grid-area: separator;
+    }
+
+    .change-new {
+        grid-area: new;
     }
 
     .modal-subtitle {
         margin-top: 12px;
+        margin-bottom: 2px;
     }
 
     .info-row1 {
@@ -185,7 +230,8 @@
 }
 
 /*
- * MÓDOSÍTÁS: a team modal rácsai a modal tényleges szélességét követik.
- * Keskeny helyen az információpárok egymás alá rendeződnek, a tartalom
- * és a builder által megadott piros/zöld színek változatlanok maradnak.
+ * MÓDOSÍTÁS: a Team modal tartalma logikai sorokra épül. Keskeny
+ * modalban a változás neve teljes sort kap, az értékek alatta maradnak;
+ * alap, lg és xl méretben a sor egyben marad. A tartalom és a builder
+ * által adott piros/zöld színek változatlanok.
  */
