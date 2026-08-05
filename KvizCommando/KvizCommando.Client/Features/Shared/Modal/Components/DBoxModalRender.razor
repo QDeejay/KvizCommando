@@ -1,20 +1,22 @@
 @using KvizCommando.Client.Features.Shared.Modal.Builders;
 
 <div class="modal-display">
-    @switch (DialogBoxType)
-    {
-        case DBoxConfirmTypes.LanguageConfirm:
-            @Lang[$"common.Modal.Language.Content.{RequestedLanguage}"]
-            break;
-        case DBoxConfirmTypes.SoloGameQuitConfirm:
-            @Lang["solo.Modal.Quit.Content"]
-            break;
-        case DBoxConfirmTypes.VsGameQuitConfirm:
-            @Lang["vsgame.Modal.Quit.Content"]
-            break;
-        default:
-            break;
-    }
+    <div class="modal-layout">
+        @switch (DialogBoxType)
+        {
+            case DBoxConfirmTypes.LanguageConfirm:
+                @Lang[$"common.Modal.Language.Content.{RequestedLanguage}"]
+                break;
+            case DBoxConfirmTypes.SoloGameQuitConfirm:
+                @Lang["solo.Modal.Quit.Content"]
+                break;
+            case DBoxConfirmTypes.VsGameQuitConfirm:
+                @Lang["vsgame.Modal.Quit.Content"]
+                break;
+            default:
+                break;
+        }
+    </div>
 </div>
 
 @*

@@ -4,6 +4,7 @@
 @if (_isLoaded && (int)Mode > 200 && (int)Mode < 206)
 {
     <div class="modal-display">
+        <div class="modal-layout">
         <div class="@InfoClass">
             <div>@Info.Name</div>
             <div class="modal-value" style="color: @(Info.Color)">@Info.NameValue</div>
@@ -139,5 +140,6 @@
                 break;
 
     }
+        </div>
     </div>
 }

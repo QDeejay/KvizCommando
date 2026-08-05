@@ -3,19 +3,26 @@
 @if (isLoaded)
 {
     <div class="modal-display">
-        @switch (Mode)
+        @if (Mode == ModalTypes.QNewRules)
         {
-            case ModalTypes.QUsrDelet:  /// user slot törlése
-                <br>
-                @Lang["question.Modal.Text.Confirm"]
-                <br>
-                <br>
-                break;
-            case ModalTypes.QPendHandle: /// pending slot törlése vagy ha approved akkor átmozgatása
-                <div>
-                    <label class="category-label">@Lang["question.Table.Header.Category"]:</label>
-                    <span> @CatNamePend</span>
-                </div>
+            @RenderHTML
+        }
+        else
+        {
+            <div class="modal-layout">
+                @switch (Mode)
+                {
+                    case ModalTypes.QUsrDelet:  /// user slot törlése
+                        <br>
+                        @Lang["question.Modal.Text.Confirm"]
+                        <br>
+                        <br>
+                        break;
+                    case ModalTypes.QPendHandle: /// pending slot törlése vagy ha approved akkor átmozgatása
+                        <div>
+                            <label class="category-label">@Lang["question.Table.Header.Category"]:</label>
+                            <span> @CatNamePend</span>
+                        </div>
                     <br>
                     <p class="question-label">@Slot.Question</p>
                     <br>
@@ -37,12 +44,12 @@
                 <div class="remark-label">
                     <p>@Slot.Remark</p>
                 </div>
-                break;
-            case ModalTypes.QCheckQuestion: /// kérdés ellenőrzése
-                <div>
-                    <label class="category-label">@Lang["question.Table.Header.Category"]:</label>
-                    <span> @CatNameUsr</span>
-                </div>
+                        break;
+                    case ModalTypes.QCheckQuestion: /// kérdés ellenőrzése
+                        <div>
+                            <label class="category-label">@Lang["question.Table.Header.Category"]:</label>
+                            <span> @CatNameUsr</span>
+                        </div>
                     <br>
                 <p class="question-label">@UsrSlot.Question</p>
                     <br>
@@ -68,15 +75,13 @@
                         <label class="label-statistic">@Lang["question.Modal.Content.Ratio"] </label>
                         <span class="label-result">@UsrSlot.Ratio</span>
                     </div>
-                </div>
-                break;
-
-            case ModalTypes.QNewRules: /// új kérdés felvétele
-                @RenderHTML
-                break;
-            default:
-                <p></p>
-                break; 
-         }
+                        </div>
+                        break;
+                    default:
+                        <p></p>
+                        break;
+                }
+            </div>
+        }
     </div>
 }

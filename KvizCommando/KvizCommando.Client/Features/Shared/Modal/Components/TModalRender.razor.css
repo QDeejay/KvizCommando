@@ -1,77 +1,99 @@
 ﻿.modal-display {
-    font-size: 1.1rem;
+    container-name: modal-render;
+    container-type: inline-size;
+    width: 100%;
     min-width: 0;
     max-width: 100%;
 }
-.member-info-block {
-    display: grid;
-    grid-template-columns: 70px minmax(0, 1fr) 85px 70px;
-    margin-bottom: 10px;
+
+.modal-layout {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    font-size: 1.1rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
 }
+
+.member-info-block,
 .team-info-block {
     display: grid;
     grid-template-columns: 70px minmax(0, 1fr) 85px 70px;
+    column-gap: 0.35rem;
+    row-gap: 0.15rem;
+    width: 100%;
+    min-width: 0;
     margin-bottom: 10px;
 }
 
 .hire-skillblock {
-  
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 80px;
-}
-
-.promote-block {
-   
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 60px 40px 60px;
+    grid-template-columns: minmax(0, 1fr) minmax(60px, 80px);
+    column-gap: 0.5rem;
     width: 100%;
+    min-width: 0;
 }
-.team-promote-block { display: grid; grid-template-columns: minmax(0, 1fr) 60px 40px 60px; width: 100%; }
 
-.info-block > *,
+.promote-block,
+.team-promote-block {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(44px, 60px) 40px minmax(44px, 60px);
+    column-gap: 0.25rem;
+    width: 100%;
+    min-width: 0;
+}
+
+.member-info-block > *,
+.team-info-block > *,
 .hire-skillblock > *,
-.promote-block > * {
+.promote-block > *,
+.team-promote-block > * {
     min-width: 0;
     overflow-wrap: anywhere;
 }
+
 .handle-block {
-    text-align: center;
+    min-width: 0;
     margin-bottom: 30px;
+    text-align: center;
 }
 
-
-
-
 .modal-subtitle {
+    min-width: 0;
+    margin-top: 20px;
     text-decoration: underline;
-    margin-top:20px;
+    overflow-wrap: anywhere;
 }
 
 .info-row1 {
-    font-size: 1.6rem;
+    padding: 20px;
     color: red;
+    font-size: 1.6rem;
     font-weight: bold;
-    padding:20px;
-}
-.info-row2 { 
 }
 
 .info-row3 {
-    margin-top:10px;
-    font-weight:bold;
+    margin-top: 10px;
+    font-weight: bold;
 }
+
 .info-row4 {
-    text-align: center;
-    font-size: 0.7rem;
     margin-top: 20px;
+    font-size: 0.7rem;
+    text-align: center;
 }
-
-
 
 .modal-separator {
-    padding-left:10px
+    align-content: center;
+    text-align: center;
 }
-.modal-value { font-weight: bold; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+
+.modal-value {
+    min-width: 0;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
 .right {
     align-content: center;
     text-align: right;
@@ -80,35 +102,90 @@
 .divider {
     display: flex;
     align-items: center;
-    text-align: center;
+    min-width: 0;
+    margin: 2px 0 4px;
     font-weight: bold;
-    margin: 2px 0 4px 0;
+    text-align: center;
 }
 
-    .divider::before,
-    .divider::after {
-        content: "";
-        flex: 1;
-        border-bottom: 1px solid #666;
-    }
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1 1 auto;
+    min-width: 0;
+    border-bottom: 1px solid #666;
+}
 
-    .divider:not(:empty)::before {
-        margin-right: .75em;
-    }
+.divider:not(:empty)::before {
+    margin-right: 0.75em;
+}
 
-    .divider:not(:empty)::after {
-        margin-left: .75em;
-    }
+.divider:not(:empty)::after {
+    margin-left: 0.75em;
+}
+
 .modal-promlevel {
     color: lightgray;
 }
+
 .modal-promrank {
-    padding-left:4px;
+    padding-left: 4px;
     color: greenyellow;
 }
 
+@container modal-render (max-width: 32rem) {
+    .modal-layout {
+        font-size: 0.9rem;
+        line-height: 1.32;
+    }
+
+    .member-info-block,
+    .team-info-block {
+        grid-template-columns: minmax(72px, 0.8fr) minmax(0, 1.2fr);
+        column-gap: 0.5rem;
+        row-gap: 0.25rem;
+    }
+
+    .hire-skillblock {
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: 0.35rem;
+    }
+
+    .promote-block,
+    .team-promote-block {
+        grid-template-columns: minmax(0, 1fr) minmax(38px, auto) 24px minmax(38px, auto);
+        column-gap: 0.15rem;
+        font-size: 0.82rem;
+    }
+
+    .modal-subtitle {
+        margin-top: 12px;
+    }
+
+    .info-row1 {
+        padding: 10px 4px;
+        font-size: 1.15rem;
+    }
+
+    .handle-block {
+        margin-bottom: 18px;
+    }
+
+    .divider {
+        font-size: 0.86rem;
+    }
+
+    .divider:not(:empty)::before {
+        margin-right: 0.4em;
+    }
+
+    .divider:not(:empty)::after {
+        margin-left: 0.4em;
+    }
+}
+
 /*
- * MÓDOSÍTÁS: a korábbi fix összszélességű team-modal rácsok első,
- * szöveges oszlopa a modal aktuális szélességéhez zsugorodik. Az
- * értékoszlopok és a tartalom jelentése változatlan marad.
+ * MÓDOSÍTÁS: a team modal rácsai a modal tényleges szélességét követik.
+ * Keskeny helyen az információpárok egymás alá rendeződnek, a tartalom
+ * és a builder által megadott piros/zöld színek változatlanok maradnak.
  */
