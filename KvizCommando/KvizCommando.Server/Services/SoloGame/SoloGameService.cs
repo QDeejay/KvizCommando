@@ -533,8 +533,9 @@ public sealed class SoloGameService : ISoloGameService
         double time,
         int oldScore,
         double oldTime) =>
-        score > oldScore ||
-        score == oldScore && (oldTime <= 0 || time < oldTime);
+        score > 0 &&
+        (score > oldScore ||
+         score == oldScore && (oldTime <= 0 || time < oldTime));
 
     private static void Shuffle<T>(IList<T> values)
     {
@@ -552,4 +553,5 @@ public sealed class SoloGameService : ISoloGameService
  * HTTP start/finish út, a teljes finish request, elapsed validáció és
  * kérdéstoken megszűnt. A kapcsolat sorrendje azonosítja az aktuális
  * kérdést; az utolsó elfogadott válasz közvetlenül lezárja a játékot.
+ * MÓDOSÍTÁS: nulla pontos eredmény nem minősül új rekordnak.
  */

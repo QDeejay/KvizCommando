@@ -195,6 +195,7 @@ public partial class SoloGameManager : IAsyncDisposable
         }
 
         _remainingSeconds = 0;
+        _points = 0;
         await SaveAnswerAsync(
             -1,
             _game.AnswerTimeSeconds * 1000,
@@ -563,4 +564,5 @@ public partial class SoloGameManager : IAsyncDisposable
  * adja át, így a mérés eredménye a VS nézettel azonos módon látható.
  * MÓDOSÍTÁS: aktív játék közbeni SignalR-hibánál azonnal megállítja a
  * kérdésórát, megszakítja a játékmenetet és hibastátuszra vált.
+ * MÓDOSÍTÁS: lejárt kérdésidőnél a kijelzett járó pontot is nullázza.
  */

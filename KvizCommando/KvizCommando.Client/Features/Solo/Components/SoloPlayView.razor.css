@@ -339,7 +339,8 @@
     overflow: auto;
 
    
-    font-size: clamp(1.05rem, 1.55vw, 1.55rem);
+    font-size: clamp(1rem, 1.7vw, 1.35rem);
+    font-weight: 700;
     line-height: 1.35;
     text-align: center;
 
@@ -978,3 +979,8 @@ transition: width .25s linear;
 
 
 */
+
+/*
+ * MÓDOSÍTÁS: a Solo kérdés- és státuszkijelző tipográfiája a VS
+ * kérdéskijelző betűméretét és félkövérségét használja.
+ */
