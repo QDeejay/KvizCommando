@@ -177,6 +177,21 @@
   <data name="Label.GameProcess.Connecting" xml:space="preserve">
     <value>Csatlakozás a szerverhez</value>
   </data>
+  <data name="Connection.Checking" xml:space="preserve">
+    <value>Kapcsolat ellenőrzése</value>
+  </data>
+  <data name="Connection.ResponseTime" xml:space="preserve">
+    <value>Válaszidő: {0}ms - {1}</value>
+  </data>
+  <data name="Connection.Good" xml:space="preserve">
+    <value>megfelelő</value>
+  </data>
+  <data name="Connection.Medium" xml:space="preserve">
+    <value>közepes</value>
+  </data>
+  <data name="Connection.Bad" xml:space="preserve">
+    <value>rossz</value>
+  </data>
   <data name="Label.GameProcess.Starting" xml:space="preserve">
     <value>Játék indítása</value>
   </data>

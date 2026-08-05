@@ -1,4 +1,5 @@
 using KvizCommando.Client.Features.Solo.ViewModels;
+using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Enums.VsGame;
 using Microsoft.AspNetCore.Components;
@@ -40,7 +41,37 @@ public partial class SoloPlayView
         };
 
     private string ConnectionTitle =>
-        $"{Data.Game.ResponseTimeMilliseconds} ms";
+        Data.Game.IsConnectionActive
+            ? $"{Data.Game.ResponseTimeMilliseconds} ms"
+            : string.Empty;
+
+    private bool HasConnectionResult =>
+        Data.Game.ConnectionQuality != VsConnectionQuality.Unknown;
+
+    private string ConnectionResultText =>
+        Lang["solo.Connection.ResponseTime"].FormatSafe(
+            Data.Game.ResponseTimeMilliseconds,
+            Lang[ConnectionQualityTextKey(
+                Data.Game.ConnectionQuality)]);
+
+    private string ConnectionResultClass =>
+        Data.Game.ConnectionQuality switch
+        {
+            VsConnectionQuality.Good => "good",
+            VsConnectionQuality.Medium => "medium",
+            VsConnectionQuality.Bad => "bad",
+            _ => string.Empty
+        };
+
+    private static string ConnectionQualityTextKey(
+        VsConnectionQuality quality) =>
+        quality switch
+        {
+            VsConnectionQuality.Good => "solo.Connection.Good",
+            VsConnectionQuality.Medium => "solo.Connection.Medium",
+            VsConnectionQuality.Bad => "solo.Connection.Bad",
+            _ => string.Empty
+        };
     private double TimerPercent => Data.Game.TotalSeconds <= 0
         ? 0
         : Math.Clamp((double)Data.Game.RemainingSeconds / Data.Game.TotalSeconds * 100, 0, 100);
@@ -87,3 +118,8 @@ public partial class SoloPlayView
        ? OnAnswerSelected.InvokeAsync(answerIndex)
        : Task.CompletedTask;
 }
+
+/**
+ * MÓDOSÍTÁS: a VS rosterrel azonos pingminősítést, hasábos ikont és
+ * lokalizált kapcsolatellenőrzési eredményt készíti elő a Solo nézetnek.
+ */

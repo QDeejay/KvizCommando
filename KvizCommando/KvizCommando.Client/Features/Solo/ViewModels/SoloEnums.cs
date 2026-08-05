@@ -3,6 +3,7 @@
     public enum SoloPanelMode
     {
         Status,
+        Connection,
         Question,
         Evaluation,
         Reward
@@ -17,3 +18,8 @@
         Unanswered
     }
 }
+
+/**
+ * MÓDOSÍTÁS: a Connection mód elkülöníti a pingteszt megjelenítését a
+ * Solo általános státusz- és kérdésnézeteitől.
+ */

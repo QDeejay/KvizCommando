@@ -72,6 +72,9 @@ public partial class SoloGame : KcComponentBase, IDisposable
                 _boxOrder = boxId == 420 ? SgameBoxBuilder.SubCat : SgameBoxBuilder.GameCat;
                 _gameMode = SoloGameMode.Category;
                 _selectionId = boxId - 420;
+                _gameTitle = boxId == 420
+                    ? string.Empty
+                    : _boxes[$"{SgameBoxKeySub.BtnCat}{_selectionId}"].Header;
                 headerTitle = _boxes[SgameBoxKeyRoot.RtBtnCategory.ToString()].Header;
                 break;
 
@@ -79,6 +82,9 @@ public partial class SoloGame : KcComponentBase, IDisposable
                 _boxOrder = boxId == 450 ? SgameBoxBuilder.SubOri : SgameBoxBuilder.GameOri;
                 _gameMode = SoloGameMode.Orientation;
                 _selectionId = boxId - 450;
+                _gameTitle = boxId == 450
+                    ? string.Empty
+                    : _boxes[$"{SgameBoxKeySub.BtnOri}{_selectionId}"].Header;
                 headerTitle = _boxes[SgameBoxKeyRoot.RtBtnOrient.ToString()].Header;
                 break;
 
@@ -159,4 +165,6 @@ public partial class SoloGame : KcComponentBase, IDisposable
  * MÓDOSÍTÁS: a Solo oldal külön kezeli a folyamatban lévő és a már
  * befejezett játék visszalépését. Tényleges csapatszintlépés után a
  * meglévő csapat-előléptetési modalt mutatja, majd folytatja a kilépést.
+ * MÓDOSÍTÁS: játékindításkor a kiválasztott kategória vagy orientáció
+ * neve kerül a Solo játéknézet címparaméterébe.
  */

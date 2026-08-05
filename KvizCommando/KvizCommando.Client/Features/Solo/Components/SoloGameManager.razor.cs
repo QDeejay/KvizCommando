@@ -49,7 +49,7 @@ public partial class SoloGameManager : IAsyncDisposable
     private int _evaluatedCount;
     private bool _answerEnabled;
     private bool _isDisposed;
-    private string _statusKey = "solo.Label.GameProcess.Preparing";
+    private string _statusKey = "solo.Label.GameProcess.Connecting";
 
     private string Culture => AppStates.Culture;
     private UserMainData UserData => AppStates.Home!.UserMainData;
@@ -96,8 +96,6 @@ public partial class SoloGameManager : IAsyncDisposable
         try
         {
             await Audio.PlayMusicAsync("Battle01.webm");
-            await ShowStatusAsync("solo.Label.GameProcess.Preparing", 1000, ct);
-
             _statusKey = "solo.Label.GameProcess.Connecting";
             await RenderAsync();
 
@@ -112,6 +110,11 @@ public partial class SoloGameManager : IAsyncDisposable
                 await ShowFailureAsync();
                 return;
             }
+
+            await ShowStatusAsync(
+                "solo.Label.GameProcess.Preparing",
+                1000,
+                ct);
 
             _hasActiveGame = true;
             _answers = [.. _game.Questions.Select(question => new SoloAnswerDto
@@ -370,7 +373,10 @@ public partial class SoloGameManager : IAsyncDisposable
         {
             return new SoloPanelViewData
             {
-                Mode = SoloPanelMode.Status,
+                Mode = _statusKey ==
+                    "solo.Label.GameProcess.Connecting"
+                        ? SoloPanelMode.Connection
+                        : SoloPanelMode.Status,
                 DisplayLines =
                 [
                     new SoloDisplayLine { ResourceKey = _statusKey }
@@ -534,4 +540,6 @@ public partial class SoloGameManager : IAsyncDisposable
  * válaszfolyamát kezeli. A kapcsolat állapotát megjelenítésre továbbítja,
  * hivatalos kilépéskor abortálja az aktív játékot, majd lezárja a hubot.
  * A befejezett játék Team XP-szintlépését a szülő oldalnak jelzi.
+ * MÓDOSÍTÁS: a kapcsolatellenőrzési státuszt külön megjelenítési módon
+ * adja át, így a mérés eredménye a VS nézettel azonos módon látható.
  */

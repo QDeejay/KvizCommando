@@ -244,7 +244,8 @@ public sealed class SoloGameClientService : ISoloGameClientService
 
 /**
  * MÓDOSÍTÁS: a korábbi HTTP kliens helyett egyetlen, automatikusan
- * újra nem kapcsolódó Solo SignalR kapcsolatot kezel. Start előtt
- * ötpróbás pinget kér, a válaszok után átveszi az egypróbás friss
- * értéket, és csak a Start/SubmitAnswer/Abort műveleteket küldi.
+ * újra nem kapcsolódó Solo SignalR kapcsolatot kezel. A StartAsync
+ * előbb elvégzi az ötpróbás pinget és kivárja az eredmény megjelenítési
+ * idejét, majd ugyanazon a kapcsolaton kéri a szerveroldali startot.
+ * A válaszok után átveszi az egypróbás friss értéket.
  */

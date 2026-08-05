@@ -177,6 +177,21 @@
   <data name="Label.GameProcess.Connecting" xml:space="preserve">
     <value>Connecting to server</value>
   </data>
+  <data name="Connection.Checking" xml:space="preserve">
+    <value>Checking connection</value>
+  </data>
+  <data name="Connection.ResponseTime" xml:space="preserve">
+    <value>Response time: {0} ms - {1}</value>
+  </data>
+  <data name="Connection.Good" xml:space="preserve">
+    <value>good</value>
+  </data>
+  <data name="Connection.Medium" xml:space="preserve">
+    <value>medium</value>
+  </data>
+  <data name="Connection.Bad" xml:space="preserve">
+    <value>poor</value>
+  </data>
   <data name="Label.GameProcess.Starting" xml:space="preserve">
     <value>Starting game</value>
   </data>
