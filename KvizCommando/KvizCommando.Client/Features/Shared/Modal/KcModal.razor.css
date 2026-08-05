@@ -128,19 +128,19 @@
     align-content: center;
     margin-left:4px;
 }
-.kc-modal-fixed-modal-sm-lock { 
+.modal-sm.locked { 
     --bs-modal-width: 300px; 
 }
 
-.kc-modal-fixed--lock { 
+.locked { 
     --bs-modal-width: 500px; 
 }
 
-.kc-modal-fixed-modal-lg-lock { 
+.modal-lg.locked { 
     --bs-modal-width: 800px; 
 }
 
-.kc-modal-fixed-modal-xl-lock { 
+.modal-xl.locked { 
     --bs-modal-width: 1140px; 
 }
 

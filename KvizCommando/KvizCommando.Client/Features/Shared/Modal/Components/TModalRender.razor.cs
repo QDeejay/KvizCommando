@@ -17,7 +17,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Components
 
         [CascadingParameter]
         public ModalTypes Mode { get; set; } = ModalTypes.None;
-
+        
         [Parameter] public int CanDidateNo { get; set; } = default!;
         [Parameter] public int SelectedMember { get; set; } = default!;
         private bool _isLoaded = false;
@@ -25,6 +25,15 @@ namespace KvizCommando.Client.Features.Shared.Modal.Components
         private TeamExtendedInfo TeamInfo => AppStates.Team!.TeamInfo;
         private HelpDto Help => AppStates.Team!.Help;
 
+        private string InfoClass => Mode switch
+        {
+            ModalTypes.THire => "member-info-block",
+            ModalTypes.TPromoteMember => "member-info-block",
+            ModalTypes.TRetire => "member-info-block",
+            ModalTypes.THandle => "member-info-block",
+            ModalTypes.TPromoteTeam => "team-info-block",
+            _ => string.Empty
+        };
         private TeamMemberDto Member => SelectedMember > 0 && SelectedMember <= 8 ? AppStates.Team.TeamMembers[SelectedMember] : new();
         private CandidateDto Candidate => CanDidateNo > 0 && CanDidateNo <= 8 ? AppStates.Team.Candidates[SelectedMember] : new();
 

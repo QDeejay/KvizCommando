@@ -21,6 +21,7 @@ namespace KvizCommando.Client.Features.Shared.Modal
         [Parameter] public EventCallback OnCheckBoxAction { get; set; }
         [Parameter] public EventCallback<ModalResult> OnModalAction { get; set; }
 
+        private const string DEFAULT_MODAL_SIZE = "modal-md";
         private ModalBoxVm Par = new();
         private bool CanAccept { get; set; } = false;
         private bool _bottomReached;
@@ -28,7 +29,7 @@ namespace KvizCommando.Client.Features.Shared.Modal
         private string? BodyStyle =>
                 Par.CheckBottom ? "overflow-y: auto;" : null;
 
-        private string ModalSizeClass => Par.SizeLock ? $"kc-modal-{Par.Size}-lock" : Par.Size;
+        private string ModalSizeClass => Par.SizeLock ? $"{Par.SizeLock} locked" : Par.Size;
         private sealed record ScrollMetrics(
             double ScrollTop, double ScrollHeight, double ClientHeight,
             double OffsetHeight, double BoxHeight);

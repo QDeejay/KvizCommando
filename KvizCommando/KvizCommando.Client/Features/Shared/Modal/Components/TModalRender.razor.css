@@ -3,7 +3,12 @@
     min-width: 0;
     max-width: 100%;
 }
-.info-block {
+.member-info-block {
+    display: grid;
+    grid-template-columns: 70px minmax(0, 1fr) 85px 70px;
+    margin-bottom: 10px;
+}
+.team-info-block {
     display: grid;
     grid-template-columns: 70px minmax(0, 1fr) 85px 70px;
     margin-bottom: 10px;

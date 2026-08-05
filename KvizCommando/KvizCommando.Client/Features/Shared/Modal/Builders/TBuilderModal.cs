@@ -72,7 +72,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                 Name = info.Name,
                 Devpoints = info.DevPoints.ToString(),
                 //Level = info.Level,
-                Level = 30,
+                Level = 29,
             };
             int newLevel = Math.Min(bi.Level + 1, 30);
             int addDevPoints = RankRewards.List[newLevel].DevPointToStore;
@@ -102,7 +102,6 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             vm.UnlocksOrg = RankNameLocalizer.GetTeam(newLevel, culture);
             vm.UnlockExtras = newExtra > 0 ? _lang["team.modal.Label.UnlocksExtras"] : string.Empty;
             vm.UnlockHelps = _lang["team.modal.Label.UnlocksHelps"];
-
 
             vm.Rows.Add(newExtra >= 200
                 ? new ModalRow(
@@ -316,7 +315,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             int newL = level;
             for (int i = 0; i < 4; i++)
             {
-                if (newL >= slevel[i])
+                if (newL >= slevel[i] && help.Skill[i].LvlCurMax + 1<= maxLevel[i])
                 {
                     vm.Rows.Add(new ModalRow(
                      CategoryName: CategoryNameLocalizer.GetCategory(help.Category[i], culture),
@@ -377,6 +376,5 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             public int Orient1 = 0;
             public int Orient2 = 0;
         }
-
     }
 }
