@@ -4,9 +4,7 @@ namespace KvizCommando.Client.Services.Audio
 {
     public sealed class AudioService
     {
-        public const string MUSIC_MENU = "Menu02.webm";
-        public const string MUSIC_BATTLE = "Battle01.webm";
-
+        public const string SFX_CLICK = "Click.webm";
         public const string SFX_SELECT = "Select.webm";
         public const string SFX_HIT = "Hit.webm";
         public const string SFX_EMPTY = "Empty.webm";
@@ -19,48 +17,54 @@ namespace KvizCommando.Client.Services.Audio
 
         private readonly IJSRuntime _jsRuntime;
         private bool _isInitialized;
-        private string? _requestedMusic;
+        private MusicTrack? _requestedMusic;
 
-        public bool IsEnabled { get; private set; }
+        public bool IsMuted { get; private set; } = true;
 
         public AudioService(IJSRuntime jsRuntime)
         {
             _jsRuntime = jsRuntime;
         }
 
-        public async Task InitializeAsync(bool? enabled = null)
+        public async Task InitializeAsync()
         {
-            if (!_isInitialized)
-            {
-                await _jsRuntime.InvokeVoidAsync(
-                    "audioEngine.initialize");
-                _isInitialized = true;
-            }
-
-            if (enabled.HasValue)
-                await SetEnabledAsync(enabled.Value);
-        }
-
-        public async Task SetEnabledAsync(bool enabled)
-        {
-            IsEnabled = enabled;
-
-            await _jsRuntime.InvokeVoidAsync(
-                "audioEngine.setEnabled",
-                enabled);
-
-            if (!enabled)
+            if (_isInitialized)
                 return;
 
-            _requestedMusic ??= MUSIC_MENU;
-            await PlayMusicInternalAsync(_requestedMusic);
+            await _jsRuntime.InvokeVoidAsync(
+                "audioEngine.initialize");
+            await _jsRuntime.InvokeVoidAsync(
+                "audioEngine.setMuted",
+                true);
+            _isInitialized = true;
+            IsMuted = true;
         }
 
-        public async Task PlayMusicAsync(string fileName)
+        public async Task SetMutedAsync(
+            bool muted,
+            MusicTrack? fallbackMusic = null)
         {
-            _requestedMusic = fileName;
+            IsMuted = muted;
 
-            await PlayMusicInternalAsync(fileName);
+            await _jsRuntime.InvokeVoidAsync(
+                "audioEngine.setMuted",
+                muted);
+
+            if (!muted &&
+                !_requestedMusic.HasValue &&
+                fallbackMusic.HasValue)
+            {
+                await PlayMusicAsync(fallbackMusic.Value);
+            }
+        }
+
+        public async Task PlayMusicAsync(MusicTrack track)
+        {
+            _requestedMusic = track;
+
+            await _jsRuntime.InvokeVoidAsync(
+                "audioEngine.playMusic",
+                $"audio/music/{track}.webm");
         }
 
         public async Task StopMusicAsync()
@@ -82,6 +86,9 @@ namespace KvizCommando.Client.Services.Audio
 
         public async Task PlaySfxAsync(string fileName)
         {
+            if (IsMuted)
+                return;
+
             await _jsRuntime.InvokeVoidAsync(
                 "audioEngine.playSfx",
                 $"audio/sfx/{fileName}");
@@ -104,16 +111,13 @@ namespace KvizCommando.Client.Services.Audio
                 "audioEngine.stopAll");
         }
 
-        private Task PlayMusicInternalAsync(string fileName) =>
-            _jsRuntime.InvokeVoidAsync(
-                "audioEngine.playMusic",
-                $"audio/music/{fileName}").AsTask();
     }
 }
 
 /**
- * MÓDOSÍTÁS: a perzisztált master állapot valódi némítás. Kikapcsolva
- * a zene és az effektek idővonala tovább fut, csak nem hallható.
- * Visszakapcsoláskor az aktuális zene folytatódik; ha nincs kért zene,
- * a menüzene indul. A játékok hangfájljainak nevei egy helyen vannak.
+ * MÓDOSÍTÁS: minden böngészőindulás némán kezdődik. A master mute nem
+ * állítja le a lejátszást; unmute-kor az aktuális sáv folytatódik, vagy
+ * a hívó által megadott fallback zene indul, ha még nincs aktív sáv.
+ * Némított állapotban az egyszeri effektek létre sem jönnek.
+ * A zenéket MusicTrack enum, az effekteket központi fájlnevek jelölik.
  */

@@ -267,7 +267,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                             break;
 
                         case ManageType.Heal:
-                            member!.EnergyPoints = 33 + member.Rank * 3;
+                            member!.EnergyPoints = 36 + member.Rank * 3;
                             member.DevPoints -= 1;
                             break;
                     }
@@ -590,3 +590,8 @@ namespace KvizCommando.Server.Services.DtoMapping
         }
     }
 }
+
+/**
+ * MÓDOSÍTÁS: a gyógyítás a karakter maximum vitalitását ugyanazzal a
+ * 36 + szint * 3 képlettel állítja vissza, mint a többi csapatnézet.
+ */

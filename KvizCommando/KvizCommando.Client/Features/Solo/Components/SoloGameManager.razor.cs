@@ -47,6 +47,7 @@ public partial class SoloGameManager : IAsyncDisposable
     private int _remainingSeconds;
     private int _points;
     private int _evaluatedCount;
+    private int _evaluatedCorrectAnswers;
     private bool _answerEnabled;
     private bool _isDisposed;
     private string _statusKey = "solo.Label.GameProcess.Connecting";
@@ -74,7 +75,11 @@ public partial class SoloGameManager : IAsyncDisposable
             ConnectionQuality =
                 GameService.ConnectionCheck?.Quality ??
                 VsConnectionQuality.Unknown,
-            IsConnectionActive = GameService.IsConnected
+            IsConnectionActive = GameService.IsConnected,
+            IsHealing = _game?.IsHealing == true,
+            IsHealingCompleted =
+                _game is { IsHealing: true } game &&
+                _evaluatedCorrectAnswers * 2 >= game.QuestionCount
         },
         Panel = BuildPanelData()
     };
@@ -96,7 +101,7 @@ public partial class SoloGameManager : IAsyncDisposable
         try
         {
             await Audio.PlayMusicAsync(
-                AudioService.MUSIC_BATTLE);
+                MusicTrack.Battle01);
             _statusKey = "solo.Label.GameProcess.Connecting";
             await RenderAsync();
 
@@ -268,7 +273,7 @@ public partial class SoloGameManager : IAsyncDisposable
                 _result.Rewards.NewTeamLevel);
         }
         await Audio.PlayMusicAsync(
-            AudioService.MUSIC_MENU);
+            MusicTrack.Menu01);
         await ShowStatusAsync("solo.Label.GameProcess.Evaluating", 1000, ct);
         await ShowStatusAsync("solo.Label.GameProcess.EvaluationReady", 1000, ct);
         await EvaluateAsync(ct);
@@ -279,6 +284,7 @@ public partial class SoloGameManager : IAsyncDisposable
         _phase = SoloGamePhase.Evaluation;
         _points = 0;
         _evaluatedCount = 0;
+        _evaluatedCorrectAnswers = 0;
         _skipSignal = new TaskCompletionSource(
             TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -290,6 +296,8 @@ public partial class SoloGameManager : IAsyncDisposable
             var questionState =
                 ResolveQuestionState(_questionIndex);
             _progress[_questionIndex] = questionState;
+            if (questionState == SoloQuestionState.Correct)
+                _evaluatedCorrectAnswers++;
             _evaluatedCount++;
             _points += _result.TotalPoints[_questionIndex];
             await Audio.PlaySfxAsync(
@@ -323,6 +331,7 @@ public partial class SoloGameManager : IAsyncDisposable
             _progress[i] = ResolveQuestionState(i);
 
         _evaluatedCount = _result.AnswerResults.Length;
+        _evaluatedCorrectAnswers = _result.CorrectAnswers;
         _points = _result.TotalPoints.Sum();
         _questionIndex = Math.Max(_result.AnswerResults.Length - 1, 0);
     }
@@ -438,7 +447,9 @@ public partial class SoloGameManager : IAsyncDisposable
                 TeamDevPoints = _result?.Rewards.TeamDevPoints ?? 0,
                 MemberXp = _result?.Rewards.MemberXp ?? 0,
                 MemberDevPoints = _result?.Rewards.MemberDevPoints ?? 0,
-                NewTeamLevel = _result?.Rewards.NewTeamLevel ?? 0
+                NewTeamLevel = _result?.Rewards.NewTeamLevel ?? 0,
+                HealingPointAwarded =
+                    _result?.Rewards.HealingPointAwarded == true
             },
             Progress = _progress
         };
@@ -556,7 +567,7 @@ public partial class SoloGameManager : IAsyncDisposable
         try
         {
             await Audio.PlayMusicAsync(
-                AudioService.MUSIC_MENU);
+                MusicTrack.Menu01);
         }
         catch (Exception ex)
         {
@@ -590,4 +601,8 @@ public partial class SoloGameManager : IAsyncDisposable
  * MÓDOSÍTÁS: választáskor rövid kijelölési effektet, a kiértékeléskor
  * találat-, üres tár- vagy mellélövés-hangot játszik. A jutalomnézet
  * normál eredményt és új rekordot külön hanggal jelez.
+ * MÓDOSÍTÁS: a Solo játékhoz a Battle01, befejezéskor és kilépéskor
+ * pedig a közös Menu01 zenei sávot kéri az AudioService-től.
+ * MÓDOSÍTÁS: a gyógyító játék szívjelzését a már felfedett helyes
+ * válaszok alapján, a jutalomikonját a szerver eredményéből vezérli.
  */

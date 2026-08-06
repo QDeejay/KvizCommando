@@ -142,7 +142,7 @@
                             disabled="@(!Data.Preparation.CanFinish || Data.Preparation.IsFinished)"
                             aria-label="@Lang["vsgame.Match.Button.Finish"]"
                             title="@Lang["vsgame.Match.Button.Finish"]"
-                            @onclick="OnFinish">
+                            @onclick="FinishAsync">
                         <i class="bi bi-check2"></i>
                     </button>
                 </div>
@@ -156,7 +156,7 @@
                         <button type="button"
                                 class="kc-vs-prep-character-card"
                                 disabled="@Data.Preparation.IsFinished"
-                                @onclick="() => OnCharacterSelected.InvokeAsync(character.SlotNumber)">
+                                @onclick="() => SelectCharacterAsync(character.SlotNumber)">
                             <div class="kc-vs-prep-inventory-picture-frame">
                                 <div class="kc-vs-prep-inventory-svg-host">
                                     <CharacterView PicCode="@character.PictureCode" />
@@ -178,7 +178,7 @@
                         <button type="button"
                                 class="kc-vs-prep-loadout-card @(_selectedLoadoutPosition == loadout.LoadoutPosition ? "selected" : "") @(!loadout.IsSelectable ? "locked" : "")"
                                 disabled="@(!loadout.IsSelectable || Data.Preparation.IsFinished)"
-                                @onclick="() => SelectLoadout(loadout)">
+                                @onclick="() => SelectLoadoutAsync(loadout)">
                             <img src="@loadout.ImageSrc"
                                  alt="@loadout.CategoryName" />
                             @if (!loadout.IsSelectable)
@@ -200,7 +200,7 @@
                         <button type="button"
                                 class="kc-vs-prep-help-card @(_selectedHelp == help.HelpType ? "selected" : "")"
                                 disabled="@(help.Count <= 0 || Data.Preparation.IsFinished)"
-                                @onclick="() => SelectHelp(help)">
+                                @onclick="() => SelectHelpAsync(help)">
                             <i class="@help.IconCss"></i>
                             <span>
                                 <strong>@help.Name</strong>
@@ -235,4 +235,6 @@
 
     A három VS preparáció közös, snapshot-alapú nézete. Karaktersorrendet,
     kategóriakiosztást, segítségkiosztást és szerverhatáridőt jelenít meg.
+    MÓDOSÍTÁS: minden érvényes preparációs művelet ugyanazt a halk
+    Click effektet használja; letiltott cél vagy elem nem ad hangot.
 *@

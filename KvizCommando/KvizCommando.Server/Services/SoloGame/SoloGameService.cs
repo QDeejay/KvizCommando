@@ -132,7 +132,11 @@ public sealed class SoloGameService : ISoloGameService
             Mode = request.Mode,
             SelectionId = request.SelectionId,
             Level = level,
-            isHealing = character?.EnergyPoints == 0,
+            IsHealing = character is
+            {
+                EnergyPoints: 0,
+                DevPoints: 0
+            },
             PointsPerLevel = 100 + level / 2 * 10,
             ExpiresAtUtc = now.Add(gameTime)
                 .AddSeconds(EXPIRATION_ALLOWANCE_SECONDS),
@@ -145,6 +149,7 @@ public sealed class SoloGameService : ISoloGameService
         return (new StartSoloGameResponse
         {
             GameId = game.GameId,
+            IsHealing = game.IsHealing,
             QuestionCount = questionCount,
             AnswerTimeSeconds = ANSWER_SECONDS,
             FeedbackTimeSeconds = FEEDBACK_SECONDS,
@@ -262,10 +267,12 @@ public sealed class SoloGameService : ISoloGameService
         if (highScore.Success != true)
             return (null, highScore.Success);
 
+        var correctAnswers = answerResults.Count(result => result == true);
         var reward = await CreateRewardAsync(
             game,
             points.Sum(),
             highScore.OldScore,
+            correctAnswers,
             ct);
 
         if (reward.Success != true)
@@ -278,7 +285,7 @@ public sealed class SoloGameService : ISoloGameService
             [
                 .. answerResults.Select(result => result == true)
             ],
-            CorrectAnswers = answerResults.Count(result => result == true),
+            CorrectAnswers = correctAnswers,
             WrongAnswers = answerResults.Count(result => result != true),
             TotalAnswerTimeMs = totalTimeMs,
             IsNewHighScore = highScore.IsNewHighScore,
@@ -372,6 +379,7 @@ public sealed class SoloGameService : ISoloGameService
             SoloGameSession game,
             int newScore,
             int oldScore,
+            int correctAnswers,
             CancellationToken ct)
     {
         var earnedDevelopmentPoints = Math.Max(
@@ -383,6 +391,9 @@ public sealed class SoloGameService : ISoloGameService
         var teamDevelopmentPoints = 0;
         var memberDevelopmentPoints = 0;
         var newTeamLevel = 0;
+        var healingPointAwarded =
+            game.IsHealing &&
+            correctAnswers * 2 >= game.Questions.Count;
 
         var success = await _playerCache.UpdatePlayerLockedAsync(
             game.PlayerId,
@@ -401,7 +412,8 @@ public sealed class SoloGameService : ISoloGameService
                         return null;
 
                     memberDevelopmentPoints =
-                        earnedDevelopmentPoints + (game.isHealing ? 1 : 0);
+                        earnedDevelopmentPoints +
+                        (healingPointAwarded ? 1 : 0);
 
                     if (game.Level == 0 && newScore > 0)
                     {
@@ -447,7 +459,8 @@ public sealed class SoloGameService : ISoloGameService
             TeamDevPoints = teamDevelopmentPoints,
             NewTeamLevel = newTeamLevel,
             MemberXp = memberXp,
-            MemberDevPoints = memberDevelopmentPoints
+            MemberDevPoints = memberDevelopmentPoints,
+            HealingPointAwarded = healingPointAwarded
         });
     }
 
@@ -547,6 +560,13 @@ public sealed class SoloGameService : ISoloGameService
         }
     }
 }
+
+/**
+ * MÓDOSÍTÁS: a nulla vitalitású és fejlesztési ponttal még nem rendelkező
+ * karakter Solo játéka gyógyító játék.
+ * A plusz fejlesztési pont kizárólag akkor jár, ha a játékos legalább
+ * a kérdések felére helyesen válaszolt; ezt a szerver számolja és jelzi.
+ */
 
 /**
  * MÓDOSÍTÁS: a Solo játék kizárólag SignalR parancsokat kezel. A régi

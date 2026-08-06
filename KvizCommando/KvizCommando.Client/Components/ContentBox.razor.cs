@@ -1,4 +1,5 @@
 ﻿using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Services.Audio;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System.Runtime.Intrinsics.X86;
@@ -7,6 +8,8 @@ namespace KvizCommando.Client.Components
 {
     public partial class ContentBox : IDisposable
     {
+        [Inject] private AudioService Audio { get; set; } = default!;
+
         [Parameter] public ContentBoxVm Vm { get; set; } = default!;
         [Parameter] public EventCallback<int> OnClick { get; set; }
         [Parameter] public EventCallback FooterClick { get; set; }
@@ -35,6 +38,8 @@ namespace KvizCommando.Client.Components
         {
             if (_vm.IsClickable && _vm.IsEnabled)
             {
+                await Audio.PlaySfxAsync(AudioService.SFX_CLICK);
+
                 if (OnClick.HasDelegate)
                     await OnClick.InvokeAsync(_vm.ClickId);
             }
@@ -62,3 +67,8 @@ namespace KvizCommando.Client.Components
 
     }
 }
+
+/**
+ * MÓDOSÍTÁS: minden engedélyezett, kattintható ContentBox az egységes,
+ * halk Click effektet játssza le az OnClick továbbítása előtt.
+ */

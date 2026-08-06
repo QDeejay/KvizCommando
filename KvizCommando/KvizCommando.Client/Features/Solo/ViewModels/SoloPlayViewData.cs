@@ -32,6 +32,8 @@ namespace KvizCommando.Client.Features.Solo.ViewModels
         public int ResponseTimeMilliseconds { get; init; }
         public VsConnectionQuality ConnectionQuality { get; init; }
         public bool IsConnectionActive { get; init; }
+        public bool IsHealing { get; init; }
+        public bool IsHealingCompleted { get; init; }
     }
 
     public sealed class SoloPanelViewData
@@ -59,6 +61,7 @@ namespace KvizCommando.Client.Features.Solo.ViewModels
         public int MemberXp { get; init; }
         public int MemberDevPoints { get; init; }
         public int NewTeamLevel { get; init; }
+        public bool HealingPointAwarded { get; init; }
     }
     public sealed class SoloDisplayLine
     {
@@ -73,4 +76,6 @@ namespace KvizCommando.Client.Features.Solo.ViewModels
 /**
  * MÓDOSÍTÁS: a Solo nézet megkapja a hubon mért válaszidőt és a szerver
  * által minősített kapcsolat állapotát.
+ * MÓDOSÍTÁS: a gyógyító játék és annak kiértékelés közbeni teljesülése,
+ * valamint a szerver által kiosztott gyógyítási pont is megjeleníthető.
  */

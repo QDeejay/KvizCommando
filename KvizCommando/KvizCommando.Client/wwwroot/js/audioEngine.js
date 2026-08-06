@@ -177,9 +177,9 @@
     // SETTINGS
     // =========================================
 
-    function setEnabled(enabled) {
+    function setMuted(muted) {
 
-        masterMuted = !enabled;
+        masterMuted = muted;
 
         if (musicPlayer !== null)
             musicPlayer.muted = masterMuted || !musicEnabled;
@@ -257,7 +257,7 @@
         playMusic,
         stopMusic,
 
-        setEnabled,
+        setMuted,
 
         setMusicEnabled,
         setMusicVolume,
@@ -275,5 +275,6 @@
  * MÓDOSÍTÁS: a motor közös master mute állapotot használ. Némításkor
  * a zene és az aktív effektek nem állnak le, csak elnémulnak; az új
  * lejátszások is némán futnak. Feloldáskor az aktuális idővonalon
- * folytatódik a hang.
+ * folytatódik a hang. A publikus API a működésének megfelelő
+ * setMuted nevet használja.
  */

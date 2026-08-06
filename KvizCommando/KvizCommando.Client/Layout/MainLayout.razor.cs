@@ -3,7 +3,6 @@ using Blazored.SessionStorage;
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Shared.Modal;
 using KvizCommando.Client.Features.Shared.Modal.Builders;
-using KvizCommando.Client.Features.VsGame;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
@@ -30,7 +29,6 @@ namespace KvizCommando.Client.Layout
         private static readonly string _localNotShowNew = ModalConst.LOCAL_NOT_SHOW_NEW;
         private static readonly string _localNotShowDel = ModalConst.LOCAL_NOT_SHOW_DEL;
         private const string LOCAL_LAST_B_BOARD = "B.B";
-        private const string LOCAL_SOUND_ENABLED = "audio:enabled";
 
         private readonly AppState _appState = new();
 
@@ -39,7 +37,6 @@ namespace KvizCommando.Client.Layout
         private string _culture = "hu";
         private bool _isReady = false;
         private bool _isLoggedIn = false;
-        private bool _isSoundOn;
         private bool _isBckBtnEna = false;
         private string _currentTitle = string.Empty;
         private bool _isDesktopNavOpen = true;
@@ -85,10 +82,7 @@ namespace KvizCommando.Client.Layout
             await Ui.Lang.LoadModuleAsync(_culture, "mainlayout");  // szükséges
             await Ui.Lang.LoadModuleAsync(_culture, "home");
 
-            _isSoundOn =
-                await LocalStorage.GetItemAsync<bool?>(
-                    LOCAL_SOUND_ENABLED) ?? true;
-            await Audio.InitializeAsync(_isSoundOn);
+            await Audio.InitializeAsync();
 
             var sessionId = await SessionStorage.GetItemAsync<string>("SessionId");
 
@@ -112,7 +106,7 @@ namespace KvizCommando.Client.Layout
             }
 
             if (_isLoggedIn)
-                await Audio.PlayMusicAsync(AudioService.MUSIC_MENU);
+                await Audio.PlayMusicAsync(MusicTrack.Menu02);
 
             _isReady = true;
         }
@@ -155,11 +149,9 @@ namespace KvizCommando.Client.Layout
         }
         private async Task SetSoundEnabledAsync(bool enabled)
         {
-            _isSoundOn = enabled;
-            await LocalStorage.SetItemAsync(
-                LOCAL_SOUND_ENABLED,
-                _isSoundOn);
-            await Audio.SetEnabledAsync(_isSoundOn);
+            await Audio.SetMutedAsync(
+                !enabled,
+                enabled ? MusicTrack.Menu01 : null);
         }
         private async Task Logout()
         {
@@ -287,8 +279,11 @@ namespace KvizCommando.Client.Layout
  * képernyős navbar-tiltását a VS ranked meccs 311–315 tartományára is
  * alkalmazza. Teljes képernyőre váltáskor a korábban nyitva maradt
  * oldalsávot is bezárja. A fejléc vissza gombját ez nem tiltja.
- * MÓDOSÍTÁS: a közös hangkapcsolót LocalStorage-ba menti, az LCD
- * megjelenítési állapotát pedig magára az LCD komponensre bízza.
+ * MÓDOSÍTÁS: minden teljes böngészőfrissítés némított állapotból indul,
+ * de meglévő sessionnél a Menu01 már némán fut a háttérben. A közös
+ * hangkapcsoló valódi master mute-ként működik; feloldáskor az aktuális
+ * sáv folytatódik, aktív sáv hiányában a Menu01 indul el. Az LCD
+ * közvetlenül az AudioService állapotát jeleníti meg.
  * Minden Home snapshot frissítés után újraépíti az aktuális
  * csapatadatokat tartalmazó LCD-üzeneteket.
  */

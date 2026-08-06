@@ -36,6 +36,7 @@ public partial class VsMatchManager : IAsyncDisposable
     private VsMatchViewData? _match;
     private string _errorText = string.Empty;
     private readonly CancellationTokenSource _lifetimeCts = new();
+    private bool _preparationMusicStarted;
     private bool _battleMusicStarted;
     private bool _requiresQuitConfirmation;
     private bool _completionHandled;
@@ -138,12 +139,20 @@ public partial class VsMatchManager : IAsyncDisposable
                 await OnTeamLevelChanged.InvokeAsync(newTeamLevel);
         }
 
-        if (!_battleMusicStarted &&
+        if (!_preparationMusicStarted &&
             phase == VsMatchPhase.PreparationStarting)
+        {
+            _preparationMusicStarted = true;
+            await Audio.PlayMusicAsync(
+                MusicTrack.Menu02);
+        }
+
+        if (!_battleMusicStarted &&
+            phase == VsMatchPhase.GameStarting)
         {
             _battleMusicStarted = true;
             await Audio.PlayMusicAsync(
-                AudioService.MUSIC_BATTLE);
+                MusicTrack.Battle02);
         }
 
         var requiresQuitConfirmation =
@@ -165,21 +174,18 @@ public partial class VsMatchManager : IAsyncDisposable
 
     private async Task SelectCharacterAsync(int slotNumber)
     {
-        await PlaySelectionEffectAsync();
         await MatchClient.SelectCharacterAsync(slotNumber);
     }
 
     private async Task AssignLoadoutAsync(
         VsLoadoutAssignmentRequest request)
     {
-        await PlaySelectionEffectAsync();
         await MatchClient.AssignLoadoutAsync(request);
     }
 
     private async Task AssignHelpAsync(
         VsHelpAssignmentRequest request)
     {
-        await PlaySelectionEffectAsync();
         await MatchClient.AssignHelpAsync(request);
     }
 
@@ -232,22 +238,10 @@ public partial class VsMatchManager : IAsyncDisposable
         _lastEffectQuestionNumber =
             _match.Game.QuestionNumber;
 
-        var myPosition = _match.Players
-            .FirstOrDefault(player => player.IsMe)
-            ?.Position;
-        if (!myPosition.HasValue)
-            return;
-
-        var result = _match.Game.QuestionPlayers
-            .FirstOrDefault(player =>
-                player.Position == myPosition.Value);
-
-        if (result is null)
-            return;
-
-        var effect = !result.HasAnswered
+        var effect = !_match.Game.MyAnswerIndex.HasValue
             ? AudioService.SFX_EMPTY
-            : result.IsCorrect
+            : _match.Game.MyAnswerIndex ==
+              _match.Game.CorrectAnswerIndex
                 ? AudioService.SFX_HIT
                 : AudioService.SFX_MISS;
 
@@ -352,7 +346,7 @@ public partial class VsMatchManager : IAsyncDisposable
             try
             {
                 await Audio.PlayMusicAsync(
-                    AudioService.MUSIC_MENU);
+                    MusicTrack.Menu02);
             }
             catch (Exception ex)
             {
@@ -375,9 +369,9 @@ public partial class VsMatchManager : IAsyncDisposable
  * VS lap, builder vagy spec felé. Dispose során hivatalosan kilép a
  * queue-ból, majd minden esetben lezárja a kapcsolatot. A saját
  * életciklus-token megszakítja a még folyamatban lévő csatlakozást.
- * A minden játékost összegyűjtő visszaszámlálás kezdetén a Solo
- * játékkal azonos harci zenét indítja, kilépéskor pedig visszaállítja
- * a menüzenét. Queue-ban és befejezett meccsnél nem kér kilépési
+ * A preparáció kezdetén a Menu02, a játék előtti visszaszámláláskor
+ * a Battle02 indul; a meglévő zenei fade kezeli a váltást. Kilépéskor
+ * a Menu01 áll vissza. Queue-ban és befejezett meccsnél nem kér kilépési
  * megerősítést.
  * MÓDOSÍTÁS: ha egy korábban kilépett játékos elavult kliensadatai
  * miatt a szerver elutasítja a következő queue-belépést, a kérdés-,
@@ -396,8 +390,11 @@ public partial class VsMatchManager : IAsyncDisposable
  * alakítja; a minősítési határokat nem ismétli meg kliensoldalon.
  * MÓDOSÍTÁS: a GameCompleted snapshotot egyszer dolgozza fel, majd a
  * tényleges új csapatszintet továbbítja a VS oldal előléptetési modaljához.
- * MÓDOSÍTÁS: a preparációs és játékbeli kijelöléseket közös rövid
- * effekt jelzi. A saját kérdéseredmény találat-, üres tár- vagy
+ * MÓDOSÍTÁS: a játékmeneti kijelöléseket rövid Select effekt jelzi;
+ * a preparáció kattintásait maga a preparációs nézet kezeli a közös,
+ * halk Click effekttel. A saját kérdéseredmény találat-, üres tár- vagy
  * mellélövés-hangot, a meccs vége helyezés szerinti győzelmi,
  * normál vagy vereséghangot kap; minden snapshot-esemény csak egyszer szól.
+ * A kérdéseredmény effektje közvetlenül a saját válaszindexet hasonlítja
+ * a snapshot helyes válaszindexéhez; roster- vagy játékoskeresést nem végez.
  */

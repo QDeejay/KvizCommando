@@ -72,7 +72,7 @@ namespace KvizCommando.Client.Services.User
             var SessionId = _sessionCache.SessionId;
             await Task.Delay(1);
             await _http.PostAsJsonAsync("api/logout", SessionId);
-            await _audio.StopMusicAsync();
+            await _audio.StopAllAsync();
 
             if (soft)
             {
@@ -245,8 +245,8 @@ namespace KvizCommando.Client.Services.User
                 _sessionCache.SessionId = sessionId;
                 await _audio.InitializeAsync();
                 await _home.EnsureLoadedAsync();
-                await _audio.PlayMusicAsync(
-                    AudioService.MUSIC_MENU);
+                await _audio.PlayMusicAsync(MusicTrack.Menu02);
+                await _audio.SetMutedAsync(false);
                 _nav.NavigateTo("/home");
             }
             return (true, new List<string> { });
@@ -277,7 +277,7 @@ namespace KvizCommando.Client.Services.User
 }
 
 /**
- * MÓDOSÍTÁS: sikeres check-in után a menüzenét a közös AudioService
- * kéri. A tényleges lejátszás kizárólag a perzisztált master
- * hangbeállítás engedélyezett állapotában indulhat el.
+ * MÓDOSÍTÁS: a logout minden zenét és effektet leállít, ezért a
+ * bejelentkezési képernyőn nem maradhat aktív hang. Sikeres check-in
+ * után beállítás hiányában a Menu01 elindul és a master mute feloldódik.
  */

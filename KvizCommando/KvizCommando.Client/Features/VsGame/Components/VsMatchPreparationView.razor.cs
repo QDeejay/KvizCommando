@@ -1,5 +1,6 @@
 using KvizCommando.Client.Features.VsGame.Services;
 using KvizCommando.Client.Features.VsGame.ViewModels;
+using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.VsGame.Match;
 using KvizCommando.Shared.Models.Enums.VsGame;
@@ -11,6 +12,7 @@ namespace KvizCommando.Client.Features.VsGame.Components;
 public partial class VsMatchPreparationView : IDisposable
 {
     [Inject] private ILanguageService Lang { get; set; } = default!;
+    [Inject] private AudioService Audio { get; set; } = default!;
     [Inject]
     private IVsMatchClientService MatchClient { get; set; } = default!;
 
@@ -146,7 +148,16 @@ public partial class VsMatchPreparationView : IDisposable
                Lang["vsgame.Match.Round.Empty"];
     }
 
-    private void SelectLoadout(VsLoadoutCardVm loadout)
+    private async Task SelectCharacterAsync(int slotNumber)
+    {
+        if (Data.Preparation.IsFinished)
+            return;
+
+        await PlayClickAsync();
+        await OnCharacterSelected.InvokeAsync(slotNumber);
+    }
+
+    private async Task SelectLoadoutAsync(VsLoadoutCardVm loadout)
     {
         if (!loadout.IsSelectable ||
             Data.Preparation.IsFinished)
@@ -154,6 +165,7 @@ public partial class VsMatchPreparationView : IDisposable
             return;
         }
 
+        await PlayClickAsync();
         _selectedLoadoutPosition = loadout.LoadoutPosition;
         _selectedCategoryId = loadout.CategoryId;
     }
@@ -172,6 +184,7 @@ public partial class VsMatchPreparationView : IDisposable
         if (!CanAssignCategory(round))
             return;
 
+        await PlayClickAsync();
         await OnLoadoutAssigned.InvokeAsync(
             new VsLoadoutAssignmentRequest
             {
@@ -224,7 +237,7 @@ public partial class VsMatchPreparationView : IDisposable
                 : string.Empty;
     }
 
-    private void SelectHelp(VsHelpCardVm help)
+    private async Task SelectHelpAsync(VsHelpCardVm help)
     {
         if (help.Count <= 0 ||
             Data.Preparation.IsFinished)
@@ -232,6 +245,7 @@ public partial class VsMatchPreparationView : IDisposable
             return;
         }
 
+        await PlayClickAsync();
         _selectedHelp = help.HelpType;
     }
 
@@ -252,6 +266,7 @@ public partial class VsMatchPreparationView : IDisposable
         if (!CanAssignHelp(round))
             return;
 
+        await PlayClickAsync();
         await OnHelpAssigned.InvokeAsync(
             new VsHelpAssignmentRequest
             {
@@ -264,11 +279,30 @@ public partial class VsMatchPreparationView : IDisposable
 
     private async Task ResetAsync()
     {
+        if (!Data.Preparation.CanReset)
+            return;
+
+        await PlayClickAsync();
         _selectedLoadoutPosition = null;
         _selectedCategoryId = null;
         _selectedHelp = VsHelpType.None;
         await OnReset.InvokeAsync();
     }
+
+    private async Task FinishAsync()
+    {
+        if (!Data.Preparation.CanFinish ||
+            Data.Preparation.IsFinished)
+        {
+            return;
+        }
+
+        await PlayClickAsync();
+        await OnFinish.InvokeAsync();
+    }
+
+    private Task PlayClickAsync() =>
+        Audio.PlaySfxAsync(AudioService.SFX_CLICK);
 
     public void Dispose()
     {
@@ -292,6 +326,10 @@ public partial class VsMatchPreparationView : IDisposable
  * érvényesíti a match lock alatt.
  * MÓDOSÍTÁS: a visszaszámlálás a SignalR-kapcsolat elején
  * szinkronizált szerverórát használja a készülék órája helyett.
+ * MÓDOSÍTÁS: a karakter-, kategória- és segítségkijelölés, a slotba
+ * helyezés, valamint a Reset és Finish minden érvényes kattintásakor
+ * ugyanazt a halk Click effektet játssza le. A manager emiatt nem
+ * dupláz preparációs kijelöléshangot.
  *
  * A preparációs nézet lokális kijelöléseit, visszaszámlálását és
  * EventCallback-alapú parancstovábbítását kezeli.

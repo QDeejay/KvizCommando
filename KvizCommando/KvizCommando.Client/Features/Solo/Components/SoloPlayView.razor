@@ -107,6 +107,14 @@
                     }
                 </div>
             }
+
+            @if (Data.Game.IsHealing)
+            {
+                <span class="kc-solo-healing-indicator @(Data.Game.IsHealingCompleted ? "completed" : string.Empty)"
+                      aria-hidden="true">
+                    <i class="bi bi-heart-fill"></i>
+                </span>
+            }
         </div>
 
         @if (Data.Panel.Mode != SoloPanelMode.Reward)
@@ -175,4 +183,6 @@
     MÓDOSÍTÁS: a Solo kapcsolatellenőrzés a VS mérési nézetét követi.
     A térerőjel normál nézetben a portré bal felső sarkában, keskeny
     felső rosterben pedig önálló első gridoszlopban jelenik meg.
+    MÓDOSÍTÁS: gyógyító Solo játékban a kérdéskijelző jobb alsó sarkában
+    megjelenik a szívjelzés, amely a feltétel teljesülésekor eltűnik.
 *@

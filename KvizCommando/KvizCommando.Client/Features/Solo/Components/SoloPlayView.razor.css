@@ -332,6 +332,7 @@
 
 
 .kc-solo-question-text {
+    position: relative;
     padding: 16px 24px;
     display: flex;
     align-items: center;
@@ -351,6 +352,41 @@
     box-shadow: 0 4px 16px rgba(0,0,0,0.4), inset 0 4px 8px rgba(0,0,0,0.7);
     color: #222F16;
     font-family: 'Share Tech Mono', monospace;
+}
+
+.kc-solo-healing-indicator {
+    position: absolute;
+    right: 10px;
+    bottom: 8px;
+    display: grid;
+    place-items: center;
+    color: inherit;
+    font-size: 1.25rem;
+    line-height: 1;
+    opacity: .92;
+    filter: drop-shadow(0 0 3px rgba(34, 47, 22, .35));
+    pointer-events: none;
+}
+
+.kc-solo-healing-indicator.completed {
+    animation: kc-solo-healing-complete .65s ease forwards;
+}
+
+@keyframes kc-solo-healing-complete {
+    0% {
+        opacity: .92;
+        transform: scale(1);
+    }
+
+    40% {
+        opacity: 1;
+        transform: scale(1.25);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(.35);
+    }
 }
 
 .kc-solo-answer-list {

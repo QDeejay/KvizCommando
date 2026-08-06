@@ -24,6 +24,7 @@ namespace KvizCommando.Shared.Contracts.SoloGame
     public sealed class StartSoloGameResponse
     {
         public Guid GameId { get; set; }
+        public bool IsHealing { get; set; }
         public int QuestionCount { get; set; }
         public int AnswerTimeSeconds { get; set; }
         public int FeedbackTimeSeconds { get; set; }
@@ -53,7 +54,7 @@ namespace KvizCommando.Shared.Contracts.SoloGame
 
         public int MemberXp { get; set; }
         public int MemberDevPoints { get; set; }
-
+        public bool HealingPointAwarded { get; set; }
     }
 
     public sealed class FinishSoloGameResponse
@@ -80,4 +81,6 @@ namespace KvizCommando.Shared.Contracts.SoloGame
  * MÓDOSÍTÁS: kizárólag az egyetlen Solo SignalR hub start-, válasz- és
  * eredménycontractjait tartalmazza. A kapcsolat sorrendje miatt nincs
  * kérdéstoken, batch finish request vagy HTTP abandon request.
+ * MÓDOSÍTÁS: a szerver jelzi a gyógyító játékot és a teljesített
+ * gyógyítási feltételért ténylegesen kiosztott fejlesztési pontot.
  */

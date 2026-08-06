@@ -138,7 +138,7 @@ var clientAssetCacheOptions = new StaticFileOptions
         var extension = Path.GetExtension(
             context.File.Name);
 
-        if (extension is ".html" or ".js" or ".css" or ".json")
+        if (extension is ".html" or ".js" or ".css" or ".json" or ".webm")
         {
             context.Context.Response.Headers.CacheControl =
                 "no-cache, must-revalidate";
@@ -183,7 +183,7 @@ app.Use(async (ctx, next) =>
         ctx.Response.StatusCode, ctx.Request.Path, ep?.DisplayName ?? "<none>");
 });
 */
-
+/*
 app.Use(async (ctx, next) =>
 {
     var hdr = ctx.Request.Headers["Authorization"].ToString();
@@ -211,7 +211,7 @@ Name: {name}
 
     await next();
 });
-
+*/
 app.UseRateLimiter();
 app.UseExceptionHandler();
 

@@ -91,7 +91,7 @@
                             </div>
                             <div class="kc-mainlayout-content-header--center">
                                 <div class="kc-header-lcd-display">
-                                    <LCDDisplay SoundEnabled="@_isSoundOn"
+                                    <LCDDisplay SoundEnabled="@(!Audio.IsMuted)"
                                                 SoundEnabledChanged="SetSoundEnabledAsync" />
                                 </div>
                             </div>
@@ -121,5 +121,6 @@
 
 @*
     MÓDOSÍTÁS: az LCD komponens saját belső vezérlőket renderel; a
-    MainLayout csak a perzisztált közös hangállapotot adja át neki.
+    MainLayout közvetlenül az AudioService egyetlen mute állapotát
+    adja át neki; külön megjelenítési másolatot nem tart fenn.
 *@

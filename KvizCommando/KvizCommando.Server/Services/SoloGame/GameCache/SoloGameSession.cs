@@ -20,7 +20,7 @@ public sealed class SoloGameSession
     public required SoloGameMode Mode { get; init; }
     public required int SelectionId { get; init; }
     public required int Level { get; init; }
-    public bool isHealing { get; init; }
+    public bool IsHealing { get; init; }
     public required int PointsPerLevel { get; init; }
     public required DateTime ExpiresAtUtc { get; init; }
     public required IReadOnlyList<CachedSoloQuestion> Questions { get; init; }
@@ -32,4 +32,6 @@ public sealed class SoloGameSession
 /**
  * MÓDOSÍTÁS: a Solo session kérdéssorrendben gyűjti a SignalR-en
  * egyenként elfogadott válaszokat. Nincs kérdéstoken vagy HTTP finish.
+ * MÓDOSÍTÁS: a gyógyító játék állapota szabályos C# tulajdonságnéven
+ * része a szerveroldali játékállapotnak.
  */
