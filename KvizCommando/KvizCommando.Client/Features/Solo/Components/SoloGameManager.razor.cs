@@ -95,7 +95,8 @@ public partial class SoloGameManager : IAsyncDisposable
     {
         try
         {
-            await Audio.PlayMusicAsync("Battle01.webm");
+            await Audio.PlayMusicAsync(
+                AudioService.MUSIC_BATTLE);
             _statusKey = "solo.Label.GameProcess.Connecting";
             await RenderAsync();
 
@@ -230,15 +231,15 @@ public partial class SoloGameManager : IAsyncDisposable
             _result = submission.Result;
     }
 
-    private Task SelectAnswerAsync(int answerIndex)
+    private async Task SelectAnswerAsync(int answerIndex)
     {
         if (_phase == SoloGamePhase.Playing && _answerEnabled)
         {
             _answerEnabled = false;
             _answerSignal?.TrySetResult(answerIndex);
+            await Audio.PlaySfxAsync(
+                AudioService.SFX_SELECT);
         }
-
-        return Task.CompletedTask;
     }
 
     private async Task FinishGameAsync(CancellationToken ct)
@@ -266,7 +267,8 @@ public partial class SoloGameManager : IAsyncDisposable
             await OnTeamLevelChanged.InvokeAsync(
                 _result.Rewards.NewTeamLevel);
         }
-        await Audio.PlayMusicAsync("Menu02.webm");
+        await Audio.PlayMusicAsync(
+            AudioService.MUSIC_MENU);
         await ShowStatusAsync("solo.Label.GameProcess.Evaluating", 1000, ct);
         await ShowStatusAsync("solo.Label.GameProcess.EvaluationReady", 1000, ct);
         await EvaluateAsync(ct);
@@ -285,9 +287,13 @@ public partial class SoloGameManager : IAsyncDisposable
              _questionIndex++)
         {
             SetEvaluationTime(_questionIndex);
-            _progress[_questionIndex] = ResolveQuestionState(_questionIndex);
+            var questionState =
+                ResolveQuestionState(_questionIndex);
+            _progress[_questionIndex] = questionState;
             _evaluatedCount++;
             _points += _result.TotalPoints[_questionIndex];
+            await Audio.PlaySfxAsync(
+                EvaluationEffect(questionState));
             await RenderAsync();
 
             var delay = Task.Delay(1000, ct);
@@ -340,6 +346,10 @@ public partial class SoloGameManager : IAsyncDisposable
     {
         _phase = SoloGamePhase.Reward;
         _points = _result?.TotalPoints.Sum() ?? 0;
+        await Audio.PlaySfxAsync(
+            _result?.IsNewHighScore == true
+                ? AudioService.SFX_NEW_RECORD
+                : AudioService.SFX_RESULT);
         await RenderAsync();
     }
 
@@ -506,6 +516,17 @@ public partial class SoloGameManager : IAsyncDisposable
             MidpointRounding.AwayFromZero);
     }
 
+    private static string EvaluationEffect(
+        SoloQuestionState questionState) =>
+        questionState switch
+        {
+            SoloQuestionState.Correct =>
+                AudioService.SFX_HIT,
+            SoloQuestionState.Unanswered =>
+                AudioService.SFX_EMPTY,
+            _ => AudioService.SFX_MISS
+        };
+
     private static string FormatTime(int milliseconds) =>
         TimeSpan.FromMilliseconds(milliseconds).ToString(@"mm\:ss");
 
@@ -534,7 +555,8 @@ public partial class SoloGameManager : IAsyncDisposable
 
         try
         {
-            await Audio.PlayMusicAsync("Menu02.webm");
+            await Audio.PlayMusicAsync(
+                AudioService.MUSIC_MENU);
         }
         catch (Exception ex)
         {
@@ -565,4 +587,7 @@ public partial class SoloGameManager : IAsyncDisposable
  * MÓDOSÍTÁS: aktív játék közbeni SignalR-hibánál azonnal megállítja a
  * kérdésórát, megszakítja a játékmenetet és hibastátuszra vált.
  * MÓDOSÍTÁS: lejárt kérdésidőnél a kijelzett járó pontot is nullázza.
+ * MÓDOSÍTÁS: választáskor rövid kijelölési effektet, a kiértékeléskor
+ * találat-, üres tár- vagy mellélövés-hangot játszik. A jutalomnézet
+ * normál eredményt és új rekordot külön hanggal jelez.
  */

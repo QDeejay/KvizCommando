@@ -1,9 +1,11 @@
 ﻿window.audioEngine = (() => {
 
     let musicPlayer = null;
+    const activeSfx = new Set();
 
     let currentMusicPath = null;
 
+    let masterMuted = true;
     let musicEnabled = true;
     let sfxEnabled = true;
 
@@ -80,6 +82,7 @@
     function stopAll() {
 
         stopMusicInternal();
+        stopSfx();
     }
 
     // =========================================
@@ -125,6 +128,7 @@
         musicPlayer = new Audio(path);
 
         musicPlayer.loop = true;
+        musicPlayer.muted = masterMuted;
         musicPlayer.volume = 0;
 
         try {
@@ -173,13 +177,24 @@
     // SETTINGS
     // =========================================
 
+    function setEnabled(enabled) {
+
+        masterMuted = !enabled;
+
+        if (musicPlayer !== null)
+            musicPlayer.muted = masterMuted || !musicEnabled;
+
+        for (const sfx of activeSfx)
+            sfx.muted = masterMuted || !sfxEnabled;
+    }
+
     function setMusicEnabled(enabled) {
 
         musicEnabled = enabled;
 
         if (musicPlayer !== null) {
 
-            musicPlayer.muted = !enabled;
+            musicPlayer.muted = masterMuted || !enabled;
         }
     }
 
@@ -195,21 +210,39 @@
 
     function playSfx(path) {
 
-        if (!sfxEnabled)
-            return;
-
         const sfx = new Audio(path);
 
+        sfx.muted = masterMuted || !sfxEnabled;
         sfx.volume = sfxVolume;
+        activeSfx.add(sfx);
+
+        const release = () => activeSfx.delete(sfx);
+        sfx.addEventListener("ended", release, { once: true });
+        sfx.addEventListener("error", release, { once: true });
 
         sfx.play().catch(error => {
+            release();
             console.error("SFX play failed:", error);
         });
+    }
+
+    function stopSfx() {
+
+        for (const sfx of activeSfx) {
+
+            sfx.pause();
+            sfx.currentTime = 0;
+        }
+
+        activeSfx.clear();
     }
 
     function setSfxEnabled(enabled) {
 
         sfxEnabled = enabled;
+
+        for (const sfx of activeSfx)
+            sfx.muted = masterMuted || !enabled;
     }
 
     function setSfxVolume(volume) {
@@ -224,6 +257,8 @@
         playMusic,
         stopMusic,
 
+        setEnabled,
+
         setMusicEnabled,
         setMusicVolume,
 
@@ -235,3 +270,10 @@
         stopAll
     };
 })();
+
+/**
+ * MÓDOSÍTÁS: a motor közös master mute állapotot használ. Némításkor
+ * a zene és az aktív effektek nem állnak le, csak elnémulnak; az új
+ * lejátszások is némán futnak. Feloldáskor az aktuális idővonalon
+ * folytatódik a hang.
+ */

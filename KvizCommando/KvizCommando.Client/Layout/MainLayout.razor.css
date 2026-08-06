@@ -154,26 +154,8 @@
 
 .kc-header-lcd-display {
     width: clamp(320px, 50vw, 640px);
-    height: 70%; /* vagy amit szeretnél */
-    position: center;
+    height: 70%;
 }
-
-.kc-sound-button {
-    width: auto;
-    height: 35px;
-    cursor: url('/Images/cursors/active.cur'), pointer;
-    user-select: none;
-}
-
-.kc-sound-picture {
-    width: auto;
-    height: 100%;
-}
-
-.kc-sound-button:hover {
-    filter: brightness(1.1);
-}
-
 
 
 
@@ -215,6 +197,11 @@ main {
     .kc-mainlayout-content-container::-webkit-scrollbar {
         display: none;
     }
+
+/*
+ * MÓDOSÍTÁS: a fejléc kizárólag az LCD külső méretét adja meg; az LCD
+ * belső vezérlőinek elrendezése a komponens saját scoped CSS-e.
+ */
 
 .kc-collapse-btn {
     position: fixed;

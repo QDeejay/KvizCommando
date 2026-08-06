@@ -40,6 +40,7 @@ public partial class VsMatchManager : IAsyncDisposable
     private bool _requiresQuitConfirmation;
     private bool _completionHandled;
     private bool _disposed;
+    private int _lastEffectQuestionNumber = -1;
 
     protected override async Task OnInitializedAsync()
     {
@@ -116,9 +117,14 @@ public partial class VsMatchManager : IAsyncDisposable
 
         var phase = _match?.Phase;
 
+        if (phase == VsMatchPhase.QuestionResult &&
+            _match?.Game.QuestionKind == VsQuestionKind.Choice)
+            await PlayQuestionResultEffectAsync();
+
         if (phase == VsMatchPhase.GameCompleted && !_completionHandled)
         {
             _completionHandled = true;
+            await PlayMatchCompletionEffectAsync();
             await Ui.ReloadAsync(
                 ReqStates.Home,
                 ReqStates.Question,
@@ -136,7 +142,8 @@ public partial class VsMatchManager : IAsyncDisposable
             phase == VsMatchPhase.PreparationStarting)
         {
             _battleMusicStarted = true;
-            await Audio.PlayMusicAsync("Battle01.webm");
+            await Audio.PlayMusicAsync(
+                AudioService.MUSIC_BATTLE);
         }
 
         var requiresQuitConfirmation =
@@ -156,16 +163,25 @@ public partial class VsMatchManager : IAsyncDisposable
             requiresQuitConfirmation);
     }
 
-    private Task SelectCharacterAsync(int slotNumber) =>
-        MatchClient.SelectCharacterAsync(slotNumber);
+    private async Task SelectCharacterAsync(int slotNumber)
+    {
+        await PlaySelectionEffectAsync();
+        await MatchClient.SelectCharacterAsync(slotNumber);
+    }
 
-    private Task AssignLoadoutAsync(
-        VsLoadoutAssignmentRequest request) =>
-        MatchClient.AssignLoadoutAsync(request);
+    private async Task AssignLoadoutAsync(
+        VsLoadoutAssignmentRequest request)
+    {
+        await PlaySelectionEffectAsync();
+        await MatchClient.AssignLoadoutAsync(request);
+    }
 
-    private Task AssignHelpAsync(
-        VsHelpAssignmentRequest request) =>
-        MatchClient.AssignHelpAsync(request);
+    private async Task AssignHelpAsync(
+        VsHelpAssignmentRequest request)
+    {
+        await PlaySelectionEffectAsync();
+        await MatchClient.AssignHelpAsync(request);
+    }
 
     private Task ResetPreparationAsync() =>
         MatchClient.ResetPreparationAsync();
@@ -173,21 +189,86 @@ public partial class VsMatchManager : IAsyncDisposable
     private Task FinishPreparationAsync() =>
         MatchClient.FinishPreparationAsync();
 
-    private Task SubmitGuessAsync(
-        VsGuessAnswerRequest request) =>
-        MatchClient.SubmitGuessAsync(request);
+    private async Task SubmitGuessAsync(
+        VsGuessAnswerRequest request)
+    {
+        await PlaySelectionEffectAsync();
+        await MatchClient.SubmitGuessAsync(request);
+    }
 
-    private Task SubmitChoiceAsync(
-        VsChoiceAnswerRequest request) =>
-        MatchClient.SubmitChoiceAsync(request);
+    private async Task SubmitChoiceAsync(
+        VsChoiceAnswerRequest request)
+    {
+        await PlaySelectionEffectAsync();
+        await MatchClient.SubmitChoiceAsync(request);
+    }
 
-    private Task UseHelpAsync(
-        VsUseHelpRequest request) =>
-        MatchClient.UseHelpAsync(request);
+    private async Task UseHelpAsync(
+        VsUseHelpRequest request)
+    {
+        await PlaySelectionEffectAsync();
+        await MatchClient.UseHelpAsync(request);
+    }
 
-    private Task SelectCaptainQuestionAsync(
-        VsCaptainQuestionRequest request) =>
-        MatchClient.SelectCaptainQuestionAsync(request);
+    private async Task SelectCaptainQuestionAsync(
+        VsCaptainQuestionRequest request)
+    {
+        await PlaySelectionEffectAsync();
+        await MatchClient.SelectCaptainQuestionAsync(request);
+    }
+
+    private Task PlaySelectionEffectAsync() =>
+        Audio.PlaySfxAsync(AudioService.SFX_SELECT);
+
+    private async Task PlayQuestionResultEffectAsync()
+    {
+        if (_match is null ||
+            _match.Game.QuestionNumber ==
+            _lastEffectQuestionNumber)
+        {
+            return;
+        }
+
+        _lastEffectQuestionNumber =
+            _match.Game.QuestionNumber;
+
+        var myPosition = _match.Players
+            .FirstOrDefault(player => player.IsMe)
+            ?.Position;
+        if (!myPosition.HasValue)
+            return;
+
+        var result = _match.Game.QuestionPlayers
+            .FirstOrDefault(player =>
+                player.Position == myPosition.Value);
+
+        if (result is null)
+            return;
+
+        var effect = !result.HasAnswered
+            ? AudioService.SFX_EMPTY
+            : result.IsCorrect
+                ? AudioService.SFX_HIT
+                : AudioService.SFX_MISS;
+
+        await Audio.PlaySfxAsync(effect);
+    }
+
+    private Task PlayMatchCompletionEffectAsync()
+    {
+        var myReward = _match?.Reward.MyReward;
+        if (myReward is null)
+            return Task.CompletedTask;
+
+        var effect = myReward.FinalPosition == 1
+            ? AudioService.SFX_MATCH_WIN
+            : myReward.FinalPosition ==
+              _match!.Reward.Standings.Length
+                ? AudioService.SFX_MATCH_LOSS
+                : AudioService.SFX_MATCH_COMPLETE;
+
+        return Audio.PlaySfxAsync(effect);
+    }
 
     private bool IsGamePhase =>
         _match?.Phase is
@@ -270,7 +351,8 @@ public partial class VsMatchManager : IAsyncDisposable
         {
             try
             {
-                await Audio.PlayMusicAsync("Menu02.webm");
+                await Audio.PlayMusicAsync(
+                    AudioService.MUSIC_MENU);
             }
             catch (Exception ex)
             {
@@ -314,4 +396,8 @@ public partial class VsMatchManager : IAsyncDisposable
  * alakítja; a minősítési határokat nem ismétli meg kliensoldalon.
  * MÓDOSÍTÁS: a GameCompleted snapshotot egyszer dolgozza fel, majd a
  * tényleges új csapatszintet továbbítja a VS oldal előléptetési modaljához.
+ * MÓDOSÍTÁS: a preparációs és játékbeli kijelöléseket közös rövid
+ * effekt jelzi. A saját kérdéseredmény találat-, üres tár- vagy
+ * mellélövés-hangot, a meccs vége helyezés szerinti győzelmi,
+ * normál vagy vereséghangot kap; minden snapshot-esemény csak egyszer szól.
  */

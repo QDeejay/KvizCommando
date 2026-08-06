@@ -131,8 +131,23 @@ app.UseAppLocalization("hu-HU", new[] { "hu-HU", "en-US" });
 // --- Middleware lánc ---
 //app.UseHttpsRedirection();
 
+var clientAssetCacheOptions = new StaticFileOptions
+{
+    OnPrepareResponse = context =>
+    {
+        var extension = Path.GetExtension(
+            context.File.Name);
+
+        if (extension is ".html" or ".js" or ".css" or ".json")
+        {
+            context.Context.Response.Headers.CacheControl =
+                "no-cache, must-revalidate";
+        }
+    }
+};
+
 app.UseBlazorFrameworkFiles();
-app.UseStaticFiles();
+app.UseStaticFiles(clientAssetCacheOptions);
 
 app.UseRouting();
 
@@ -217,7 +232,7 @@ app.MapGroup("/")
 app.MapLogoutEndpoints();
 app.MapFacebookAuthEndpoints();
 
-app.MapFallbackToFile("index.html");
+app.MapFallbackToFile("index.html", clientAssetCacheOptions);
 
 app.Run();
 
@@ -226,6 +241,11 @@ app.Run();
  * /hubs/vs-match VS multiplayer végpontot.
  * MÓDOSÍTÁS: publikálja a kategória- és orientációs Solo mód közös
  * /hubs/solo-game SignalR végpontját is.
+ * MÓDOSÍTÁS: a stabil URL-en publikált HTML-, JS-, CSS- és JSON-
+ * kliensasseteket minden új oldalbetöltéskor újraellenőrizteti a
+ * böngészővel. A változatlan fájlokra továbbra is 304 válasz érkezhet,
+ * a friss build viszont nem indulhat korábban cache-elt saját kóddal.
+ * A képek és hangok gyorsítótárazását ez nem korlátozza.
  *
  * A fájl a KvizCommando szerver indulását, middleware-láncát és
  * endpoint-regisztrációját állítja össze.

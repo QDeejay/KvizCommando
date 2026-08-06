@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Blazored.SessionStorage;
+using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Shared.Modal;
 using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Features.VsGame;
@@ -29,6 +30,7 @@ namespace KvizCommando.Client.Layout
         private static readonly string _localNotShowNew = ModalConst.LOCAL_NOT_SHOW_NEW;
         private static readonly string _localNotShowDel = ModalConst.LOCAL_NOT_SHOW_DEL;
         private const string LOCAL_LAST_B_BOARD = "B.B";
+        private const string LOCAL_SOUND_ENABLED = "audio:enabled";
 
         private readonly AppState _appState = new();
 
@@ -37,7 +39,7 @@ namespace KvizCommando.Client.Layout
         private string _culture = "hu";
         private bool _isReady = false;
         private bool _isLoggedIn = false;
-        private bool _isMusicOn;
+        private bool _isSoundOn;
         private bool _isBckBtnEna = false;
         private string _currentTitle = string.Empty;
         private bool _isDesktopNavOpen = true;
@@ -83,6 +85,11 @@ namespace KvizCommando.Client.Layout
             await Ui.Lang.LoadModuleAsync(_culture, "mainlayout");  // szükséges
             await Ui.Lang.LoadModuleAsync(_culture, "home");
 
+            _isSoundOn =
+                await LocalStorage.GetItemAsync<bool?>(
+                    LOCAL_SOUND_ENABLED) ?? true;
+            await Audio.InitializeAsync(_isSoundOn);
+
             var sessionId = await SessionStorage.GetItemAsync<string>("SessionId");
 
             if (!string.IsNullOrWhiteSpace(sessionId))
@@ -104,16 +111,8 @@ namespace KvizCommando.Client.Layout
 
             }
 
-            if (Audio.EnteredNormal)
-            {
-                Console.WriteLine("Playing music because EnteredNormal is true.");
-                await Audio.PlayMusicAsync("Menu02.webm");
-                _isMusicOn = true;
-            }
-            else
-            {
-                Console.WriteLine("Not playing music because EnteredNormal is false.");
-            }
+            if (_isLoggedIn)
+                await Audio.PlayMusicAsync(AudioService.MUSIC_MENU);
 
             _isReady = true;
         }
@@ -154,19 +153,13 @@ namespace KvizCommando.Client.Layout
         {
             Ui.Modal.SendResult(result);
         }
-        private async Task OnMusicClick()
+        private async Task SetSoundEnabledAsync(bool enabled)
         {
-            _isMusicOn = !_isMusicOn;
-            if (Audio.EnteredNormal)
-            {
-                await Audio.SetMusicEnabledAsync(_isMusicOn);
-            }
-            else
-            {
-                Audio.EnteredNormal = true;
-                await Audio.PlayMusicAsync("Menu02.webm");
-            }
-
+            _isSoundOn = enabled;
+            await LocalStorage.SetItemAsync(
+                LOCAL_SOUND_ENABLED,
+                _isSoundOn);
+            await Audio.SetEnabledAsync(_isSoundOn);
         }
         private async Task Logout()
         {
@@ -191,6 +184,7 @@ namespace KvizCommando.Client.Layout
                         HState.Invalidate();
                         await HState.EnsureLoadedAsync();
                         _appState.Home = HState.Snapshot;
+                        UpdateHeadDisplay();
                         break;
 
                     case ReqStates.Question:
@@ -230,6 +224,37 @@ namespace KvizCommando.Client.Layout
 
             await InvokeAsync(StateHasChanged);
         }
+
+        private void UpdateHeadDisplay()
+        {
+            var home = _appState.Home;
+            if (home?.UserMainData is null ||
+                home.ExtendedInfo is null)
+            {
+                return;
+            }
+
+            var main = home.UserMainData;
+            var level = RankNameTable.Data[main.RankEnum]
+                .PublicLevel ?? string.Empty;
+
+            Ui.HeadDisplay.SetMessages(
+            [
+                Ui.Lang["mainlayout.Text.TeamName"]
+                    .FormatSafe(main.TeamName),
+                Ui.Lang["mainlayout.Text.TeamLevel"]
+                    .FormatSafe(level),
+                Ui.Lang["mainlayout.Text.Xp"]
+                    .FormatSafe(main.XP),
+                Ui.Lang["mainlayout.Text.NextLevelXp"]
+                    .FormatSafe(home.ExtendedInfo.NextXp),
+                Ui.Lang["mainlayout.Text.Credit"]
+                    .FormatSafe(main.Credit),
+                Ui.Lang["mainlayout.Text.Voucher"]
+                    .FormatSafe(main.Voucher)
+            ]);
+        }
+
         private async Task<string> InitCultureAsync()
         {
             var culture = await LocalStorage.GetItemAsync<string>("userLang");
@@ -262,4 +287,8 @@ namespace KvizCommando.Client.Layout
  * képernyős navbar-tiltását a VS ranked meccs 311–315 tartományára is
  * alkalmazza. Teljes képernyőre váltáskor a korábban nyitva maradt
  * oldalsávot is bezárja. A fejléc vissza gombját ez nem tiltja.
+ * MÓDOSÍTÁS: a közös hangkapcsolót LocalStorage-ba menti, az LCD
+ * megjelenítési állapotát pedig magára az LCD komponensre bízza.
+ * Minden Home snapshot frissítés után újraépíti az aktuális
+ * csapatadatokat tartalmazó LCD-üzeneteket.
  */

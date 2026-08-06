@@ -91,13 +91,9 @@
                             </div>
                             <div class="kc-mainlayout-content-header--center">
                                 <div class="kc-header-lcd-display">
-                                    <LCDDisplay />
-                                </div> 
-                                <span class="kc-sound-button" @onclick="OnMusicClick">
-                                    <img class="kc-sound-picture"
-                                         src=@(_isMusicOn ? "images/musicon.webp" : "images/musicoff.webp")
-                                         alt="MusicOn" />
-                                </span>
+                                    <LCDDisplay SoundEnabled="@_isSoundOn"
+                                                SoundEnabledChanged="SetSoundEnabledAsync" />
+                                </div>
                             </div>
                             <div class="kc-mainlayout-content-header--right">
                             <span class="kc-header-greeting">@Greetings</span>
@@ -122,3 +118,8 @@
     </div>
 
 }
+
+@*
+    MÓDOSÍTÁS: az LCD komponens saját belső vezérlőket renderel; a
+    MainLayout csak a perzisztált közös hangállapotot adja át neki.
+*@

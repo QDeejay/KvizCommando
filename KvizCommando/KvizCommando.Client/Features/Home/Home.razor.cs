@@ -1,6 +1,4 @@
 ﻿using Blazored.LocalStorage;
-using KvizCommando.Client.Data;
-using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Pages.Home.Features;
 using KvizCommando.Client.Services.ClientCache;
@@ -83,7 +81,6 @@ public partial class Home : KcComponentBase, IDisposable
 
         Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Home"], 0);
         Ui.Header.SetBackBtnEna(false);
-        UpdateLedDisplay();
         _isLoaded = true;
         if (_isReady == false)
             BuildBoxes();
@@ -91,25 +88,6 @@ public partial class Home : KcComponentBase, IDisposable
     protected override void OnInitialized()
     {
         Ui.Header.OnBackBtnClicked += UpdateBckClick;
-    }
-
-    private void UpdateLedDisplay()
-    {
-        var main = HState.UserMainData!;
-        var next = HState.ExtendedInfo!.NextXp;
-        int level = main.RankEnum;
-        string levelStr = RankNameTable.Data[level].PublicLevel ?? "";
-
-        var messages = new List<string>
-            {
-                Ui.Lang["mainlayout.Text.TeamName"].FormatSafe(main.TeamName),
-                Ui.Lang["mainlayout.Text.TeamLevel"].FormatSafe(levelStr),
-                Ui.Lang["mainlayout.Text.Xp"].FormatSafe(main.XP),
-                Ui.Lang["mainlayout.Text.NextLevelXp"].FormatSafe(next),
-                Ui.Lang["mainlayout.Text.Credit"].FormatSafe(main.Credit),
-                Ui.Lang["mainlayout.Text.Voucher"].FormatSafe(main.Voucher)
-            };
-        Ui.HeadDisplay.SetMessages(messages);
     }
 
     public void Dispose()
@@ -122,3 +100,9 @@ public partial class Home : KcComponentBase, IDisposable
     {
     }
 }
+
+/**
+ * MÓDOSÍTÁS: az LCD csapatadatainak frissítése a Home komponensből a
+ * MainLayout Home-snapshot frissítési ágába került, ezért más oldalról
+ * érkező Home refresh után is azonnal aktuális értékeket mutat.
+ */

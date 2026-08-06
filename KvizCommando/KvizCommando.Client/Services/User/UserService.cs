@@ -245,7 +245,8 @@ namespace KvizCommando.Client.Services.User
                 _sessionCache.SessionId = sessionId;
                 await _audio.InitializeAsync();
                 await _home.EnsureLoadedAsync();
-                _audio.EnteredNormal = true;
+                await _audio.PlayMusicAsync(
+                    AudioService.MUSIC_MENU);
                 _nav.NavigateTo("/home");
             }
             return (true, new List<string> { });
@@ -274,3 +275,9 @@ namespace KvizCommando.Client.Services.User
         }
     }
 }
+
+/**
+ * MÓDOSÍTÁS: sikeres check-in után a menüzenét a közös AudioService
+ * kéri. A tényleges lejátszás kizárólag a perzisztált master
+ * hangbeállítás engedélyezett állapotában indulhat el.
+ */
