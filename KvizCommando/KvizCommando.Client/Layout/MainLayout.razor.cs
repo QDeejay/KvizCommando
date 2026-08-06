@@ -106,7 +106,7 @@ namespace KvizCommando.Client.Layout
             }
 
             if (_isLoggedIn)
-                await Audio.PlayMusicAsync(MusicTrack.Menu02);
+                await Audio.PlayMusicAsync(MusicTrack.MenuMain);
 
             _isReady = true;
         }
@@ -151,7 +151,7 @@ namespace KvizCommando.Client.Layout
         {
             await Audio.SetMutedAsync(
                 !enabled,
-                enabled ? MusicTrack.Menu01 : null);
+                enabled ? MusicTrack.MenuMain : null);
         }
         private async Task Logout()
         {

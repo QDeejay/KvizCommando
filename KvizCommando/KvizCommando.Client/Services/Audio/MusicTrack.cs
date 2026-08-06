@@ -2,10 +2,10 @@ namespace KvizCommando.Client.Services.Audio;
 
 public enum MusicTrack
 {
-    Menu01,
-    Menu02,
-    Battle01,
-    Battle02
+    MenuMain,
+    MenuVs,
+    BattleSolo,
+    BattleVs
 }
 
 /**

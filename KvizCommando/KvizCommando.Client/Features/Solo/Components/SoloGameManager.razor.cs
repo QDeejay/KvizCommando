@@ -101,7 +101,7 @@ public partial class SoloGameManager : IAsyncDisposable
         try
         {
             await Audio.PlayMusicAsync(
-                MusicTrack.Battle01);
+                MusicTrack.BattleSolo);
             _statusKey = "solo.Label.GameProcess.Connecting";
             await RenderAsync();
 
@@ -273,7 +273,7 @@ public partial class SoloGameManager : IAsyncDisposable
                 _result.Rewards.NewTeamLevel);
         }
         await Audio.PlayMusicAsync(
-            MusicTrack.Menu01);
+            MusicTrack.MenuMain);
         await ShowStatusAsync("solo.Label.GameProcess.Evaluating", 1000, ct);
         await ShowStatusAsync("solo.Label.GameProcess.EvaluationReady", 1000, ct);
         await EvaluateAsync(ct);
@@ -567,7 +567,7 @@ public partial class SoloGameManager : IAsyncDisposable
         try
         {
             await Audio.PlayMusicAsync(
-                MusicTrack.Menu01);
+                MusicTrack.MenuMain);
         }
         catch (Exception ex)
         {

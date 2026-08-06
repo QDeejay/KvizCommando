@@ -144,7 +144,7 @@ public partial class VsMatchManager : IAsyncDisposable
         {
             _preparationMusicStarted = true;
             await Audio.PlayMusicAsync(
-                MusicTrack.Menu02);
+                MusicTrack.MenuVs);
         }
 
         if (!_battleMusicStarted &&
@@ -152,7 +152,7 @@ public partial class VsMatchManager : IAsyncDisposable
         {
             _battleMusicStarted = true;
             await Audio.PlayMusicAsync(
-                MusicTrack.Battle02);
+                MusicTrack.BattleVs);
         }
 
         var requiresQuitConfirmation =
@@ -346,7 +346,7 @@ public partial class VsMatchManager : IAsyncDisposable
             try
             {
                 await Audio.PlayMusicAsync(
-                    MusicTrack.Menu02);
+                    MusicTrack.MenuMain);
             }
             catch (Exception ex)
             {

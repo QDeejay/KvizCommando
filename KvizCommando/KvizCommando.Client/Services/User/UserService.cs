@@ -245,7 +245,7 @@ namespace KvizCommando.Client.Services.User
                 _sessionCache.SessionId = sessionId;
                 await _audio.InitializeAsync();
                 await _home.EnsureLoadedAsync();
-                await _audio.PlayMusicAsync(MusicTrack.Menu02);
+                await _audio.PlayMusicAsync(MusicTrack.MenuMain);
                 await _audio.SetMutedAsync(false);
                 _nav.NavigateTo("/home");
             }
