@@ -138,7 +138,7 @@ var clientAssetCacheOptions = new StaticFileOptions
         var extension = Path.GetExtension(
             context.File.Name);
 
-        if (extension is ".html" or ".js" or ".css" or ".json" or ".webm")
+        if (extension is ".html" or ".js" or ".css" or ".json")
         {
             context.Context.Response.Headers.CacheControl =
                 "no-cache, must-revalidate";
