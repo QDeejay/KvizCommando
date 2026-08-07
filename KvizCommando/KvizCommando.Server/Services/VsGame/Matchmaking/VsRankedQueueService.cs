@@ -2,6 +2,7 @@ using KvizCommando.Server.Hubs;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.VsGame.Match;
 using KvizCommando.Shared.Contracts.VsGame.Match;
+using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Enums.VsGame;
 using Microsoft.AspNetCore.SignalR;
@@ -369,13 +370,19 @@ public sealed partial class VsRankedQueueService :
                 var loadout = JsonSerializer.Deserialize<int[]>(
                                   player.Loadout.FactorySlotsJson) ??
                               [];
+                var maxUserSlot = Math.Min(
+                    RankRewards.List[player.Core.RankEnum].OwnQuestSlot,
+                    questions.uSlots.Length);
 
                 if (!HasValidLoadout(
                         loadout,
+                        player.Core.RankEnum,
                         rule.RequiredPartySize,
-                        questions.uSlots.Count(question =>
-                            question is not null &&
-                            question.CategoryNo > 0)))
+                        questions.uSlots
+                            .Take(maxUserSlot)
+                            .Count(question =>
+                                question is not null &&
+                                question.CategoryNo > 0)))
                 {
                     return null;
                 }
@@ -403,14 +410,18 @@ public sealed partial class VsRankedQueueService :
 
     private static bool HasValidLoadout(
         int[] loadout,
+        int teamLevel,
         int requiredPartySize,
         int availableOwnQuestions)
     {
-        if (loadout.Length < VsMatchProfiles.Ranked.LoadoutSize)
+        var loadoutSize =
+            QuestionLoadoutRules.GetLoadoutSize(teamLevel);
+
+        if (loadout.Length < loadoutSize)
             return false;
 
         var matchLoadout = loadout
-            .Take(VsMatchProfiles.Ranked.LoadoutSize)
+            .Take(loadoutSize)
             .ToArray();
 
         if (matchLoadout.Any(category =>
@@ -424,15 +435,27 @@ public sealed partial class VsRankedQueueService :
             return false;
         }
 
+        if (matchLoadout
+            .Skip(loadoutSize / 2)
+            .Any(category =>
+                category == VsLoadoutCategoryIds.OwnQuestion))
+        {
+            return false;
+        }
+
+        var ownQuestionCount = matchLoadout.Count(category =>
+            category == VsLoadoutCategoryIds.OwnQuestion);
+        var ownQuestionLimit =
+            QuestionLoadoutRules.GetOwnQuestionLimit(
+                loadoutSize,
+                availableOwnQuestions);
+
         return
             matchLoadout.Count(category =>
                 category !=
-                VsLoadoutCategoryIds.OwnQuestion) >=
+                    VsLoadoutCategoryIds.OwnQuestion) >=
             requiredPartySize &&
-            matchLoadout.Count(category =>
-                category ==
-                VsLoadoutCategoryIds.OwnQuestion) <=
-            availableOwnQuestions;
+            ownQuestionCount <= ownQuestionLimit;
     }
 
     private void RemoveExistingEntry(
@@ -515,6 +538,13 @@ public sealed partial class VsRankedQueueService :
     }
 
 }
+
+/**
+ * MÓDOSÍTÁS: a ranked belépés a játékos csapatszintjéből számolt
+ * 6/8/10-es aktív loadoutot ellenőrzi. A saját kérdések száma nem
+ * lépheti túl sem a foglalt user slotok számát, sem a loadout felét,
+ * és a második loadoutfélben nem szerepelhet 17-es érték.
+ */
 
 /**
  * MÓDOSÍTÁS: a queue szinkron lockot használ, mert a kritikus

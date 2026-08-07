@@ -48,13 +48,11 @@ public sealed class VsMatchSetupService
         {
             seeds.Add(await BuildPlayerSeedAsync(
                 player,
-                match.Profile.LoadoutSize,
                 ct));
         }
 
         var questions = await _questionLoader.LoadAsync(
             seeds,
-            match.Profile.LoadoutSize,
             match.Classification.RequiredPartySize,
             ct);
 
@@ -134,7 +132,6 @@ public sealed class VsMatchSetupService
 
     private async Task<VsMatchPlayerSeed> BuildPlayerSeedAsync(
         VsMatchPlayerState matchPlayer,
-        int loadoutSize,
         CancellationToken ct)
     {
         using var scope = _scopeFactory.CreateScope();
@@ -172,6 +169,12 @@ public sealed class VsMatchSetupService
                 var loadout = JsonSerializer.Deserialize<int[]>(
                                   player.Loadout.FactorySlotsJson) ??
                               [];
+                var loadoutSize =
+                    QuestionLoadoutRules.GetLoadoutSize(
+                        player.Core.RankEnum);
+
+                if (loadout.Length < loadoutSize)
+                    return null;
 
                 var helpData = JsonSerializer.Deserialize<int[]>(
                                    player.Loadout.HelpLevelsJson) ??
@@ -203,6 +206,10 @@ public sealed class VsMatchSetupService
                     OwnQuestions =
                     [
                         .. questions.uSlots
+                            .Take(Math.Min(
+                                RankRewards.List[player.Core.RankEnum]
+                                    .OwnQuestSlot,
+                                questions.uSlots.Length))
                             .Where(question =>
                                 question is not null &&
                                 question.CategoryNo > 0)
@@ -383,4 +390,7 @@ public sealed class VsMatchSetupService
  * tekinti a kérdések egyszeri betöltésekor.
  * MÓDOSÍTÁS: a karakter aktuális XP-jét is beemeli a zárolt
  * meccssnapshotba a szinthatáron történő rewardvágáshoz.
+ * MÓDOSÍTÁS: minden játékos snapshotja a saját csapatszintjéből
+ * számolt 6/8/10-es loadoutot viszi a meccsbe; a saját kérdéskészlet
+ * csak az adott szinten ténylegesen elérhető user slotokból készül.
  */

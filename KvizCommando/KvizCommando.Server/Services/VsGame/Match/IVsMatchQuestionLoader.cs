@@ -4,7 +4,6 @@ public interface IVsMatchQuestionLoader
 {
     Task<VsMatchQuestionSet> LoadAsync(
         IReadOnlyCollection<VsMatchPlayerSeed> players,
-        int loadoutSize,
         int normalRoundCount,
         CancellationToken ct = default);
 }
@@ -24,4 +23,6 @@ public sealed class VsMatchQuestionSet
  *
  * A MatchLocked után egyszer végrehajtott, kötegelt kérdésbetöltés
  * szerződése.
+ * MÓDOSÍTÁS: a globális loadoutSize paraméter megszűnt; minden seed a
+ * saját, szint szerint már levágott loadoutját adja át.
  */

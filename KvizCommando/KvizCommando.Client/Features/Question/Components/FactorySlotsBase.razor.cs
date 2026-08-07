@@ -5,6 +5,7 @@ using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.Question;
+using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -21,8 +22,6 @@ public partial class FactorySlotsBase
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
 
-    private const int ROW_COUNT = 10;
-
     private int? _editingRowIndex;
     private CategoryOption[] _options = [];
     private int[] _originalCodes = [];
@@ -34,6 +33,10 @@ public partial class FactorySlotsBase
     private int[] FactSlots => AppStates.Question!.FactorySlots;
     private QuestionExtendedInfo ExtInfo =>
         AppStates.Question!.ExtendedInfo;
+    private int OwnQuestionLimit =>
+        QuestionLoadoutRules.GetOwnQuestionLimit(
+            _workingCodes.Length,
+            ExtInfo.OccupiedUserSlot);
 
     protected override void OnInitialized()
     {
@@ -76,4 +79,16 @@ public partial class FactorySlotsBase
         if (e.Key is "Enter" or "Escape")
             StopEdit();
     }
+
+    private bool CanSelectOwnQuestion(int rowIndex)
+    {
+        return rowIndex < OwnQuestionLimit;
+    }
 }
+
+/**
+ * MÓDOSÍTÁS: a komponens a szervertől kapott 6/8/10 elemű loadouttal
+ * dolgozik. A saját kérdés opció a megszokott első N sorban marad
+ * elérhető, ahol N a foglalt user slotok és a loadout fele közül a
+ * kisebb érték.
+ */

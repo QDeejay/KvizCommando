@@ -196,16 +196,20 @@ public partial class TeamManager
         }
 
         ReqStates[] refreshTypes = requestType is
-            ManageType.Retire or ManageType.Fire
+            ManageType.Promote
                 ? [
-                    ReqStates.Question,
+                    ReqStates.VsGame,
                     ReqStates.Home,
                     ReqStates.Team
                 ]
                 : [
+                    ReqStates.Home,
                     ReqStates.Team,
-                    ReqStates.VsGame
+                    ReqStates.VsGame,
+                    ReqStates.SoloGame,
+                    ReqStates.Question
                 ];
+
 
         await Ui.ReloadAsync(refreshTypes);
     }

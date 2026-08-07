@@ -26,6 +26,16 @@
             CancellationToken ct = default);
 
         /// <summary>
+        /// A játékos- és kérdéscache aktuális állapotát ugyanazon játékoslock
+        /// alatt adja át, miközben a módosítás player dirty flaget állít.
+        /// </summary>
+        Task<bool?> UpdatePlayerAndQuestionsLockedAsync(
+            int playerId,
+            string sessionId,
+            Func<CachedPlayer, CachedQuestion, DirtyFlags?> update,
+            CancellationToken ct = default);
+
+        /// <summary>
         /// A szerver által már hitelesített meccseredményt az aktuális
         /// klienssessiontől függetlenül vezeti át a játékoscache-en.
         /// </summary>
@@ -66,3 +76,8 @@
 
     }
 }
+
+/**
+ * MÓDOSÍTÁS: a loadout mentési validációjához felvette a játékos- és
+ * kérdéscache-t egyetlen lock alatt módosító művelet szerződését.
+ */

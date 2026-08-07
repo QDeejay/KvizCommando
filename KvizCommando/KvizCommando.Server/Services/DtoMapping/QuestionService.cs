@@ -26,13 +26,64 @@ namespace KvizCommando.Server.Services.DtoMapping
 
         public async Task<bool?> SaveFactorySlotsAsync(int playerId, SaveFactoryRequest dto, CancellationToken ct)
         {
-            return await _cache.UpdatePlayerLockedAsync(
+            return await _cache.UpdatePlayerAndQuestionsLockedAsync(
                 playerId,
                 dto.SessionId,
-                player =>
+                (player, question) =>
                 {
+                    var level = player.Core.RankEnum;
+                    if (level <= 0)
+                        return null;
+
+                    var loadoutSize =
+                        QuestionLoadoutRules.GetLoadoutSize(level);
+
+                    if (dto.CategorySlots.Length < loadoutSize)
+                        return null;
+
+                    var categorySlots = dto.CategorySlots
+                        .Take(loadoutSize)
+                        .ToArray();
+
+                    if (categorySlots.Any(category =>
+                            category is < 0 or >
+                                QuestionLoadoutRules.OWN_QUESTION_CATEGORY))
+                    {
+                        return null;
+                    }
+
+                    var maxUserSlot = Math.Min(
+                        RankRewards.List[level].OwnQuestSlot,
+                        question.uSlots.Length);
+
+                    var occupiedUserSlots = question.uSlots
+                        .Take(maxUserSlot)
+                        .Count(slot => slot.CategoryNo > 0);
+
+                    var ownQuestionLimit =
+                        QuestionLoadoutRules.GetOwnQuestionLimit(
+                            loadoutSize,
+                            occupiedUserSlots);
+
+                    if (categorySlots.Count(category =>
+                            category ==
+                                QuestionLoadoutRules.OWN_QUESTION_CATEGORY) >
+                        ownQuestionLimit)
+                    {
+                        return null;
+                    }
+
+                    if (categorySlots
+                        .Skip(loadoutSize / 2)
+                        .Any(category =>
+                            category ==
+                                QuestionLoadoutRules.OWN_QUESTION_CATEGORY))
+                    {
+                        return null;
+                    }
+
                     player.Loadout.FactorySlotsJson =
-                        JsonSerializer.Serialize(dto.CategorySlots);
+                        JsonSerializer.Serialize(categorySlots);
 
                     return DirtyFlags.Loadout;
                 },
@@ -47,6 +98,9 @@ namespace KvizCommando.Server.Services.DtoMapping
                 (player, question) =>
                 {
                     var level = player.Core.RankEnum;
+
+                    if (level <= 0)
+                        return null;
 
                     var maxUserSlot = Math.Min(
                         RankRewards.List[level].OwnQuestSlot,
@@ -162,6 +216,9 @@ namespace KvizCommando.Server.Services.DtoMapping
                 dto.SessionId,
                 (player, question) =>
                 {
+                    if (player.Core.RankEnum <= 0)
+                        return null;
+
                     var freePendingSlots = question.pSlots
                         .Take(5)
                         .Count(item => item.CategoryNo == 0);
@@ -222,6 +279,9 @@ namespace KvizCommando.Server.Services.DtoMapping
             if (player.SessionId == "denied")
                 return new QuestionDtos { AccessDenied = true };
 
+            if (player.Core.RankEnum <= 0)
+                return new QuestionDtos { AccessDenied = true };
+
             var context = BuildContext(player, slot);
 
             await CorrectFactorySlotsIfNeededAsync(
@@ -257,17 +317,32 @@ namespace KvizCommando.Server.Services.DtoMapping
         {
             var level = player.Core.RankEnum;
             var rewards = RankRewards.List[level];
+            var storedFactorySlots =
+                player.Loadout?.FactorySlotsJson.ConvertToArray<int>() ?? [];
+            var loadoutSize =
+                QuestionLoadoutRules.GetLoadoutSize(level);
 
             var context = new QuestionContext
             {
-                AvailableUserSlot = rewards.OwnQuestSlot,
-                UserSlotEnable = level > 0
+                AvailableUserSlot = Math.Min(
+                    rewards.OwnQuestSlot,
+                    slot.uSlots.Length),
+                UserSlotEnable = level > 0,
+                StoredFactorySlots = storedFactorySlots,
+                FactorySlots = new int[loadoutSize]
             };
 
-            context.AvailablePendingSlot = context.AvailableUserSlot >> 1;
+            Array.Copy(
+                storedFactorySlots,
+                context.FactorySlots,
+                Math.Min(storedFactorySlots.Length, loadoutSize));
 
-            context.FactorySlots = player.Loadout?.FactorySlotsJson.ConvertToArray<int>() ?? [];
-            context.OwnQuestionCount = context.FactorySlots.Count(c => c == 17);
+            context.AvailablePendingSlot = Math.Min(
+                context.AvailableUserSlot >> 1,
+                slot.pSlots.Length);
+
+            context.OwnQuestionCount = context.FactorySlots.Count(c =>
+                c == QuestionLoadoutRules.OWN_QUESTION_CATEGORY);
 
             context.UserSlots = BuildUserSlots(slot, context.AvailableUserSlot);
 
@@ -346,44 +421,49 @@ namespace KvizCommando.Server.Services.DtoMapping
             QuestionContext context,
             CancellationToken ct)
         {
-            bool[] maskCurrent = new bool[16];
-            bool[] maskChecked = new bool[16];
-
-            foreach (var n in context.FactorySlots)
-            {
-                if (n is > 0 and < 17)
-                    maskCurrent[n - 1] = true;
-            }
-
-            for (var i = 0; i < 16; i++)
-            {
-                maskChecked[i] = maskCurrent[i] && context.CategoryMask[i];
-            }
-
-            if (context.OccupiedUserSlot >= context.OwnQuestionCount && maskCurrent.SequenceEqual(maskChecked))
-                return;
-
+            var ownQuestionLimit =
+                QuestionLoadoutRules.GetOwnQuestionLimit(
+                    context.FactorySlots.Length,
+                    context.OccupiedUserSlot);
             var ownQuestionCounter = 0;
+            var ownQuestionAreaLength =
+                context.FactorySlots.Length / 2;
 
             for (var i = 0; i < context.FactorySlots.Length; i++)
             {
-                if (context.FactorySlots[i] == 17)
+                var category = context.FactorySlots[i];
+
+                if (category ==
+                    QuestionLoadoutRules.OWN_QUESTION_CATEGORY)
+                {
                     ownQuestionCounter++;
 
-                Console.WriteLine("------------------------------------------------------");
-                Console.WriteLine($"Slot:{i} Category:{context.FactorySlots[i]} a j értéke:{ownQuestionCounter}");
+                    if (i >= ownQuestionAreaLength ||
+                        ownQuestionCounter > ownQuestionLimit)
+                    {
+                        context.FactorySlots[i] = 0;
+                    }
 
-                context.FactorySlots[i] =
-                    context.FactorySlots[i] == 17 && ownQuestionCounter > context.OccupiedUserSlot
-                        ? 0
-                        : context.FactorySlots[i];
-                if (context.FactorySlots[i] > 0 && context.FactorySlots[i] < 17)
-                    context.FactorySlots[i] = !context.CategoryMask[context.FactorySlots[i] - 1]
-                                                   ? 0
-                                                   : context.FactorySlots[i];
+                    continue;
+                }
 
-                Console.WriteLine($"Slot:{i} Category:{context.FactorySlots[i]} a j értéke:{ownQuestionCounter}");
-                Console.WriteLine("------------------------------------------------------");
+                if (category is < 0 or >
+                        QuestionLoadoutRules.OWN_QUESTION_CATEGORY ||
+                    category is > 0 and <
+                        QuestionLoadoutRules.OWN_QUESTION_CATEGORY &&
+                    !context.CategoryMask[category - 1])
+                {
+                    context.FactorySlots[i] = 0;
+                }
+            }
+
+            context.OwnQuestionCount = context.FactorySlots.Count(category =>
+                category == QuestionLoadoutRules.OWN_QUESTION_CATEGORY);
+
+            if (context.StoredFactorySlots.SequenceEqual(
+                    context.FactorySlots))
+            {
+                return;
             }
 
             await _cache.UpdatePlayerLockedAsync(
@@ -401,6 +481,7 @@ namespace KvizCommando.Server.Services.DtoMapping
 
         private sealed class QuestionContext
         {
+            internal int[] StoredFactorySlots { get; set; } = [];
             internal int[] FactorySlots { get; set; } = [];
             internal bool[] CategoryMask { get; set; } = [];
             internal UserSlot[] UserSlots { get; set; } = [];
@@ -420,3 +501,12 @@ namespace KvizCommando.Server.Services.DtoMapping
     }
 }
 
+/**
+ * MÓDOSÍTÁS: a loadout mérete a csapatszint MaxCharacters értékének
+ * kétszerese, legfeljebb tíz. A mentés a ténylegesen foglalt user
+ * slotok és a loadout fele alapján validálja a 17-esek számát, és a
+ * második loadoutfélben nem fogad el saját kérdést. A meglévő betöltési
+ * korrekció balról jobbra továbbra is csak a többlet 17-eseket nullázza,
+ * majd azonnal újraszámolja az OwnQuestionCount értékét. A 0-s szint
+ * kérdésműveletei nem módosíthatják a cache-t.
+ */

@@ -23,7 +23,6 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
 
     public async Task<VsMatchQuestionSet> LoadAsync(
             IReadOnlyCollection<VsMatchPlayerSeed> players,
-            int loadoutSize,
             int normalRoundCount,
             CancellationToken ct = default)
     {
@@ -32,7 +31,6 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
             player => player.PlayerId,
             player => BuildPlan(
                 player,
-                loadoutSize,
                 usedFactoryIds));
 
         var factoryIds = plans.Values
@@ -103,16 +101,12 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
 
     private VsQuestionLoadPlan[] BuildPlan(
         VsMatchPlayerSeed player,
-        int loadoutSize,
         ISet<int> usedFactoryIds)
     {
-        if (player.LoadoutCategories.Length < loadoutSize)
-        {
-            throw new InvalidOperationException(
-                $"Player {player.PlayerId} has an incomplete VS loadout.");
-        }
-
+        var loadoutSize = player.LoadoutCategories.Length;
         var result = new VsQuestionLoadPlan[loadoutSize];
+        var ownQuestions = player.OwnQuestions.ToArray();
+        Shuffle(ownQuestions);
         var ownQuestionIndex = 0;
 
         for (var index = 0; index < loadoutSize; index++)
@@ -121,7 +115,7 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
 
             if (categoryId == VsLoadoutCategoryIds.OwnQuestion)
             {
-                if (ownQuestionIndex >= player.OwnQuestions.Length)
+                if (ownQuestionIndex >= ownQuestions.Length)
                 {
                     throw new InvalidOperationException(
                         $"Player {player.PlayerId} has an invalid own-question loadout.");
@@ -132,7 +126,7 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
                     LoadoutPosition = index,
                     DisplayCategoryId = categoryId,
                     OwnQuestion =
-                        player.OwnQuestions[ownQuestionIndex++]
+                        ownQuestions[ownQuestionIndex++]
                 };
                 continue;
             }
@@ -292,4 +286,8 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
  * A kategóriánkénti ID-indexből kiválasztja a meccs kérdéseit,
  * majd kötegelt adatbázis-lekéréssel meccsszintű, kevert állapotot
  * készít.
+ * MÓDOSÍTÁS: játékosonként a seed saját 6/8/10-es loadoutméretét
+ * használja. A foglalt user slotok saját kérdéseit minden meccshez
+ * megkeveri, ezért a 17-es helyekre ismétlés nélkül véletlen kérdések
+ * kerülnek.
  */

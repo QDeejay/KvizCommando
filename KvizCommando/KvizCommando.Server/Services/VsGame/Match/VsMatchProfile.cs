@@ -22,7 +22,6 @@ public sealed class VsMatchProfile
     public int TimeFreezeWrongAnswerPenaltySeconds { get; init; } = 20;
     public int PointUnit { get; init; } = 1;
     public int CaptainMultiplier { get; init; } = 2;
-    public int LoadoutSize { get; init; } = 10;
     public int GoodResponseTimeMilliseconds { get; init; } = 100;
     public int MaximumResponseTimeMilliseconds { get; init; } = 250;
     public bool PausePreparationOnTimeout { get; init; } = false;
@@ -57,4 +56,6 @@ public static class VsMatchProfiles
  *
  * A VS meccsmotor egy helyen módosítható idő-, pont- és
  * létszámprofilját tartalmazza.
+ * MÓDOSÍTÁS: a fix LoadoutSize kikerült a meccsprofilból, mert a
+ * loadout méretét játékosonként a közös szintszabály határozza meg.
  */

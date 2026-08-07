@@ -140,6 +140,31 @@ namespace KvizCommando.Server.Services.PlayerCache
             }
         }
 
+        public async Task<bool?> UpdatePlayerAndQuestionsLockedAsync(
+            int playerId,
+            string sessionId,
+            Func<CachedPlayer, CachedQuestion, DirtyFlags?> update,
+            CancellationToken ct = default)
+        {
+            var entry = await GetOrCreateEntryAsync(playerId, sessionId, ct);
+            if (entry is null) return false;
+
+            await entry.Lock.WaitAsync(ct);
+            try
+            {
+                if (entry.Player.SessionId != sessionId)
+                    return null;
+
+                return ApplyPlayerUpdate(
+                    entry,
+                    player => update(player, entry.CachedQ));
+            }
+            finally
+            {
+                entry.Lock.Release();
+            }
+        }
+
         public async Task<bool> UpdateRewardPlayerLockedAsync(
             int playerId,
             string loadSessionId,
@@ -415,4 +440,7 @@ namespace KvizCommando.Server.Services.PlayerCache
  * kérdésmódosításai külön műveleten, sessionegyezés nélkül futnak.
  * A normál kliensmódosítások sessionellenőrzése változatlan maradt;
  * a közös update-logika mindkét útvonalon azonos dirty-kezelést ad.
+ * MÓDOSÍTÁS: a loadout mentése a játékos és a kérdésslotok aktuális
+ * állapotát egyetlen játékoslock alatt ellenőrizheti, miközben továbbra
+ * is a meglévő player dirty-kezelés jelöli mentendőnek a loadoutot.
  */

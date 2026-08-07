@@ -1,7 +1,9 @@
 using KvizCommando.Client.Features.Question.Builders;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 
@@ -15,14 +17,45 @@ public partial class Question : KcComponentBase, IDisposable
     private readonly Dictionary<string, ContentBoxVm> _boxes = [];
 
     private string[] _boxOrder = [];
+    private bool _hasAccess;
     private bool _isReady;
+    private bool _isSubscribed;
 
     private string Culture => AppStates.Culture;
     private QuestionDtos QuestionData => AppStates.Question!;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        var teamLevel =
+            AppStates.Home?.UserMainData.RankEnum ?? 0;
+
+        if (teamLevel <= 0)
+        {
+            Ui.Nav.NavigateTo("/home", replace: true);
+            return;
+        }
+
+        var expectedLoadoutSize =
+            QuestionLoadoutRules.GetLoadoutSize(teamLevel);
+
+        if (AppStates.Question is null ||
+            AppStates.Question.AccessDenied ||
+            AppStates.Question.FactorySlots.Length !=
+                expectedLoadoutSize)
+        {
+            await Ui.ReloadAsync(ReqStates.Question);
+        }
+
+        if (AppStates.Question is null ||
+            AppStates.Question.AccessDenied)
+        {
+            Ui.Nav.NavigateTo("/home", replace: true);
+            return;
+        }
+
+        _hasAccess = true;
         Ui.Header.OnBackBtnClicked += HandleBack;
+        _isSubscribed = true;
         Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Question"], 1);
         _boxOrder = QBoxBuilder.Root;
     }
@@ -31,6 +64,9 @@ public partial class Question : KcComponentBase, IDisposable
 
     private void BuildBoxes()
     {
+        if (!_hasAccess || AppStates.Question is null)
+            return;
+
         foreach (var box in QBoxBuilder.BuildBoxes(
                      QuestionData.ExtendedInfo!,
                      Ui.Lang))
@@ -92,7 +128,16 @@ public partial class Question : KcComponentBase, IDisposable
 
     public void Dispose()
     {
-        Ui.Header.OnBackBtnClicked -= HandleBack;
+        if (_isSubscribed)
+            Ui.Header.OnBackBtnClicked -= HandleBack;
+
         GC.SuppressFinalize(this);
     }
 }
+
+/**
+ * MÓDOSÍTÁS: 0-s csapatszinten a közvetlen /question navigáció is
+ * visszairányít a Home oldalra. Szintváltás után a lap csak akkor kér
+ * új Question snapshotot, ha a cache hiányzik, tiltott, vagy a benne
+ * lévő loadout hossza már nem egyezik a 6/8/10-es szintszabállyal.
+ */

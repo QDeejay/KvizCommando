@@ -6,22 +6,18 @@
             <div class="list-header no-cell">@Lang["question.Table.Header.No"]</div>
             <div class="list-header category-cell">@Lang["question.Table.Header.Category"]</div>
 
-            @for (var i = 0; i < ROW_COUNT; i++)
+            @for (var i = 0; i < _workingCodes.Length; i++)
             {
                 var row = i;
-                var ownLimit = Math.Min(
-                    ExtInfo.AvailablePendingSlot,
-                    ExtInfo.AvailableUserSlot - ExtInfo.FreeUserSlot
-                );
 
-                if (row < ownLimit)
+                if (CanSelectOwnQuestion(row))
                 {
-                        _options = CatHelper.OptionsUpdate(CategoryOptionHelpers.optionType.Own, ExtInfo.CharCatMask);
-                    <div>o</div>
+                    _options = CatHelper.OptionsUpdate(CategoryOptionHelpers.optionType.Own, ExtInfo.CharCatMask);
+                    <div><i class="bi bi-person-raised-hand"></i></div>
                 }
                 else
                 {
-                        _options = CatHelper.OptionsUpdate(CategoryOptionHelpers.optionType.Normal, ExtInfo.CharCatMask);
+                    _options = CatHelper.OptionsUpdate(CategoryOptionHelpers.optionType.Normal, ExtInfo.CharCatMask);
                     <div></div>
                 }
 
@@ -66,3 +62,8 @@
 
 
 
+@*
+    MÓDOSÍTÁS: a fix tíz sor helyett a szervertől kapott loadoutméretet
+    jeleníti meg. A saját kérdésre alkalmas helyet személy-kérdés ikon
+    jelöli; az optionlista meglévő Normal/Own felépítése változatlan.
+*@

@@ -89,7 +89,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                 },
                 Question = new ScreenButtonEntity
                 {
-                    Enable = true,
+                    Enable = player.Core.RankEnum > 0,
                     //FooterData1 = 2 // TODO: később lekérdezésből
                 },
                 SoloGame = new ScreenButtonEntity
@@ -396,4 +396,6 @@ namespace KvizCommando.Server.Services.DtoMapping
  *
  * A fájl a Home, Solo és VS képernyők PlayerCache-alapú
  * snapshotjait állítja össze.
+ * MÓDOSÍTÁS: a teljes kérdésoldal Home gombja csak 0-nál nagyobb
+ * csapatszinten engedélyezett.
  */

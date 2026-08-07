@@ -4,23 +4,32 @@
 
 <link href="css/question-common.css" rel="stylesheet" />
 
-<LangGuard Culture="@Culture" Module="question" OnReady="BuildBoxes">
-    <PageContainer>
-        @if (_isReady)
-        {
-            <div class="kc-quest-selector">
-                @foreach (var bx in _boxOrder)
-                {
-                    var box = Box(bx);
-                    <ContentBox Vm="@box"
-                                OnClick="OnBoxClick">
-                        <ContentBody>
-                            <DynamicComponent Type="@box.BodyComponent"
-                                              Parameters="@box.BodyParameters" />
-                        </ContentBody>
-                    </ContentBox>
-                }
-            </div>
-        }
-    </PageContainer>
-</LangGuard>
+@if (_hasAccess)
+{
+    <LangGuard Culture="@Culture" Module="question" OnReady="BuildBoxes">
+        <PageContainer>
+            @if (_isReady)
+            {
+                <div class="kc-quest-selector">
+                    @foreach (var bx in _boxOrder)
+                    {
+                        var box = Box(bx);
+                        <ContentBox Vm="@box"
+                                    OnClick="OnBoxClick">
+                            <ContentBody>
+                                <DynamicComponent Type="@box.BodyComponent"
+                                                  Parameters="@box.BodyParameters" />
+                            </ContentBody>
+                        </ContentBox>
+                    }
+                </div>
+            }
+        </PageContainer>
+    </LangGuard>
+}
+
+@*
+    MÓDOSÍTÁS: a nyelvi és tartalomkomponensek csak a 0-s szint
+    kizárása és a szintnek megfelelő Question snapshot betöltése után
+    példányosodnak, így az aszinkron inicializálás nem épít üres oldalt.
+*@

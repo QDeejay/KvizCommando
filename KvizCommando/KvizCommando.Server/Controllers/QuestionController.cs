@@ -111,8 +111,8 @@ namespace KvizCommando.Server.Controllers
             }
             else if (success == false)
             {
-                _logger.LogWarning("Factory slot mentés sikertelen. userId={UserId}", userId);
-                return FailToast(500, _localizer["Error.Internal"].Value);
+                _logger.LogWarning("Érvénytelen factory loadout mentés. userId={UserId}", userId);
+                return FailToast(400, _localizer["Error.InValidData"].Value);
             }
             else
                 return OkToast(_localizer["Resp.SaveOk"].Value, ToastType.Success);
@@ -248,4 +248,9 @@ namespace KvizCommando.Server.Controllers
 
 }
 
+/**
+ * MÓDOSÍTÁS: a szintfüggő méretnek, sajátkérdés-limitnek vagy
+ * pozíciószabálynak nem megfelelő factory loadoutot 400-as hibával
+ * utasítja vissza a korábbi általános 500-as válasz helyett.
+ */
 
