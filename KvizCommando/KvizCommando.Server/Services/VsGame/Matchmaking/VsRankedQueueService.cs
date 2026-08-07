@@ -209,12 +209,12 @@ public sealed partial class VsRankedQueueService :
         return result;
     }
 
-    public Task<bool> LeaveAsync(
+    public Task<VsQueueLeaveStatus> LeaveAsync(
         string connectionId,
         CancellationToken ct = default) =>
         RemoveConnectionAsync(
             connectionId,
-            applyReentryBlock: true,
+            isManualLeave: true,
             ct);
 
     public async Task DisconnectAsync(
@@ -223,7 +223,7 @@ public sealed partial class VsRankedQueueService :
     {
         await RemoveConnectionAsync(
             connectionId,
-            applyReentryBlock: false,
+            isManualLeave: false,
             ct);
     }
 
@@ -258,12 +258,13 @@ public sealed partial class VsRankedQueueService :
             await BroadcastQueueAsync(changedClassification.Value);
     }
 
-    private async Task<bool> RemoveConnectionAsync(
+    private async Task<VsQueueLeaveStatus> RemoveConnectionAsync(
         string connectionId,
-        bool applyReentryBlock,
+        bool isManualLeave,
         CancellationToken ct)
     {
         int? changedClassification = null;
+        var isReentryBlocked = false;
 
         ct.ThrowIfCancellationRequested();
 
@@ -277,16 +278,20 @@ public sealed partial class VsRankedQueueService :
                 if (entry is null)
                     continue;
 
+                var hadOtherWaitingPlayers =
+                    queue.Value.Entries.Count > 1;
+
                 queue.Value.Entries.Remove(entry);
                 changedClassification = queue.Key;
                 UpdateMatchmakingTimerAfterLeaveLocked(queue.Value);
 
-                if (applyReentryBlock)
+                if (isManualLeave && hadOtherWaitingPlayers)
                 {
                     _reentryBlockedUntilUtc[entry.PlayerId] =
                         DateTime.UtcNow.AddSeconds(
                             VsMatchProfiles.Ranked
                                 .QueueReentryBlockSeconds);
+                    isReentryBlocked = true;
                 }
 
                 break;
@@ -296,7 +301,12 @@ public sealed partial class VsRankedQueueService :
         if (changedClassification.HasValue)
             await BroadcastQueueAsync(changedClassification.Value);
 
-        return changedClassification.HasValue;
+        if (!changedClassification.HasValue)
+            return VsQueueLeaveStatus.NotInQueue;
+
+        return isReentryBlocked
+            ? VsQueueLeaveStatus.LeftWithCooldown
+            : VsQueueLeaveStatus.Left;
     }
 
     private async Task<VsRankedQueueEntry?> BuildQueueEntryAsync(
@@ -527,6 +537,9 @@ public sealed partial class VsRankedQueueService :
  * PeriodicTimer figyeli mind az öt besorolást, valamint a manuális
  * kilépés egyperces újrabelépési tiltását. A SignalR-disconnect és a
  * logout büntetésmentes marad.
+ * MÓDOSÍTÁS: az egyedül várakozó manuális kilépése nem kap tiltást;
+ * cooldown csak akkor készül, ha a kilépés pillanatában más játékos is
+ * ugyanabban a queue-ban várakozott.
  *
  * Az öt besorolás külön várólistáját kezeli, cache-snapshotból
  * validálja a belépést, majd négy játékosnál azonnal, a határidő

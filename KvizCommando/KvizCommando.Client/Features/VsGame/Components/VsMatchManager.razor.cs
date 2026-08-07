@@ -355,13 +355,13 @@ public partial class VsMatchManager : IAsyncDisposable
         _lifetimeCts.Cancel();
         MatchClient.OnChanged -= OnMatchClientChanged;
 
-        var leftQueue = false;
+        var leaveStatus = VsQueueLeaveStatus.NotInQueue;
 
         try
         {
             try
             {
-                leftQueue = await MatchClient.LeaveQueueAsync();
+                leaveStatus = await MatchClient.LeaveQueueAsync();
             }
             finally
             {
@@ -370,10 +370,17 @@ public partial class VsMatchManager : IAsyncDisposable
         }
         finally
         {
-            if (leftQueue)
+            switch (leaveStatus)
             {
-                Ui.Toast.Brief(
-                    Lang["vsgame.Match.Queue.LeftWarning"]);
+                case VsQueueLeaveStatus.LeftWithCooldown:
+                    Ui.Toast.Brief(
+                        Lang["vsgame.Match.Queue.LeftWarning"]);
+                    break;
+
+                case VsQueueLeaveStatus.Left:
+                    Ui.Toast.Complete(
+                        Lang["vsgame.Match.Queue.LeftInfo"]);
+                    break;
             }
 
             try
@@ -409,7 +416,7 @@ public partial class VsMatchManager : IAsyncDisposable
  * MÓDOSÍTÁS: a queue-snapshot szerverhatáridejét a szinkronizált
  * szerverórából számolja vissza; a helyi kijelzőtimer meccs közben nem
  * renderelteti újra a managert. A sikeres manuális queue-kilépést a
- * szerver bool eredménye alapján warning toast jelzi.
+ * szerver típusos eredménye alapján info vagy warning toast jelzi.
  * MÓDOSÍTÁS: ha egy korábban kilépett játékos elavult kliensadatai
  * miatt a szerver elutasítja a következő queue-belépést, a kérdés-,
  * csapat- és VS snapshotot egyszer frissíti. Így a meccs közben

@@ -14,6 +14,13 @@ public sealed class VsQueueJoinResult
     public string ErrorKey { get; set; } = string.Empty;
 }
 
+public enum VsQueueLeaveStatus
+{
+    NotInQueue,
+    Left,
+    LeftWithCooldown
+}
+
 public sealed class VsRankedQueueSnapshot
 {
     public int ClassificationId { get; set; }
@@ -36,4 +43,6 @@ public sealed class VsRankedQueueSnapshot
  * ugyanebben a queue-szerződésben utazik vissza a klienshez.
  * MÓDOSÍTÁS: a dinamikus matchmaking abszolút szerverhatárideje a
  * queue-snapshot része; a kliens ebből csak a kijelzést számolja.
+ * MÓDOSÍTÁS: a manuális kilépés háromállapotú eredménye megkülönbözteti
+ * a hiányzó queue-bejegyzést, a szabad kilépést és a cooldownos kilépést.
  */

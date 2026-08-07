@@ -85,7 +85,10 @@
     <value>Meccs indul: {0} mp</value>
   </data>
   <data name="Match.Queue.LeftWarning" xml:space="preserve">
-    <value>Játék megszakítva a várólistából, új belépés 1 percig tiltva.</value>
+    <value>Más játékosok is várakoztak veled. Megszakítottad a várólistát, ezért új belépés 1 percig tiltva.</value>
+  </data>
+  <data name="Match.Queue.LeftInfo" xml:space="preserve">
+    <value>Elhagytad a várótermet!</value>
   </data>
   <data name="Match.Queue.Stake" xml:space="preserve">
     <value>Tét</value>

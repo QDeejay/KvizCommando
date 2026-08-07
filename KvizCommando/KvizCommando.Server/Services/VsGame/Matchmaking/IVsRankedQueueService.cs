@@ -16,7 +16,7 @@ public interface IVsRankedQueueService
         VsConnectionQuality connectionQuality,
         CancellationToken ct = default);
 
-    Task<bool> LeaveAsync(
+    Task<VsQueueLeaveStatus> LeaveAsync(
         string connectionId,
         CancellationToken ct = default);
 
@@ -55,5 +55,8 @@ public sealed class VsRankedQueueEntry
  * MÓDOSÍTÁS: logoutkor PlayerId és SessionId alapján is eltávolítható
  * a várakozó játékos.
  * MÓDOSÍTÁS: a manuális queue-kilépés és a kapcsolatvesztés külön
- * művelet; csak a manuális kilépés hoz létre újrabelépési tiltást.
+ * művelet; újrabelépési tiltást csak a más várakozókat hátrahagyó
+ * manuális kilépés hoz létre.
+ * A kilépési eredmény azt is jelzi, hogy volt-e más várakozó, ezért a
+ * kliens a szerver döntése alapján választ info vagy warning toastot.
  */

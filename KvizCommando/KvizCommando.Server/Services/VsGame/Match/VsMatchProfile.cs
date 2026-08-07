@@ -51,8 +51,9 @@ public static class VsMatchProfiles
  * rangsorolt várólistába.
  * A rangsorolt várólista négy játékost céloz. Két játékostól 60
  * másodperces dinamikus matchmaking indul, az első további érkező
- * legfeljebb 30 másodperccel hosszabbíthat, a manuális kilépés pedig
- * 60 másodperces újrabelépési tiltást ad.
+ * legfeljebb 30 másodperccel hosszabbíthat. A más várakozókat hátrahagyó
+ * manuális kilépés 60 másodperces újrabelépési tiltást ad; az utolsó
+ * várakozó büntetés nélkül távozhat.
  *
  * A VS meccsmotor egy helyen módosítható idő-, pont- és
  * létszámprofilját tartalmazza.
