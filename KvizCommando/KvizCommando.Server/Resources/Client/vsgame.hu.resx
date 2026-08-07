@@ -81,6 +81,12 @@
   <data name="Match.Queue.Status" xml:space="preserve">
     <value>Várakozás a többi játékosra</value>
   </data>
+  <data name="Match.Queue.StartingIn" xml:space="preserve">
+    <value>Meccs indul: {0} mp</value>
+  </data>
+  <data name="Match.Queue.LeftWarning" xml:space="preserve">
+    <value>Játék megszakítva a várólistából, új belépés 1 percig tiltva.</value>
+  </data>
   <data name="Match.Queue.Stake" xml:space="preserve">
     <value>Tét</value>
   </data>
@@ -197,6 +203,9 @@
   </data>
   <data name="Match.Error.QueueValidation" xml:space="preserve">
     <value>A csapat, a loadout vagy a kreditegyenleg már nem felel meg a besorolás feltételeinek.</value>
+  </data>
+  <data name="Match.Error.QueueCooldown" xml:space="preserve">
+    <value>A várólista elhagyása után 1 percig nem indíthatsz új játékot.</value>
   </data>
   <data name="Match.Error.Connection" xml:space="preserve">
     <value>A rangsorolt kapcsolat megszakadt.</value>

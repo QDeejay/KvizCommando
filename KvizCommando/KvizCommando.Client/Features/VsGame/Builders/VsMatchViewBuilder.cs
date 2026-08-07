@@ -53,6 +53,8 @@ public sealed class VsMatchViewBuilder
             RequiredPlayers = snapshot.RequiredPlayers,
             RequiredPartySize = snapshot.RequiredPartySize,
             Stake = snapshot.Stake,
+            MatchmakingDeadlineUtc =
+                snapshot.MatchmakingDeadlineUtc,
             Players =
             [
                 .. snapshot.Players.Select(player =>

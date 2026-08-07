@@ -81,6 +81,12 @@
   <data name="Match.Queue.Status" xml:space="preserve">
     <value>Waiting for the other players</value>
   </data>
+  <data name="Match.Queue.StartingIn" xml:space="preserve">
+    <value>Match starts in: {0} sec</value>
+  </data>
+  <data name="Match.Queue.LeftWarning" xml:space="preserve">
+    <value>Queue preparation cancelled. Joining a new match is blocked for 1 minute.</value>
+  </data>
   <data name="Match.Queue.Stake" xml:space="preserve">
     <value>Stake</value>
   </data>
@@ -197,6 +203,9 @@
   </data>
   <data name="Match.Error.QueueValidation" xml:space="preserve">
     <value>The team, loadout or credit balance no longer meets the classification requirements.</value>
+  </data>
+  <data name="Match.Error.QueueCooldown" xml:space="preserve">
+    <value>You cannot start a new match for 1 minute after leaving the queue.</value>
   </data>
   <data name="Match.Error.Connection" xml:space="preserve">
     <value>The ranked connection was closed.</value>

@@ -2,6 +2,7 @@
 
     let musicPlayer = null;
     const activeSfx = new Set();
+    const preloadedSfx = new Map();
 
     let currentMusicPath = null;
 
@@ -208,17 +209,40 @@
         }
     }
 
+    function preloadSfx(paths) {
+
+        for (const path of paths) {
+
+            if (preloadedSfx.has(path))
+                continue;
+
+            const sfx = new Audio(path);
+            sfx.preload = "auto";
+            sfx.load();
+            preloadedSfx.set(path, sfx);
+        }
+    }
+
     function playSfx(path) {
 
-        const sfx = new Audio(path);
+        let sfx = preloadedSfx.get(path);
+
+        if (sfx === undefined || !sfx.paused) {
+
+            sfx = new Audio(path);
+        }
+        else {
+
+            sfx.currentTime = 0;
+        }
 
         sfx.muted = masterMuted || !sfxEnabled;
         sfx.volume = sfxVolume;
         activeSfx.add(sfx);
 
         const release = () => activeSfx.delete(sfx);
-        sfx.addEventListener("ended", release, { once: true });
-        sfx.addEventListener("error", release, { once: true });
+        sfx.onended = release;
+        sfx.onerror = release;
 
         sfx.play().catch(error => {
             release();
@@ -262,6 +286,7 @@
         setMusicEnabled,
         setMusicVolume,
 
+        preloadSfx,
         playSfx,
 
         setSfxEnabled,
@@ -277,4 +302,7 @@
  * lejátszások is némán futnak. Feloldáskor az aktuális idővonalon
  * folytatódik a hang. A publikus API a működésének megfelelő
  * setMuted nevet használja.
+ * MÓDOSÍTÁS: az effektek külön lejátszás nélkül előtölthetők. Az első
+ * kattintás is a már betöltött példányt használja; párhuzamos lejátszásnál
+ * a motor csak az adott alkalomhoz készít új Audio példányt.
  */

@@ -17,7 +17,7 @@ public interface IVsMatchClientService : IAsyncDisposable
         int classificationId,
         CancellationToken ct = default);
 
-    Task LeaveQueueAsync(CancellationToken ct = default);
+    Task<bool> LeaveQueueAsync(CancellationToken ct = default);
 
     Task SelectCharacterAsync(
         int slotNumber,
@@ -66,6 +66,8 @@ public interface IVsMatchClientService : IAsyncDisposable
  * monotón módon továbbhaladó becsült szerveridőt teszi elérhetővé.
  * MÓDOSÍTÁS: az egyszeri kapcsolatellenőrzés típusos eredményét a
  * manager számára olvashatóvá teszi.
+ * MÓDOSÍTÁS: a manuális queue-kilépés bool eredménye különbözteti meg
+ * a tényleges várólista-elhagyást a már lockolt vagy lezárt állapottól.
  *
  * A VS dynamic manager által használt SignalR klienskapcsolat
  * szerződése. Automatikus reconnectet szándékosan nem tartalmaz.

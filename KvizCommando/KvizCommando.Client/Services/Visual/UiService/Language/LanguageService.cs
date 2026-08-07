@@ -1,6 +1,5 @@
 ﻿using KvizCommando.Client.Helpers;
 using Microsoft.JSInterop;
-using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace KvizCommando.Client.Services.Visual.UiService.Language
@@ -11,8 +10,7 @@ namespace KvizCommando.Client.Services.Visual.UiService.Language
         private readonly HttpClient _http;
         private readonly Dictionary<string, string> _translations = new();
         private readonly HashSet<string> _loadedModules = new();
-        private Dictionary<string, string>? _manifest;
-        public string CurrentCulture { get; private set; }
+        public string CurrentCulture { get; private set; } = string.Empty;
         public bool IsReady => _loadedModules.Count > 0;
         
         public LanguageService(IJSRuntime js, HttpClient http)
@@ -35,40 +33,28 @@ namespace KvizCommando.Client.Services.Visual.UiService.Language
         }
         public async Task LoadModuleAsync(string culture, string moduleName)
         {
-            await EnsureManifestAsync(culture);
-            if (_manifest is null || !_manifest.TryGetValue(moduleName, out var expectedHash) || string.IsNullOrWhiteSpace(expectedHash))
-            {
-                Console.WriteLine($"[Lang] Manifest missing hash for {moduleName}");
-                return;
-            }
-
             if (_loadedModules.Contains(moduleName))
                 return;
 
             string cacheKey = $"langcache.{culture}.{moduleName}";
-            string hashKey = $"langhash.{culture}.{moduleName}";
 
-            // próbáljuk a sessionStorage cache-t
+            // Először az adott böngészőfül session cache-ét használjuk.
             string? cachedJson = await _js.InvokeAsync<string?>("sessionStorage.getItem", cacheKey);
-            string? cachedHash = await _js.InvokeAsync<string?>("sessionStorage.getItem", hashKey);
-
             bool hasJson = !string.IsNullOrWhiteSpace(cachedJson) && cachedJson.TrimStart().StartsWith("{");
-            bool hashMatches = !string.IsNullOrWhiteSpace(cachedHash) && cachedHash == expectedHash;
 
-            if (hasJson && hashMatches)
+            if (hasJson)
             {
                 var moduleTranslations = JsonSerializer.Deserialize<Dictionary<string, string>>(cachedJson!)!;
                 foreach (var kv in moduleTranslations) _translations[kv.Key] = kv.Value;
                 _loadedModules.Add(moduleName);
+                CurrentCulture = culture;
                 return;
             }
 
-            // cache miss → töltsd le a modult
+            // Cache miss esetén a statikus JSON válasza no-cache fejlécet kap a szervertől.
             await _js.InvokeVoidAsync("sessionStorage.removeItem", cacheKey);
-            await _js.InvokeVoidAsync("sessionStorage.removeItem", hashKey);
 
-            // TRÜKK: cache-busting query param a hash-sel
-            string moduleUrl = $"localization/{culture}/{moduleName}.json?v={expectedHash}";
+            string moduleUrl = $"localization/{culture}/{moduleName}.json";
             var response = await _http.GetAsync(moduleUrl);
             if (!response.IsSuccessStatusCode)
             {
@@ -82,10 +68,10 @@ namespace KvizCommando.Client.Services.Visual.UiService.Language
 
             string serialized = JsonSerializer.Serialize(freshModule);
             await _js.InvokeVoidAsync("sessionStorage.setItem", cacheKey, serialized);
-            await _js.InvokeVoidAsync("sessionStorage.setItem", hashKey, expectedHash);
 
             foreach (var kv in freshModule) _translations[kv.Key] = kv.Value;
             _loadedModules.Add(moduleName);
+            CurrentCulture = culture;
         }
 
 
@@ -93,21 +79,16 @@ namespace KvizCommando.Client.Services.Visual.UiService.Language
         {
             Console.WriteLine($"--- Törlés indul: {deleteculture}");
 
-            // 1) modul cache + hash törlése csak a betöltöttekre
+            // A korábbi nyelv betöltött moduljainak session cache-e törlődik.
             foreach (var module in _loadedModules.ToArray())
             {
                 await _js.InvokeVoidAsync("sessionStorage.removeItem", $"langcache.{deleteculture}.{module}");
-                await _js.InvokeVoidAsync("sessionStorage.removeItem", $"langhash.{deleteculture}.{module}");
             }
 
-            // 2) manifest törlése az előző nyelvhez
-            await _js.InvokeVoidAsync("sessionStorage.removeItem", $"lang.manifest.{deleteculture}");
-
-            // 3) memóriabeli állapot nullázása – fontos, hogy a következő EnsureManifest újra töltsön
+            // Memóriabeli állapot nullázása a következő nyelv betöltése előtt.
             _loadedModules.Clear();
             _translations.Clear();
-            _manifest = null;
-            CurrentCulture = null;
+            CurrentCulture = string.Empty;
             Console.WriteLine($"[Lang] Clearing cache for {deleteculture}");
 
         }
@@ -134,33 +115,11 @@ namespace KvizCommando.Client.Services.Visual.UiService.Language
             return result;
         }
 
-        private async Task EnsureManifestAsync(string culture)
-        {
-            if (_manifest != null && CurrentCulture == culture) return;
-
-            // próbáld sessionStorage-ból
-            var mk = $"lang.manifest.{culture}";
-            var cached = await _js.InvokeAsync<string?>("sessionStorage.getItem", mk);
-            if (!string.IsNullOrWhiteSpace(cached))
-            {
-                _manifest = JsonSerializer.Deserialize<Dictionary<string, string>>(cached!);
-                CurrentCulture = culture;
-                return;
-            }
-
-            // külön API-ról kérd le → nem ragad be a wwwroot cache
-            var api = $"/api/lang/manifest?culture={culture}";
-            _manifest = await _http.GetFromJsonAsync<Dictionary<string, string>>(api);
-
-            if (_manifest is not null)
-            {
-                await _js.InvokeVoidAsync("sessionStorage.setItem", mk,
-                    JsonSerializer.Serialize(_manifest));
-                CurrentCulture = culture;
-            }
-        }
-
-
     }
 }
 
+/**
+ * MÓDOSÍTÁS: a kliensoldali nyelvi hash- és manifest-ellenőrzés megszűnt.
+ * A modulok böngészőfülenként a sessionStorage-ból töltődnek, cache missnél
+ * pedig közvetlenül a szerver no-cache fejléccel kiszolgált statikus JSON-jából.
+ */

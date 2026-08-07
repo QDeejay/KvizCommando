@@ -36,6 +36,7 @@ public partial class VsMatchManager : IAsyncDisposable
     private VsMatchViewData? _match;
     private string _errorText = string.Empty;
     private readonly CancellationTokenSource _lifetimeCts = new();
+    private System.Threading.Timer? _queueTimer;
     private bool _preparationMusicStarted;
     private bool _battleMusicStarted;
     private bool _requiresQuitConfirmation;
@@ -47,6 +48,18 @@ public partial class VsMatchManager : IAsyncDisposable
     {
         _builder = new VsMatchViewBuilder(Lang);
         MatchClient.OnChanged += OnMatchClientChanged;
+        _queueTimer = new System.Threading.Timer(
+            _ =>
+            {
+                if (!_disposed &&
+                    _queue?.MatchmakingDeadlineUtc.HasValue == true)
+                {
+                    _ = InvokeAsync(StateHasChanged);
+                }
+            },
+            null,
+            TimeSpan.FromMilliseconds(250),
+            TimeSpan.FromMilliseconds(250));
 
         try
         {
@@ -140,7 +153,8 @@ public partial class VsMatchManager : IAsyncDisposable
         }
 
         if (!_preparationMusicStarted &&
-            phase == VsMatchPhase.PreparationStarting)
+            (_queue is not null ||
+             phase == VsMatchPhase.PreparationStarting))
         {
             _preparationMusicStarted = true;
             await Audio.PlayMusicAsync(
@@ -321,20 +335,33 @@ public partial class VsMatchManager : IAsyncDisposable
             _ => string.Empty
         };
 
+    private int QueueRemainingSeconds =>
+        _queue?.MatchmakingDeadlineUtc is not DateTime deadlineUtc
+            ? 0
+            : Math.Max(
+                0,
+                (int)Math.Ceiling(
+                    (deadlineUtc -
+                     MatchClient.ServerUtcNow).TotalSeconds));
+
     public async ValueTask DisposeAsync()
     {
         if (_disposed)
             return;
 
         _disposed = true;
+        _queueTimer?.Dispose();
+        _queueTimer = null;
         _lifetimeCts.Cancel();
         MatchClient.OnChanged -= OnMatchClientChanged;
+
+        var leftQueue = false;
 
         try
         {
             try
             {
-                await MatchClient.LeaveQueueAsync();
+                leftQueue = await MatchClient.LeaveQueueAsync();
             }
             finally
             {
@@ -343,6 +370,12 @@ public partial class VsMatchManager : IAsyncDisposable
         }
         finally
         {
+            if (leftQueue)
+            {
+                Ui.Toast.Brief(
+                    Lang["vsgame.Match.Queue.LeftWarning"]);
+            }
+
             try
             {
                 await Audio.PlayMusicAsync(
@@ -369,10 +402,14 @@ public partial class VsMatchManager : IAsyncDisposable
  * VS lap, builder vagy spec felé. Dispose során hivatalosan kilép a
  * queue-ból, majd minden esetben lezárja a kapcsolatot. A saját
  * életciklus-token megszakítja a még folyamatban lévő csatlakozást.
- * A preparáció kezdetén a Menu02, a játék előtti visszaszámláláskor
- * a Battle02 indul; a meglévő zenei fade kezeli a váltást. Kilépéskor
- * a Menu01 áll vissza. Queue-ban és befejezett meccsnél nem kér kilépési
+ * A rangsorolt váróteremben a MenuVs, a játék előtti visszaszámláláskor
+ * a BattleVs indul; a meglévő zenei fade kezeli a váltást. Kilépéskor
+ * a MenuMain áll vissza. Queue-ban és befejezett meccsnél nem kér kilépési
  * megerősítést.
+ * MÓDOSÍTÁS: a queue-snapshot szerverhatáridejét a szinkronizált
+ * szerverórából számolja vissza; a helyi kijelzőtimer meccs közben nem
+ * renderelteti újra a managert. A sikeres manuális queue-kilépést a
+ * szerver bool eredménye alapján warning toast jelzi.
  * MÓDOSÍTÁS: ha egy korábban kilépett játékos elavult kliensadatai
  * miatt a szerver elutasítja a következő queue-belépést, a kérdés-,
  * csapat- és VS snapshotot egyszer frissíti. Így a meccs közben

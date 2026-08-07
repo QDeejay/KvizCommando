@@ -93,7 +93,7 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
 
     public DateTime GetServerUtc() => DateTime.UtcNow;
 
-    public Task LeaveRankedQueue() =>
+    public Task<bool> LeaveRankedQueue() =>
         _queue.LeaveAsync(
             Context.ConnectionId,
             Context.ConnectionAborted);
@@ -159,7 +159,7 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        await _queue.LeaveAsync(
+        await _queue.DisconnectAsync(
             Context.ConnectionId,
             CancellationToken.None);
 
@@ -254,4 +254,7 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
  * eldobja, a következő négy átlagát pedig a kapcsolat Context.Items
  * állapotában tartja. Rossz minősítésű vagy mérés nélküli kapcsolat
  * nem léphet be a várólistába.
+ * MÓDOSÍTÁS: a kliens explicit LeaveRankedQueue parancsa visszajelzi,
+ * hogy valóban történt-e manuális kilépés. A SignalR-disconnect külön
+ * büntetésmentes eltávolítás marad.
  */

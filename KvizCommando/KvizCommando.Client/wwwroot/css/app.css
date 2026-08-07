@@ -42,10 +42,10 @@ label {
 }
 .company-logo {
     position: absolute;
-    top: 0;
+    top: 20px;
     left: 60px;
     width: auto;
-    height: 60px;
+    height: 20px;
 }
 *, *::before, *::after {
     box-sizing: inherit;

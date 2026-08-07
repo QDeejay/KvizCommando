@@ -21,6 +21,7 @@ public sealed class VsRankedQueueSnapshot
     public int RequiredPlayers { get; set; }
     public int RequiredPartySize { get; set; }
     public int Stake { get; set; }
+    public DateTime? MatchmakingDeadlineUtc { get; set; }
     public VsMatchPlayerDto[] Players { get; set; } = [];
 }
 
@@ -33,4 +34,6 @@ public sealed class VsRankedQueueSnapshot
  * küldhető, kizárólag publikus várólista-snapshotot tartalmazza.
  * MÓDOSÍTÁS: az egyszeri, szerveroldali kapcsolatellenőrzés eredménye
  * ugyanebben a queue-szerződésben utazik vissza a klienshez.
+ * MÓDOSÍTÁS: a dinamikus matchmaking abszolút szerverhatárideje a
+ * queue-snapshot része; a kliens ebből csak a kijelzést számolja.
  */

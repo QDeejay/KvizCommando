@@ -4,6 +4,8 @@ namespace KvizCommando.Client.Services.Audio
 {
     public sealed class AudioService
     {
+        private const string AUDIO_ASSET_VERSION = "2";
+
         public const string SFX_CLICK = "Click.webm";
         public const string SFX_SELECT = "Select.webm";
         public const string SFX_HIT = "Hit.webm";
@@ -14,6 +16,20 @@ namespace KvizCommando.Client.Services.Audio
         public const string SFX_MATCH_WIN = "MatchWin.webm";
         public const string SFX_MATCH_COMPLETE = "MatchComplete.webm";
         public const string SFX_MATCH_LOSS = "MatchLoss.webm";
+
+        private static readonly string[] SFX_FILES =
+        [
+            SFX_CLICK,
+            SFX_SELECT,
+            SFX_HIT,
+            SFX_EMPTY,
+            SFX_MISS,
+            SFX_RESULT,
+            SFX_NEW_RECORD,
+            SFX_MATCH_WIN,
+            SFX_MATCH_COMPLETE,
+            SFX_MATCH_LOSS
+        ];
 
         private readonly IJSRuntime _jsRuntime;
         private bool _isInitialized;
@@ -33,6 +49,11 @@ namespace KvizCommando.Client.Services.Audio
 
             await _jsRuntime.InvokeVoidAsync(
                 "audioEngine.initialize");
+            await _jsRuntime.InvokeVoidAsync(
+                "audioEngine.preloadSfx",
+                (object)Array.ConvertAll(
+                    SFX_FILES,
+                    BuildSfxPath));
             await _jsRuntime.InvokeVoidAsync(
                 "audioEngine.setMuted",
                 true);
@@ -64,7 +85,7 @@ namespace KvizCommando.Client.Services.Audio
 
             await _jsRuntime.InvokeVoidAsync(
                 "audioEngine.playMusic",
-                $"audio/music/{track}.webm");
+                WithAssetVersion($"audio/music/{track}.webm"));
         }
 
         public async Task StopMusicAsync()
@@ -91,7 +112,7 @@ namespace KvizCommando.Client.Services.Audio
 
             await _jsRuntime.InvokeVoidAsync(
                 "audioEngine.playSfx",
-                $"audio/sfx/{fileName}");
+                BuildSfxPath(fileName));
         }
 
         public async Task SetSfxVolumeAsync(double volume)
@@ -111,6 +132,12 @@ namespace KvizCommando.Client.Services.Audio
                 "audioEngine.stopAll");
         }
 
+        private static string WithAssetVersion(string path) =>
+            $"{path}?v={AUDIO_ASSET_VERSION}";
+
+        private static string BuildSfxPath(string fileName) =>
+            WithAssetVersion($"audio/sfx/{fileName}");
+
     }
 }
 
@@ -118,6 +145,10 @@ namespace KvizCommando.Client.Services.Audio
  * MÓDOSÍTÁS: minden böngészőindulás némán kezdődik. A master mute nem
  * állítja le a lejátszást; unmute-kor az aktuális sáv folytatódik, vagy
  * a hívó által megadott fallback zene indul, ha még nincs aktív sáv.
- * Némított állapotban az egyszeri effektek létre sem jönnek.
+ * Némított állapotban az egyszeri effektek lejátszása el sem indul.
  * A zenéket MusicTrack enum, az effekteket központi fájlnevek jelölik.
+ * Az AUDIO_ASSET_VERSION kézi emelése új URL-t ad minden audiofájlnak,
+ * ezért tartalomcsere után a böngésző biztosan az új hangot tölti le.
+ * A rövid effektek inicializáláskor csak előtöltődnek; nem játszódnak le,
+ * viszont az első tényleges használatkor sincs hálózati/dekódolási késés.
  */

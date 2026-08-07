@@ -31,10 +31,11 @@ public sealed partial class VsMatchService : IVsMatchService
     public VsMatchSession LockMatch(
         IReadOnlyList<VsRankedQueueEntry> entries)
     {
-        if (entries.Count != VsMatchProfiles.Ranked.RequiredPlayers)
+        if (entries.Count < VsMatchProfiles.Ranked.MinimumPlayers ||
+            entries.Count > VsMatchProfiles.Ranked.MaximumPlayers)
         {
             throw new InvalidOperationException(
-                "A ranked match must be locked with the configured player count.");
+                "A ranked match must be locked with a valid player count.");
         }
 
         var classificationId = entries[0].ClassificationId;
@@ -1155,4 +1156,6 @@ public sealed partial class VsMatchService : IVsMatchService
  * meglévő bot-reward szabályokkal azonnal kiszámolja és elmenti a
  * büntetéseket, leállítja a fázist, majd felszabadítja a meccset és
  * valamennyi PlayerId-zárolását.
+ * MÓDOSÍTÁS: a meccslock a ranked profil minimuma és maximuma közötti
+ * 2–4 játékost fogad, ezért a dinamikus queue ugyanazt a motort használja.
  */

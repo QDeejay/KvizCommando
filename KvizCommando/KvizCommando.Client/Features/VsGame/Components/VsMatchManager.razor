@@ -78,6 +78,17 @@
                         <small>/ @_queue.RequiredPlayers</small>
                     </div>
 
+                    @if (_queue.MatchmakingDeadlineUtc.HasValue)
+                    {
+                        <div class="kc-vs-queue-timer">
+                            <i class="bi bi-hourglass-split"></i>
+                            <strong>
+                                @Lang["vsgame.Match.Queue.StartingIn"].FormatSafe(
+                                    QueueRemainingSeconds)
+                            </strong>
+                        </div>
+                    }
+
                     <div class="kc-vs-queue-conditions">
                         <span>
                             <i class="bi bi-list-ol"></i>
@@ -145,4 +156,6 @@
     maradhatnak aktív színűek.
     MÓDOSÍTÁS: preparációban célzott állapotosztály engedi, hogy a
     meccskeret a tartalommal együtt függőlegesen tovább nőjön.
+    MÓDOSÍTÁS: a dinamikus matchmaking szerverhatárideje csak akkor
+    jelenik meg, amikor legalább két játékos várakozik.
 *@

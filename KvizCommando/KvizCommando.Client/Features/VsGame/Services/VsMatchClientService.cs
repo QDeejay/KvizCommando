@@ -153,10 +153,12 @@ public sealed class VsMatchClientService : IVsMatchClientService
         }
     }
 
-    public Task LeaveQueueAsync(CancellationToken ct = default) =>
+    public Task<bool> LeaveQueueAsync(CancellationToken ct = default) =>
         IsConnected
-            ? _connection!.InvokeAsync("LeaveRankedQueue", ct)
-            : Task.CompletedTask;
+            ? _connection!.InvokeAsync<bool>(
+                "LeaveRankedQueue",
+                ct)
+            : Task.FromResult(false);
 
     public Task SelectCharacterAsync(
         int slotNumber,
@@ -308,6 +310,8 @@ public sealed class VsMatchClientService : IVsMatchClientService
  * MÓDOSÍTÁS: az öt szerveroldali SignalR-próbához visszaadja a kapott
  * tokent, majd a mérés eredményét legalább egy másodpercig megmutatja
  * a queue-belépés előtt. Rossz minősítésnél nem küld belépési parancsot.
+ * MÓDOSÍTÁS: a manuális LeaveRankedQueue szerveroldali bool eredményét
+ * változtatás nélkül adja vissza a managernek.
  *
  * Egyetlen, automatikusan újra nem kapcsolódó SignalR kapcsolatot
  * kezel, fogadja a queue/match snapshotokat és továbbítja a

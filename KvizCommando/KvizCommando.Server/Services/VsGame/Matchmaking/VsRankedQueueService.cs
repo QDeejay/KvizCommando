@@ -9,29 +9,39 @@ using System.Text.Json;
 
 namespace KvizCommando.Server.Services.VsGame.Matchmaking;
 
-public sealed class VsRankedQueueService : IVsRankedQueueService
+public sealed partial class VsRankedQueueService :
+    IVsRankedQueueService,
+    IAsyncDisposable
 {
     private readonly object _syncRoot = new();
-    private readonly Dictionary<int, List<VsRankedQueueEntry>> _queues =
+    private readonly Dictionary<int, VsRankedQueueState> _queues =
         VsBattleClassificationRules.List.ToDictionary(
             rule => rule.ClassificationId,
-            _ => new List<VsRankedQueueEntry>());
+            _ => new VsRankedQueueState());
+    private readonly Dictionary<int, DateTime> _reentryBlockedUntilUtc = [];
+    private readonly CancellationTokenSource _lifetimeCts = new();
 
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly VsMatchStore _matchStore;
     private readonly IVsMatchService _matchService;
     private readonly IHubContext<VsMatchHub, IVsMatchHubClient> _hub;
+    private readonly ILogger<VsRankedQueueService> _logger;
+    private readonly Task _matchmakingLoop;
 
     public VsRankedQueueService(
         IServiceScopeFactory scopeFactory,
         VsMatchStore matchStore,
         IVsMatchService matchService,
-        IHubContext<VsMatchHub, IVsMatchHubClient> hub)
+        IHubContext<VsMatchHub, IVsMatchHubClient> hub,
+        ILogger<VsRankedQueueService> logger)
     {
         _scopeFactory = scopeFactory;
         _matchStore = matchStore;
         _matchService = matchService;
         _hub = hub;
+        _logger = logger;
+        _matchmakingLoop = RunMatchmakingLoopAsync(
+            _lifetimeCts.Token);
     }
 
     public IReadOnlyDictionary<int, int>
@@ -46,7 +56,7 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
 
             foreach (var queue in _queues)
             {
-                foreach (var entry in queue.Value)
+                foreach (var entry in queue.Value.Entries)
                     playersByClassification[queue.Key]
                         .Add(entry.PlayerId);
             }
@@ -97,6 +107,15 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
             };
         }
 
+        if (IsReentryBlocked(playerId))
+        {
+            return new VsQueueJoinResult
+            {
+                ErrorKey =
+                    "vsgame.Match.Error.QueueCooldown"
+            };
+        }
+
         var entry = await BuildQueueEntryAsync(
             playerId,
             sessionId,
@@ -133,23 +152,32 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
             else
             {
                 RemoveExistingEntry(playerId, connectionId);
-                _queues[classificationId].Add(entry);
+                var queue = _queues[classificationId];
+                var previousCount = queue.Entries.Count;
+                queue.Entries.Add(entry);
 
-                if (_queues[classificationId].Count >=
+                if (queue.Entries.Count >=
                     VsMatchProfiles.Ranked.RequiredPlayers)
                 {
                     List<VsRankedQueueEntry> matchedEntries =
                     [
-                        .. _queues[classificationId]
+                        .. queue.Entries
                             .Take(VsMatchProfiles.Ranked.RequiredPlayers)
                     ];
 
                     lockedMatch =
                         _matchService.LockMatch(matchedEntries);
 
-                    _queues[classificationId].RemoveRange(
+                    queue.Entries.RemoveRange(
                         0,
                         matchedEntries.Count);
+                    ClearMatchmakingTimerLocked(queue);
+                }
+                else
+                {
+                    UpdateMatchmakingTimerAfterJoinLocked(
+                        queue,
+                        previousCount);
                 }
 
                 result = new VsQueueJoinResult
@@ -181,31 +209,22 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
         return result;
     }
 
-    public async Task LeaveAsync(
+    public Task<bool> LeaveAsync(
+        string connectionId,
+        CancellationToken ct = default) =>
+        RemoveConnectionAsync(
+            connectionId,
+            applyReentryBlock: true,
+            ct);
+
+    public async Task DisconnectAsync(
         string connectionId,
         CancellationToken ct = default)
     {
-        int? changedClassification = null;
-
-        ct.ThrowIfCancellationRequested();
-
-        lock (_syncRoot)
-        {
-            foreach (var queue in _queues)
-            {
-                var removed = queue.Value.RemoveAll(
-                    entry => entry.ConnectionId == connectionId);
-
-                if (removed > 0)
-                {
-                    changedClassification = queue.Key;
-                    break;
-                }
-            }
-        }
-
-        if (changedClassification.HasValue)
-            await BroadcastQueueAsync(changedClassification.Value);
+        await RemoveConnectionAsync(
+            connectionId,
+            applyReentryBlock: false,
+            ct);
     }
 
     public async Task LeavePlayerAsync(
@@ -221,13 +240,15 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
         {
             foreach (var queue in _queues)
             {
-                var removed = queue.Value.RemoveAll(entry =>
+                var removed = queue.Value.Entries.RemoveAll(entry =>
                     entry.PlayerId == playerId &&
                     entry.SessionId == sessionId);
 
                 if (removed > 0)
                 {
                     changedClassification = queue.Key;
+                    UpdateMatchmakingTimerAfterLeaveLocked(
+                        queue.Value);
                     break;
                 }
             }
@@ -235,6 +256,47 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
 
         if (changedClassification.HasValue)
             await BroadcastQueueAsync(changedClassification.Value);
+    }
+
+    private async Task<bool> RemoveConnectionAsync(
+        string connectionId,
+        bool applyReentryBlock,
+        CancellationToken ct)
+    {
+        int? changedClassification = null;
+
+        ct.ThrowIfCancellationRequested();
+
+        lock (_syncRoot)
+        {
+            foreach (var queue in _queues)
+            {
+                var entry = queue.Value.Entries.FirstOrDefault(item =>
+                    item.ConnectionId == connectionId);
+
+                if (entry is null)
+                    continue;
+
+                queue.Value.Entries.Remove(entry);
+                changedClassification = queue.Key;
+                UpdateMatchmakingTimerAfterLeaveLocked(queue.Value);
+
+                if (applyReentryBlock)
+                {
+                    _reentryBlockedUntilUtc[entry.PlayerId] =
+                        DateTime.UtcNow.AddSeconds(
+                            VsMatchProfiles.Ranked
+                                .QueueReentryBlockSeconds);
+                }
+
+                break;
+            }
+        }
+
+        if (changedClassification.HasValue)
+            await BroadcastQueueAsync(changedClassification.Value);
+
+        return changedClassification.HasValue;
     }
 
     private async Task<VsRankedQueueEntry?> BuildQueueEntryAsync(
@@ -369,9 +431,12 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
     {
         foreach (var queue in _queues.Values)
         {
-            queue.RemoveAll(entry =>
+            var removed = queue.Entries.RemoveAll(entry =>
                 entry.PlayerId == playerId ||
                 entry.ConnectionId == connectionId);
+
+            if (removed > 0)
+                UpdateMatchmakingTimerAfterLeaveLocked(queue);
         }
     }
 
@@ -397,7 +462,8 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
         VsRankedQueueSnapshot Snapshot)[] BuildQueueMessagesLocked(
             int classificationId)
     {
-        var entries = _queues[classificationId].ToArray();
+        var queue = _queues[classificationId];
+        var entries = queue.Entries.ToArray();
         var rule = VsBattleClassificationRules.List.First(
             item => item.ClassificationId == classificationId);
 
@@ -413,6 +479,8 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
                         VsMatchProfiles.Ranked.RequiredPlayers,
                     RequiredPartySize = rule.RequiredPartySize,
                     Stake = rule.Stake,
+                    MatchmakingDeadlineUtc =
+                        queue.MatchmakingDeadlineUtc,
                     Players =
                     [
                         .. entries.Select((entry, index) =>
@@ -453,9 +521,15 @@ public sealed class VsRankedQueueService : IVsRankedQueueService
  * várakozó címzett publikus roster-snapshotjába bekerül.
  * MÓDOSÍTÁS: logoutkor PlayerId és SessionId alapján azonnal törli a
  * várakozót és kiküldi a friss queue-snapshotot.
+ * MÓDOSÍTÁS: a második játékos 60 másodperces szerverhatáridőt indít.
+ * Az első további érkező egyszer, legfeljebb 60 másodpercig hosszabbít;
+ * kilépéskor az óra csak egy főre visszaesve szűnik meg. Egyetlen közös
+ * PeriodicTimer figyeli mind az öt besorolást, valamint a manuális
+ * kilépés egyperces újrabelépési tiltását. A SignalR-disconnect és a
+ * logout büntetésmentes marad.
  *
  * Az öt besorolás külön várólistáját kezeli, cache-snapshotból
- * validálja a belépést, majd a profil szerinti játékosszámnál
- * MatchLocked meccset hoz létre. Kérdést nem tölt és játékállapotot
- * nem tárol.
+ * validálja a belépést, majd négy játékosnál azonnal, a határidő
+ * lejártakor pedig az aktuális 2–3 játékossal MatchLocked meccset hoz
+ * létre. Kérdést nem tölt és játékállapotot nem tárol.
  */

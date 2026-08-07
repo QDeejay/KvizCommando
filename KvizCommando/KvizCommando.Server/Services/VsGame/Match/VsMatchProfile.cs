@@ -2,9 +2,12 @@ namespace KvizCommando.Server.Services.VsGame.Match;
 
 public sealed class VsMatchProfile
 {
-    public int RequiredPlayers { get; init; } = 2;
+    public int RequiredPlayers { get; init; } = 4;
     public int MinimumPlayers { get; init; } = 2;
     public int MaximumPlayers { get; init; } = 4;
+    public int MatchmakingSeconds { get; init; } = 60;
+    public int MatchmakingArrivalExtensionSeconds { get; init; } = 30;
+    public int QueueReentryBlockSeconds { get; init; } = 60;
     public int PreparationSeconds { get; init; } = 20;
     public int GuessSeconds { get; init; } = 20;
     public int QuestionSeconds { get; init; } = 15;
@@ -46,6 +49,10 @@ public static class VsMatchProfiles
  * A jó és még elfogadható kapcsolat válaszidő-határa ugyanebben a
  * profilban módosítható; a maximum feletti kapcsolat nem léphet
  * rangsorolt várólistába.
+ * A rangsorolt várólista négy játékost céloz. Két játékostól 60
+ * másodperces dinamikus matchmaking indul, az első további érkező
+ * legfeljebb 30 másodperccel hosszabbíthat, a manuális kilépés pedig
+ * 60 másodperces újrabelépési tiltást ad.
  *
  * A VS meccsmotor egy helyen módosítható idő-, pont- és
  * létszámprofilját tartalmazza.

@@ -25,6 +25,7 @@ public sealed class VsQueueViewData
     public int RequiredPlayers { get; set; }
     public int RequiredPartySize { get; set; }
     public int Stake { get; set; }
+    public DateTime? MatchmakingDeadlineUtc { get; set; }
     public VsRosterPlayerVm[] Players { get; set; } = [];
 }
 
