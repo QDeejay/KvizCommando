@@ -17,6 +17,7 @@ namespace KvizCommando.Client.Services.ClientCache
         public bool? ChkBxNotShowNew { get; set; }
         public bool? ChkBxNotShowDel { get; set; }
         public DateTime LastBboardChk {get; set; } = DateTime.MinValue;
+        public HashSet<int> SeenHelps { get; set; } = [];
 
     }
 

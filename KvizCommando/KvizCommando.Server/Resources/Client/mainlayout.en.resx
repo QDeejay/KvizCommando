@@ -192,4 +192,19 @@
   <data name="Bootstrap.Label.Help" xml:space="preserve">
     <value>Help</value>
   </data>
+  <data name="Help.Title" xml:space="preserve">
+    <value>HELP</value>
+  </data>
+  <data name="Help.Page" xml:space="preserve">
+    <value>PAGE</value>
+  </data>
+  <data name="Help.Button.Previous" xml:space="preserve">
+    <value>PREVIOUS</value>
+  </data>
+  <data name="Help.Button.Next" xml:space="preserve">
+    <value>NEXT</value>
+  </data>
+  <data name="Help.Button.Close" xml:space="preserve">
+    <value>CLOSE</value>
+  </data>
 </root>

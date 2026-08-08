@@ -34,6 +34,7 @@
     border-radius: 6px;
     padding: .5rem .75rem;
     color: #444;
+    cursor: url('/Images/cursors/active.cur'), pointer;
 }
 
     #userMenu .dropdown-item:hover,
@@ -44,6 +45,7 @@
         display: block;
         width: 100%;
         text-align: inherit;
+        cursor: url('/Images/cursors/active.cur'), pointer;
     }
 
 /* toggle button */

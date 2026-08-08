@@ -1,10 +1,4 @@
-﻿using KvizCommando.Client.Utilities;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Components;
 
 
 namespace KvizCommando.Client.Components
@@ -26,8 +20,7 @@ namespace KvizCommando.Client.Components
        [Parameter] public string? lclRow9 { get; set; }
        */
         [Parameter] public string? lclLogout { get; set; }
-        [Parameter] public EventCallback<int> OnSelected { get; set; } = default!;
-    
+        [Parameter] public EventCallback OnHelp { get; set; }
         [Parameter] public EventCallback OnLogout { get; set; }
     }
 }

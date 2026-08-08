@@ -11,6 +11,11 @@ namespace KvizCommando.Client.Services.Visual
         { 
             _http = http;
         }
+        public async Task<MarkupString> LoadingHtmlAsync(string path)
+        {
+            return new MarkupString(await _http.GetStringAsync(path));
+        }
+
         public async Task<MarkupString> LoadingHtmlAsync(string culture, Html reqHtml)
         {
             var html = new MarkupString(string.Empty);

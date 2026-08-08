@@ -1,4 +1,5 @@
 ﻿@using KvizCommando.Client.Services
+@using KvizCommando.Client.Features.Shared.Help
 @using KvizCommando.Client.Features.Shared.Modal;
 
 
@@ -19,10 +20,18 @@
     </KcModal>
     if (_isLoggedIn)
     {
+        <HelpNavigator @ref="_helpNavigator" AppStates="@_appState" />
+        <button id="kc-help-trigger"
+                type="button"
+                hidden
+                @onclick="OpenHelpAsync">
+        </button>
         <AppHeader DisplayName="@_appState.Home!.UserMainData.UserName"
                 lclRow1="@Ui.Lang["mainlayout.Bootstrap.Label.Profile"]"
                 lclRow2="@Ui.Lang["mainlayout.Bootstrap.Label.Settings"]"
+                lclRow3="@Ui.Lang["mainlayout.Bootstrap.Label.Help"]"
                 lclLogout="@Ui.Lang["mainlayout.Bootstrap.Label.Logout"]"
+                OnHelp="OpenHelpAsync"
                 OnLogout="Logout" />
     }
     else

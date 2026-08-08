@@ -10,3 +10,13 @@
         boxHeight: rect.height
     };
 };
+
+document.addEventListener("keydown", (event) => {
+    if (event.key !== "F1") return;
+
+    const helpTrigger = document.getElementById("kc-help-trigger");
+    if (!helpTrigger) return;
+
+    event.preventDefault();
+    helpTrigger.click();
+});

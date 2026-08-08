@@ -23,5 +23,10 @@
   "Bootstrap.Label.Logout": "Kilépés",
   "Option.Default": "-- Válassz! --",
   "CheckBox.NotShow": "Ne mutasd többet",
-  "Bootstrap.Label.Help": "Segítség"
+  "Bootstrap.Label.Help": "Segítség",
+  "Help.Title": "SEGÍTSÉG",
+  "Help.Page": "OLDAL",
+  "Help.Button.Previous": "ELŐZŐ",
+  "Help.Button.Next": "KÖVETKEZŐ",
+  "Help.Button.Close": "BEZÁRÁS"
 }

@@ -1,0 +1,78 @@
+@inherits Utilities.KcComponentBase
+
+@if (_showHelp && _pages.Length > 0)
+{
+    <div class="kc-help-backdrop">
+        <section class="kc-help-window"
+                 role="dialog"
+                 aria-modal="true"
+                 aria-labelledby="kc-help-title">
+            <header class="kc-help-header">
+                <div>
+                    <span class="kc-help-kicker">KCV // FIELD MANUAL</span>
+                    <h2 id="kc-help-title">@TitleLabel</h2>
+                </div>
+                <div class="kc-help-header-actions">
+                    <span class="kc-help-counter">
+                        @PageLabel @(_currentPage + 1) / @_pages.Length
+                    </span>
+                    <button type="button"
+                            class="kc-help-x"
+                            aria-label="@CloseLabel"
+                            @onclick="Close">
+                        ×
+                    </button>
+                </div>
+            </header>
+
+            <div class="kc-help-content">
+                @_pages[_currentPage]
+            </div>
+
+            <div class="kc-help-footer">
+                <div class="kc-help-pagination" aria-label="@PageLabel">
+                    @for (var i = 0; i < _pages.Length; i++)
+                    {
+                        var pageIndex = i;
+                        <button type="button"
+                                class="kc-help-page-dot @(pageIndex == _currentPage ? "active" : null)"
+                                aria-label="@PageLabel @(pageIndex + 1)"
+                                aria-current="@(pageIndex == _currentPage ? "page" : null)"
+                                @onclick="() => GoToPage(pageIndex)">
+                        </button>
+                    }
+                </div>
+
+                <div class="kc-help-buttons">
+                    @if (_currentPage > 0)
+                    {
+                        <button type="button"
+                                class="kc-help-button"
+                                @onclick="PreviousPage">
+                            <span aria-hidden="true">◀</span>
+                            @PreviousLabel
+                        </button>
+                    }
+
+                    @if (_currentPage < _pages.Length - 1)
+                    {
+                        <button type="button"
+                                class="kc-help-button primary"
+                                @onclick="NextPage">
+                            @NextLabel
+                            <span aria-hidden="true">▶</span>
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button"
+                                class="kc-help-button primary"
+                                @onclick="Close">
+                            @CloseLabel
+                        </button>
+                    }
+                </div>
+            </div>
+        </section>
+    </div>
+}

@@ -1,0 +1,233 @@
+.kc-help-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgba(5, 7, 5, .78);
+    backdrop-filter: blur(7px) saturate(.7);
+}
+
+.kc-help-window {
+    position: relative;
+    width: min(940px, calc(100vw - 48px));
+    height: min(760px, calc(100vh - 48px));
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    overflow: hidden;
+    color: #d8d5bd;
+    font-family: 'Courier New', monospace;
+    background:
+        linear-gradient(135deg, rgba(255,255,255,.04), transparent 34%),
+        #22271d;
+    border: 2px solid #77714f;
+    border-radius: 12px;
+    box-shadow:
+        0 22px 70px rgba(0, 0, 0, .72),
+        inset 0 0 0 3px #11150f,
+        inset 0 0 0 4px rgba(184, 174, 116, .24);
+}
+
+.kc-help-header,
+.kc-help-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    background: linear-gradient(180deg, #353b2a, #24291e);
+}
+
+.kc-help-header {
+    min-height: 78px;
+    padding: 13px 16px 12px 22px;
+    border-bottom: 1px solid #77714f;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .35);
+}
+
+.kc-help-kicker {
+    display: block;
+    margin-bottom: 3px;
+    color: #aaa474;
+    font: 700 .7rem/1.1 'Share Tech Mono', monospace;
+    letter-spacing: .17em;
+}
+
+.kc-help-header h2 {
+    margin: 0;
+    color: #eee9c9;
+    font: 400 1.48rem/1.1 'Special Elite', cursive;
+    letter-spacing: .08em;
+    text-shadow: 0 1px 0 #000;
+}
+
+.kc-help-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.kc-help-counter {
+    color: #b9bd86;
+    font: 700 .78rem/1 'Share Tech Mono', monospace;
+    letter-spacing: .08em;
+    white-space: nowrap;
+}
+
+.kc-help-x {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    padding: 0 0 3px;
+    color: #d7d3b8;
+    background: #151a13;
+    border: 1px solid #77714f;
+    border-radius: 7px;
+    font: 400 1.85rem/1 Arial, sans-serif;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.kc-help-x:hover,
+.kc-help-x:focus-visible {
+    color: #fffbdc;
+    background: #3e432d;
+    border-color: #b0a86f;
+    outline: none;
+}
+
+.kc-help-content {
+    --kc-help-font-body: 'Courier New', monospace;
+    --kc-help-font-title: 'Special Elite', cursive;
+    --kc-help-font-display: 'Share Tech Mono', monospace;
+    --kc-help-text: #cccccc;
+    --kc-help-text-soft: #b9bca8;
+    --kc-help-title: #f0eec2;
+    --kc-help-accent: #c4bd72;
+    --kc-help-accent-soft: #969b68;
+    --kc-help-panel: rgba(37, 48, 36, .72);
+    --kc-help-panel-strong: #1b241b;
+    --kc-help-border: #596047;
+    min-height: 0;
+    overflow: auto;
+    padding: clamp(14px, 2.4vw, 28px);
+    color: var(--kc-help-text);
+    font-family: var(--kc-help-font-body);
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(168, 180, 120, .018) 0,
+            rgba(168, 180, 120, .018) 1px,
+            transparent 1px,
+            transparent 4px),
+        radial-gradient(circle at 50% 0, #1b291f, #101712 70%);
+    scrollbar-color: #77714f #11150f;
+}
+
+.kc-help-content ::deep .kc-help-document {
+    color: var(--kc-help-text);
+    font-family: var(--kc-help-font-body);
+}
+
+.kc-help-content ::deep .kc-help-document h1,
+.kc-help-content ::deep .kc-help-document h2 {
+    color: var(--kc-help-title);
+    font-family: var(--kc-help-font-title);
+    font-weight: 400;
+}
+
+.kc-help-footer { position: relative; grid-row: 3; width: 100%; box-sizing: border-box; min-height: 70px; padding: 12px 18px; border-top: 1px solid #77714f; box-shadow: 0 -4px 12px rgba(0, 0, 0, .28); }
+
+.kc-help-pagination,
+.kc-help-buttons {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+   
+}
+
+.kc-help-page-dot {
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    background: #11150f;
+    border: 1px solid #77714f;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 2px #24291e;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.kc-help-page-dot.active {
+    background: #c1bd75;
+    border-color: #e1dda0;
+    box-shadow: 0 0 10px rgba(211, 210, 126, .42);
+}
+
+.kc-help-button {
+    min-width: 112px;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 8px 16px;
+    color: #d3d3c0;
+    background: linear-gradient(180deg, #343a2a, #1e241b);
+    border: 1px solid #77714f;
+    border-radius: 7px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .03);
+    font: 700 .76rem/1 'Lucida Console', monospace;
+    letter-spacing: .07em;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.kc-help-button.primary {
+    color: #f1edce;
+    background: linear-gradient(180deg, #4b5235, #2b3123);
+    border-color: #aaa36b;
+}
+
+.kc-help-button:hover,
+.kc-help-button:focus-visible,
+.kc-help-page-dot:hover,
+.kc-help-page-dot:focus-visible {
+    filter: brightness(1.22);
+    outline: none;
+}
+
+@media (max-width: 680px) {
+    .kc-help-backdrop {
+        padding: 10px;
+    }
+
+    .kc-help-window {
+        width: calc(100vw - 20px);
+        height: calc(100vh - 20px);
+    }
+
+    .kc-help-header {
+        padding-left: 15px;
+    }
+
+    .kc-help-kicker,
+    .kc-help-counter {
+        display: none;
+    }
+
+    .kc-help-footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .kc-help-pagination {
+        justify-content: center;
+    }
+
+    .kc-help-buttons {
+        justify-content: flex-end;
+    }
+
+    .kc-help-button {
+        flex: 1;
+    }
+}

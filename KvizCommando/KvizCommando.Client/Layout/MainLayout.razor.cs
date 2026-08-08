@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using KvizCommando.Client.Data;
+using KvizCommando.Client.Features.Shared.Help;
 using KvizCommando.Client.Features.Shared.Modal;
 using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Helpers;
@@ -32,6 +33,7 @@ namespace KvizCommando.Client.Layout
 
         private readonly AppState _appState = new();
 
+        private HelpNavigator? _helpNavigator;
         private KcModal? _mainModal;
 
         private string _culture = "hu";
@@ -158,6 +160,9 @@ namespace KvizCommando.Client.Layout
             await User.LogoutAsync(false);
             Console.WriteLine("User logged out.");
         }
+        private Task OpenHelpAsync() =>
+            _helpNavigator?.ShowAsync() ?? Task.CompletedTask;
+
         private Task OnRefreshRequired(ReqStates[] reqTypes) =>
             InitStatesAsync(reqTypes);
 
@@ -210,6 +215,9 @@ namespace KvizCommando.Client.Layout
                             await LocalStorage.GetItemAsync<bool>(_localNotShowNew);
                         _appState.LocStoreStates.LastBboardChk =
                             await LocalStorage.GetItemAsync<DateTime>(LOCAL_LAST_B_BOARD);
+                        _appState.LocStoreStates.SeenHelps =
+                            await LocalStorage.GetItemAsync<HashSet<int>>(
+                                HelpCollection.SeenStorageKey) ?? [];
                         break;
                 }
             }
