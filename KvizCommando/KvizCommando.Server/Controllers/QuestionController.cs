@@ -191,13 +191,19 @@ namespace KvizCommando.Server.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            if (dto == null || dto.Category == 0 || !dto.Question.Contains('?') || dto.Question.Length < 10 || dto.Question.Length > 200)
+            if (dto == null ||
+                dto.Category is < 1 or > 16 ||
+                string.IsNullOrWhiteSpace(dto.Question) ||
+                !dto.Question.Contains('?'))
                 return FailToast(400, _localizer["Resp.Qustion.BadData"].Value);
 
-            if (dto.Question.Length < 10 || dto.Question.Length > 200)
+            if (dto.Question.Length < 10 || dto.Question.Length > 150)
                 return FailToast(400, _localizer["Resp.Question.TooLong"].Value);
 
-            if (dto.Answers.Any(a => string.IsNullOrWhiteSpace(a)))
+            if (dto.Answers is not { Length: 4 } ||
+                dto.Answers.Any(answer =>
+                    string.IsNullOrWhiteSpace(answer) ||
+                    answer.Length > 30))
                 return FailToast(400, _localizer["Resp.Answer.BadData"].Value);
 
             if (dto.Answers.Distinct().Count() != dto.Answers.Length)
@@ -253,4 +259,3 @@ namespace KvizCommando.Server.Controllers
  * pozíciószabálynak nem megfelelő factory loadoutot 400-as hibával
  * utasítja vissza a korábbi általános 500-as válasz helyett.
  */
-

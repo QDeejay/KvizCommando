@@ -219,6 +219,18 @@ namespace KvizCommando.Server.Services.DtoMapping
                     if (player.Core.RankEnum <= 0)
                         return null;
 
+                    var categoryMaskIndex = (dto.Category - 1) % 8;
+                    if (dto.Category is < 1 or > 16 ||
+                        categoryMaskIndex >= player.CharCatMask.Length ||
+                        !player.CharCatMask[categoryMaskIndex])
+                    {
+                        _logger.LogWarning(
+                            "SendNewQuestion: Category is not available. userId={PlayerId}, Category={Category}",
+                            playerId,
+                            dto.Category);
+                        return null;
+                    }
+
                     var freePendingSlots = question.pSlots
                         .Take(5)
                         .Count(item => item.CategoryNo == 0);
@@ -231,10 +243,12 @@ namespace KvizCommando.Server.Services.DtoMapping
                         return null;
                     }
 
-                    var maxPendingSlot =
-                        RankRewards.List[player.Core.RankEnum].OwnQuestSlot >> 1;
+                    var maxPendingSlot = Math.Min(
+                        RankRewards.List[player.Core.RankEnum].OwnQuestSlot >> 1,
+                        question.pSlots.Length);
 
-                    if (dto.SlotNo > maxPendingSlot)
+                    if (dto.SlotNo < 0 ||
+                        dto.SlotNo >= maxPendingSlot)
                     {
                         _logger.LogWarning(
                             "SendNewQuestion: Invalid pending slot number. userId={PlayerId}, SlotNo={SlotNo}",

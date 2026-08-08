@@ -148,7 +148,7 @@
     <value>&lt; Move to user slot successed! &gt;</value>
   </data>
   <data name="Resp.Question.TooLong" xml:space="preserve">
-    <value>The question is too long</value>
+    <value>The question must be between 10 and 150 characters long</value>
   </data>
   <data name="Resp.Qustion.BadData" xml:space="preserve">
     <value>Invalid question data</value>

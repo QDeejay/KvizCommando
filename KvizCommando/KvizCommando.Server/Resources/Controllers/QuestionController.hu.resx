@@ -148,7 +148,7 @@
     <value>&lt; Mozgatás sikeres volt! &gt;</value>
   </data>
   <data name="Resp.Question.TooLong" xml:space="preserve">
-    <value>Kérdés hossz nem megfelelő (min10 max200 karakter)</value>
+    <value>A kérdés hossza 10 és 150 karakter között lehet</value>
   </data>
   <data name="Resp.Qustion.BadData" xml:space="preserve">
     <value>Nem megfelelő kérdés adat</value>

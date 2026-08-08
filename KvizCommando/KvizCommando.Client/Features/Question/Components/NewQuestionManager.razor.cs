@@ -23,8 +23,8 @@ public partial class NewQuestionManager
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
 
-    private const int LENGHT_AREA_BOX = 200;
-    private const int LENGHT_ANSWER_BOX = 40;
+    private const int LENGHT_AREA_BOX = 150;
+    private const int LENGHT_ANSWER_BOX = 30;
 
     private NewQuestionRequest _formData = new();
 

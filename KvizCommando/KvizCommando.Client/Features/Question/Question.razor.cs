@@ -19,7 +19,7 @@ public partial class Question : KcComponentBase, IDisposable
     private string[] _boxOrder = [];
     private bool _hasAccess;
     private bool _isReady;
-    private bool _isSubscribed;
+    //private bool _isSubscribed;
 
     private string Culture => AppStates.Culture;
     private QuestionDtos QuestionData => AppStates.Question!;
@@ -55,9 +55,13 @@ public partial class Question : KcComponentBase, IDisposable
 
         _hasAccess = true;
         Ui.Header.OnBackBtnClicked += HandleBack;
-        _isSubscribed = true;
         Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Question"], 1);
         _boxOrder = QBoxBuilder.Root;
+    }
+    protected override void OnParametersSet()
+    {
+        if (_isReady && _hasAccess && AppStates.Question is not null)
+            BuildBoxes();
     }
 
     private ContentBoxVm Box(string key) => _boxes[key];
@@ -122,15 +126,13 @@ public partial class Question : KcComponentBase, IDisposable
             return;
         }
 
-        BuildBoxes();
+        //BuildBoxes();
         OnBoxClick(1);
     }
 
     public void Dispose()
     {
-        if (_isSubscribed)
-            Ui.Header.OnBackBtnClicked -= HandleBack;
-
+        Ui.Header.OnBackBtnClicked -= HandleBack;
         GC.SuppressFinalize(this);
     }
 }

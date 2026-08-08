@@ -67,7 +67,9 @@ namespace KvizCommando.Client.Features.Question.Builders
                 Size = ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = 104,
                 BuildBoxText = (lang, qn) => lang["question.Box.Footer.New"].FormatSafe(qn.FreePendingSlot),
-                CheckEnable = (qn) => qn.FreePendingSlot > 0,
+                CheckEnable = (qn) =>
+                    qn.FreePendingSlot > 0 &&
+                    qn.CharCatMask.Any(hasCharacter => hasCharacter),
                 LcdBackground = false,
                 RenderContent = 0,
                 BodyComp = null

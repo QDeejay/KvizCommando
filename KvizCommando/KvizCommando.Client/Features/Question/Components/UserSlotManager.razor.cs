@@ -41,9 +41,11 @@ public partial class UserSlotManager
         var modal = MBoxBuilder.BuildParam(
             ModalTypes.QCheckQuestion,
             Ui.Lang);
+
         modal.BodyParameters.Add(
             nameof(QModalRender.SlotNo),
             _selectedId);
+
         await Ui.Modal.ShowAsync(modal);
     }
 
