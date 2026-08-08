@@ -26,7 +26,7 @@
   "Bootstrap.Label.Help": "Help",
   "Help.Title": "HELP",
   "Help.Page": "PAGE",
-  "Help.Button.Previous": "PREVIOUS",
-  "Help.Button.Next": "NEXT",
-  "Help.Button.Close": "CLOSE"
+  "Help.Button.Previous": "Previous",
+  "Help.Button.Next": "Next",
+  "Help.Button.Close": "Close"
 }

@@ -1,9 +1,8 @@
 ﻿.lcd-display {
     width: 100%;
-    height: 100%;
+    height: 34px;
     overflow: hidden;
     position: relative;
-    min-height: 38px;
     /*border-radius: 8px;*/
     /* margin-left: 10px;*/
     border: inset 2px #777;
@@ -13,7 +12,7 @@
     font-size: 1.2rem;
     color: #222F16;
     display: grid;
-    grid-template-columns: 68px minmax(0, 1fr) 40px;
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
     grid-template-rows: 1fr;
     align-items: center;
     background-color: rgba(210, 255, 57, 0.9);
@@ -21,16 +20,20 @@
 }
 
 .lcd-text {
-    grid-column: 1 / -1;
+    grid-column: 2;
     grid-row: 1;
     align-self: center;
+    min-width: 0;
     width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     opacity: 0;
     transform: translateY(30%);
     transition: opacity 0.4s, transform 0.5s;
     text-align: center;
     box-sizing: border-box;
-    padding: 8px 42px 8px 68px;
+    padding: 0 6px;
     color: #222F16;
     font-family: 'Share Tech Mono', monospace;
     font-size: 1.2rem;
@@ -64,6 +67,7 @@
 .lcd-control {
     width: 28px;
     height: 28px;
+    flex: 0 0 28px;
     padding: 0;
     display: grid;
     place-items: center;
@@ -89,13 +93,14 @@
 }
 
 /*
- * MÓDOSÍTÁS: az LCD egyetlen overlay-grid sorában helyezkedik el a
- * szöveg és mindhárom vezérlő. Emiatt a play/pause, a pause alatti
- * léptető és a jobb oldali hangkapcsoló fizikailag sem kerülhet a
- * kijelző fölé vagy alá. A gombok háttere minden állapotban átlátszó.
+ * MÓDOSÍTÁS: az LCD egyetlen grid sorában helyezkedik el. A két
+ * vezérlőoszlop max-content, a szöveg pedig a köztük megmaradó
+ * minmax(0, 1fr) területet kapja, egy sorban, ellipszissel. Emiatt a
+ * play/pause, a pause alatti léptető és a jobb oldali hangkapcsoló
+ * nem zsugorodhat, nem tolódhat le, és a szöveg sem nyomhatja őket.
+ * A wrapper csak a rendelkezésre álló header-területet adja és középre
+ * igazít; a tényleges LCD-magasságot ez a komponens birtokolja.
  */
-
-
 
 
 

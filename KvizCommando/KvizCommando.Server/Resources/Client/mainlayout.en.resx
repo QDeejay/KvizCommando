@@ -199,12 +199,12 @@
     <value>PAGE</value>
   </data>
   <data name="Help.Button.Previous" xml:space="preserve">
-    <value>PREVIOUS</value>
+    <value>Previous</value>
   </data>
   <data name="Help.Button.Next" xml:space="preserve">
-    <value>NEXT</value>
+    <value>Next</value>
   </data>
   <data name="Help.Button.Close" xml:space="preserve">
-    <value>CLOSE</value>
+    <value>Close</value>
   </data>
 </root>

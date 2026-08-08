@@ -66,6 +66,108 @@
         cursor: url('/Images/cursors/disabled.cur'), not-allowed;
     }
 
+/* Közös, ContentBox-hangulatú ablakváz a központi modalhoz és a helphez. */
+.kc-window-shell {
+    position: relative;
+    min-width: 0;
+    color: #d3d3d3;
+    font-family: 'Courier New', monospace;
+    background-color: #2a2a2a;
+    border: 2px solid rgba(64, 64, 64, 0.85);
+    border-radius: 16px;
+    box-shadow:
+        10px 14px 24px rgba(0, 0, 0, 0.72),
+        inset 0 4px 8px rgba(0, 0, 0, 0.72);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.kc-window-header,
+.kc-window-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    background: linear-gradient(180deg, #30332c, #20231f);
+}
+
+.kc-window-header {
+    position: relative;
+    min-height: 64px;
+    padding: 10px 54px 9px 18px;
+    border-bottom: 1px solid #6e6d52;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.kc-window-title {
+    margin: 0;
+    color: #f0eec2;
+    font-family: 'Special Elite', cursive;
+    font-weight: normal;
+    letter-spacing: 0.08em;
+    text-shadow: 0 1px 0 #000;
+}
+
+.kc-window-close {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    padding: 0 0 3px;
+    color: #d7d3b8;
+    background-color: #191c18;
+    border: 1px solid #666451;
+    border-radius: 6px;
+    box-shadow: none;
+    font: normal 1.7rem/1 Arial, sans-serif;
+    transform: translateY(-50%);
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.kc-window-close:hover,
+.kc-window-close:focus-visible {
+    color: #fffbdc;
+    background-color: #34382f;
+    border-color: #9a9667;
+    outline: none;
+}
+
+/*
+ * A Bootstrap button:not(:disabled) szabályánál szándékosan specifikusabb.
+ * Így minden közös modal/help vezérlőn biztosan a projekt aktív kurzora látszik.
+ */
+button.military-button:not(:disabled),
+button.military-button--secondary:not(:disabled),
+button.kc-window-close:not(:disabled),
+button.kc-help-page-dot:not(:disabled) {
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.kc-window-body {
+    min-width: 0;
+    margin: 10px;
+    padding: 15px;
+    color: #cccccc;
+    background-color: #1b211b;
+    border: 2px inset rgba(160, 160, 130, 0.16);
+    border-radius: 8px;
+    box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.66);
+    box-sizing: border-box;
+}
+
+.kc-window-footer {
+    position: relative;
+    min-height: 66px;
+    padding: 10px 16px 14px;
+    border-top: 1px solid #55564c;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.28);
+}
+
 .lcd-input {
     background-color: #001f3f; /* sötét, katonai kék */
     color: #bfa800; /* halvány sárga szöveg */

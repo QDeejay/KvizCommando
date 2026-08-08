@@ -199,12 +199,12 @@
     <value>OLDAL</value>
   </data>
   <data name="Help.Button.Previous" xml:space="preserve">
-    <value>ELŐZŐ</value>
+    <value>Előző</value>
   </data>
   <data name="Help.Button.Next" xml:space="preserve">
-    <value>KÖVETKEZŐ</value>
+    <value>Következő</value>
   </data>
   <data name="Help.Button.Close" xml:space="preserve">
-    <value>BEZÁRÁS</value>
+    <value>Bezárás</value>
   </data>
 </root>
