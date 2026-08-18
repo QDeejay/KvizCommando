@@ -59,16 +59,22 @@ Egy bejegyzés tartalma:
 
 - UTC időpont;
 - stabil eseménynév;
-- `Accepted`, `Succeeded` vagy `Failed` eredmény;
-- belső felhasználói azonosító, ha a művelet hitelesített és az azonosító ténylegesen ismert;
+- `Accepted`, `Succeeded`, `Failed` vagy `Denied` eredmény;
+- `ActorId`: a művelet végrehajtójának belső azonosítója, ha ténylegesen ismert;
+- `SubjectId`: az érintett fiók belső azonosítója, ha biztonságosan azonosítható;
 - opcionális, kulcsolt IP-hash;
-- technikai kérésazonosító.
+- technikai kérésazonosító;
+- kizárólag engedélyezett `ChangedFields` vagy `DocumentVersion` részletek.
 
 Nem kerülhet auditba e-mail-cím, jelszó, megerősítő token, jelszó-visszaállító kód, cookie, Authorization fejléc vagy request body.
 
-Az elfelejtett jelszó művelet anonim `Accepted` esemény. Az audit nem jelzi, hogy a megadott címhez tartozott-e fiók. A jelszó-visszaállítás és a hitelesített profilváltoztatás eredménye szabályos endpoint-státuszból származik; nincs típusnév alapján történő hibafelismerés vagy nem létező `ResolvedUserId` adat.
+Az elfelejtett jelszó művelet anonim `Identity.PasswordResetRequested` esemény. Az audit nem jelzi, hogy a megadott címhez tartozott-e fiók. A sikeres és sikertelen jelszó-visszaállítás külön esemény; az érintett belső azonosítóját a szerver az Identity-adattárból határozza meg anélkül, hogy az e-mail-címet naplózná.
 
-Az `IncludeIpHash` alapértéke `false`. Bekapcsolásakor csak érvényes Base64-formátumú `AuditHash:Secret` mellett készül HMAC-SHA256 hash. A hash-elt IP továbbra is személyhez kapcsolható adat lehet, ezért használata külön célt és megőrzési szabályt igényel.
+A működő folyamatok a regisztrációt, a helyi és külső bejelentkezést, a zárolást, a kijelentkezést, a sessioncserét és -visszavonást, a jelszómódosítást, az e-mail-változás megerősítését, a külső login kapcsolását és eltávolítását, valamint az ÁSZF elfogadását auditálják. Az ÁSZF-esemény `DocumentVersion` részlete a `TermsConsents` táblába mentett verzióval azonos.
+
+A még nem működő export-, helyesbítési, törlési, korlátozási és tiltakozási folyamatok eseménynevei csak fenntartott konstansok. Ezeket jelenleg semmilyen végpont nem írja az auditnaplóba.
+
+Az `IncludeIpHash` alapértéke `false`. Bekapcsolásakor csak érvényes Base64-formátumú `AuditHash:Secret` mellett készül HMAC-SHA256 hash. Az IP-cím a hash előtt normalizálásra kerül, így az IPv4 és annak IPv4-be ágyazott IPv6 alakja azonos bemenetet ad. A hash-elt IP továbbra is személyhez kapcsolható adat lehet, ezért használata külön célt és megőrzési szabályt igényel.
 
 A helyi fájl nem változtathatatlan, nem kezel több alkalmazáspéldányt és nem biztosít központi jogosultságkezelést. Production környezetben központi, hozzáférés-szabályozott audittároló szükséges. A GDPR szempontjából az audit célhoz kötöttségét, adattakarékosságát, megőrzését és védelmét együtt kell meghatározni; a kiinduló elvek a GDPR 5. és 32. cikkében találhatók.
 

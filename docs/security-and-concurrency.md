@@ -33,4 +33,6 @@ A fájlos auditlogger singleton élettartamú; egy közös `SemaphoreSlim` akad�
 
 Az auditfájlok naponta elkülönülnek, a konfigurált megőrzési időnél régebbi fájlokat a logger eltávolítja. A takarítás kizárólag a beállított auditkönyvtár közvetlen `audit-*.jsonl` fájljait érintheti; általános könyvtártörlés nem vezethető be.
 
-IP-cím csak bekapcsolt opció és külön titkos kulcs mellett, HMAC formában kerülhet a bejegyzésbe. A hash nem jelent automatikus anonimizálást. E-mail-cím, token, jelszó-visszaállító kód, cookie, Authorization fejléc és request body auditba írása tilos.
+IP-cím csak bekapcsolt opció és külön titkos kulcs mellett, normalizált HMAC formában kerülhet a bejegyzésbe. A hash nem jelent automatikus anonimizálást. E-mail-cím, token, session ID, jelszó-visszaállító kód, cookie, Authorization fejléc és request body auditba írása tilos.
+
+Az auditbejegyzés az esemény végrehajtóját `ActorId`, az érintett fiókot `SubjectId` mezőben tartja. A `Details` csak módosított mezőneveket vagy elfogadott dokumentumverziót tartalmazhat; régi és új személyesadat-értéket nem.

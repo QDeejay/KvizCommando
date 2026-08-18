@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using KvizCommando.Server.Identity;
+using KvizCommando.Server.Infrastructure.Logging;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.Players;
 using Microsoft.AspNetCore.Identity;
@@ -27,19 +28,37 @@ public static class LogoutEndpoints
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IPlayerService playerService,
+            IAuditLogger audit,
             CancellationToken ct) =>
         {
             var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)
                        ?? httpContext.User.FindFirstValue("sub");
+            var ipAddress = httpContext.Connection.RemoteIpAddress?.ToString();
 
             if (string.IsNullOrWhiteSpace(userId))
             {
+                await audit.LogAsync(
+                    new AuditEntry(
+                        AuditEvents.Logout,
+                        AuditOutcome.Failed,
+                        ActorId: null,
+                        SubjectId: null,
+                        IpAddress: ipAddress,
+                        RequestId: httpContext.TraceIdentifier));
                 return Results.Unauthorized();
             }
 
             var user = await userManager.FindByIdAsync(userId);
             if (user is null)
             {
+                await audit.LogAsync(
+                    new AuditEntry(
+                        AuditEvents.Logout,
+                        AuditOutcome.Failed,
+                        ActorId: null,
+                        SubjectId: userId,
+                        IpAddress: ipAddress,
+                        RequestId: httpContext.TraceIdentifier));
                 return Results.Unauthorized();
             }
 
@@ -49,7 +68,17 @@ public static class LogoutEndpoints
                 ct);
 
             if (sessionStatus == CacheReadStatus.SessionMismatch)
+            {
+                await audit.LogAsync(
+                    new AuditEntry(
+                        AuditEvents.Logout,
+                        AuditOutcome.Denied,
+                        userId,
+                        userId,
+                        ipAddress,
+                        httpContext.TraceIdentifier));
                 return Results.Conflict();
+            }
 
             var hasBearer = httpContext.Request.Headers.Authorization
                 .ToString()
@@ -58,7 +87,29 @@ public static class LogoutEndpoints
             if (hasBearer)
             {
                 // Bearer kijelentkezésnél a security stamp frissítése minden kiadott tokent érvénytelenít.
-                await userManager.UpdateSecurityStampAsync(user);
+                var stampResult = await userManager.UpdateSecurityStampAsync(user);
+                if (!stampResult.Succeeded)
+                {
+                    await audit.LogAsync(
+                        new AuditEntry(
+                            AuditEvents.SessionRevoked,
+                            AuditOutcome.Failed,
+                            userId,
+                            userId,
+                            ipAddress,
+                            httpContext.TraceIdentifier));
+                    await audit.LogAsync(
+                        new AuditEntry(
+                            AuditEvents.Logout,
+                            AuditOutcome.Failed,
+                            userId,
+                            userId,
+                            ipAddress,
+                            httpContext.TraceIdentifier));
+                    return Results.Problem(
+                        "session_revoke_failed",
+                        statusCode: StatusCodes.Status500InternalServerError);
+                }
             }
             else
             {
@@ -67,6 +118,27 @@ public static class LogoutEndpoints
 
             Console.WriteLine($"Kijelentkezés User{userId} Session:{sessionId}");
             await playerService.LogoutAndRemoveCacheAsync(userId, sessionId, ct);
+
+            if (hasBearer)
+            {
+                await audit.LogAsync(
+                    new AuditEntry(
+                        AuditEvents.SessionRevoked,
+                        AuditOutcome.Succeeded,
+                        userId,
+                        userId,
+                        ipAddress,
+                        httpContext.TraceIdentifier));
+            }
+
+            await audit.LogAsync(
+                new AuditEntry(
+                    AuditEvents.Logout,
+                    AuditOutcome.Succeeded,
+                    userId,
+                    userId,
+                    ipAddress,
+                    httpContext.TraceIdentifier));
 
             return Results.NoContent();
         });

@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using KvizCommando.Server.Identity;
+using KvizCommando.Server.Infrastructure.Logging;
 using KvizCommando.Server.Infrastructure.Persistence;
 using KvizCommando.Server.Services.CheckIn;
 using KvizCommando.Shared.Contracts.CheckIn;
@@ -23,19 +24,22 @@ public sealed class CheckInController : ControllerBase
     private readonly ITermsProvider _termsProvider;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly IAuditLogger _audit;
 
     public CheckInController(
         ICheckInService service,
         ApplicationDbContext db,
         ITermsProvider termsProvider,
         UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager)
+        SignInManager<ApplicationUser> signInManager,
+        IAuditLogger audit)
     {
         _service = service;
         _db = db;
         _termsProvider = termsProvider;
         _userManager = userManager;
         _signInManager = signInManager;
+        _audit = audit;
     }
 
     /// <summary>
@@ -107,22 +111,46 @@ public sealed class CheckInController : ControllerBase
 
     private async Task ReplacePreviousLoginAsync(string userId)
     {
-        var user = await _userManager.FindByIdAsync(userId)
-                   ?? throw new InvalidOperationException("User not found.");
-
-        var hasCurrentCookie =
-            (await HttpContext.AuthenticateAsync(
-                IdentityConstants.ApplicationScheme)).Succeeded;
-
-        var result = await _userManager.UpdateSecurityStampAsync(user);
-
-        if (!result.Succeeded)
+        try
         {
-            throw new InvalidOperationException(
-                string.Join("; ", result.Errors.Select(x => x.Description)));
+            var user = await _userManager.FindByIdAsync(userId)
+                       ?? throw new InvalidOperationException("User not found.");
+
+            var hasCurrentCookie =
+                (await HttpContext.AuthenticateAsync(
+                    IdentityConstants.ApplicationScheme)).Succeeded;
+
+            var result = await _userManager.UpdateSecurityStampAsync(user);
+
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException(
+                    string.Join("; ", result.Errors.Select(x => x.Description)));
+            }
+
+            if (hasCurrentCookie)
+                await _signInManager.RefreshSignInAsync(user);
+        }
+        catch
+        {
+            await _audit.LogAsync(
+                new AuditEntry(
+                    AuditEvents.SessionReplaced,
+                    AuditOutcome.Failed,
+                    userId,
+                    userId,
+                    HttpContext.Connection.RemoteIpAddress?.ToString(),
+                    HttpContext.TraceIdentifier));
+            throw;
         }
 
-        if (hasCurrentCookie)
-            await _signInManager.RefreshSignInAsync(user);
+        await _audit.LogAsync(
+            new AuditEntry(
+                AuditEvents.SessionReplaced,
+                AuditOutcome.Succeeded,
+                userId,
+                userId,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                HttpContext.TraceIdentifier));
     }
 }

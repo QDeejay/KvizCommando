@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -38,9 +39,17 @@ public sealed class FileAuditLogger : IAuditLogger, IDisposable
             utcTime = now,
             eventName = entry.EventName,
             outcome = entry.Outcome.ToString(),
+            actorId = entry.ActorId,
             subjectId = entry.SubjectId,
             ipHash = GetIpHash(entry.IpAddress),
-            requestId = entry.RequestId
+            requestId = entry.RequestId,
+            details = entry.Details is null
+                ? null
+                : new
+                {
+                    changedFields = entry.Details.ChangedFields,
+                    documentVersion = entry.Details.DocumentVersion
+                }
         });
 
         await _writeLock.WaitAsync(cancellationToken);
@@ -121,10 +130,26 @@ public sealed class FileAuditLogger : IAuditLogger, IDisposable
             return null;
         }
 
+        var normalizedIp = NormalizeIpAddress(ipAddress);
         var hash = HMACSHA256.HashData(
             _ipHashKey,
-            Encoding.UTF8.GetBytes(ipAddress));
+            Encoding.UTF8.GetBytes(normalizedIp));
         return Convert.ToHexString(hash);
+    }
+
+    private static string NormalizeIpAddress(string ipAddress)
+    {
+        if (!IPAddress.TryParse(ipAddress, out var parsed))
+        {
+            return ipAddress.Trim();
+        }
+
+        if (parsed.IsIPv4MappedToIPv6)
+        {
+            parsed = parsed.MapToIPv4();
+        }
+
+        return parsed.ToString();
     }
 
     private byte[]? ReadHashKey(string? configuredValue)

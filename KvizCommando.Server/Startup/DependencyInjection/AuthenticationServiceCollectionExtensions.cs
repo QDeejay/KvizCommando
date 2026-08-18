@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Identity;
+using KvizCommando.Server.Infrastructure.Logging;
 
 namespace KvizCommando.Server.Startup;
 
@@ -46,7 +47,7 @@ public static class AuthenticationServiceCollectionExtensions
 
                 options.Events = new OAuthEvents
                 {
-                    OnRemoteFailure = ctx =>
+                    OnRemoteFailure = async ctx =>
                     {
                         var redirect = ctx.Properties?.RedirectUri;
                         if (string.IsNullOrEmpty(redirect))
@@ -66,7 +67,17 @@ public static class AuthenticationServiceCollectionExtensions
 
                         ctx.Response.Redirect(redirect + q);
                         ctx.HandleResponse();
-                        return Task.CompletedTask;
+
+                        var audit = ctx.HttpContext.RequestServices
+                            .GetRequiredService<IAuditLogger>();
+                        await audit.LogAsync(
+                            new AuditEntry(
+                                AuditEvents.LoginFailed,
+                                AuditOutcome.Failed,
+                                ActorId: null,
+                                SubjectId: null,
+                                IpAddress: ctx.HttpContext.Connection.RemoteIpAddress?.ToString(),
+                                RequestId: ctx.HttpContext.TraceIdentifier));
                     }
                 };
             });

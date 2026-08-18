@@ -1,11 +1,9 @@
-﻿using KvizCommando.Client;
-using KvizCommando.Server.Identity;
-using KvizCommando.Server.Services.CheckIn;
+﻿using KvizCommando.Server.Identity;
+using KvizCommando.Server.Infrastructure.Logging;
 using KvizCommando.Server.Services.Db;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -34,6 +32,7 @@ public static class FacebookAuthEndpoints
                 SignInManager<ApplicationUser> signInManager,
                 UserManager<ApplicationUser> userManager,
                 IPlayerDbService playerDb,
+                IAuditLogger audit,
                 HttpContext ctx) =>
         {
             var qs = ctx.Request.QueryString.Value;
@@ -47,7 +46,17 @@ public static class FacebookAuthEndpoints
 
             var info = await signInManager.GetExternalLoginInfoAsync();
             if (info == null)
+            {
+                await audit.LogAsync(
+                    new AuditEntry(
+                        AuditEvents.LoginFailed,
+                        AuditOutcome.Failed,
+                        ActorId: null,
+                        SubjectId: null,
+                        IpAddress: ctx.Connection.RemoteIpAddress?.ToString(),
+                        RequestId: ctx.TraceIdentifier));
                 return Results.Redirect("/?error=NoInfo");
+            }
 
             var user = await userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
 
@@ -70,7 +79,33 @@ public static class FacebookAuthEndpoints
                     };
                     var cr = await userManager.CreateAsync(user);
                     if (!cr.Succeeded)
+                    {
+                        await audit.LogAsync(
+                            new AuditEntry(
+                                AuditEvents.AccountRegistered,
+                                AuditOutcome.Failed,
+                                ActorId: null,
+                                SubjectId: null,
+                                IpAddress: ctx.Connection.RemoteIpAddress?.ToString(),
+                                RequestId: ctx.TraceIdentifier));
+                        await audit.LogAsync(
+                            new AuditEntry(
+                                AuditEvents.LoginFailed,
+                                AuditOutcome.Failed,
+                                ActorId: null,
+                                SubjectId: null,
+                                IpAddress: ctx.Connection.RemoteIpAddress?.ToString(),
+                                RequestId: ctx.TraceIdentifier));
                         return Results.Redirect("/?error=CreateFailed");
+                    }
+                    await audit.LogAsync(
+                        new AuditEntry(
+                            AuditEvents.AccountRegistered,
+                            AuditOutcome.Succeeded,
+                            user.Id,
+                            user.Id,
+                            ctx.Connection.RemoteIpAddress?.ToString(),
+                            ctx.TraceIdentifier));
                     var FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName);
                     var SuggestedName = await playerDb.SuggestAsync(FirstName);
                     uriReturn = $"/checkin?name={Uri.EscapeDataString(SuggestedName)}";
@@ -78,7 +113,33 @@ public static class FacebookAuthEndpoints
 
                 var lr = await userManager.AddLoginAsync(user, info);
                 if (!lr.Succeeded)
+                {
+                    await audit.LogAsync(
+                        new AuditEntry(
+                            AuditEvents.ExternalLoginLinked,
+                            AuditOutcome.Failed,
+                            ActorId: null,
+                            SubjectId: user.Id,
+                            IpAddress: ctx.Connection.RemoteIpAddress?.ToString(),
+                            RequestId: ctx.TraceIdentifier));
+                    await audit.LogAsync(
+                        new AuditEntry(
+                            AuditEvents.LoginFailed,
+                            AuditOutcome.Failed,
+                            ActorId: null,
+                            SubjectId: user.Id,
+                            IpAddress: ctx.Connection.RemoteIpAddress?.ToString(),
+                            RequestId: ctx.TraceIdentifier));
                     return Results.Redirect("/?error=LinkFailed");
+                }
+                await audit.LogAsync(
+                    new AuditEntry(
+                        AuditEvents.ExternalLoginLinked,
+                        AuditOutcome.Succeeded,
+                        user.Id,
+                        user.Id,
+                        ctx.Connection.RemoteIpAddress?.ToString(),
+                        ctx.TraceIdentifier));
             }
 
             // Csak a fiók e-mail-címével pontosan egyező külső claim igazolhatja a címet.
@@ -96,7 +157,16 @@ public static class FacebookAuthEndpoints
             await signInManager.SignInAsync(user, isPersistent: false);
             await signInManager.UpdateExternalAuthenticationTokensAsync(info);
             await ctx.SignOutAsync(IdentityConstants.ExternalScheme);
-           
+
+            var ipAddress = ctx.Connection.RemoteIpAddress?.ToString();
+            await audit.LogAsync(
+                new AuditEntry(
+                    AuditEvents.LoginSucceeded,
+                    AuditOutcome.Succeeded,
+                    user.Id,
+                    user.Id,
+                    ipAddress,
+                    ctx.TraceIdentifier));
 
 
             return Results.Redirect(uriReturn);
@@ -105,7 +175,9 @@ public static class FacebookAuthEndpoints
         app.MapPost("/facebook/deauthorize", async (
             [FromForm] string signed_request,
             IConfiguration config,
-            UserManager<ApplicationUser> userManager) =>
+            UserManager<ApplicationUser> userManager,
+            IAuditLogger audit,
+            HttpContext ctx) =>
         {
             if (string.IsNullOrWhiteSpace(signed_request))
                 return Results.BadRequest(new { error = "missing_signed_request" });
@@ -125,10 +197,21 @@ public static class FacebookAuthEndpoints
             var user = await userManager.FindByLoginAsync("Facebook", fbUserId);
             if (user != null)
             {
-                await userManager.RemoveLoginAsync(user, "Facebook", fbUserId);
+                var removeResult = await userManager.RemoveLoginAsync(user, "Facebook", fbUserId);
                 await userManager.RemoveAuthenticationTokenAsync(user, "Facebook", "access_token");
                 await userManager.RemoveAuthenticationTokenAsync(user, "Facebook", "expires_at");
                 await userManager.RemoveAuthenticationTokenAsync(user, "Facebook", "token_type");
+
+                await audit.LogAsync(
+                    new AuditEntry(
+                        AuditEvents.ExternalLoginRemoved,
+                        removeResult.Succeeded
+                            ? AuditOutcome.Succeeded
+                            : AuditOutcome.Failed,
+                        ActorId: null,
+                        SubjectId: user.Id,
+                        IpAddress: ctx.Connection.RemoteIpAddress?.ToString(),
+                        RequestId: ctx.TraceIdentifier));
             }
             return Results.Ok(new { status = "ok" });
         }).AllowAnonymous();

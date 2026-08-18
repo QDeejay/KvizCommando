@@ -2,6 +2,7 @@
 using KvizCommando.Server.Domain.Entities.Players;
 using KvizCommando.Server.Domain.Entities.Statistics;
 using KvizCommando.Server.Identity;
+using KvizCommando.Server.Infrastructure.Logging;
 using KvizCommando.Server.Infrastructure.Persistence;
 using KvizCommando.Server.Models;
 using KvizCommando.Server.Services.PlayerCache;
@@ -24,13 +25,15 @@ namespace KvizCommando.Server.Services.Db
         private readonly ILookupNormalizer _normalizer;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _config;
+        private readonly IAuditLogger _audit;
         public PlayerDbService(
             ApplicationDbContext db,
             UserManager<ApplicationUser> userManager,
             ILogger<PlayerDbService> logger,
             ILookupNormalizer normalizer,
             IHttpContextAccessor httpcontextaccessor,
-            IConfiguration config)
+            IConfiguration config,
+            IAuditLogger audit)
         {
             _db = db;
             _userManager = userManager;
@@ -38,6 +41,7 @@ namespace KvizCommando.Server.Services.Db
             _normalizer = normalizer;
             _httpContextAccessor = httpcontextaccessor;
             _config = config;
+            _audit = audit;
         }
 
         /// <inheritdoc />
@@ -288,7 +292,15 @@ namespace KvizCommando.Server.Services.Db
                 });
 
                 await _db.SaveChangesAsync(ct);
-                _logger.LogInformation("Terms accepted. UserId={UserId}, Version={Version}", user.Id, currentTerms);
+                await _audit.LogAsync(
+                    new AuditEntry(
+                        AuditEvents.TermsAccepted,
+                        AuditOutcome.Succeeded,
+                        user.Id,
+                        user.Id,
+                        ip,
+                        http?.TraceIdentifier,
+                        new AuditDetails(DocumentVersion: currentTerms)));
 
             }
 
