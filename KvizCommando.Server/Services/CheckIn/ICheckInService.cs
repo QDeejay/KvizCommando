@@ -17,6 +17,5 @@ namespace KvizCommando.Server.Services.CheckIn
             string userId,
             CheckInPostRequest request,
             CancellationToken ct);
-       // Task<string> SuggestAsync(string? rawName, CancellationToken ct = default);
     }
 }

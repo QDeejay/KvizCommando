@@ -98,9 +98,6 @@ namespace KvizCommando.Client.Layout
             else
             {
                 _isLoggedIn = false;
-                //var uri = Ui.Nav.ToAbsoluteUri(Ui.Nav.Uri);
-
-
                 var page = Ui.Nav.ToBaseRelativePath(
                     uri.GetLeftPart(UriPartial.Path));
 

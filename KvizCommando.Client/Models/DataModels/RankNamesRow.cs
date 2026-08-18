@@ -59,12 +59,4 @@
             TeamEn = teamEn;
         }
     }
-
-
-    public enum LanguageCode
-    {
-        hu,
-        en,
-        de
-    }
 }

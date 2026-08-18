@@ -63,7 +63,8 @@ public static class IdentityServiceCollectionExtensions
             options.RefreshTokenExpiration = TimeSpan.FromDays(7);
         });
 
-        // ===== Personal data (GDPR export/törlés) =====
+        // A végleges GDPR export/törlés még nincs bekötve. Ez az opció most nem
+        // változtat a futáson, csak kijelöli a későbbi adatvédelmi kulcs helyét.
         services.Configure<PersonalDataOptions>(options =>
         {
             options.ProtectionKeyName = null; // vagy saját provider

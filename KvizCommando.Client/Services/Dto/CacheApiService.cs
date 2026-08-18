@@ -83,38 +83,3 @@ namespace KvizCommando.Client.Services.Dto
     }
 
 }
-/*
-   public async Task<HomeDTOs?> GetHomeScreenAsync(CancellationToken ct = default)
-        {
-            var SessionId = _sessionCache.SessionId;
-            var dto = await _http.GetFromJsonAsync<HomeDTOs>($"{SCREEN_ROUTE}/home?sessionId={SessionId}", ct);
-            return dto;
-
-        }
-  public async Task<QuestionDtos?> GetQuestionAsync(CancellationToken ct = default)
-        {
-            var SessionId = _sessionCache.SessionId;
-            var dto = await _http.GetFromJsonAsync<QuestionDtos>($"{SCREEN_ROUTE_QUESTION}?sessionId={SessionId}", ct);
-            return dto;
-        }
-        public async Task<TeamDtos?> GetTeamAsync(CancellationToken ct = default)
-        {
-            var SessionId = _sessionCache.SessionId;
-            var dto = await _http.GetFromJsonAsync<TeamDtos>($"{SCREEN_ROUTE_TEAM}?sessionId={SessionId}", ct);
-            return dto;
-
-        }
-        public async Task<SoloGameDtos?> GetSoloAsync(CancellationToken ct = default)
-        {
-            var SessionId = _sessionCache.SessionId;
-            var dto = await _http.GetFromJsonAsync<SoloGameDtos>($"{SCREEN_ROUTE}/sologame?sessionId={SessionId}", ct);
-            return dto;
-
-        }
-        public async Task<VsGameDtos?> GetVsGameAsync(CancellationToken ct = default)
-        {
-            var sessionId = _sessionCache.SessionId;
-            return await _http.GetFromJsonAsync<VsGameDtos>($"{SCREEN_ROUTE}/vsgame?sessionId={sessionId}", ct);
-        }
-
- */

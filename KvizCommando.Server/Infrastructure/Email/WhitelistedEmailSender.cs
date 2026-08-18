@@ -91,8 +91,6 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>
         var pagePath = $"/auth/{page}";
 
         // 2) Új link építése a Blazor oldalra
-        //var customLink = $"{uri.Scheme}://{uri.Host}:{uri.Port}/auth/confirm{query}";
-        //var customLink = $"{uri.Scheme}://{TempHost}:{uri.Port}{pagePath}{query}";
         var customLink = $"https://kviz-commando.ngrok.app{pagePath}{query}";
 
         // 3) Sablonfájlok betöltése
@@ -111,8 +109,6 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>
        
         var DisplayName = _localizer["DisplayName.Fallback"];
         // 4) Link behelyettesítése
-        //htmlBody = htmlBody.Replace("{ConfirmUrl}", customLink);
-        //textBody = textBody.Replace("{ConfirmUrl}", customLink);
         htmlBody = htmlBody
                     .Replace("{{AppName}}", appName)
                     .Replace("{{DisplayName}}", DisplayName)

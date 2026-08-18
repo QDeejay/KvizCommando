@@ -17,12 +17,6 @@ namespace KvizCommando.Server.Utilities
             }
             return result;
         }
-        public static T[] DeserializeArray<T>(string? json)
-        {
-            return string.IsNullOrEmpty(json)
-                ? []
-                : JsonSerializer.Deserialize<T[]>(json) ?? [];
-        }
         public static T[] ConvertToArray<T>(this string? json)
         {
             return string.IsNullOrEmpty(json)

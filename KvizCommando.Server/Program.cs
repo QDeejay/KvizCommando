@@ -142,53 +142,37 @@ app.MapGet("/signin-facebook", async ctx =>
 app.UseAuthentication();   // <<< fontos: routing után
 app.UseAuthorization();
 
-/*
-// Üzenet fejléc elennőrzés - diagnosztika
-app.Use(async (ctx, next) =>
+// Alapból ki van kapcsolva. Asztali vagy mobil kliens tesztelésekor segít eldönteni,
+// hogy a cookie vagy a bearer hitelesítés akadt-e el. Tokent és felhasználói adatot nem ír a naplóba.
+if (builder.Configuration.GetValue<bool>("Diagnostics:EnableAuthenticationDebugLogging"))
 {
-    var cookieRes = await ctx.AuthenticateAsync(IdentityConstants.ApplicationScheme);
-    var bearerRes = await ctx.AuthenticateAsync(IdentityConstants.BearerScheme);
-    var hasBearerHdr = ctx.Request.Headers["Authorization"].ToString().StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase);
+    app.Use(async (context, next) =>
+    {
+        var cookieAuthentication = await context.AuthenticateAsync(
+            IdentityConstants.ApplicationScheme);
+        var bearerAuthentication = await context.AuthenticateAsync(
+            IdentityConstants.BearerScheme);
+        var hasBearerHeader = context.Request.Headers["Authorization"]
+            .ToString()
+            .StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase);
 
-   app.Logger.LogInformation("AUTH path={path} cookieOK={cOK} bearerHdr={bh} bearerOK={bOK}",
-        ctx.Request.Path, cookieRes.Succeeded, hasBearerHdr, bearerRes.Succeeded);
+        app.Logger.LogInformation(
+            "AUTH path={Path} cookie={CookieAuthenticated} bearerHeader={HasBearerHeader} bearer={BearerAuthenticated}",
+            context.Request.Path,
+            cookieAuthentication.Succeeded,
+            hasBearerHeader,
+            bearerAuthentication.Succeeded);
 
-    await next();
+        await next();
 
-    var ep = ctx.GetEndpoint();
-    app.Logger.LogInformation("RESP {status} path={path} ep={ep}",
-        ctx.Response.StatusCode, ctx.Request.Path, ep?.DisplayName ?? "<none>");
-});
-*/
-/*
-app.Use(async (ctx, next) =>
-{
-    var hdr = ctx.Request.Headers["Authorization"].ToString();
-    var cookieAuth = await ctx.AuthenticateAsync(IdentityConstants.ApplicationScheme);
-    //var bearerAuth = await ctx.AuthenticateAsync("Bearer");
-    var idBearerAuth = await ctx.AuthenticateAsync(IdentityConstants.BearerScheme);
-    //Console.Clear();
-    //Console.SetCursorPosition(0, 0);
-    app.Logger.LogWarning(@"
-=== AUTH DEBUG ===
-PATH: {path}
-HEADER: {hdr}
-CookieAuth: {cOK}
-IdentityBearerAuth: {ibOK}
-User.Identity.IsAuthenticated: {auth}
-Name: {name}
-==================",
-        ctx.Request.Path,
-        hdr,
-        cookieAuth.Succeeded,
-        //bearerAuth.Succeeded,
-        idBearerAuth.Succeeded,
-        ctx.User?.Identity?.IsAuthenticated ?? false,
-        ctx.User?.Identity?.Name ?? "(null)");
+        app.Logger.LogInformation(
+            "AUTH response status={StatusCode} path={Path} endpoint={Endpoint}",
+            context.Response.StatusCode,
+            context.Request.Path,
+            context.GetEndpoint()?.DisplayName ?? "<none>");
+    });
+}
 
-    await next();
-});
-*/
 app.UseRateLimiter();
 app.UseExceptionHandler();
 

@@ -111,26 +111,6 @@ public static class ResxExporterLogic
         return result;
     }
 
-
-    /*
-    private static Dictionary<string, string> ReadResxFile(string resxPath, string modulePrefix)
-    {
-        Console.WriteLine($"Most ovassa osztaa rühes dzsézont+!");
-        var result = new Dictionary<string, string>();
-        using var reader = new ResXResourceReader(resxPath) { UseResXDataNodes = true };
-        foreach (DictionaryEntry entry in reader)
-        {
-            if (entry.Key is string key && entry.Value is string value)
-            {
-                string fullKey = $"{modulePrefix}.{key}";
-                Console.WriteLine($"[ResxExporter] Processing key: {fullKey}"); 
-                result[fullKey] = value;
-                Console.WriteLine($"[ResxExporter] Processing key: {fullKey}");
-            }
-        }
-        return result;
-    }
-    */
     private static string ComputeSHA256(string content)
     {
         using var sha = SHA256.Create();

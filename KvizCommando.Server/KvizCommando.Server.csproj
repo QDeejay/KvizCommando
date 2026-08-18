@@ -63,9 +63,6 @@
 	  <None Remove="Data\UserJsons\**" />
 	  <None Remove="wwwroot\Board\**" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Compile Remove="Infrastructure\Email\Templates\EmailTemplates\Auth\Class.cs" />
-	</ItemGroup>
 	<PropertyGroup>
 		<ResxExporterAssembly>$(MSBuildThisFileDirectory)..\BuildTools\ResxExporter\bin\Release\net472\ResxExporter.dll</ResxExporterAssembly>
 	</PropertyGroup>

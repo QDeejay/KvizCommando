@@ -109,7 +109,6 @@ namespace KvizCommando.Client.Features.Team.Builders
         {
             foreach (int j in Enumerable.Range(1, 8))
             {
-                //if (input.CharCatMask[j])
                 if (members[j] is not null)
                 {
                     var mem = members[j];

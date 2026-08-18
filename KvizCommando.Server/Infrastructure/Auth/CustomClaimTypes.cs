@@ -11,9 +11,5 @@
         /// Példa érték: "2025-09-01-ETAG".
         /// </summary>
         public const string TermsAcceptedEtag = "terms.accepted.etag";
-
-        // Opcionális:
-        // Csak akkor vezessük be, ha tényleges kliensoldali igény van rá.
-        // public const string DisplayName = "display_name";
     }
 }
