@@ -49,7 +49,7 @@ public static class FacebookAuthEndpoints
             {
                 await audit.LogAsync(
                     new AuditEntry(
-                        AuditEvents.LoginFailed,
+                        AuditEvents.Login,
                         AuditOutcome.Failed,
                         ActorId: null,
                         SubjectId: null,
@@ -90,7 +90,7 @@ public static class FacebookAuthEndpoints
                                 RequestId: ctx.TraceIdentifier));
                         await audit.LogAsync(
                             new AuditEntry(
-                                AuditEvents.LoginFailed,
+                                AuditEvents.Login,
                                 AuditOutcome.Failed,
                                 ActorId: null,
                                 SubjectId: null,
@@ -124,7 +124,7 @@ public static class FacebookAuthEndpoints
                             RequestId: ctx.TraceIdentifier));
                     await audit.LogAsync(
                         new AuditEntry(
-                            AuditEvents.LoginFailed,
+                            AuditEvents.Login,
                             AuditOutcome.Failed,
                             ActorId: null,
                             SubjectId: user.Id,
@@ -161,7 +161,7 @@ public static class FacebookAuthEndpoints
             var ipAddress = ctx.Connection.RemoteIpAddress?.ToString();
             await audit.LogAsync(
                 new AuditEntry(
-                    AuditEvents.LoginSucceeded,
+                    AuditEvents.Login,
                     AuditOutcome.Succeeded,
                     user.Id,
                     user.Id,

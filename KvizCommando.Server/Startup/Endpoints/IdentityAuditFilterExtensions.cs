@@ -124,7 +124,7 @@ public static class IdentityAuditFilterExtensions
                 await WriteAuditAsync(
                     audit,
                     httpContext,
-                    AuditEvents.LoginSucceeded,
+                    AuditEvents.Login,
                     AuditOutcome.Succeeded,
                     subjectId,
                     subjectId);
@@ -136,7 +136,7 @@ public static class IdentityAuditFilterExtensions
                 await WriteAuditAsync(
                     audit,
                     httpContext,
-                    locked ? AuditEvents.AccountLocked : AuditEvents.LoginFailed,
+                    locked ? AuditEvents.AccountLocked : AuditEvents.Login,
                     locked ? AuditOutcome.Denied : AuditOutcome.Failed,
                     actorId: null,
                     subjectId: subjectId);
@@ -149,7 +149,7 @@ public static class IdentityAuditFilterExtensions
             await WriteAuditAsync(
                 audit,
                 httpContext,
-                AuditEvents.LoginFailed,
+                AuditEvents.Login,
                 AuditOutcome.Failed,
                 actorId: null,
                 subjectId: null);
@@ -205,7 +205,7 @@ public static class IdentityAuditFilterExtensions
             await WriteAuditAsync(
                 audit,
                 httpContext,
-                failed ? AuditEvents.PasswordResetFailed : AuditEvents.PasswordResetSucceeded,
+                AuditEvents.PasswordReset,
                 failed ? AuditOutcome.Failed : AuditOutcome.Succeeded,
                 failed ? null : subjectId,
                 subjectId);
@@ -216,7 +216,7 @@ public static class IdentityAuditFilterExtensions
             await WriteAuditAsync(
                 audit,
                 httpContext,
-                AuditEvents.PasswordResetFailed,
+                AuditEvents.PasswordReset,
                 AuditOutcome.Failed,
                 actorId: null,
                 subjectId: subjectId);
