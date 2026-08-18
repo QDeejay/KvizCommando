@@ -3,6 +3,7 @@ using KvizCommando.Server.Endpoints;
 using KvizCommando.Server.Extensions;
 using KvizCommando.Server.Hubs;
 using KvizCommando.Server.Identity;
+using KvizCommando.Server.Infrastructure.Logging;
 using KvizCommando.Server.Security.RateLimiting;
 using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
 
