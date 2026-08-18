@@ -9,6 +9,8 @@ public static class AuthenticationServiceCollectionExtensions
     /// <summary>
     /// Regisztrálja a cookie- és bearer-alapú hitelesítési sémákat.
     /// </summary>
+    /// <param name="services">A bővítendő szolgáltatásgyűjtemény.</param>
+    /// <param name="configuration">Az alkalmazás konfigurációja.</param>
     public static IServiceCollection AddCustomAuthentication(
         this IServiceCollection services,
         IConfiguration configuration)

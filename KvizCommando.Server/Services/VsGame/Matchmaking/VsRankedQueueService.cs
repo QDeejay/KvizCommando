@@ -79,9 +79,7 @@ public sealed partial class VsRankedQueueService :
         }
     }
 
-    /// <summary>
-    /// Belépteti a játékost a kiválasztott rangsorolt várólistába.
-    /// </summary>
+    /// <inheritdoc />
     public async Task<VsQueueJoinResult> JoinAsync(
         int playerId,
         string sessionId,
@@ -214,9 +212,7 @@ public sealed partial class VsRankedQueueService :
         return result;
     }
 
-    /// <summary>
-    /// Eltávolítja a játékost a rangsorolt várólistából.
-    /// </summary>
+    /// <inheritdoc />
     public Task<VsQueueLeaveStatus> LeaveAsync(
         string connectionId,
         CancellationToken ct = default) =>
@@ -224,9 +220,7 @@ public sealed partial class VsRankedQueueService :
             entry => entry.ConnectionId == connectionId,
             ct);
 
-    /// <summary>
-    /// Feldolgozza a klienskapcsolat megszakadását.
-    /// </summary>
+    /// <inheritdoc />
     public async Task DisconnectAsync(
         string connectionId,
         CancellationToken ct = default)
@@ -236,9 +230,7 @@ public sealed partial class VsRankedQueueService :
             ct);
     }
 
-    /// <summary>
-    /// Eltávolítja a játékost a várólistából vagy a hozzá tartozó meccsből.
-    /// </summary>
+    /// <inheritdoc />
     public async Task LeavePlayerAsync(
         int playerId,
         CancellationToken ct = default)

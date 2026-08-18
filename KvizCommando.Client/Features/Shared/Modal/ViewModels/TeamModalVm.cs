@@ -17,6 +17,14 @@
         public string UnlockHelps { get; set; } = string.Empty;
         public string UnlockExtras { get; set; } = string.Empty;
     }
+    /// <summary>
+    /// Egy csapatművelet modális ablakában megjelenő összehasonlító sort ír le.
+    /// </summary>
+    /// <param name="CategoryName">A sor felirata.</param>
+    /// <param name="ValueDisplay">Az aktuális érték megjelenítési alakja.</param>
+    /// <param name="separator">Az aktuális és a módosított érték közötti elválasztó.</param>
+    /// <param name="ValueChangeDisplay">A módosítás utáni érték megjelenítési alakja.</param>
+    /// <param name="color">A változás kiemeléséhez használt szín.</param>
     public sealed record ModalRow(
         string CategoryName,
         string ValueDisplay,
@@ -24,6 +32,23 @@
         string ValueChangeDisplay,
         string color
         );
+    /// <summary>
+    /// A csapattag részletes adatait előre lokalizált címke–érték párokban adja át a modális nézetnek.
+    /// </summary>
+    /// <param name="Name">A név mező felirata.</param>
+    /// <param name="NameValue">A csapattag megjelenített neve.</param>
+    /// <param name="Color">A csapattag kiemelési színe.</param>
+    /// <param name="Rank">A rang mező felirata.</param>
+    /// <param name="RankValue">A rang megjelenített értéke.</param>
+    /// <param name="Level">A szint mező felirata.</param>
+    /// <param name="LevelValue">A szint megjelenített értéke.</param>
+    /// <param name="Orient1">Az első beállítottság felirata.</param>
+    /// <param name="Orient2">A második beállítottság felirata.</param>
+    /// <param name="Orient1Value">Az első beállítottság megjelenített értéke.</param>
+    /// <param name="Orient2Value">A második beállítottság megjelenített értéke.</param>
+    /// <param name="Devpoints">A fejlesztési pontok mezőjének felirata.</param>
+    /// <param name="DevPointsValue">A rendelkezésre álló fejlesztési pontok megjelenített értéke.</param>
+    /// <param name="AddedDevPoints">A művelet által hozzáadott fejlesztési pontok megjelenített értéke.</param>
     public sealed record InfoBlock(
         string Name,
         string NameValue,

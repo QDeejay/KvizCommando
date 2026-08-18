@@ -18,6 +18,9 @@ public static class TBoxBuilder
     /// <summary>
     /// Összeállítja a képernyő tartalmi dobozait.
     /// </summary>
+    /// <param name="rootInfo">A csapatképernyő dobozainak forrásadata.</param>
+    /// <param name="parameters">A dobozok megjelenítését meghatározó paraméterek.</param>
+    /// <param name="lang">A feliratok feloldásához használt nyelvi szolgáltatás.</param>
     public static Dictionary<string, ContentBoxVm> BuildBoxes(
         TeamRootBoxInfo rootInfo,
         TeamComponentParameters parameters,

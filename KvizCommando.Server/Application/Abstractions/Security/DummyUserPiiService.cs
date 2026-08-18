@@ -34,9 +34,7 @@ namespace KvizCommando.Server.Application.Security
             _opts = opts.Value;
         }
 
-        /// <summary>
-        /// Elmenti a felhasználó e-mail-címét.
-        /// </summary>
+        /// <inheritdoc />
         public async Task SetEmailAsync(string userId, string email, CancellationToken ct = default)
         {
             var entity = await EnsureEntity(userId, ct);
@@ -51,9 +49,7 @@ namespace KvizCommando.Server.Application.Security
             await _db.SaveChangesAsync(ct);
         }
 
-        /// <summary>
-        /// Visszaadja a felhasználó tárolt e-mail-címét.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<string?> GetEmailAsync(string userId, CancellationToken ct = default)
         {
             var entity = await _db.UserPii.FirstOrDefaultAsync(x => x.UserId == userId, ct);
@@ -62,9 +58,7 @@ namespace KvizCommando.Server.Application.Security
             return _enc.Decrypt(entity.EmailEncrypted, entity.EmailNonce, entity.EmailTag);
         }
 
-        /// <summary>
-        /// Megkeresi a normalizált e-mail-hashhez tartozó felhasználóazonosítót.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<string?> FindUserIdByEmailAsync(string email, CancellationToken ct = default)
         {
             var hash = _emailLookup.ComputeHashFromRaw(email);
@@ -72,9 +66,7 @@ namespace KvizCommando.Server.Application.Security
             return entity?.UserId;
         }
 
-        /// <summary>
-        /// Elmenti a felhasználó telefonszámát.
-        /// </summary>
+        /// <inheritdoc />
         public async Task SetPhoneAsync(string userId, string phoneE164, CancellationToken ct = default)
         {
             var entity = await EnsureEntity(userId, ct);
@@ -91,9 +83,7 @@ namespace KvizCommando.Server.Application.Security
             await _db.SaveChangesAsync(ct);
         }
 
-        /// <summary>
-        /// Visszaadja a felhasználó tárolt telefonszámát.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<string?> GetPhoneAsync(string userId, CancellationToken ct = default)
         {
             var entity = await _db.UserPii.FirstOrDefaultAsync(x => x.UserId == userId, ct);
@@ -102,9 +92,7 @@ namespace KvizCommando.Server.Application.Security
             return _enc.Decrypt(entity.PhoneEncrypted, entity.PhoneNonce, entity.PhoneTag);
         }
 
-        /// <summary>
-        /// Elmenti a felhasználó számlázási adatait.
-        /// </summary>
+        /// <inheritdoc />
         public async Task SetBillingAsync(string userId, string billingName, string billingAddress, CancellationToken ct = default)
         {
             var entity = await EnsureEntity(userId, ct);
@@ -123,9 +111,7 @@ namespace KvizCommando.Server.Application.Security
             await _db.SaveChangesAsync(ct);
         }
 
-        /// <summary>
-        /// Visszaadja a felhasználó tárolt számlázási adatait.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<(string? BillingName, string? BillingAddress)> GetBillingAsync(string userId, CancellationToken ct = default)
         {
             var entity = await _db.UserPii.FirstOrDefaultAsync(x => x.UserId == userId, ct);

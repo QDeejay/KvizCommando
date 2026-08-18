@@ -7,6 +7,7 @@ public static class IdentityEndpointRateLimitExtensions
     /// <summary>
     /// A végpontok műveletéhez illeszkedő forgalomkorlátozást állít be.
     /// </summary>
+    /// <param name="builder">A kiegészítendő végpontkonvenció-építő.</param>
     public static IEndpointConventionBuilder WithPerEndpointRateLimiting(this IEndpointConventionBuilder builder)
     {
         builder.Add(endpointBuilder =>

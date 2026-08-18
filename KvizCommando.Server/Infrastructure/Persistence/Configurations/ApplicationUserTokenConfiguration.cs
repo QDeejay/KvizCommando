@@ -6,9 +6,7 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {
     public class ApplicationUserTokenConfiguration : IEntityTypeConfiguration<ApplicationUserToken>
     {
-        /// <summary>
-        /// Beállítja az entitás EF Core leképezését és adatbázis-korlátait.
-        /// </summary>
+        /// <inheritdoc />
         public void Configure(EntityTypeBuilder<ApplicationUserToken> b)
         {
             // IdentityUserToken PK: UserId + LoginProvider + Name

@@ -11,6 +11,7 @@ namespace KvizCommando.Server.Infrastructure.Security
         /// <summary>
         /// Engedélyezi a Column Encryption Setting értéket a kapcsolati karakterláncban.
         /// </summary>
+        /// <param name="connectionString">Az Always Encrypted használatára előkészítendő SQL Server-kapcsolati karakterlánc.</param>
         public static string WithAlwaysEncrypted(string connectionString)
         {
             var csb = new SqlConnectionStringBuilder(connectionString);

@@ -19,6 +19,7 @@ public static class SoloGameRules
     /// <summary>
     /// Visszaadja az egyéni játék kérdéseinek számát.
     /// </summary>
+    /// <param name="level">Az eredményt meghatározó aktuális szint.</param>
     public static int GetQuestionCount(int level) =>
         level switch
         {
@@ -30,19 +31,22 @@ public static class SoloGameRules
     /// <summary>
     /// Visszaadja az egy kérdéssel megszerezhető legnagyobb pontszámot.
     /// </summary>
+    /// <param name="level">Az eredményt meghatározó aktuális szint.</param>
     public static int GetMaxPointsPerQuestion(int level) =>
         100 + level / 2 * 10;
 
     /// <summary>
     /// Visszaadja az adott játékszabályok mellett elérhető legnagyobb pontszámot.
     /// </summary>
+    /// <param name="level">Az eredményt meghatározó aktuális szint.</param>
     public static int GetMaximumScore(int level) =>
         GetQuestionCount(level) *
         GetMaxPointsPerQuestion(level);
 
     /// <summary>
-    /// Visszaadja az adott játékszabályok mellett elérhető legnagyobb pontszámot.
+    /// Visszaadja a játékmód legmagasabb szintjén elérhető legnagyobb pontszámot.
     /// </summary>
+    /// <param name="mode">Az értékelendő egyéni játékmód.</param>
     public static int GetMaximumScore(SoloGameMode mode) =>
         mode switch
         {
@@ -56,12 +60,15 @@ public static class SoloGameRules
     /// <summary>
     /// Visszaadja a pontszámhoz tartozó fejlesztésipont-sávot.
     /// </summary>
+    /// <param name="score">Az értékelendő pontszám.</param>
     public static int GetScoreDevelopmentPointCount(int score) =>
         ScoreConstants.ScorLimits.Count(limit => score >= limit);
 
     /// <summary>
     /// Kiszámítja a pontszám alapján megszerzett fejlesztési pontokat.
     /// </summary>
+    /// <param name="newScore">Az újonnan elért pontszám.</param>
+    /// <param name="oldScore">A korábban elért legjobb pontszám.</param>
     public static int GetEarnedScoreDevelopmentPoints(
         int newScore,
         int oldScore) =>
@@ -73,6 +80,8 @@ public static class SoloGameRules
     /// <summary>
     /// Jelzi, hogy a játékos elérte-e a pontszámból szerezhető fejlesztési pontok maximumát.
     /// </summary>
+    /// <param name="bestScore">A korábban elért legjobb pontszám.</param>
+    /// <param name="level">Az eredményt meghatározó aktuális szint.</param>
     public static bool HasMaxedScoreDevelopmentPoints(
         int bestScore,
         int level) =>
@@ -83,6 +92,7 @@ public static class SoloGameRules
     /// <summary>
     /// Visszaadja a szívjutalomhoz szükséges helyes válaszok számát.
     /// </summary>
+    /// <param name="questionCount">A játékmód kérdéseinek száma.</param>
     public static int GetHeartRewardRequiredCorrectAnswers(
         int questionCount) =>
         (int)Math.Ceiling(
@@ -93,6 +103,8 @@ public static class SoloGameRules
     /// <summary>
     /// Jelzi, hogy a játékos megszerezte-e a szívjutalmat.
     /// </summary>
+    /// <param name="correctAnswers">A helyes válaszok száma.</param>
+    /// <param name="questionCount">A játékmód kérdéseinek száma.</param>
     public static bool HasEarnedHeartReward(
         int correctAnswers,
         int questionCount) =>
@@ -102,6 +114,8 @@ public static class SoloGameRules
     /// <summary>
     /// Kiszámítja a válaszért járó pontszámot.
     /// </summary>
+    /// <param name="maximumPoints">A válaszért időlevonás nélkül adható pont.</param>
+    /// <param name="elapsedMs">A válaszadásig eltelt idő ezredmásodpercben.</param>
     public static int GetAnswerPoints(
         int maximumPoints,
         int elapsedMs)
@@ -122,6 +136,9 @@ public static class SoloGameRules
     /// <summary>
     /// Kiszámítja a válaszért járó pontszámot.
     /// </summary>
+    /// <param name="maximumPoints">A válaszért időlevonás nélkül adható pont.</param>
+    /// <param name="elapsedMs">A válaszadásig eltelt idő ezredmásodpercben.</param>
+    /// <param name="isCorrect">Jelzi, hogy a beküldött válasz helyes-e.</param>
     public static int GetAnswerPoints(
         int maximumPoints,
         int elapsedMs,
@@ -138,6 +155,7 @@ public static class SoloGameRules
     /// <summary>
     /// Jelzi, hogy az adott szinten szerezhető-e karaktertapasztalat.
     /// </summary>
+    /// <param name="level">Az eredményt meghatározó aktuális szint.</param>
     public static bool CanEarnMemberExperience(int level) =>
         level + 1 != TeamRules.RETIRE_REWARD_RANK &&
         TeamRules.IsRankClassChangingPromotion(level);
@@ -145,6 +163,10 @@ public static class SoloGameRules
     /// <summary>
     /// Kiszámítja az egyéni játék után járó karaktertapasztalatot.
     /// </summary>
+    /// <param name="basePoints">A tapasztalatszámítás alapjául szolgáló pont.</param>
+    /// <param name="correctAnswers">A helyes válaszok száma.</param>
+    /// <param name="wrongAnswers">A hibás válaszok száma.</param>
+    /// <param name="level">Az eredményt meghatározó aktuális szint.</param>
     public static int GetMemberExperience(
         int basePoints,
         int correctAnswers,
@@ -167,6 +189,8 @@ public static class SoloGameRules
     /// <summary>
     /// Kiszámítja az egyéni játék után járó csapattapasztalatot.
     /// </summary>
+    /// <param name="memberExperience">A csapattag által megszerzett tapasztalati pont.</param>
+    /// <param name="level">Az eredményt meghatározó aktuális szint.</param>
     public static int GetTeamExperience(
         int memberExperience,
         int level) =>

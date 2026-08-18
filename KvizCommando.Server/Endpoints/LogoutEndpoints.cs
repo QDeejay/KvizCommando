@@ -13,6 +13,7 @@ public static class LogoutEndpoints
     /// <summary>
     /// Regisztrálja a kijelentkezési végpontokat.
     /// </summary>
+    /// <param name="routes">A végpontokat fogadó útvonalcsoport.</param>
     public static IEndpointRouteBuilder MapLogoutEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/logout")

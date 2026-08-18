@@ -19,13 +19,9 @@ namespace KvizCommando.Client.Services.Visual
             }
             return opts;
         }
-        /// <summary>
-        /// Visszaadja az összes választható kategóriát.
-        /// </summary>
+        /// <inheritdoc />
         public IReadOnlyList<CategoryOption> GetAll()  => _options;
-        /// <summary>
-        /// Visszaadja a kategóriakód lokalizált feliratát.
-        /// </summary>
+        /// <inheritdoc />
         public string ResolveLabel(int code, string culture)
         {
             for (var i = 0; i < _options.Count; i++)
@@ -41,9 +37,7 @@ namespace KvizCommando.Client.Services.Visual
             return $"Ismeretlen ({code})";
         }
 
-        /// <summary>
-        /// Megkísérli feloldani a kategóriakód lokalizált feliratát.
-        /// </summary>
+        /// <inheritdoc />
         public bool TryResolveLabel(int code, out string label, string culture)
         {
             for (var i = 0; i < _options.Count; i++)

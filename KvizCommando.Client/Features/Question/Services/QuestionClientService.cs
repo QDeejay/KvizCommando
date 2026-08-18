@@ -22,9 +22,7 @@ public sealed class QuestionClientService : IQuestionClientService
         _logger = logger;
     }
 
-    /// <summary>
-    /// Elmenti a gyári kérdéshelyek összeállítását.
-    /// </summary>
+    /// <inheritdoc />
     public Task<bool> SaveFactorySlotsAsync(
         SaveFactoryRequest request,
         CancellationToken ct = default)
@@ -33,9 +31,7 @@ public sealed class QuestionClientService : IQuestionClientService
         return PostAsync("factory", request, ct);
     }
 
-    /// <summary>
-    /// Végrehajtja a kérdéshelyen kért kezelési műveletet.
-    /// </summary>
+    /// <inheritdoc />
     public Task<bool> ManageSlotAsync(
         ManageSlotRequest request,
         CancellationToken ct = default)
@@ -44,9 +40,7 @@ public sealed class QuestionClientService : IQuestionClientService
         return PostAsync("manageslot", request, ct);
     }
 
-    /// <summary>
-    /// Beküldi az új felhasználói kérdést ellenőrzésre.
-    /// </summary>
+    /// <inheritdoc />
     public Task<bool> SendNewQuestionAsync(
         NewQuestionRequest request,
         CancellationToken ct = default)

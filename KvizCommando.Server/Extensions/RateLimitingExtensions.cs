@@ -9,6 +9,7 @@ public static class RateLimitingExtensions
     /// <summary>
     /// Regisztrálja az alkalmazásszintű forgalomkorlátozást.
     /// </summary>
+    /// <param name="services">A bővítendő szolgáltatásgyűjtemény.</param>
     public static IServiceCollection AddAppRateLimiting(this IServiceCollection services)
     {
         services.AddRateLimiter(options =>

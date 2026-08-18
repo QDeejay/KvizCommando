@@ -6,9 +6,7 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {
     public class PlayerConfiguration : IEntityTypeConfiguration<Player>
     {
-        /// <summary>
-        /// Beállítja az entitás EF Core leképezését és adatbázis-korlátait.
-        /// </summary>
+        /// <inheritdoc />
         public void Configure(EntityTypeBuilder<Player> b)
         {
             b.ToTable("Players");

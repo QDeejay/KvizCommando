@@ -10,6 +10,9 @@ namespace KvizCommando.Server.Services.Players
         /// <summary>
         /// Ellenőrzi, hogy a játékos munkamenete továbbra is érvényes-e.
         /// </summary>
+        /// <param name="userId">Az Identity-felhasználó azonosítója.</param>
+        /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         Task<CacheReadStatus> CheckSessionAsync(
             string userId,
             string sessionId,
@@ -18,8 +21,9 @@ namespace KvizCommando.Server.Services.Players
         /// <summary>
         /// Inaktiválja a játékost cache-ben, ha van, azonosított UserId alapján.
         /// </summary>
+        /// <param name="userId">Az Identity-felhasználó azonosítója.</param>
+        /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         Task LogoutAndRemoveCacheAsync(string userId, string sessionId, CancellationToken ct = default);
-
-       /// Task<int> GetPlayerIdAsync(string userId, CancellationToken ct = default);
     }
 }

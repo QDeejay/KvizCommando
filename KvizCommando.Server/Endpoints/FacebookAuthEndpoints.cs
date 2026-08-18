@@ -18,6 +18,7 @@ public static class FacebookAuthEndpoints
     /// <summary>
     /// Regisztrálja a Facebook-hitelesítés végpontjait.
     /// </summary>
+    /// <param name="app">A konfigurálandó alkalmazás vagy végpontépítő.</param>
     public static IEndpointRouteBuilder MapFacebookAuthEndpoints(this IEndpointRouteBuilder app)
     {
         // A külső szolgáltató callbackje a befejező végpontra tér vissza.

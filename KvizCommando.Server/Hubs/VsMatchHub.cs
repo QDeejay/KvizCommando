@@ -34,6 +34,8 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
     /// <summary>
     /// Belépteti a kapcsolat játékosát a rangsorolt várólistába.
     /// </summary>
+    /// <param name="classificationId">A kiválasztott rangsorolt várólista azonosítója.</param>
+    /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
     public async Task<VsQueueJoinResult> JoinRankedQueue(
         int classificationId,
         string sessionId)
@@ -113,6 +115,7 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
     /// <summary>
     /// A karaktert a megadott előkészítési helyhez rendeli.
     /// </summary>
+    /// <param name="slotNumber">Az előkészítési hely egytől induló sorszáma.</param>
     public Task SelectCharacter(
         int slotNumber) =>
         _matches.SelectCharacterAsync(
@@ -123,6 +126,7 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
     /// <summary>
     /// A kiválasztott kérdéskategóriát a megadott körhöz rendeli.
     /// </summary>
+    /// <param name="request">A feldolgozandó kérés adatai.</param>
     public Task AssignLoadout(
         VsLoadoutAssignmentRequest request) =>
         _matches.AssignLoadoutAsync(
@@ -133,6 +137,7 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
     /// <summary>
     /// A kiválasztott segítséget a megadott előkészítési helyhez rendeli.
     /// </summary>
+    /// <param name="request">A feldolgozandó kérés adatai.</param>
     public Task AssignHelp(
         VsHelpAssignmentRequest request) =>
         _matches.AssignHelpAsync(
@@ -159,6 +164,7 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
     /// <summary>
     /// Beküldi a becslős meccskérdés válaszát.
     /// </summary>
+    /// <param name="request">A feldolgozandó kérés adatai.</param>
     public Task SubmitGuess(
         VsGuessAnswerRequest request) =>
         _matches.SubmitGuessAsync(
@@ -169,6 +175,7 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
     /// <summary>
     /// Beküldi a feleletválasztós meccskérdés válaszát.
     /// </summary>
+    /// <param name="request">A feldolgozandó kérés adatai.</param>
     public Task SubmitChoice(
         VsChoiceAnswerRequest request) =>
         _matches.SubmitChoiceAsync(
@@ -179,6 +186,7 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
     /// <summary>
     /// Felhasználja a kiválasztott segítséget az aktuális kérdésnél.
     /// </summary>
+    /// <param name="request">A feldolgozandó kérés adatai.</param>
     public Task UseHelp(
         VsUseHelpRequest request) =>
         _matches.UseHelpAsync(
@@ -189,6 +197,7 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
     /// <summary>
     /// Kiválasztja a kapitányi kör kérdését.
     /// </summary>
+    /// <param name="request">A feldolgozandó kérés adatai.</param>
     public Task SelectCaptainQuestion(
         VsCaptainQuestionRequest request) =>
         _matches.SelectCaptainQuestionAsync(
@@ -199,6 +208,7 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
     /// <summary>
     /// Feldolgozza a SignalR-kapcsolat megszakadását.
     /// </summary>
+    /// <param name="exception">A kapcsolat megszakadását kiváltó kivétel, ha ismert.</param>
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         await _queue.DisconnectAsync(

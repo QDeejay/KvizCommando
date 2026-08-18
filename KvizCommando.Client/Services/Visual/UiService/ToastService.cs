@@ -24,30 +24,36 @@ namespace KvizCommando.Client.Services.Visual.UiService
         /// <summary>
         /// Sikeres értesítést jelenít meg.
         /// </summary>
+        /// <param name="text">A megjelenítendő vagy elküldendő szöveg.</param>
         public void Success(string text)
             => _ = Show(text, ToastType.Success);
 
         /// <summary>
         /// Hibaértesítést jelenít meg.
         /// </summary>
+        /// <param name="text">A megjelenítendő vagy elküldendő szöveg.</param>
         public void Error(string text)
             => _ = Show(text, ToastType.Error);
 
         /// <summary>
         /// Figyelmeztető értesítést jelenít meg.
         /// </summary>
+        /// <param name="text">A megjelenítendő vagy elküldendő szöveg.</param>
         public void Brief(string text)
             => _ = Show(text, ToastType.Warning);
 
         /// <summary>
         /// Tájékoztató értesítést jelenít meg.
         /// </summary>
+        /// <param name="text">A megjelenítendő vagy elküldendő szöveg.</param>
         public void Complete(string text)
             => _ = Show(text, ToastType.Info);
 
         /// <summary>
-        /// Megjeleníti a felületi elemet a megadott adatokkal.
+        /// Sorba állítja az értesítést, és szükség esetén elindítja az értesítési sor feldolgozását.
         /// </summary>
+        /// <param name="text">Az értesítésben megjelenítendő szöveg.</param>
+        /// <param name="type">Az értesítés megjelenési típusa.</param>
         public async Task Show(string text, ToastType type)
         {
             var toast = new ToastMessage

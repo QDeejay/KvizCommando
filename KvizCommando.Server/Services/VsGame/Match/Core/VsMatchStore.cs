@@ -11,6 +11,7 @@ public sealed class VsMatchStore
     /// <summary>
     /// Megkísérli hozzáadni a meccset a meccstárhoz.
     /// </summary>
+    /// <param name="match">Az inicializálandó, már zárolt meccsállapot.</param>
     public bool TryAdd(VsMatchSession match)
     {
         if (!_matches.TryAdd(match.MatchId, match))
@@ -58,18 +59,23 @@ public sealed class VsMatchStore
     /// <summary>
     /// Jelzi, hogy a meccstár tartalmazza-e a megadott játékost.
     /// </summary>
+    /// <param name="playerId">A játékos adatbázis-azonosítója.</param>
     public bool ContainsPlayer(int playerId) =>
         _playerMatches.ContainsKey(playerId);
 
     /// <summary>
     /// Megkísérli visszaadni a megadott azonosítójú elemet.
     /// </summary>
+    /// <param name="matchId">A meccs azonosítója.</param>
+    /// <param name="match">Az inicializálandó, már zárolt meccsállapot.</param>
     public bool TryGet(Guid matchId, out VsMatchSession? match) =>
         _matches.TryGetValue(matchId, out match);
 
     /// <summary>
     /// Megkísérli visszaadni a kapcsolathoz tartozó meccset és játékost.
     /// </summary>
+    /// <param name="connectionId">Az aktív SignalR-kapcsolat azonosítója.</param>
+    /// <param name="match">Az inicializálandó, már zárolt meccsállapot.</param>
     public bool TryGetByConnection(
         string connectionId,
         out VsMatchSession? match)
@@ -85,6 +91,8 @@ public sealed class VsMatchStore
     /// <summary>
     /// Megkísérli visszaadni a játékoshoz tartozó meccset és játékosállapotot.
     /// </summary>
+    /// <param name="playerId">A játékos adatbázis-azonosítója.</param>
+    /// <param name="match">Az inicializálandó, már zárolt meccsállapot.</param>
     public bool TryGetByPlayer(
         int playerId,
         out VsMatchSession? match)
@@ -98,6 +106,8 @@ public sealed class VsMatchStore
     /// <summary>
     /// Felszabadítja a játékos meccshez tartozó foglalásait.
     /// </summary>
+    /// <param name="match">Az inicializálandó, már zárolt meccsállapot.</param>
+    /// <param name="player">A mentendő gyorsítótárazott játékosállapot.</param>
     public void ReleasePlayer(VsMatchSession match, VsMatchPlayerState player)
     {
         if (_connectionMatches.TryGetValue(
@@ -146,6 +156,8 @@ public sealed class VsMatchStore
     /// <summary>
     /// Megkísérli eltávolítani a meccset a meccstárból.
     /// </summary>
+    /// <param name="matchId">A meccs azonosítója.</param>
+    /// <param name="match">Az inicializálandó, már zárolt meccsállapot.</param>
     public bool TryRemove(Guid matchId, out VsMatchSession? match)
     {
         match = null;

@@ -8,6 +8,8 @@ namespace KvizCommando.Server.Utilities
         /// <summary>
         /// Elemenként összead két azonos hosszúságú egész tömböt.
         /// </summary>
+        /// <param name="a">Az első összefűzendő tömb.</param>
+        /// <param name="b">A második összefűzendő tömb.</param>
         public static int[] AddTo(this int[] a, int[] b)
         {
             if (a.Length != b.Length)

@@ -7,9 +7,7 @@
         private List<string> _messages = new();
         public IReadOnlyList<string> Messages => _messages;
 
-        /// <summary>
-        /// Lecseréli a megjelenítendő üzenetek aktuális listáját.
-        /// </summary>
+        /// <inheritdoc />
         public void SetMessages(IEnumerable<string> newMessages)
         {
             _messages = newMessages.ToList();

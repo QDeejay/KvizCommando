@@ -5,6 +5,8 @@ public static class HelpMarkupReplacer
     /// <summary>
     /// Behelyettesíti a súgószöveg dinamikus helyőrzőit.
     /// </summary>
+    /// <param name="html">A helyőrzőket tartalmazó HTML-szöveg.</param>
+    /// <param name="tokens">A HTML helyőrzőihez rendelt értékek.</param>
     public static string Replace(
         string html,
         IReadOnlyDictionary<string, string> tokens)

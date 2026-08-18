@@ -8,6 +8,9 @@ namespace KvizCommando.Server.Services.VsGame
         /// <summary>
         /// Elmenti a rangsorolt játékhoz összeállított csapatot.
         /// </summary>
+        /// <param name="playerId">A játékos adatbázis-azonosítója.</param>
+        /// <param name="request">A rangsorolt játékhoz kiválasztott karakterhelyek.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         Task<CacheUpdateResult> SaveBattleTeamAsync(
             int playerId,
             SaveBattleTeamRequest request,

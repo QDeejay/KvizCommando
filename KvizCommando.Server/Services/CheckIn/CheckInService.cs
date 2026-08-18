@@ -47,9 +47,7 @@ namespace KvizCommando.Server.Services.CheckIn
             _vsMatch = vsMatch;
         }
 
-        /// <summary>
-        /// Visszaadja a felhasználó aktuális beléptetési követelményeit.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<CheckInGetResponse> GetStatusAsync(string userId, string sessionid, CancellationToken ct)
         {
             var response = await _playerDb.LoadCheckinDataFromDbAsync(userId, ct);
@@ -82,9 +80,7 @@ namespace KvizCommando.Server.Services.CheckIn
             };
         }
 
-        /// <summary>
-        /// Befejezi a beléptetési folyamatot, és elmenti az elfogadott adatokat.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<(IReadOnlyList<string> Errors, string Suggested, bool PreviousSessionReplaced)> CompleteAsync(
             string userId,
             CheckInPostRequest request,

@@ -11,9 +11,7 @@ namespace ResxExporter
         [Required]
         public string OutputRoot { get; set; } = null!;
 
-        /// <summary>
-        /// Végrehajtja az MSBuild feladatot.
-        /// </summary>
+        /// <inheritdoc />
         public override bool Execute()
         {
             return ResxExporterLogic.ProcessResx(

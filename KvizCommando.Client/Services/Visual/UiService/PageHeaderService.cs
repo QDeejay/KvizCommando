@@ -17,6 +17,8 @@
         /// <summary>
         /// Beállítja az oldal fejlécének címét.
         /// </summary>
+        /// <param name="title">A fejlécben megjelenítendő lokalizációs kulcs vagy szöveg.</param>
+        /// <param name="index">A lokalizálandó érték indexe.</param>
         public void SetTitle(string title, int index)
         {
             Title = title;
@@ -27,6 +29,7 @@
         /// <summary>
         /// Beállítja a vissza gomb engedélyezett állapotát.
         /// </summary>
+        /// <param name="back">A vissza gomb kívánt engedélyezett állapota.</param>
         public void SetBackBtnEna(bool back)
         {
             BackEna = back;

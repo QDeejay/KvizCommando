@@ -4,9 +4,7 @@ namespace KvizCommando.Server.Services.VsGame.Match;
 
 public sealed partial class VsMatchService
 {
-    /// <summary>
-    /// A karaktert a megadott előkészítési helyhez rendeli.
-    /// </summary>
+    /// <inheritdoc />
     public async Task SelectCharacterAsync(
         string connectionId,
         int slotNumber,
@@ -45,9 +43,7 @@ public sealed partial class VsMatchService
         await SendBroadcastMessagesAsync(messages);
     }
 
-    /// <summary>
-    /// A kiválasztott kérdéskategóriát a megadott körhöz rendeli.
-    /// </summary>
+    /// <inheritdoc />
     public async Task AssignLoadoutAsync(
         string connectionId,
         VsLoadoutAssignmentRequest request,
@@ -83,9 +79,7 @@ public sealed partial class VsMatchService
         await SendBroadcastMessagesAsync(messages);
     }
 
-    /// <summary>
-    /// A kiválasztott segítséget a megadott előkészítési helyhez rendeli.
-    /// </summary>
+    /// <inheritdoc />
     public async Task AssignHelpAsync(
         string connectionId,
         VsHelpAssignmentRequest request,
@@ -125,9 +119,7 @@ public sealed partial class VsMatchService
         await SendBroadcastMessagesAsync(messages);
     }
 
-    /// <summary>
-    /// Törli a játékos előkészítési választásait.
-    /// </summary>
+    /// <inheritdoc />
     public async Task ResetPreparationAsync(
         string connectionId,
         CancellationToken ct = default)
@@ -161,9 +153,7 @@ public sealed partial class VsMatchService
         await SendBroadcastMessagesAsync(messages);
     }
 
-    /// <summary>
-    /// Lezárja a játékos előkészítési szakaszát.
-    /// </summary>
+    /// <inheritdoc />
     public async Task FinishPreparationAsync(
         string connectionId,
         CancellationToken ct = default)

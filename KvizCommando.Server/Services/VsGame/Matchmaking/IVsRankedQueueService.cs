@@ -13,6 +13,13 @@ public interface IVsRankedQueueService
     /// <summary>
     /// Belépteti a játékost a kiválasztott rangsorolt várólistába.
     /// </summary>
+    /// <param name="playerId">A játékos adatbázis-azonosítója.</param>
+    /// <param name="sessionId">A várólistára lépéskor ellenőrzött munkamenet-azonosító.</param>
+    /// <param name="connectionId">Az aktív SignalR-kapcsolat azonosítója.</param>
+    /// <param name="classificationId">A kiválasztott rangsorolt várólista azonosítója.</param>
+    /// <param name="responseTimeMilliseconds">A kliens és a szerver között mért válaszidő ezredmásodpercben.</param>
+    /// <param name="connectionQuality">A mért válaszidőből meghatározott kapcsolatminőség.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task<VsQueueJoinResult> JoinAsync(
         int playerId,
         string sessionId,
@@ -25,6 +32,8 @@ public interface IVsRankedQueueService
     /// <summary>
     /// Eltávolítja a játékost a rangsorolt várólistából.
     /// </summary>
+    /// <param name="connectionId">Az aktív SignalR-kapcsolat azonosítója.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task<VsQueueLeaveStatus> LeaveAsync(
         string connectionId,
         CancellationToken ct = default);
@@ -32,6 +41,8 @@ public interface IVsRankedQueueService
     /// <summary>
     /// Feldolgozza a klienskapcsolat megszakadását.
     /// </summary>
+    /// <param name="connectionId">Az aktív SignalR-kapcsolat azonosítója.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task DisconnectAsync(
         string connectionId,
         CancellationToken ct = default);
@@ -39,6 +50,8 @@ public interface IVsRankedQueueService
     /// <summary>
     /// Eltávolítja a játékost a várólistából vagy a hozzá tartozó meccsből.
     /// </summary>
+    /// <param name="playerId">A játékos adatbázis-azonosítója.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task LeavePlayerAsync(
         int playerId,
         CancellationToken ct = default);

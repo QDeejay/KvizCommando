@@ -14,14 +14,17 @@ namespace KvizCommando.Client.Services.Visual
         /// <summary>
         /// Betölti a megadott HTML-tartalmat.
         /// </summary>
+        /// <param name="path">A betöltendő jelölőfájl relatív útvonala.</param>
         public async Task<MarkupString> LoadingHtmlAsync(string path)
         {
             return new MarkupString(await _http.GetStringAsync(path));
         }
 
         /// <summary>
-        /// Betölti a megadott HTML-tartalmat.
+        /// Betölti a kiválasztott, kultúrafüggő tájékoztatóoldalt.
         /// </summary>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
+        /// <param name="reqHtml">A betöltendő HTML-erőforrás típusa.</param>
         public async Task<MarkupString> LoadingHtmlAsync(string culture, Html reqHtml)
         {
             var html = new MarkupString(string.Empty);

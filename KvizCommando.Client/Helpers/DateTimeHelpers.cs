@@ -5,6 +5,9 @@
         /// <summary>
         /// Kiszámítja a célidőpontig hátralévő teljes órákat és perceket.
         /// </summary>
+        /// <param name="utcTarget">A visszaszámlálás céljának UTC időpontja.</param>
+        /// <param name="hours">A kiszámított teljes órák kimeneti értéke.</param>
+        /// <param name="minutes">A fennmaradó percek kimeneti értéke.</param>
         public static void GetTimeLeft(DateTime utcTarget, out int hours, out int minutes)
         {
             DateTime utcNow = DateTime.UtcNow;

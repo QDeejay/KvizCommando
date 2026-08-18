@@ -22,9 +22,7 @@ namespace KvizCommando.Client.Services.ClientCache
         public PendingSlot[]? PendingSlots => _snapshot?.PendingSlots;
         public QuestionExtendedInfo? ExtendedInfo => _snapshot?.ExtendedInfo;
 
-        /// <summary>
-        /// Szükség esetén betölti a képernyő aktuális állapotát.
-        /// </summary>
+        /// <inheritdoc />
         public async Task EnsureLoadedAsync()
         {
             if (IsLoaded) return;
@@ -38,9 +36,7 @@ namespace KvizCommando.Client.Services.ClientCache
             finally { _gate.Release(); }
         }
 
-        /// <summary>
-        /// Friss adatot tölt a képernyő gyorsítótárába.
-        /// </summary>
+        /// <inheritdoc />
         public async Task RefreshAsync()
         {
             await _gate.WaitAsync();
@@ -52,14 +48,10 @@ namespace KvizCommando.Client.Services.ClientCache
             finally { _gate.Release(); }
         }
 
-        /// <summary>
-        /// Érvényteleníti a gyorsítótárat, hogy a következő lekérés friss adatot töltsön.
-        /// </summary>
+        /// <inheritdoc />
         public void Invalidate() => _dirty = true;
 
-        /// <summary>
-        /// Törli a szolgáltatásban tárolt aktuális állapotot.
-        /// </summary>
+        /// <inheritdoc />
         public void Clear()
         {
             _snapshot = null;

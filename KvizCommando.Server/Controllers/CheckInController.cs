@@ -41,6 +41,8 @@ public sealed class CheckInController : ControllerBase
     /// <summary>
     /// Lekéri az aktuális beléptetési állapotot.
     /// </summary>
+    /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     [HttpGet]
     [ProducesResponseType(typeof(CheckInGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -60,6 +62,8 @@ public sealed class CheckInController : ControllerBase
     /// <summary>
     /// Feldolgozza és elmenti a beléptetés során megadott adatokat.
     /// </summary>
+    /// <param name="req">A feldolgozandó beléptetési kérés.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     [HttpPost]
     [Consumes("application/json")]
     [ProducesResponseType(typeof(CheckInPostResponse), StatusCodes.Status200OK)]
@@ -70,7 +74,7 @@ public sealed class CheckInController : ControllerBase
                      ?? User.FindFirstValue("sub")
                      ?? throw new InvalidOperationException("Missing user id");
 
-        // EF execution strategy (tranziens hibákra újrapróbál)
+        // Az EF végrehajtási stratégiája a teljes tranzakciót ismétli meg átmeneti adatbázishibánál.
         var strategy = _db.Database.CreateExecutionStrategy();
         var SuggestedName = string.Empty;
         var previousSessionReplaced = false;
@@ -84,7 +88,7 @@ public sealed class CheckInController : ControllerBase
         if (errorKeys.Count == 0 && previousSessionReplaced)
             await ReplacePreviousLoginAsync(userId);
 
-        // Opaque bearer esetén jelzünk a kliensnek, hogy /auth/refresh szükséges.
+        // Opaque bearer esetén a kliensnek külön tokenfrissítést kell kérnie a claimváltozás átvételéhez.
         var isBearer = (await HttpContext.AuthenticateAsync(IdentityConstants.BearerScheme)).Succeeded;
 
         var response = new CheckInPostResponse
@@ -97,7 +101,7 @@ public sealed class CheckInController : ControllerBase
             PreviousSessionReplaced = previousSessionReplaced
         };
 
-        // Szerződés szerint mindig 200 OK + body (Success/Errors/RequiresTokenRefresh).
+        // A kliens a válasz törzséből kezeli az üzleti hibákat és a tokenfrissítés szükségességét.
         return Ok(response);
     }
 

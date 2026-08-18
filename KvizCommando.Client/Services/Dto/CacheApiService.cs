@@ -19,9 +19,7 @@ namespace KvizCommando.Client.Services.Dto
             _sessionCache = sessioncache;
         }
 
-        /// <summary>
-        /// Lekéri a kezdőképernyő megjelenítéséhez szükséges adatokat.
-        /// </summary>
+        /// <inheritdoc />
         public Task<HomeDTOs?> GetHomeScreenAsync(CancellationToken ct = default)
         {
             var sessionId = _sessionCache.SessionId;
@@ -29,9 +27,7 @@ namespace KvizCommando.Client.Services.Dto
             return GetAsync<HomeDTOs>($"{SCREEN_ROUTE}/home?sessionId={sessionId}", ct);
         }
 
-        /// <summary>
-        /// Lekéri a kérdéskezelő képernyő adatait.
-        /// </summary>
+        /// <inheritdoc />
         public Task<QuestionDtos?> GetQuestionAsync(
            CancellationToken ct = default)
         {
@@ -42,9 +38,7 @@ namespace KvizCommando.Client.Services.Dto
                 ct);
         }
 
-        /// <summary>
-        /// Lekéri a csapatképernyő adatait.
-        /// </summary>
+        /// <inheritdoc />
         public Task<TeamDtos?> GetTeamAsync(
             CancellationToken ct = default)
         {
@@ -55,9 +49,7 @@ namespace KvizCommando.Client.Services.Dto
                 ct);
         }
 
-        /// <summary>
-        /// Lekéri az egyéni játék választóképernyőjének adatait.
-        /// </summary>
+        /// <inheritdoc />
         public Task<SoloGameDtos?> GetSoloAsync(
             CancellationToken ct = default)
         {
@@ -68,9 +60,7 @@ namespace KvizCommando.Client.Services.Dto
                 ct);
         }
 
-        /// <summary>
-        /// Lekéri a többjátékos mód választóképernyőjének adatait.
-        /// </summary>
+        /// <inheritdoc />
         public Task<VsGameDtos?> GetVsGameAsync(
             CancellationToken ct = default)
         {

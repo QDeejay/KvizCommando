@@ -9,6 +9,7 @@ public static class RecruitHelpRules
     /// <summary>
     /// Összeállítja a súgószöveg dinamikus helyettesítési értékeit.
     /// </summary>
+    /// <param name="appStates">A súgószöveg változóinak feloldásához használt alkalmazásállapot.</param>
     public static IReadOnlyDictionary<string, string> BuildTokens(
         AppState appStates)
     {

@@ -14,6 +14,7 @@ namespace KvizCommando.Server.Identity
         /// Ellenőrzi a megjelenített név (DisplayName) érvényességét és visszaadja a hibakódok listáját.
         /// Üres lista esetén a név érvényes.
         /// </summary>
+        /// <param name="displayName">A menteni kívánt nyilvános játékosnév.</param>
         public static IReadOnlyList<string> Validate(string? displayName)
         {
             var errors = new List<string>();
@@ -36,7 +37,6 @@ namespace KvizCommando.Server.Identity
             // Az engedélyezett készlet jelenleg ASCII; Unicode támogatásakor a validációs szabályt is bővíteni kell.
             if (!string.IsNullOrEmpty(CheckInValidationOptions.DisplayNameAllowedChars))
             {
-                // HashSet a gyors kereséshez
                 var allowed = CheckInValidationOptions.DisplayNameAllowedChars.ToHashSet();
                 if (name.Any(ch => !allowed.Contains(ch)))
                     errors.Add(IdentityErrorCodes.DisplayNameInvalidCharacters);

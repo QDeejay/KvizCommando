@@ -6,9 +6,7 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {
     public class PlayerLoadoutConfiguration : IEntityTypeConfiguration<PlayerLoadout>
     {
-        /// <summary>
-        /// Beállítja az entitás EF Core leképezését és adatbázis-korlátait.
-        /// </summary>
+        /// <inheritdoc />
         public void Configure(EntityTypeBuilder<PlayerLoadout> b)
         {
             b.ToTable("PlayerLoadouts");

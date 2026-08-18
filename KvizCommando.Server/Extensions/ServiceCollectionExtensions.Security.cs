@@ -18,6 +18,8 @@ namespace KvizCommando.Server.Infrastructure.Extensions
         /// <summary>
         /// Regisztrálja a biztonsági és személyesadat-kezelési szolgáltatásokat.
         /// </summary>
+        /// <param name="services">A bővítendő szolgáltatásgyűjtemény.</param>
+        /// <param name="config">Az alkalmazás konfigurációja.</param>
         public static IServiceCollection AddSecurityAndPii(this IServiceCollection services, IConfiguration config)
         {
             services.Configure<SecurityOptions>(config.GetSection("Security"));

@@ -18,9 +18,7 @@ public class AuditLogger : IAuditLogger
         _filePath = Path.Combine(logDir, "audit.log");
     }
 
-    /// <summary>
-    /// Auditbejegyzést ír a megadott eseményről.
-    /// </summary>
+    /// <inheritdoc />
     public Task LogAsync(string eventName, string? userId, string? ipAddress)
     {
         var entry = new

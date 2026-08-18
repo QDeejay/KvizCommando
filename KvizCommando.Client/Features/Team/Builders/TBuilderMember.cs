@@ -19,6 +19,8 @@ namespace KvizCommando.Client.Features.Team.Builders
         /// <summary>
         /// Összeállítja a karakter felső adatblokkjának nézetmodelljét.
         /// </summary>
+        /// <param name="member">A megjelenítendő csapattag adatai.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public UpperBlockVm BuildMemberUpperVm(TeamMemberDto member, string culture)
         {
             var vm = new UpperBlockVm();
@@ -55,6 +57,8 @@ namespace KvizCommando.Client.Features.Team.Builders
         /// <summary>
         /// Összeállítja a karakter adatainak alsó nézetmodelljét.
         /// </summary>
+        /// <param name="member">A megjelenítendő csapattag adatai.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public BottomBlockVm BuildMemberBottomVm(TeamMemberDto member, string culture)
         {
             var vm = new BottomBlockVm();
@@ -72,6 +76,10 @@ namespace KvizCommando.Client.Features.Team.Builders
         /// <summary>
         /// Összeállítja a karakter fejlesztési adatainak alsó nézetmodelljét.
         /// </summary>
+        /// <param name="subPos">A kiválasztott alsó nézetrész sorszáma.</param>
+        /// <param name="member">A megjelenítendő csapattag adatai.</param>
+        /// <param name="usedPoints">A már felhasznált fejlesztési pontok száma.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public BottomDevVm BuildMemberBottomDevVm(int subPos, TeamMemberDto member, int[] usedPoints, string culture)
         {
             int ori = TeamHelpers.NormalizeCategory(member.SecondAttitude.Category[0]);

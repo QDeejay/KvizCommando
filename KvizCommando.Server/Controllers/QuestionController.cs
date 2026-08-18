@@ -15,8 +15,7 @@ using System.Security.Claims;
 namespace KvizCommando.Server.Controllers
 {
     /// <summary>
-    /// Domain műveletek a Question oldalhoz (POST/PUT/DELETE).
-    /// Jelenleg: factory slotok mentése.
+    /// A kérdésképernyő lekérdezési, kérdéshely-kezelési és újkérdés-beküldési végpontjait biztosítja.
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
@@ -43,6 +42,8 @@ namespace KvizCommando.Server.Controllers
         /// <summary>
         /// Lekéri a kérdéskezelő képernyő megjelenítési adatait.
         /// </summary>
+        /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         [HttpGet("screen")]
         [ProducesResponseType(typeof(QuestionDtos), 200)]
         [ProducesResponseType(401)]
@@ -74,6 +75,8 @@ namespace KvizCommando.Server.Controllers
         /// <summary>
         /// Elmenti az aktuális játékos gyári kérdéshelyeinek összeállítását.
         /// </summary>
+        /// <param name="dto">A feldolgozandó kérés adatai.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         [HttpPost("factory")]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -106,7 +109,7 @@ namespace KvizCommando.Server.Controllers
                 return NotFound("No Player record found for this user.");
 
 
-            // write-through frissítés a cache-ben + store-ban
+            // A módosítás ugyanazon műveletben frissíti a cache-t és jelöli tartós mentésre az érintett adatot.
             var result = await _questionService.SaveFactorySlotsAsync(playerId.Value, dto, ct);
 
             if (result == CacheUpdateResult.SessionMismatch)
@@ -135,6 +138,8 @@ namespace KvizCommando.Server.Controllers
         /// <summary>
         /// Végrehajtja a kérdéshelyen kért kezelési műveletet.
         /// </summary>
+        /// <param name="dto">A feldolgozandó kérés adatai.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ApiResponse), 200)]
@@ -193,6 +198,8 @@ namespace KvizCommando.Server.Controllers
         /// <summary>
         /// Beküldi az új felhasználói kérdést ellenőrzésre.
         /// </summary>
+        /// <param name="dto">A feldolgozandó kérés adatai.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ApiResponse), 200)]
@@ -265,7 +272,11 @@ namespace KvizCommando.Server.Controllers
 
         }
 
-        // Egységes API válasz
+        /// <summary>
+        /// A kérdésműveletek egységes sikerességi válaszát írja le.
+        /// </summary>
+        /// <param name="Success">Jelzi, hogy az üzleti művelet sikeresen befejeződött-e.</param>
+        /// <param name="ServerVersion">A válaszhoz tartozó opcionális szerververzió.</param>
         public sealed record ApiResponse(bool Success, string? ServerVersion = null)
         {
             /// <summary>

@@ -49,6 +49,7 @@ public sealed class SoloGameHub : Hub<ISoloGameHubClient>
     /// <summary>
     /// Elindítja a kért egyéni játékot.
     /// </summary>
+    /// <param name="request">A feldolgozandó kérés adatai.</param>
     public async Task<StartSoloHubResponse> StartSoloGame(
         StartSoloGameRequest request)
     {
@@ -101,6 +102,7 @@ public sealed class SoloGameHub : Hub<ISoloGameHubClient>
     /// <summary>
     /// Beküldi az egyéni játék válaszát.
     /// </summary>
+    /// <param name="answer">A kiértékelendő válasz és annak kliensoldali időadatai.</param>
     public async Task<SoloHubAnswerResponse> SubmitAnswer(
         SoloAnswerDto answer)
     {

@@ -6,9 +6,7 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {
     public class UserQuestionConfiguration : IEntityTypeConfiguration<UserQuestion>
     {
-        /// <summary>
-        /// Beállítja az entitás EF Core leképezését és adatbázis-korlátait.
-        /// </summary>
+        /// <inheritdoc />
         public void Configure(EntityTypeBuilder<UserQuestion> builder)
         {
             builder.HasKey(u => u.Id);

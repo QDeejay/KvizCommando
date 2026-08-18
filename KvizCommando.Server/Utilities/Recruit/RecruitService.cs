@@ -11,6 +11,8 @@ namespace KvizCommando.Server.Utilities.Recruit
         /// <summary>
         /// Létrehozza a megadott számú és lejáratú toborzási helyet.
         /// </summary>
+        /// <param name="count">A létrehozandó elemek száma.</param>
+        /// <param name="expDays">A létrehozástól számított érvényesség napokban.</param>
         public static RecruitSlot Generate(int count, int expDays)
         {
             return new RecruitSlot

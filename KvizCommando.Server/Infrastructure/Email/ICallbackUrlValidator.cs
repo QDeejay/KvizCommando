@@ -3,13 +3,17 @@
 public interface ICallbackUrlValidator
 {
     /// <summary>
-    /// Igazat ad vissza, ha a megadott abszolút URL hostja az engedélyezett domain(ek) egyike.
+    /// Ellenőrzi, hogy az abszolút URL állomásneve szerepel-e az engedélyezett tartományok között.
     /// </summary>
+    /// <param name="absoluteUrl">Az ellenőrzendő abszolút URL; <see langword="null"/> esetén az ellenőrzés sikertelen.</param>
+    /// <returns><see langword="true"/>, ha a cím abszolút és szerepel az engedélyezett célok között.</returns>
     bool IsAllowedAbsoluteUrl(string? absoluteUrl);
 
     /// <summary>
-    /// A megadott returnUrl (lehet relatív vagy abszolút) alapján kanonikus, whitelistelt abszolút URL-t ad vissza,
-    /// vagy null-t, ha nem engedélyezett.
+    /// Relatív vagy abszolút visszatérési címből ellenőrzött, kanonikus abszolút URI-t képez.
     /// </summary>
+    /// <param name="returnUrl">Az ellenőrzendő relatív vagy abszolút visszahívási cím.</param>
+    /// <param name="serverBaseUri">A relatív visszahívási cím feloldásához használt szerver-alapcím.</param>
+    /// <returns>Az engedélyezett abszolút URI, vagy <see langword="null"/>, ha a cím hibás vagy nem engedélyezett.</returns>
     Uri? TryBuildWhitelistedAbsoluteUrl(string? returnUrl, Uri serverBaseUri);
 }

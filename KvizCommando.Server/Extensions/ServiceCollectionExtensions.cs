@@ -26,6 +26,7 @@ public static class ServiceCollectionExtensions
     /// <summary>
     /// Regisztrálja az alkalmazás saját szolgáltatásait.
     /// </summary>
+    /// <param name="services">A bővítendő szolgáltatásgyűjtemény.</param>
     public static IServiceCollection AddCustomServices(this IServiceCollection services)
     {
         // Játékos- és munkamenetkezelés

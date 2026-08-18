@@ -22,6 +22,10 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
         /// <summary>
         /// Összeállítja a jelölt felvételéhez tartozó modális nézetmodellt.
         /// </summary>
+        /// <param name="candidate">A megjelenítendő vagy felveendő jelölt adatai.</param>
+        /// <param name="hpos">A toborzási hely sorszáma.</param>
+        /// <param name="candno">A jelölt helyének sorszáma.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public ModalHireVm BuildHireVm(CandidateDto candidate, int hpos, int candno, string culture)
         {
             var vm = new ModalHireVm();
@@ -70,6 +74,9 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
         /// <summary>
         /// Összeállítja a csapat előléptetéséhez tartozó modális nézetmodellt.
         /// </summary>
+        /// <param name="info">A nézetmodellhez szükséges csapatadatok.</param>
+        /// <param name="help">A nézetmodellhez szükséges segítségadatok.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public ModalTeamPromoteVm BuildTeamPromoteVm(
             TeamExtendedInfo info,
             HelpDto help,
@@ -176,6 +183,8 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
         /// <summary>
         /// Összeállítja a karakter előléptetéséhez tartozó modális nézetmodellt.
         /// </summary>
+        /// <param name="member">A megjelenítendő csapattag adatai.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public ModalPromoteVm BuildPromoteVm(TeamMemberDto member, string culture)
         {
             var vm = new ModalPromoteVm();
@@ -227,6 +236,8 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
         /// <summary>
         /// Összeállítja a karakter nyugdíjazásához tartozó modális nézetmodellt.
         /// </summary>
+        /// <param name="member">A megjelenítendő csapattag adatai.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public ModalRetireVm BuildRetireVm(TeamMemberDto member, string culture)
         {
             var vm = new ModalRetireVm();
@@ -263,6 +274,8 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
         /// <summary>
         /// Összeállítja a karakter kezeléséhez tartozó modális nézetmodellt.
         /// </summary>
+        /// <param name="member">A megjelenítendő csapattag adatai.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public ModalHandleVm BuildHandleVm(TeamMemberDto member, string culture)
         {
             var vm = new ModalHandleVm();

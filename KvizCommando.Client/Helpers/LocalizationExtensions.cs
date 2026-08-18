@@ -5,6 +5,8 @@
         /// <summary>
         /// A formázási helyőrzőket a hiányzó argumentumok mellett is biztonságosan behelyettesíti.
         /// </summary>
+        /// <param name="template">A helyőrzőket tartalmazó formátumszöveg.</param>
+        /// <param name="args">A formátumszöveg helyőrzőibe kerülő értékek.</param>
         public static string FormatSafe(this string template, params object[] args)
         {
             if (string.IsNullOrEmpty(template) || args == null || args.Length == 0)

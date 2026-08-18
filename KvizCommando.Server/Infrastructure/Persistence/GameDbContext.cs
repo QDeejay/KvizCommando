@@ -27,7 +27,3 @@ namespace KvizCommando.Server.Infrastructure.Persistence
 
     }
 }
-
-
-/// Add-Migration InitialGame -Context GameDbContext -OutputDir "Data\Migrations\Game"
-/// Update-Database -Context GameDbContext

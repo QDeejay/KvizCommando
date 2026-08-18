@@ -9,6 +9,8 @@ namespace KvizCommando.Client.Helpers
         /// <summary>
         /// Visszaadja a rendfokozat lokalizált nevét.
         /// </summary>
+        /// <param name="index">A lokalizálandó érték indexe.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public static string GetName(int index, string culture)
         {
             var lang = LocationNormalizer.CultFormat(culture); ;
@@ -24,6 +26,8 @@ namespace KvizCommando.Client.Helpers
         /// <summary>
         /// Visszaadja a rendfokozat lokalizált rövid nevét.
         /// </summary>
+        /// <param name="index">A lokalizálandó érték indexe.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public static string GetShort(int index, string culture)
         {
             var lang = LocationNormalizer.CultFormat(culture);
@@ -38,6 +42,8 @@ namespace KvizCommando.Client.Helpers
         /// <summary>
         /// Visszaadja a rendfokozati osztály lokalizált nevét.
         /// </summary>
+        /// <param name="index">A lokalizálandó érték indexe.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public static string GetClass(int index, string culture)
         {
             var lang = LocationNormalizer.CultFormat(culture);
@@ -52,6 +58,8 @@ namespace KvizCommando.Client.Helpers
         /// <summary>
         /// Visszaadja a csapatszint lokalizált nevét.
         /// </summary>
+        /// <param name="index">A lokalizálandó érték indexe.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public static string GetTeam(int index, string culture)
         {
             var lang = LocationNormalizer.CultFormat(culture);

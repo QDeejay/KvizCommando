@@ -28,9 +28,7 @@ public sealed partial class VsMatchService : IVsMatchService
         _logger = logger;
     }
 
-    /// <summary>
-    /// Lezárja a várólista kijelölt játékosait egy új meccshez.
-    /// </summary>
+    /// <inheritdoc />
     public VsMatchSession LockMatch(
         IReadOnlyList<VsRankedQueueEntry> entries)
     {
@@ -81,9 +79,7 @@ public sealed partial class VsMatchService : IVsMatchService
         return match;
     }
 
-    /// <summary>
-    /// Előkészíti a lezárt meccs játékosait, kérdéseit és kezdőállapotát.
-    /// </summary>
+    /// <inheritdoc />
     public async Task<bool> InitializeLockedMatchAsync(
         VsMatchSession match,
         CancellationToken ct = default)

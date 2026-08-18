@@ -273,9 +273,7 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
         _pages = [];
     }
 
-    /// <summary>
-    /// Felszabadítja a példány által használt erőforrásokat.
-    /// </summary>
+    /// <inheritdoc />
     public void Dispose()
     {
         Ui.Header.OnTitleChanged -= OnPageChanged;

@@ -16,6 +16,8 @@ namespace KvizCommando.Server.Services.PlayerCache
         /// <summary>
         /// A megadott játékosok módosított cache-adatait tartós tárba írja.
         /// </summary>
+        /// <param name="playerIds">A tartós tárba írandó játékosok azonosítói.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         public async Task FlushAsync(
             int[] playerIds,
             CancellationToken ct = default)

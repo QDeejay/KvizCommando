@@ -21,6 +21,10 @@ public sealed class VsBattleTeamBuilder
     /// <summary>
     /// Összeállítja a bemeneti adatokhoz tartozó megjelenítési modellt.
     /// </summary>
+    /// <param name="data">A nézetmodell felépítéséhez használt forrásadat.</param>
+    /// <param name="selectedSlots">A felhasználó által kiválasztott csapattaghelyek.</param>
+    /// <param name="isDirty">Jelzi, hogy a kiválasztás eltér-e a mentett állapottól.</param>
+    /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
     public VsBattleTeamVm Build(
         VsGameDtos data,
         IReadOnlyCollection<int> selectedSlots,

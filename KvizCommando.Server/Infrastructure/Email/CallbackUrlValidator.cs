@@ -14,9 +14,7 @@ public class CallbackUrlValidator : ICallbackUrlValidator
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
     }
 
-    /// <summary>
-    /// Jelzi, hogy az abszolút URL hostja és sémája engedélyezett-e.
-    /// </summary>
+    /// <inheritdoc />
     public bool IsAllowedAbsoluteUrl(string? absoluteUrl)
     {
         if (string.IsNullOrWhiteSpace(absoluteUrl)) return false;
@@ -24,20 +22,17 @@ public class CallbackUrlValidator : ICallbackUrlValidator
         return _allowedHosts.Contains(NormalizeHost(uri.Host));
     }
 
-    /// <summary>
-    /// Engedélyezett abszolút callback URL-t állít elő a megadott visszatérési címből.
-    /// </summary>
+    /// <inheritdoc />
     public Uri? TryBuildWhitelistedAbsoluteUrl(string? returnUrl, Uri serverBaseUri)
     {
         if (string.IsNullOrWhiteSpace(returnUrl)) return null;
 
-        // Ha abszolút URL
         if (Uri.TryCreate(returnUrl, UriKind.Absolute, out var absolute))
         {
             return _allowedHosts.Contains(NormalizeHost(absolute.Host)) ? absolute : null;
         }
 
-        // Ha relatív, a serverBaseUri-t használjuk alapnak, de a hostot whitelisteljük
+        // Relatív címnél a feloldás után is ellenőrizni kell a hostot, különben nyílt átirányítás kerülhet a folyamatba.
         if (Uri.TryCreate(serverBaseUri, returnUrl, out var combined))
         {
             return _allowedHosts.Contains(NormalizeHost(combined.Host)) ? combined : null;

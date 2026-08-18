@@ -14,6 +14,8 @@ public static class IdentityServiceCollectionExtensions
     /// <summary>
     /// Regisztrálja és konfigurálja az alkalmazás Identity szolgáltatásait.
     /// </summary>
+    /// <param name="services">A bővítendő szolgáltatásgyűjtemény.</param>
+    /// <param name="configuration">Az alkalmazás konfigurációja.</param>
     public static IServiceCollection AddCustomIdentity(
         this IServiceCollection services,
         IConfiguration configuration)

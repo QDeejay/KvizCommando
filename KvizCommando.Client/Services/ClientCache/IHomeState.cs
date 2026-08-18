@@ -10,22 +10,21 @@ namespace KvizCommando.Client.Services.ClientCache
         /// <summary>
         /// Szükség esetén betölti a képernyő aktuális állapotát.
         /// </summary>
-        Task EnsureLoadedAsync();    // első használatkor betölti, ha még nem
+        Task EnsureLoadedAsync();
         /// <summary>
         /// Friss adatot tölt a képernyő gyorsítótárába.
         /// </summary>
-        Task RefreshAsync();         // szerver művelet után explicit frissítés
+        Task RefreshAsync();
         /// <summary>
-        /// Eltávolítja a cache-ből a megadott UserId-hez tartozó PlayerId-t (pl. kijelentkezéskor).
+        /// Elavultnak jelöli az állapotpillanatképet, de az utolsó betöltött adatot megtartja a következő frissítésig.
         /// </summary>
-        void Invalidate();           // jelöld “piszkosnak”, következő Ensure újratölt
+        void Invalidate();
 
         /// <summary>
-        /// Teljes cache ürítése (pl. admin flush vagy maintenance során).
+        /// Törli az állapotpillanatképet; a következő betöltési kérés ismét a szerverről tölti fel.
         /// </summary>
-        void Clear();                // törli a cache-t, következő Ensure újratölt
+        void Clear();
 
-        // közvetlen elérés a 3 fő részhez
         UserMainData? UserMainData { get; }
         HomeScreen? HomeScreen { get; }
         HomeExtendedInfo? ExtendedInfo { get; }

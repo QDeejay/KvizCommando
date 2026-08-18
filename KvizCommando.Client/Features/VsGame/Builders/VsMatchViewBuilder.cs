@@ -43,6 +43,7 @@ public sealed class VsMatchViewBuilder
     /// <summary>
     /// Összeállítja a rangsorolt várólista nézetadatait.
     /// </summary>
+    /// <param name="snapshot">A kliensnek továbbítandó aktuális állapotpillanatkép.</param>
     public VsQueueViewData BuildQueue(
         VsRankedQueueSnapshot snapshot)
     {
@@ -69,6 +70,8 @@ public sealed class VsMatchViewBuilder
     /// <summary>
     /// Összeállítja a bemeneti adatokhoz tartozó megjelenítési modellt.
     /// </summary>
+    /// <param name="snapshot">A kliensnek továbbítandó aktuális állapotpillanatkép.</param>
+    /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
     public VsMatchViewData Build(
         VsMatchSnapshot snapshot,
         string culture)

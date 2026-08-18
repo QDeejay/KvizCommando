@@ -69,6 +69,8 @@ public static class VsBattleClassificationRules
     /// <summary>
     /// Visszaadja azokat a rangsorolt osztályokat, amelyekbe a csapat beléphet.
     /// </summary>
+    /// <param name="teamRank">A csapat aktuális rangja.</param>
+    /// <param name="memberRanks">A kiválasztott csapattagok rangjai.</param>
     public static int[] GetEligibleClassificationIds(
         int teamRank,
         IReadOnlyCollection<int> memberRanks)
@@ -88,12 +90,17 @@ public static class VsBattleClassificationRules
     /// <summary>
     /// Jelzi, hogy a megadott csapatlétszám támogatott-e.
     /// </summary>
+    /// <param name="partySize">A csapatba választott tagok száma.</param>
     public static bool IsSupportedPartySize(int partySize) =>
         List.Any(rule => rule.RequiredPartySize == partySize);
 
     /// <summary>
     /// Jelzi, hogy a karakter kiválasztható-e a rangsorolt csapatba.
     /// </summary>
+    /// <param name="teamRank">A csapat aktuális rangja.</param>
+    /// <param name="energyPoints">A csapat rendelkezésre álló energiapontjai.</param>
+    /// <param name="memberRank">A csapattag aktuális rangja.</param>
+    /// <param name="memberXp">A csapattag aktuális tapasztalati pontja.</param>
     public static bool CanSelectMember(
         int teamRank,
         int energyPoints,
@@ -107,6 +114,8 @@ public static class VsBattleClassificationRules
     /// <summary>
     /// Jelzi, hogy a karakter nyugdíjazásra vár-e.
     /// </summary>
+    /// <param name="memberRank">A csapattag aktuális rangja.</param>
+    /// <param name="memberXp">A csapattag aktuális tapasztalati pontja.</param>
     public static bool IsAwaitingRetirement(
         int memberRank,
         int memberXp) =>
@@ -138,6 +147,7 @@ public static class VsBattleClassificationRules
     /// <summary>
     /// Visszaadja a ranghoz tartozó rendfokozati osztályt.
     /// </summary>
+    /// <param name="rank">A feloldandó rang értéke.</param>
     public static int ResolveRankClass(int rank) =>
         rank == 0 ? 0 : (rank - 1) / 3 + 1;
 }

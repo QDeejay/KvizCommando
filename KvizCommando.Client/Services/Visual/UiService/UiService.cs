@@ -20,6 +20,7 @@ namespace KvizCommando.Client.Services.Visual.UiService
         /// <summary>
         /// Kéri a megadott alkalmazásállapotok újratöltését.
         /// </summary>
+        /// <param name="reqTypes">Az újratöltés során frissítendő képernyőállapotok.</param>
         public Task ReloadAsync(params ReqStates[] reqTypes)
             => ReloadRequested?.Invoke(reqTypes) ?? Task.CompletedTask;
         public UiServices(

@@ -6,9 +6,7 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {
     public class PlayerCategoryStatConfiguration : IEntityTypeConfiguration<PlayerCategoryStat>
     {
-        /// <summary>
-        /// Beállítja az entitás EF Core leképezését és adatbázis-korlátait.
-        /// </summary>
+        /// <inheritdoc />
         public void Configure(EntityTypeBuilder<PlayerCategoryStat> b)
         {
             b.ToTable("PlayerCategoryStats");

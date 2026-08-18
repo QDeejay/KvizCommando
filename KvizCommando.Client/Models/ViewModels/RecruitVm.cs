@@ -5,6 +5,12 @@
         public List<RecruitBlock> Cards { get; } = new();
         public string Info { get; set; } = string.Empty;
     }
+    /// <summary>
+    /// Egy toborzási kártya láthatóságát és kattintási azonosítóját kapcsolja a jelölt adataihoz.
+    /// </summary>
+    /// <param name="Show">Jelzi, hogy a kártya megjelenjen-e.</param>
+    /// <param name="ClickId">A felületi művelet azonosítója.</param>
+    /// <param name="Card">A megjelenítendő jelölt kártyaadatai.</param>
     public sealed record RecruitBlock(
         bool Show,
         int ClickId,

@@ -1,7 +1,7 @@
 ﻿namespace KvizCommando.Server.Infrastructure.Options
 {
     /// <summary>
-    /// Biztonsági beállítások. Pepper és AE kapcsolók. Töltsd fel appsettings-ből.
+    /// Az e-mail-keresési kivonat és az SQL Server oszloptitkosítás konfigurációs értékeit tartalmazza.
     /// </summary>
     public class SecurityOptions
     {

@@ -12,6 +12,8 @@ namespace KvizCommando.Client.Helpers
         /// <summary>
         /// A kategóriamaszk alapján frissíti a választható kategóriákat.
         /// </summary>
+        /// <param name="otype">A módosítandó kategóriaválasztás típusa.</param>
+        /// <param name="categorymask">A választható kategóriákat jelölő bitmaszk.</param>
         public CategoryOption[] OptionsUpdate(optionType otype, bool[] categorymask)
         {
             var MergedMask = new bool[18];
@@ -37,6 +39,8 @@ namespace KvizCommando.Client.Helpers
         /// <summary>
         /// Visszaadja a kategóriakód lokalizált feliratát.
         /// </summary>
+        /// <param name="code">A lokalizálandó kategóriakód.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public string ResolveLabel(int code, string culture)
         {
             return _lookup.ResolveLabel(code, culture);

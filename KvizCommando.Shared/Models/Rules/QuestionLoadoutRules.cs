@@ -8,6 +8,7 @@ public static class QuestionLoadoutRules
     /// <summary>
     /// Visszaadja a csapatszinthez tartozó kérdéslista méretét.
     /// </summary>
+    /// <param name="teamLevel">A csapat aktuális szintje.</param>
     public static int GetLoadoutSize(int teamLevel)
     {
         if (teamLevel <= 0)
@@ -26,6 +27,8 @@ public static class QuestionLoadoutRules
     /// <summary>
     /// Visszaadja a kérdéslistában használható saját kérdések legnagyobb számát.
     /// </summary>
+    /// <param name="loadoutSize">A kérdés-összeállítás teljes mérete.</param>
+    /// <param name="occupiedUserSlots">A saját kérdéssel már elfoglalt helyek száma.</param>
     public static int GetOwnQuestionLimit(
         int loadoutSize,
         int occupiedUserSlots)

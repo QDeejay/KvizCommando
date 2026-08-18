@@ -1,5 +1,11 @@
 namespace KvizCommando.Shared.Models.Rules
 {
+    /// <summary>
+    /// Egy csapatsegítséget a feloldási rangszabály és a hatásmódosító közös tábláihoz kapcsol.
+    /// </summary>
+    /// <param name="HelpId">A csapatsegítség azonosítója.</param>
+    /// <param name="RankRuleIndex">A feloldási szintet tartalmazó rangszabály indexe.</param>
+    /// <param name="ModifierIndex">A segítség hatását tartalmazó módosító indexe.</param>
     public sealed record TeamHelpRule(
     int HelpId,
     int RankRuleIndex,
@@ -60,12 +66,14 @@ namespace KvizCommando.Shared.Models.Rules
         /// <summary>
         /// Visszaadja a megadott csapatsegítség szabályait.
         /// </summary>
+        /// <param name="helpId">A keresett segítség azonosítója.</param>
         public static TeamHelpRule GetHelp(int helpId) =>
             HelpRules.First(rule => rule.HelpId == helpId);
 
         /// <summary>
         /// Visszaadja a karakterszinthez tartozó rendfokozati osztályt.
         /// </summary>
+        /// <param name="memberLevel">A csapattag aktuális szintje.</param>
         public static int GetMemberRankClass(int memberLevel) =>
             memberLevel == FIRST_MEMBER_LEVEL
                 ? 0
@@ -74,6 +82,7 @@ namespace KvizCommando.Shared.Models.Rules
         /// <summary>
         /// Jelzi, hogy az előléptetés rendfokozati osztályt is vált-e.
         /// </summary>
+        /// <param name="currentLevel">A csapattag aktuális szintje.</param>
         public static bool IsRankClassChangingPromotion(int currentLevel) =>
             GetMemberRankClass(currentLevel) !=
             GetMemberRankClass(currentLevel + 1);
@@ -81,6 +90,9 @@ namespace KvizCommando.Shared.Models.Rules
         /// <summary>
         /// Kiszámítja a karakter számára jóváírható tapasztalatot.
         /// </summary>
+        /// <param name="earnedXp">A jóváírni kívánt tapasztalati pont.</param>
+        /// <param name="level">Az eredményt meghatározó aktuális szint.</param>
+        /// <param name="currentXp">A csapattag jelenlegi tapasztalati pontja.</param>
         public static int GetCreditableMemberExperience(
             int earnedXp,
             int level,
@@ -98,12 +110,14 @@ namespace KvizCommando.Shared.Models.Rules
         /// <summary>
         /// Jelzi, hogy a karakter rendelkezik-e felhasználható életerővel.
         /// </summary>
+        /// <param name="vitality">A csapattag aktuális életerőpontja.</param>
         public static bool HasVitality(int vitality) =>
             vitality > 0;
 
         /// <summary>
         /// Visszaadja a karakterszinthez tartozó maximális életerőt.
         /// </summary>
+        /// <param name="level">Az eredményt meghatározó aktuális szint.</param>
         public static int GetMemberMaxVitality(int level) =>
             MEMBER_BASE_VITALITY +
             level * MEMBER_VITALITY_PER_LEVEL;
@@ -111,6 +125,8 @@ namespace KvizCommando.Shared.Models.Rules
         /// <summary>
         /// Kiszámítja a karakter életerejének százalékos értékét.
         /// </summary>
+        /// <param name="vitality">A csapattag aktuális életerőpontja.</param>
+        /// <param name="level">Az eredményt meghatározó aktuális szint.</param>
         public static int GetMemberVitalityPercent(
             int vitality,
             int level) =>
@@ -122,6 +138,8 @@ namespace KvizCommando.Shared.Models.Rules
         /// <summary>
         /// Visszaadja a karakter életerőállapotát.
         /// </summary>
+        /// <param name="vitality">A csapattag aktuális életerőpontja.</param>
+        /// <param name="level">Az eredményt meghatározó aktuális szint.</param>
         public static MemberVitalityState GetMemberVitalityState(
             int vitality,
             int level) =>
@@ -137,6 +155,10 @@ namespace KvizCommando.Shared.Models.Rules
         /// <summary>
         /// Jelzi, hogy elindítható-e a gyógyítást adó egyéni játék.
         /// </summary>
+        /// <param name="vitality">A csapattag aktuális életerőpontja.</param>
+        /// <param name="developmentPoints">A rendelkezésre álló fejlesztési pontok száma.</param>
+        /// <param name="nextHealingGameUtc">A következő gyógyító játék legkorábbi UTC időpontja.</param>
+        /// <param name="utcNow">Az összehasonlításhoz használt aktuális UTC időpont.</param>
         public static bool CanStartSoloHealingGame(
             int vitality,
             int developmentPoints,
@@ -150,6 +172,7 @@ namespace KvizCommando.Shared.Models.Rules
         /// <summary>
         /// Visszaadja a következő gyógyító egyéni játék legkorábbi időpontját.
         /// </summary>
+        /// <param name="completedUtc">A befejezett gyógyító játék UTC időpontja.</param>
         public static DateTime GetNextSoloHealingGameUtc(
             DateTime completedUtc) =>
             completedUtc.AddHours(SOLO_HEALING_COOLDOWN_HOURS);

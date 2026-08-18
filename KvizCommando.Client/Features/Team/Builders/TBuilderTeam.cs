@@ -19,6 +19,8 @@ namespace KvizCommando.Client.Features.Team.Builders
         /// <summary>
         /// Összeállítja a csapat felső adatblokkjának nézetmodelljét.
         /// </summary>
+        /// <param name="info">A nézetmodellhez szükséges csapatadatok.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public UpperBlockVm BuildTeamUpperVm(TeamExtendedInfo info, string culture)
         {
             var vm = new UpperBlockVm();
@@ -59,6 +61,8 @@ namespace KvizCommando.Client.Features.Team.Builders
         /// <summary>
         /// Összeállítja a csapat alsó adatblokkjának nézetmodelljét.
         /// </summary>
+        /// <param name="members">A megjelenítendő csapattagok.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public BottomBlockVm BuildTeamBottomVm(TeamMemberDto[] members, string culture)
         {
             var vm = new BottomBlockVm();
@@ -77,6 +81,10 @@ namespace KvizCommando.Client.Features.Team.Builders
         /// <summary>
         /// Összeállítja a csapat fejlesztési adatainak alsó nézetmodelljét.
         /// </summary>
+        /// <param name="info">A nézetmodellhez szükséges csapatadatok.</param>
+        /// <param name="usedPoints">A már felhasznált fejlesztési pontok száma.</param>
+        /// <param name="help">A nézetmodellhez szükséges segítségadatok.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public BottomDevVm BuildTeamBottomDevVm(TeamExtendedInfo info, int[] usedPoints, HelpDto help, string culture)
         {
             //string headerType = "Help";

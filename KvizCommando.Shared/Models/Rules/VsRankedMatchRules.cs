@@ -17,6 +17,7 @@ public static class VsRankedMatchRules
     /// <summary>
     /// Kiszámítja a győztesnek járó szintkompenzációt.
     /// </summary>
+    /// <param name="teamLevel">A csapat aktuális szintje.</param>
     public static double GetWinnerCompensation(int teamLevel)
     {
         var maximumLevel = RankRewards.List.Count - 1;
@@ -31,6 +32,8 @@ public static class VsRankedMatchRules
     /// <summary>
     /// Kiszámítja a rangsorolt mérkőzés eredménypontját.
     /// </summary>
+    /// <param name="netPoints">A kompenzáció előtti nettó rangsorpont.</param>
+    /// <param name="winnerCompensation">A győztes szintkülönbség miatti kompenzációja.</param>
     public static double GetRankedScore(
         int netPoints,
         double winnerCompensation) =>

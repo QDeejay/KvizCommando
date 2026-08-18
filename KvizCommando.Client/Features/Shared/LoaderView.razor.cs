@@ -40,9 +40,7 @@ namespace KvizCommando.Client.Features.Shared
             InvokeAsync(StateHasChanged);
         }
 
-        /// <summary>
-        /// Felszabadítja a példány által használt erőforrásokat.
-        /// </summary>
+        /// <inheritdoc />
         public void Dispose()
         {
             Loader.OnShow -= Show;

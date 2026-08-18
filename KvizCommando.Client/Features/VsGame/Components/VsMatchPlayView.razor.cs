@@ -479,9 +479,7 @@ public partial class VsMatchPlayView : IDisposable
         }
     }
 
-    /// <summary>
-    /// Felszabadítja a példány által használt erőforrásokat.
-    /// </summary>
+    /// <inheritdoc />
     public void Dispose()
     {
         _timer?.Dispose();

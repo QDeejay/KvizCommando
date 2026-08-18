@@ -5,9 +5,7 @@ namespace KvizCommando.Server.Services.VsGame.Match;
 
 public sealed partial class VsMatchService
 {
-    /// <summary>
-    /// Kiértékelésre beküldi a becslős meccskérdés válaszát.
-    /// </summary>
+    /// <inheritdoc />
     public async Task SubmitGuessAsync(
         string connectionId,
         VsGuessAnswerRequest request,
@@ -56,9 +54,7 @@ public sealed partial class VsMatchService
         await SendBroadcastMessagesAsync(messages);
     }
 
-    /// <summary>
-    /// Kiértékelésre beküldi a feleletválasztós meccskérdés válaszát.
-    /// </summary>
+    /// <inheritdoc />
     public async Task SubmitChoiceAsync(
         string connectionId,
         VsChoiceAnswerRequest request,
@@ -108,9 +104,7 @@ public sealed partial class VsMatchService
         await SendBroadcastMessagesAsync(messages);
     }
 
-    /// <summary>
-    /// Felhasználja a kiválasztott segítséget az aktuális kérdésnél.
-    /// </summary>
+    /// <inheritdoc />
     public async Task UseHelpAsync(
         string connectionId,
         VsUseHelpRequest request,
@@ -154,9 +148,7 @@ public sealed partial class VsMatchService
         await SendBroadcastMessagesAsync(messages);
     }
 
-    /// <summary>
-    /// Kiválasztja a kapitányi kör kérdését.
-    /// </summary>
+    /// <inheritdoc />
     public async Task SelectCaptainQuestionAsync(
         string connectionId,
         VsCaptainQuestionRequest request,

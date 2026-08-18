@@ -45,6 +45,7 @@ namespace KvizCommando.Client.Services.Audio
         /// <summary>
         /// Beállítja a teljes hangkimenet némítását.
         /// </summary>
+        /// <param name="muted">Az összes hang némításának kívánt állapota.</param>
         public async Task SetMutedAsync(bool muted)
         {
             IsMuted = muted;
@@ -57,6 +58,7 @@ namespace KvizCommando.Client.Services.Audio
         /// <summary>
         /// Elindítja a megadott háttérzene lejátszását.
         /// </summary>
+        /// <param name="track">A lejátszandó háttérzene fájlneve vagy útvonala.</param>
         public async Task PlayMusicAsync(MusicTrack track)
         {
             if (_requestedMusic == track)
@@ -83,6 +85,7 @@ namespace KvizCommando.Client.Services.Audio
         /// <summary>
         /// Beállítja a háttérzene hangerejét.
         /// </summary>
+        /// <param name="volume">A beállítandó hangerő a szolgáltatás által elfogadott tartományban.</param>
         public async Task SetMusicVolumeAsync(double volume)
         {
             volume = Math.Clamp(volume, 0.0, 1.0);
@@ -95,6 +98,7 @@ namespace KvizCommando.Client.Services.Audio
         /// <summary>
         /// Lejátssza a megadott hangeffektust.
         /// </summary>
+        /// <param name="fileName">A lejátszandó hangeffektus fájlneve.</param>
         public async Task PlaySfxAsync(string fileName)
         {
             if (IsMuted)
@@ -109,6 +113,7 @@ namespace KvizCommando.Client.Services.Audio
         /// <summary>
         /// Beállítja a hangeffektusok hangerejét.
         /// </summary>
+        /// <param name="volume">A beállítandó hangerő a szolgáltatás által elfogadott tartományban.</param>
         public async Task SetSfxVolumeAsync(double volume)
         {
             volume = Math.Clamp(volume, 0.0, 1.0);

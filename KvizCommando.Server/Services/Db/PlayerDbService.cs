@@ -40,9 +40,7 @@ namespace KvizCommando.Server.Services.Db
             _config = config;
         }
 
-        /// <summary>
-        /// Betölti a játékos teljes, gyorsítótárba helyezhető állapotát az adatbázisból.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<CachedPlayer?> LoadPlayerFromDbAsync(
             int playerId,
             string sessionId,
@@ -122,9 +120,7 @@ namespace KvizCommando.Server.Services.Db
 
         }
 
-        /// <summary>
-        /// A dirty jelzők alapján elmenti a játékos módosított adatszegmenseit.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<bool> SavePlayerToDbAsync(
             CachedPlayer player,
             DirtyFlags flags,
@@ -206,9 +202,7 @@ namespace KvizCommando.Server.Services.Db
 
         }
 
-        /// <summary>
-        /// Betölti a beléptetéshez szükséges Identity-, játékosnév- és játékosazonosító-adatokat.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<(ApplicationUser?, string?, int?)> LoadCheckinDataFromDbAsync(
             string userId,
             CancellationToken ct)
@@ -231,9 +225,7 @@ namespace KvizCommando.Server.Services.Db
 
             return (user, lastAcceptedVersion, playerId);
         }
-        /// <summary>
-        /// Ellenőrzi és elmenti a felhasználó nyilvános játékosnevét.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<(IReadOnlyList<string>, bool success)> SaveDisplayNameToDbAsync(ApplicationUser user, string displayName, CancellationToken ct)
         {
             var errorKeys = new List<string>();
@@ -251,9 +243,7 @@ namespace KvizCommando.Server.Services.Db
             return (Array.Empty<string>(), true);
         }
 
-        /// <summary>
-        /// Append-only auditbejegyzésként elmenti az ÁSZF elfogadását.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<bool> SaveTermsToDbAsync(
             ApplicationUser user,
             string acceptedTerms,
@@ -304,9 +294,7 @@ namespace KvizCommando.Server.Services.Db
 
             return true;
         }
-        /// <summary>
-        /// Létrehozza az Identity-felhasználóhoz tartozó játékosrekordot és alapadatait.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<int> CreatePlayerToDbAsync(
             string userId,
             string displayname,
@@ -406,9 +394,7 @@ namespace KvizCommando.Server.Services.Db
 
         }
 
-        /// <summary>
-        /// Szabad játékosnevet javasol a külső szolgáltatótól kapott név alapján.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<string> SuggestAsync(string? rawName, CancellationToken ct = default)
         {
             var raw = (rawName ?? string.Empty).Trim();

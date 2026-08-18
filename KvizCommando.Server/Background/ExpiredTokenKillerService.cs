@@ -21,12 +21,12 @@ public class ExpiredTokenKillerService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        // indulás után azonnal fut
+        // Induláskor is lefut, hogy a leállás alatt lejárt tokenek ne maradjanak a következő ütemezésig.
         await CleanupAsync(stoppingToken);
        
         while (!stoppingToken.IsCancellationRequested)
         {
-            // kiszámoljuk mennyi idő van a következő éjfélig
+            // A napi takarítás helyi idő szerint éjfél után indul újra.
             var now = DateTime.UtcNow;
             var midnight = now.Date.AddDays(1); // következő nap 00:00 UTC
             var delay = midnight - now;

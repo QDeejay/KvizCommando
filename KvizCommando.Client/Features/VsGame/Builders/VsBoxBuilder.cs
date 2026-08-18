@@ -24,6 +24,9 @@ public static class VsBoxBuilder
     /// <summary>
     /// Összeállítja a képernyő tartalmi dobozait.
     /// </summary>
+    /// <param name="data">A nézetmodell felépítéséhez használt forrásadat.</param>
+    /// <param name="parameters">A dobozok megjelenítését meghatározó paraméterek.</param>
+    /// <param name="lang">A feliratok feloldásához használt nyelvi szolgáltatás.</param>
     public static Dictionary<string, ContentBoxVm> BuildBoxes(
         VsGameDtos data,
         VsComponentParameters parameters,

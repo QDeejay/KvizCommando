@@ -5,40 +5,37 @@ using Microsoft.AspNetCore.Identity;
 namespace KvizCommando.Server.Identity
 {
     /// <summary>
-    /// Bővített Identity felhasználó a játékhoz.
+    /// Az Identity-fiókot a játékosprofilhoz és a hozzájárulások aktuális állapotához kapcsolja.
     /// </summary>
     public class ApplicationUser : IdentityUser
     {
         /// <summary>Játékban megjelenő név.</summary>
         public string? DisplayName { get; set; }
 
-        /// <summary>Játékban megjelenő név normalizált (pl. FELSŐ) változata, egyediséghez.</summary>
+        /// <summary>A játékosnév normalizált változata, amelyen az egyediségvizsgálat történik.</summary>
         public string? NormalizedDisplayName { get; set; }
 
-        /// <summary>Felhasználó preferált nyelve IETF formátumban (pl. "hu-HU").</summary>
+        /// <summary>A felhasználó előnyben részesített nyelve IETF-formátumban, például <c>hu-HU</c>.</summary>
         public string PreferredLocale { get; set; } = "hu-HU";
 
-        /// <summary>Regisztráció időpontja (UTC).</summary>
+        /// <summary>A regisztráció UTC időpontja.</summary>
         public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 
-        /// <summary>ÁSZF elfogadása (aktuális állapot-flag, audit külön táblában).</summary>
+        /// <summary>Az aktuális ÁSZF elfogadási állapota; az elfogadások történetét külön auditrekordok őrzik.</summary>
         public bool AcceptTerms { get; set; }
 
-        /// <summary>Marketing célú megkereséshez adott hozzájárulás (aktuális állapot-flag, audit külön táblában).</summary>
+        /// <summary>A marketingcélú megkereséshez adott hozzájárulás aktuális állapota.</summary>
         public bool MarketingConsent { get; set; }
 
-        /// <summary>Soft delete jelző (logikai törléshez).</summary>
+        /// <summary>Jelzi, hogy a fiók logikailag törölt állapotban van-e.</summary>
         public bool IsDeleted { get; set; }
 
-        /// <summary>
-        /// Számított, perzisztált oszlop: akkor igaz, ha a check-in feltételek teljesülnek
-        /// (DisplayName nem null és AcceptTerms = 1). EF konfiguráció állítja be a számított SQL-t.
-        /// </summary>
-        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     }
 }
 
-
+/// <summary>
+/// Az Identity által kiadott felhasználói token lejárati időponttal kiegészített perzisztált alakja.
+/// </summary>
 public class ApplicationUserToken : IdentityUserToken<string>
 {
     public DateTimeOffset ExpiresAt { get; set; }

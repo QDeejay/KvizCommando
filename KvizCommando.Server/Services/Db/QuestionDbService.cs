@@ -20,9 +20,7 @@ namespace KvizCommando.Server.Services.Db
             _GameDb = gamedb;
         }
 
-        /// <summary>
-        /// Betölti a játékos kérdésadatait az adatbázisból.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<CachedQuestion?> LoadQuestionsFromDbAsync(
            int playerId,
            CancellationToken ct)
@@ -46,9 +44,7 @@ namespace KvizCommando.Server.Services.Db
         }
 
         
-        /// <summary>
-        /// Elmenti a játékos módosított kérdésadatait az adatbázisba.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<QuestionStats> SaveQuestionsToDbAsync(
             CachedQuestion cache,
             CancellationToken ct = default)

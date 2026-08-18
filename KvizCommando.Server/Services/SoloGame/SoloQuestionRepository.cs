@@ -7,9 +7,7 @@ public sealed class SoloQuestionRepository : ISoloQuestionRepository
 {
     private readonly GameDbContext _db;
     public SoloQuestionRepository(GameDbContext db) => _db = db;
-    /// <summary>
-    /// Betölti a megadott azonosítójú feleletválasztós kérdéseket.
-    /// </summary>
+    /// <inheritdoc />
     public async Task<IReadOnlyList<FactoryQuestion>> LoadByIdsAsync(IEnumerable<int> ids, CancellationToken ct = default)
     {
         var selected = ids.Distinct().ToArray();
@@ -17,9 +15,7 @@ public sealed class SoloQuestionRepository : ISoloQuestionRepository
             .Where(q => selected.Contains(q.Id)).ToListAsync(ct);
     }
 
-    /// <summary>
-    /// Betölti a megadott azonosítójú becslős kérdéseket.
-    /// </summary>
+    /// <inheritdoc />
     public async Task<IReadOnlyList<GuessQuestion>> LoadGuessByIdsAsync(
         IEnumerable<int> ids,
         CancellationToken ct = default)

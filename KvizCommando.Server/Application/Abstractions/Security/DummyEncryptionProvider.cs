@@ -23,9 +23,7 @@ namespace KvizCommando.Server.Application.Security
             return (cipher, DummyNonce, DummyTag);
         }
 
-        /// <summary>
-        /// Visszaalakítja a fejlesztési kódolással tárolt értéket.
-        /// </summary>
+        /// <inheritdoc />
         public string Decrypt(byte[] cipher, byte[] nonce, byte[] tag)
         {
             var b64 = Encoding.UTF8.GetString(cipher);

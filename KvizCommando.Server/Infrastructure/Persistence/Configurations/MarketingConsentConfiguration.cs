@@ -6,9 +6,7 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {
     public class MarketingConsentConfiguration : IEntityTypeConfiguration<MarketingConsent>
     {
-        /// <summary>
-        /// Beállítja az entitás EF Core leképezését és adatbázis-korlátait.
-        /// </summary>
+        /// <inheritdoc />
         public void Configure(EntityTypeBuilder<MarketingConsent> b)
         {
             b.ToTable("MarketingConsents");

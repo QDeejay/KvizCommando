@@ -37,6 +37,8 @@ public sealed class VsGameController : ControllerBase
     /// <summary>
     /// Elmenti a rangsorolt játékhoz összeállított csapatot.
     /// </summary>
+    /// <param name="request">A rangsorolt játékhoz kiválasztott karakterhelyek.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     [HttpPost("battle-team")]
     [Consumes("application/json")]
     [ProducesResponseType(204)]

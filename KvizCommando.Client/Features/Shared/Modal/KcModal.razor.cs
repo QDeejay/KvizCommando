@@ -36,6 +36,7 @@ namespace KvizCommando.Client.Features.Shared.Modal
         /// <summary>
         /// Megjeleníti a modális ablakot vagy a betöltésjelzőt.
         /// </summary>
+        /// <param name="par">A modális ablak tartalmát és működését leíró paraméterek.</param>
         public async Task ShowAsync(ModalBoxVm par)
         {
             Par = par;

@@ -129,9 +129,7 @@ public partial class Question : KcComponentBase, IDisposable
         OnBoxClick((int)HomeBoxKey.Question);
     }
 
-    /// <summary>
-    /// Felszabadítja a példány által használt erőforrásokat.
-    /// </summary>
+    /// <inheritdoc />
     public void Dispose()
     {
         Ui.Header.OnBackBtnClicked -= HandleBack;

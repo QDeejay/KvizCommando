@@ -27,7 +27,7 @@ public class AuthOptionsController : ControllerBase
     {
         var dto = new RegisterOptionsResponse
         {
-            // Password policy
+            // A kliens ugyanazokat a jelszószabályokat jeleníti meg, amelyeket az Identity érvényesít.
             RequiredLength = _options.Password.RequiredLength,
             RequireNonAlphanumeric = _options.Password.RequireNonAlphanumeric,
             RequireDigit = _options.Password.RequireDigit,
@@ -35,14 +35,11 @@ public class AuthOptionsController : ControllerBase
             RequireUppercase = _options.Password.RequireUppercase,
             RequiredUniqueChars = _options.Password.RequiredUniqueChars,
 
-            // User policy
             RequireUniqueEmail = _options.User.RequireUniqueEmail,
 
-            // SignIn policy
             RequireConfirmedEmail = _options.SignIn.RequireConfirmedEmail,
             RequireConfirmedAccount = _options.SignIn.RequireConfirmedAccount,
 
-            // Custom rules
             DisplayNameMaxLength = CheckInValidationOptions.DisplayNameMaxLength,
             DisplayNameMinLength = CheckInValidationOptions.DisplayNameMinLength,
         };

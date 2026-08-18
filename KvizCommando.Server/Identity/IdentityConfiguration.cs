@@ -8,6 +8,7 @@ public static class IdentityConfiguration
     /// <summary>
     /// Beállítja az alkalmazás Identity szabályait.
     /// </summary>
+    /// <param name="options">A beállítandó Identity-opciók.</param>
     public static void ConfigureIdentityOptions(IdentityOptions options)
     {
         // Jelszóházirend

@@ -33,15 +33,11 @@ namespace KvizCommando.Server.Services.Auth
             _logger = logger;
         }
 
-        /// <summary>
-        /// Az aktuális időponttal létrehozza vagy frissíti az ÁSZF-elfogadási claimet.
-        /// </summary>
+        /// <inheritdoc />
         public Task UpsertTermsClaimsNowAsync(ApplicationUser user, string termsEtag, CancellationToken cancellationToken = default)
             => UpsertTermsClaimsAsync(user, termsEtag, DateTime.UtcNow, cancellationToken);
 
-        /// <summary>
-        /// Létrehozza vagy frissíti a felhasználó ÁSZF-elfogadási claimjeit.
-        /// </summary>
+        /// <inheritdoc />
         public async Task UpsertTermsClaimsAsync(ApplicationUser user, string termsEtag, DateTime acceptedAtUtc, CancellationToken cancellationToken = default)
         {
             if (user is null) throw new ArgumentNullException(nameof(user));

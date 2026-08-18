@@ -13,6 +13,11 @@ public static class ResxExporterLogic
     /// <summary>
     /// A RESX-erőforrásokat kliensoldali JSON-fájlokká alakítja.
     /// </summary>
+    /// <param name="resxRoot">A feldolgozandó RESX-fájlok gyökérmappája.</param>
+    /// <param name="outputRoot">A létrehozott exportfájlok célmappája.</param>
+    /// <param name="logInfo">A tájékoztató üzeneteket fogadó naplózó callback.</param>
+    /// <param name="logWarning">A figyelmeztetéseket fogadó naplózó callback.</param>
+    /// <param name="logError">A hibákat fogadó naplózó callback.</param>
     public static bool ProcessResx(string resxRoot, string outputRoot, Action<string> logInfo, Action<string> logWarning, Action<string> logError)
     {
         if (!Directory.Exists(resxRoot))

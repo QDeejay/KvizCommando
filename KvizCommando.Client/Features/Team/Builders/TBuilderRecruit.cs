@@ -11,6 +11,11 @@ namespace KvizCommando.Client.Features.Team.Builders
         /// <summary>
         /// Összeállítja a toborzási képernyő nézetmodelljét.
         /// </summary>
+        /// <param name="candidate">A megjelenítendő vagy felveendő jelölt adatai.</param>
+        /// <param name="order">A jelölt megjelenítési sorrendje.</param>
+        /// <param name="tabpos">A jelölthöz tartozó laphely sorszáma.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
+        /// <param name="lang">A feliratok feloldásához használt nyelvi szolgáltatás.</param>
         public static RecruitVm BuildRecruitVm(CandidateDto candidate, int[] order, int tabpos, string culture, ILanguageService lang)
         {
             var vm = new RecruitVm() { Info = lang["team.Label.NoMember"] };

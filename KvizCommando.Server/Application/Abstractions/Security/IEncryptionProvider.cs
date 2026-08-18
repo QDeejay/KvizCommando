@@ -11,6 +11,10 @@
         /// <summary>
         /// Visszaalakítja a fejlesztési kódolással tárolt értéket.
         /// </summary>
+        /// <param name="cipher">A visszafejtendő titkosított bájtsorozat.</param>
+        /// <param name="nonce">A titkosításhoz tartozó egyszer használatos érték.</param>
+        /// <param name="tag">A titkosított adat hitelesítési címkéje.</param>
+        /// <returns>A visszafejtett eredeti szöveg.</returns>
         string Decrypt(byte[] cipher, byte[] nonce, byte[] tag);
     }
 }

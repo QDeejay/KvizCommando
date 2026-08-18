@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 namespace KvizCommando.Server.Application.Security
 {
     /// <summary>
-    /// SHA-256 + pepper alapú hash. Pepper a konfigurációból (Key Vault később).
+    /// A normalizált e-mail-címből alkalmazástitokkal kiegészített SHA-256 keresési kivonatot képez.
     /// </summary>
     public class EmailLookup : IEmailLookup
     {
@@ -21,15 +21,11 @@ namespace KvizCommando.Server.Application.Security
                 throw new InvalidOperationException("SecurityOptions.EmailHashPepper is not configured.");
         }
 
-        /// <summary>
-        /// Egységes keresési formára alakítja az e-mail-címet.
-        /// </summary>
+        /// <inheritdoc />
         public string Normalize(string email)
             => email.Trim().ToUpperInvariant();
 
-        /// <summary>
-        /// Kiszámítja a már normalizált érték keresési hash-ét.
-        /// </summary>
+        /// <inheritdoc />
         public byte[] ComputeNormalizedHash(string normalizedEmail)
         {
             using var sha = SHA256.Create();
@@ -37,9 +33,7 @@ namespace KvizCommando.Server.Application.Security
             return sha.ComputeHash(bytes);
         }
 
-        /// <summary>
-        /// Normalizálja az értéket, majd kiszámítja a kereséshez használt hash-t.
-        /// </summary>
+        /// <inheritdoc />
         public byte[] ComputeHashFromRaw(string email)
             => ComputeNormalizedHash(Normalize(email));
     }

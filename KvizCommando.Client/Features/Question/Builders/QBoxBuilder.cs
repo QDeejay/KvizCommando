@@ -15,6 +15,8 @@ public static class QBoxBuilder
     /// <summary>
     /// Összeállítja a képernyő tartalmi dobozait.
     /// </summary>
+    /// <param name="questionInfo">A kérdésképernyő dobozainak forrásadata.</param>
+    /// <param name="lang">A feliratok feloldásához használt nyelvi szolgáltatás.</param>
     public static Dictionary<string, ContentBoxVm> BuildBoxes(
         QuestionExtendedInfo questionInfo,
         ILanguageService lang)

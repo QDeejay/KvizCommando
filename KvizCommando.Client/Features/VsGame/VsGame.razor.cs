@@ -162,9 +162,7 @@ public partial class VsGame : KcComponentBase, IDisposable
     private void SetNewTeamLevel(int value) =>
         _newTeamLevel = value;
 
-    /// <summary>
-    /// Felszabadítja a példány által használt erőforrásokat.
-    /// </summary>
+    /// <inheritdoc />
     public void Dispose()
     {
         Ui.Header.OnBackBtnClicked -= HandleBack;

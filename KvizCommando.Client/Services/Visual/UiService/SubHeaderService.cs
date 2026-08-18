@@ -18,8 +18,10 @@ namespace KvizCommando.Client.Services.Visual.UiService
         public event Action<int>? OnButtonClicked;
 
         /// <summary>
-        /// Megjeleníti a felületi elemet a megadott adatokkal.
+        /// Megjeleníti a gombsort, és az index alapján kijelöli az aktív gombot.
         /// </summary>
+        /// <param name="buttons">A fejlécben megjelenítendő gombok.</param>
+        /// <param name="index">A lokalizálandó érték indexe.</param>
         public void Show(List<SubHeaderVm> buttons, int index)
         {
             _tabs = [.. buttons];
@@ -38,6 +40,7 @@ namespace KvizCommando.Client.Services.Visual.UiService
         /// <summary>
         /// Továbbítja a kiválasztott alfejlécgomb indexét a feliratkozóknak.
         /// </summary>
+        /// <param name="index">A lokalizálandó érték indexe.</param>
         public void Click(int index)
         {
             if ((uint)index > (uint)_tabs.Length)

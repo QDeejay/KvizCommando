@@ -26,10 +26,7 @@ namespace KvizCommando.Server.Services.UserPlayerIdCache
             };
         }
 
-        /// <summary>
-        /// Visszaadja az ASP.NET Identity felhasználóazonosítójához tartozó játékosazonosítót.
-        /// Hiányzó érték esetén adatbázisból tölt, majd 30 percre gyorsítótáraz.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<int?> GetPlayerIdAsync(string userId, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(userId))
@@ -55,18 +52,14 @@ namespace KvizCommando.Server.Services.UserPlayerIdCache
             return pid;
         }
 
-        /// <summary>
-        /// Eltávolítja a megadott felhasználó játékosazonosítóját a gyorsítótárból.
-        /// </summary>
+        /// <inheritdoc />
         public void Invalidate(string userId)
         {
             if (!string.IsNullOrWhiteSpace(userId))
                 _cache.Remove(userId);
         }
 
-        /// <summary>
-        /// Kiüríti a teljes felhasználó–játékos leképezési gyorsítótárat.
-        /// </summary>
+        /// <inheritdoc />
         public void Clear()
         {
             if (_cache is MemoryCache memoryCache)

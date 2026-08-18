@@ -25,13 +25,12 @@ public sealed class VsMatchSession : IDisposable
     /// <summary>
     /// Visszaadja a megadott SignalR-kapcsolathoz tartozó játékost.
     /// </summary>
+    /// <param name="connectionId">Az aktív SignalR-kapcsolat azonosítója.</param>
     public VsMatchPlayerState? FindByConnection(string connectionId) =>
         Players.FirstOrDefault(player =>
             player.ConnectionId == connectionId);
 
-    /// <summary>
-    /// Felszabadítja a példány által használt erőforrásokat.
-    /// </summary>
+    /// <inheritdoc />
     public void Dispose()
     {
         PhaseTimerCts.Cancel();

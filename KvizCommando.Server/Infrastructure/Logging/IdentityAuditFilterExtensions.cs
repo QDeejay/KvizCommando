@@ -10,6 +10,7 @@ public static class IdentityAuditFilterExtensions
     /// <summary>
     /// Auditnaplózást kapcsol az Identity végpontokra.
     /// </summary>
+    /// <param name="builder">A kiegészítendő végpontkonvenció-építő.</param>
     public static IEndpointConventionBuilder WithIdentityAudit(this IEndpointConventionBuilder builder)
     {
         builder.AddEndpointFilter(async (context, next) =>

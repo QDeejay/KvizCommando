@@ -8,6 +8,9 @@ namespace KvizCommando.Server.Services.Db
         /// <summary>
         /// Betölti a játékos teljes, gyorsítótárba helyezhető állapotát az adatbázisból.
         /// </summary>
+        /// <param name="playerId">A játékos adatbázis-azonosítója.</param>
+        /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         Task<CachedPlayer?> LoadPlayerFromDbAsync(
             int playerId,
             string sessionId,
@@ -15,6 +18,10 @@ namespace KvizCommando.Server.Services.Db
         /// <summary>
         /// A dirty jelzők alapján elmenti a játékos módosított adatszegmenseit.
         /// </summary>
+        /// <param name="player">A mentendő gyorsítótárazott játékosállapot.</param>
+        /// <param name="flags">A módosult játékos-adatszegmenseket jelölő bitmező.</param>
+        /// <param name="playerId">A játékos adatbázis-azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         Task<bool> SavePlayerToDbAsync(
             CachedPlayer player,
             DirtyFlags flags,
@@ -37,6 +44,11 @@ namespace KvizCommando.Server.Services.Db
         /// <summary>
         /// Append-only auditbejegyzésként elmenti az ÁSZF elfogadását.
         /// </summary>
+        /// <param name="user">Az érintett Identity-felhasználó.</param>
+        /// <param name="acceptedTerms">A felhasználó által elfogadott feltételverzió.</param>
+        /// <param name="currentTerms">Az elfogadáskor aktuális feltételverzió.</param>
+        /// <param name="acceptedAt">Az elfogadás UTC időpontja.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         Task<bool> SaveTermsToDbAsync(
              ApplicationUser user,
              string acceptedTerms,
@@ -47,6 +59,10 @@ namespace KvizCommando.Server.Services.Db
         /// <summary>
         /// Létrehozza az Identity-felhasználóhoz tartozó játékosrekordot és alapadatait.
         /// </summary>
+        /// <param name="userId">Az Identity-felhasználó azonosítója.</param>
+        /// <param name="displayname">A létrehozandó játékos nyilvános neve.</param>
+        /// <param name="teamname">A létrehozandó játékos alapértelmezett csapatneve.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         Task<int> CreatePlayerToDbAsync(
             string userId,
             string displayname,
@@ -55,6 +71,8 @@ namespace KvizCommando.Server.Services.Db
         /// <summary>
         /// Szabad játékosnevet javasol a külső szolgáltatótól kapott név alapján.
         /// </summary>
+        /// <param name="rawName">A névjavaslat kiinduló értéke, amely hiányozhat.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         Task<string> SuggestAsync(
             string? rawName,
             CancellationToken ct = default);

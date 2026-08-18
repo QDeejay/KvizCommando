@@ -15,6 +15,8 @@ namespace KvizCommando.Server.Services.CheckIn
         /// <summary>
         /// Jelzi, hogy a megadott verzió megfelel-e az aktuális ÁSZF-verziónak.
         /// </summary>
+        /// <param name="version">Az ellenőrzendő feltételverzió.</param>
+        /// <returns><see langword="true"/>, ha a verzió jelenleg elfogadható.</returns>
         bool IsValidVersion(string version);
 
         /// <summary>

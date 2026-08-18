@@ -25,6 +25,8 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
         /// <summary>
         /// Lekéri a kezdőképernyő megjelenítéséhez szükséges adatokat.
         /// </summary>
+        /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         [HttpGet("home")]
         [ProducesResponseType(typeof(HomeDTOs), 200)]
         [ProducesResponseType(401)]
@@ -53,6 +55,8 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
         /// <summary>
         /// Lekéri az egyéni játék választóképernyőjének adatait.
         /// </summary>
+        /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         [HttpGet("sologame")]
         [ProducesResponseType(typeof(SoloGameDtos), 200)]
         [ProducesResponseType(401)]
@@ -77,6 +81,8 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
         /// <summary>
         /// Lekéri a többjátékos mód választóképernyőjének adatait.
         /// </summary>
+        /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         [HttpGet("vsgame")]
         [ProducesResponseType(typeof(VsGameDtos), 200)]
         [ProducesResponseType(401)]

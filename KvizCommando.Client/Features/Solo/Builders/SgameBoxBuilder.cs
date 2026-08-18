@@ -15,6 +15,10 @@ namespace KvizCommando.Client.Features.Solo.Builders
         /// <summary>
         /// Összeállítja a képernyő tartalmi dobozait.
         /// </summary>
+        /// <param name="ss">Az egyéni játékképernyő forrásadata.</param>
+        /// <param name="parameters">A dobozok megjelenítését meghatározó paraméterek.</param>
+        /// <param name="cult">A megjelenítéshez használt kultúra neve.</param>
+        /// <param name="lang">A feliratok feloldásához használt nyelvi szolgáltatás.</param>
         public static Dictionary<string, ContentBoxVm> BuildBoxes(
             SoloGameDtos ss,
             SoloComponentParameters parameters,

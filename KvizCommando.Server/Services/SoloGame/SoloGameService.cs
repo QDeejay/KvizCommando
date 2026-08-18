@@ -32,9 +32,7 @@ public sealed class SoloGameService : ISoloGameService
         _gameCache = gameCache;
     }
 
-    /// <summary>
-    /// Ellenőrzi az indítási kérést, majd létrehozza és gyorsítótárba helyezi az egyéni játékot.
-    /// </summary>
+    /// <inheritdoc />
     public async Task<SoloStartResult> StartAsync(
             int playerId,
             StartSoloGameRequest request,
@@ -211,9 +209,7 @@ public sealed class SoloGameService : ISoloGameService
         };
     }
 
-    /// <summary>
-    /// Kiértékelésre beküldi az egyéni játék válaszát.
-    /// </summary>
+    /// <inheritdoc />
     public async Task<SoloAnswerResult> SubmitAnswerAsync(
         int playerId,
         Guid gameId,
@@ -276,9 +272,7 @@ public sealed class SoloGameService : ISoloGameService
         }
     }
 
-    /// <summary>
-    /// Megszakítja az aktuális egyéni játékot.
-    /// </summary>
+    /// <inheritdoc />
     public async Task<SoloGameOperationStatus> AbandonAsync(
         int playerId,
         Guid gameId,

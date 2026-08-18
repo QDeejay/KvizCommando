@@ -9,6 +9,8 @@ namespace KvizCommando.Client.Helpers
         /// <summary>
         /// Visszaadja az orientáció lokalizált nevét.
         /// </summary>
+        /// <param name="index">A lokalizálandó érték indexe.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public static string GetOrientation(int index, string culture)
         {
             var lang = LocationNormalizer.CultFormat(culture); ;
@@ -24,6 +26,8 @@ namespace KvizCommando.Client.Helpers
         /// <summary>
         /// Visszaadja az orientáció lokalizált rövid nevét.
         /// </summary>
+        /// <param name="index">A lokalizálandó érték indexe.</param>
+        /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         public static string GetOrientShort(int index, string culture)
         {
             var lang = LocationNormalizer.CultFormat(culture);

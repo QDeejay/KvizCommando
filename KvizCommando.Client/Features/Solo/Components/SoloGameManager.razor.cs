@@ -565,9 +565,7 @@ public partial class SoloGameManager : IAsyncDisposable
     private static string FormatTime(int milliseconds) =>
         TimeSpan.FromMilliseconds(milliseconds).ToString(@"mm\:ss");
 
-    /// <summary>
-    /// Aszinkron módon felszabadítja a példány által használt erőforrásokat.
-    /// </summary>
+    /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
         if (_isDisposed)

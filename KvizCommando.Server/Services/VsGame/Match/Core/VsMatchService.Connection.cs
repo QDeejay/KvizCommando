@@ -5,9 +5,7 @@ namespace KvizCommando.Server.Services.VsGame.Match;
 
 public sealed partial class VsMatchService
 {
-    /// <summary>
-    /// Feldolgozza a klienskapcsolat megszakadását.
-    /// </summary>
+    /// <inheritdoc />
     public async Task DisconnectAsync(
         string connectionId,
         CancellationToken ct = default)
@@ -122,9 +120,7 @@ public sealed partial class VsMatchService
         await SendBroadcastMessagesAsync(messages);
     }
 
-    /// <summary>
-    /// Eltávolítja vagy automatikus játékra állítja a lekapcsolódott játékost.
-    /// </summary>
+    /// <inheritdoc />
     public Task DisconnectPlayerAsync(
         int playerId,
         CancellationToken ct = default)

@@ -7,6 +7,7 @@
         /// <summary>
         /// Lecseréli a megjelenítendő üzenetek aktuális listáját.
         /// </summary>
+        /// <param name="newMessages">A felületen megjelenítendő üzenetek.</param>
         void SetMessages(IEnumerable<string> newMessages);
     }
 

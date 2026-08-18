@@ -22,6 +22,8 @@ namespace KvizCommando.Client.Services.Visual.UiService.Language
         /// <summary>
         /// Visszaadja a lokalizációs kulcshoz tartozó szöveget.
         /// </summary>
+        /// <param name="key">A feloldandó lokalizációs kulcs.</param>
+        /// <returns>A lokalizált szöveg; hiányzó kulcsnál a kulcs <c>#</c> előtaggal.</returns>
         public string Get(string key)
         {
             if (string.IsNullOrEmpty(key))
@@ -32,14 +34,14 @@ namespace KvizCommando.Client.Services.Visual.UiService.Language
         /// <summary>
         /// Visszaadja a lokalizált és paraméterekkel formázott szöveget.
         /// </summary>
+        /// <param name="key">A feloldandó lokalizációs kulcs.</param>
+        /// <param name="args">A formátumszöveg helyőrzőibe kerülő értékek.</param>
         public string GetFormatted(string key, params object[] args)
         {
             var template = Get(key);
             return template.FormatSafe(args);
         }
-        /// <summary>
-        /// Betölti a megadott lokalizációs modult.
-        /// </summary>
+        /// <inheritdoc />
         public async Task LoadModuleAsync(string culture, string moduleName)
         {
             if (_loadedModules.Contains(moduleName))
@@ -84,9 +86,7 @@ namespace KvizCommando.Client.Services.Visual.UiService.Language
         }
 
 
-        /// <summary>
-        /// Törli a megadott nyelvhez tartozó lokalizációs gyorsítótárat.
-        /// </summary>
+        /// <inheritdoc />
         public async Task ClearLanguageCacheAsync(string deleteculture)
         {
             Console.WriteLine($"--- Törlés indul: {deleteculture}");

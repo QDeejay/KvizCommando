@@ -30,6 +30,9 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>
     /// <summary>
     /// Előkészíti és fájlba írja a regisztrációt megerősítő levelet.
     /// </summary>
+    /// <param name="user">Az érintett Identity-felhasználó.</param>
+    /// <param name="email">A feldolgozandó e-mail-cím.</param>
+    /// <param name="confirmationLink">A felhasználói fiók megerősítésére szolgáló hivatkozás.</param>
     public async Task SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink)
     {
         var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
@@ -49,6 +52,9 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>
     /// <summary>
     /// Előkészíti és fájlba írja a jelszó-visszaállító hivatkozást tartalmazó levelet.
     /// </summary>
+    /// <param name="user">Az érintett Identity-felhasználó.</param>
+    /// <param name="email">A feldolgozandó e-mail-cím.</param>
+    /// <param name="resetLink">A jelszó visszaállítására szolgáló hivatkozás.</param>
     public async Task SendPasswordResetLinkAsync(ApplicationUser user, string email, string resetLink)
     {
         var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
@@ -68,6 +74,9 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>
     /// <summary>
     /// Előkészíti és fájlba írja a jelszó-visszaállító kódot tartalmazó levelet.
     /// </summary>
+    /// <param name="user">Az érintett Identity-felhasználó.</param>
+    /// <param name="email">A feldolgozandó e-mail-cím.</param>
+    /// <param name="resetCode">A jelszó-visszaállítás egyszer használatos kódja.</param>
     public async Task SendPasswordResetCodeAsync(ApplicationUser user, string email, string resetCode)
     {
         var resetLink = $"https://Localhost:7229/Auth/reset-password?email={Uri.EscapeDataString(email)}&code={Uri.EscapeDataString(resetCode)}\r\n";

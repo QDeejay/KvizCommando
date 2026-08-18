@@ -12,6 +12,9 @@ namespace KvizCommando.Server.Services.CheckIn
         /// <summary>
         /// Visszaadja a felhasználó aktuális beléptetési követelményeit.
         /// </summary>
+        /// <param name="userId">Az Identity-felhasználó azonosítója.</param>
+        /// <param name="sessionid">A kliens aktuális munkamenet-azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         Task<CheckInGetResponse> GetStatusAsync(string userId, string sessionid, CancellationToken ct);
         /// <summary>
         /// Befejezi a beléptetést; siker esetén üres, hiba esetén lokalizálható hibakódlistát ad vissza.

@@ -8,12 +8,15 @@ public interface IVsMatchService
     /// <summary>
     /// Lezárja a várólista kijelölt játékosait egy új meccshez.
     /// </summary>
+    /// <param name="entries">A meccshez zárolt várólista-bejegyzések.</param>
     VsMatchSession LockMatch(
         IReadOnlyList<VsRankedQueueEntry> entries);
 
     /// <summary>
     /// Előkészíti a lezárt meccs játékosait, kérdéseit és kezdőállapotát.
     /// </summary>
+    /// <param name="match">Az inicializálandó, már zárolt meccsállapot.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task<bool> InitializeLockedMatchAsync(
         VsMatchSession match,
         CancellationToken ct = default);
@@ -21,6 +24,9 @@ public interface IVsMatchService
     /// <summary>
     /// A karaktert a megadott előkészítési helyhez rendeli.
     /// </summary>
+    /// <param name="connectionId">Az aktív SignalR-kapcsolat azonosítója.</param>
+    /// <param name="slotNumber">Az előkészítési hely egytől induló sorszáma.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task SelectCharacterAsync(
         string connectionId,
         int slotNumber,
@@ -29,6 +35,9 @@ public interface IVsMatchService
     /// <summary>
     /// A kiválasztott kérdéskategóriát a megadott körhöz rendeli.
     /// </summary>
+    /// <param name="connectionId">Az aktív SignalR-kapcsolat azonosítója.</param>
+    /// <param name="request">A feldolgozandó kérés adatai.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task AssignLoadoutAsync(
         string connectionId,
         VsLoadoutAssignmentRequest request,
@@ -37,6 +46,9 @@ public interface IVsMatchService
     /// <summary>
     /// A kiválasztott segítséget a megadott előkészítési helyhez rendeli.
     /// </summary>
+    /// <param name="connectionId">Az aktív SignalR-kapcsolat azonosítója.</param>
+    /// <param name="request">A feldolgozandó kérés adatai.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task AssignHelpAsync(
         string connectionId,
         VsHelpAssignmentRequest request,
@@ -45,6 +57,8 @@ public interface IVsMatchService
     /// <summary>
     /// Törli a játékos előkészítési választásait.
     /// </summary>
+    /// <param name="connectionId">Az aktív SignalR-kapcsolat azonosítója.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task ResetPreparationAsync(
         string connectionId,
         CancellationToken ct = default);
@@ -52,6 +66,8 @@ public interface IVsMatchService
     /// <summary>
     /// Lezárja a játékos előkészítési szakaszát.
     /// </summary>
+    /// <param name="connectionId">Az aktív SignalR-kapcsolat azonosítója.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task FinishPreparationAsync(
         string connectionId,
         CancellationToken ct = default);
@@ -59,6 +75,9 @@ public interface IVsMatchService
     /// <summary>
     /// Kiértékelésre beküldi a becslős meccskérdés válaszát.
     /// </summary>
+    /// <param name="connectionId">Az aktív SignalR-kapcsolat azonosítója.</param>
+    /// <param name="request">A feldolgozandó kérés adatai.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task SubmitGuessAsync(
         string connectionId,
         VsGuessAnswerRequest request,
@@ -67,6 +86,9 @@ public interface IVsMatchService
     /// <summary>
     /// Kiértékelésre beküldi a feleletválasztós meccskérdés válaszát.
     /// </summary>
+    /// <param name="connectionId">Az aktív SignalR-kapcsolat azonosítója.</param>
+    /// <param name="request">A feldolgozandó kérés adatai.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task SubmitChoiceAsync(
         string connectionId,
         VsChoiceAnswerRequest request,
@@ -75,6 +97,9 @@ public interface IVsMatchService
     /// <summary>
     /// Felhasználja a kiválasztott segítséget az aktuális kérdésnél.
     /// </summary>
+    /// <param name="connectionId">Az aktív SignalR-kapcsolat azonosítója.</param>
+    /// <param name="request">A feldolgozandó kérés adatai.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task UseHelpAsync(
         string connectionId,
         VsUseHelpRequest request,
@@ -83,6 +108,9 @@ public interface IVsMatchService
     /// <summary>
     /// Kiválasztja a kapitányi kör kérdését.
     /// </summary>
+    /// <param name="connectionId">Az aktív SignalR-kapcsolat azonosítója.</param>
+    /// <param name="request">A feldolgozandó kérés adatai.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task SelectCaptainQuestionAsync(
         string connectionId,
         VsCaptainQuestionRequest request,
@@ -91,6 +119,8 @@ public interface IVsMatchService
     /// <summary>
     /// Feldolgozza a klienskapcsolat megszakadását.
     /// </summary>
+    /// <param name="connectionId">Az aktív SignalR-kapcsolat azonosítója.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task DisconnectAsync(
         string connectionId,
         CancellationToken ct = default);
@@ -98,6 +128,8 @@ public interface IVsMatchService
     /// <summary>
     /// Eltávolítja vagy automatikus játékra állítja a lekapcsolódott játékost.
     /// </summary>
+    /// <param name="playerId">A játékos adatbázis-azonosítója.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task DisconnectPlayerAsync(
         int playerId,
         CancellationToken ct = default);

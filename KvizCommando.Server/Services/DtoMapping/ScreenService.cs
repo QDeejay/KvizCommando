@@ -31,9 +31,7 @@ namespace KvizCommando.Server.Services.DtoMapping
             _env = env;
         }
 
-        /// <summary>
-        /// Lekéri a kezdőképernyő megjelenítéséhez szükséges adatokat.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<HomeDTOs?> GetHomeScreenAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
 
@@ -165,9 +163,7 @@ namespace KvizCommando.Server.Services.DtoMapping
             };
         }
 
-        /// <summary>
-        /// Lekéri az egyéni játék választóképernyőjének adatait.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<SoloGameDtos?> GetSoloGameScreenAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
             var cacheResult = await _cache.GetOrLoadLockedAsync(
@@ -225,9 +221,7 @@ namespace KvizCommando.Server.Services.DtoMapping
 
         }
 
-        /// <summary>
-        /// Lekéri a többjátékos mód választóképernyőjének adatait.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<VsGameDtos?> GetVsGameScreenAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
             var cacheResult = await _cache.GetOrLoadLockedAsync(

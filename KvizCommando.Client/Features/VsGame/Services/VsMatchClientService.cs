@@ -39,9 +39,7 @@ public sealed class VsMatchClientService : IVsMatchClientService
     public DateTime ServerUtcNow =>
         _serverUtcAtSync + _serverClock.Elapsed;
 
-    /// <summary>
-    /// Létrehozza a SignalR-kapcsolatot, szinkronizálja a szerveridőt, majd belépteti a játékost a rangsorolt várólistába.
-    /// </summary>
+    /// <inheritdoc />
     public async Task<VsQueueJoinResult> StartAsync(
         int classificationId,
         CancellationToken ct = default)
@@ -156,9 +154,7 @@ public sealed class VsMatchClientService : IVsMatchClientService
         }
     }
 
-    /// <summary>
-    /// Kilépteti a játékost az aktuális várólistából.
-    /// </summary>
+    /// <inheritdoc />
     public Task<VsQueueLeaveStatus> LeaveQueueAsync(
         CancellationToken ct = default) =>
         IsConnected
@@ -167,77 +163,57 @@ public sealed class VsMatchClientService : IVsMatchClientService
                 ct)
             : Task.FromResult(VsQueueLeaveStatus.NotInQueue);
 
-    /// <summary>
-    /// A karaktert a megadott előkészítési helyhez rendeli.
-    /// </summary>
+    /// <inheritdoc />
     public Task SelectCharacterAsync(
         int slotNumber,
         CancellationToken ct = default) =>
         InvokeAsync("SelectCharacter", slotNumber, ct);
 
-    /// <summary>
-    /// A kiválasztott kérdéskategóriát a megadott körhöz rendeli.
-    /// </summary>
+    /// <inheritdoc />
     public Task AssignLoadoutAsync(
         VsLoadoutAssignmentRequest request,
         CancellationToken ct = default) =>
         InvokeAsync("AssignLoadout", request, ct);
 
-    /// <summary>
-    /// A kiválasztott segítséget a megadott előkészítési helyhez rendeli.
-    /// </summary>
+    /// <inheritdoc />
     public Task AssignHelpAsync(
         VsHelpAssignmentRequest request,
         CancellationToken ct = default) =>
         InvokeAsync("AssignHelp", request, ct);
 
-    /// <summary>
-    /// Törli a játékos előkészítési választásait.
-    /// </summary>
+    /// <inheritdoc />
     public Task ResetPreparationAsync(CancellationToken ct = default) =>
         InvokeAsync("ResetPreparation", ct);
 
-    /// <summary>
-    /// Lezárja a játékos előkészítési szakaszát.
-    /// </summary>
+    /// <inheritdoc />
     public Task FinishPreparationAsync(CancellationToken ct = default) =>
         InvokeAsync("FinishPreparation", ct);
 
-    /// <summary>
-    /// Kiértékelésre beküldi a becslős meccskérdés válaszát.
-    /// </summary>
+    /// <inheritdoc />
     public Task SubmitGuessAsync(
         VsGuessAnswerRequest request,
         CancellationToken ct = default) =>
         InvokeAsync("SubmitGuess", request, ct);
 
-    /// <summary>
-    /// Kiértékelésre beküldi a feleletválasztós meccskérdés válaszát.
-    /// </summary>
+    /// <inheritdoc />
     public Task SubmitChoiceAsync(
         VsChoiceAnswerRequest request,
         CancellationToken ct = default) =>
         InvokeAsync("SubmitChoice", request, ct);
 
-    /// <summary>
-    /// Felhasználja a kiválasztott segítséget az aktuális kérdésnél.
-    /// </summary>
+    /// <inheritdoc />
     public Task UseHelpAsync(
         VsUseHelpRequest request,
         CancellationToken ct = default) =>
         InvokeAsync("UseHelp", request, ct);
 
-    /// <summary>
-    /// Kiválasztja a kapitányi kör kérdését.
-    /// </summary>
+    /// <inheritdoc />
     public Task SelectCaptainQuestionAsync(
         VsCaptainQuestionRequest request,
         CancellationToken ct = default) =>
         InvokeAsync("SelectCaptainQuestion", request, ct);
 
-    /// <summary>
-    /// Leállítja az aktuális játékkapcsolatot.
-    /// </summary>
+    /// <inheritdoc />
     public async Task StopAsync(CancellationToken ct = default)
     {
         var connection = _connection;
@@ -323,9 +299,7 @@ public sealed class VsMatchClientService : IVsMatchClientService
 
     private void NotifyChanged() => OnChanged?.Invoke();
 
-    /// <summary>
-    /// Aszinkron módon felszabadítja a példány által használt erőforrásokat.
-    /// </summary>
+    /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
         await StopAsync();

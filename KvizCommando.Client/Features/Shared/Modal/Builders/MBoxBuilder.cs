@@ -9,6 +9,8 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
         /// <summary>
         /// Összeállítja a megadott típushoz tartozó modális ablak paramétereit.
         /// </summary>
+        /// <param name="type">Az üzenet vagy megjelenítés típusa.</param>
+        /// <param name="lang">A feliratok feloldásához használt nyelvi szolgáltatás.</param>
         public static ModalBoxVm BuildParam(ModalTypes type, ILanguageService lang)
         {
             if ((int)type == 0)

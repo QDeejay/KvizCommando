@@ -8,9 +8,7 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations;
 public sealed class TeamStatisticConfiguration :
     IEntityTypeConfiguration<TeamStatistic>
 {
-    /// <summary>
-    /// Beállítja az entitás EF Core leképezését és adatbázis-korlátait.
-    /// </summary>
+    /// <inheritdoc />
     public void Configure(EntityTypeBuilder<TeamStatistic> builder)
     {
         builder.ToTable("TeamStatistics", table =>

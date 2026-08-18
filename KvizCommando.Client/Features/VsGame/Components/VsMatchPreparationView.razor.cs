@@ -294,9 +294,7 @@ public partial class VsMatchPreparationView : IDisposable
     private Task PlayClickAsync() =>
         Audio.PlaySfxAsync(AudioService.SFX_CLICK);
 
-    /// <summary>
-    /// Felszabadítja a példány által használt erőforrásokat.
-    /// </summary>
+    /// <inheritdoc />
     public void Dispose()
     {
         _timer?.Dispose();

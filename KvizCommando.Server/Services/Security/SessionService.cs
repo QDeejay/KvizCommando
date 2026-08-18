@@ -7,20 +7,16 @@ namespace KvizCommando.Server.Services.Security
     {
         private readonly ConcurrentDictionary<string, string> _sessionKeys = new();
 
-        /// <summary>
-        /// Új munkamenetkulcsot hoz létre és társít a felhasználóhoz.
-        /// </summary>
+        /// <inheritdoc />
         public string GenerateAndStoreSessionKey(string userId)
         {
-            var keyBytes = RandomNumberGenerator.GetBytes(32); // 256 bit
+            var keyBytes = RandomNumberGenerator.GetBytes(32);
             var key = Convert.ToBase64String(keyBytes);
             _sessionKeys[userId] = key;
             return key;
         }
 
-        /// <summary>
-        /// Visszaadja a felhasználóhoz tartozó munkamenetkulcsot.
-        /// </summary>
+        /// <inheritdoc />
         public string? GetSessionKey(string userId)
         {
             return _sessionKeys.TryGetValue(userId, out var key) ? key : null;

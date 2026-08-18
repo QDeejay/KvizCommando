@@ -42,12 +42,10 @@ namespace KvizCommando.Client.Services.User
             _sessionCache = sessionCache;
         }
 
-        /// <summary>
-        /// Hitelesíti a felhasználót a megadott bejelentkezési adatokkal.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<(bool Success, string Errors)> LoginAsync(LoginRequestForm formData)
         {
-            // Query param a RememberMe logikának megfelelően
+            // A szerver csak tartós bejelentkezésnél állít ki újrahasználható hitelesítési cookie-t.
             var url = formData.rememberMe
                 ? "login?useCookies=true"
                 : "login?useCookies=true&useSessionCookies=true";
@@ -63,15 +61,13 @@ namespace KvizCommando.Client.Services.User
 
             if (response.IsSuccessStatusCode)
             {
-                // Sikeres login: HttpOnly cookie-t a böngésző kezeli, nem kell JSON-t olvasni
+                // A HttpOnly cookie-t a böngésző kezeli, ezért sikeres válasznál nincs feldolgozandó törzs.
                 return (true, "");
             }
 
             return (false, "identityerrors.LoginFailed");
         }
-        /// <summary>
-        /// Kijelentkezteti az aktuális felhasználót.
-        /// </summary>
+        /// <inheritdoc />
         public async Task LogoutAsync(bool soft)
         {
             var SessionId = _sessionCache.SessionId;
@@ -121,9 +117,7 @@ namespace KvizCommando.Client.Services.User
             _sessionCache.Clear();
             _nav.NavigateTo($"/?reason={reason}", forceLoad: true);
         }
-        /// <summary>
-        /// Megerősíti a felhasználó e-mail-címét az Identity kódjával.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<bool> ConfirmEmailAsync(string userId, string code)
         {
 
@@ -145,12 +139,9 @@ namespace KvizCommando.Client.Services.User
             }
 
         }
-        /// <summary>
-        /// Elindítja az elfelejtett jelszó helyreállítási folyamatát.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<bool> ForgotPswAsync(ForgotPasswordRequestForm formData)
         {
-            // 
             var dto = new ForgotPasswordRequestForm()
             {
                 email = formData.email
@@ -168,9 +159,7 @@ namespace KvizCommando.Client.Services.User
 
 
         }
-        /// <summary>
-        /// Beállítja az új jelszót a helyreállítási kód alapján.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<(bool Success, List<string> Errors)> RecoverPasswordAsync(ResetPasswordForm formData)
         {
             var dto = new ResetPasswordDto()
@@ -202,13 +191,9 @@ namespace KvizCommando.Client.Services.User
 
             return (false, new List<string> { "DefaultError" });
         }
-        /// <summary>
-        /// Törli az aktuális felhasználói profilt.
-        /// </summary>
+        /// <inheritdoc />
         public Task<bool> ProfileDeleteAsync() => Task.FromResult(true);
-        /// <summary>
-        /// Regisztrálja a megadott felhasználói profilt.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<(bool Success, List<string> Errors)> ProfileRegistAsync(RegisterRequestForm formData)
         {
             var dto = new RegisterRequestDto()
@@ -241,9 +226,7 @@ namespace KvizCommando.Client.Services.User
 
             return (false, new List<string> { "DefaultError" });
         }
-        /// <summary>
-        /// Lekéri a bejelentkezés utáni beléptetési állapotot, és szükség esetén navigál.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<(bool CanNavigateHome, List<string> Errors)> CheckInStartAsync(bool needToRoute, CancellationToken ct = default)
         {
             string sessionId = Guid.NewGuid().ToString("N");
@@ -286,9 +269,7 @@ namespace KvizCommando.Client.Services.User
             await _audio.SetMutedAsync(false);
             return (true, new List<string>());
         }
-        /// <summary>
-        /// Elküldi a beléptetési adatokat, és visszaadja a lokalizálható hibakódokat.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<(bool Success, List<string> Errors, string SugDispName)> CheckInFinishedAsync(CheckInPostRequest request, CancellationToken ct = default)
         {
             var suggestedName = string.Empty;

@@ -39,6 +39,8 @@ namespace KvizCommando.Server.Controllers
         /// <summary>
         /// Lekéri a csapatképernyő megjelenítési adatait.
         /// </summary>
+        /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         [HttpGet("screen")]
         [ProducesResponseType(typeof(TeamDtos), 200)]
         [ProducesResponseType(401)]
@@ -65,6 +67,8 @@ namespace KvizCommando.Server.Controllers
         /// <summary>
         /// Feldolgozza a karakter képességpontjainak mentési kérését.
         /// </summary>
+        /// <param name="dto">A feldolgozandó kérés adatai.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         [HttpPost("modify")]
         [Consumes("application/json")]
         [Produces("application/json")]
@@ -117,6 +121,8 @@ namespace KvizCommando.Server.Controllers
         /// <summary>
         /// Végrehajtja a csapaton kért kezelési műveletet.
         /// </summary>
+        /// <param name="dto">A feldolgozandó kérés adatai.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ApiResponse), 200)]
@@ -181,6 +187,11 @@ namespace KvizCommando.Server.Controllers
 
         }
 
+        /// <summary>
+        /// A csapatműveletek egységes sikerességi válaszát írja le.
+        /// </summary>
+        /// <param name="Success">Jelzi, hogy az üzleti művelet sikeresen befejeződött-e.</param>
+        /// <param name="ServerVersion">A válaszhoz tartozó opcionális szerververzió.</param>
         public sealed record ApiResponse(bool Success, string? ServerVersion = null)
         {
             /// <summary>

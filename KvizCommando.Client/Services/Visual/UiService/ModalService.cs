@@ -14,6 +14,7 @@ namespace KvizCommando.Client.Services.Visual.UiService
         /// <summary>
         /// Megjeleníti a modális ablakot vagy a betöltésjelzőt.
         /// </summary>
+        /// <param name="param">A modális ablak tartalmát és működését leíró paraméterek.</param>
         public Task<ModalResult> ShowAsync(ModalBoxVm param)
         {
             Parameter = param;
@@ -28,6 +29,7 @@ namespace KvizCommando.Client.Services.Visual.UiService
         /// <summary>
         /// Átadja a modális művelet eredményét a várakozó hívónak.
         /// </summary>
+        /// <param name="result">A modális ablak hívójának visszaadott eredmény.</param>
         public void SendResult(ModalResult result)
         {
             var completion = _tcs;

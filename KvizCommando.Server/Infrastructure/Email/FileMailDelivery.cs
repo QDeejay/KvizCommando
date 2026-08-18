@@ -23,6 +23,12 @@ namespace KvizCommando.Infrastructure.Email
         /// <summary>
         /// Fejlesztési e-mail-fájlt ír a megadott levéltartalommal.
         /// </summary>
+        /// <param name="to">A címzett e-mail-címe.</param>
+        /// <param name="from">A feladó e-mail-címe.</param>
+        /// <param name="subject">Az üzenet tárgya.</param>
+        /// <param name="textBody">Az üzenet egyszerű szöveges törzse.</param>
+        /// <param name="htmlBody">Az üzenet HTML-formátumú törzse.</param>
+        /// <param name="cancellationToken">A művelet megszakítását jelző token.</param>
         public async Task WriteAsync(string to, string from, string subject, string textBody, string htmlBody, CancellationToken cancellationToken)
         {
             var fileName = $"{DateTime.UtcNow:yyyyMMdd_HHmmssfff}_{Guid.NewGuid():N}.eml";

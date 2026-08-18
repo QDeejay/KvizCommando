@@ -26,9 +26,7 @@ namespace KvizCommando.Server.Services.DtoMapping
         }
 
 
-        /// <summary>
-        /// Elmenti a karakter képességpontjain végzett módosítást.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<CacheUpdateResult> SaveModifiedSkillAsync(int playerid, ModifySkillRequest dto, CancellationToken ct = default)
         {
             return await _cache.UpdatePlayerLockedAsync(
@@ -132,9 +130,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                 ct);
         }
 
-        /// <summary>
-        /// Végrehajtja a csapaton kért kezelési műveletet.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<CacheUpdateResult> ManageTeamAsync(int playerid, ManageTeamRequest dto, CancellationToken ct = default)
         {
             return await _cache.UpdatePlayerLockedAsync(
@@ -309,9 +305,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                 },
                 ct);
         }
-        /// <summary>
-        /// Lekéri a csapatképernyő megjelenítési adatait.
-        /// </summary>
+        /// <inheritdoc />
         public async Task<TeamDtos?> GetTeamScreenDataAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
             var cacheResult = await _cache.GetOrLoadLockedAsync(

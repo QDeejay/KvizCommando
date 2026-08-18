@@ -6,9 +6,7 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {
     public class UserPaymentMethodConfiguration : IEntityTypeConfiguration<UserPaymentMethod>
     {
-        /// <summary>
-        /// Beállítja az entitás EF Core leképezését és adatbázis-korlátait.
-        /// </summary>
+        /// <inheritdoc />
         public void Configure(EntityTypeBuilder<UserPaymentMethod> b)
         {
             b.ToTable("UserPaymentMethods");

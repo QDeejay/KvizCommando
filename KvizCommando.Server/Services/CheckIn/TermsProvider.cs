@@ -21,7 +21,7 @@ namespace KvizCommando.Server.Services.CheckIn
         private readonly IMemoryCache _cache;
         private readonly ILogger<TermsProvider> _logger;
 
-        // Rövid, de kényelmes élettartam. Ha aktívan szerkeszted a fájlt, a ChangeToken azonnal érvénytelenít.
+        // A rövid lejárat korlátozza a fájlfigyelés hibájából eredő elavulást; a ChangeToken normál esetben azonnal érvénytelenít.
         private static readonly TimeSpan CacheTtl = TimeSpan.FromSeconds(45);
 
         public TermsProvider(IWebHostEnvironment env, IMemoryCache cache, ILogger<TermsProvider> logger)
@@ -37,9 +37,7 @@ namespace KvizCommando.Server.Services.CheckIn
 
         public string CurrentTermsEtag => GetCurrentTerms().Version;
 
-        /// <summary>
-        /// Visszaadja az aktuális ÁSZF-verzió metaadatait.
-        /// </summary>
+        /// <inheritdoc />
         public TermsMeta GetCurrentTerms()
         {
             var culture = NormalizeCulture(CultureInfo.CurrentUICulture?.Name ?? CultureInfo.CurrentCulture.Name);
@@ -90,7 +88,7 @@ namespace KvizCommando.Server.Services.CheckIn
                 meta = Fallback();
             }
 
-            // Cache beállítása: rövid TTL + file change token (ha van)
+            // A fájlfigyelő token azonnali, a lejárat pedig tartalék érvénytelenítést biztosít.
             var changeToken = _webRootProvider.Watch(pathRelative); // mindig ad IChangeToken-t, még ha nem is létezik
             _cache.Set(cacheKey, meta, new MemoryCacheEntryOptions()
                 .SetAbsoluteExpiration(CacheTtl)
@@ -99,9 +97,7 @@ namespace KvizCommando.Server.Services.CheckIn
             return meta;
         }
 
-        /// <summary>
-        /// Jelzi, hogy az ÁSZF-verzió elfogadható-e.
-        /// </summary>
+        /// <inheritdoc />
         public bool IsValidVersion(string version)
         {
             if (string.IsNullOrWhiteSpace(version)) return false;

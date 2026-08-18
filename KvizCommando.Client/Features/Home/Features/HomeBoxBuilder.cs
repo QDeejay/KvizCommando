@@ -11,6 +11,8 @@ public static class HomeBoxBuilder
     /// <summary>
     /// Összeállítja a bemeneti adatokhoz tartozó megjelenítési modellt.
     /// </summary>
+    /// <param name="hs">A kezdőképernyő forrásadata.</param>
+    /// <param name="lang">A feliratok feloldásához használt nyelvi szolgáltatás.</param>
     public static Dictionary<string, ContentBoxVm> Build(HomeScreen hs, ILanguageService lang)
     {
         var dict = new Dictionary<string, ContentBoxVm>(HomeBoxSpecs.Specs.Count);

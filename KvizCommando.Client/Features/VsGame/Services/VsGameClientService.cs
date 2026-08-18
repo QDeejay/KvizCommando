@@ -22,9 +22,7 @@ public sealed class VsGameClientService : IVsGameClientService
         _logger = logger;
     }
 
-    /// <summary>
-    /// Elmenti a rangsorolt játékhoz összeállított csapatot.
-    /// </summary>
+    /// <inheritdoc />
     public async Task<bool> SaveBattleTeamAsync(
         SaveBattleTeamRequest request,
         CancellationToken ct = default)
