@@ -341,6 +341,13 @@ public static class IdentityAuditFilterExtensions
                 details));
     }
 
-    private static bool IsFailedResult(object? result) =>
-        result is IStatusCodeHttpResult { StatusCode: >= 400 };
+    private static bool IsFailedResult(object? result)
+    {
+        while (result is INestedHttpResult nestedResult)
+        {
+            result = nestedResult.Result;
+        }
+
+        return result is IStatusCodeHttpResult { StatusCode: >= 400 };
+    }
 }

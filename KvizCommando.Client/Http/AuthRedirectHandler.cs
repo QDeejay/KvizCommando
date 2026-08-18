@@ -16,7 +16,9 @@ public class AuthRedirectHandler : DelegatingHandler
     "/login",
     "/register",
     "/api/checkin",
-    "/refresh"
+    "/refresh",
+    "/confirmemail",
+    "/resetpassword"
 ];
     protected override async Task<HttpResponseMessage> SendAsync(
      HttpRequestMessage request,
