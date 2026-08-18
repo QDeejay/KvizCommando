@@ -1,0 +1,218 @@
+﻿using Blazored.SessionStorage;
+using KvizCommando.Client.Features.Shared.Modal;
+using KvizCommando.Client.Features.Shared.Modal.Builders;
+using KvizCommando.Client.Features.Shared.Modal.ViewModels;
+using KvizCommando.Client.Models.StoreModels;
+using KvizCommando.Client.Services;
+using KvizCommando.Client.Utilities;
+using KvizCommando.Shared.Contracts.CheckIn;
+using KvizCommando.Shared.Options;
+using Microsoft.AspNetCore.Components;
+using System.Globalization;
+
+
+namespace KvizCommando.Client.Features.Login
+{
+    public partial class CheckIn : KcComponentBase
+    {
+        [Inject] private ISessionStorageService SessionStorage { get; set; } = default!;
+        [Inject] private HttpClient Http { get; set; } = default!;
+        [Inject] private IdentityRulesService IdentityRules { get; set; } = default!;
+
+        private string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+        private KcModal? _termsModal;
+        private ModalBoxVm _termsPar = new();
+        private string _fullHtml = string.Empty;
+        private MarkupString _renderHTML;
+        private MarkupString _termsHtml;
+        private MarkupString _privacyHtml;
+
+        private const string CHEKIN_CACHE_KEY = "checkin:status";
+        private CheckInSessionCache _cacheData = new();
+
+        private RegisterOptionsResponse? _options;
+
+        private CheckInPostRequest _formData = new();
+        private string _resultMessage { get; set; } = string.Empty;
+
+        private string _dynamicTitle { get; set; } = string.Empty; // Dinamikus oldal cím
+        private string _message { get; set; } = string.Empty; // Általános üzenet a felhasználónak
+        private bool _displayNameField { get; set; } = false;
+
+
+        private bool _isLoaded = false;
+
+        private bool CanCheckIn =>
+           (!string.IsNullOrWhiteSpace(_formData.DisplayName) || _cacheData.needsName == false)
+           && !string.IsNullOrWhiteSpace(_formData.AcceptedTermsVersion);
+
+        private bool _isAccepted;
+
+        private bool IsAccepted
+        {
+            get => _isAccepted;
+            set
+            {
+                if (_isAccepted != value)
+                {
+                    _isAccepted = value;
+                    if (value)
+                    {
+                        _formData.AcceptedTermsVersion = _cacheData.termsVersion;
+                    }
+                    else
+                    {
+                        _formData.AcceptedTermsVersion = string.Empty;
+                    }
+                }
+            }
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+            _options = await IdentityRules.GetRulesAsync();
+            var uri = Ui.Nav.ToAbsoluteUri(Ui.Nav.Uri);
+            var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+            var SugDispName = query["name"];
+            if (!string.IsNullOrEmpty(SugDispName))
+            {
+                _formData.DisplayName = !string.IsNullOrEmpty(SugDispName) && SugDispName.Length > 3
+                                        ? SugDispName
+                                        : string.Empty;
+                Ui.Nav.NavigateTo(uri.GetLeftPart(UriPartial.Path), replace: true);
+                await User.CheckInStartAsync(false);
+            }
+            _cacheData = await SessionStorage.GetItemAsync<CheckInSessionCache>(CHEKIN_CACHE_KEY);
+            if (_cacheData is not null)
+            {
+                _fullHtml = await Http.GetStringAsync(_cacheData.url);
+            }
+            _isLoaded = true;
+        }
+
+        private async Task HandleValidSubmit()
+
+        {
+            _resultMessage = string.Empty;
+
+            _displayNameField = false;
+            var dsp = _formData.DisplayName?.Trim() ?? string.Empty;
+
+            if (_options is not null)
+            {
+                if (_options.DisplayNameMinLength > dsp.Length && _cacheData.needsName == true)
+                {
+                    _resultMessage = Ui.Lang["identityerrors.DisplayNameTooShort"];
+                    _displayNameField = true;
+                }
+                else if (_options.DisplayNameMaxLength < dsp.Length & _cacheData.needsName == true)
+                {
+                    _resultMessage = Ui.Lang["identityerrors.DisplayNameTooLong"];
+                    _displayNameField = true;
+                }
+                else if (IsAccepted == false)
+                {
+                    _resultMessage = Ui.Lang["identityerrors.TermsNotAccepted"];
+                }
+            }
+            if ((_displayNameField && _cacheData.needsName) || IsAccepted == false)
+                return;
+            _formData.TeamName = _formData.DisplayName + Ui.Lang["checkin.Team.Append"];
+            // Kérés a szerver felé
+            var (response, errors, suggestedname) = await User.CheckInFinishedAsync(_formData);
+
+            if (response)
+            {
+                // Sikeres bejelentkezés után töröljük a cache-t
+                await SessionStorage.RemoveItemAsync(CHEKIN_CACHE_KEY);
+                Ui.Nav.NavigateTo("/home");
+                return;
+            }
+            // Hibák kezelése: a szerver identityerrors.* kulcsokat ad vissza
+            if (errors is { Count: > 0 })
+            {
+                // csak az első hibát mutatjuk; ha több kell, join-olható
+                _resultMessage = Ui.Lang[$"identityerrors.{errors[0]}"];
+            }
+            else
+            {
+                _resultMessage = Ui.Lang["identityerrors.DefaultError"];
+            }
+            if (suggestedname is not null && suggestedname != string.Empty)
+            {
+                _resultMessage += " " + Ui.Lang["checkin.Reason.SuggestedName"] + $" '{suggestedname}'.";
+                _formData.DisplayName = suggestedname;
+                _displayNameField = true;
+            }
+
+        }
+
+        private void BuildDynamicText()
+        {
+            if (_cacheData is null || (_cacheData.needsName == false && _cacheData.needsTerms == false))
+            {
+                _message = Ui.Lang["checkin.Reason.FallBack"];
+                _dynamicTitle = Ui.Lang["checkin.Title.Fallback"];
+            }
+            else if (_cacheData.needsName == true)
+            {
+                _cacheData.needsTerms = true;
+                _message = Ui.Lang["checkin.Reason.DisplayName"];
+                _dynamicTitle = Ui.Lang["checkin.Title.DisplayName"];
+            }
+            else
+            {
+                _message = Ui.Lang["checkin.Reason.TermsUpdated"];
+                _dynamicTitle = Ui.Lang["checkin.Title.TermsOutdated"];
+
+            }
+            _termsPar = MBoxBuilder.BuildParam(ModalTypes.Terms, Ui.Lang);
+        }
+
+        private async Task OpenTerms()
+        {
+            _termsHtml = new MarkupString(ExtractSection(_fullHtml, "terms"));
+            _termsPar = _termsPar with { Title = Ui.Lang["checkin.modal.TermsTitle"] };
+            _renderHTML = _termsHtml;
+            if (_termsModal is not null)
+                await _termsModal.ShowAsync(_termsPar);
+        }
+        private async Task OpenPrivacy()
+        {
+
+            _privacyHtml = new MarkupString(ExtractSection(_fullHtml, "privacy"));
+            _termsPar = _termsPar with { Title = Ui.Lang["checkin.modal.PrivacyTitle"] };
+            _renderHTML = _privacyHtml;
+            if (_termsModal is not null)
+                await _termsModal.ShowAsync(_termsPar);
+        }
+
+        private static Task AcceptTerms() => Task.CompletedTask;
+
+        private async Task NavigateHome()
+        {
+            await SessionStorage.RemoveItemAsync(CHEKIN_CACHE_KEY);
+            await User.LogoutAsync(true);
+            Ui.Nav.NavigateTo("/login");
+        }
+        /// Helpers
+        /// 
+        private static string ExtractSection(string html, string id)
+        {
+            var startTag = $"<div id=\"{id}\">";
+            var endTag = "</div>";
+
+            var start = html.IndexOf(startTag, StringComparison.OrdinalIgnoreCase);
+            if (start == -1) return string.Empty;
+
+            start += startTag.Length;
+            var end = html.IndexOf(endTag, start, StringComparison.OrdinalIgnoreCase);
+            if (end == -1) return string.Empty;
+
+            return html.Substring(start, end - start);
+        }
+    }
+
+
+}

@@ -1,0 +1,30 @@
+@page "/solo-game"
+
+@using KvizCommando.Client.Features.Solo.Components
+
+@inherits Utilities.KcComponentBase
+
+<LangGuard Culture="@Culture" Module="solo" OnReady="BuildBoxes">
+    <PageContainer>
+        @if (_isReady)
+        {
+            <div class="@SelectorCss">
+                @foreach (var bx in _boxOrder)
+                {
+                    var box = Box(bx);
+
+                    <ContentBox Vm="@box"
+                                OnClick="OnBoxClick">
+                        <ContentBody>
+                            @if (box.BodyComponent is not null)
+                            {
+                                <DynamicComponent Type="@box.BodyComponent"
+                                                  Parameters="@box.BodyParameters" />
+                            }
+                        </ContentBody>
+                    </ContentBox>
+                }
+            </div>
+        }
+    </PageContainer>
+</LangGuard>

@@ -1,0 +1,46 @@
+﻿.kc-regist-panel {
+    width: 380px;
+    margin: 10px auto;
+}
+
+.kc-regist-head {
+    text-align: center;
+    padding: 4px;
+}
+
+.kc-regist-body {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.kc-regist-body--divider {
+}
+kc-regist-body--success {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+.kc-regist-body--button-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* FOOTER */
+.kc-regist-footer {
+    margin-top:30px;
+    display: flex;
+    justify-content: left;
+}
+.kc-regist-error-row {
+    display: flex;
+    position: static;
+    bottom: 0;
+}
+

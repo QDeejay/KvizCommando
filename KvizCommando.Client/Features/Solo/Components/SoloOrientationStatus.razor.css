@@ -1,0 +1,144 @@
+.kc-solo-orientation-status {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.kc-solo-orientation-panel {
+    position: relative;
+    min-height: 1.7rem;
+    padding: .3rem .35rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(210, 255, 57, .45);
+    border-radius: 4px;
+    background-color: rgba(23, 23, 23, .58);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .65);
+    box-sizing: border-box;
+    color: #d2ff39;
+    text-shadow: 0 1px 2px #000;
+}
+
+.kc-solo-orientation-panel.has-tooltip {
+    pointer-events: auto;
+}
+
+.kc-solo-orientation-panel.has-tooltip:hover > .tooltip-box {
+    z-index: 5;
+    display: block;
+    width: max-content;
+    max-width: 170px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    border: 1px darkgrey dotted;
+    font-family: 'Courier New', monospace;
+    white-space: normal;
+    line-height: 20px;
+    text-align: center;
+}
+
+.kc-solo-orientation-xp {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: rgba(190, 195, 185, .65);
+}
+
+.kc-solo-orientation-xp.maxed {
+    color: #d2ff39;
+}
+
+.kc-solo-orientation-xp > .tooltip-box {
+    bottom: calc(100% + .35rem);
+    left: 0;
+}
+
+.kc-solo-orientation-score {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0 .4rem;
+    gap: .35rem;
+}
+
+    .kc-solo-orientation-score .bi-trophy-fill {
+        color: rgba(190, 195, 185, .65);
+    }
+
+        .kc-solo-orientation-score .bi-trophy-fill.maximum-score {
+            color: #d2ff39;
+        }
+.kc-solo-orientation-healing {
+    min-width: 1.8rem;
+    --vitality-color: rgba(190, 48, 42, .88);
+}
+
+.kc-solo-orientation-healing > .tooltip-box {
+    top: calc(100% + .35rem);
+    right: 0;
+}
+
+.kc-solo-orientation-heart {
+    position: relative;
+    width: 1em;
+    height: 1em;
+    display: block;
+    line-height: 1;
+}
+
+.kc-solo-orientation-heart i {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+}
+
+.kc-solo-orientation-heart .heart-empty {
+    color: rgba(204, 204, 204, .28);
+}
+
+.kc-solo-orientation-heart .heart-fill {
+    color: var(--vitality-color);
+    clip-path: inset(
+        calc(100% - var(--vitality-percent)) 0 0 0);
+}
+
+.kc-solo-orientation-healing.full {
+    --vitality-color: rgba(20, 82, 38, .88);
+}
+
+.kc-solo-orientation-healing.high {
+    --vitality-color: rgba(55, 145, 52, .82);
+}
+
+.kc-solo-orientation-healing.medium {
+    --vitality-color: rgba(191, 168, 0, .82);
+}
+
+.kc-solo-orientation-healing.low {
+    --vitality-color: rgba(220, 132, 31, .86);
+}
+
+.kc-solo-orientation-healing.critical {
+    --vitality-color: rgba(190, 48, 42, .88);
+}
+
+.kc-solo-orientation-panel.maxed {
+    background-color: rgba(48, 76, 43, .58);
+    border-color: rgba(126, 160, 95, .72);
+}
+.kc-solo-orientation-healing.healing-game {
+    background-color: rgba(112, 47, 47, .64);
+    border-color: rgba(190, 76, 76, .78);
+}

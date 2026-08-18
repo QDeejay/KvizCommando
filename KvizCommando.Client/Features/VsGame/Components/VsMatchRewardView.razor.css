@@ -1,0 +1,320 @@
+.kc-vs-reward {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    padding: 10px;
+    display: grid;
+    grid-template-rows: 42px minmax(0, 1fr);
+    gap: 8px;
+    overflow: hidden;
+    box-sizing: border-box;
+    color: #cccccc;
+    background: rgba(30, 32, 27, .96);
+    border: 2px solid #151713;
+    border-radius: 10px;
+    box-shadow:
+        inset 0 0 0 1px #55584a,
+        inset 0 0 16px rgba(0, 0, 0, .75);
+}
+
+.kc-vs-reward-title {
+    min-width: 0;
+    min-height: 40px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: #cccccc;
+    opacity: .9;
+    border: inset 1px #777;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, .4),
+        inset 0 4px 8px rgba(0, 0, 0, .7);
+    font-family: 'Special Elite', cursive;
+    font-size: clamp(1rem, 1.35vw, 1.35rem);
+    text-transform: uppercase;
+}
+
+.kc-vs-reward-title > strong,
+.kc-vs-reward-title > span {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    transform: translateY(3px);
+}
+
+.kc-vs-reward-title > strong {
+    min-width: 0;
+    overflow: hidden;
+    letter-spacing: .04em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kc-vs-reward-title > span {
+    flex: 0 0 auto;
+    color: #c6ef39;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+}
+
+.kc-vs-reward-body {
+    min-width: 0;
+    min-height: 0;
+    padding: 8px;
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #777850 #171910;
+}
+
+.kc-vs-reward-banner {
+    min-height: 56px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: clamp(1.15rem, 2vw, 1.55rem);
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.kc-vs-reward-panel {
+    min-width: 0;
+    padding: 12px 14px;
+    background: rgba(17, 22, 16, .94);
+    border: 1px solid #55583f;
+    border-radius: 7px;
+    box-shadow:
+        inset 0 0 9px rgba(0, 0, 0, .55),
+        0 3px 7px rgba(0, 0, 0, .35);
+}
+
+.kc-vs-reward-panel h3 {
+    margin: 0 0 10px;
+    color: #c6ef39;
+    font-family: 'Special Elite', cursive;
+    font-size: 1.05rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.kc-vs-reward-standing-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+}
+
+.kc-vs-reward-standing {
+    min-width: 0;
+    min-height: 47px;
+    padding: 6px 8px;
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) auto auto auto;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #55583f;
+    border-radius: 5px;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.kc-vs-reward-standing.me {
+    border: 2px solid #d8bd51;
+}
+
+.kc-vs-reward-standing.bot {
+    opacity: .48;
+}
+
+.kc-vs-reward-standing .place,
+.kc-vs-reward-standing .points {
+    color: #c6ef39;
+    font-size: 1rem;
+}
+
+.kc-vs-reward-standing div {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.kc-vs-reward-standing div > strong,
+.kc-vs-reward-standing div > small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kc-vs-reward-standing .time,
+.kc-vs-reward-standing div > small {
+    color: #aaa99f;
+    font-size: .72rem;
+}
+
+.kc-vs-reward-standing .bot-label {
+    color: #d15f52;
+    font-size: .7rem;
+}
+
+.kc-vs-reward-details {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+    gap: 10px;
+}
+
+.kc-vs-reward-panel dl {
+    margin: 0;
+    display: grid;
+}
+
+.kc-vs-reward-panel dl > div {
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid #3f4335;
+    font-family: 'Courier New', monospace;
+    font-size: .78rem;
+}
+
+.kc-vs-reward-panel dt {
+    color: #aaa99f;
+}
+
+.kc-vs-reward-panel dt small {
+    color: inherit;
+    font: inherit;
+    white-space: nowrap;
+}
+
+.kc-vs-reward-panel dd {
+    margin: 0;
+    color: #eee9dc;
+    font-weight: 700;
+    text-align: right;
+}
+
+.kc-vs-reward-panel dl > div.total dd {
+    color: #c6ef39;
+}
+
+.kc-vs-reward-panel dl > div.ranking-score {
+    min-height: 42px;
+    border-bottom-color: #777850;
+}
+
+.kc-vs-reward-panel .ranking-score dt {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #c6ef39;
+}
+
+.kc-vs-reward-panel .ranking-score dd {
+    color: #c6ef39;
+    font-size: 1rem;
+}
+
+.kc-vs-reward-panel dt.team-xp-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+
+.team-level-cycle { display: inline-grid; min-width: 76px; color: #c6ef39; pointer-events: none; }
+
+    .team-level-cycle > strong { grid-area: 1 / 1; white-space: nowrap; opacity: 0; }
+
+
+        .team-level-cycle > strong:first-child { animation: team-level-up-text 4s linear infinite; }
+
+        .team-level-cycle > strong:last-child { animation: team-level-up-level 4s linear infinite; }
+
+@keyframes team-level-up-text {
+    0% { opacity: 0; }
+
+    25% { opacity: 1; }
+
+    50% { opacity: 0; }
+
+    100% { opacity: 0; }
+}
+
+@keyframes team-level-up-level {
+    0% { opacity: 0; }
+
+    50% { opacity: 0; }
+
+    75% { opacity: 1; }
+
+    100% { opacity: 0; }
+}
+.kc-vs-reward-character-list {
+    display: grid;
+    gap: 7px;
+}
+
+.kc-vs-reward-character {
+    min-width: 0;
+    min-height: 63px;
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 9px;
+    border-bottom: 1px solid #3f4335;
+    font-family: 'Courier New', monospace;
+}
+
+.kc-vs-reward-character-picture {
+    position: relative;
+    isolation: isolate;
+    width: 40px;
+    height: 52px;
+    overflow: hidden;
+    background: rgba(23, 23, 23, .75);
+    border: inset 2px #555;
+    border-radius: 4px;
+}
+
+.kc-vs-reward-character-svg-host {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+}
+
+.kc-vs-reward-character > div:nth-child(2) {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.kc-vs-reward-character small {
+    color: #aaa99f;
+}
+
+.kc-vs-reward-character .character-xp.capped {
+    color: #d15f52;
+}
+
+.kc-vs-reward-character .pension {
+    color: #eee9dc;
+    font-size: .78rem;
+    white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+    .kc-vs-reward-standing-grid,
+    .kc-vs-reward-details {
+        grid-template-columns: 1fr;
+    }
+}

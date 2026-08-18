@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Recruiting – candidate card</title>
+    <style>
+        .kc-recruit-help{max-width:820px;margin:0 auto;color:var(--kc-help-text);font:15px/1.5 var(--kc-help-font-body)}.kc-recruit-help *{box-sizing:border-box}.kc-recruit-help .eyebrow{color:var(--kc-help-accent-soft);font:700 12px/1.2 var(--kc-help-font-display);letter-spacing:.13em}.kc-recruit-help h1{margin:8px 0 10px;color:var(--kc-help-title);font:400 clamp(28px,4vw,40px)/1.08 var(--kc-help-font-title)}.kc-recruit-help .lead{margin:0 0 15px;color:var(--kc-help-text-soft);font-size:16px}.kc-recruit-help .sample-wrap{display:grid;grid-template-columns:minmax(250px,320px) 1fr;align-items:start;gap:12px}.kc-recruit-help .candidate-item{position:relative;width:100%;height:96px;align-self:start}.kc-recruit-help .candidate-no{position:absolute;z-index:2;top:11px;left:10px;width:20px;color:#87947e;font:400 11px/1 var(--kc-help-font-display);pointer-events:none}.kc-recruit-help .candidate{width:100%;height:100%;min-width:0;padding:8px 9px 8px 38px;overflow:hidden;color:#ccc;background:rgba(27,33,27,.88);border:1px solid #55583f;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(119,120,80,.14),0 3px 7px rgba(0,0,0,.32)}.kc-recruit-help .candidate-head{display:flex;align-items:center;justify-content:space-between;gap:6px;padding-bottom:5px}.kc-recruit-help .candidate-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:pink;font:400 14px/1.2 var(--kc-help-font-title)}.kc-recruit-help .candidate-orient{flex:0 0 auto;color:#d9ddb0;font:400 12px/1 var(--kc-help-font-display);white-space:nowrap}.kc-recruit-help .categories{min-width:0;padding-top:5px;overflow:hidden;color:#ccc;border-top:1px solid #55583f;font:400 12px/1.25 var(--kc-help-font-display)}.kc-recruit-help .categories div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.kc-recruit-help .facts{display:grid;gap:8px}.kc-recruit-help .fact{padding:10px 12px;border:1px solid var(--kc-help-border);border-radius:7px;background:var(--kc-help-panel)}.kc-recruit-help .fact b{display:block;color:var(--kc-help-title)}.kc-recruit-help .modifier-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}.kc-recruit-help .modifier{padding:10px 12px;border-top:3px solid var(--kc-help-accent);border-radius:5px;background:var(--kc-help-panel)}.kc-recruit-help .modifier b{display:block;color:var(--kc-help-title)}.kc-recruit-help .good{color:#7f9368}.kc-recruit-help .bad{color:#a86b61}@media(max-width:680px){.kc-recruit-help .sample-wrap,.kc-recruit-help .modifier-grid{grid-template-columns:1fr}.kc-recruit-help .candidate-item{max-width:320px}.kc-recruit-help .lead{font-size:15px}}
+    </style>
+</head>
+<body>
+<section class="kc-help-document kc-recruit-help">
+    <div class="eyebrow">RECRUITING // 02 / 05</div>
+    <h1>What does a candidate card show?</h1>
+    <p class="lead">The card provides a quick comparison. After selecting a candidate, use the Hire button to view the complete details.</p>
+
+    <div class="sample-wrap">
+        <div class="candidate-item">
+            <span class="candidate-no">03</span>
+            <div class="candidate">
+                <div class="candidate-head"><span class="candidate-name">Aaren Abercrombie</span><span class="candidate-orient">&lt;Eng&gt;</span></div>
+                <div class="categories"><div>{{RECRUIT_ORIENTATION_06_CATEGORY_01}}</div><div>{{RECRUIT_ORIENTATION_05_CATEGORY_01}}</div><div>{{RECRUIT_ORIENTATION_01_CATEGORY_01}}</div></div>
+            </div>
+        </div>
+        <div class="facts">
+            <div class="fact"><b>Secondary orientation</b>The abbreviation beside the name identifies it. The character's secondary modifiers come from this orientation.</div>
+            <div class="fact"><b>Three categories</b>The categories of the primary, secondary and extra favourable modifiers.</div>
+            <div class="fact"><b>Selection</b>Selecting the card displays the portrait and the Hire button on the left.</div>
+        </div>
+    </div>
+
+    <div class="modifier-grid">
+        <div class="modifier"><b>Primary modifiers</b>They come from the primary orientation fixed by the team position.</div>
+        <div class="modifier"><b>Secondary modifiers</b>They come from the candidate's secondary orientation.</div>
+        <div class="modifier"><b>Extra modifiers</b>They are associated with the character's sex.</div>
+    </div>
+
+    <p><span class="good"><b>Green:</b></span> favourable modifier. <span class="bad"><b>Red:</b></span> unfavourable modifier. The details show their values in seconds.</p>
+</section>
+</body>
+</html>

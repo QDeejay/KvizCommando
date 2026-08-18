@@ -1,0 +1,73 @@
+﻿
+.htp-tabbar {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1px;
+    user-select: none;
+    height: 35px;
+    color: #cccccc;
+    z-index:101;
+}
+
+.htp-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: 'Courier New', monospace;
+    background: rgba(10, 10, 10, 0.1);
+    transition: 0.3s;
+    cursor: url('/Images/cursors/normal.cur'), default;
+    border-radius: 0 0 8px 8px;
+    font-size: 1.2rem;
+    letter-spacing: 0.2px;
+    text-align: center;
+    line-height: 30px;
+}
+
+.htp-tab.disabled:hover .tooltip-box {
+    display: block;
+    padding-left: 10px;
+    padding-right: 10px;
+    top: -20px;
+}
+    .htp-tab:hover {
+        background: rgba(99, 99, 99, 0.4);
+        cursor: url('/Images/cursors/active.cur'), pointer;
+    }
+
+.htp-tab.active {
+    background: #0c1f17;
+    font-weight: bold;
+    border: 1px solid #004400;
+    box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.6);
+    cursor: url('/Images/cursors/normal.cur'), default;
+    width: max-content;
+    max-width: 100%;
+    border-top: none;
+}
+
+.htp-tab.disabled {
+    background: rgba(255,45,45,0.15);
+    color: #cccccc;
+    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+}
+
+.tab-text {
+    display: block;
+    padding: 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tooltip-box {
+    border: 1px darkgrey dotted;
+}

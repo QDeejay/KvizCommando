@@ -1,0 +1,138 @@
+﻿.modal-display {
+    container-name: modal-render;
+    container-type: inline-size;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.modal-layout {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    font-size: 1.2rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+.category-label,
+.remark-title {
+    text-decoration: underline;
+}
+
+.question-label {
+    margin-bottom: 0.75rem;
+    font-weight: bold;
+}
+
+.answer-label {
+    margin-bottom: 0.55rem;
+    font-size: 0.9rem;
+}
+
+.answer-label.correct {
+    font-weight: bold;
+}
+
+.remark-label {
+    min-width: 0;
+    font-size: 0.9rem;
+}
+
+.remark-label p {
+    margin-bottom: 0;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    margin: 2px 0;
+    color: #666;
+    text-align: center;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1 1 auto;
+    min-width: 0;
+    border-bottom: 1px solid #666;
+}
+
+.divider:not(:empty)::before {
+    margin-right: 0.75em;
+}
+
+.divider:not(:empty)::after {
+    margin-left: 0.75em;
+}
+
+.status-row {
+    font-weight: bold;
+}
+
+.submited-at {
+    font-size: 0.7rem;
+}
+
+.statistic-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.statistic-row > div {
+    display: grid;
+    grid-template-columns: minmax(0, 160px) minmax(0, 1fr);
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.label-statistic {
+    min-width: 0;
+    font-size: 0.9rem;
+}
+
+.label-result {
+    min-width: 0;
+    font-size: 1rem;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+@container modal-render (max-width: 32rem) {
+    .modal-layout {
+        font-size: 0.95rem;
+        line-height: 1.35;
+    }
+
+    .question-label {
+        margin-bottom: 0.5rem;
+    }
+
+    .answer-label,
+    .remark-label,
+    .label-statistic {
+        font-size: 0.82rem;
+    }
+
+    .label-result {
+        font-size: 0.9rem;
+        text-align: right;
+    }
+
+    .statistic-row > div {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.35rem;
+    }
+
+    .divider:not(:empty)::before {
+        margin-right: 0.4em;
+    }
+
+    .divider:not(:empty)::after {
+        margin-left: 0.4em;
+    }
+}

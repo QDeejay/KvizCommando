@@ -1,0 +1,14 @@
+<div class="kc-character-vitality @(Compact ? "compact" : string.Empty) state-@VitalityCssClass @_damageCssClass">
+    <span class="kc-character-vitality-fill @VitalityCssClass"
+          style="@VitalityWidth"></span>
+
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <span class="kc-character-vitality-label">@Label</span>
+    }
+
+    @if (ShowValue)
+    {
+        <strong>@DisplayedCurrent / @VitalityMaximum</strong>
+    }
+</div>

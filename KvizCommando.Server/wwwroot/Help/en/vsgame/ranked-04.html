@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Ranked battlefields – preparation</title>
+    <style>
+        .kc-vs-help{max-width:820px;margin:0 auto;color:var(--kc-help-text);font:14px/1.4 var(--kc-help-font-body)}.kc-vs-help *{box-sizing:border-box}.kc-vs-help .eyebrow{color:var(--kc-help-accent-soft);font:700 12px/1.2 var(--kc-help-font-display);letter-spacing:.13em}.kc-vs-help h1{margin:8px 0 8px;color:var(--kc-help-title);font:400 clamp(27px,4vw,38px)/1.08 var(--kc-help-font-title)}.kc-vs-help .lead{margin:0 0 10px;color:var(--kc-help-text-soft);font-size:15px}.kc-vs-help .phase-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px}.kc-vs-help .phase{padding:10px 11px;border:1px solid var(--kc-help-border);border-radius:7px;background:var(--kc-help-panel)}.kc-vs-help .phase small{color:var(--kc-help-accent-soft);font-family:var(--kc-help-font-display)}.kc-vs-help .phase b{display:block;margin:3px 0;color:var(--kc-help-title)}.kc-vs-help .prep-stage{padding:10px;background:rgba(30,32,27,.96);border:2px solid #151713;border-radius:10px;box-shadow:inset 0 0 0 1px #55584a,inset 0 0 16px rgba(0,0,0,.75)}.kc-vs-help .kc-vs-prep-info{min-width:0;min-height:40px;padding:0 8px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#ccc;opacity:.9;border:inset 1px #777;box-shadow:0 4px 16px rgba(0,0,0,.4),inset 0 4px 8px rgba(0,0,0,.7);font-family:'Special Elite',cursive;font-size:clamp(1rem,1.35vw,1.35rem);text-transform:uppercase}.kc-vs-help .kc-vs-prep-info>strong,.kc-vs-help .kc-vs-prep-info>span{align-self:stretch;display:flex;align-items:center;transform:translateY(3px)}.kc-vs-help .kc-vs-prep-info>span{flex:0 0 auto;font-family:'Share Tech Mono',monospace;font-size:1rem}.kc-vs-help .kc-vs-prep-round{min-height:62px;margin-top:8px;display:grid;grid-template-columns:minmax(190px,1.15fr) minmax(135px,1.2fr) minmax(115px,.95fr) minmax(70px,.6fr);align-items:stretch;gap:7px;overflow:hidden}.kc-vs-help .kc-vs-prep-round-character,.kc-vs-help .kc-vs-prep-round-category,.kc-vs-help .kc-vs-prep-round-help,.kc-vs-help .kc-vs-prep-round-modifier{min-width:0;min-height:0;height:100%;overflow:hidden;color:#e6e2d5;background:linear-gradient(180deg,#3b3f2b,#292d1d);border:2px solid #171910;border-radius:7px;box-shadow:inset 0 0 0 1px #777850,0 2px 3px rgba(0,0,0,.6)}.kc-vs-help .kc-vs-prep-round-character{padding:4px 7px;display:grid;grid-template-columns:38px minmax(0,1fr);align-items:center;gap:7px}.kc-vs-help .round-picture{width:38px;aspect-ratio:138/176;display:grid;place-items:center;overflow:hidden;background:rgba(23,23,23,.72);border:inset 1px #666;font-size:1.7rem}.kc-vs-help .round-copy{min-width:0;display:flex;flex-direction:column;justify-content:center;gap:3px;font-family:'Courier New',monospace}.kc-vs-help .round-copy small{color:#aaa99f;font-size:.68rem;text-transform:uppercase}.kc-vs-help .round-copy strong{overflow:hidden;color:#eee9dc;font-size:.88rem;text-overflow:ellipsis;white-space:nowrap}.kc-vs-help .kc-vs-prep-round-category,.kc-vs-help .kc-vs-prep-round-help{position:relative;padding:4px;display:grid;place-items:center;cursor:url('/Images/cursors/active.cur'),pointer}.kc-vs-help .kc-vs-prep-round-category.assignable,.kc-vs-help .kc-vs-prep-round-help.assignable{border-color:rgba(210,255,57,.62);box-shadow:inset 0 0 0 1px rgba(210,255,57,.2),0 0 6px rgba(210,255,57,.22)}.kc-vs-help .kc-vs-prep-round-category i,.kc-vs-help .kc-vs-prep-round-help i{color:#c6ef39;font-size:1.5rem}.kc-vs-help .kc-vs-prep-round-modifier{display:grid;place-items:center;color:#c6ef39;font-family:'Share Tech Mono',monospace}.kc-vs-help .prep-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}.kc-vs-help .prep-actions .button-on-lcd{width:50px;height:50px;pointer-events:none}.kc-vs-help .help-note{margin-top:10px;padding:9px 11px;border-left:4px solid var(--kc-help-accent);background:var(--kc-help-panel);color:var(--kc-help-text-soft)}.kc-vs-help .help-note b{color:var(--kc-help-title)}@media(max-width:680px){.kc-vs-help .phase-grid{grid-template-columns:1fr}.kc-vs-help .kc-vs-prep-round{grid-template-columns:1fr 58px 58px 54px}.kc-vs-help .round-copy small{display:none}}
+        .kc-vs-help .kc-vs-prep-round{grid-template-columns:minmax(215px,1.15fr) minmax(160px,1.2fr) minmax(125px,.95fr) minmax(76px,.6fr)}.kc-vs-help .kc-vs-prep-actions{flex:0 0 auto;display:flex;justify-content:flex-end;gap:7px;margin-top:8px}.kc-vs-help .kc-vs-prep-actions .button-on-lcd{width:40px;height:40px;pointer-events:none}@media(max-width:980px){.kc-vs-help .kc-vs-prep-round{grid-template-columns:minmax(190px,1.15fr) minmax(130px,1.1fr) minmax(95px,.8fr) 70px}}
+    </style>
+</head>
+<body>
+<section class="kc-help-document kc-vs-help">
+    <div class="eyebrow">RANKED BATTLEFIELDS // 04 / 06</div>
+    <h1>Three-step preparation</h1>
+    <p class="lead">Each step allows <b>{{VS_PREPARATION_SECONDS}}</b> seconds. The Finish button locks the current step; it can no longer be changed afterwards.</p>
+
+    <div class="phase-grid">
+        <div class="phase"><small>1 / 3</small><b>Character order</b>Assign every team member to a normal round. The same character can only be used once.</div>
+        <div class="phase"><small>2 / 3</small><b>Assign categories</b>Select a loadout category, then click its destination round. Each loadout slot can only be assigned once.</div>
+        <div class="phase"><small>3 / 3</small><b>Assign helps</b>Using a help is optional. Each help type can be assigned to no more than one round.</div>
+    </div>
+
+    <div class="prep-stage" aria-label="Preparation round example">
+        <header class="kc-vs-prep-info"><strong>Assign your categories to rounds!</strong><span>2 / 3</span></header>
+        <div class="kc-vs-prep-round">
+            <div class="kc-vs-prep-round-character"><span class="round-picture"><i class="bi bi-person-fill"></i></span><span class="round-copy"><small>1st normal round</small><strong>Darn Pateros</strong></span></div>
+            <button type="button" class="kc-vs-prep-round-category assignable" tabindex="-1"><i class="bi bi-grid-3x3-gap"></i></button>
+            <button type="button" class="kc-vs-prep-round-help" tabindex="-1"><i class="bi bi-life-preserver"></i></button>
+            <div class="kc-vs-prep-round-modifier">+1.5s</div>
+        </div>
+        <div class="kc-vs-prep-actions"><button type="button" class="button-on-lcd" tabindex="-1" aria-label="Reset"><i class="bi bi-arrow-counterclockwise"></i></button><button type="button" class="button-on-lcd" tabindex="-1" aria-label="Finish"><i class="bi bi-check2"></i></button></div>
+    </div>
+
+    <div class="help-note"><b>Captain round:</b> an own-question slot cannot be assigned to a normal round; it remains available among the captain-round choices. 50–50 and AI Help can also be assigned there, while Guess Range and Time Freeze can only be used in normal rounds. When time expires, required character and category slots are filled automatically; helps may remain unused.</div>
+</section>
+</body>
+</html>

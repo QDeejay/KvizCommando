@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Team members – development</title>
+    <style>
+        .kc-member-help{max-width:820px;margin:0 auto;color:var(--kc-help-text);font:15px/1.45 var(--kc-help-font-body)}.kc-member-help *{box-sizing:border-box}.kc-member-help .eyebrow{color:var(--kc-help-accent-soft);font:700 12px/1.2 var(--kc-help-font-display);letter-spacing:.13em}.kc-member-help h1{margin:8px 0 9px;color:var(--kc-help-title);font:400 clamp(28px,4vw,40px)/1.08 var(--kc-help-font-title)}.kc-member-help .lead{max-width:760px;margin:0 0 14px;color:var(--kc-help-text-soft);font-size:16px}.kc-member-help .view-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-bottom:12px}.kc-member-help .view{display:grid;grid-template-columns:42px 1fr;gap:11px;align-items:center;padding:10px 12px;border:1px solid var(--kc-help-border);border-radius:7px;background:var(--kc-help-panel)}.kc-member-help .icon{display:grid;place-items:center;width:40px;height:36px;color:var(--kc-help-accent);border:1px solid var(--kc-help-border);border-radius:5px;background:var(--kc-help-panel-strong);font-size:20px}.kc-member-help .view b{display:block;color:var(--kc-help-title)}.kc-member-help .steps{display:grid;gap:8px}.kc-member-help .step{padding:10px 13px;border:1px solid var(--kc-help-border);border-radius:7px;background:var(--kc-help-panel)}.kc-member-help .step b{color:var(--kc-help-title)}.kc-member-help .controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}.kc-member-help .control{padding:9px 8px;border:1px solid var(--kc-help-border);border-radius:6px;background:var(--kc-help-panel-strong);text-align:center}.kc-member-help .control i{display:block;margin-bottom:4px;color:var(--kc-help-accent);font-size:20px}.kc-member-help .warning{margin-top:12px;padding:10px 13px;border-left:4px solid #a86b61;background:var(--kc-help-panel-strong);color:var(--kc-help-text-soft)}.kc-member-help .shortcut{display:inline-block;margin-top:14px;padding:7px 10px;color:var(--kc-help-text-soft);border:1px solid var(--kc-help-border);border-radius:5px;background:var(--kc-help-panel);font-family:var(--kc-help-font-display)}@media(max-width:700px){.kc-member-help .view-grid{grid-template-columns:1fr}.kc-member-help .controls{grid-template-columns:repeat(2,minmax(0,1fr))}.kc-member-help .lead{font-size:15px}}
+    </style>
+</head>
+<body>
+<section class="kc-help-document kc-member-help">
+    <div class="eyebrow">TEAM MEMBERS // 05 / 05</div>
+    <h1>Allocating development points</h1>
+    <p class="lead">A team member's Sp can increase the level of secondary and extra modifiers.</p>
+
+    <div class="view-grid">
+        <div class="view"><span class="icon"><i class="bi bi-person-vcard" aria-hidden="true"></i></span><div><b>Overview</b>Return to the modifier list.</div></div>
+        <div class="view"><span class="icon"><i class="bi bi-layers" aria-hidden="true"></i></span><div><b>Secondary</b>Develop secondary modifiers.</div></div>
+        <div class="view"><span class="icon"><i class="bi bi-stars" aria-hidden="true"></i></span><div><b>Extra</b>Develop extra modifiers.</div></div>
+    </div>
+
+    <div class="steps">
+        <div class="step"><b>Level indicator:</b> the first number is the current level; the second is the highest level currently available at the character's rank.</div>
+        <div class="step"><b>Not yet available:</b> the row shows the Lvl from which the modifier can be developed.</div>
+        <div class="step"><b>Maxed out:</b> the modifier has reached its final maximum level.</div>
+        <div class="step"><b>Modify (N):</b> N is the number of development points allocated but not yet saved.</div>
+    </div>
+
+    <div class="controls">
+        <div class="control"><i class="bi bi-dash-lg" aria-hidden="true"></i>Remove one planned level</div>
+        <div class="control"><i class="bi bi-plus-lg" aria-hidden="true"></i>Plan one new level</div>
+        <div class="control"><i class="bi bi-trash3-fill" aria-hidden="true"></i>Discard every planned change</div>
+        <div class="control"><i class="bi bi-floppy" aria-hidden="true"></i>Save allocated points</div>
+    </div>
+
+    <div class="warning">Development points cannot be allocated at 0 vitality; the team member's vitality must be restored first. Switching to another character or view discards allocations that have not been saved. Development points already saved cannot be refunded.</div>
+    <span class="shortcut">F1 – open help again</span>
+</section>
+</body>
+</html>

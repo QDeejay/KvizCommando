@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Ranked battlefields – captain round and result</title>
+    <style>
+        .kc-vs-help{max-width:820px;margin:0 auto;color:var(--kc-help-text);font:14px/1.4 var(--kc-help-font-body)}.kc-vs-help *{box-sizing:border-box}.kc-vs-help .eyebrow{color:var(--kc-help-accent-soft);font:700 12px/1.2 var(--kc-help-font-display);letter-spacing:.13em}.kc-vs-help h1{margin:8px 0 8px;color:var(--kc-help-title);font:400 clamp(27px,4vw,38px)/1.08 var(--kc-help-font-title)}.kc-vs-help .lead{margin:0 0 10px;color:var(--kc-help-text-soft);font-size:15px}.kc-vs-help .captain{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px}.kc-vs-help .captain>div{padding:10px 11px;border:1px solid var(--kc-help-border);border-radius:7px;background:var(--kc-help-panel)}.kc-vs-help .captain b{display:block;margin-bottom:3px;color:var(--kc-help-title)}.kc-vs-help .reward-stage{padding:10px;background:rgba(30,32,27,.96);border:2px solid #151713;border-radius:10px;box-shadow:inset 0 0 0 1px #55584a,inset 0 0 16px rgba(0,0,0,.75)}.kc-vs-help .kc-vs-reward-banner{min-height:56px;padding:8px 16px;display:flex;align-items:center;justify-content:center;gap:12px;color:#222f16;background-color:rgba(210,255,57,.9);border:inset 2px #777;border-radius:4px;box-shadow:0 4px 16px rgba(0,0,0,.4),inset 0 4px 8px rgba(0,0,0,.7);font-family:'Share Tech Mono',monospace;font-size:clamp(1.15rem,2vw,1.55rem);font-weight:700;text-align:center;text-transform:uppercase}.kc-vs-help .kc-vs-reward-panel{min-width:0;margin-top:8px;padding:12px 14px;background:rgba(17,22,16,.94);border:1px solid #55583f;border-radius:7px;box-shadow:inset 0 0 9px rgba(0,0,0,.55),0 3px 7px rgba(0,0,0,.35)}.kc-vs-help .kc-vs-reward-panel h3{margin:0 0 10px;color:#c6ef39;font-family:'Special Elite',cursive;font-size:1.05rem;letter-spacing:.06em;text-transform:uppercase}.kc-vs-help .kc-vs-reward-standing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.kc-vs-help .kc-vs-reward-standing{min-width:0;min-height:47px;padding:6px 8px;display:grid;grid-template-columns:34px minmax(0,1fr) auto auto;align-items:center;gap:8px;border:1px solid #55583f;border-radius:5px;font-family:'Share Tech Mono',monospace}.kc-vs-help .kc-vs-reward-standing.me{border:2px solid #d8bd51}.kc-vs-help .kc-vs-reward-standing .place,.kc-vs-help .kc-vs-reward-standing .points{color:#c6ef39;font-size:1rem}.kc-vs-help .kc-vs-reward-standing div{min-width:0;display:flex;flex-direction:column}.kc-vs-help .kc-vs-reward-standing div>*{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.kc-vs-help .kc-vs-reward-standing .time,.kc-vs-help .kc-vs-reward-standing small{color:#aaa99f;font-size:.72rem}.kc-vs-help .reward-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.kc-vs-help .reward{padding:9px 11px;border:1px solid var(--kc-help-border);border-radius:7px;background:var(--kc-help-panel);color:var(--kc-help-text-soft)}.kc-vs-help .reward b{display:block;color:var(--kc-help-title)}.kc-vs-help .shortcut{display:inline-block;margin-top:12px;padding:7px 10px;color:var(--kc-help-text-soft);border:1px solid var(--kc-help-border);border-radius:5px;background:var(--kc-help-panel);font-family:var(--kc-help-font-display)}@media(max-width:650px){.kc-vs-help .captain,.kc-vs-help .reward-grid{grid-template-columns:1fr}.kc-vs-help .kc-vs-reward-standing-grid{grid-template-columns:1fr}}
+        .kc-vs-help .kc-vs-reward-standing{grid-template-columns:34px minmax(0,1fr) auto auto auto}.kc-vs-help .kc-vs-reward-standing .bot-label{color:#d15f52;font-size:.7rem}
+    </style>
+</head>
+<body>
+<section class="kc-help-document kc-vs-help">
+    <div class="eyebrow">RANKED BATTLEFIELDS // 06 / 06</div>
+    <h1>Captain round and final result</h1>
+    <p class="lead">After the normal rounds, every player becomes the questioner once during the captain round.</p>
+
+    <div class="captain">
+        <div><b>Reverse order</b>The player currently in last place selects a captain question first; the leader selects last.</div>
+        <div><b>Remaining questions</b>Each player chooses from loadout slots not used during the normal rounds.</div>
+        <div><b>{{VS_CAPTAIN_MULTIPLIER}}× point value</b>The captain-round base unit is {{VS_CAPTAIN_POINT_UNIT}} points. There is no round-winner bonus, character XP or vitality change, but the player with the best combined captain-round time receives the speed bonus starting at {{VS_CAPTAIN_POINT_UNIT}} points. A questioner's own-question time is excluded here as well.</div>
+    </div>
+
+    <div class="reward-stage" aria-label="Final result example">
+        <div class="kc-vs-reward-banner"><i class="bi bi-trophy-fill"></i><strong>ALPHA TEAM · VICTORY</strong></div>
+        <section class="kc-vs-reward-panel">
+            <h3>Final standing</h3>
+            <div class="kc-vs-reward-standing-grid">
+                <article class="kc-vs-reward-standing me"><strong class="place">1.</strong><div><strong>Alpha Team</strong><small>Player · Lvl-12</small></div><span class="bot-label"></span><strong class="points">18 P</strong><span class="time">54.2s</span></article>
+                <article class="kc-vs-reward-standing"><strong class="place">2.</strong><div><strong>Bravo Team</strong><small>Opponent · Lvl-11</small></div><span class="bot-label"></span><strong class="points">14 P</strong><span class="time">49.8s</span></article>
+            </div>
+        </section>
+    </div>
+
+    <div class="reward-grid">
+        <div class="reward"><b>Final order</b>Total points decide first. If points are equal, the lower combined time ranks higher.</div>
+        <div class="reward"><b>Leaderboard result</b>The winner's net points receive a {{VS_WINNER_COMPENSATION_MIN}}–{{VS_WINNER_COMPENSATION_MAX}} winner-compensation multiplier based on the team level held when the result was achieved. Every other player uses {{VS_WINNER_COMPENSATION_MIN}}, so their leaderboard result equals their net points. Each player's best result becomes their all-time record.</div>
+        <div class="reward"><b>Credits</b>The winner sees the returned stake, prize and team-level bonus separately.</div>
+        <div class="reward"><b>Team</b>When team XP is available, the result separates the character-average and score-derived portions.</div>
+        <div class="reward"><b>Characters</b>XP earned in normal rounds, vitality loss and any retirement fund are shown for each character.</div>
+    </div>
+
+    <span class="shortcut">F1 – reopen this help</span>
+</section>
+</body>
+</html>

@@ -1,0 +1,112 @@
+.kc-character-vitality {
+    position: relative;
+    width: 100%;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    isolation: isolate;
+    background-color: var(--kc-lcd-background, rgba(210, 255, 57, .9));
+    background-image: repeating-linear-gradient(
+        0deg,
+        var(--kc-lcd-scanline, rgba(20, 28, 10, .025)) 0,
+        var(--kc-lcd-scanline, rgba(20, 28, 10, .025)) 1px,
+        transparent 1px,
+        transparent 4px);
+    border: 2px solid rgba(51, 51, 51, .8);
+    box-sizing: border-box;
+}
+
+.kc-character-vitality.compact {
+    height: 15px;
+    border-width: 1px;
+    border-color: #171d11;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, .18);
+}
+
+.kc-character-vitality-fill {
+    position: absolute;
+    z-index: 0;
+    inset: 0 auto 0 0;
+    transition: width .25s ease;
+    box-shadow: inset -1px 0 0 #050805;
+}
+
+.kc-character-vitality-fill.full {
+    background-color: rgba(20, 82, 38, .88);
+}
+
+.kc-character-vitality-fill.high {
+    background-color: rgba(55, 145, 52, .82);
+}
+
+.kc-character-vitality-fill.medium {
+    background-color: rgba(191, 168, 0, .82);
+}
+
+.kc-character-vitality-fill.low {
+    background-color: rgba(220, 132, 31, .86);
+}
+
+.kc-character-vitality-fill.critical {
+    background-color: rgba(190, 48, 42, .88);
+}
+
+.kc-character-vitality-label,
+.kc-character-vitality > strong {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+    overflow: hidden;
+    color: #222f16;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: .78rem;
+    line-height: 1;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kc-character-vitality.compact
+    .kc-character-vitality-label,
+.kc-character-vitality.compact > strong {
+    padding: 0 3px;
+    font-size: .67rem;
+}
+
+.kc-character-vitality.state-full
+    .kc-character-vitality-label,
+.kc-character-vitality.state-full > strong {
+    color: #edf5d8;
+    text-shadow: 0 1px 2px rgba(3, 18, 7, .9);
+}
+
+.kc-character-vitality.damage-a {
+    animation: kc-character-vitality-damage-a .48s ease-out;
+}
+
+.kc-character-vitality.damage-b {
+    animation: kc-character-vitality-damage-b .48s ease-out;
+}
+
+@keyframes kc-character-vitality-damage-a {
+    0%, 100% {
+        box-shadow: none;
+    }
+
+    35% {
+        box-shadow: 0 0 8px rgba(222, 65, 53, .95);
+    }
+}
+
+@keyframes kc-character-vitality-damage-b {
+    0%, 100% {
+        box-shadow: none;
+    }
+
+    35% {
+        box-shadow: 0 0 8px rgba(222, 65, 53, .95);
+    }
+}

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="hu">
+<head>
+    <meta charset="utf-8">
+    <title>Kategóriajáték – jutalom</title>
+    <style>
+        .kc-solo-help{max-width:820px;margin:0 auto;color:var(--kc-help-text);font:15px/1.43 var(--kc-help-font-body)}.kc-solo-help *{box-sizing:border-box}.kc-solo-help .eyebrow{color:var(--kc-help-accent-soft);font:700 12px/1.2 var(--kc-help-font-display);letter-spacing:.13em}.kc-solo-help h1{margin:8px 0 9px;color:var(--kc-help-title);font:400 clamp(28px,4vw,40px)/1.08 var(--kc-help-font-title)}.kc-solo-help .lead{margin:0 0 12px;color:var(--kc-help-text-soft);font-size:16px}.kc-solo-help .reward-card{padding:11px 13px;border:1px solid var(--kc-help-border);border-radius:7px;background:var(--kc-help-panel)}.kc-solo-help .reward-card h2{display:flex;align-items:center;gap:7px;margin:0 0 6px;color:var(--kc-help-title);font:700 15px/1.2 var(--kc-help-font-display)}.kc-solo-help .reward-card h2 i{color:var(--kc-help-accent)}.kc-solo-help .reward-card p{margin:5px 0;color:var(--kc-help-text-soft)}.kc-solo-help .limits{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}.kc-solo-help .limit{padding:4px 7px;border:1px solid var(--kc-help-border);border-radius:4px;background:var(--kc-help-panel-strong);color:var(--kc-help-title);font-family:var(--kc-help-font-display)}.kc-solo-help .shortcut{display:inline-block;margin-top:14px;padding:7px 10px;color:var(--kc-help-text-soft);border:1px solid var(--kc-help-border);border-radius:5px;background:var(--kc-help-panel);font-family:var(--kc-help-font-display)}@media(max-width:650px){.kc-solo-help .lead{font-size:15px}}
+    </style>
+</head>
+<body>
+<section class="kc-help-document kc-solo-help">
+    <div class="eyebrow">KATEGÓRIAJÁTÉK // 06 / 06</div>
+    <h1>Eredmény és jutalom</h1>
+    <p class="lead">A játék végén látható az eredmény és minden ténylegesen megszerzett jutalom. Minden kategória külön őrzi a saját legjobb eredményét.</p>
+
+    <section class="reward-card">
+        <h2><i class="bi bi-plus-square-fill"></i> Csapatfejlesztési pont eredményből</h2>
+        <p>Az adott kategória korábbi legjobb eredményéhez képest újonnan átlépett ponthatárokért csapat-FP jár. Egy erős eredmény egyszerre több határt is átléphet.</p>
+        <div class="limits">
+            <span class="limit">{{SOLO_DEV_SCORE_01}}</span><span class="limit">{{SOLO_DEV_SCORE_02}}</span><span class="limit">{{SOLO_DEV_SCORE_03}}</span><span class="limit">{{SOLO_DEV_SCORE_04}}</span><span class="limit">{{SOLO_DEV_SCORE_05}}</span><span class="limit">{{SOLO_DEV_SCORE_06}}</span><span class="limit">{{SOLO_DEV_SCORE_07}}</span><span class="limit">{{SOLO_DEV_SCORE_08}}</span><span class="limit">{{SOLO_DEV_SCORE_09}}</span><span class="limit">{{SOLO_DEV_SCORE_10}}</span>
+        </div>
+    </section>
+
+    <span class="shortcut">F1 – a segítség újbóli megnyitása</span>
+</section>
+</body>
+</html>

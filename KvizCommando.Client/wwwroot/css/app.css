@@ -1,0 +1,267 @@
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+/* === ALAP BEÁLLÍTÁSOK === */
+html, body {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: radial-gradient(circle at 30% 20%, rgba(0,255,0,0.05), transparent 25%), radial-gradient(circle at 70% 80%, rgba(0,180,0,0.04), transparent 35%), linear-gradient(180deg, #1a1f1a, #0f130f);
+    color: white;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    overflow: hidden;
+    cursor: url('/Images/cursors/normal.cur'), default;
+}
+
+/* Linkek, gombok, hover */
+/* interaktív elemek (hover) */
+a:hover,
+button:hover,
+input[type=button]:hover {
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+/* disabled elemek */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+}
+label {
+    cursor: url('/Images/cursors/normal.cur'), default;
+}
+.shell-game-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}
+.company-logo {
+    position: absolute;
+    top: 20px;
+    left: 60px;
+    width: auto;
+    height: 20px;
+}
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+/* === LINKEK, GOMBOK === */
+a, .btn-link {
+    color: #0071c1;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+/* === TARTALOM PADDING === */
+.content {
+    padding-top: 1.1rem;
+}
+
+/* === VALIDÁCIÓ === */
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+/* === HIBAÜZENET PANEL === */
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+.blazor-error-boundary {
+    background: url(data:image/svg+xml;base64,...) no-repeat 1rem/1.8rem, #b32121;
+    padding: 1rem 1rem 1rem 3.7rem;
+    color: red;
+}
+
+    .blazor-error-boundary::after {
+        content: "An error has occurred.";
+    }
+
+header {
+    background-color: #0c1f17; /* sötétzöld */
+
+    height: 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0px;
+    font-family: 'Special Elite', cursive;
+    
+    
+}
+
+.kc-shell-header {
+    position: relative;
+    height: 60px;
+    flex: 0 0 60px;
+}
+    header .left {
+        
+        width: 9%;
+        
+        text-align: center;
+        color: #d3d3d3;
+        font-size: 1.4rem;
+  
+        letter-spacing: 0.5px;
+    }
+    header .right {
+        color: #d3d3d3;
+        padding: 1%;
+        font-size: 150%;
+        margin-right:10px;
+        letter-spacing: 0.5px;
+    }
+
+/* === KÓD SZÍNEZÉS === */
+code {
+    color: #c02d76;
+}
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(51, 51, 51, 0.5); /* sötétszürke, 50% */
+    color: lightgray;
+    font-size: 8px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 8px 0;
+    z-index: 999;
+    backdrop-filter:blur(2px);
+}
+img {
+    user-select: none; /* ne lehessen kijelölni */
+    pointer-events: none; /* ne lehessen ráklikkelni vagy húzni */
+    -webkit-user-drag: none; /* Safari / Chrome – ne lehessen húzni */
+}
+/* ===== Loader Overlay ===== */
+.loader-wrapper {
+    position: fixed;
+    width: 100%;
+    margin: 10px auto;
+    bottom: 40px;
+    text-align: center;
+
+    justify-items: center;
+    font-family: 'Special Elite', cursive;
+    color: #cccccc;
+    z-index: 9999;
+}
+.loader-percent::after {
+    content: var(--blazor-load-percentage-text, "0%");
+    display: block;
+    font-size: 30px; /* TODO: állítsd be */
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+.loader-bar {
+    width: 90%;
+    height: 20px;
+    background: #222;
+    border: 2px solid #cccccc;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 0 10px #000 inset, 0 0 5px #ccc;
+}
+.loader-fill {
+    height: 100%;
+    width: var(--blazor-load-percentage, 0%);
+    background: repeating-linear-gradient( 45deg, #cccccc, #cccccc 10px, #999999 10px, #999999 20px );
+    box-shadow: inset 0 0 5px #000;
+    transition: width 0.05s ease-in-out;
+}
+
+/* alap checkbox kinézet kikapcsolása */
+input[type="checkbox"].custom-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #777; /* keret színe */
+    border-radius: 4px; /* lekerekítés (opcionális) */
+    background-color: #fff; /* háttérszín alapból */
+    cursor: url('/Images/cursors/active.cur'), pointer;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+}
+
+input[type=checkbox]:focus {
+    outline: none;
+    box-shadow: none;
+}
+/* pipa állapot */
+input[type="checkbox"].custom-checkbox:checked {
+    background-color: darkslategrey; /* marad a háttér ugyanaz */
+    border-color: #777;
+    color: #777; /* ez lesz a pipa színe */
+}
+    /* pipa megjelenítése */
+    input[type="checkbox"].custom-checkbox:checked::after {
+        position: absolute;
+        top: -2px;
+        left: 2px;
+        font-size: 16px;
+        color: #000; /* pipa színe */
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,91 @@
+@using KvizCommando.Client.Features.VsGame.ViewModels
+@using KvizCommando.Client.Components.CharacterComponent
+
+<aside class="kc-vs-roster compact-columns-@CompactColumnCount compact-count-@RosterCardCount">
+    <header>
+        <i class="bi bi-broadcast-pin"></i>
+        <strong>@Title</strong>
+    </header>
+
+    @foreach (var player in Players)
+    {
+        <article class="kc-vs-roster-card @PlayerToneClass(player.Position) @(player.IsMe ? "me" : "") @(!player.IsConnected && !player.IsBot ? "disconnected" : "") @(player.IsBot ? "bot" : "") @(player.ActiveCharacter?.EnergyPoints == 0 ? "depleted" : "") @(player.IsMe && CurrentTimeModifierSeconds.HasValue ? "has-modifier" : "") @(ShowScore ? "has-score" : "")">
+            <span class="kc-vs-roster-connection @ConnectionQualityClass(DisplayedConnectionQuality(player))"
+                  title="@ConnectionTitle(player)">
+                <i class="bi @ConnectionIconClass(player)"></i>
+            </span>
+
+            <div class="kc-vs-roster-visual">
+                <div class="kc-vs-roster-avatar">
+                    @if (player.ActiveCharacter is not null)
+                    {
+                        <div class="kc-vs-roster-svg-host">
+                            <CharacterView 
+                                PicCode="@player.ActiveCharacter.PictureCode" />
+                     
+                        </div>
+                    }
+                    else
+                    {
+                        <img src="@player.TeamPictureSrc"
+                             alt="@player.TeamName" />
+                    }
+                </div>
+
+                @if (player.ActiveCharacter is not null)
+                {
+                    <div class="kc-vs-roster-vitality">
+                        <CharacterVitalityBar @key="(player.Position, player.ActiveCharacter.SlotNumber)"
+                                              Current="@player.ActiveCharacter.EnergyPoints"
+                                              Level="@player.ActiveCharacter.Level"
+                                              Compact="true" />
+                    </div>
+                }
+            </div>
+
+            <div class="kc-vs-roster-data">
+                <strong title="@player.TeamName">@player.TeamName</strong>
+                <span title="@player.DisplayName">@player.DisplayName</span>
+                @if (player.ActiveCharacter is not null)
+                {
+                    <small class="@(player.ActiveCharacter.PictureCode[0] == 'M' ? "male" : "female")">
+                        @player.ActiveCharacter.Name
+                    </small>
+                }
+                else
+                {
+                    <small>@player.TeamLevel</small>
+                }
+            </div>
+
+            @if (player.IsMe &&
+                 CurrentTimeModifierSeconds.HasValue)
+            {
+                <strong class="kc-vs-roster-modifier @ModifierClass(CurrentTimeModifierSeconds.Value)">
+                    @ModifierText(CurrentTimeModifierSeconds.Value)
+                </strong>
+            }
+
+            @if (ShowScore)
+            {
+                <div class="kc-vs-roster-score">
+                    <strong>@player.TotalPoints</strong>
+                    <small>
+                        @Seconds(player.TotalTimeSeconds)
+                    </small>
+                </div>
+            }
+            else
+            {
+                <span class="kc-vs-roster-state @(player.IsFinished ? "ready" : "")"></span>
+            }
+        </article>
+    }
+
+    @for (var index = 0; index < MissingPlayers; index++)
+    {
+        <article class="kc-vs-roster-card searching">
+            <span class="kc-vs-roster-search-ring"></span>
+        </article>
+    }
+</aside>

@@ -1,0 +1,153 @@
+﻿@using KvizCommando.Client.Features.Shared.Modal.Builders;
+
+@if (_isLoaded && (int)Mode > 200 && (int)Mode < 206)
+{
+    <div class="modal-display">
+        <div class="modal-layout">
+            <div class="info-block @InfoClass">
+                <div class="info-pair">
+                    <div class="info-label">@Info.Name</div>
+                    <div class="modal-value" style="color: @(Info.Color)">@Info.NameValue</div>
+                </div>
+                <div class="info-pair">
+                    <div class="info-label">@Info.Level</div>
+                    <div class="modal-value right">@Info.LevelValue</div>
+                </div>
+                <div class="info-pair">
+                    <div class="info-label">@Info.Rank</div>
+                    <div class="modal-value">@Info.RankValue</div>
+                </div>
+                <div class="info-pair">
+                    <div class="info-label right">@Info.Devpoints</div>
+                    <div class="modal-value right">@Info.DevPointsValue</div>
+                </div>
+                <div class="info-pair">
+                    <div class="info-label">@Info.Orient1</div>
+                    <div class="modal-value">@Info.Orient1Value</div>
+                </div>
+                <div class="info-pair">
+                    <div class="info-label"></div>
+                    <div class="modal-value right" style="color:green">@Info.AddedDevPoints</div>
+                </div>
+                <div class="info-pair">
+                    <div class="info-label">@Info.Orient2</div>
+                    <div class="modal-value">@Info.Orient2Value</div>
+                </div>
+            </div>
+
+            @if (Mode == ModalTypes.TPromoteMember || Mode == ModalTypes.TRetire || Mode == ModalTypes.TPromoteTeam)
+            {
+                if (!string.IsNullOrEmpty(rh.RankClass))
+                {
+                    <div class="divider modal-section">
+                        <span class="modal-@(rh.NewClass ? "promrank" : "promlevel")">@rh.RankClass</span>
+                    </div>
+                }
+                <div class="divider modal-section">
+                    <span class="modal-promlevel">@rh.Level</span>
+                    <span class="modal-promrank">@rh.Rank</span>
+                </div>
+            }
+
+            @switch (Mode)
+            {
+                case ModalTypes.THire:
+                    <div class="hire-skillblock modal-section">
+                        <div class="modal-subtitle">@_vmHir.Labelpros</div>
+                        @for (int i = 0; i < _vmHir.Rows.Count; i++)
+                        {
+                            @if (i == 3)
+                            {
+                                <div class="modal-subtitle">@_vmHir.Labelcons</div>
+                            }
+                            <div class="hire-row">
+                                <div class="row-name">@_vmHir.Rows[i].CategoryName</div>
+                                <div class="modal-value times" style="color: @(_vmHir.Rows[i].color)">@_vmHir.Rows[i].ValueDisplay</div>
+                            </div>
+                        }
+                    </div>
+                    break;
+
+                case ModalTypes.TPromoteMember:
+                    <div class="promote-block modal-section">
+                        @for (int i = 0; i < _vmPro.Rows.Count; i++)
+                        {
+                            @if (i == 2)
+                            {
+                                <div class="modal-subtitle">@_vmPro.Unlocks</div>
+                            }
+                            else if (i == 6)
+                            {
+                                <div class="modal-subtitle">@_vmPro.UnlockMaxLevels1</div>
+                            }
+                            else if (i == 10)
+                            {
+                                <div class="modal-subtitle">@_vmPro.UnlockMaxLevels2</div>
+                            }
+
+                            <div class="change-row">
+                                <div class="row-name">@_vmPro.Rows[i].CategoryName</div>
+                                <div class="modal-value change-old" style="color: @(_vmPro.Rows[i].color)">@_vmPro.Rows[i].ValueDisplay</div>
+                                <div class="modal-separator">@_vmPro.Rows[i].separator</div>
+                                <div class="modal-value change-new" style="color: @(_vmPro.Rows[i].color)">@_vmPro.Rows[i].ValueChangeDisplay</div>
+                            </div>
+                        }
+                    </div>
+                    <div class="info-row4 modal-section">(@_vmPro.Infotext1)</div>
+                    break;
+
+                case ModalTypes.TRetire:
+                    <div class="promote-block modal-section">
+                        <div class="modal-subtitle">@_vmRet.Unlocks</div>
+                        @for (int i = 0; i < _vmRet.Rows.Count; i++)
+                        {
+                            <div class="change-row">
+                                <div class="row-name">@_vmRet.Rows[i].CategoryName</div>
+                                <div class="modal-value change-old">@_vmRet.Rows[i].ValueDisplay</div>
+                                <div class="modal-separator">@_vmRet.Rows[i].separator</div>
+                                <div class="modal-value change-new" style="@(_vmRet.Rows[i].color)">@_vmRet.Rows[i].ValueChangeDisplay</div>
+                            </div>
+                        }
+                    </div>
+                    <div class="info-row4 modal-section">@_vmRet.Infotext1</div>
+                    break;
+
+                case ModalTypes.THandle:
+                    <div class="handle-block modal-section">
+                        <div class="info-row1">@_vmHan.Infotext1</div>
+                        <div class="info-row2">@_vmHan.Infotext2</div>
+                        <div class="info-row3">@_vmHan.Infotext3</div>
+                        <div class="info-row4">@_vmHan.Infotext4</div>
+                    </div>
+                    break;
+
+                case ModalTypes.TPromoteTeam:
+                    <div class="team-promote-block modal-section">
+                        @for (int i = 0; i < _vmTpro.Rows.Count; i++)
+                        {
+                            @if (i == 0)
+                            {
+                                <div class="modal-subtitle">@_vmTpro.UnlockExtras</div>
+                            }
+                            else if (i == 1)
+                            {
+                                <div class="modal-subtitle">@_vmTpro.Unlocks</div>
+                            }
+                            else if (i == _vmTpro.StartOfHelps)
+                            {
+                                <div class="modal-subtitle">@_vmTpro.UnlockHelps</div>
+                            }
+
+                            <div class="change-row">
+                                <div class="row-name">@_vmTpro.Rows[i].CategoryName</div>
+                                <div class="modal-value change-old" style="color: @(_vmTpro.Rows[i].color)">@_vmTpro.Rows[i].ValueDisplay</div>
+                                <div class="modal-separator">@_vmTpro.Rows[i].separator</div>
+                                <div class="modal-value change-new" style="color: @(_vmTpro.Rows[i].color)">@_vmTpro.Rows[i].ValueChangeDisplay</div>
+                            </div>
+                        }
+                    </div>
+                    break;
+            }
+        </div>
+    </div>
+}

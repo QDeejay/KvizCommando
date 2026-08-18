@@ -1,0 +1,13 @@
+.kc-home-selector {
+    display: flex;
+    width: 680px;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+
+
+.kc-bboard-item {
+    display: flex;
+}

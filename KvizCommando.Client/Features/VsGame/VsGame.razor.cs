@@ -1,0 +1,169 @@
+using KvizCommando.Client.Features.Shared.Modal.Builders;
+using KvizCommando.Client.Features.Shared.Modal.Components;
+using KvizCommando.Client.Features.VsGame.Builders;
+using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Pages.Home.Features;
+using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Visual.UiService;
+using KvizCommando.Client.Utilities;
+using KvizCommando.Shared.Models.Dtos;
+using Microsoft.AspNetCore.Components;
+
+namespace KvizCommando.Client.Features.VsGame;
+
+public partial class VsGame : KcComponentBase, IDisposable
+{
+    [CascadingParameter]
+    private AppState AppStates { get; set; } = default!;
+
+    private readonly Dictionary<string, ContentBoxVm> _boxes = [];
+
+    private string[] _boxOrder = [];
+    private int _classificationId;
+    private bool _isReady;
+    private bool _requiresQuitConfirmation;
+    private int _newTeamLevel;
+
+    private string Culture => AppStates.Culture;
+    private VsGameDtos VsData => AppStates.VsGame!;
+
+    protected override void OnInitialized()
+    {
+        Ui.Header.OnBackBtnClicked += HandleBack;
+        Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.GameVs"], (int)HomeBoxKey.GameVs);
+        _boxOrder = VsBoxBuilder.Root;
+    }
+
+    private ContentBoxVm Box(string key) => _boxes[key];
+
+    private void BuildBoxes()
+    {
+        var parameters = new VsComponentParameters
+        {
+            OnTeamSaved = RefreshRankedAsync,
+            OnQuitConfirmationChanged =
+                EventCallback.Factory.Create<bool>(
+                    this,
+                    SetQuitConfirmation),
+            OnTeamLevelChanged =
+                EventCallback.Factory.Create<int>(
+                    this,
+                    SetNewTeamLevel),
+            ClassificationId = _classificationId
+        };
+
+        foreach (var box in VsBoxBuilder.BuildBoxes(
+                     VsData,
+                     parameters,
+                     Ui.Lang))
+        {
+            _boxes[box.Key] = box.Value;
+        }
+
+        _isReady = true;
+    }
+
+    private void OnBoxClick(int boxId)
+    {
+        _boxOrder = VsBoxBuilder.Root;
+        var headerTitle =
+            Ui.Lang["mainlayout.Header.GameVs"];
+
+        if (boxId == (int)VsBoxKeyRoot.RankedBattlefields)
+        {
+            _boxOrder = VsBoxBuilder.Ranked;
+            headerTitle = _boxes[
+                VsBoxKeyRoot.RankedBattlefields
+                    .ToString()].Header;
+        }
+        else if (boxId is > (int)VsBoxKeyRanked.Classification and <= (int)VsBoxKeyRanked.Classification + VsGameBoxSpecs.CLASSIFICATION_BOX_COUNT)
+        {
+            _newTeamLevel = 0;
+            _classificationId = boxId - (int)VsBoxKeyRanked.Classification;
+            BuildBoxes();
+            _boxOrder = VsBoxBuilder.Match;
+            headerTitle = _boxes[
+                $"{VsBoxKeyRanked.Classification}" +
+                $"{_classificationId}"].Header;
+        }
+
+        Ui.Header.SetTitle(headerTitle, boxId);
+        Ui.Header.SetBackBtnEna(boxId != (int)HomeBoxKey.GameVs);
+        StateHasChanged();
+    }
+
+    private Task RefreshRankedAsync()
+    {
+        BuildBoxes();
+        OnBoxClick((int)VsBoxKeyRoot.RankedBattlefields);
+        return Task.CompletedTask;
+    }
+
+    private async void HandleBack()
+    {
+        if (Ui.Header.PageIndex is > (int)VsBoxKeyRanked.Classification and <= (int)VsBoxKeyRanked.Classification + VsGameBoxSpecs.CLASSIFICATION_BOX_COUNT)
+        {
+            if (_requiresQuitConfirmation)
+            {
+                var modal = MBoxBuilder.BuildParam(
+                    ModalTypes.DialogConfirm,
+                    Ui.Lang);
+
+                modal.BodyParameters.Add(
+                    nameof(DBoxModalRender.DialogBoxType),
+                    DBoxConfirmTypes.VsGameQuitConfirm);
+
+                if (await Ui.Modal.ShowAsync(modal) !=
+                    ModalResult.Button1)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                if (_newTeamLevel > 0)
+                {
+                    await Ui.Lang.LoadModuleAsync(Culture, "team");
+
+                    var modal = MBoxBuilder.BuildParam(
+                        ModalTypes.TPromoteTeam,
+                        Ui.Lang);
+
+                    await Ui.Modal.ShowAsync(modal);
+                    _newTeamLevel = 0;
+                }
+
+                await Ui.ReloadAsync(
+                    ReqStates.Home,
+                    ReqStates.Question,
+                    ReqStates.Team,
+                    ReqStates.VsGame);
+            }
+
+            _requiresQuitConfirmation = false;
+            BuildBoxes();
+            OnBoxClick((int)VsBoxKeyRoot.RankedBattlefields);
+            return;
+        }
+
+        if (Ui.Header.PageIndex == (int)HomeBoxKey.GameVs)
+        {
+            Ui.Nav.NavigateTo("/home");
+            return;
+        }
+
+        BuildBoxes();
+        OnBoxClick((int)HomeBoxKey.GameVs);
+    }
+
+    private void SetQuitConfirmation(bool value) =>
+        _requiresQuitConfirmation = value;
+
+    private void SetNewTeamLevel(int value) =>
+        _newTeamLevel = value;
+
+    public void Dispose()
+    {
+        Ui.Header.OnBackBtnClicked -= HandleBack;
+    }
+}

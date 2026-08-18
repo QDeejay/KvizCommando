@@ -1,0 +1,121 @@
+﻿
+/* Alap modal keret */
+.modal-custom {
+    z-index: 9999; /* magasabb mint a backdrop (1050) */
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin: auto;
+}
+
+/* Header */
+.modal-header-custom {
+    justify-content: center;
+}
+
+.modal-title-custom {
+    text-transform: uppercase;
+    font-size: 1.2rem;
+}
+
+/* Body */
+.kc-modal-body {
+    font-size: 0.8rem;
+    font-family: 'Courier New', monospace;
+    /* mindig a modal keret görget */
+    width: auto;
+    max-width: calc(100% - 20px);
+    max-height: 65vh; /* limitáljuk a teljes keretet */
+    overflow-x: hidden;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(168, 180, 120, .018) 0,
+            rgba(168, 180, 120, .018) 1px,
+            transparent 1px,
+            transparent 4px),
+        radial-gradient(circle at 50% 0, #1b291f, #101712 70%);
+}
+
+.kc-modal-body ::deep > * {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.kc-modal-body ::deep img,
+.kc-modal-body ::deep svg,
+.kc-modal-body ::deep table {
+    max-width: 100%;
+}
+
+.modal .kc-modal-body h1,
+.modal .kc-modal-body h2 {
+    text-align: center;
+}
+/* Footer */
+.modal-footer-custom {
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+/* Scrollbar testreszabás csak a modal body-n belül */
+.kc-modal-body::-webkit-scrollbar {
+    width: 10px;
+}
+
+.kc-modal-body::-webkit-scrollbar-track {
+    background: rgba(30, 30, 30, 0.9);
+    border-radius: 6px;
+}
+
+.kc-modal-body::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 6px;
+    border: 2px solid rgba(30, 30, 30, 0.9);
+}
+
+    .kc-modal-body::-webkit-scrollbar-thumb:hover {
+        background-color: #777;
+    }
+
+/* Firefox */
+.kc-modal-body {
+    scrollbar-width: thin;
+    scrollbar-color: #555 rgba(30, 30, 30, 0.9);
+}
+
+
+
+.modal-checkbox {
+    display: flex;
+    min-width: 0;
+    margin-left: 16px;
+    justify-content: left;
+
+}
+.notshow-label {
+    display:flex;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    color: #cccccc;
+    align-content: center;
+    margin-left:4px;
+}
+.modal-sm.locked { 
+    --bs-modal-width: 300px; 
+}
+
+.locked { 
+    --bs-modal-width: 500px; 
+}
+
+.modal-lg.locked { 
+    --bs-modal-width: 800px; 
+}
+
+.modal-xl.locked { 
+    --bs-modal-width: 1140px; 
+}

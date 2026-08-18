@@ -1,0 +1,87 @@
+@using KvizCommando.Client.Features.Solo.ViewModels
+
+<section class="kc-solo-reward">
+    @if (Data.IsNewHighScore)
+    {
+        <div class="kc-solo-reward-banner kc-lcd-surface">
+            <i class="bi bi-trophy-fill"></i>
+            <strong>@Lang["solo.Label.Game.Message.NewRecord"]</strong>
+        </div>
+    }
+
+    <div class="kc-solo-reward-columns">
+        <section class="kc-solo-reward-panel">
+            <h3>@Lang["solo.Label.Game.Reward.Performance"]</h3>
+            <dl>
+                <div>
+                    <dt>@Lang["solo.Label.Game.Reward.Answered"]</dt>
+                    <dd>@Data.Answered / @Data.TotalQuestions</dd>
+                </div>
+                <div>
+                    <dt>@Lang["solo.Label.Game.Reward.Correct"]</dt>
+                    <dd>@Data.Correct</dd>
+                </div>
+                <div>
+                    <dt>@Lang["solo.Label.Game.Reward.Time"]</dt>
+                    <dd>@Data.Time</dd>
+                </div>
+                <div class="total">
+                    <dt>@Lang["solo.Label.Game.Reward.TotalPoints"]</dt>
+                    <dd>@Data.TotalPoints</dd>
+                </div>
+            </dl>
+        </section>
+
+        <section class="kc-solo-reward-panel">
+            <h3>@Lang["solo.Label.Game.Reward.Title"]</h3>
+            <dl>
+                @if (Data.TeamXp != 0)
+                {
+                    <div class="total">
+                        <dt class="team-xp-label">
+                            <span>@Lang["solo.Label.Game.Reward.TeamXp"]</span>
+                            @if (Data.NewTeamLevel > 0)
+                            {
+                                <span class="team-level-cycle" aria-live="polite">
+                                    <strong>@Lang["solo.Label.Game.Reward.NewTeamLevel"]</strong>
+                                    <strong>@NewTeamLevelCode</strong>
+                                </span>
+                            }
+                        </dt>
+                        <dd>@Signed(Data.TeamXp)</dd>
+                    </div>
+                }
+                @if (Data.TeamDevPoints != 0)
+                {
+                    <div>
+                        <dt>@Lang["solo.Label.Game.Reward.TeamDev"]</dt>
+                        <dd>@Signed(Data.TeamDevPoints)</dd>
+                    </div>
+                }
+                @if (Data.IsExperienceGame)
+                {
+                    <div>
+                        <dt>@Lang["solo.Label.Game.Reward.MemberXp"]</dt>
+                        <dd class="member-xp @(Data.IsMemberXpCapped ? "capped" : "")">
+                            @Signed(Data.MemberXp)
+                        </dd>
+                    </div>
+                }
+                @if (Data.MemberDevPoints != 0)
+                {
+                    <div>
+                        <dt class="member-dev-label">
+                            <span>@Lang["solo.Label.Game.Reward.MemberDev"]</span>
+                            @if (Data.HealingPointAwarded)
+                            {
+                                <i class="bi bi-plus-square-fill"
+                                   aria-hidden="true"></i>
+                            }
+                        </dt>
+                        <dd>@Signed(Data.MemberDevPoints)</dd>
+                    </div>
+                }
+            </dl>
+        </section>
+    </div>
+</section>

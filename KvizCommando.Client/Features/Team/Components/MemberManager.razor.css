@@ -1,0 +1,26 @@
+﻿.picture-side {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    height: 157px;
+    width: 123px;
+    border-left: none;
+    z-index: 0;
+    background: rgba(23,23,255,0.5);
+    border-left: 3px #333 solid;
+    border-bottom: 3px #333 solid;
+}
+
+    .picture-side.hide {
+        display: none;
+        height: 0;
+        width: 0;
+    }
+
+.vitality-display {
+    position: absolute;
+    top: 100%;
+    left: -3px;
+    width: calc(100% + 3px);
+    height: 22px;
+}

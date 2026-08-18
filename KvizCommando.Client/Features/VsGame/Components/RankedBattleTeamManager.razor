@@ -1,0 +1,76 @@
+@using KvizCommando.Client.Components.CharacterComponent
+
+@if (_isReady)
+{
+    <div class="kc-ranked-team-manager">
+        <div class="kc-ranked-team-message">
+            @_vm.Message
+        </div>
+
+        <div class="kc-ranked-member-grid">
+            @foreach (var member in _vm.Members)
+            {
+                <button type="button"
+                        class="kc-ranked-member @(member.IsSelected ? "selected" : "") @(!member.IsSelectable ? "not-selectable" : "")"
+                        disabled="@(!member.IsSelectable)"
+                        aria-pressed="@member.IsSelected"
+                        @onclick="@(() => ToggleMember(member.SlotNumber))">
+                    <span class="kc-ranked-member-picture">
+                        <CharacterView PicCode="@member.PictureCode" />
+                    </span>
+                    <span class="kc-ranked-member-data">
+                        <span class="kc-ranked-member-name">@member.Name</span>
+                        <span title="@member.RankName">@member.RankName</span>
+                        <span title="@member.RankClassName">
+                            @member.RankClassName
+                        </span>
+                        <span>@member.ClassificationText</span>
+                    </span>
+                    <div class="kc-ranked-member-vitality">
+                        <CharacterVitalityBar @key="member.SlotNumber"
+                                              Current="@member.EnergyPoints"
+                                              Level="@member.Level"
+                                              Label="@($"<{member.OrientationShort}>")"
+                                              ShowValue="false"
+                                              Compact="true" />
+                    </div>
+                    @if (!member.IsSelectable)
+                    {
+                        <i class="bi bi-x-lg kc-ranked-member-state blocked"></i>
+                    }
+                    else if (member.IsSelected)
+                    {
+                        <i class="bi bi-check-lg kc-ranked-member-state selected"></i>
+                    }
+                </button>
+            }
+        </div>
+
+        <div class="component-button-row">
+            <div class="component-button-group left">
+                @foreach (var lamp in _vm.ClassificationLamps)
+                {
+                    <div class="kc-ranked-classification @(lamp.IsActive ? "active" : "")">
+                        <span>@lamp.Label</span>
+                        <span class="tooltip-box">
+                            <span>@lamp.MinimumTeamLevelText</span>
+                            <span>@lamp.PartySizeText</span>
+                            <span>@lamp.RankClassZoneText</span>
+                            <span>@lamp.RequiredMembersText</span>
+                        </span>
+                    </div>
+                }
+            </div>
+            <div class="component-button-group right">
+                <button class="button-on-lcd kc-ranked-save-button"
+                        type="button"
+                        disabled="@(!_vm.CanSave)"
+                        aria-label="@Ui.Lang["vsgame.Manager.Button.Save"]"
+                        title="@Ui.Lang["vsgame.Manager.Button.Save"]"
+                        @onclick="SaveAsync">
+                    <i class="bi bi-floppy"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+}

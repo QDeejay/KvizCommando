@@ -1,0 +1,87 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+	<PropertyGroup>
+		<EmbeddedResourceUseDependentUponConvention>false</EmbeddedResourceUseDependentUponConvention>
+	</PropertyGroup>
+	<PropertyGroup>
+		<InvariantGlobalization>false</InvariantGlobalization>
+		<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+	</PropertyGroup>
+
+
+
+
+
+	<ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="8.0.18" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.18" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.18" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.18" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.18">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.18" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.18" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.18">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="6.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KvizCommando.Client\KvizCommando.Client.csproj" />
+    <ProjectReference Include="..\KvizCommando.Shared\KvizCommando.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\StaticData\" />
+    <Folder Include="Resources\Client\localization\en\" />
+    <Folder Include="Resources\Client\localization\hu\" />
+    <Folder Include="Services\VsGame\" />
+    <Folder Include="wwwroot\Denied\hu\" />
+    <Folder Include="wwwroot\Denied\en\" />
+    <Folder Include="wwwroot\Localization\" />
+  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Infrastructure\Email\Templates\**\*.*" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="Data\UserJsons\**" />
+	  <Compile Remove="wwwroot\Board\**" />
+	  <Content Remove="Data\UserJsons\**" />
+	  <Content Remove="wwwroot\Board\**" />
+	  <EmbeddedResource Remove="Data\UserJsons\**" />
+	  <EmbeddedResource Remove="wwwroot\Board\**" />
+	  <None Remove="Data\UserJsons\**" />
+	  <None Remove="wwwroot\Board\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="Infrastructure\Email\Templates\EmailTemplates\Auth\Class.cs" />
+	</ItemGroup>
+	<PropertyGroup>
+		<ResxExporterAssembly>$(MSBuildThisFileDirectory)..\BuildTools\ResxExporter\bin\Release\net472\ResxExporter.dll</ResxExporterAssembly>
+	</PropertyGroup>
+
+	<UsingTask TaskName="ResxExporter.ResxExporter"
+		AssemblyFile="$(ResxExporterAssembly)"
+		Condition="Exists('$(ResxExporterAssembly)')" />
+
+	<Target Name="RunResxExporter"
+		BeforeTargets="Build"
+		Condition="'$(Configuration)' == 'Debug' and Exists('$(ResxExporterAssembly)')">
+		<ResxExporter
+			SourceRoot="$(MSBuildProjectDirectory)\Resources\Client"
+			OutputRoot="$(MSBuildProjectDirectory)\wwwroot\localization" />
+	</Target>
+	
+
+
+</Project>

@@ -1,0 +1,24 @@
+﻿<div class="pic-display">
+
+    <div class="picture">
+        @if (_character.genre == false)
+        {
+          <CharachterMale Asian="@_character.asian"
+                      Glasses="@_character.glasses"
+                      EyeColor="@_character.eyeColor"
+                      SkinColor="@_character.skinColor"
+                      Hairstyle="@_character.hairStyle"
+                      HairColor="@_character.hairColor" />
+        }
+        else if (_character.genre == true)
+        {
+          <CharachterFemale Asian="@_character.asian"
+                            Glasses="@_character.glasses"
+                            EyeColor="@_character.eyeColor"
+                            SkinColor="@_character.skinColor"
+                            Hairstyle="@_character.hairStyle"
+                            HairColor="@_character.hairColor" />
+        }
+    </div>
+    <div class="display-layer"></div>
+</div>

@@ -1,0 +1,96 @@
+@using KvizCommando.Client.Components.CharacterComponent
+@using KvizCommando.Client.Helpers
+
+@{
+    var displayedCards = _vm.Cards
+        .Where(card => card.Show)
+        .ToArray();
+
+    var selectedDisplayIndex = -1;
+
+    for (var index = 0; index < displayedCards.Length; index++)
+    {
+        if (displayedCards[index].ClickId == _selectedId)
+        {
+            selectedDisplayIndex = index;
+            break;
+        }
+    }
+
+    var selectedCard = selectedDisplayIndex >= 0
+        ? displayedCards[selectedDisplayIndex].Card
+        : null;
+}
+
+<div class="recruit-tab @(_couldBeHire ? "" : "closed")">
+    @if (_couldBeHire)
+    {
+        <section class="candidate-preview">
+            <div class="candidate-preview-header">
+                @Lang["team.Label.Recruit.SelectedCandidate"]
+            </div>
+
+            <div class="picture-side">
+                @if (string.IsNullOrEmpty(_picCode))
+                {
+                    <i class="bi bi-person"></i>
+                }
+                else
+                {
+                    <div class="character-svg-host">
+                        <CharacterView PicCode="@_picCode" />
+                    </div>
+                }
+            </div>
+
+            <div class="candidate-identity">
+                @if (selectedCard is not null)
+                {
+                    <strong class="candidate-name @(selectedCard.Sex ? "male" : "female")"
+                            title="@selectedCard.Name">
+                        @selectedCard.Name
+                    </strong>
+                    <div class="candidate-meta">
+                        <span>@selectedCard.SecOrient</span>
+                        <span>
+                            @Lang["team.Label.Recruit.CandidateNumber"].FormatSafe(
+                                $"{selectedDisplayIndex + 1:00}")
+                        </span>
+                    </div>
+                }
+            </div>
+
+            <div class="button-side">
+                <button class="button-on-lcd recruit-button"
+                        @onclick="OnHireButtonAsync"
+                        disabled="@(_selectedId == 0)">
+                    <i class="bi bi-person-fill-add"></i>
+                    <span>@Lang["team.Button.Hire"]</span>
+                </button>
+            </div>
+        </section>
+
+        <div class="candidate-list">
+            @for (var index = 0; index < displayedCards.Length; index++)
+            {
+                var displayedCard = displayedCards[index];
+
+                <div class="candidate-list-item @(displayedCard.ClickId == _selectedId ? "selected" : "")">
+                    <span class="candidate-list-number">
+                        @(index + 1 < 10 ? $"0{index + 1}" : $"{index + 1}")
+                    </span>
+                    <RecruitCard CardNo="@displayedCard.ClickId"
+                                 Card="@displayedCard.Card"
+                                 SelectedCardNo="_selectedId"
+                                 Selected="OnCandidateSelect" />
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="hire-info">
+            @Lang["team.Label.Recruit.Suspended"]
+        </div>
+    }
+</div>

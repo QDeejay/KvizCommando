@@ -1,0 +1,19 @@
+<div class="recruit-block label-text @(_isSelected ? "selected-block" : "")"
+     @onclick="OnCardSelected">
+    <div class="block-info">
+        <div class="name-row">
+            <div class="name-line"
+                 style="@(Vm.Sex ? "color: lightblue;" : "color: pink;")"
+                 title="@Vm.Name">
+                @Vm.Name
+            </div>
+            <div class="ori-short">@Vm.SecOrient</div>
+        </div>
+
+        <div class="block-status">
+            <div title="@Vm.MainCat">@Vm.MainCat</div>
+            <div title="@Vm.SubCat">@Vm.SubCat</div>
+            <div title="@Vm.ExtCat">@Vm.ExtCat</div>
+        </div>
+    </div>
+</div>

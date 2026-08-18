@@ -1,0 +1,57 @@
+﻿ <div class="@CssClass" @onclick="HandleClick" >
+
+    <div class="kc-content-box--inner" style="@BackgroundStyle">
+
+        <div class="kc-content-box--header">
+            <label class="label-title">@_vm.Header</label>
+        
+            @if (_vm.Header.Length > 13 && _vm.Size=="small")
+            {
+                <span class="tooltip-box">@_vm.Header</span>
+            }
+
+        </div>
+
+        <div class="kc-content-box--content @(_noContent ? "no-content" : "") @BackgroundContentClass">
+
+            @if (!string.IsNullOrEmpty(_vm.ImageSrc))
+            {
+                <img src="@_vm.ImageSrc" alt="logo" />
+
+            }
+            else if (_vm.Size == "content-sized")
+            {
+                
+                    @ContentBody
+                
+            }
+            else if (_vm.RenderContent > 0)
+            {
+                <div class="kc-lcd-wrapper">
+                    <div class="kc-lcd-display--outer @(_vm.LcdDisplay ? "kc-lcd-surface" : "lcd-off")">
+                        <div class="kc-lcd-display--inner @(_vm.LcdDisplay ? "kc-lcd-content" : "lcd-off")">
+                            @ContentBody
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+        <div class="@FooterClass" @onclick="ToggleSize" style="@FooterCursorStyle">
+            @_vm.Footer
+            @if (_vm.ReSizable)
+            {
+                <span class="kc-toggle-icon @(_vm.Size == "minimalized" ? "arrow-down" : "arrow-up")"></span>
+            }
+        </div>
+        @if (!_vm.IsEnabled)
+        {
+            <div class="kc-content-box-disabled-overlay">
+                <svg xmlns="http://www.w3.org/2000/svg" class="kc-disable-icon" viewBox="0 0 512 512">
+                    <path fill="grey" d="M352 224V160C352 89.3 294.7 32 224 32S96 89.3 96 160v64H80c-26.5 0-48 21.5-48 48v160c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48h-16zM144 160c0-44.1 35.9-80 80-80s80 35.9 80 80v64H144v-64zm112 192v48c0 8.8-7.2 16-16 16s-16-7.2-16-16v-48c-9.6-5.5-16-15.8-16-27.5c0-17.7 14.3-32 32-32s32 14.3 32 32c0 11.7-6.4 22-16 27.5z" />
+                </svg>
+            </div>
+        }
+    </div>
+    
+</div>

@@ -1,0 +1,45 @@
+<div class="kc-solo-orientation-status">
+    <span class="kc-solo-orientation-panel @MaxedCssClass">
+        @PublicLevel
+    </span>
+
+    @if (IsExperienceGame)
+    {
+        <span class="kc-solo-orientation-panel kc-solo-orientation-xp @ExperienceCssClass has-tooltip">
+            XP
+            <span class="tooltip-box">@ExperienceTooltip</span>
+        </span>
+    }
+
+    <span class="kc-solo-orientation-panel kc-solo-orientation-score @MaxedCssClass">
+        @if (Member is null)
+        {
+            <span>-</span>
+        }
+        else
+        {
+            <i class="bi bi-trophy-fill @MaximumScoreCssClass" aria-hidden="true"></i>
+            <span>@Member.SoloBestScore</span>
+        }
+    </span>
+
+    <span class="kc-solo-orientation-panel kc-solo-orientation-healing @MaxedCssClass @HealingCssClass @VitalityStateCssClass @HealingTooltipCssClass"
+          style="@VitalityStyle">
+        @if (Member is null)
+        {
+            <span>-</span>
+        }
+        else
+        {
+            <span class="kc-solo-orientation-heart" aria-hidden="true">
+                <i class="bi bi-heart-fill heart-empty"></i>
+                <i class="bi bi-heart-fill heart-fill"></i>
+            </span>
+
+            @if (HasHealingTooltip)
+            {
+                <span class="tooltip-box">@HealingTooltip</span>
+            }
+        }
+    </span>
+</div>

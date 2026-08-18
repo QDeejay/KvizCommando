@@ -1,0 +1,8 @@
+{
+  "Button": "Regist",
+  "ConfirmPassword": "Confirm password",
+  "Email": "E-mail address",
+  "ResultMsg01": "Registration Succesful!",
+  "ResultMsg02": "We sent the validation link to the e-mail address!",
+  "Title": "Registration"
+}

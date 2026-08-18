@@ -1,0 +1,29 @@
+@page "/question"
+
+@inherits Utilities.KcComponentBase
+
+<link href="css/question-common.css" rel="stylesheet" />
+
+@if (_hasAccess)
+{
+    <LangGuard Culture="@Culture" Module="question" OnReady="BuildBoxes">
+        <PageContainer>
+            @if (_isReady)
+            {
+                <div class="kc-quest-selector">
+                    @foreach (var bx in _boxOrder)
+                    {
+                        var box = Box(bx);
+                        <ContentBox Vm="@box"
+                                    OnClick="OnBoxClick">
+                            <ContentBody>
+                                <DynamicComponent Type="@box.BodyComponent"
+                                                  Parameters="@box.BodyParameters" />
+                            </ContentBody>
+                        </ContentBox>
+                    }
+                </div>
+            }
+        </PageContainer>
+    </LangGuard>
+}

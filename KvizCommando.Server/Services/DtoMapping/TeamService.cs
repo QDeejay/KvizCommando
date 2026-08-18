@@ -1,0 +1,623 @@
+﻿using KvizCommando.Server.Models;
+using KvizCommando.Server.Services.PlayerCache;
+using KvizCommando.Server.Utilities;
+using KvizCommando.Server.Utilities.Recruit;
+using KvizCommando.Shared.Contracts.Team;
+using KvizCommando.Shared.Models;
+using KvizCommando.Shared.Models.Dtos;
+using KvizCommando.Shared.Models.Enums;
+using KvizCommando.Shared.Models.Rules;
+using System.Text.Json;
+
+namespace KvizCommando.Server.Services.DtoMapping
+{
+    public class TeamService : ITeamService
+
+    {
+        private readonly IPlayerCacheService _cache;
+
+        private readonly ILogger<TeamService> _logger;
+        public TeamService(
+            IPlayerCacheService cache,
+            ILogger<TeamService> logger)
+        {
+            _cache = cache;
+            _logger = logger;
+        }
+
+
+        public async Task<CacheUpdateResult> SaveModifiedSkillAsync(int playerid, ModifySkillRequest dto, CancellationToken ct = default)
+        {
+            return await _cache.UpdatePlayerLockedAsync(
+                playerid,
+                dto.SessionId,
+                player =>
+                {
+                    if (dto.MemberId > 0 && player.CharCatMask[dto.MemberId - 1] == false)
+                        return null;
+
+                    var member = dto.MemberId > 0
+                        ? player.Characters[dto.MemberId - 1]
+                        : null;
+
+                    if (dto.MemberId > 0 && member is null)
+                        return null;
+
+                    if (member is not null &&
+                        !TeamRules.HasVitality(member.EnergyPoints))
+                    {
+                        return null;
+                    }
+
+                    int availableDevPoints = dto.MemberId == 0
+                        ? player.Core.DevPoint
+                        : member!.DevPoints;
+
+                    var requestedLevels = dto.SkillChanges.Sum();
+                    var totalUsedPoints = dto.MemberId == 0
+                        ? requestedLevels * TeamRules.HELP_LEVEL_TEAM_DEV_POINT_COST
+                        : requestedLevels;
+
+                    if (availableDevPoints < totalUsedPoints)
+                        return null;
+
+                    int skillType = dto.MemberId == 0
+                        ? 12
+                        : dto.SkillType == 1 ? 4 : 8;
+
+                    int maxLevel = dto.MemberId == 0
+                        ? player.Core.RankEnum
+                        : member!.Rank;
+
+                    var helpDatas = string.IsNullOrEmpty(player.Loadout.HelpLevelsJson)
+                        ? []
+                        : JsonSerializer.Deserialize<int[]>(player.Loadout.HelpLevelsJson) ?? [];
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (dto.SkillChanges[i] > 0 &&
+                            maxLevel < RankConstants.startLevels[i + skillType])
+                            return null;
+
+                        int levelLimit = Math.Min(
+                            RankConstants.maxLevels[i + skillType],
+                            RankConstants.maxLevels[i + skillType] - 21 + maxLevel);
+                        levelLimit = Math.Max(0, levelLimit);
+
+                        if (dto.MemberId == 0)
+                        {
+                            if (dto.SkillChanges[i] > 0 &&
+                                dto.SkillChanges[i] + helpDatas[i] > levelLimit)
+                                return null;
+
+                            helpDatas[i] += dto.SkillChanges[i];
+                        }
+                        else if (dto.SkillChanges[i] > 0 &&
+                                 dto.SkillType == 0 &&
+                                 dto.SkillChanges[i] + member!.Attitude.Secondary.Level[i] > levelLimit)
+                        {
+                            return null;
+                        }
+                        else if (dto.SkillChanges[i] > 0 &&
+                                 dto.SkillType == 4 &&
+                                 dto.SkillChanges[i] + member!.Attitude.Gender.Level[i] > levelLimit)
+                        {
+                            return null;
+                        }
+                    }
+
+                    if (dto.MemberId > 0)
+                    {
+                        member!.DevPoints -= totalUsedPoints;
+
+                        if (dto.SkillType == 1)
+                            member.Attitude.Secondary.Level =
+                                member.Attitude.Secondary.Level.AddTo(dto.SkillChanges);
+
+                        if (dto.SkillType == 2)
+                            member.Attitude.Gender.Level =
+                                member.Attitude.Gender.Level.AddTo(dto.SkillChanges);
+
+                        return DirtyFlags.Characters;
+                    }
+
+                    player.Core.DevPoint -= totalUsedPoints;
+                    player.Loadout.HelpLevelsJson = JsonSerializer.Serialize(helpDatas);
+
+                    return DirtyFlags.Core | DirtyFlags.Loadout;
+                },
+                ct);
+        }
+
+        public async Task<CacheUpdateResult> ManageTeamAsync(int playerid, ManageTeamRequest dto, CancellationToken ct = default)
+        {
+            return await _cache.UpdatePlayerLockedAsync(
+                playerid,
+                dto.SessionId,
+                player =>
+                {
+                    var member = player.Characters[dto.MemberNo - 1];
+                    var candidate = player.CandidateCharacters[dto.MemberNo - 1];
+
+                    var level = member?.Rank ?? 0;
+                    var teamLevel = player.Core.RankEnum;
+                    var devPoints = player.Core.DevPoint;
+                    var nextLevelXp = RankRewards.List[level].NextLevelMember;
+
+                    if ((int)dto.ReqType > 0)
+                    {
+                        if (member is null)
+                            return null;
+                    }
+                    else if (candidate is null)
+                    {
+                        return null;
+                    }
+
+                    if (dto.ReqType is ManageType.Promote or ManageType.Retire &&
+                        !TeamRules.HasVitality(member!.EnergyPoints))
+                    {
+                        return null;
+                    }
+
+                    switch (dto.ReqType)
+                    {
+                        case ManageType.Hire:
+                            if (candidate!.Names is null || candidate.PictureCodes is null)
+                                return null;
+                            if (player.CharCatMask[dto.MemberNo - 1])
+                                return null;
+                            break;
+
+                        case ManageType.Promote:
+                            {
+                                var rankClassChanged =
+                                    TeamRules.IsRankClassChangingPromotion(level);
+
+                                if (level >= 21 || level >= teamLevel)
+                                    return null;
+                                if (!rankClassChanged &&
+                                    devPoints < TeamRules.PROMOTION_TEAM_DEV_POINT_COST)
+                                    return null;
+                                if (member!.XP < nextLevelXp)
+                                    return null;
+                                break;
+                            }
+
+                        case ManageType.Retire:
+                            if (level != TeamRules.LAST_MEMBER_LEVEL || teamLevel <= TeamRules.LAST_MEMBER_LEVEL)
+                                return null;
+                            if (member!.XP < RankRewards.List[21].NextLevelMember)
+                                return null;
+                            break;
+
+                        case ManageType.Fire:
+                            if (TeamRules.HasVitality(member!.EnergyPoints))
+                                return null;
+                            break;
+
+                        case ManageType.Heal:
+                            if (TeamRules.HasVitality(member!.EnergyPoints) ||
+                                member.DevPoints < TeamRules.HEAL_CHARACTER_DEV_POINT_COST)
+                                return null;
+                            break;
+
+                        default:
+                            return null;
+                    }
+
+                    var dirty = DirtyFlags.Characters;
+
+                    switch (dto.ReqType)
+                    {
+                        case ManageType.Hire:
+                            {
+                                var recruit = RecruitService.RecruitResolver(
+                                    dto.MemberNo,
+                                    dto.CandidateId);
+                                var levels = new[] { 0, 0, 0, 0 };
+
+                                member = new CharachterSlot
+                                {
+                                    Name = candidate!.Names![dto.CandidateId - 1],
+                                    PictureCode = candidate.PictureCodes![dto.CandidateId - 1],
+                                    XP = 0,
+                                    Rank = TeamRules.HIRED_CHAR_STARTLEVEL,
+                                    DevPoints = 0,
+                                    EnergyPoints = TeamRules.GetMemberMaxVitality(0),
+                                    Attitude = new Attitude
+                                    {
+                                        Main = new AttitudeBranch
+                                        {
+                                            CatNo = recruit.Item1,
+                                            Level = levels
+                                        },
+                                        Secondary = new AttitudeBranch
+                                        {
+                                            CatNo = recruit.Item2,
+                                            Level = levels
+                                        },
+                                        Gender = new AttitudeBranch
+                                        {
+                                            CatNo = recruit.Item3,
+                                            Level = levels
+                                        }
+                                    }
+                                };
+                                candidate = null;
+                                break;
+                            }
+
+                        case ManageType.Promote:
+                            {
+                                var rankClassChanged =
+                                    TeamRules.IsRankClassChangingPromotion(member!.Rank);
+
+                                member.Rank = Math.Min(member.Rank + 1, 21);
+                                player.Core.DevPoint -= rankClassChanged
+                                    ? 0
+                                    : TeamRules.PROMOTION_TEAM_DEV_POINT_COST;
+                                member.DevPoints += RankRewards.List[member.Rank].DevPointRevard;
+                                member.EnergyPoints = TeamRules.GetMemberMaxVitality(
+                                    member.Rank);
+                                player.Core.DevPoint += RankRewards.List[member.Rank].DevPointToStore;
+                                dirty |= DirtyFlags.Core;
+                                break;
+                            }
+
+                        case ManageType.Retire:
+                            member!.Rank = Math.Min(member.Rank + 1, 21);
+                            candidate = RecruitService.Generate(8, 7);
+                            candidate.ExpirationTime = DateTime.UtcNow.AddDays(7);
+                            player.Core.DevPoint += RankRewards.List[
+                                TeamRules.RETIRE_REWARD_RANK].DevPointToStore;
+                            player.Core.Credit += member.Pension;
+                            member = null;
+                            dirty |= DirtyFlags.Core;
+                            break;
+
+                        case ManageType.Fire:
+                            member = null;
+                            candidate = new RecruitSlot
+                            {
+                                Names = null,
+                                PictureCodes = null,
+                                ExpirationTime = DateTime.UtcNow.AddDays(
+                                    TeamRules.FIRE_RECRUIT_DELAY_DAYS)
+                            };
+                            break;
+
+                        case ManageType.Heal:
+                            member!.EnergyPoints = TeamRules.GetMemberMaxVitality(
+                                member.Rank);
+                            member.DevPoints -=
+                                TeamRules.HEAL_CHARACTER_DEV_POINT_COST;
+                            break;
+                    }
+
+                    player.Characters[dto.MemberNo - 1] = member;
+                    player.CharCatMask[dto.MemberNo - 1] = member is not null;
+                    player.CandidateCharacters[dto.MemberNo - 1] = candidate;
+
+                    return dirty;
+                },
+                ct);
+        }
+        public async Task<TeamDtos?> GetTeamScreenDataAsync(int playerId, string sessionId, CancellationToken ct = default)
+        {
+            var cacheResult = await _cache.GetOrLoadLockedAsync(
+                playerId,
+                sessionId,
+                ct);
+
+            if (cacheResult.Status == CacheReadStatus.SessionMismatch)
+                return new TeamDtos { AccessDenied = true };
+
+            var player = cacheResult.Player;
+
+            if (player is null)
+            {
+                _logger.LogWarning("Player not found in cache. userId={UserId}", playerId);
+                return null;
+            }
+
+
+            var context = BuildContext(player);
+
+            await CorrectCandidateSlotsAsync(playerId, sessionId, context, ct);
+
+            var teamInfo = new TeamExtendedInfo
+            {
+                Name = player.Core.TeamName,
+                Level = player.Core.RankEnum,
+                Xp = player.Core.XP,
+                NextXp = RankRewards.List[player.Core.RankEnum].NextLevelTeam,
+                DevPoints = player.Core.DevPoint,
+                TotalMembers = context.NumberOfCharacters,
+                MaxMembers = RankRewards.List[player.Core.RankEnum].MaxCharacters,
+                AbleToHireMask = context.AbleToHireMask,
+                Bonus = RankRewards.List[player.Core.RankEnum].WinBonus,
+                Credits = player.Core.Credit,
+                MembRemarks = context.MemberRemarks
+            };
+
+            var help = HelpResolver(
+                player.Loadout.HelpLevelsJson,
+                teamInfo.Level,
+                teamInfo.DevPoints);
+
+            var rootBoxInfo = TeamRootBoxInfoResolver(
+                teamInfo,
+                help.CanDev);
+
+            return new TeamDtos
+            {
+                TeamInfo = teamInfo,
+                TeamMembers = context.TeamMembers,
+                Candidates = context.Candidates,
+                CharCatMask = context.CharacterMask,
+                Help = help,
+                RootBoxInfo = rootBoxInfo
+            };
+        }
+
+        private static TeamContext BuildContext(CachedPlayer player)
+        {
+            var context = new TeamContext();
+            context.TeamMembers[0] = null;
+            context.Candidates[0] = null;
+            context.CharacterMask[0] = true;
+            context.AbleToHireMask[0] = false;
+
+            BuildMembers(player, context);
+            BuildCandidates(player, context);
+
+            return context;
+        }
+        private static HelpDto HelpResolver(string helpDatasJson, int rank, int teamDevPoints)
+        {
+            var helpDatas = string.IsNullOrEmpty(helpDatasJson)
+               ? [0, 0, 0, 0, 0, 0, 0, 0]
+               : JsonSerializer.Deserialize<int[]>(helpDatasJson) ?? [0, 0, 0, 0, 0, 0, 0, 0];
+
+            var helpSkill = SkillResolver(helpDatas[0..4], rank, RankConstants.maxLevels[12..16], RankConstants.startLevels[12..16]);
+
+            return new HelpDto
+            {
+                Skill = helpSkill,
+                CanDev = helpSkill.Any(x => x.SkillCanDev) &&
+                         teamDevPoints >= TeamRules.HELP_LEVEL_TEAM_DEV_POINT_COST,
+                HelpVolumes = [.. helpDatas.Skip(4).Take(4)],
+                Category = [101, 102, 103, 104]
+            };
+        }
+        private static TeamRootBoxInfo TeamRootBoxInfoResolver(TeamExtendedInfo info, bool helpDev)
+        {
+            var retire = info.MembRemarks.Count(x => x == MembRemark.Retire);
+            var fire = info.MembRemarks.Count(x => x == MembRemark.Fire);
+            var promote = info.MembRemarks.Count(x => x == MembRemark.Promote);
+            var heal = info.MembRemarks.Count(x => x == MembRemark.Heal);
+            var help = helpDev ? 1 : 0;
+            var freePositions = Math.Max(info.MaxMembers - info.TotalMembers, 0);
+            var ableToHire = info.AbleToHireMask.Count(x => x);
+
+            return new TeamRootBoxInfo
+            {
+                IsTeamEnable = true,
+                IsRecruitEnable = freePositions > 0,
+                IsMemberEnable = info.TotalMembers > 0,
+                TeamOpRequired = retire + fire + promote + heal + help,
+                MemberOpRequired = info.MembRemarks.Count(x => x == MembRemark.Develop),
+                FreePositions = freePositions,
+                AbleToHire = ableToHire
+            };
+        }
+
+        private static void BuildMembers(CachedPlayer player, TeamContext context)
+        {
+            for (int i = 1; i < 9; i++)
+            {
+                var character = player.Characters[i - 1];
+
+                if (character != null)
+                {
+                    int tempRank = character.Rank;
+                    int nextRank = Math.Min(21, character.Rank + 1);
+                    bool hasVitality = TeamRules.HasVitality(
+                        character.EnergyPoints);
+
+                    context.TeamMembers[i] = new TeamMemberDto
+                    {
+                        Name = character.Name,
+                        Level = tempRank,
+                        PictureCode = character.PictureCode,
+                        Xp = character.XP,
+                        Pension = character.Pension,
+                        SkillPoints = character.DevPoints,
+                        EnergyPoints = character.EnergyPoints,
+                        NextHealingGameUtc = character.NextHealingGameUtc,
+                        SoloBestScore = character.CharStatistic.SoloBestScore,
+                        NextXp = RankRewards.List[tempRank].NextLevelMember,
+                        MaintAttitude = AttitudeResolver(
+                            character.Attitude.Main,
+                            tempRank,
+                            RankConstants.maxLevels[0..4],
+                            RankConstants.startLevels[0..4],
+                            0,
+                            false),
+
+                        SecondAttitude = AttitudeResolver(
+                            character.Attitude.Secondary,
+                            tempRank,
+                            RankConstants.maxLevels[4..8],
+                            RankConstants.startLevels[4..8],
+                            character.DevPoints,
+                            hasVitality),
+
+                        GenderAttitude = AttitudeResolver(
+                            character.Attitude.Gender,
+                            tempRank,
+                            RankConstants.maxLevels[8..12],
+                            RankConstants.startLevels[8..12],
+                            character.DevPoints,
+                            hasVitality)
+                    };
+
+                    context.MemberRemarks[i] = RemarkResolver(
+                        context.TeamMembers[i]!,
+                        player.Core.DevPoint,
+                        player.Core.RankEnum);
+
+                    context.TeamMembers[i]!.Remark = context.MemberRemarks[i];
+
+                    context.CharacterMask[i] = true;
+                    context.NumberOfCharacters++;
+                }
+                else
+                {
+                    context.TeamMembers[i] = null;
+                    context.CharacterMask[i] = false;
+                }
+            }
+        }
+        private static void BuildCandidates(CachedPlayer player, TeamContext context)
+        {
+            for (int i = 1; i < 9; i++)
+            {
+                if (context.CharacterMask[i])
+                {
+                    context.Candidates[i] = new CandidateDto { CanBeHire = false, ExpirationTime = DateTime.UtcNow.AddMonths(1) };
+                    context.UpdRecruitSlots[i - 1] = null;
+                }
+                else
+                {
+                    var candidate = player.CandidateCharacters[i - 1];
+
+                    if (candidate == null || DateTime.UtcNow > candidate.ExpirationTime)
+                        candidate = RecruitService.Generate(8, 7) ?? new RecruitSlot();
+
+                    context.Candidates[i] = new CandidateDto
+                    {
+                        Name = candidate.Names,
+                        PictureCode = candidate.PictureCodes,
+                        CanBeHire = candidate.Names != null &&
+                                    candidate.PictureCodes != null,
+                        ExpirationTime = candidate.ExpirationTime
+                    };
+                    context.UpdRecruitSlots[i - 1] = candidate;
+
+                }
+                context.AbleToHireMask[i] = context.Candidates[i]!.CanBeHire;
+
+            }
+        }
+
+
+        private static AttidtudeDto AttitudeResolver(
+            AttitudeBranch attitude,
+            int rank,
+            int[] maxLevels,
+            int[] startLevels,
+            int devPoints,
+            bool canDevelop)
+        {
+            var skill = SkillResolver(attitude.Level, rank, maxLevels, startLevels, [0, 1, 0, 1]);
+
+            if (!canDevelop)
+            {
+                foreach (var item in skill)
+                    item.SkillCanDev = false;
+            }
+
+            return new AttidtudeDto
+            {
+                Category = [.. attitude.CatNo.Take(4).Select(x => (byte)x)],
+                Skill = skill,
+                CanDev = canDevelop &&
+                         skill.Any(x => x.SkillCanDev) &&
+                         devPoints > 0
+            };
+        }
+        private static SkillPartial[] SkillResolver(int[] data, int mainActLevel, int[] constMaxLev, int[] constStartLev, int[]? correctors = null)
+        {
+            correctors ??= [0, 0, 0, 0];
+            var sp = new SkillPartial[data.Length];
+
+            for (int i = 0; i < data.Length; i++)
+                sp[i] = SkillPartialResolver(data[i], mainActLevel, constMaxLev[i], constStartLev[i] - 1, correctors[i]);
+
+            return sp;
+        }
+        private static SkillPartial SkillPartialResolver(int currentLevel, int actualRank, int maxLevel, int startmodifier, int corrector)
+        {
+            int maxmodify = Math.Max(0, actualRank - startmodifier);
+            int maxlevel = Math.Min(maxLevel, maxmodify);
+            maxlevel = Math.Max(0, maxlevel);
+            return new SkillPartial
+            {
+                LvlCurrent = (byte)currentLevel,
+                LvlCurMax = maxlevel > 0 ? (byte)(maxlevel + corrector) : (byte)maxlevel,
+                LvlOvrMax = maxlevel > 0 ? (byte)(maxlevel + corrector) : (byte)maxlevel,
+                SkillCanDev = (byte)currentLevel < (byte)maxlevel
+            };
+        }
+        private static MembRemark RemarkResolver(TeamMemberDto mem, int teamPoints, int teamLevel)
+        {
+            if (!TeamRules.HasVitality(mem.EnergyPoints))
+                return mem.SkillPoints >= TeamRules.HEAL_CHARACTER_DEV_POINT_COST
+                    ? MembRemark.Heal
+                    : MembRemark.Fire;
+
+            if (mem.NextXp <= mem.Xp && mem.Level < teamLevel)
+                if (mem.Level == 21)
+                    return MembRemark.Retire;
+                else if (TeamRules.IsRankClassChangingPromotion(mem.Level) ||
+                         teamPoints >= TeamRules.PROMOTION_TEAM_DEV_POINT_COST)
+                    return MembRemark.Promote;
+
+            if (mem.SkillPoints > 0 && (mem.SecondAttitude.CanDev || mem.GenderAttitude.CanDev))
+                return MembRemark.Develop;
+
+            return MembRemark.None;
+        }
+
+        private async Task CorrectCandidateSlotsAsync(
+            int playerId,
+            string sessionId,
+            TeamContext context,
+            CancellationToken ct)
+        {
+            await _cache.UpdatePlayerLockedAsync(
+                playerId,
+                sessionId,
+                player =>
+                {
+                    bool updateRequired = false;
+
+                    for (int i = 0; i < 8; i++)
+                    {
+                        updateRequired |=
+                            context.UpdRecruitSlots[i] != player.CandidateCharacters[i];
+                    }
+
+                    if (updateRequired == false)
+                        return DirtyFlags.None;
+
+                    player.CandidateCharacters = context.UpdRecruitSlots;
+                    return DirtyFlags.Characters;
+                },
+                ct);
+        }
+
+        private sealed class TeamContext
+        {
+            internal TeamMemberDto?[] TeamMembers { get; } = new TeamMemberDto?[9];
+            internal CandidateDto[] Candidates { get; } = new CandidateDto[9];
+            internal RecruitSlot?[] UpdRecruitSlots { get; } = new RecruitSlot?[8];
+            internal MembRemark[] MemberRemarks { get; } = new MembRemark[9];
+            internal bool[] CharacterMask { get; } = new bool[9];
+            internal bool[] AbleToHireMask { get; } = new bool[9];
+            internal int NumberOfCharacters { get; set; }
+        }
+    }
+}

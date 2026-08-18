@@ -1,0 +1,92 @@
+﻿@page "/checkin"
+
+@layout LoginLayout
+@using KvizCommando.Client.Features.Shared.Modal 
+
+@inherits Utilities.KcComponentBase
+
+
+
+@if (_isLoaded==true)
+{
+    <LangGuard Culture=@_culture Module="checkin" OnReady="BuildDynamicText">
+
+         <KcModal @ref="_termsModal"
+             Id="termsModal"
+             OnAction1="AcceptTerms">
+             @if (!string.IsNullOrWhiteSpace(_cacheData.url))
+                 {
+                      @_renderHTML
+                 }
+         </KcModal>
+ 
+        
+        <div class="checkin-panel">
+            <div class="checkin-head">
+                  <label class="label-title">@_dynamicTitle</label>
+                 
+              
+            </div>
+                 <div class="checkin-body"> 
+                    
+                        <label class="label-text">@_message</label>
+                     <br>
+                @if (_cacheData.needsName == true)
+                {
+                    <label class="label-text">@Ui.Lang["checkin.Label.DisplayName"]</label>
+                     <input class="lcd-input"   @bind-value="_formData.DisplayName"
+                                    @bind-value:event="oninput"
+                    style="@((_displayNameField ? "border: 1px solid red;" : null))" />
+            
+                }
+                @if (_cacheData.needsTerms == true)
+                {
+                    <div class="checkin-action">
+                                <div class="checkin-checkbox">                            
+                            <input class="form-check-input custom-checkbox" type="checkbox" id="AcceptTerms"
+                                        @bind="IsAccepted" 
+                                            />
+                                </div>
+                         <div class="checkin-AcceptText">                             <span class="label-text" style="font-size: 10px" for="AcceptTerms">
+                                @Ui.Lang["checkin.Label.AcceptTerms"]
+                            </span>
+                            <a class="AcceptTerms-link" @onclick="OpenTerms">@Ui.Lang["checkin.ButtonLink.Terms"]</a>
+                              <span class="label-text" style="font-size: 10px" for="AcceptTerms">
+                                @Ui.Lang["checkin.Label.AcceptTerms1"]
+                            </span>
+                            <a class="AcceptTerms-link" @onclick="OpenPrivacy">@Ui.Lang["checkin.ButtonLink.Privacy"]</a>
+                              <span class="label-text" style="font-size: 10px"  for="AcceptTerms">
+                                @Ui.Lang["checkin.Label.AcceptTerms2"]
+                            </span>
+                        </div>
+
+                     
+                     </div>
+                    <div class="checkin-row">
+                          <button class="military-button" disabled="@(!CanCheckIn)" type="button" @onclick="HandleValidSubmit">
+                            @Ui.Lang["checkin.button.CheckIn"]
+                          </button>
+                          <button class="military-button--secondary" @onclick="NavigateHome">
+                            @Ui.Lang["checkin.button.RedirectToLogin"]
+                          </button>
+                     </div>
+
+                }
+                else
+                {
+                     <div class="checkin-footer">
+                        
+                    <button class="military-button--secondary" @onclick="NavigateHome">
+                            @Ui.Lang["checkin.button.RedirectToLogin"]
+                     </button>
+                 </div>
+                }
+                   <br>
+                    <p style="color:red">@_resultMessage</p> 
+                 </div>
+        </div>
+    </LangGuard>
+}
+
+
+

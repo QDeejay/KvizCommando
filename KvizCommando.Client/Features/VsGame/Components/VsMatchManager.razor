@@ -1,0 +1,127 @@
+@using KvizCommando.Client.Helpers
+@using KvizCommando.Shared.Models.Enums.VsGame
+
+<div class="kc-vs-match-manager @(IsPreparationPhase ? "preparation" : "")">
+    @if (!string.IsNullOrWhiteSpace(_errorText))
+    {
+        <div class="kc-vs-match-error" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>@_errorText</span>
+        </div>
+    }
+
+    @if (_match is not null)
+    {
+        <div class="kc-vs-match-stage">
+            <VsMatchRoster
+                Players="@_match.Players"
+                ShowScore="@IsGamePhase"
+                IsConnectionActive="@MatchClient.IsConnected"
+                CurrentTimeModifierSeconds="@_match.Game.MyTimeModifierSeconds"
+                Title="@Lang["vsgame.Match.Roster.Match"]" />
+
+            <main class="kc-vs-match-content">
+                @if (_match.Phase == VsMatchPhase.MatchLocked)
+                {
+                    <div class="kc-vs-match-locked">
+                        <i class="bi bi-shield-lock-fill"></i>
+                        <strong>@_match.InfoText</strong>
+                        <span>@Lang["vsgame.Match.Info.LoadingQuestions"]</span>
+                    </div>
+                }
+                else if (_match.Phase is
+                         VsMatchPhase.PreparationOrder or
+                         VsMatchPhase.PreparationCategories or
+                         VsMatchPhase.PreparationHelps or
+                         VsMatchPhase.PreparationCompleted)
+                {
+                    <VsMatchPreparationView
+                        Data="@_match"
+                        OnCharacterSelected="SelectCharacterAsync"
+                        OnLoadoutAssigned="AssignLoadoutAsync"
+                        OnHelpAssigned="AssignHelpAsync"
+                        OnReset="ResetPreparationAsync"
+                        OnFinish="FinishPreparationAsync" />
+                }
+                else if (_match.Phase == VsMatchPhase.GameCompleted)
+                {
+                    <VsMatchRewardView Data="@_match" />
+                }
+                else
+                {
+                    <VsMatchPlayView
+                        Data="@_match"
+                        OnGuessSubmitted="SubmitGuessAsync"
+                        OnChoiceSubmitted="SubmitChoiceAsync"
+                        OnHelpUsed="UseHelpAsync"
+                        OnCaptainQuestionSelected="SelectCaptainQuestionAsync" />
+                }
+            </main>
+        </div>
+    }
+    else if (_queue is not null)
+    {
+        <div class="kc-vs-match-stage">
+            <VsMatchRoster
+                Players="@_queue.Players"
+                ExpectedPlayers="@_queue.RequiredPlayers"
+                IsConnectionActive="@MatchClient.IsConnected"
+                Title="@Lang["vsgame.Match.Roster.Lobby"]" />
+
+            <main class="kc-vs-match-content">
+                <section class="kc-vs-queue">
+                    <h3>@_queue.ClassificationText</h3>
+                    <p>@_queue.StatusText</p>
+
+                    <div class="kc-vs-queue-counter">
+                        <span>@_queue.WaitingPlayers</span>
+                        <small>/ @_queue.RequiredPlayers</small>
+                    </div>
+
+                    @if (_queue.MatchmakingDeadlineUtc.HasValue)
+                    {
+                        <div class="kc-vs-queue-timer">
+                            <i class="bi bi-hourglass-split"></i>
+                            <strong>
+                                @Lang["vsgame.Match.Queue.StartingIn"].FormatSafe(
+                                    QueueRemainingSeconds)
+                            </strong>
+                        </div>
+                    }
+
+                    <div class="kc-vs-queue-conditions">
+                        <span>
+                            <i class="bi bi-list-ol"></i>
+                            <strong>
+                                @Lang["vsgame.Match.Queue.Rounds"].FormatSafe(
+                                    _queue.RequiredPartySize)
+                            </strong>
+                        </span>
+                        <span>
+                            @Lang["vsgame.Match.Queue.Stake"]
+                            <strong>@_queue.Stake</strong>
+                        </span>
+                    </div>
+                </section>
+            </main>
+        </div>
+    }
+    else
+    {
+        <section class="kc-vs-queue connecting">
+            <div class="kc-vs-queue-emblem">
+                <i class="bi bi-broadcast"></i>
+            </div>
+            @if (MatchClient.ConnectionCheck is null)
+            {
+                <h3>@Lang["vsgame.Match.Status.Connecting"]</h3>
+            }
+            else
+            {
+                <h3 class="kc-vs-connection-result @ConnectionResultClass">
+                    @ConnectionResultText
+                </h3>
+            }
+        </section>
+    }
+</div>

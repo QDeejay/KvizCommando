@@ -1,0 +1,65 @@
+@using KvizCommando.Client.Helpers
+
+<div class="list-grid">
+    <div></div>
+    <div></div>
+    <div class="list-header no-cell">@Lang["question.Table.Header.No"]</div>
+    <div class="list-header category-cell">@Lang["question.Table.Header.ShortCat"]</div>
+    <div class="list-header value-cell">@Lang["question.Table.Header.Question"]</div>
+    <div class="list-header ratio-cell">@Lang["question.Table.Header.Status"]</div>
+
+    @for (var j = 0; j < ExtInfo.AvailablePendingSlot; j++)
+    {
+        var row = j;
+        var marked = Slots[row].Status != "Pending" && Slots[row].Category != 0;
+
+        @if (marked)
+        {
+            <div><label class="row-marker">!</label></div>
+        }
+        else
+        {
+            <div></div>
+        }
+
+        @if (Slots[row].Status != "Pending" && Slots[row].Status != "None")
+        {
+            <div>
+                <input type="checkbox"
+                       class="custom-radio"
+                       name="UsrRow"
+                       value="@row"
+                       checked="@(_selectedId == row)"
+                       @onchange="() => OnSelect(row)" />
+            </div>
+        }
+        else
+        {
+            <div></div>
+        }
+
+        var categoryName = CategoryNameLocalizer.GetCatShort(
+            Slots[row].Category,
+            Culture);
+        var status = string.IsNullOrEmpty(Slots[row].Status)
+            ? "None"
+            : Slots[row].Status;
+
+        <div class="no-cell">@(row + 1)</div>
+        <div class="category-cell category-cellext">@categoryName</div>
+        <div class="value-cell value-cellext">@Slots[row].Question</div>
+        <div class="ratio-cell ratio-cellext">
+            @Lang[$"question.Table.Status.{status}"]
+        </div>
+    }
+</div>
+
+<div class="component-button-row">
+    <div class="component-button-group right">
+        <button class="button-on-lcd"
+                @onclick="OnHandleButtonAsync"
+                disabled="@(_selectedId == 100)">
+            <i class="bi bi-tools"></i>
+        </button>
+    </div>
+</div>

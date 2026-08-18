@@ -1,0 +1,18 @@
+﻿@if (_isActive)
+{
+    <div class="htp-tabbar">
+        
+        @foreach (var tb in Tabs)
+        {
+            @if (tb.Visible)
+            {
+                <div class="htp-tab @(_activeIndex == tb.ClickId ? "active" : "") @(tb.Enable ? "" : "disabled")"
+                     @onclick="() => SetTab(tb.ClickId)">
+                    <span class="tab-text">@tb.Text</span>
+                    <span class="tooltip-box">@tb.ToolTip</span>
+                </div>
+                
+            }           
+        }
+    </div>
+}

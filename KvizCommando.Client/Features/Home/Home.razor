@@ -1,0 +1,39 @@
+﻿@page "/home"
+@inherits Utilities.KcComponentBase
+
+
+<LangGuard Culture=@Culture Module="Home" OnReady="BuildBoxes">
+    <PageContainer>
+        
+            @if (_isReady == true)
+            {
+            <div class="kc-home-selector">
+                @foreach (string bx in _boxOrder)
+                    {
+                        var box = Box(bx);
+               
+                    <ContentBox Vm="@box"
+                                OnClick="OnBoxClick"
+                                FooterClick="CloseBBoard">
+                                <ContentBody>
+                                    <div class="kc-bboard-item">
+                                        @_bBoardHTML
+                                    </div>
+                                </ContentBody>
+                    </ContentBox>
+                    }
+             </div>
+            }
+    </PageContainer>
+</LangGuard>
+
+
+
+
+
+
+
+
+
+
+

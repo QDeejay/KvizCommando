@@ -1,0 +1,33 @@
+using KvizCommando.Shared.Models.Enums.VsGame;
+
+namespace KvizCommando.Shared.Contracts.VsGame.Match;
+
+public sealed class VsConnectionCheckResult
+{
+    public int ResponseTimeMilliseconds { get; set; }
+    public VsConnectionQuality Quality { get; set; }
+}
+
+public sealed class VsQueueJoinResult
+{
+    public bool IsAccepted { get; set; }
+    public string ErrorKey { get; set; } = string.Empty;
+}
+
+public enum VsQueueLeaveStatus
+{
+    NotInQueue,
+    Left,
+    LeftWithCooldown
+}
+
+public sealed class VsRankedQueueSnapshot
+{
+    public int ClassificationId { get; set; }
+    public int WaitingPlayers { get; set; }
+    public int RequiredPlayers { get; set; }
+    public int RequiredPartySize { get; set; }
+    public int Stake { get; set; }
+    public DateTime? MatchmakingDeadlineUtc { get; set; }
+    public VsMatchPlayerDto[] Players { get; set; } = [];
+}

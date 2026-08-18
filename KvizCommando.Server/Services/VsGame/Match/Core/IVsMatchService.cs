@@ -1,0 +1,65 @@
+using KvizCommando.Server.Services.VsGame.Matchmaking;
+using KvizCommando.Shared.Contracts.VsGame.Match;
+
+namespace KvizCommando.Server.Services.VsGame.Match;
+
+public interface IVsMatchService
+{
+    VsMatchSession LockMatch(
+        IReadOnlyList<VsRankedQueueEntry> entries);
+
+    Task<bool> InitializeLockedMatchAsync(
+        VsMatchSession match,
+        CancellationToken ct = default);
+
+    Task SelectCharacterAsync(
+        string connectionId,
+        int slotNumber,
+        CancellationToken ct = default);
+
+    Task AssignLoadoutAsync(
+        string connectionId,
+        VsLoadoutAssignmentRequest request,
+        CancellationToken ct = default);
+
+    Task AssignHelpAsync(
+        string connectionId,
+        VsHelpAssignmentRequest request,
+        CancellationToken ct = default);
+
+    Task ResetPreparationAsync(
+        string connectionId,
+        CancellationToken ct = default);
+
+    Task FinishPreparationAsync(
+        string connectionId,
+        CancellationToken ct = default);
+
+    Task SubmitGuessAsync(
+        string connectionId,
+        VsGuessAnswerRequest request,
+        CancellationToken ct = default);
+
+    Task SubmitChoiceAsync(
+        string connectionId,
+        VsChoiceAnswerRequest request,
+        CancellationToken ct = default);
+
+    Task UseHelpAsync(
+        string connectionId,
+        VsUseHelpRequest request,
+        CancellationToken ct = default);
+
+    Task SelectCaptainQuestionAsync(
+        string connectionId,
+        VsCaptainQuestionRequest request,
+        CancellationToken ct = default);
+
+    Task DisconnectAsync(
+        string connectionId,
+        CancellationToken ct = default);
+
+    Task DisconnectPlayerAsync(
+        int playerId,
+        CancellationToken ct = default);
+}

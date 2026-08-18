@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="hu">
+<head>
+    <meta charset="utf-8">
+    <title>Csapat áttekintés – segítségek</title>
+    <style>
+        .kc-team-help{max-width:820px;margin:0 auto;color:var(--kc-help-text);font:14px/1.45 var(--kc-help-font-body)}.kc-team-help *{box-sizing:border-box}.kc-team-help .eyebrow{color:var(--kc-help-accent-soft);font:700 12px/1.2 var(--kc-help-font-display);letter-spacing:.13em}.kc-team-help h1{margin:8px 0 8px;color:var(--kc-help-title);font:400 clamp(27px,4vw,38px)/1.08 var(--kc-help-font-title)}.kc-team-help .lead{margin:0 0 13px;color:var(--kc-help-text-soft);font-size:15px}.kc-team-help .help-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.kc-team-help .help-card{padding:12px 14px;border:1px solid var(--kc-help-border);border-radius:7px;background:var(--kc-help-panel)}.kc-team-help .help-card h2{margin:0 0 5px;color:var(--kc-help-title);font:700 16px/1.2 var(--kc-help-font-display)}.kc-team-help .meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:7px}.kc-team-help .meta span{padding:3px 7px;border:1px solid var(--kc-help-border);border-radius:4px;color:var(--kc-help-accent-soft);background:var(--kc-help-panel-strong);font:700 11px/1.2 var(--kc-help-font-display)}.kc-team-help .controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:13px}.kc-team-help .control{padding:9px 8px;border:1px solid var(--kc-help-border);border-radius:6px;background:var(--kc-help-panel-strong);text-align:center}.kc-team-help .control i{display:block;margin-bottom:4px;color:var(--kc-help-accent);font-size:20px}.kc-team-help .note{margin-top:12px;padding:10px 13px;border-left:4px solid var(--kc-help-accent);background:var(--kc-help-panel-strong);color:var(--kc-help-text-soft)}.kc-team-help .shortcut{display:inline-block;margin-top:14px;padding:7px 10px;color:var(--kc-help-text-soft);border:1px solid var(--kc-help-border);border-radius:5px;background:var(--kc-help-panel);font-family:var(--kc-help-font-display)}@media(max-width:650px){.kc-team-help .help-grid{grid-template-columns:1fr}.kc-team-help .controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    </style>
+</head>
+<body>
+<section class="kc-help-document kc-team-help">
+    <div class="eyebrow">CSAPAT ÁTTEKINTÉS // 06 / 06</div>
+    <h1>Segítségek fejlesztése</h1>
+    <p class="lead">Minden segítségnek saját nyitási és fejlesztési szintje van. Egy segítség egy szinttel történő fejlesztése {{TEAM_HELP_LEVEL_COST}} Csp-be kerül.</p>
+
+    <div class="help-grid">
+        <div class="help-card">
+            <h2>50-50</h2>
+            <div class="meta"><span>Nyitás: {{TEAM_HELP_FIFTY_FIFTY_UNLOCK_LEVEL}}</span><span>Maximum: Szint {{TEAM_HELP_FIFTY_FIFTY_MAX_LEVEL}}</span></div>
+            Eltávolít két helytelen választ.
+        </div>
+        <div class="help-card">
+            <h2>Tipp sáv</h2>
+            <div class="meta"><span>Nyitás: {{TEAM_HELP_GUESS_RANGE_UNLOCK_LEVEL}}</span><span>Maximum: Szint {{TEAM_HELP_GUESS_RANGE_MAX_LEVEL}}</span></div>
+            A becslős kérdéshez mutatott tartomány {{TEAM_HELP_GUESS_RANGE_START_VALUE}}%-ról {{TEAM_HELP_GUESS_RANGE_MAX_VALUE}}%-ra szűkíthető. A kisebb érték pontosabb segítséget jelent.
+        </div>
+        <div class="help-card">
+            <h2>Időtlenítő</h2>
+            <div class="meta"><span>Nyitás: {{TEAM_HELP_TIME_FREEZE_UNLOCK_LEVEL}}</span><span>Maximum: Szint {{TEAM_HELP_TIME_FREEZE_MAX_LEVEL}}</span></div>
+            Jó válasz esetén 0 másodperces válaszidővel számol.
+        </div>
+        <div class="help-card">
+            <h2>AI javaslat</h2>
+            <div class="meta"><span>Nyitás: {{TEAM_HELP_AI_SUGGESTION_UNLOCK_LEVEL}}</span><span>Maximum: Szint {{TEAM_HELP_AI_SUGGESTION_MAX_LEVEL}}</span></div>
+            Kijelöl egy választ. Pontossága {{TEAM_HELP_AI_SUGGESTION_START_VALUE}}%-ról {{TEAM_HELP_AI_SUGGESTION_MAX_VALUE}}%-ra fejleszthető.
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="control"><i class="bi bi-dash-lg" aria-hidden="true"></i>Tervezett szint visszavétele</div>
+        <div class="control"><i class="bi bi-plus-lg" aria-hidden="true"></i>Tervezett szint növelése</div>
+        <div class="control"><i class="bi bi-trash3-fill" aria-hidden="true"></i>Változtatások visszaállítása</div>
+        <div class="control"><i class="bi bi-floppy" aria-hidden="true"></i>Beállítások mentése</div>
+    </div>
+
+    <div class="note">A segítségnél látható „Szint” nem a csapat vagy a karakter Lvl-je. A módosítások csak a mentés ikon megnyomásakor lépnek életbe.</div>
+    <span class="shortcut">F1 – a segítség újbóli megnyitása</span>
+</section>
+</body>
+</html>

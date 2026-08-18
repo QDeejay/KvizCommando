@@ -1,0 +1,26 @@
+﻿.emailconfirm-panel {
+    width: 400px;
+    margin: 10px auto;
+}
+
+.emailconfirm-head {
+    text-align: center;
+    padding: 4px;
+}
+
+.emailconfirm-body {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+/* FOOTER */
+.emailconfirm-footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}

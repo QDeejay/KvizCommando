@@ -1,0 +1,144 @@
+﻿using KvizCommando.Client.Helpers;
+using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Shared.Models.Dtos; // itt van a HomeDTOs, HomeScreen, ScreenButtonEntity
+
+namespace KvizCommando.Client.Pages.Home.Features;
+
+public sealed class HomeSpecs : VmSpecs
+{
+    internal HomeBoxKey Key { get; init; }
+    internal Func<HomeScreen, ScreenButtonEntity> Pick { get; init; } = default!;
+    internal Func<ILanguageService, ScreenButtonEntity, string> BuildFooter 
+        { get; init; } = (_, _) => string.Empty;
+}
+
+public static class HomeBoxSpecs
+{
+    private const string IMAGE_ROOT = "images/buttons/home";
+    public static readonly IReadOnlyList<HomeSpecs> Specs = new[]
+    {
+        new HomeSpecs {
+            Key = HomeBoxKey.GameVs,
+            TitleKey = "home.Box.Title.GameVs",
+            ImageSrc = string.Empty,
+            BgImageSrc =$"{IMAGE_ROOT}/game.webp",
+            Size = ContentBoxSize.BUTTON_WIDE,
+            FooterDisplay = true, ClickId = (int)HomeBoxKey.GameVs,
+            Pick = s => s.VsGame,
+            BuildFooter = (lang, b) => $"Online: {b.FooterData1}"
+        },
+        new HomeSpecs {
+            Key = HomeBoxKey.GameSolo,
+            TitleKey = "home.Box.Title.GameSolo",
+            ImageSrc = string.Empty,
+            BgImageSrc = $"{IMAGE_ROOT}/gamesolo.webp",
+            Size = ContentBoxSize.BUTTON_SMALL,
+            FooterDisplay = false, ClickId = (int)HomeBoxKey.GameSolo,
+            Pick = s => s.SoloGame,
+        
+        },
+        new HomeSpecs {
+            Key = HomeBoxKey.Shop,
+            TitleKey = "home.Box.Title.Shop",
+            ImageSrc = string.Empty,
+            BgImageSrc = $"{IMAGE_ROOT}/shop.webp",
+            Size = ContentBoxSize.BUTTON_MEDIUM,
+            FooterDisplay = false, ClickId = (int)HomeBoxKey.Shop,
+            Pick = s => s.Shop,
+          
+        },
+        new HomeSpecs {
+            Key = HomeBoxKey.Rankings,
+            TitleKey = "home.Box.Title.Rankings",
+            ImageSrc = string.Empty,
+            BgImageSrc = $"{IMAGE_ROOT}/ranking.webp",
+            Size = ContentBoxSize.BUTTON_MEDIUM,
+            FooterDisplay = true, ClickId = (int)HomeBoxKey.Rankings,
+            Pick = s => s.Ranking,
+            BuildFooter = (lang, b) =>
+                b.FooterData1 < 1
+                ? lang["home.Box.Footer.Rankings2"]
+                : lang["home.Box.Footer.Rankings1"].FormatSafe(b.FooterData1)
+        },
+        new HomeSpecs {
+            Key = HomeBoxKey.Statistic,
+            TitleKey = "home.Box.Title.Statistic",
+            BgImageSrc = $"{IMAGE_ROOT}/statistic.webp",
+            ImageSrc = string.Empty,
+            Size =ContentBoxSize.BUTTON_SMALL,
+            FooterDisplay = false, ClickId = (int)HomeBoxKey.Statistic,
+            Pick = s => s.Statistic,
+           
+        },
+        new HomeSpecs {
+            Key = HomeBoxKey.Events,
+            TitleKey = "home.Box.Title.Events",
+            ImageSrc = string.Empty,
+            BgImageSrc = $"{IMAGE_ROOT}/events.webp",
+            Size = ContentBoxSize.BUTTON_WIDE,
+            FooterDisplay = true, ClickId = (int)HomeBoxKey.Events,
+            Pick = s => s.Events,
+            BuildFooter = (lang, b) => b.FooterData1 switch
+            {
+                99 => lang["home.Box.Footer.Events2"],
+                > 0 => lang["home.Box.Footer.Events1"].FormatSafe(b.FooterData1),
+                0   => lang["home.Box.Footer.Events3"].FormatSafe(b.FooterData2), // pl. duration
+                _   => $"#{b.FooterData1}"
+            }
+        },
+        new HomeSpecs {
+            Key = HomeBoxKey.Community,
+            TitleKey = "home.Box.Title.Community",
+            ImageSrc = string.Empty,
+            BgImageSrc = $"{IMAGE_ROOT}/community.webp",
+            Size = ContentBoxSize.BUTTON_MEDIUM,
+            FooterDisplay = true, ClickId = (int)HomeBoxKey.Community,
+            Pick = s => s.Community,
+            BuildFooter = (lang, b) => lang["home.Box.Footer.Community"].FormatSafe(b.FooterData1, b.FooterData2)
+        },
+        new HomeSpecs {
+            Key = HomeBoxKey.Messages,
+            TitleKey = "home.Box.Title.Messages",
+            ImageSrc = string.Empty,
+            BgImageSrc = $"{IMAGE_ROOT}/messages.webp",
+            Size = ContentBoxSize.BUTTON_MEDIUM,
+            FooterDisplay = true, ClickId = (int)HomeBoxKey.Messages,
+            Pick = s => s.Messages,
+            BuildFooter = (lang, b) => lang["home.Box.Footer.Messages"].FormatSafe(b.FooterData1)
+        },
+        new HomeSpecs {
+            Key = HomeBoxKey.Team,
+            TitleKey = "home.Box.Title.Team",
+            ImageSrc = string.Empty,
+            BgImageSrc = $"{IMAGE_ROOT}/team.webp",
+            Size = ContentBoxSize.BUTTON_MEDIUM,
+            FooterDisplay = true, ClickId = (int)HomeBoxKey.Team,
+            Pick = s => s.Team,
+            BuildFooter = (lang, b) => lang["home.Box.Footer.Team"].FormatSafe(b.FooterData1, b.FooterData2)
+        },
+        new HomeSpecs {
+            Key = HomeBoxKey.Question,
+            TitleKey = "home.Box.Title.Question",
+            ImageSrc = string.Empty,
+            BgImageSrc = $"{IMAGE_ROOT}/questions.webp",
+            Size = ContentBoxSize.BUTTON_MEDIUM,
+            FooterDisplay = false,
+            ClickId = (int)HomeBoxKey.Question,
+            Pick = s => s.Question
+        },
+        new HomeSpecs {
+            Key = HomeBoxKey.InfoBoard,
+            TitleKey = "home.Title.BulleteinBoard",
+            ImageSrc = string.Empty,
+            BgImageSrc = string.Empty, 
+            Size = ContentBoxSize.CONTENT_LARGE,
+            ReSizable = true,
+            RenderContent = 1,
+            LcdBackground=true,
+            FooterDisplay = false,
+            ClickId = 0,
+            Pick = s => s.InfoBoard
+        }
+    };
+}

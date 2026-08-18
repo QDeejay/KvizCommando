@@ -1,0 +1,72 @@
+﻿<div class="modal fade" id="@Id" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered @ModalSizeClass">
+        <div class="modal-content modal-custom kc-window-shell">
+
+            <div class="modal-header-custom kc-window-header text-center">
+                <h5 class="modal-title-custom kc-window-title">@Par.Title</h5>
+                <button type="button" class="modal-close kc-window-close"
+                        @onclick="CloseAsync"
+                        aria-label="Close">×</button>
+            </div>
+
+            <div id="termsBody"
+                 class="modal-body kc-modal-body kc-window-body"
+                 style="@BodyStyle"
+                 @onscroll="OnBodyScroll">
+                    
+                <CascadingValue Value="Appstates">
+                    <CascadingValue Value="Par.Mode">
+                        @if (Par.BodyComponent != null)
+                        {
+                            <DynamicComponent Type="@Par.BodyComponent"
+                                              Parameters="@Par.BodyParameters" />
+                        }
+                        else
+                        {
+                            @ChildContent
+                        }
+                    </CascadingValue>
+                 </CascadingValue>
+            </div>
+               
+            <div class="modal-checkbox">
+                @if (!string.IsNullOrWhiteSpace(Par.CheckBoxText) && Par.CheckBoxText!="#")
+                {
+                    <input class="form-check-input custom-checkbox" type="checkbox" id="notshow" @bind="CheckBox" />
+                    <label class="form-check-label notshow-label" for="notshow">
+                        @Par.CheckBoxText
+                    </label>
+                }
+            </div>
+
+            <div class="modal-footer-custom kc-window-footer d-flex justify-content-around">
+                @if (!string.IsNullOrWhiteSpace(Par.ActionText1) && Par.ActionText1 != "#")
+                {
+                    <button class="military-button"
+                            disabled="@(CanAccept==false)"
+                            @onclick="OnActionClicked1"
+                            style="@Par.ActionStyle1">
+                        @Par.ActionText1
+                    </button>
+                }
+                @if (!string.IsNullOrWhiteSpace(Par.ActionText2) && Par.ActionText2 != "#")
+                {
+                    <button class="military-button"
+                            style="@Par.ActionStyle2"
+                            disabled="@(CanAccept == false)"
+                            @onclick="OnActionClicked2">
+                        @Par.ActionText2
+                    </button>
+                }
+                @if (!string.IsNullOrWhiteSpace(Par.CloseText) && Par.CloseText != "#")
+                {
+                    <button class="military-button--secondary"
+                            @onclick="CloseAsync">
+                        @Par.CloseText
+                    </button>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>

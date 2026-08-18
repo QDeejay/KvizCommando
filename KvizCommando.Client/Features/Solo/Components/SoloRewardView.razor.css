@@ -1,0 +1,129 @@
+.kc-solo-reward {
+    width: 100%;
+    min-width: 0;
+    display: grid;
+    align-content: center;
+    gap: 10px;
+    color: #cccccc;
+}
+
+.kc-solo-reward-banner {
+    min-height: 52px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: clamp(1rem, 1.8vw, 1.4rem);
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.kc-solo-reward-columns {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.kc-solo-reward-panel {
+    min-width: 0;
+    padding: 12px 14px;
+    background: rgba(17, 22, 16, .94);
+    border: 1px solid #55583f;
+    border-radius: 7px;
+    box-shadow: inset 0 0 9px rgba(0, 0, 0, .55),
+        0 3px 7px rgba(0, 0, 0, .35);
+}
+
+.kc-solo-reward-panel h3 {
+    margin: 0 0 10px;
+    color: #c6ef39;
+    font-family: 'Special Elite', cursive;
+    font-size: 1.05rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.kc-solo-reward-panel dl {
+    margin: 0;
+    display: grid;
+}
+
+.kc-solo-reward-panel dl > div {
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid #3f4335;
+    font-family: 'Courier New', monospace;
+    font-size: .78rem;
+}
+
+.kc-solo-reward-panel dt { color: #aaa99f; }
+
+.kc-solo-reward-panel dd {
+    margin: 0;
+    color: #eee9dc;
+    font-weight: 700;
+    text-align: right;
+}
+
+.kc-solo-reward-panel .total dd { color: #c6ef39; }
+
+.kc-solo-reward-panel .member-xp.capped { color: #d15f52; }
+
+.member-dev-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.member-dev-label > i {
+    color: inherit;
+    font-size: .95rem;
+    line-height: 1;
+}
+
+.team-xp-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.team-level-cycle {
+    display: inline-grid;
+    min-width: 76px;
+    color: #c6ef39;
+    pointer-events: none;
+}
+
+.team-level-cycle > strong {
+    grid-area: 1 / 1;
+    white-space: nowrap;
+    opacity: 0;
+}
+
+.team-level-cycle > strong:first-child {
+    animation: solo-team-level-text 4s linear infinite;
+}
+
+.team-level-cycle > strong:last-child {
+    animation: solo-team-level-code 4s linear infinite;
+}
+
+@keyframes solo-team-level-text {
+    0%, 100% { opacity: 0; }
+    25% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+@keyframes solo-team-level-code {
+    0%, 50%, 100% { opacity: 0; }
+    75% { opacity: 1; }
+}
+
+@media (max-width: 620px) {
+    .kc-solo-reward-columns { grid-template-columns: 1fr; }
+}

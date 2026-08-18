@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Team overview – basic data</title>
+    <style>
+        .kc-team-help{max-width:820px;margin:0 auto;color:var(--kc-help-text);font:15px/1.55 var(--kc-help-font-body)}.kc-team-help *{box-sizing:border-box}.kc-team-help .eyebrow{color:var(--kc-help-accent-soft);font:700 12px/1.2 var(--kc-help-font-display);letter-spacing:.13em}.kc-team-help h1{margin:8px 0 10px;color:var(--kc-help-title);font:400 clamp(28px,4vw,40px)/1.08 var(--kc-help-font-title)}.kc-team-help .lead{max-width:760px;margin:0 0 17px;color:var(--kc-help-text-soft);font-size:16px}.kc-team-help .data-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.kc-team-help .data-card{padding:12px 14px;border:1px solid var(--kc-help-border);border-radius:7px;background:var(--kc-help-panel)}.kc-team-help .data-card b{display:block;margin-bottom:3px;color:var(--kc-help-title)}.kc-team-help .navigation{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:15px}.kc-team-help .nav-card{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;padding:11px 13px;border:1px solid var(--kc-help-border);border-radius:7px;background:var(--kc-help-panel-strong)}.kc-team-help .icon{display:grid;place-items:center;width:42px;height:38px;color:var(--kc-help-accent);border:1px solid var(--kc-help-border);border-radius:5px;background:var(--kc-help-panel);font-size:21px}.kc-team-help .nav-card b{display:block;color:var(--kc-help-title)}.kc-team-help .marker{display:inline-grid;place-items:center;width:24px;height:24px;margin-right:6px;color:var(--kc-help-title);border:1px solid var(--kc-help-accent);border-radius:50%;font-weight:700}@media(max-width:650px){.kc-team-help .data-grid,.kc-team-help .navigation{grid-template-columns:1fr}.kc-team-help .lead{font-size:15px}}
+    </style>
+</head>
+<body>
+<section class="kc-help-document kc-team-help">
+    <div class="eyebrow">TEAM OVERVIEW // 01 / 06</div>
+    <h1>Your team's status</h1>
+    <p class="lead">The upper panel shows your team's current progress and capacity.</p>
+
+    <div class="data-grid">
+        <div class="data-card"><b>Organization</b>A higher team Lvl also means a higher organization level.</div>
+        <div class="data-card"><b>Lvl and XP</b>Lvl is the team's current level. XP shows its progress towards the next level.</div>
+        <div class="data-card"><b>Team development points – Tp</b>The team's shared development points. They are used for promotions and improving helps.</div>
+        <div class="data-card"><b>Bonus</b>The percentage bonus belonging to the team's current level.</div>
+        <div class="data-card"><b>Winner compensation – W. comp.</b>Based on team level, a ×1.0–×3.0 multiplier increases the winner's leaderboard result. It does not change net points or rewards. At Lvl-0 it is N/A because ranked matches are not yet available.</div>
+        <div class="data-card"><b>Team size</b>The first number is the current number of members; the second is the largest team currently allowed.</div>
+    </div>
+
+    <div class="navigation">
+        <div class="nav-card"><span class="icon"><i class="bi bi-people" aria-hidden="true"></i></span><div><b>Team members</b>The member list and available actions.</div></div>
+        <div class="nav-card"><span class="icon"><i class="bi bi-life-preserver" aria-hidden="true"></i></span><div><b>Helps</b>Development of the team's in-game helps.</div></div>
+    </div>
+
+    <p><span class="marker">!</span>An action is available or required for that team member.</p>
+</section>
+</body>
+</html>

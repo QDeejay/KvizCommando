@@ -1,0 +1,58 @@
+namespace KvizCommando.Client.Features.VsGame.ViewModels;
+
+public sealed class VsMatchRewardViewData
+{
+    public int PrizePool { get; set; }
+    public VsRewardStandingVm[] Standings { get; set; } = [];
+    public VsMyRewardVm? MyReward { get; set; }
+}
+
+public sealed class VsRewardStandingVm
+{
+    public int FinalPosition { get; set; }
+    public int PlayerPosition { get; set; }
+    public string DisplayName { get; set; } = string.Empty;
+    public string TeamName { get; set; } = string.Empty;
+    public string TeamLevel { get; set; } = string.Empty;
+    public bool IsMe { get; set; }
+    public bool IsBot { get; set; }
+    public bool IsWinner { get; set; }
+    public int Points { get; set; }
+    public double TimeSeconds { get; set; }
+}
+
+public sealed class VsMyRewardVm
+{
+    public int FinalPosition { get; set; }
+    public double WinnerCompensation { get; set; }
+    public double RankedScore { get; set; }
+    public bool IsTeamXpAvailable { get; set; }
+    public int CharacterAverageXp { get; set; }
+    public int ScoreXp { get; set; }
+    public int TeamXp { get; set; }
+    public int NewTeamLevel { get; set; }
+    public int StakeReturn { get; set; }
+    public int BaseCreditReward { get; set; }
+    public int TeamBonusCredit { get; set; }
+    public int TeamBonusPercent { get; set; }
+    public int CreditReward { get; set; }
+    public VsConsumedHelpVm[] ConsumedHelps { get; set; } = [];
+    public VsCharacterRewardVm[] Characters { get; set; } = [];
+}
+
+public sealed class VsConsumedHelpVm
+{
+    public string Name { get; set; } = string.Empty;
+    public int Count { get; set; }
+}
+
+public sealed class VsCharacterRewardVm
+{
+    public int SlotNumber { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string PictureCode { get; set; } = string.Empty;
+    public int CharacterXp { get; set; }
+    public bool IsCharacterXpCapped { get; set; }
+    public int EnergyLoss { get; set; }
+    public int Pension { get; set; }
+}

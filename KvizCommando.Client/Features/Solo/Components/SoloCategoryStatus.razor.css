@@ -1,0 +1,37 @@
+.kc-solo-category-status {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.kc-solo-category-panel {
+    min-width: 1.8rem;
+    min-height: 1.7rem;
+    padding: .3rem .45rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(210, 255, 57, .45);
+    border-radius: 4px;
+    background-color: rgba(23, 23, 23, .58);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .65);
+    box-sizing: border-box;
+    color: rgba(190, 195, 185, .65);
+    text-shadow: 0 1px 2px #000;
+}
+
+.kc-solo-category-panel.maxed {
+    background-color: rgba(48, 76, 43, .58);
+    border-color: rgba(126, 160, 95, .72);
+}
+
+.kc-solo-category-panel .bi-trophy-fill.maximum-score {
+    color: #d2ff39;
+}

@@ -1,0 +1,36 @@
+﻿<div class="lcd-display kc-lcd-surface">
+    <div class="lcd-start-controls">
+        <button type="button"
+                class="lcd-control"
+                aria-label="LCD play/pause"
+                @onclick="TogglePlayback">
+            <i class="bi @(_isPaused ? "bi-play-fill" : "bi-pause-fill")"></i>
+        </button>
+
+        @if (_isPaused)
+        {
+            <button type="button"
+                    class="lcd-control"
+                    aria-label="LCD next"
+                    @onclick="StepAsync">
+                <i class="bi bi-skip-forward-fill"></i>
+            </button>
+        }
+    </div>
+
+    @if (CurrentText != null)
+    {
+        <div class="lcd-text kc-lcd-content @(IsVisible ? "visible" : "")">@CurrentText</div>
+    }
+    else
+    {
+        <div class="lcd-text kc-lcd-content">-- Kvíz Commando--</div>
+    }
+
+    <button type="button"
+            class="lcd-control lcd-sound-control"
+            aria-label="Sound on/off"
+            @onclick="ToggleSoundAsync">
+        <i class="bi @(SoundEnabled ? "bi-volume-up-fill" : "bi-volume-mute-fill")"></i>
+    </button>
+</div>

@@ -1,0 +1,131 @@
+﻿@using KvizCommando.Client.Services
+@using KvizCommando.Client.Features.Shared.Help
+@using KvizCommando.Client.Features.Shared.Modal;
+
+
+@inherits Utilities.KcLayoutComponentBase
+<HeadContent>
+    <link href="css/MainLayout.css" rel="stylesheet" />
+</HeadContent>
+
+<LoaderView />
+<KcToast />
+
+@if (IsRenderReady)
+{
+    <KcModal @ref="_mainModal"
+             Id="mainModal"
+             Appstates="@_appState"
+             OnModalAction="ModalAction">
+    </KcModal>
+    if (_isLoggedIn)
+    {
+        <HelpNavigator @ref="_helpNavigator" AppStates="@_appState" />
+        <button id="kc-help-trigger"
+                type="button"
+                hidden
+                @onclick="OpenCurrentHelpAsync">
+        </button>
+        <AppHeader DisplayName="@_appState.Home!.UserMainData.UserName"
+                lclRow1="@Ui.Lang["mainlayout.Bootstrap.Label.Profile"]"
+                lclRow2="@Ui.Lang["mainlayout.Bootstrap.Label.Settings"]"
+                lclRow3="@Ui.Lang["mainlayout.Bootstrap.Label.Help"]"
+                lclLogout="@Ui.Lang["mainlayout.Bootstrap.Label.Logout"]"
+                OnHelp="OpenHelpAsync"
+                OnLogout="Logout" />
+    }
+    else
+    {
+        <LanguageSelector />
+    }
+
+    <div class="kc-unsupported-screen">
+        <ScreenTooSmall />
+    </div>
+    <div class="kc-mainlayout-root @(_isDesktopNavOpen && CanToggleSidebar ? "desktop-nav-open" : "")"
+         style="@(_isLoggedIn
+                  ? "background-image: url('/images/lobby.webp');" 
+                  : "background-image: url('/images/login.webp');")">
+        
+        @if (_isLoggedIn)
+        {
+            <button type="button"
+                    class="kc-collapse-btn kc-desktop-nav-toggle"
+                    disabled="@(!CanToggleSidebar)"
+                    aria-label="Navigation"
+                    aria-expanded="@_isDesktopNavOpen"
+                    @onclick="ToggleDesktopSidebar">
+            </button>
+
+            <button type="button"
+                    class="kc-collapse-btn kc-mobile-nav-toggle"
+                    disabled="@(!CanToggleSidebar)"
+                    aria-label="Navigation"
+                    aria-expanded="@_isMobileNavOpen"
+                    @onclick="ToggleMobileSidebar">
+            </button>
+
+            @if (_isMobileNavOpen)
+            {
+                <div class="kc-mainlayout-nav-backdrop" @onclick="CloseMobileSidebar"></div>
+            }
+
+            <LangGuard Culture="@_culture" Module="nav">
+                <div class="kc-mainlayout-nav-side @(_isDesktopNavOpen ? "desktop-open" : "") @(_isMobileNavOpen ? "mobile-open" : "")">
+                    <NavMenu Hs="@Hs" OnClose="CloseMobileSidebar" />
+                </div>
+            </LangGuard>
+        }
+
+        <main>
+            <section class="kc-mainlayout-content-side">
+                @if (_isLoggedIn)
+                    {
+                        <header class="kc-mainlayout-content-header">
+
+                            <div class="kc-mainlayout-content-header--left-warper">
+                                  <div class="kc-mainlayout-content-header--left">
+
+
+                                <div class="kc-back-button-slot">
+                                    <div class="kc-back-button @(BackNavigationEna ? "" : "btn-hidden")"
+                                         @onclick="OnBackClick">
+                                        @("◀")
+                                    </div>
+                                </div>
+                                            <div class="kc-actual-page-title">
+                                                <h2>@_currentTitle</h2>
+                                            </div>
+                                        </div>
+                            </div>
+                            <div class="kc-mainlayout-content-header--center">
+                                <div class="kc-header-lcd-display">
+                                    <LCDDisplay SoundEnabled="@(!Audio.IsMuted)"
+                                                SoundEnabledChanged="SetSoundEnabledAsync" />
+                                </div>
+                            </div>
+                            <div class="kc-mainlayout-content-header--right">
+                            <span class="kc-header-greeting">@Greetings</span>
+                            </div>           
+                        </header>
+                    }
+                <div class="kc-mainlayout-content-container">
+                    @if (_isLoggedIn)
+                    {
+                        <SubHeader Tabs="Ui.SubHeader.Tabs"
+                                   StartIndex="Ui.SubHeader.Index"
+                                   IsVisible="Ui.SubHeader.IsVisible"
+                                   ActiveIndexChanged="Ui.SubHeader.Click" />
+                    }
+                    <div class="kc-mainlayout-scroll-container">
+                        <CascadingValue Value="_appState">
+                            @Body
+                        </CascadingValue>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+}

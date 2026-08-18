@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="hu">
+<head>
+    <meta charset="utf-8">
+    <title>Toborzás – jelöltkártya</title>
+    <style>
+        .kc-recruit-help{max-width:820px;margin:0 auto;color:var(--kc-help-text);font:15px/1.5 var(--kc-help-font-body)}.kc-recruit-help *{box-sizing:border-box}.kc-recruit-help .eyebrow{color:var(--kc-help-accent-soft);font:700 12px/1.2 var(--kc-help-font-display);letter-spacing:.13em}.kc-recruit-help h1{margin:8px 0 10px;color:var(--kc-help-title);font:400 clamp(28px,4vw,40px)/1.08 var(--kc-help-font-title)}.kc-recruit-help .lead{margin:0 0 15px;color:var(--kc-help-text-soft);font-size:16px}.kc-recruit-help .sample-wrap{display:grid;grid-template-columns:minmax(250px,320px) 1fr;align-items:start;gap:12px}.kc-recruit-help .candidate-item{position:relative;width:100%;height:96px;align-self:start}.kc-recruit-help .candidate-no{position:absolute;z-index:2;top:11px;left:10px;width:20px;color:#87947e;font:400 11px/1 var(--kc-help-font-display);pointer-events:none}.kc-recruit-help .candidate{width:100%;height:100%;min-width:0;padding:8px 9px 8px 38px;overflow:hidden;color:#ccc;background:rgba(27,33,27,.88);border:1px solid #55583f;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(119,120,80,.14),0 3px 7px rgba(0,0,0,.32)}.kc-recruit-help .candidate-head{display:flex;align-items:center;justify-content:space-between;gap:6px;padding-bottom:5px}.kc-recruit-help .candidate-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:pink;font:400 14px/1.2 var(--kc-help-font-title)}.kc-recruit-help .candidate-orient{flex:0 0 auto;color:#d9ddb0;font:400 12px/1 var(--kc-help-font-display);white-space:nowrap}.kc-recruit-help .categories{min-width:0;padding-top:5px;overflow:hidden;color:#ccc;border-top:1px solid #55583f;font:400 12px/1.25 var(--kc-help-font-display)}.kc-recruit-help .categories div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.kc-recruit-help .facts{display:grid;gap:8px}.kc-recruit-help .fact{padding:10px 12px;border:1px solid var(--kc-help-border);border-radius:7px;background:var(--kc-help-panel)}.kc-recruit-help .fact b{display:block;color:var(--kc-help-title)}.kc-recruit-help .modifier-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}.kc-recruit-help .modifier{padding:10px 12px;border-top:3px solid var(--kc-help-accent);border-radius:5px;background:var(--kc-help-panel)}.kc-recruit-help .modifier b{display:block;color:var(--kc-help-title)}.kc-recruit-help .good{color:#7f9368}.kc-recruit-help .bad{color:#a86b61}@media(max-width:680px){.kc-recruit-help .sample-wrap,.kc-recruit-help .modifier-grid{grid-template-columns:1fr}.kc-recruit-help .candidate-item{max-width:320px}.kc-recruit-help .lead{font-size:15px}}
+    </style>
+</head>
+<body>
+<section class="kc-help-document kc-recruit-help">
+    <div class="eyebrow">TOBORZÁS // 02 / 05</div>
+    <h1>Mit mutat a jelöltkártya?</h1>
+    <p class="lead">A kártya gyors összehasonlítást ad. A teljes adatlapot a jelölt kiválasztása után, a Behív gombbal nézheted meg.</p>
+
+    <div class="sample-wrap">
+        <div class="candidate-item">
+            <span class="candidate-no">03</span>
+            <div class="candidate">
+                <div class="candidate-head"><span class="candidate-name">Aaren Abercrombie</span><span class="candidate-orient">&lt;Mér&gt;</span></div>
+                <div class="categories"><div>{{RECRUIT_ORIENTATION_06_CATEGORY_01}}</div><div>{{RECRUIT_ORIENTATION_05_CATEGORY_01}}</div><div>{{RECRUIT_ORIENTATION_01_CATEGORY_01}}</div></div>
+            </div>
+        </div>
+        <div class="facts">
+            <div class="fact"><b>Másodlagos orientáció</b>A név melletti rövidítés ezt mutatja. A karakter másodlagos módosítói ebből az orientációból származnak.</div>
+            <div class="fact"><b>Három kategória</b>A fő, a másodlagos és az extra kedvező módosító kategóriája.</div>
+            <div class="fact"><b>Kiválasztás</b>A kártyára kattintva bal oldalon megjelenik a portré és a Behív gomb.</div>
+        </div>
+    </div>
+
+    <div class="modifier-grid">
+        <div class="modifier"><b>Fő módosítók</b>A csapathelyhez tartozó fő orientáció adja őket.</div>
+        <div class="modifier"><b>Másodlagos módosítók</b>A jelölt másodlagos orientációjából következnek.</div>
+        <div class="modifier"><b>Extra módosítók</b>A karakter neméhez tartoznak.</div>
+    </div>
+
+    <p><span class="good"><b>Zöld:</b></span> kedvező módosító. <span class="bad"><b>Piros:</b></span> kedvezőtlen módosító. Az adatlap másodpercben mutatja ezek mértékét.</p>
+</section>
+</body>
+</html>

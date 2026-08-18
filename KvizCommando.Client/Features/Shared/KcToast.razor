@@ -1,0 +1,20 @@
+﻿
+
+
+@if (Toast.Current is not null)
+{
+    <div class="kc-toast @(Toast.IsVisible ? "show" : "hide") @GetCssClass()">
+        <div class="kc-toast-icon">
+            <i class="@GetBiIcon()"></i>
+        </div>
+        <div class="kc-toast-message">
+            @Toast.Current.Text
+        </div>
+
+        <button class="kc-toast-close"
+                @onclick="Close">
+            <i class="bi bi-x-lg"></i>
+        </button>
+
+    </div>
+}

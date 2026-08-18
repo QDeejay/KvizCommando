@@ -1,0 +1,73 @@
+﻿
+/* === KÖZÉP === */
+.kc-start-layout {
+    position: fixed;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* header + footer */
+    min-width: 100%;
+}
+/* A középre igazított fix főkonténer */
+.kc-start-main-container {
+    display: flex;
+    flex-direction: column;
+    border-radius: 22px;
+    background-color: rgba(51, 51, 51, 0.9);
+    box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
+    border-width: 2px;
+    border-style: solid;
+    border-color: rgba(64, 64, 64, 0.7);
+    width: 520px;
+    height: 580px;
+    position: relative;
+    align-items: center;
+}
+.kc-start-logo {
+    display:flex;
+    height:stretch;
+    width:500px;
+    height:auto;
+    border-radius: 12px;
+}
+
+.kc-start-content-body {
+    flex: 1;
+    color: white;
+    width:100%;
+    justify-items:center;
+    padding:5px;
+}
+
+.kc-start-login-panel {
+    display:flex;
+    position:relative;
+    flex-direction:column;
+    top:-30px;
+    padding:10px;
+    width:85%;
+}
+
+.kc-start-login-panel--head {
+    text-align: center;
+}
+/* FOOTER */
+.kc-start-login-panel--footer {
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 520px), (max-height: 700px) {
+    .kc-start-layout {
+        align-items: start;
+        top: 70px;
+    }
+    .kc-start-main-container {
+        width: 260px;
+        height: 480px;
+    }
+    .kc-start-logo {
+        width: 380px;
+    }
+}

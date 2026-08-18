@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="hu">
+<head>
+    <meta charset="utf-8">
+    <title>Kategóriajáték – játékmenet</title>
+    <style>
+        .kc-solo-help {
+            max-width: 820px;
+            margin: 0 auto;
+            color: var(--kc-help-text);
+            font: 15px/1.46 var(--kc-help-font-body)
+        }
+
+            .kc-solo-help * {
+                box-sizing: border-box
+            }
+
+            .kc-solo-help .eyebrow {
+                color: var(--kc-help-accent-soft);
+                font: 700 12px/1.2 var(--kc-help-font-display);
+                letter-spacing: .13em
+            }
+
+            .kc-solo-help h1 {
+                margin: 8px 0 9px;
+                color: var(--kc-help-title);
+                font: 400 clamp(28px,4vw,40px)/1.08 var(--kc-help-font-title)
+            }
+
+            .kc-solo-help .lead {
+                margin: 0 0 13px;
+                color: var(--kc-help-text-soft);
+                font-size: 16px
+            }
+
+            .kc-solo-help .rule-grid {
+                display: grid;
+                grid-template-columns: repeat(3,minmax(0,1fr));
+                gap: 8px;
+                margin-bottom: 10px
+            }
+
+            .kc-solo-help .rule {
+                padding: 11px 12px;
+                border: 1px solid var(--kc-help-border);
+                border-radius: 7px;
+                background: var(--kc-help-panel)
+            }
+
+                .kc-solo-help .rule strong {
+                    display: block;
+                    margin-bottom: 3px;
+                    color: var(--kc-help-title);
+                    font-family: var(--kc-help-font-display)
+                }
+
+            .kc-solo-help .score-line {
+                display: grid;
+                grid-template-columns: repeat(3,minmax(0,1fr));
+                margin-bottom: 10px;
+                border: 1px solid var(--kc-help-border);
+                border-radius: 6px;
+                background: var(--kc-help-panel-strong)
+            }
+
+            .kc-solo-help .score {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 7px;
+                min-width: 0;
+                padding: 7px 9px;
+                text-align: center
+            }
+
+                .kc-solo-help .score + .score {
+                    border-left: 1px solid var(--kc-help-border)
+                }
+
+                .kc-solo-help .score i {
+                    font-size: 17px
+                }
+
+                .kc-solo-help .score.good i {
+                    color: #8fae72
+                }
+
+                .kc-solo-help .score.bad i {
+                    color: #b86662
+                }
+
+                .kc-solo-help .score.empty i {
+                    color: var(--kc-help-text-soft)
+                }
+
+                .kc-solo-help .score b {
+                    color: var(--kc-help-title)
+                }
+
+            .kc-solo-help .indicator-box {
+                padding: 10px 13px;
+                border-left: 4px solid var(--kc-help-accent);
+                background: var(--kc-help-panel)
+            }
+
+                .kc-solo-help .indicator-box > b {
+                    color: var(--kc-help-title)
+                }
+
+            .kc-solo-help .help-progress-row {
+                display: grid;
+                grid-template-columns: minmax(0,1fr) auto;
+                align-items: start;
+                gap: 8px;
+                margin: 10px 0 7px
+            }
+
+            .kc-solo-help .help-question-track {
+                position: relative;
+                display: grid;
+                grid-template-columns: repeat(5,1fr);
+                width: 100%;
+                min-width: 0
+            }
+
+            .kc-solo-help .help-question-item {
+                position: relative;
+                min-width: 0;
+                display: grid;
+                grid-template-rows: 24px auto;
+                gap: 6px;
+                justify-items: center;
+                align-items: start;
+                color: #aaa;
+                font-size: .75rem
+            }
+
+                .kc-solo-help .help-question-item::before {
+                    content: "";
+                    position: absolute;
+                    top: 11px;
+                    right: 50%;
+                    width: 100%;
+                    height: 2px;
+                    background: #55584b;
+                    z-index: 0
+                }
+
+                .kc-solo-help .help-question-item:first-child::before {
+                    display: none
+                }
+
+            .kc-solo-help .help-question-dot {
+                position: relative;
+                z-index: 1;
+                width: 22px;
+                height: 22px;
+                display: grid;
+                place-items: center;
+                color: #ddd;
+                background: #171a15;
+                border: 2px solid #66695b;
+                border-radius: 50%;
+                font-size: .75rem
+            }
+
+            .kc-solo-help .help-question-item.active .help-question-dot {
+                border-color: #c6ef39;
+                box-shadow: 0 0 7px #c6ef39
+            }
+
+            .kc-solo-help .help-question-item.correct .help-question-dot {
+                color: #17200d;
+                background: #aeca35;
+                border-color: #d1f257
+            }
+
+            .kc-solo-help .help-question-item.wrong .help-question-dot {
+                color: #fff;
+                background: #a83232;
+                border-color: #ef6767
+            }
+
+            .kc-solo-help .help-question-item.unanswered .help-question-dot {
+                color: #332b09;
+                background: #d6ba54;
+                border-color: #f0d66e
+            }
+
+            .kc-solo-help .help-question-label {
+                max-width: 110px;
+                color: var(--kc-help-text-soft);
+                font-size: 12px;
+                line-height: 1.25;
+                text-align: center
+            }
+
+            .kc-solo-help .help-skip-button {
+                width: 50px;
+                margin: 0;
+                pointer-events: none
+            }
+
+            .kc-solo-help .indicator-box p {
+                margin: 8px 0 0;
+                color: var(--kc-help-text-soft)
+            }
+
+        @media(max-width:680px) {
+            .kc-solo-help .rule-grid {
+                grid-template-columns: 1fr
+            }
+
+            .kc-solo-help .score {
+                gap: 4px;
+                padding: 7px 4px;
+                font-size: 12px
+            }
+
+                .kc-solo-help .score i {
+                    font-size: 15px
+                }
+
+            .kc-solo-help .help-question-label {
+                font-size: 10px
+            }
+
+            .kc-solo-help .lead {
+                font-size: 15px
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="kc-help-document kc-solo-help">
+        <div class="eyebrow">KATEGÓRIAJÁTÉK // 02 / 06</div>
+        <h1>Válaszolj gyorsan – de biztosan</h1>
+        <p class="lead">Minden kérdéshez négy válasz tartozik. A választás végleges; ha lejár a rendelkezésre álló idő, a kérdés megválaszolatlannak számít.</p>
+
+        <div class="rule-grid">
+            <div class="rule"><strong>{{SOLO_ANSWER_SECONDS}} másodperc</strong>Ennyi idő áll rendelkezésre egy kérdéshez.</div>
+            <div class="rule"><strong>Első {{SOLO_FULL_POINTS_SECONDS}} másodperc</strong>Helyes válasznál még a szint teljes válaszpontja jár.</div>
+            <div class="rule"><strong>Utána csökken</strong>A megszerezhető vagy elveszíthető pont az idő végéig folyamatosan fogy.</div>
+        </div>
+
+        <div class="score-line">
+            <div class="score good"><i class="bi bi-check-lg"></i><span><b>Helyes:</b> pozitív pont</span></div>
+            <div class="score bad"><i class="bi bi-x-lg"></i><span><b>Hibás:</b> negatív pont</span></div>
+            <div class="score empty"><i class="bi bi-square-fill"></i><span><b>Nincs válasz:</b> 0 pont</span></div>
+        </div>
+
+        <div class="indicator-box">
+            <b>A kérdésjelzők mutatják, hol tart a játék és hogyan sikerültek a válaszok.</b>
+            <div class="help-progress-row">
+                <div class="help-question-track" aria-label="A kérdésjelzők állapotai">
+                    <span class="help-question-item"><span class="help-question-dot">1</span><span class="help-question-label">Még nincs értékelve</span></span>
+                    <span class="help-question-item active"><span class="help-question-dot">2</span><span class="help-question-label">Aktuális kérdés</span></span>
+                    <span class="help-question-item correct"><span class="help-question-dot"><i class="bi bi-check-lg"></i></span><span class="help-question-label">Helyes válasz</span></span>
+                    <span class="help-question-item wrong"><span class="help-question-dot"><i class="bi bi-x-lg"></i></span><span class="help-question-label">Hibás válasz</span></span>
+                    <span class="help-question-item unanswered"><span class="help-question-dot"><i class="bi bi-square-fill"></i></span><span class="help-question-label">Nincs válasz</span></span>
+                </div>
+                <button type="button" class="button-on-lcd help-skip-button" tabindex="-1" aria-hidden="true">
+                    <i class="bi bi-skip-forward-fill"></i>
+                </button>
+            </div>
+            <p>A léptetőgomb csak az eredmények egyenkénti bemutatását ugorja át. Kérdést nem lehet vele kihagyni.</p>
+        </div>
+    </section>
+</body>
+</html>

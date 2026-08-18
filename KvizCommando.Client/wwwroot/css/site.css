@@ -1,0 +1,501 @@
+﻿:root {
+    --kc-lcd-background: rgba(210, 255, 57, 0.9);
+    --kc-lcd-scanline: rgba(20, 28, 10, 0.025);
+    --kc-lcd-color: #222f16;
+    --kc-lcd-border: #484848;
+    --kc-lcd-font: 'Share Tech Mono', monospace;
+    --kc-lcd-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 4px 8px rgba(0, 0, 0, 0.7);
+}
+
+.military-button,
+.military-button--secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Lucida Console', monospace;
+    font-size: 18px;
+    line-height: 1;
+    color: #f0eec2;
+    background-image: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.2) 0,
+        rgba(255, 255, 255, 0.06) 42%,
+        rgba(0, 0, 0, 0.02) 43%,
+        rgba(0, 0, 0, 0.26) 100%);
+    border: 2px solid #282b23;
+    border-radius: 4px;
+    padding: 2px 8px;
+    width: max-content;
+    min-width: 120px;
+    height: 30px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.52),
+        0 1px 0 #181a15,
+        0 2px 4px rgba(0, 0, 0, 0.38);
+    transition: filter 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+    margin-top: 12px;
+}
+
+.military-button {
+    background-color: #4b5320;
+}
+
+.military-button--secondary {
+    background-color: #4e3b2b;
+}
+
+.military-button:hover:not(:disabled),
+.military-button--secondary:hover:not(:disabled) {
+    filter: brightness(1.12);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.52),
+        0 1px 0 #181a15,
+        0 2px 5px rgba(0, 0, 0, 0.48);
+}
+
+.military-button:active:not(:disabled),
+.military-button--secondary:active:not(:disabled) {
+    filter: brightness(0.88);
+    box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.58),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+    transform: translateY(1px);
+}
+
+.military-button:disabled,
+.military-button--secondary:disabled {
+    color: #a4a79f;
+    background-color: #595c55 !important;
+    background-image: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.07),
+        rgba(0, 0, 0, 0.18));
+    border-color: #3a3e39;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.28);
+    filter: none;
+    transform: none;
+    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+}
+
+/* Közös, ContentBox-hangulatú ablakváz a központi modalhoz és a helphez. */
+.kc-window-shell {
+    position: relative;
+    min-width: 0;
+    color: #d3d3d3;
+    font-family: 'Courier New', monospace;
+    background-color: #2a2a2a;
+    border: 2px solid rgba(64, 64, 64, 0.85);
+    border-radius: 16px;
+    box-shadow:
+        10px 14px 24px rgba(0, 0, 0, 0.72),
+        inset 0 4px 8px rgba(0, 0, 0, 0.72);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.kc-window-header,
+.kc-window-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    background: linear-gradient(180deg, #30332c, #20231f);
+}
+
+.kc-window-header {
+    position: relative;
+    min-height: 64px;
+    padding: 10px 54px 9px 18px;
+    border-bottom: 1px solid #6e6d52;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.kc-window-title {
+    margin: 0;
+    color: #f0eec2;
+    font-family: 'Special Elite', cursive;
+    font-weight: normal;
+    letter-spacing: 0.08em;
+    text-shadow: 0 1px 0 #000;
+}
+
+.kc-window-close {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    padding: 0 0 3px;
+    color: #d7d3b8;
+    background-color: #191c18;
+    border: 1px solid #666451;
+    border-radius: 6px;
+    box-shadow: none;
+    font: normal 1.7rem/1 Arial, sans-serif;
+    transform: translateY(-50%);
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.kc-window-close:hover,
+.kc-window-close:focus-visible {
+    color: #fffbdc;
+    background-color: #34382f;
+    border-color: #9a9667;
+    outline: none;
+}
+
+/*
+ * A Bootstrap button:not(:disabled) szabályánál szándékosan specifikusabb.
+ * Így minden közös modal/help vezérlőn biztosan a projekt aktív kurzora látszik.
+ */
+button.military-button:not(:disabled),
+button.military-button--secondary:not(:disabled),
+button.kc-window-close:not(:disabled),
+button.kc-help-page-dot:not(:disabled) {
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.kc-window-body {
+    min-width: 0;
+    margin: 10px;
+    padding: 15px;
+    color: #cccccc;
+    background-color: #1b211b;
+    border: 2px inset rgba(160, 160, 130, 0.16);
+    border-radius: 8px;
+    box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.66);
+    box-sizing: border-box;
+}
+
+.kc-window-footer {
+    position: relative;
+    min-height: 66px;
+    padding: 10px 16px 14px;
+    border-top: 1px solid #55564c;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.28);
+}
+
+.lcd-input {
+    background-color: #001f3f; /* sötét, katonai kék */
+    color: #bfa800; /* halvány sárga szöveg */
+    font-family: 'Times New Roman', serif;
+    font-size: 1rem;
+    padding: 4px 12px;
+    border: inset 1px #777; /* süllyesztett hatás */
+    border-radius: 4px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+    outline: none;
+    width: 250px;
+    cursor: url('/Images/cursors/IBeam.cur'), text !important;
+}
+
+    .lcd-input:focus {
+        box-shadow: inset 0 2px 6px rgba(212, 180, 0, 0.4), 0 0 4px #d4b400;
+        cursor: url('/cursors/IBeam.cur') text !important;
+    }
+    .lcd-input:disabled {
+        cursor: url('/Images/cursors/disabled.cur'), not-allowed !Important;
+        width: 250px;
+        background-color: #2a2a2a;
+    }
+
+.kc-lcd-surface {
+    color: var(--kc-lcd-color);
+    background-color: var(--kc-lcd-background);
+    background-image: repeating-linear-gradient(
+        0deg,
+        var(--kc-lcd-scanline) 0,
+        var(--kc-lcd-scanline) 1px,
+        transparent 1px,
+        transparent 4px);
+    border: inset 2px var(--kc-lcd-border);
+    border-radius: 4px;
+    box-shadow: var(--kc-lcd-shadow);
+    font-family: var(--kc-lcd-font);
+}
+
+.lcd-input.kc-lcd-surface:disabled {
+    background-color: var(--kc-lcd-background);
+}
+
+.kc-lcd-content {
+    color: var(--kc-lcd-color);
+    font-family: var(--kc-lcd-font);
+}
+
+.label-title {
+    font-family: 'Courier New', monospace;
+    font-size: 1.4rem;
+    color: #cccccc;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-align: center;
+    display: block; /* szükséges a text-align működéséhez */
+    width: calc(100% - 10px);
+    padding-left:5px;
+    white-space: nowrap; /* 1. Ne törje a szöveget új sorba */
+    overflow: hidden; /* 2. Rejtse el ami kilóg */
+    text-overflow: ellipsis;
+    
+}
+
+.label-text {
+    color: #cccccc;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.2px;
+    font-size: 0.95rem;
+    text-align: left; /* opcionális, mivel alapból az */
+    display: block;
+}
+
+
+
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.25) !important;
+    backdrop-filter: blur(0px); /* alap: nincs blur */
+    -webkit-backdrop-filter: blur(0px);
+    
+}
+    .modal-backdrop.show {
+        backdrop-filter: blur(4px); /* aktiválódáskor blur */
+        -webkit-backdrop-filter: blur(4px);
+        opacity: 1 !important; /* színből jön az áttetszőség */
+      
+    }
+
+.tooltip-box {
+    display: none;
+    position: absolute;
+    width: max-content;
+    border: 2px solid rgba(64, 64, 64, 0.7);
+    background: #333;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 12px;
+    box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.8);
+    
+}
+
+.navigation-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    width: 100%;
+    height: 5.4vh;
+    padding: 0 12px;
+    font-family: Arial, sans-serif;
+    color: #d3d3d3;
+    background-color: #0c1f17;
+    text-decoration: none;
+    transition: background-color 0.2s, border-right-width 0.2s;
+    box-sizing: border-box;
+    font-size: clamp(12px, 1.2vh, 34px);
+  
+    gap: 8px;
+}
+
+    .navigation-button i {
+        flex-shrink: 0;
+        font-size: clamp(12px, 1.6vh, 34px);
+        color: inherit;
+        transition: transform 0.2s ease;
+    }
+
+    .navigation-button span {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .navigation-button:hover {
+        background-color: #11292E;
+        border-right: 4px solid whitesmoke;
+        color: whitesmoke;
+    }
+
+        .navigation-button:hover i {
+            transform: scale(1.1);
+        }
+
+    .navigation-button.active {
+        background-color: whitesmoke;
+        border-right: 6px solid whitesmoke;
+        color: #004400;
+    }
+
+    .navigation-button.disabled {
+        background-color: #666666;
+        color: #d3d3d3;
+
+        border: 1px solid #004400;
+        border-right: 4px solid #004400;
+        cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+    }
+        .navigation-button.disabled i {
+            transform: none ;
+        }
+
+        @media (min-height: 800px) {
+            .navigation-button {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        gap: 2px;
+    }
+
+        .navigation-button i {
+            padding: 0;
+        }
+
+        .navigation-button span {
+            text-align: center;
+        }
+}
+@media (max-width: 1400px)  {
+    .navigation-button {
+        justify-content: center;
+        gap: 0;
+    }
+
+        .navigation-button span {
+            display: none;
+        }
+}
+
+.button-on-lcd {
+    min-height: 0;
+    min-width:50px;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    color: #d3d3d3;
+    background-color: #0c1f17;
+    border-radius: 8px;
+    text-decoration: none;
+    opacity: 0.6;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+    .button-on-lcd i {
+        flex:1;
+        display:flex;
+        font-size: 30px;
+        color: inherit;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .button-on-lcd:hover,
+    .button-on-lcd:hover i {
+        transform: scale(1.01);
+        opacity: 0.7;
+        cursor: url('/Images/cursors/active.cur'), pointer;
+    }
+
+    .button-on-lcd:disabled {
+        background-color: #666666;
+        color: #d3d3d3;
+        transform: none;
+        opacity: 0.7;
+        cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+    }
+
+        .button-on-lcd:disabled i {
+            transform: none;
+            opacity: 0.7;
+            cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+        }
+
+.button-on-lcd--text {
+    display: inline-flex;
+    min-height: 0;
+    min-width: 120px;
+    height: 30px;
+    padding: 2px 8px;
+    align-items: center;
+    justify-content: center;
+    color: #d3d3d3;
+    background-color: #0c1f17;
+    background-image: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.03) 44%,
+        rgba(0, 0, 0, 0.13) 100%);
+    border: 1px solid rgba(24, 30, 21, 0.92);
+    border-radius: 5px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.34),
+        0 1px 2px rgba(0, 0, 0, 0.24);
+    font: 700 14px/1 'Lucida Console', monospace;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    transition: filter 0.12s ease, box-shadow 0.12s ease, transform 0.06s ease;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.button-on-lcd--text:hover:not(:disabled) {
+    filter: brightness(1.08);
+}
+
+.button-on-lcd--text:active:not(:disabled) {
+    box-shadow:
+        inset 0 2px 3px rgba(0, 0, 0, 0.42),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+    filter: brightness(0.94);
+    transform: translateY(1px);
+}
+
+.button-on-lcd--text:disabled {
+    color: #a4a79f;
+    background-color: #595c55 !important;
+    background-image: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.05),
+        rgba(0, 0, 0, 0.12));
+    border-color: #3a3e39;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.22);
+    filter: none;
+    transform: none;
+    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+}
+
+.component-button-row {
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    width: 100%;
+    gap: 4px;
+    position: absolute;
+    height:50px;
+    padding:0 10px;
+    right: 0;
+    bottom: 5px;
+}
+.component-button-group {
+    display: flex;
+    flex-direction: row;
+    width:100%;
+    gap:10px;
+    min-width: 0;
+}
+    .component-button-group.right { 
+        justify-content: right;
+    }
+    .component-button-group.left {
+        justify-content: left;
+
+    }

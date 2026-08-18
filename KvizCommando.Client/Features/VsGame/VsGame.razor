@@ -1,0 +1,31 @@
+@page "/vs-game"
+
+@inherits Utilities.KcComponentBase
+
+<LangGuard Culture="@Culture"
+           Module="vsgame"
+           OnReady="BuildBoxes">
+    <PageContainer>
+        @if (_isReady)
+        {
+            <div class="kc-vsgame-selector">
+                @foreach (var key in _boxOrder)
+                {
+                    var box = Box(key);
+
+                    <ContentBox Vm="@box"
+                                OnClick="OnBoxClick">
+                        <ContentBody>
+                            @if (box.BodyComponent is not null)
+                            {
+                                <DynamicComponent
+                                    Type="@box.BodyComponent"
+                                    Parameters="@box.BodyParameters" />
+                            }
+                        </ContentBody>
+                    </ContentBox>
+                }
+            </div>
+        }
+    </PageContainer>
+</LangGuard>

@@ -1,0 +1,10 @@
+﻿
+.kc-quest-selector {
+    display: flex;
+    flex-direction:column;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
+    width: max-content;
+}
+

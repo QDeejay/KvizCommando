@@ -1,0 +1,362 @@
+.kc-help-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgba(5, 7, 5, .78);
+    backdrop-filter: blur(7px) saturate(.7);
+}
+
+.kc-help-window {
+    width: min(940px, calc(100vw - 48px));
+    height: min(760px, calc(100vh - 48px));
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.kc-help-window.with-navigation {
+    width: min(1180px, calc(100vw - 48px));
+}
+
+.kc-help-kicker {
+    display: block;
+    margin-bottom: 3px;
+    color: #aaa474;
+    font: 700 .7rem/1.1 'Share Tech Mono', monospace;
+    letter-spacing: .17em;
+}
+
+.kc-help-header h2 {
+    font-size: 1.48rem;
+}
+
+.kc-help-main {
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.kc-help-main.with-navigation {
+    grid-template-columns: 240px minmax(0, 1fr);
+}
+
+.kc-help-nav-toggle {
+    display: none;
+}
+
+.kc-help-navigation {
+    min-width: 0;
+    min-height: 0;
+    margin: 10px 0 10px 10px;
+    overflow: auto;
+    color: #c9c9bd;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(168, 180, 120, .018) 0,
+            rgba(168, 180, 120, .018) 1px,
+            transparent 1px,
+            transparent 4px),
+        linear-gradient(180deg, #1a211a, #111611);
+    border: 1px solid #4f5541;
+    border-radius: 8px;
+    box-shadow: inset 0 3px 7px rgba(0, 0, 0, .66);
+    scrollbar-color: #77714f #11150f;
+}
+
+.kc-help-navigation-title {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 13px 14px 11px;
+    color: #d8d5a6;
+    font: 700 .76rem/1.1 'Share Tech Mono', monospace;
+    letter-spacing: .14em;
+    background: linear-gradient(180deg, #2d3228, #1d211b);
+    border-bottom: 1px solid #5d604b;
+}
+
+.kc-help-tree {
+    padding: 8px;
+}
+
+.kc-help-tree-root + .kc-help-tree-root {
+    margin-top: 4px;
+}
+
+.kc-help-root-button,
+.kc-help-package-button,
+.kc-help-nav-toggle {
+    width: 100%;
+    color: #c7c9b8;
+    font-family: 'Courier New', monospace;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.kc-help-root-button {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr);
+    align-items: center;
+    gap: 4px;
+    padding: 8px 7px;
+    font-size: .9rem;
+    letter-spacing: .025em;
+    border-radius: 4px;
+}
+
+.kc-help-root-button:not(:disabled):hover,
+.kc-help-root-button:not(:disabled):focus-visible {
+    color: #f0eec2;
+    background: rgba(101, 108, 73, .2);
+    outline: none;
+}
+
+.kc-help-root-button:disabled {
+    color: #696c62;
+    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+}
+
+.kc-help-tree-arrow {
+    color: #aaa474;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.kc-help-root-button:disabled .kc-help-tree-arrow {
+    color: #55584f;
+}
+
+.kc-help-tree-children {
+    position: relative;
+    margin: 2px 0 6px 13px;
+    padding-left: 12px;
+}
+
+.kc-help-tree-children::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 1px;
+    background: #515742;
+}
+
+.kc-help-package-button {
+    position: relative;
+    padding: 7px 7px 7px 9px;
+    overflow: hidden;
+    font-size: .82rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-radius: 3px;
+}
+
+.kc-help-package-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -12px;
+    width: 9px;
+    height: 1px;
+    background: #515742;
+}
+
+.kc-help-package-button:hover,
+.kc-help-package-button:focus-visible {
+    color: #f0eec2;
+    background: rgba(101, 108, 73, .2);
+    outline: none;
+}
+
+.kc-help-package-button.active {
+    color: #f0eec2;
+    background: rgba(143, 148, 92, .25);
+    box-shadow: inset 3px 0 #c4bd72;
+}
+
+.kc-help-content {
+    --kc-help-font-body: 'Courier New', monospace;
+    --kc-help-font-title: 'Special Elite', cursive;
+    --kc-help-font-display: 'Share Tech Mono', monospace;
+    --kc-help-text: #cccccc;
+    --kc-help-text-soft: #b9bca8;
+    --kc-help-title: #f0eec2;
+    --kc-help-accent: #c4bd72;
+    --kc-help-accent-soft: #969b68;
+    --kc-help-panel: rgba(37, 48, 36, .72);
+    --kc-help-panel-strong: #1b241b;
+    --kc-help-border: #596047;
+    position: relative;
+    isolation: isolate;
+    min-height: 0;
+    overflow: auto;
+    padding: clamp(14px, 2.4vw, 28px);
+    color: var(--kc-help-text);
+    font-family: var(--kc-help-font-body);
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(168, 180, 120, .018) 0,
+            rgba(168, 180, 120, .018) 1px,
+            transparent 1px,
+            transparent 4px),
+        radial-gradient(circle at 50% 0, #1b291f, #101712 70%);
+    scrollbar-color: #77714f #11150f;
+}
+
+.kc-help-content::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: var(--kc-help-background-image);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: grayscale(.25) sepia(.25) saturate(.65);
+    opacity: .035;
+    pointer-events: none;
+}
+
+.kc-help-content.landing::before {
+    background-size: contain;
+    opacity: .045;
+}
+
+.kc-help-content-inner {
+    position: relative;
+    z-index: 1;
+}
+
+.kc-help-content ::deep .kc-help-document {
+    color: var(--kc-help-text);
+    font-family: var(--kc-help-font-body);
+}
+
+.kc-help-content ::deep .kc-help-document h1,
+.kc-help-content ::deep .kc-help-document h2 {
+    color: var(--kc-help-title);
+    font-family: var(--kc-help-font-title);
+    font-weight: 400;
+}
+
+.kc-help-footer {
+    grid-row: 3;
+}
+
+.kc-help-pagination,
+.kc-help-buttons {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.kc-help-page-dot {
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    background: #11150f;
+    border: 1px solid #77714f;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 2px #24291e;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.kc-help-page-dot.active {
+    background: #c1bd75;
+    border-color: #e1dda0;
+    box-shadow: 0 0 10px rgba(211, 210, 126, .42);
+}
+
+.kc-help-page-dot:hover,
+.kc-help-page-dot:focus-visible {
+    filter: brightness(1.22);
+    outline: none;
+}
+
+@media (max-width: 900px) {
+    .kc-help-main.with-navigation {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto minmax(0, 1fr);
+    }
+
+    .kc-help-nav-toggle {
+        display: flex;
+        grid-row: 1;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 40px;
+        padding: 8px 14px;
+        color: #d8d5a6;
+        font: 700 .78rem/1.1 'Share Tech Mono', monospace;
+        letter-spacing: .12em;
+        background: linear-gradient(180deg, #2d3228, #1d211b);
+        border-bottom: 1px solid #5d604b;
+    }
+
+    .kc-help-nav-toggle:hover,
+    .kc-help-nav-toggle:focus-visible {
+        color: #f0eec2;
+        background: linear-gradient(180deg, #383d30, #24291f);
+        outline: none;
+    }
+
+    .kc-help-navigation {
+        display: none;
+        grid-row: 2;
+        max-height: 40vh;
+        margin: 8px 10px 0;
+    }
+
+    .kc-help-navigation.open {
+        display: block;
+    }
+
+    .kc-help-main.with-navigation .kc-help-content {
+        grid-row: 3;
+    }
+
+    .kc-help-navigation-title {
+        display: none;
+    }
+}
+
+@media (max-width: 680px) {
+    .kc-help-backdrop {
+        padding: 10px;
+    }
+
+    .kc-help-window,
+    .kc-help-window.with-navigation {
+        width: calc(100vw - 20px);
+        height: calc(100vh - 20px);
+    }
+
+    .kc-help-header {
+        padding-left: 15px;
+    }
+
+    .kc-help-kicker {
+        display: none;
+    }
+
+    .kc-help-footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .kc-help-pagination {
+        justify-content: center;
+    }
+
+    .kc-help-buttons {
+        justify-content: flex-end;
+    }
+}

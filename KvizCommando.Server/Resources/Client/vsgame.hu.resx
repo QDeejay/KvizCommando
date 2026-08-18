@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms</value>
+  </resheader>
+  <data name="Box.Footer.Ranked" xml:space="preserve">
+    <value>Online: {0}, Legjobb eredmény: {1} pont</value>
+  </data>
+  <data name="Manager.Title" xml:space="preserve">
+    <value>Csapat összeállítása</value>
+  </data>
+  <data name="Manager.Message.Initial" xml:space="preserve">
+    <value>Állítsd össze a mai csapatod!</value>
+  </data>
+  <data name="Manager.Message.Invalidated" xml:space="preserve">
+    <value>Változott a csapat, állítsd össze újra!</value>
+  </data>
+  <data name="Manager.Message.Saved" xml:space="preserve">
+    <value>A mai csapat összeállítva.</value>
+  </data>
+  <data name="Manager.Footer.Toggle" xml:space="preserve">
+    <value>Csapatmanager</value>
+  </data>
+  <data name="Manager.Button.Save" xml:space="preserve">
+    <value>Mentés</value>
+  </data>
+  <data name="Manager.Member.Classification" xml:space="preserve">
+    <value>Besorolás: {0}</value>
+  </data>
+  <data name="Manager.Tooltip.MinimumTeamLevel" xml:space="preserve">
+    <value>Minimum csapatszint: {0}</value>
+  </data>
+  <data name="Manager.Tooltip.PartySize" xml:space="preserve">
+    <value>Csapatméret: {0} fő</value>
+  </data>
+  <data name="Manager.Tooltip.RankClassZone" xml:space="preserve">
+    <value>Rangosztály-zóna: {0}–{1} ({2}–{3})</value>
+  </data>
+  <data name="Manager.Tooltip.RequiredMembers" xml:space="preserve">
+    <value>Kötelező tag a zónából: {0} fő</value>
+  </data>
+  <data name="Classification.Title.1" xml:space="preserve">
+    <value>I. harci besorolás</value>
+  </data>
+  <data name="Classification.Title.2" xml:space="preserve">
+    <value>II. harci besorolás</value>
+  </data>
+  <data name="Classification.Title.3" xml:space="preserve">
+    <value>III. harci besorolás</value>
+  </data>
+  <data name="Classification.Title.4" xml:space="preserve">
+    <value>IV. harci besorolás</value>
+  </data>
+  <data name="Classification.Title.5" xml:space="preserve">
+    <value>V. harci besorolás</value>
+  </data>
+  <data name="Match.Title" xml:space="preserve">
+    <value>Rangsorolt csatatér</value>
+  </data>
+  <data name="Match.Title.Preparation" xml:space="preserve">
+    <value>Preparáció</value>
+  </data>
+  <data name="Match.Queue.Status" xml:space="preserve">
+    <value>Várakozás a többi játékosra</value>
+  </data>
+  <data name="Match.Queue.StartingIn" xml:space="preserve">
+    <value>Meccs indul: {0} mp</value>
+  </data>
+  <data name="Match.Queue.LeftWarning" xml:space="preserve">
+    <value>Más játékosok is várakoztak veled. Megszakítottad a várólistát, ezért új belépés 1 percig tiltva.</value>
+  </data>
+  <data name="Match.Queue.LeftInfo" xml:space="preserve">
+    <value>Elhagytad a várótermet!</value>
+  </data>
+  <data name="Match.Queue.Stake" xml:space="preserve">
+    <value>Tét</value>
+  </data>
+  <data name="Match.Queue.Rounds" xml:space="preserve">
+    <value>Körök: {0} normál + 1 kapitánykör</value>
+  </data>
+  <data name="Match.Status.Connecting" xml:space="preserve">
+    <value>Kapcsolat ellenőrzése</value>
+  </data>
+  <data name="Match.Connection.ResponseTime" xml:space="preserve">
+    <value>Válaszidő: {0}ms - {1}</value>
+  </data>
+  <data name="Match.Connection.Good" xml:space="preserve">
+    <value>megfelelő</value>
+  </data>
+  <data name="Match.Connection.Medium" xml:space="preserve">
+    <value>közepes</value>
+  </data>
+  <data name="Match.Connection.Bad" xml:space="preserve">
+    <value>rossz</value>
+  </data>
+  <data name="Match.Info.Locked" xml:space="preserve">
+    <value>A meccs lezárva</value>
+  </data>
+  <data name="Match.Info.LoadingQuestions" xml:space="preserve">
+    <value>A meccs kérdéseinek egyszeri betöltése</value>
+  </data>
+  <data name="Match.Info.PreparationStarting" xml:space="preserve">
+    <value>Mindenki csatlakozott... kezdünk.</value>
+  </data>
+  <data name="Match.Info.Order" xml:space="preserve">
+    <value>Válassz sorrendet!</value>
+  </data>
+  <data name="Match.Info.Categories" xml:space="preserve">
+    <value>Párosítsd a kategóriáid a körökhöz!</value>
+  </data>
+  <data name="Match.Info.Helps" xml:space="preserve">
+    <value>Párosítsd a segítségeid!</value>
+  </data>
+  <data name="Match.Info.WaitingForPlayers" xml:space="preserve">
+    <value>Várakozás a többi játékosra</value>
+  </data>
+  <data name="Match.Info.PreparationCompleted" xml:space="preserve">
+    <value>A preparáció befejeződött</value>
+  </data>
+  <data name="Match.Info.Aborted" xml:space="preserve">
+    <value>A meccs megszakadt</value>
+  </data>
+  <data name="Match.Round.Captain" xml:space="preserve">
+    <value>Kapitánykör</value>
+  </data>
+  <data name="Match.Round.Normal" xml:space="preserve">
+    <value>{0}. normál kör</value>
+  </data>
+  <data name="Match.Help.1" xml:space="preserve">
+    <value>50-50</value>
+  </data>
+  <data name="Match.Help.2" xml:space="preserve">
+    <value>Tippsáv</value>
+  </data>
+  <data name="Match.Help.3" xml:space="preserve">
+    <value>Időtlenítő</value>
+  </data>
+  <data name="Match.Help.4" xml:space="preserve">
+    <value>AI-segítség</value>
+  </data>
+  <data name="Match.Category.Own" xml:space="preserve">
+    <value>Saját kérdés</value>
+  </data>
+  <data name="Match.Category.All" xml:space="preserve">
+    <value>Összes kategória</value>
+  </data>
+  <data name="Match.Inventory.Characters" xml:space="preserve">
+    <value>Csatába hozott karakterek</value>
+  </data>
+  <data name="Match.Inventory.Loadout" xml:space="preserve">
+    <value>Loadout kategóriák</value>
+  </data>
+  <data name="Match.Inventory.Helps" xml:space="preserve">
+    <value>Segítségek</value>
+  </data>
+  <data name="Match.Inventory.Title" xml:space="preserve">
+    <value>Készlet</value>
+  </data>
+  <data name="Match.Timer.SecondsShort" xml:space="preserve">
+    <value>MP</value>
+  </data>
+  <data name="Match.Roster.Match" xml:space="preserve">
+    <value>VS meccs</value>
+  </data>
+  <data name="Match.Roster.Lobby" xml:space="preserve">
+    <value>Váróterem</value>
+  </data>
+  <data name="Match.Round.Empty" xml:space="preserve">
+    <value>Üres hely</value>
+  </data>
+  <data name="Match.Button.Reset" xml:space="preserve">
+    <value>Visszaállítás</value>
+  </data>
+  <data name="Match.Button.Finish" xml:space="preserve">
+    <value>Kész</value>
+  </data>
+  <data name="Match.Error.Identity" xml:space="preserve">
+    <value>A játékosazonosítás sikertelen.</value>
+  </data>
+  <data name="Match.Error.Player" xml:space="preserve">
+    <value>A játékos nem található.</value>
+  </data>
+  <data name="Match.Error.Classification" xml:space="preserve">
+    <value>Érvénytelen harci besorolás.</value>
+  </data>
+  <data name="Match.Error.AlreadyLocked" xml:space="preserve">
+    <value>A játékos már lezárt meccsben van.</value>
+  </data>
+  <data name="Match.Error.QueueValidation" xml:space="preserve">
+    <value>A csapat, a loadout vagy a kreditegyenleg már nem felel meg a besorolás feltételeinek.</value>
+  </data>
+  <data name="Match.Error.QueueCooldown" xml:space="preserve">
+    <value>A várólista elhagyása után 1 percig nem indíthatsz új játékot.</value>
+  </data>
+  <data name="Match.Error.Connection" xml:space="preserve">
+    <value>A rangsorolt kapcsolat megszakadt.</value>
+  </data>
+  <data name="Match.Error.ConnectionSpeed" xml:space="preserve">
+    <value>A kapcsolati sebesség nem megfelelő!</value>
+  </data>
+  <data name="Match.Error.Disconnected" xml:space="preserve">
+    <value>A meccskapcsolat megszakadt; ehhez a meccshez nincs újracsatlakozás.</value>
+  </data>
+  <data name="Match.Info.GameStarting" xml:space="preserve">
+    <value>A játék indul</value>
+  </data>
+  <data name="Match.Info.Guess" xml:space="preserve">
+    <value>Tippelj!</value>
+  </data>
+  <data name="Match.Info.Question" xml:space="preserve">
+    <value>Válaszolj a kérdésre!</value>
+  </data>
+  <data name="Match.Info.QuestionResult" xml:space="preserve">
+    <value>A kérdés eredménye</value>
+  </data>
+  <data name="Match.Info.RoundResult" xml:space="preserve">
+    <value>A kör eredménye</value>
+  </data>
+  <data name="Match.Info.CaptainSelection" xml:space="preserve">
+    <value>Kapitánykérdés kiválasztása</value>
+  </data>
+  <data name="Match.Info.CaptainQuestion" xml:space="preserve">
+    <value>Kapitánykör</value>
+  </data>
+  <data name="Match.Info.CaptainResult" xml:space="preserve">
+    <value>A kapitánykör eredménye</value>
+  </data>
+  <data name="Match.Info.GameCompleted" xml:space="preserve">
+    <value>A játék véget ért</value>
+  </data>
+  <data name="Match.Game.WaitingCaptain" xml:space="preserve">
+    <value>Várakozás a kérdező választására</value>
+  </data>
+  <data name="Match.Game.Team" xml:space="preserve">
+    <value>Csapat</value>
+  </data>
+  <data name="Match.Game.RoundPoints" xml:space="preserve">
+    <value>Körpont</value>
+  </data>
+  <data name="Match.Game.Time" xml:space="preserve">
+    <value>Idő</value>
+  </data>
+  <data name="Match.Game.Total" xml:space="preserve">
+    <value>Összesen</value>
+  </data>
+  <data name="Match.Game.Reward" xml:space="preserve">
+    <value>Jutalom</value>
+  </data>
+  <data name="Match.Game.WinnerBonus" xml:space="preserve">
+    <value>Körgyőztes bónusz</value>
+  </data>
+  <data name="Match.Game.QuestionSpeedBonus" xml:space="preserve">
+    <value>Leggyorsabb helyes válasz bónusza</value>
+  </data>
+  <data name="Match.Game.SpeedBonusPool" xml:space="preserve">
+    <value>Összesített gyorsasági bónusz</value>
+  </data>
+  <data name="Match.Game.SpeedPositionGain" xml:space="preserve">
+    <value>A gyorsasági bónusszal javított a körpontok szerinti helyezésén</value>
+  </data>
+  <data name="Match.Game.Questioner" xml:space="preserve">
+    <value>Kérdező</value>
+  </data>
+  <data name="Match.Game.CorrectGuess" xml:space="preserve">
+    <value>Helyes érték</value>
+  </data>
+  <data name="Match.Game.GuessRangeHelp" xml:space="preserve">
+    <value>Tippsáv segítség</value>
+  </data>
+  <data name="Match.Game.Submit" xml:space="preserve">
+    <value>Beküldés</value>
+  </data>
+  <data name="Match.Game.EnergyShort" xml:space="preserve">
+    <value>EP</value>
+  </data>
+  <data name="Match.Reward.Victory" xml:space="preserve"><value>győzelem</value></data>
+  <data name="Match.Reward.FinalStanding" xml:space="preserve"><value>Végeredmény</value></data>
+  <data name="Match.Reward.Team" xml:space="preserve"><value>Csapatjutalmak</value></data>
+  <data name="Match.Reward.RankedScore" xml:space="preserve"><value>Ranglistás eredmény</value></data>
+  <data name="Match.Reward.CharacterAverageXp" xml:space="preserve"><value>Karakter Ø XP</value></data>
+  <data name="Match.Reward.ScoreXp" xml:space="preserve"><value>Pontszám utáni XP</value></data>
+  <data name="Match.Reward.XpTotal" xml:space="preserve"><value>Összes XP</value></data>
+  <data name="Match.Reward.NewTeamLevel" xml:space="preserve"><value>Új szint!</value></data>
+  <data name="Match.Reward.StakeReturn" xml:space="preserve"><value>Tét vissza</value></data>
+  <data name="Match.Reward.BaseCredit" xml:space="preserve"><value>Nyeremény</value></data>
+  <data name="Match.Reward.TeamBonus" xml:space="preserve"><value>Csapatbónusz</value></data>
+  <data name="Match.Reward.CreditTotal" xml:space="preserve"><value>Összes kredit</value></data>
+  <data name="Match.Reward.ConsumedHelps" xml:space="preserve"><value>Felhasznált segítség</value></data>
+  <data name="Match.Reward.Characters" xml:space="preserve"><value>Karakterjutalmak</value></data>
+  <data name="Match.Reward.PensionTotal" xml:space="preserve"><value>Nyugdíjalap összesen:</value></data>
+  <data name="Match.Reward.None" xml:space="preserve"><value>Nincs</value></data>
+  <data name="Match.Reward.CreditUnit" xml:space="preserve"><value>kredit</value></data>
+  <!--
+    MÓDOSÍTÁS: hozzáadja a ranked várólista, MatchLocked, a három
+    preparációs fázis, az ismétlésmentes preparációs fejléc, az
+    inventory, játékmenet, eredmény, roster és az üres körhely magyar
+    feliratait.
+    MÓDOSÍTÁS: felvette a tippsáv játékközbeni magyar feliratát.
+    MÓDOSÍTÁS: felvette a végső tabella és a csapat-/karakterjutalmak
+    magyar megjelenítési feliratait, köztük a csapat-XP levezetését.
+    MÓDOSÍTÁS: a karakterek alatt megjelenő összes nyugdíjalap
+    feliratát tartalmazza; az egyedi összeg már kreditként jelenik meg.
+    MÓDOSÍTÁS: felvette a reward képernyő csapat-szintlépési animációjának
+    „Új szint!” feliratát.
+    MÓDOSÍTÁS: felvette a ranked root online/highscore láblécét.
+
+    A fájl a VS kliens magyar lokalizációs forrása; Debug buildkor
+    a ResxExporter ebből készíti el a vsgame.json fájlt.
+  -->
+  <data name="Modal.Quit.Content" xml:space="preserve">
+    <value>Ha kilépsz, elhagyod az aktuális VS játékot. Biztosan ki szeretnél lépni?</value>
+  </data>
+</root>

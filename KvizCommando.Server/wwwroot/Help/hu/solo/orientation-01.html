@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="hu">
+<head>
+    <meta charset="utf-8">
+    <title>Orientációs játék – választás</title>
+    <style>
+        .kc-solo-help{max-width:820px;margin:0 auto;color:var(--kc-help-text);font:15px/1.46 var(--kc-help-font-body)}.kc-solo-help *{box-sizing:border-box}.kc-solo-help .eyebrow{color:var(--kc-help-accent-soft);font:700 12px/1.2 var(--kc-help-font-display);letter-spacing:.13em}.kc-solo-help h1{margin:8px 0 9px;color:var(--kc-help-title);font:400 clamp(28px,4vw,40px)/1.08 var(--kc-help-font-title)}.kc-solo-help .lead{margin:0 0 13px;color:var(--kc-help-text-soft);font-size:16px}.kc-solo-help .route{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:9px;margin-bottom:13px}.kc-solo-help .route-card{height:100%;padding:11px 13px;border:1px solid var(--kc-help-border);border-radius:7px;background:var(--kc-help-panel)}.kc-solo-help .route-card b{display:block;margin-bottom:3px;color:var(--kc-help-title)}.kc-solo-help .arrow{color:var(--kc-help-accent);font-size:22px}.kc-solo-help .status-list{display:grid;gap:7px}.kc-solo-help .status-row{display:grid;grid-template-columns:125px 1fr;align-items:center;gap:11px;padding:8px 10px;border:1px solid var(--kc-help-border);border-radius:7px;background:var(--kc-help-panel)}.kc-solo-help .sample-pair{justify-self:center;display:flex;gap:6px}.kc-solo-help .sample{min-height:1.7rem;justify-self:center;padding:.3rem .45rem;display:flex;align-items:center;justify-content:center;border:1px solid rgba(210,255,57,.45);border-radius:4px;background:rgba(23,23,23,.58);box-shadow:0 2px 5px rgba(0,0,0,.65);color:#d2ff39;text-shadow:0 1px 2px #000;font:400 1rem/1 var(--kc-help-font-display)}.kc-solo-help .sample.xp{color:rgba(190,195,185,.65)}.kc-solo-help .sample.xp.maxed{border-color:rgba(126,160,95,.72);color:#d2ff39}.kc-solo-help .sample.score{width:112px;min-width:0;gap:.35rem}.kc-solo-help .sample .trophy{color:rgba(190,195,185,.7)}.kc-solo-help .sample.maxed{background:rgba(48,76,43,.58)}.kc-solo-help .sample.maxed .trophy{color:#d2ff39}.kc-solo-help .sample.heart{width:auto;min-width:1.8rem;padding:.3rem .45rem;border-color:rgba(210,255,57,.45);background:rgba(112,47,47,.64)}.kc-solo-help .heart-icon{position:relative;width:1em;height:1em;display:block;line-height:1}.kc-solo-help .heart-icon i{position:absolute;inset:0;display:block;width:1em;height:1em;line-height:1}.kc-solo-help .heart-empty{color:rgba(204,204,204,.28)}.kc-solo-help .heart-fill{color:rgba(190,48,42,.88);clip-path:inset(100% 0 0 0)}.kc-solo-help .status-row b{color:var(--kc-help-title)}@media(max-width:620px){.kc-solo-help .route{grid-template-columns:1fr}.kc-solo-help .arrow{transform:rotate(90deg);text-align:center}.kc-solo-help .status-row{grid-template-columns:105px 1fr}.kc-solo-help .sample.score{width:96px}.kc-solo-help .lead{font-size:15px}}
+        .kc-solo-help .screen-note{margin:10px 0 0;padding:8px 10px;border-left:4px solid var(--kc-help-accent);background:var(--kc-help-panel);color:var(--kc-help-text-soft)}.kc-solo-help .screen-note b{color:var(--kc-help-title)}
+    </style>
+</head>
+<body>
+<section class="kc-help-document kc-solo-help">
+    <div class="eyebrow">ORIENTÁCIÓS JÁTÉK // 01 / 05</div>
+    <h1>Válaszd ki a karaktert</h1>
+    <p class="lead">Minden elérhető orientáció egy besorozott karakterhez tartozik. A kártya kiválasztása után a kapcsolat ellenőrzése, majd a játék következik.</p>
+
+    <div class="route">
+        <div class="route-card"><b>A karakter szintje számít</b>A kérdések száma és az egy helyes válaszért járó legmagasabb pont a kiválasztott karakter szintjéhez igazodik.</div>
+        <div class="arrow">▶</div>
+        <div class="route-card"><b>Két kategória, egy játék</b>Az orientáció két kategóriájából azonos mennyiségű kérdés érkezik, összekevert sorrendben.</div>
+    </div>
+
+    <div class="status-list">
+        <div class="status-row"><span class="sample">Lvl-06</span><span><b>Szint</b> – a karakter jelenlegi szintje.</span></div>
+        <div class="status-row"><span class="sample-pair"><span class="sample xp">XP</span><span class="sample xp maxed">XP</span></span><span><b>XP-lemez</b> – csak XP-szerző szinten jelenik meg. A szürke XP azt jelzi, hogy még szerezhető XP. A halvány zöld lemezen látható sárga XP azt jelzi, hogy ezen a szinten már nem szerezhető több XP.</span></div>
+        <div class="status-row"><span class="sample score"><i class="bi bi-trophy-fill trophy"></i> 1250</span><span><b>Serleg és pontszám</b> – a karakter saját legjobb eredménye.</span></div>
+        <div class="status-row"><span class="sample score maxed"><i class="bi bi-trophy-fill trophy"></i> 1250</span><span><b>Halvány zöld lemezek</b> – ezen a szinten eredményből már nem szerezhető több FP. A serleg sárga, ha a karakter elérte a szinten megszerezhető legmagasabb pontszámot.</span></div>
+        <div class="status-row"><span class="sample heart"><span class="heart-icon"><i class="bi bi-heart-fill heart-empty"></i><i class="bi bi-heart-fill heart-fill"></i></span></span><span><b>Szív</b> – a kitöltése a vitalitás arányát mutatja. A piros lemez azt jelzi, hogy a karakter vitalitása 0, és nincs FP-je a helyreállításához.</span></div>
+    </div>
+    <p class="screen-note"><b>Legjobb eredmény:</b> az orientációválasztó kártya alsó sora az adott orientációban elért legjobb eredményt és a hozzá tartozó időt mutatja.</p>
+</section>
+</body>
+</html>

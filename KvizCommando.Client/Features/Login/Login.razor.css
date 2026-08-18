@@ -1,0 +1,108 @@
+﻿.kc-login-panel {
+    display:flex;
+    flex-direction:column;
+    width: 380px;
+    height:stretch;
+    margin: 10px auto;
+    justify-content:space-between;
+}
+
+.kc-login-pnael--divider-top {
+}
+.kc-login-panel--divider-bottom {
+}
+
+
+.kc-login-head {
+    text-align: center;
+    padding: 4px;
+}
+
+.kc-login-body {
+        margin-top: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    
+    }
+.kc-login-body--info-row {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    gap: 5px;
+}
+.kc-login-body--action-row {
+        display: flex;
+        align-items: center; /* függőleges középvonal */
+        justify-content: center;
+        gap: 10px;
+    }
+
+.kc-login-error-row {
+    display: flex;
+    position: static;
+    bottom: 0;
+}
+/* FOOTER */
+.kc-login-footer {
+    display: flex;
+    flex-direction: column;
+    bottom: 0px;
+}
+
+.kc-login-footer--other-providers-row {
+    text-align: left;
+}
+.kc-login-footer--other-providers-row.hide {
+    display: none;
+}
+
+.kc-btn-provider {
+    padding: 1px;
+    width: max-content; /* alap szélesség */
+    height: 30px;
+    color: #fff;
+}
+    .kc-btn-provider:hover {
+        opacity: 0.7;
+        cursor: url('/Images/cursors/active.cur'), pointer;
+    }
+
+    .kc-login-links-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        
+    }
+
+        .kc-login-links-row .divider {
+            color: #888;
+            font-weight: bold;
+            user-select: none;
+        }
+
+    /* Link stílus */
+        .kc-login-link {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem; /* Méret állítása itt */
+            color: #aaff44;
+            text-decoration: none;
+        }
+            .kc-login-link:hover {
+                color: #ddff77;
+                text-decoration: underline;
+                cursor: url('/Images/cursors/active.cur'), pointer;
+            }
+
+
+.label-text.masked-email {
+    font-weight: bold;
+}
+
+.remember-me-label {
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    color: #cccccc;
+}

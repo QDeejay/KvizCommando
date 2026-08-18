@@ -1,0 +1,8 @@
+{
+  "Button": "Regisztráció",
+  "ConfirmPassword": "Jelszó megerősítése",
+  "Email": "E-mail cím",
+  "ResultMsg01": "Sikeres regisztráció!",
+  "ResultMsg02": "Megadott emailre elküdtük a megerősítő linket!",
+  "Title": "Regisztráció"
+}

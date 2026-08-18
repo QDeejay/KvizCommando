@@ -1,0 +1,8 @@
+﻿.main-pagecontainer {
+    display: flex;
+    flex-direction: row;
+    margin-top: 40px;
+    padding-bottom: 40px;
+    justify-content: center;
+    z-index: 10;
+}

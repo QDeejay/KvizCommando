@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="hu">
+<head>
+    <meta charset="utf-8">
+    <title>Rangsorolásos csataterek – váróterem</title>
+    <style>
+        .kc-vs-help{max-width:820px;margin:0 auto;color:var(--kc-help-text);font:15px/1.44 var(--kc-help-font-body)}.kc-vs-help *{box-sizing:border-box}.kc-vs-help .eyebrow{color:var(--kc-help-accent-soft);font:700 12px/1.2 var(--kc-help-font-display);letter-spacing:.13em}.kc-vs-help h1{margin:8px 0 9px;color:var(--kc-help-title);font:400 clamp(28px,4vw,40px)/1.08 var(--kc-help-font-title)}.kc-vs-help .lead{margin:0 0 12px;color:var(--kc-help-text-soft);font-size:16px}.kc-vs-help .kc-vs-queue{width:100%;padding:18px;display:grid;place-items:center;align-content:center;gap:12px;color:#ccc;background:rgba(30,32,27,.96);border:2px solid #151713;border-radius:10px;box-shadow:inset 0 0 0 1px #55584a,inset 0 0 16px rgba(0,0,0,.75);text-align:center}.kc-vs-help .kc-vs-queue h3{margin:0;color:#eee9dc;font-family:'Special Elite',cursive;font-size:clamp(1.2rem,2.2vw,1.8rem);text-transform:uppercase}.kc-vs-help .kc-vs-queue p{margin:0;font-family:'Courier New',monospace}.kc-vs-help .kc-vs-queue-counter{width:120px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;gap:8px;color:#c6ef39;background:rgba(14,16,13,.78);border:4px dashed #c6ef39;border-radius:50%;box-shadow:0 0 11px rgba(210,255,57,.25),inset 0 0 15px rgba(0,0,0,.7);font-family:'Share Tech Mono',monospace;line-height:1}.kc-vs-help .kc-vs-queue-counter>span{font-size:2.5rem}.kc-vs-help .kc-vs-queue-counter>small{font-size:1.2rem}.kc-vs-help .kc-vs-queue-conditions{width:min(100%,520px);min-height:76px;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;gap:18px;color:#e6e2d5;background:rgba(17,22,16,.94);border:1px solid #55583f;border-radius:7px;box-shadow:inset 0 0 9px rgba(0,0,0,.55);font-family:'Courier New',monospace}.kc-vs-help .kc-vs-queue-conditions>span{display:flex;align-items:center;gap:8px}.kc-vs-help .kc-vs-queue-conditions i,.kc-vs-help .kc-vs-queue-conditions strong{color:#c6ef39}.kc-vs-help .matching{margin-top:11px;padding:12px 14px;border-left:4px solid var(--kc-help-accent);background:var(--kc-help-panel)}.kc-vs-help .matching b{color:var(--kc-help-title)}.kc-vs-help .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}.kc-vs-help .step{padding:10px;border:1px solid var(--kc-help-border);border-radius:7px;background:var(--kc-help-panel);color:var(--kc-help-text-soft)}.kc-vs-help .step i{display:block;margin-bottom:5px;color:var(--kc-help-accent);font-size:20px}.kc-vs-help .step b{color:var(--kc-help-title)}@media(max-width:620px){.kc-vs-help .steps{grid-template-columns:1fr}.kc-vs-help .kc-vs-queue-conditions{align-items:flex-start;flex-direction:column}.kc-vs-help .lead{font-size:15px}}
+        .kc-vs-help .kc-vs-queue{height:100%;padding:34px}.kc-vs-help .kc-vs-queue-counter{width:158px}
+    </style>
+</head>
+<body>
+<section class="kc-help-document kc-vs-help">
+    <div class="eyebrow">RANGSOROLÁSOS CSATATEREK // 03 / 06</div>
+    <h1>Kapcsolat és váróterem</h1>
+    <p class="lead">A csatatér kiválasztása után a rendszer először ellenőrzi a kapcsolatot, majd beléptet a választott besorolás várótermébe.</p>
+
+    <section class="kc-vs-queue" aria-label="Váróterem mintája">
+        <h3>II. harci besorolás</h3>
+        <p>Várakozás a többi játékosra</p>
+        <div class="kc-vs-queue-counter"><span>3</span><small>/ 4</small></div>
+        <div class="kc-vs-queue-conditions"><span><i class="bi bi-list-ol"></i><strong>Körök: 3 normál + 1 kapitánykör</strong></span><span>Tét <strong>{{VS_CLASSIFICATION_02_STAKE}}</strong></span></div>
+    </section>
+
+    <div class="matching"><b>Párosítás:</b> a rendszer saját szabályai szerint igyekszik azonos rangú játékosokat, minél kevesebb újrajátszás mellett összesorsolni.</div>
+
+    <div class="steps">
+        <div class="step"><i class="bi bi-reception-4"></i><b>Kapcsolat</b><br>Nem megfelelő kapcsolatnál a rangsorolt mérkőzés nem indul el.</div>
+        <div class="step"><i class="bi bi-people-fill"></i><b>Várakozás</b><br>A bal oldali roster és a számláló mutatja a csatlakozott játékosokat.</div>
+        <div class="step"><i class="bi bi-shield-lock-fill"></i><b>Meccszár</b><br>A párosítás elkészültekor a tét rögzítésre kerül, majd betöltődnek a meccs kérdései.</div>
+    </div>
+</section>
+</body>
+</html>

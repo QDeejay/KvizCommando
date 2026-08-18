@@ -1,0 +1,37 @@
+﻿
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+#app {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.kc-mainlayout-root {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    background-attachment: fixed; /* opcionális: ne mozogjon görgetésre */
+    image-rendering: auto; /* vagy 'crisp-edges' kísérletnek */
+    z-index:0;
+    opacity:0.95;
+}
+.kc-unsupported-screen {
+    display: none;
+}
+
+
+@media (max-width: 660px), (max-height: 300px) {
+    .kc-unsupported-screen {
+        display: flex;
+    }
+}

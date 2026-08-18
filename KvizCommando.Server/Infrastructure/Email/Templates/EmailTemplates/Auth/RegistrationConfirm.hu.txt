@@ -1,0 +1,12 @@
+﻿Üdv, Közlegény!
+
+Kérjük, erősítsd meg az e-mail címed a {{AppName}} fiókod aktiválásához.
+
+Megerősítés:
+{{ConfirmUrl}}
+
+A link {{TokenValidityHours}} óráig érvényes.
+
+Ha nem te kérted ezt a regisztrációt, hagyd figyelmen kívül ezt a levelet vagy írj nekünk: {{SupportEmail}}
+
+© {{Year}} {{AppName}}

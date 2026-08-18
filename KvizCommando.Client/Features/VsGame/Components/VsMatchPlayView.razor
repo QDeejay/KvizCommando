@@ -1,0 +1,410 @@
+@using KvizCommando.Client.Features.VsGame.ViewModels
+@using KvizCommando.Shared.Models.Enums.VsGame
+
+<section class="kc-vs-play @(ShowProgress ? "with-progress" : "")">
+    <header class="kc-vs-play-title">
+        <strong>@Data.InfoText</strong>
+        <span title="@Data.MatchId">
+            @RoundText · #@MatchReference
+        </span>
+    </header>
+
+    <div class="kc-vs-play-timer-slot">
+        @if (ShowWaitTimer)
+        {
+            <div class="kc-vs-wait-timer"
+                 style="@WaitTimerStyle">
+                <strong>@DisplaySeconds</strong>
+            </div>
+        }
+        else if (ShowAnswerTimer)
+        {
+            <div class="kc-vs-play-timer @TimerStateClass">
+                <i class="bi bi-stopwatch"></i>
+                <div class="kc-vs-play-timer-display kc-lcd-surface">
+                    <strong>@DisplaySeconds</strong>
+                    <span>@Lang["vsgame.Match.Timer.SecondsShort"]</span>
+                </div>
+                <div class="kc-vs-play-timer-track">
+                    <div class="kc-vs-play-timer-value"
+                         style="@TimerStyle"></div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="kc-vs-play-body">
+        @if (Data.Phase is
+                VsMatchPhase.PreparationStarting or
+                VsMatchPhase.GameStarting)
+        {
+            <div class="kc-vs-play-message">
+                <i class="bi bi-shield-shaded"></i>
+                <strong>@Data.InfoText</strong>
+            </div>
+        }
+        else if (Data.Phase ==
+                 VsMatchPhase.CaptainQuestionSelection)
+        {
+            <div class="kc-vs-captain-selection">
+                <div class="kc-vs-captain-order">
+                    @for (var index = 0;
+                          index < Data.Game.CaptainOrder.Length;
+                          index++)
+                    {
+                        var position =
+                            Data.Game.CaptainOrder[index];
+
+                        <span class="@(index == Data.Game.CaptainOrderIndex ? "current" : "")">
+                            @(index + 1). @PlayerName(position)
+                        </span>
+                    }
+                </div>
+
+                @if (Data.Game.CanChooseCaptainQuestion)
+                {
+                    <div class="kc-vs-captain-questions">
+                        @foreach (var item in
+                                  Data.Game.CaptainQuestions)
+                        {
+                            <button type="button"
+                                    disabled="@_sending"
+                                    title="@item.CategoryName"
+                                    @onclick="() => SelectCaptainQuestionAsync(item.LoadoutPosition)">
+                                <img src="@item.ImageSrc"
+                                     alt="@item.CategoryName" />
+                                <span>@item.Question</span>
+                            </button>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="kc-vs-play-waiting">
+                        <i class="bi bi-hourglass-split"></i>
+                        <span>
+                            @Lang["vsgame.Match.Game.WaitingCaptain"]
+                        </span>
+                    </div>
+                }
+            </div>
+        }
+        else if (Data.Phase is
+                 VsMatchPhase.NormalRoundResult or
+                 VsMatchPhase.CaptainRoundResult)
+        {
+            <div class="kc-vs-round-result">
+                <div class="kc-vs-round-result-head">
+                    <span>@Lang["vsgame.Match.Game.Team"]</span>
+                    <span>@Lang["vsgame.Match.Game.RoundPoints"]</span>
+                    <span>@Lang["vsgame.Match.Game.Time"]</span>
+                    <span>@Lang["vsgame.Match.Game.Total"]</span>
+                    <span>@Lang["vsgame.Match.Game.Reward"]</span>
+                </div>
+
+                @foreach (var result in Data.Game.RoundResult)
+                {
+                    <div class="kc-vs-round-result-row">
+                        <strong>@PlayerName(result.Position)</strong>
+                        <span class="points">
+                            @Signed(result.RoundPoints)
+                        </span>
+                        <span>
+                            @Seconds(result.RoundTimeSeconds)
+                        </span>
+                        <span>
+                            @result.TotalBefore
+                            <i class="bi bi-arrow-right-short"></i>
+                            @result.TotalAfter
+                        </span>
+                        <span class="reward">
+                            @if (result.HasWinnerBonus)
+                            {
+                                <i class="bi bi-trophy-fill"
+                                   title="@Lang["vsgame.Match.Game.WinnerBonus"]"></i>
+                            }
+                            @if (result.FastestBonusPoints > 0)
+                            {
+                                <span class="kc-vs-round-speed-bonus"
+                                      title="@Lang["vsgame.Match.Game.SpeedBonusPool"]">
+                                    <i class="bi bi-lightning-charge-fill"></i>
+                                    <small>+@result.FastestBonusPoints</small>
+                                </span>
+                            }
+                            @if (result.HasSpeedPositionGain)
+                            {
+                                <i class="bi bi-arrow-up-circle-fill kc-vs-speed-position-gain"
+                                   title="@Lang["vsgame.Match.Game.SpeedPositionGain"]"></i>
+                            }
+                            @if (result.CharacterXp > 0)
+                            {
+                                <small>+@result.CharacterXp XP</small>
+                            }
+                            @if (result.EnergyLoss > 0)
+                            {
+                                <small>
+                                    -@result.EnergyLoss
+                                    @Lang["vsgame.Match.Game.EnergyShort"]
+                                </small>
+                            }
+                        </span>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="kc-vs-question">
+                @if (Data.Game.QuestionKind ==
+                     VsQuestionKind.Choice)
+                {
+                    <div class="kc-vs-speed-pool @(SpeedBonusPoolIncreased ? "increased" : "")"
+                         title="@Lang["vsgame.Match.Game.SpeedBonusPool"]">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                        <strong>@Data.Game.SpeedBonusPoolPoints</strong>
+                    </div>
+                }
+
+                @if (Data.Game.QuestionerPosition > 0)
+                {
+                    <small>
+                        @Lang["vsgame.Match.Game.Questioner"]:
+                        <strong>
+                            @PlayerName( Data.Game.QuestionerPosition)
+                        </strong>
+                    </small>
+                }
+
+                <h3 class="kc-lcd-surface">@Data.Game.Question</h3>
+
+                @if (Data.Game.QuestionKind ==
+                     VsQuestionKind.Guess)
+                {
+                    <div class="kc-vs-guess">
+                        <div class="kc-vs-guess-stage">
+                            <div class="kc-vs-guess-range-slot">
+                                @if (HasGuessRange &&
+                                     !Data.Game.CorrectGuess.HasValue)
+                                {
+                                    <div class="kc-vs-guess-range">
+                                        <i class="bi bi-arrows-expand-vertical"></i>
+                                        <span>
+                                            @Lang["vsgame.Match.Game.GuessRangeHelp"]:
+                                        </span>
+                                        <strong>@GuessRangeText</strong>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="kc-vs-guess-controls">
+                                <input type="text"
+                                       class="lcd-input @GuessInputClass"
+                                       inputmode="decimal"
+                                       @ref="_guessInput"
+                                       @bind="GuessInputText"
+                                       @bind:event="oninput"
+                                       @onkeydown="HandleGuessKeyDownAsync"
+                                       disabled="@(!IsAnswerTimeActive || _sending || IsGuessLocked)" />
+                                <button type="button"
+                                        class="button-on-lcd @(Data.Game.CorrectGuess.HasValue ? "hidden" : string.Empty)"
+                                        disabled="@(!CanSubmitGuess)"
+                                        aria-label="@Lang["vsgame.Match.Game.Submit"]"
+                                        title="@Lang["vsgame.Match.Game.Submit"]"
+                                        @onclick="SubmitGuessAsync">
+                                    <i class="bi bi-check-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="kc-vs-guess-player-results">
+                            @foreach (var player in
+                                      Data.Game.QuestionPlayers
+                                          .OrderBy(item => item.Position))
+                            {
+                                <span class="@PlayerToneClass(player.Position) @(player.Points > 0 ? "winner" : "")">
+                                    <span class="kc-vs-guess-player-name">
+                                        <small>@PlayerName(player.Position)</small>
+
+                                        @if (Data.Phase ==
+                                             VsMatchPhase.QuestionResult)
+                                        {
+                                            <strong class="kc-vs-guess-player-points @(player.Points >= 0 ? "positive" : "negative")">
+                                                @Signed(player.Points)
+                                            </strong>
+                                        }
+                                        else
+                                        {
+                                            <i class="kc-vs-guess-player-state bi @(player.HasAnswered ? "bi-check-circle-fill answered" : "bi-hourglass")"></i>
+                                        }
+                                    </span>
+
+                                    <strong class="@(IsGuessRevealed(player) ? "revealed" : "")">
+                                        @GuessText(player)
+                                    </strong>
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="kc-vs-answers">
+                        @for (var index = 0;
+                              index < Data.Game.Answers.Length;
+                              index++)
+                        {
+                            var answerIndex = index;
+
+                            <button type="button"
+                                    class="@AnswerClass(answerIndex)"
+                                    disabled="@(!IsAnswerTimeActive ||
+                                                _sending ||
+                                                IsAnswerEliminated(answerIndex))"
+                                    @onclick="() => SubmitChoiceAsync(answerIndex)">
+                                @if (ShowPlayerChoices)
+                                {
+                                    <span class="kc-vs-answer-player-fill"
+                                          aria-hidden="true">
+                                        @foreach (var player in
+                                                  PlayersOnAnswer(answerIndex))
+                                        {
+                                            <i class="@PlayerToneClass(player.Position)"></i>
+                                        }
+                                    </span>
+                                }
+
+                                <span class="kc-vs-answer-letter">
+                                    @((char)('A' + answerIndex))
+                                </span>
+                                <strong>
+                                    @Data.Game.Answers[answerIndex]
+                                </strong>
+
+                                @if (IsSuggestedAnswer(answerIndex))
+                                {
+                                    <i class="bi bi-cpu-fill kc-vs-ai-suggestion"></i>
+                                }
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+
+            @if (Data.Game.QuestionKind != VsQuestionKind.Guess ||
+                 CurrentHelp is not null)
+            {
+                <div class="kc-vs-question-status @(Data.Game.QuestionKind == VsQuestionKind.Guess ? "guess-status" : "") @(Data.Game.QuestionerPosition > 0 ? "has-questioner" : "")">
+                    @if (Data.Game.QuestionKind !=
+                         VsQuestionKind.Guess)
+                    {
+                        <div class="kc-vs-question-status-players">
+                            @foreach (var group in QuestionStatusPlayers
+                                          .GroupBy(player =>
+                                              IsQuestioner(player.Position))
+                                          .OrderByDescending(group =>
+                                              group.Key))
+                            {
+                                <div class="kc-vs-question-status-player-row @(group.Key ? "questioner-row" : "answerer-row")">
+                                    @foreach (var player in group)
+                                    {
+                                        <span class="kc-vs-player-status @PlayerToneClass(player.Position) @(player.HasAnswered ? "answered" : "") @(IsQuestioner(player.Position) ? "questioner" : "")">
+                                            @if (IsQuestioner(player.Position))
+                                            {
+                                                <i class="bi bi-patch-question-fill kc-vs-questioner-mark"
+                                                   title="@Lang["vsgame.Match.Game.Questioner"]"></i>
+                                            }
+
+                                            @PlayerName(player.Position)
+
+                                            @if (Data.Phase ==
+                                                 VsMatchPhase.QuestionResult)
+                                            {
+                                                @if (player.ModifiedTimeSeconds.HasValue)
+                                                {
+                                                    <small class="kc-vs-question-time"
+                                                           title="@Lang["vsgame.Match.Game.QuestionSpeedBonus"]">
+                                                        @Seconds(player.AnswerTimeSeconds)
+                                                        <i class="bi bi-arrow-right-short"></i>
+                                                        @Seconds(player.ModifiedTimeSeconds.Value)
+                                                    </small>
+                                                }
+
+                                                @if (player.HasSpeedBonus)
+                                                {
+                                                    <i class="bi bi-lightning-charge-fill kc-vs-speed-bonus"
+                                                       title="@Lang["vsgame.Match.Game.QuestionSpeedBonus"]"></i>
+                                                }
+
+                                                <strong class="@(player.Points >= 0 ? "positive" : "negative")">
+                                                    @Signed(player.Points)
+                                                </strong>
+                                            }
+                                            else
+                                            {
+                                                <i class="bi @(player.HasAnswered ? "bi-check-circle-fill" : "bi-hourglass")"></i>
+                                            }
+                                        </span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @if (CurrentHelp is not null)
+                    {
+                        @if (CurrentHelp.HelpType ==
+                             VsHelpType.GuessRange)
+                        {
+                            <span class="kc-vs-play-help"
+                                  title="@CurrentHelp.Name">
+                                <i class="@CurrentHelp.IconCss"></i>
+                                @CurrentHelp.Name
+                            </span>
+                        }
+                        else
+                        {
+                            <button type="button"
+                                    class="kc-vs-play-help @(CanUseHelpNow ? "available" : "")"
+                                    disabled="@(!CanUseHelpNow || _sending)"
+                                    title="@CurrentHelp.Name"
+                                    @onclick="UseHelpAsync">
+                                <i class="@CurrentHelp.IconCss"></i>
+                                <span>@CurrentHelp.Name</span>
+                                <strong>@HelpUseMarker</strong>
+                            </button>
+                        }
+                    }
+                </div>
+            }
+        }
+    </div>
+
+    @if (ShowProgress)
+    {
+        <div class="kc-vs-progress">
+            @foreach (var step in Data.Game.Progress)
+            {
+                <span class="@(step.IsCompleted ? "completed" : "") @(step.IsCurrent ? "current" : "")">
+                    @if (step.IsGuess)
+                    {
+                        <i class="bi bi-bullseye"></i>
+                    }
+                    else
+                    {
+                        @(step.StepNumber)
+                    }
+
+                    @if (step.IsCompleted)
+                    {
+                        <small>@Signed(step.Points)</small>
+                    }
+                </span>
+            }
+
+            <strong>
+                @MyRoundPoints
+                <small>@Seconds(MyRoundTime)</small>
+            </strong>
+        </div>
+    }
+</section>

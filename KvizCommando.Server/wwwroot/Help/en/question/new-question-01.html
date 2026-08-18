@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>New question – submission</title>
+    <style>
+        .kc-new-question-help{max-width:820px;margin:0 auto;color:var(--kc-help-text);font:15px/1.6 var(--kc-help-font-body)}.kc-new-question-help *{box-sizing:border-box}.kc-new-question-help .eyebrow{color:var(--kc-help-accent-soft);font:700 12px/1.2 var(--kc-help-font-display);letter-spacing:.13em}.kc-new-question-help h1{margin:8px 0 10px;color:var(--kc-help-title);font:400 clamp(28px,4vw,40px)/1.08 var(--kc-help-font-title)}.kc-new-question-help .lead{max-width:760px;margin:0 0 17px;color:var(--kc-help-text-soft);font-size:16px}.kc-new-question-help .access{padding:13px 15px;border-left:4px solid var(--kc-help-accent);background:var(--kc-help-panel-strong)}.kc-new-question-help .access b{color:var(--kc-help-title)}.kc-new-question-help .steps{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:14px}.kc-new-question-help .step{display:grid;grid-template-columns:38px minmax(0,1fr);gap:11px;align-items:start;padding:12px 13px;border:1px solid var(--kc-help-border);border-radius:7px;background:var(--kc-help-panel)}.kc-new-question-help .step-no{display:grid;place-items:center;width:34px;height:34px;color:#202719;border-radius:50%;background:var(--kc-help-accent);font:700 13px/1 var(--kc-help-font-display)}.kc-new-question-help .step b{display:block;color:var(--kc-help-title)}.kc-new-question-help .limit{color:var(--kc-help-accent);font-family:var(--kc-help-font-display);font-weight:700}.kc-new-question-help .answers{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:14px}.kc-new-question-help .answer{padding:9px 8px;text-align:center;border:1px solid var(--kc-help-border);border-radius:6px;background:var(--kc-help-panel-strong)}.kc-new-question-help .answer b{display:block;color:var(--kc-help-title);font-family:var(--kc-help-font-display)}.kc-new-question-help .answer.correct{border-color:#657d55}.kc-new-question-help .answer.correct b{color:#8dcc79}.kc-new-question-help .after{margin-top:14px;color:var(--kc-help-text-soft)}@media(max-width:650px){.kc-new-question-help .steps{grid-template-columns:1fr}.kc-new-question-help .answers{grid-template-columns:repeat(2,1fr)}.kc-new-question-help .lead{font-size:15px}}
+    </style>
+</head>
+<body>
+<section class="kc-help-document kc-new-question-help">
+    <div class="eyebrow">NEW QUESTION // 01 / 02</div>
+    <h1>How to submit a question</h1>
+    <p class="lead">This screen is available when you have at least one empty Pending question slot and at least one enlisted character.</p>
+
+    <div class="access"><b>Available categories:</b> only categories linked to the orientations of your currently enlisted characters are shown.</div>
+
+    <div class="steps">
+        <div class="step"><span class="step-no">01</span><div><b>Select a category</b>The question field becomes available after choosing a category.</div></div>
+        <div class="step"><span class="step-no">02</span><div><b>Enter the question</b>It must contain a question mark and be between <span class="limit">{{NEW_QUESTION_MIN_LENGTH}}</span> and <span class="limit">{{NEW_QUESTION_MAX_LENGTH}}</span> characters long.</div></div>
+        <div class="step"><span class="step-no">03</span><div><b>Enter four answers</b>Each answer may contain up to <span class="limit">{{NEW_QUESTION_ANSWER_MAX_LENGTH}}</span> characters. None may be empty or identical.</div></div>
+        <div class="step"><span class="step-no">04</span><div><b>Submit it</b>The Submit button becomes available only after every field follows the rules.</div></div>
+    </div>
+
+    <div class="answers">
+        <div class="answer correct"><b>Answer 1</b>correct</div>
+        <div class="answer"><b>Answer 2</b>incorrect</div>
+        <div class="answer"><b>Answer 3</b>incorrect</div>
+        <div class="answer"><b>Answer 4</b>incorrect</div>
+    </div>
+
+    <p class="after">After submission, the question is placed in the first empty Pending question slot and waits for review.</p>
+</section>
+</body>
+</html>

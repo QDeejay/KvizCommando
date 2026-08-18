@@ -1,0 +1,152 @@
+@using KvizCommando.Client.Components.CharacterComponent
+@using KvizCommando.Client.Features.VsGame.ViewModels
+
+<section class="kc-vs-reward">
+    <header class="kc-vs-reward-title">
+        <strong>@Data.InfoText</strong>
+        <span title="@Data.MatchId">#@MatchReference</span>
+    </header>
+
+    <div class="kc-vs-reward-body">
+        <div class="kc-vs-reward-banner kc-lcd-surface">
+            <i class="bi bi-trophy-fill"></i>
+            <strong>
+                @Winner.TeamName · @Lang["vsgame.Match.Reward.Victory"]
+            </strong>
+        </div>
+
+        <section class="kc-vs-reward-panel standings">
+            <h3>@Lang["vsgame.Match.Reward.FinalStanding"]</h3>
+
+            <div class="kc-vs-reward-standing-grid">
+                @foreach (var player in Data.Reward.Standings)
+                {
+                    <article class="kc-vs-reward-standing @(player.IsMe ? "me" : "") @(player.IsBot ? "bot" : "")">
+                        <strong class="place">@player.FinalPosition.</strong>
+                        <div>
+                            <strong>@player.TeamName</strong>
+                            <small>@player.DisplayName · @player.TeamLevel</small>
+                        </div>
+                        <span class="bot-label">
+                            @(player.IsBot ? "– BOT –" : string.Empty)
+                        </span>
+                        <strong class="points">@player.Points P</strong>
+                        <span class="time">@Seconds(player.TimeSeconds)</span>
+                    </article>
+                }
+            </div>
+        </section>
+
+        <div class="kc-vs-reward-details">
+            <section class="kc-vs-reward-panel team">
+                <h3>@Lang["vsgame.Match.Reward.Team"]</h3>
+
+                <dl>
+                    @if (MyReward.IsTeamXpAvailable)
+                    {
+                        <div>
+                            <dt>@Lang["vsgame.Match.Reward.CharacterAverageXp"]</dt>
+                            <dd>@MyReward.CharacterAverageXp</dd>
+                        </div>
+                        <div>
+                            <dt>@Lang["vsgame.Match.Reward.ScoreXp"]</dt>
+                            <dd>@Signed(MyReward.ScoreXp)</dd>
+                        </div>
+
+                        <div class="total">
+                            <dt class="team-xp-label">
+                                <span>@Lang["vsgame.Match.Reward.XpTotal"]</span>
+                                @if (NewTeamLevel > 0)
+                                {
+                                    <span class="team-level-cycle" aria-live="polite">
+                                        <strong>@Lang["vsgame.Match.Reward.NewTeamLevel"]</strong>
+                                        <strong>@NewTeamLevelCode</strong>
+                                    </span>
+                                }
+                            </dt>
+                            <dd>@MyReward.TeamXp</dd>
+                        </div>
+                    }
+                    <div>
+                        <dt>@Lang["vsgame.Match.Reward.StakeReturn"]</dt>
+                        <dd>@Credits(MyReward.StakeReturn)</dd>
+                    </div>
+                    <div>
+                        <dt>@Lang["vsgame.Match.Reward.BaseCredit"]</dt>
+                        <dd>@Credits(MyReward.BaseCreditReward)</dd>
+                    </div>
+                    <div>
+                        <dt>
+                            @Lang["vsgame.Match.Reward.TeamBonus"]
+                            <small>(@($"{MyReward.TeamBonusPercent}%"))</small>
+                        </dt>
+                        <dd>@Credits(MyReward.TeamBonusCredit)</dd>
+                    </div>
+                    <div class="total">
+                        <dt>@Lang["vsgame.Match.Reward.CreditTotal"]</dt>
+                        <dd>@Credits(MyReward.CreditReward)</dd>
+                    </div>
+                    <div>
+                        <dt>@Lang["vsgame.Match.Reward.ConsumedHelps"]</dt>
+                        <dd>@ConsumedHelpsText</dd>
+                    </div>
+                    <div class="ranking-score">
+                        <dt>
+                            @Lang["vsgame.Match.Reward.RankedScore"]
+                            <small>
+                                (×@Number(MyReward.WinnerCompensation))
+                            </small>
+                        </dt>
+                        <dd>@Number(MyReward.RankedScore)</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <section class="kc-vs-reward-panel characters">
+                <h3>@Lang["vsgame.Match.Reward.Characters"]</h3>
+
+                <div class="kc-vs-reward-character-list">
+                    @foreach (var character in MyReward.Characters)
+                    {
+                        <article class="kc-vs-reward-character">
+                            <div class="kc-vs-reward-character-picture">
+                                <div class="kc-vs-reward-character-svg-host">
+                                    <CharacterView PicCode="@character.PictureCode" />
+                                </div>
+                            </div>
+                            <div>
+                                <strong>@character.Name</strong>
+                                <small>
+                                    <span class="character-xp @(character.IsCharacterXpCapped ? "capped" : "")">
+                                        @Signed(character.CharacterXp) XP
+                                    </span>
+                                    @if (character.EnergyLoss > 0)
+                                    {
+                                        <span>
+                                            · @Energy(character.EnergyLoss)
+                                        </span>
+                                    }
+                                </small>
+                            </div>
+                            @if (character.Pension > 0)
+                            {
+                                <strong class="pension">
+                                    @Credits(character.Pension)
+                                </strong>
+                            }
+                        </article>
+                    }
+                </div>
+                @if (PensionTotal > 0)
+                {
+                    <dl>
+                        <div class="total">
+                            <dt>@Lang["vsgame.Match.Reward.PensionTotal"]</dt>
+                            <dd>@Credits(PensionTotal)</dd>
+                        </div>
+                    </dl>
+                }
+            </section>
+        </div>
+    </div>
+</section>

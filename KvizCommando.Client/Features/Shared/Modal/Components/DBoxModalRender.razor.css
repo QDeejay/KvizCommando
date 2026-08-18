@@ -1,0 +1,24 @@
+.modal-display {
+    container-name: modal-render;
+    container-type: inline-size;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.modal-layout {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+@container modal-render (max-width: 28rem) {
+    .modal-layout {
+        font-size: 0.92rem;
+        line-height: 1.4;
+    }
+}

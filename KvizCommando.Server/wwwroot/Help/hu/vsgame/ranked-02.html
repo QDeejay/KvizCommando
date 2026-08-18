@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="hu">
+<head>
+    <meta charset="utf-8">
+    <title>Rangsorolásos csataterek – besorolások</title>
+    <style>
+        .kc-vs-help{max-width:820px;margin:0 auto;color:var(--kc-help-text);font:14px/1.4 var(--kc-help-font-body)}.kc-vs-help *{box-sizing:border-box}.kc-vs-help .eyebrow{color:var(--kc-help-accent-soft);font:700 12px/1.2 var(--kc-help-font-display);letter-spacing:.13em}.kc-vs-help h1{margin:8px 0 8px;color:var(--kc-help-title);font:400 clamp(27px,4vw,38px)/1.08 var(--kc-help-font-title)}.kc-vs-help .lead{margin:0 0 10px;color:var(--kc-help-text-soft);font-size:15px}.kc-vs-help .lamp-row{display:flex;justify-content:center;gap:8px;margin-bottom:10px}.kc-vs-help .kc-ranked-classification{position:relative;display:flex;flex:0 0 50px;width:50px;height:50px;align-items:center;justify-content:center;color:rgba(211,211,211,.72);background:rgba(82,86,78,.72);border:inset 2px #666;border-radius:8px;font-size:1rem;font-weight:bold;cursor:url('/Images/cursors/normal.cur'),default}.kc-vs-help .kc-ranked-classification.active{color:#222f16;background:rgba(210,255,57,.95);box-shadow:0 0 10px rgba(210,255,57,.75)}.kc-vs-help .table-wrap{overflow-x:auto;border:1px solid var(--kc-help-border);border-radius:7px}.kc-vs-help table{width:100%;min-width:700px;border-collapse:collapse;background:var(--kc-help-panel)}.kc-vs-help th,.kc-vs-help td{padding:7px 9px;border-bottom:1px solid var(--kc-help-border);text-align:center;white-space:nowrap}.kc-vs-help th{color:var(--kc-help-title);background:var(--kc-help-panel-strong);font:700 11px/1.2 var(--kc-help-font-display);letter-spacing:.035em}.kc-vs-help tbody tr:last-child td{border-bottom:0}.kc-vs-help tbody tr:nth-child(even){background:color-mix(in srgb,var(--kc-help-panel-strong) 55%,transparent)}.kc-vs-help td:first-child{color:var(--kc-help-accent);font-weight:bold}.kc-vs-help .notes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.kc-vs-help .note{padding:9px 11px;border-left:4px solid var(--kc-help-accent);background:var(--kc-help-panel);color:var(--kc-help-text-soft)}.kc-vs-help .note b{color:var(--kc-help-title)}@media(max-width:620px){.kc-vs-help .notes{grid-template-columns:1fr}.kc-vs-help .lamp-row{gap:5px}.kc-vs-help .kc-ranked-classification{flex-basis:44px;width:44px;height:44px}}
+    </style>
+</head>
+<body>
+<section class="kc-help-document kc-vs-help">
+    <div class="eyebrow">RANGSOROLÁSOS CSATATEREK // 02 / 06</div>
+    <h1>Öt különböző harci besorolás</h1>
+    <p class="lead">A sárgán világító jelző azt mutatja, hogy a jelenlegi összeállítás megfelel az adott besorolásnak. A csatatér csak elmentett, megfelelő csapattal választható.</p>
+
+    <div class="lamp-row" aria-label="Harci besorolások jelzői">
+        <span class="kc-ranked-classification active">I.</span><span class="kc-ranked-classification active">II.</span><span class="kc-ranked-classification">III.</span><span class="kc-ranked-classification">IV.</span><span class="kc-ranked-classification">V.</span>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Besorolás</th><th>Tét</th><th>Minimum csapatszint</th><th>Csapat</th><th>Rangosztály-tartomány</th><th>Kötelező tag</th></tr></thead>
+            <tbody>
+                <tr><td>I.</td><td>{{VS_CLASSIFICATION_01_STAKE}}</td><td>{{VS_CLASSIFICATION_01_TEAM_LEVEL}}</td><td>{{VS_CLASSIFICATION_01_TEAM_SIZE}} fő</td><td>{{VS_CLASSIFICATION_01_RANK_CLASS_RANGE}}</td><td>{{VS_CLASSIFICATION_01_REQUIRED_MEMBERS}} fő</td></tr>
+                <tr><td>II.</td><td>{{VS_CLASSIFICATION_02_STAKE}}</td><td>{{VS_CLASSIFICATION_02_TEAM_LEVEL}}</td><td>{{VS_CLASSIFICATION_02_TEAM_SIZE}} fő</td><td>{{VS_CLASSIFICATION_02_RANK_CLASS_RANGE}}</td><td>{{VS_CLASSIFICATION_02_REQUIRED_MEMBERS}} fő</td></tr>
+                <tr><td>III.</td><td>{{VS_CLASSIFICATION_03_STAKE}}</td><td>{{VS_CLASSIFICATION_03_TEAM_LEVEL}}</td><td>{{VS_CLASSIFICATION_03_TEAM_SIZE}} fő</td><td>{{VS_CLASSIFICATION_03_RANK_CLASS_RANGE}}</td><td>{{VS_CLASSIFICATION_03_REQUIRED_MEMBERS}} fő</td></tr>
+                <tr><td>IV.</td><td>{{VS_CLASSIFICATION_04_STAKE}}</td><td>{{VS_CLASSIFICATION_04_TEAM_LEVEL}}</td><td>{{VS_CLASSIFICATION_04_TEAM_SIZE}} fő</td><td>{{VS_CLASSIFICATION_04_RANK_CLASS_RANGE}}</td><td>{{VS_CLASSIFICATION_04_REQUIRED_MEMBERS}} fő</td></tr>
+                <tr><td>V.</td><td>{{VS_CLASSIFICATION_05_STAKE}}</td><td>{{VS_CLASSIFICATION_05_TEAM_LEVEL}}</td><td>{{VS_CLASSIFICATION_05_TEAM_SIZE}} fő</td><td>{{VS_CLASSIFICATION_05_RANK_CLASS_RANGE}}</td><td>{{VS_CLASSIFICATION_05_REQUIRED_MEMBERS}} fő</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="notes">
+        <div class="note"><b>Harci besorolás</b><br>Az I–V. csatatér nehézségi és belépési osztálya.</div>
+        <div class="note"><b>Karakter-rangosztály</b><br>A karakter rangjából következő csoport. A „kötelező tag” oszlop mutatja, hány kiválasztott karakternek kell a megadott tartományba esnie.</div>
+    </div>
+</section>
+</body>
+</html>
