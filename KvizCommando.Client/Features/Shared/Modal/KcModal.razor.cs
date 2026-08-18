@@ -33,6 +33,9 @@ namespace KvizCommando.Client.Features.Shared.Modal
         private sealed record ScrollMetrics(
             double ScrollTop, double ScrollHeight, double ClientHeight,
             double OffsetHeight, double BoxHeight);
+        /// <summary>
+        /// Megjeleníti a modális ablakot vagy a betöltésjelzőt.
+        /// </summary>
         public async Task ShowAsync(ModalBoxVm par)
         {
             Par = par;
@@ -48,6 +51,9 @@ namespace KvizCommando.Client.Features.Shared.Modal
 
             }
         }
+        /// <summary>
+        /// Elrejti az aktuális modális ablakot.
+        /// </summary>
         public async Task HideAsync()
         {
             Par = new ModalBoxVm() with { Mode = ModalTypes.None };

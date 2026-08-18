@@ -22,7 +22,7 @@ namespace KvizCommando.Server.Services.PlayerCache
         }
 
         /// <summary>
-        /// Az összes aktív user azonosítója, akik jelenleg bent vannak a cache-ben.
+        /// Visszaadja a gyorsítótárban jelenleg aktív játékosok azonosítóit.
         /// </summary>
         public IReadOnlyCollection<int> GetActivePlayerIds()
             => _entries.Keys.ToList();
@@ -58,9 +58,9 @@ namespace KvizCommando.Server.Services.PlayerCache
             return entry;
         }
 
-        // --------------------------------------------------------
-        // GET / LOAD
-        // --------------------------------------------------------
+        /// <summary>
+        /// A játékoslock alatt visszaadja vagy adatbázisból betölti a cache-bejegyzést.
+        /// </summary>
         public async Task<CacheReadResult> GetOrLoadLockedAsync(
             int playerId,
             string sessionId,
@@ -100,6 +100,9 @@ namespace KvizCommando.Server.Services.PlayerCache
             }
         }
 
+        /// <summary>
+        /// A játékoslock alatt ellenőrzi a gyorsítótárban tárolt munkamenetet.
+        /// </summary>
         public async Task<CacheReadStatus> CheckSessionLockedAsync(
             int playerId,
             string sessionId,
@@ -121,9 +124,9 @@ namespace KvizCommando.Server.Services.PlayerCache
             }
         }
 
-        // --------------------------------------------------------
-        // Új session check
-        // --------------------------------------------------------
+        /// <summary>
+        /// A játékoslock alatt érvényesíti az új munkamenetet.
+        /// </summary>
         public async Task<bool> NewSessionCheckLockedAsync(
             int playerId,
             string sessionId,
@@ -131,8 +134,8 @@ namespace KvizCommando.Server.Services.PlayerCache
         {
             if (!_entries.TryGetValue(playerId, out var entry))
             {
-                ///
-                var Entry = await GetOrCreateEntryAsync(playerId, sessionId, ct); /// Ideiglenes
+                // A betöltés létrehozza a későbbi kérésekhez szükséges cache-bejegyzést.
+                var Entry = await GetOrCreateEntryAsync(playerId, sessionId, ct);
 
                 return false;
             }
@@ -156,6 +159,9 @@ namespace KvizCommando.Server.Services.PlayerCache
             }
         }
 
+        /// <summary>
+        /// A játékoslock alatt módosítja a játékos cache-állapotát.
+        /// </summary>
         public async Task<CacheUpdateResult> UpdatePlayerLockedAsync(
             int playerId,
             string sessionId,
@@ -181,6 +187,9 @@ namespace KvizCommando.Server.Services.PlayerCache
             }
         }
 
+        /// <summary>
+        /// A játékoslock alatt együtt módosítja a játékos- és kérdéscache állapotát.
+        /// </summary>
         public async Task<CacheUpdateResult> UpdatePlayerAndQuestionsLockedAsync(
             int playerId,
             string sessionId,
@@ -208,6 +217,9 @@ namespace KvizCommando.Server.Services.PlayerCache
             }
         }
 
+        /// <summary>
+        /// A játékoslock alatt átvezeti a szerver által hitelesített meccsjuttatást.
+        /// </summary>
         public async Task<bool> UpdateRewardPlayerLockedAsync(
             int playerId,
             string loadSessionId,
@@ -287,6 +299,9 @@ namespace KvizCommando.Server.Services.PlayerCache
                 .Length > 0;
         }
 
+        /// <summary>
+        /// A játékoslock alatt módosítja a kérdéscache állapotát.
+        /// </summary>
         public async Task<CacheUpdateResult> UpdateQuestionsLockedAsync(
             int playerId,
             string sessionId,
@@ -312,6 +327,9 @@ namespace KvizCommando.Server.Services.PlayerCache
             }
         }
 
+        /// <summary>
+        /// A játékoslock alatt átvezeti a szerver által hitelesített kérdésstatisztikát.
+        /// </summary>
         public async Task<bool> UpdateRewardQuestionsLockedAsync(
             int playerId,
             string loadSessionId,
@@ -348,9 +366,9 @@ namespace KvizCommando.Server.Services.PlayerCache
             return true;
         }
 
-        // --------------------------------------------------------
-        // Logout jelzés
-        // --------------------------------------------------------
+        /// <summary>
+        /// A játékoslock alatt kijelentkezésre jelöli a munkamenetet.
+        /// </summary>
         public async Task<CacheUpdateResult> LogoutLockedRequestAsync(
             int playerId,
             string sessionId,
@@ -383,9 +401,9 @@ namespace KvizCommando.Server.Services.PlayerCache
             }
         }
 
-        // --------------------------------------------------------
-        // Dirty mentés DB-be
-        // --------------------------------------------------------
+        /// <summary>
+        /// A játékoslock alatt tartós tárba írja a módosított játékosadatokat.
+        /// </summary>
         public async Task<(SaveResult, bool)> SaveDirtyLockedAsync(
             int playerId,
             CancellationToken ct = default)
@@ -435,6 +453,9 @@ namespace KvizCommando.Server.Services.PlayerCache
             }
         }
 
+        /// <summary>
+        /// A játékoslock alatt tartós tárba írja a módosított kérdésadatokat.
+        /// </summary>
         public async Task<int> SaveDirtyQuestionLockedAsync(
             int playerId,
             CancellationToken ct = default)

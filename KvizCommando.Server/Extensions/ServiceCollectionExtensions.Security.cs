@@ -10,11 +10,14 @@ namespace KvizCommando.Server.Infrastructure.Extensions
     /// Biztonsági/PII szolgáltatások regisztrációja.
     /// ÉLETciklusok:
     /// - IEmailLookup: Singleton (stateless + config)
-    /// - IEncryptionProvider: Singleton (dummy; élesben is jó, ha stateless)
+    /// A fejlesztési titkosítási helyettesítő singletonként, állapotmentesen működik.
     /// - IUserPiiService: Scoped (DbContext-et használ)
     /// </summary>
     public static class ServiceCollectionExtensionsSecurity
     {
+        /// <summary>
+        /// Regisztrálja a biztonsági és személyesadat-kezelési szolgáltatásokat.
+        /// </summary>
         public static IServiceCollection AddSecurityAndPii(this IServiceCollection services, IConfiguration config)
         {
             services.Configure<SecurityOptions>(config.GetSection("Security"));

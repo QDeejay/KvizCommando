@@ -6,15 +6,12 @@ using KvizCommando.Server.Identity;
 namespace KvizCommando.Server.Services.Auth
 {
     /// <summary>
-    /// „Gyári” claim-szinkron szolgáltatás: a felhasználó AspNetUserClaims rekordjaiban
-    /// tartja karban az ÁSZF elfogadáshoz kapcsolódó claim-eket (ETag + AcceptedAt).
-    /// Nem tárol PII-t; IP/UA kizárólag az audit táblában marad.
+    /// Az elfogadott ÁSZF verzióazonosítóját szinkronizálja az Identity claimjeivel.
     /// </summary>
     public interface IClaimsSyncService
     {
         /// <summary>
-        /// Upserteli a két ÁSZF-claimet (ETag + AcceptedAt) a megadott időbélyeggel,
-        /// majd – ha van HTTP-kontekstus és cookie-alapú bejelentkezés – frissíti a bejelentkezést.
+        /// Létrehozza vagy frissíti az ÁSZF verzióazonosítóját tartalmazó claimet, majd lehetőség szerint frissíti a hitelesítési cookie-t.
         /// </summary>
         /// <param name="user">Az érintett felhasználó.</param>
         /// <param name="termsEtag">Az elfogadott ÁSZF ETag/Version azonosítója.</param>
@@ -23,8 +20,7 @@ namespace KvizCommando.Server.Services.Auth
         Task UpsertTermsClaimsAsync(ApplicationUser user, string termsEtag, DateTime acceptedAtUtc, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Upserteli a két ÁSZF-claimet (ETag + AcceptedAt) a jelenlegi UTC idővel,
-        /// majd – ha van HTTP-kontekstus és cookie-alapú bejelentkezés – frissíti a bejelentkezést.
+        /// Az aktuális UTC-időponttal hozza létre vagy frissíti az ÁSZF-verziót tartalmazó claimet.
         /// </summary>
         /// <param name="user">Az érintett felhasználó.</param>
         /// <param name="termsEtag">Az elfogadott ÁSZF ETag/Version azonosítója.</param>

@@ -8,7 +8,7 @@ namespace KvizCommando.Server.Authorization
     /// </summary>
     public sealed class TermsAcceptedRequirement : IAuthorizationRequirement
     {
-        /// <summary>Az ehhez a requirementhez tartozó policy neve.</summary>
+        /// <summary>Az ÁSZF-elfogadási követelményhez tartozó jogosultsági szabály neve.</summary>
         public const string PolicyName = "RequireCurrentTerms";
     }
 }

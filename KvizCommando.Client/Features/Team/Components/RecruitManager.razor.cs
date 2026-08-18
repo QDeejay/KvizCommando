@@ -205,6 +205,9 @@ public partial class RecruitManager : IDisposable
         _picCode = string.Empty;
     }
 
+    /// <summary>
+    /// Felszabadítja a példány által használt erőforrásokat.
+    /// </summary>
     public void Dispose()
     {
         Ui.SubHeader.OnButtonClicked -= HandleSubHeaderClicked;

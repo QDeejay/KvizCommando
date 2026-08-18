@@ -90,6 +90,9 @@ public partial class Home : KcComponentBase, IDisposable
         Ui.Header.OnBackBtnClicked += UpdateBckClick;
     }
 
+    /// <summary>
+    /// Felszabadítja a példány által használt erőforrásokat.
+    /// </summary>
     public void Dispose()
     {
         Ui.Header.OnBackBtnClicked -= UpdateBckClick;

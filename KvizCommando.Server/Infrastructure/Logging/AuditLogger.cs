@@ -11,17 +11,21 @@ public class AuditLogger : IAuditLogger
 
     public AuditLogger(IWebHostEnvironment env)
     {
-        // log file helye pl. App_Data/Audit/audit.log
+        // A helyi fájl csak fejlesztési tároló; az éles naplózási követelményeket
+        // a docs/infrastructure-status.md tartalmazza.
         var logDir = Path.Combine(env.ContentRootPath, "App_Data", "Audit");
         Directory.CreateDirectory(logDir);
         _filePath = Path.Combine(logDir, "audit.log");
     }
 
+    /// <summary>
+    /// Auditbejegyzést ír a megadott eseményről.
+    /// </summary>
     public Task LogAsync(string eventName, string? userId, string? ipAddress)
     {
         var entry = new
         {
-            utcTime = DateTimeOffset.UtcNow.ToString("o"), // ISO 8601
+            utcTime = DateTimeOffset.UtcNow.ToString("o"),
             eventName,
             userId,
             ipHash = ipAddress is not null ? HashIp(ipAddress) : null

@@ -5,6 +5,9 @@ namespace KvizCommando.Server.Utilities
 {
     public static class ArrayExtension
     {
+        /// <summary>
+        /// Elemenként összead két azonos hosszúságú egész tömböt.
+        /// </summary>
         public static int[] AddTo(this int[] a, int[] b)
         {
             if (a.Length != b.Length)

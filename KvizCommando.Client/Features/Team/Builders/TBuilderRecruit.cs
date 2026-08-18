@@ -8,6 +8,9 @@ namespace KvizCommando.Client.Features.Team.Builders
     public class TBuilderRecruit
     {
         private static readonly int[] que = [1, 2, 3, 4, 5, 6, 7, 8];
+        /// <summary>
+        /// Összeállítja a toborzási képernyő nézetmodelljét.
+        /// </summary>
         public static RecruitVm BuildRecruitVm(CandidateDto candidate, int[] order, int tabpos, string culture, ILanguageService lang)
         {
             var vm = new RecruitVm() { Info = lang["team.Label.NoMember"] };

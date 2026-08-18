@@ -29,6 +29,9 @@ public sealed class SoloGameHub : Hub<ISoloGameHubClient>
         _games = games;
     }
 
+    /// <summary>
+    /// Megméri a kliens és a szerver közötti SignalR-kapcsolat válaszidejét.
+    /// </summary>
     public async Task<VsConnectionCheckResult> CheckConnection()
     {
         var responseTimeMilliseconds =
@@ -43,6 +46,9 @@ public sealed class SoloGameHub : Hub<ISoloGameHubClient>
         return result;
     }
 
+    /// <summary>
+    /// Elindítja a kért egyéni játékot.
+    /// </summary>
     public async Task<StartSoloHubResponse> StartSoloGame(
         StartSoloGameRequest request)
     {
@@ -92,6 +98,9 @@ public sealed class SoloGameHub : Hub<ISoloGameHubClient>
         };
     }
 
+    /// <summary>
+    /// Beküldi az egyéni játék válaszát.
+    /// </summary>
     public async Task<SoloHubAnswerResponse> SubmitAnswer(
         SoloAnswerDto answer)
     {
@@ -130,6 +139,9 @@ public sealed class SoloGameHub : Hub<ISoloGameHubClient>
         };
     }
 
+    /// <summary>
+    /// Megszakítja az aktuális egyéni játékot.
+    /// </summary>
     public async Task<bool> AbortSoloGame()
     {
         if (!TryGetGame(out var game))

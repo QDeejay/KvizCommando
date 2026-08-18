@@ -14,6 +14,9 @@
         public event Action? OnBackBtnClicked;
 
 
+        /// <summary>
+        /// Beállítja az oldal fejlécének címét.
+        /// </summary>
         public void SetTitle(string title, int index)
         {
             Title = title;
@@ -21,12 +24,18 @@
             OnTitleChanged?.Invoke();
         }
 
+        /// <summary>
+        /// Beállítja a vissza gomb engedélyezett állapotát.
+        /// </summary>
         public void SetBackBtnEna(bool back)
         {
             BackEna = back;
             OnBackBtnEnaChanged?.Invoke();
         }
 
+        /// <summary>
+        /// Beállítja, hogy a vissza gomb böngészőelőzmény-műveletet kezdeményezzen.
+        /// </summary>
         public void SetBackBtnToPushState()
         {
             OnBackBtnClicked?.Invoke();

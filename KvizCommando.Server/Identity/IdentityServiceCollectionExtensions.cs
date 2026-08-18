@@ -11,6 +11,9 @@ namespace KvizCommando.Server.Identity;
 
 public static class IdentityServiceCollectionExtensions
 {
+    /// <summary>
+    /// Regisztrálja és konfigurálja az alkalmazás Identity szolgáltatásait.
+    /// </summary>
     public static IServiceCollection AddCustomIdentity(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -25,24 +28,15 @@ public static class IdentityServiceCollectionExtensions
             .AddSignInManager()
             .AddDefaultTokenProviders()
             .AddApiEndpoints();
-        ///
-        /// --- Dual scheme: Cookie + Bearer ---
-        /// 1) AUTHENTICATION: Cookie (UI) + OPAQUE Bearer (desktop/mobil)
-        /// 
+        // A böngészős felület cookie-t, a mobil és asztali kliens opaque bearer tokent használhat.
         services.AddCustomAuthentication(configuration);
 
-        
-        ///
-        /// Autorizáció sémák
-        /// 
         services.AddAuthorization(options =>
         {
             options.AddPolicy("Api", p =>
                 p.AddAuthenticationSchemes(
                      IdentityConstants.ApplicationScheme,   // cookie
-                     IdentityConstants.BearerScheme
-                     // opaque bearer
-                        )
+                     IdentityConstants.BearerScheme)
                  .RequireAuthenticatedUser());
 
             options.AddPolicy(TermsAcceptedRequirement.PolicyName, p =>
@@ -54,20 +48,17 @@ public static class IdentityServiceCollectionExtensions
        .AddRequirements(new TermsAcceptedRequirement()));
         });
 
-        ///
-        /// ===== Bearer token beállítások =====
-        /// 
         services.Configure<BearerTokenOptions>(IdentityConstants.BearerScheme, options =>
         {
             options.BearerTokenExpiration = TimeSpan.FromMinutes(15);
             options.RefreshTokenExpiration = TimeSpan.FromDays(7);
         });
 
-        // A végleges GDPR export/törlés még nincs bekötve. Ez az opció most nem
-        // változtat a futáson, csak kijelöli a későbbi adatvédelmi kulcs helyét.
+        // A beállítás jelenleg csak a későbbi GDPR-folyamat bővítési pontja.
+        // A hiányzó export- és törlési lépéseket a docs/infrastructure-status.md rögzíti.
         services.Configure<PersonalDataOptions>(options =>
         {
-            options.ProtectionKeyName = null; // vagy saját provider
+            options.ProtectionKeyName = null;
         });
 
         return services;

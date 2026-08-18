@@ -1,5 +1,9 @@
 namespace KvizCommando.Shared.Models.Enums.VsGame;
 
+/// <summary>
+/// A kapcsolat szerver által meghatározott minősítése.
+/// A kliens az eredményt kizárólag megjeleníti.
+/// </summary>
 public enum VsConnectionQuality
 {
     Unknown = 0,
@@ -7,9 +11,3 @@ public enum VsConnectionQuality
     Medium = 2,
     Bad = 3
 }
-
-/**
- * A VS kapcsolat egyszeri, szerver által megállapított minősítése.
- * A kliens ezt kizárólag megjeleníti; a queue-belépésről a szerver
- * ugyanezen eredmény alapján dönt.
- */

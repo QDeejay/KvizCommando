@@ -4,5 +4,8 @@ namespace KvizCommando.Server.Infrastructure.Logging;
 
 public interface IAuditLogger
 {
+    /// <summary>
+    /// Auditbejegyzést ír a megadott eseményről.
+    /// </summary>
     Task LogAsync(string eventName, string? userId, string? ipAddress);
 }

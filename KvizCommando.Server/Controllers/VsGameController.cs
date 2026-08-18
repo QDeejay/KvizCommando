@@ -34,6 +34,9 @@ public sealed class VsGameController : ControllerBase
         _idCache = idCache;
     }
 
+    /// <summary>
+    /// Elmenti a rangsorolt játékhoz összeállított csapatot.
+    /// </summary>
     [HttpPost("battle-team")]
     [Consumes("application/json")]
     [ProducesResponseType(204)]

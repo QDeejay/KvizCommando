@@ -20,6 +20,9 @@ namespace KvizCommando.Server.Services.Db
             _GameDb = gamedb;
         }
 
+        /// <summary>
+        /// Betölti a játékos kérdésadatait az adatbázisból.
+        /// </summary>
         public async Task<CachedQuestion?> LoadQuestionsFromDbAsync(
            int playerId,
            CancellationToken ct)
@@ -43,6 +46,9 @@ namespace KvizCommando.Server.Services.Db
         }
 
         
+        /// <summary>
+        /// Elmenti a játékos módosított kérdésadatait az adatbázisba.
+        /// </summary>
         public async Task<QuestionStats> SaveQuestionsToDbAsync(
             CachedQuestion cache,
             CancellationToken ct = default)
@@ -113,7 +119,7 @@ namespace KvizCommando.Server.Services.Db
               .OrderBy(q => q.Id)
                .Take(10)
                .ToListAsync(ct);
-            // Ha kevesebb mint 10, pótoljuk új üres elemekkel
+            // A kliens mindig rögzített számú felhasználói kérdéshelyet kap.
             while (result.Count < 10)
             {
                 result.Add(new UserQuestion());
@@ -127,7 +133,7 @@ namespace KvizCommando.Server.Services.Db
               .OrderBy(q => q.Id)
                     .Take(5)
                      .ToListAsync(ct);
-            // Ha kevesebb mint 10, pótoljuk új üres elemekkel
+            // A kliens mindig rögzített számú függő kérdéshelyet kap.
             while (result.Count < 5)
             {
                 result.Add(new PendingQuestion());

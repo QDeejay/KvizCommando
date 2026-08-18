@@ -7,6 +7,9 @@ namespace KvizCommando.Server.Services.Players
 {
     public interface IPlayerService
     {
+        /// <summary>
+        /// Ellenőrzi, hogy a játékos munkamenete továbbra is érvényes-e.
+        /// </summary>
         Task<CacheReadStatus> CheckSessionAsync(
             string userId,
             string sessionId,

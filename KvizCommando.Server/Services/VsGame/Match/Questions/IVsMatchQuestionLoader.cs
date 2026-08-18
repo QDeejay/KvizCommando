@@ -2,6 +2,9 @@ namespace KvizCommando.Server.Services.VsGame.Match;
 
 public interface IVsMatchQuestionLoader
 {
+    /// <summary>
+    /// Betölti a szolgáltatás működéséhez szükséges adatokat.
+    /// </summary>
     Task<VsMatchQuestionSet> LoadAsync(
         IReadOnlyCollection<VsMatchPlayerSeed> players,
         int normalRoundCount,

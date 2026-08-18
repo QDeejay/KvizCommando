@@ -22,6 +22,9 @@ public sealed class TeamClientService : ITeamClientService
         _logger = logger;
     }
 
+    /// <summary>
+    /// Elmenti a karakter képességpontjain végzett módosítást.
+    /// </summary>
     public Task<bool> ModifySkillsAsync(
         ModifySkillRequest request,
         CancellationToken ct = default)
@@ -30,6 +33,9 @@ public sealed class TeamClientService : ITeamClientService
         return PostAsync("modify", request, ct);
     }
 
+    /// <summary>
+    /// Végrehajtja a csapaton kért kezelési műveletet.
+    /// </summary>
     public Task<bool> ManageTeamAsync(
         ManageTeamRequest request,
         CancellationToken ct = default)

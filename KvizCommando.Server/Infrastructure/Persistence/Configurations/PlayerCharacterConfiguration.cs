@@ -6,13 +6,16 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {
     public class PlayerCharactersConfiguration : IEntityTypeConfiguration<PlayerCharacter>
     {
+        /// <summary>
+        /// Beállítja az entitás EF Core leképezését és adatbázis-korlátait.
+        /// </summary>
         public void Configure(EntityTypeBuilder<PlayerCharacter> b)
         {
             b.ToTable("PlayerCharacters");
 
             b.HasKey(pc => pc.PlayerId);
 
-            // SQLite verzió – TEXT
+            // SQLite-konfiguráció
             b.Property(pc => pc.CharactersJson)
              .IsRequired()
              .HasColumnType("TEXT");
@@ -34,11 +37,11 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
                 );
             });
 
-            // SQL Server verzió
+            // SQL Server alternatíva
             // b.Property(pc => pc.CharactersJson)
             //  .IsRequired()
             //  .HasColumnType("nvarchar(max)");
-            //b.Property(pc => pc.CandidatesJson)
+            // b.Property(pc => pc.CandidatesJson)
             //  .IsRequired()
             //  .HasColumnType("nvarchar(max)");
             //

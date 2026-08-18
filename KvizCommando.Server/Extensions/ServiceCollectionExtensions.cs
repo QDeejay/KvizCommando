@@ -23,20 +23,18 @@ namespace KvizCommando.Server.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Regisztrálja az alkalmazás saját szolgáltatásait.
+    /// </summary>
     public static IServiceCollection AddCustomServices(this IServiceCollection services)
     {
-        ///
-        /// Player
-        /// 
-
+        // Játékos- és munkamenetkezelés
         services.AddScoped<IPlayerService, PlayerService>();
         services.AddSingleton<ISessionService, SessionService>();
         services.AddScoped<IPlayerCacheService, PlayerCacheService>();
         services.AddScoped<IUserPlayerIdCacheService, UserPlayerIdCacheService>();
 
-        ///
-        /// Dto services
-        /// 
+        // Képernyőadatok és játékmódok
         services.AddScoped<IScreenService, ScreenService>();
         services.AddScoped<IQuestionService, QuestionService>();
         services.AddScoped<ITeamService, TeamService>();
@@ -52,40 +50,28 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IVsMatchService, VsMatchService>();
         services.AddSingleton<IVsRankedQueueService, VsRankedQueueService>();
 
-        ///
-        /// Game database services
-        /// 
+        // Adatbázis-hozzáférés
         services.AddScoped<IQuestionDbService, QuestionDbService>();
         services.AddScoped<IPlayerDbService, PlayerDbService>();
 
-        ///
-        /// Solo game services
-        ///
+        // Az egyéni játék kérdésindexe alkalmazásszintű gyorsítótár.
         services.AddSingleton<ICategoryQuestionIndexCache, CategoryQuestionIndexCache>();
 
-        ///
-        /// Email services
-        /// 
+        // E-mail callback címek ellenőrzése
         services.AddScoped<ICallbackUrlValidator, CallbackUrlValidator>();
-        ///
-        /// services.AddScoped<IEmailLinkFactory, EmailLinkFactory>();
-        /// 
+
         services.AddScoped<ITermsProvider, TermsProvider>();
         services.AddScoped<ICheckInService, CheckInService>();
-        ///
-        /// Auth services
-        /// 
+
+        // Hitelesítés és jogosultságkezelés
         services.AddScoped<IClaimsSyncService, ClaimsSyncService>();
         services.AddScoped<IAuthorizationHandler, TermsAcceptedHandler>();
-        ///
-        /// Logging services
-        /// 
+
+        // Auditnaplózás
         services.AddScoped<IAuditLogger, AuditLogger>();
 
-        /// Ideiglenes admin szolgáltatás
-        /// 
+        // A kérdésállomány karbantartására szolgáló adminisztrációs felület.
         services.AddScoped<IAdminAppService, AdminAppService>();
-
 
         return services;
     }

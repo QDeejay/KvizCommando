@@ -42,6 +42,9 @@ namespace KvizCommando.Client.Services.Audio
             _jsRuntime = jsRuntime;
         }
 
+        /// <summary>
+        /// Beállítja a teljes hangkimenet némítását.
+        /// </summary>
         public async Task SetMutedAsync(bool muted)
         {
             IsMuted = muted;
@@ -51,6 +54,9 @@ namespace KvizCommando.Client.Services.Audio
                 muted);
         }
 
+        /// <summary>
+        /// Elindítja a megadott háttérzene lejátszását.
+        /// </summary>
         public async Task PlayMusicAsync(MusicTrack track)
         {
             if (_requestedMusic == track)
@@ -63,6 +69,9 @@ namespace KvizCommando.Client.Services.Audio
                 WithAssetVersion($"audio/music/{track}.webm"));
         }
 
+        /// <summary>
+        /// Leállítja a háttérzene lejátszását.
+        /// </summary>
         public async Task StopMusicAsync()
         {
             _requestedMusic = null;
@@ -71,6 +80,9 @@ namespace KvizCommando.Client.Services.Audio
                 "audioEngine.stopMusic");
         }
 
+        /// <summary>
+        /// Beállítja a háttérzene hangerejét.
+        /// </summary>
         public async Task SetMusicVolumeAsync(double volume)
         {
             volume = Math.Clamp(volume, 0.0, 1.0);
@@ -80,6 +92,9 @@ namespace KvizCommando.Client.Services.Audio
                 volume);
         }
 
+        /// <summary>
+        /// Lejátssza a megadott hangeffektust.
+        /// </summary>
         public async Task PlaySfxAsync(string fileName)
         {
             if (IsMuted)
@@ -91,6 +106,9 @@ namespace KvizCommando.Client.Services.Audio
                 BuildSfxPath(fileName));
         }
 
+        /// <summary>
+        /// Beállítja a hangeffektusok hangerejét.
+        /// </summary>
         public async Task SetSfxVolumeAsync(double volume)
         {
             volume = Math.Clamp(volume, 0.0, 1.0);
@@ -100,6 +118,9 @@ namespace KvizCommando.Client.Services.Audio
                 volume);
         }
 
+        /// <summary>
+        /// Leállítja az összes aktív hanglejátszást.
+        /// </summary>
         public async Task StopAllAsync()
         {
             _requestedMusic = null;

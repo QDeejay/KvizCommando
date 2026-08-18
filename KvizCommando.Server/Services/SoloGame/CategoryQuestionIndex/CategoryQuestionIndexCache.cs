@@ -18,6 +18,9 @@ public sealed class CategoryQuestionIndexCache : ICategoryQuestionIndexCache
         _scopeFactory = scopeFactory;
     }
 
+    /// <summary>
+    /// Betölti a szolgáltatás működéséhez szükséges adatokat.
+    /// </summary>
     public async Task LoadAsync(CancellationToken ct = default)
     {
         using var scope = _scopeFactory.CreateScope();
@@ -57,6 +60,9 @@ public sealed class CategoryQuestionIndexCache : ICategoryQuestionIndexCache
         LogLoadedIndex();
     }
 
+    /// <summary>
+    /// Visszaadja a megadott kategóriához indexelt kérdésazonosítókat.
+    /// </summary>
     public IReadOnlyList<int> GetQuestionIds(int categoryNo)
     {
         return _index.TryGetValue(categoryNo, out var questionIds)
@@ -64,11 +70,17 @@ public sealed class CategoryQuestionIndexCache : ICategoryQuestionIndexCache
             : Array.Empty<int>();
     }
 
+    /// <summary>
+    /// Érvényteleníti a gyorsítótárat, hogy a következő lekérés friss adatot töltsön.
+    /// </summary>
     public void Invalidate()
     {
         _invalidated = true;
     }
 
+    /// <summary>
+    /// Érvénytelenítés után újratölti a kategória-kérdésindexet.
+    /// </summary>
     public async Task ReloadIfInvalidatedAsync(CancellationToken ct = default)
     {
         if (!_invalidated)

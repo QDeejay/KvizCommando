@@ -11,16 +11,28 @@ public interface ISoloGameClientService : IAsyncDisposable
     string ErrorMessageKey { get; }
     bool IsConnected { get; }
 
+    /// <summary>
+    /// Létrehozza a SignalR-kapcsolatot, ellenőrzi annak minőségét, majd elindítja az egyéni játékot.
+    /// </summary>
     Task<StartSoloGameResponse?> StartAsync(
         StartSoloGameRequest request,
         CancellationToken ct = default);
 
+    /// <summary>
+    /// Kiértékelésre beküldi az egyéni játék válaszát.
+    /// </summary>
     Task<SoloHubAnswerResponse?> SubmitAnswerAsync(
         SoloAnswerDto answer,
         CancellationToken ct = default);
 
+    /// <summary>
+    /// Megszakítja az aktuális egyéni játékot.
+    /// </summary>
     Task<bool> AbandonAsync(
         CancellationToken ct = default);
 
+    /// <summary>
+    /// Leállítja az aktuális játékkapcsolatot.
+    /// </summary>
     Task StopAsync(CancellationToken ct = default);
 }

@@ -3,26 +3,38 @@
     public interface IPlayerCacheService
     {
 
+        /// <summary>
+        /// Visszaadja a gyorsítótárban jelenleg aktív játékosok azonosítóit.
+        /// </summary>
         IReadOnlyCollection<int> GetActivePlayerIds();
+        /// <summary>
+        /// A játékoslock alatt visszaadja vagy adatbázisból betölti a cache-bejegyzést.
+        /// </summary>
         Task<CacheReadResult> GetOrLoadLockedAsync(
             int playerId,
             string sessionId,
             CancellationToken ct = default);
 
+        /// <summary>
+        /// A játékoslock alatt ellenőrzi a gyorsítótárban tárolt munkamenetet.
+        /// </summary>
         Task<CacheReadStatus> CheckSessionLockedAsync(
             int playerId,
             string sessionId,
             CancellationToken ct = default);
 
+        /// <summary>
+        /// A játékoslock alatt érvényesíti az új munkamenetet.
+        /// </summary>
         Task<bool> NewSessionCheckLockedAsync(
             int playerId,
             string sessionId,
             CancellationToken ct = default);
 
         /// <summary>
-        /// A játékos cache-elt állapotát a saját lockja alatt módosítja.
+        /// A játékos gyorsítótárazott állapotát a saját lockja alatt módosítja.
         /// A callback null értékkel elutasíthatja a műveletet, siker esetén pedig
-        /// visszaadja a mentendő player-szegmenseket.
+        /// visszaadja a mentendő játékos-adatszegmenseket.
         /// </summary>
         Task<CacheUpdateResult> UpdatePlayerLockedAsync(
             int playerId,
@@ -32,7 +44,7 @@
 
         /// <summary>
         /// A játékos- és kérdéscache aktuális állapotát ugyanazon játékoslock
-        /// alatt adja át, miközben a módosítás player dirty flaget állít.
+        /// alatt adja át, miközben a módosítás játékos dirty jelzőt állít.
         /// </summary>
         Task<CacheUpdateResult> UpdatePlayerAndQuestionsLockedAsync(
             int playerId,
@@ -71,12 +83,21 @@
             Func<CachedPlayer, CachedQuestion, uint?> update,
             CancellationToken ct = default);
 
+        /// <summary>
+        /// A játékoslock alatt kijelentkezésre jelöli a munkamenetet.
+        /// </summary>
         Task<CacheUpdateResult> LogoutLockedRequestAsync(
             int playerId,
             string sessionId,
             CancellationToken ct = default);
+        /// <summary>
+        /// A játékoslock alatt tartós tárba írja a módosított játékosadatokat.
+        /// </summary>
         Task<(SaveResult, bool)> SaveDirtyLockedAsync(int playerId, CancellationToken ct = default);
 
+        /// <summary>
+        /// A játékoslock alatt tartós tárba írja a módosított kérdésadatokat.
+        /// </summary>
         Task<int> SaveDirtyQuestionLockedAsync(int playerId, CancellationToken ct = default);
 
     }

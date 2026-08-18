@@ -6,6 +6,9 @@ namespace KvizCommando.Server.Extensions
 {
     public static class HttpResponseExtensions
     {
+        /// <summary>
+        /// Új értesítést helyez a megjelenítési sorba.
+        /// </summary>
         public static void AddToast(this HttpResponse response, string text, ToastType type)
         {
             response.Headers[HttpHeaderNames.TOAST_TEXT] = WebUtility.UrlEncode(text); ;

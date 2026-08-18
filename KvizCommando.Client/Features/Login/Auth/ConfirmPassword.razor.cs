@@ -35,7 +35,7 @@ public partial class ConfirmPassword : KcComponentBase
         ResultMessage = string.Empty;
         successMessage = string.Empty;
 
-        // --- Password: IdentityOptions alapján teljes ellenőrzés ---
+        // A kliens ugyanazokat a jelszószabályokat ellenőrzi, amelyeket a szerver közzétesz.
         PasswordFiledSW = false;
         if (Options is not null)
         {

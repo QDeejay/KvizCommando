@@ -5,7 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 namespace KvizCommando.Server.Services.UserPlayerIdCache
 {
     /// <summary>
-    /// Az ASP.NET Identity UserId → PlayerId gyors leképezését végzi.
+    /// Az ASP.NET Identity felhasználóazonosítóját gyorsan játékosazonosítóhoz rendeli.
     /// Az adatokat 30 perc inaktivitás után automatikusan eldobja az IMemoryCache.
     /// </summary>
     public sealed class UserPlayerIdCacheService : IUserPlayerIdCacheService
@@ -27,8 +27,8 @@ namespace KvizCommando.Server.Services.UserPlayerIdCache
         }
 
         /// <summary>
-        /// Visszaadja a PlayerId-t az adott ASP.NET Identity UserId-hez.
-        /// Ha nincs cache-ben, adatbázisból tölti be és 30 perces élettartammal eltárolja.
+        /// Visszaadja az ASP.NET Identity felhasználóazonosítójához tartozó játékosazonosítót.
+        /// Hiányzó érték esetén adatbázisból tölt, majd 30 percre gyorsítótáraz.
         /// </summary>
         public async Task<int?> GetPlayerIdAsync(string userId, CancellationToken ct = default)
         {
@@ -56,7 +56,7 @@ namespace KvizCommando.Server.Services.UserPlayerIdCache
         }
 
         /// <summary>
-        /// Eltávolítja a cache-ből a megadott UserId-hez tartozó PlayerId-t (pl. kijelentkezéskor).
+        /// Eltávolítja a megadott felhasználó játékosazonosítóját a gyorsítótárból.
         /// </summary>
         public void Invalidate(string userId)
         {
@@ -65,7 +65,7 @@ namespace KvizCommando.Server.Services.UserPlayerIdCache
         }
 
         /// <summary>
-        /// Teljes cache ürítése (pl. admin flush vagy maintenance során).
+        /// Kiüríti a teljes felhasználó–játékos leképezési gyorsítótárat.
         /// </summary>
         public void Clear()
         {

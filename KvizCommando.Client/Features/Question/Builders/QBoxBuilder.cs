@@ -12,6 +12,9 @@ public static class QBoxBuilder
     public static readonly string[] SubPend = [QBoxKeyContent.PendigSlots.ToString()];
     public static readonly string[] SubNew = [QBoxKeyContent.NewSlot.ToString()];
 
+    /// <summary>
+    /// Összeállítja a képernyő tartalmi dobozait.
+    /// </summary>
     public static Dictionary<string, ContentBoxVm> BuildBoxes(
         QuestionExtendedInfo questionInfo,
         ILanguageService lang)

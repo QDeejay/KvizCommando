@@ -7,6 +7,9 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {
     public class PendingQuestionConfiguration : IEntityTypeConfiguration<PendingQuestion>
     {
+        /// <summary>
+        /// Beállítja az entitás EF Core leképezését és adatbázis-korlátait.
+        /// </summary>
         public void Configure(EntityTypeBuilder<PendingQuestion> builder)
         {
             builder.HasKey(u => u.Id);

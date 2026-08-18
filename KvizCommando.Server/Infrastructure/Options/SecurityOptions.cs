@@ -5,10 +5,10 @@
     /// </summary>
     public class SecurityOptions
     {
-        /// <summary>Pepper a normált e-mail hash-hez. (Key Vault-ban lesz élesben.)</summary>
+        /// <summary>A normalizált e-mail-hash alkalmazásszintű titkos kiegészítője.</summary>
         public string EmailHashPepper { get; set; } = "";
 
-        /// <summary>Always Encrypted használata SQL Serveren (Column Encryption Setting).</summary>
+        /// <summary>Az SQL Server Always Encrypted támogatásának kapcsolója.</summary>
         public bool EnableAlwaysEncrypted { get; set; } = false;
     }
 }

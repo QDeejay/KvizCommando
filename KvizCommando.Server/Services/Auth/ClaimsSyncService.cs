@@ -12,9 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace KvizCommando.Server.Services.Auth
 {
     /// <summary>
-    /// Claim-szinkron: UserManager API-val upsertel az AspNetUserClaims táblába
-    /// (csak a terms.accepted.etag-et), majd – ha van HTTP-kontekstus – 
-    /// RefreshSignInAsync-kel frissíti a cookie-t.
+    /// Az ÁSZF-verzióhoz tartozó claimet szinkronizálja az Identity-adattárral és a hitelesítési cookie-val.
     /// </summary>
     internal sealed class ClaimsSyncService : IClaimsSyncService
     {
@@ -35,9 +33,15 @@ namespace KvizCommando.Server.Services.Auth
             _logger = logger;
         }
 
+        /// <summary>
+        /// Az aktuális időponttal létrehozza vagy frissíti az ÁSZF-elfogadási claimet.
+        /// </summary>
         public Task UpsertTermsClaimsNowAsync(ApplicationUser user, string termsEtag, CancellationToken cancellationToken = default)
             => UpsertTermsClaimsAsync(user, termsEtag, DateTime.UtcNow, cancellationToken);
 
+        /// <summary>
+        /// Létrehozza vagy frissíti a felhasználó ÁSZF-elfogadási claimjeit.
+        /// </summary>
         public async Task UpsertTermsClaimsAsync(ApplicationUser user, string termsEtag, DateTime acceptedAtUtc, CancellationToken cancellationToken = default)
         {
             if (user is null) throw new ArgumentNullException(nameof(user));
@@ -45,10 +49,8 @@ namespace KvizCommando.Server.Services.Auth
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            // Jelenlegi claim-ek kiolvasása
             var claims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
 
-            // Meglévő claim felkutatása LINQ nélkül (nem használunk FirstOrDefault-ot)
             Claim? existingEtag = null;
             foreach (var c in claims)
             {
@@ -59,10 +61,9 @@ namespace KvizCommando.Server.Services.Auth
                 }
             }
 
-            // Új cél-claim objektum
             var newEtag = new Claim(CustomClaimTypes.TermsAcceptedEtag, termsEtag);
 
-            // Idempotens upsert: csak akkor írunk, ha változott
+            // A változatlan claimet nem írjuk újra, így a biztonsági bélyeg sem módosul feleslegesen.
             bool changed = false;
 
             if (existingEtag is null)
@@ -78,7 +79,6 @@ namespace KvizCommando.Server.Services.Auth
                 changed = true;
             }
 
-            // Ha történt változás és van HTTP-kontekstus (cookie-auth), frissítjük a bejelentkezést
             if (changed && _httpContextAccessor.HttpContext is not null)
             {
                 try
@@ -87,7 +87,7 @@ namespace KvizCommando.Server.Services.Auth
                 }
                 catch (Exception ex)
                 {
-                    // Bearer/opaque tokenes hívásoknál itt jellemzően nincs HttpContext cookie-hoz → nem hiba.
+                    // Bearer-tokenes kérésnél nincs frissíthető hitelesítési cookie; ez nem teszi sikertelenné a claim mentését.
                     _logger.LogDebug(ex, "ClaimsSync: RefreshSignIn kihagyva (nincs cookie-környezet vagy más ok).");
                 }
             }
@@ -97,7 +97,6 @@ namespace KvizCommando.Server.Services.Auth
         {
             if (result.Succeeded) return;
 
-            // Összefűzzük a hibákat egyetlen kivételbe – professzionális, nem nyeli el a hibát
             var msg = $"Identity {operation} failed: {string.Join("; ", result.Errors)}";
             throw new InvalidOperationException(msg);
         }

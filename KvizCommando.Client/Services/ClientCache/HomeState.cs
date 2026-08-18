@@ -20,6 +20,9 @@ namespace KvizCommando.Client.Services.ClientCache
         public HomeExtendedInfo? ExtendedInfo => _snapshot?.ExtendedInfo;
         
 
+        /// <summary>
+        /// Szükség esetén betölti a képernyő aktuális állapotát.
+        /// </summary>
         public async Task EnsureLoadedAsync()
         {
             if (IsLoaded) return;
@@ -33,6 +36,9 @@ namespace KvizCommando.Client.Services.ClientCache
             finally { _gate.Release(); }
         }
 
+        /// <summary>
+        /// Friss adatot tölt a képernyő gyorsítótárába.
+        /// </summary>
         public async Task RefreshAsync()
         {
             await _gate.WaitAsync();
@@ -44,8 +50,14 @@ namespace KvizCommando.Client.Services.ClientCache
             finally { _gate.Release(); }
         }
 
+        /// <summary>
+        /// Érvényteleníti a gyorsítótárat, hogy a következő lekérés friss adatot töltsön.
+        /// </summary>
         public void Invalidate() => _dirty = true;
 
+        /// <summary>
+        /// Törli a szolgáltatásban tárolt aktuális állapotot.
+        /// </summary>
         public void Clear()
         {
             _snapshot = null;

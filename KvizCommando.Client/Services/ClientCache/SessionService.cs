@@ -8,6 +8,9 @@
 
         public bool HasSession => !string.IsNullOrWhiteSpace(SessionId);
 
+        /// <summary>
+        /// Törli a szolgáltatásban tárolt aktuális állapotot.
+        /// </summary>
         public void Clear()
         {
             SessionId = null;

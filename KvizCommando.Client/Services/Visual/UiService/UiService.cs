@@ -17,12 +17,14 @@ namespace KvizCommando.Client.Services.Visual.UiService
 
         public event Func<ReqStates[], Task>? ReloadRequested;
 
+        /// <summary>
+        /// Kéri a megadott alkalmazásállapotok újratöltését.
+        /// </summary>
         public Task ReloadAsync(params ReqStates[] reqTypes)
             => ReloadRequested?.Invoke(reqTypes) ?? Task.CompletedTask;
         public UiServices(
             ModalService modal,
             ToastService toast,
-            //LoaderService loader,
             PageHeaderService header,
             SubHeaderService subHeader,
             IDisplayMessageState headDisplay,

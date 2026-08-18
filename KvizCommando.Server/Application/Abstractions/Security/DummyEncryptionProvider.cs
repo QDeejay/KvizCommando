@@ -5,20 +5,27 @@ using KvizCommando.Server.Application.Abstractions.Security;
 namespace KvizCommando.Server.Application.Security
 {
     /// <summary>
-    /// DUMMY: nem valódi titkosítás. Csak Base64 + fix Nonce/Tag, hogy a mezők kitöltve legyenek.
-    /// Éles váltáskor ezt cseréled AES-GCM implementációra.
+    /// Fejlesztési helyettesítő, amely Base64-kódolással tölti ki a titkosított adat mezőit.
+    /// Nem nyújt bizalmasságot, ezért valós személyes adat kezelésére nem használható.
+    /// Az éles megoldás követelményeit a docs/infrastructure-status.md tartalmazza.
     /// </summary>
     public class DummyEncryptionProvider : IEncryptionProvider
     {
-        private static readonly byte[] DummyNonce = new byte[12]; // 12 byte
-        private static readonly byte[] DummyTag = new byte[16];   // 16 byte
+        private static readonly byte[] DummyNonce = new byte[12];
+        private static readonly byte[] DummyTag = new byte[16];
 
+        /// <summary>
+        /// A fejlesztési tárolási formára alakítja a megadott szöveget.
+        /// </summary>
         public (byte[] Cipher, byte[] Nonce, byte[] Tag) Encrypt(string plain)
         {
             var cipher = Encoding.UTF8.GetBytes(Convert.ToBase64String(Encoding.UTF8.GetBytes(plain)));
             return (cipher, DummyNonce, DummyTag);
         }
 
+        /// <summary>
+        /// Visszaalakítja a fejlesztési kódolással tárolt értéket.
+        /// </summary>
         public string Decrypt(byte[] cipher, byte[] nonce, byte[] tag)
         {
             var b64 = Encoding.UTF8.GetString(cipher);

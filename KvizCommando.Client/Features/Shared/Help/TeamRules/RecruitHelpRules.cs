@@ -6,6 +6,9 @@ namespace KvizCommando.Client.Features.Shared.Help.TeamHelpRules;
 
 public static class RecruitHelpRules
 {
+    /// <summary>
+    /// Összeállítja a súgószöveg dinamikus helyettesítési értékeit.
+    /// </summary>
     public static IReadOnlyDictionary<string, string> BuildTokens(
         AppState appStates)
     {

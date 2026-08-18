@@ -19,10 +19,15 @@ namespace KvizCommando.Client.Services.Visual
             }
             return opts;
         }
+        /// <summary>
+        /// Visszaadja az összes választható kategóriát.
+        /// </summary>
         public IReadOnlyList<CategoryOption> GetAll()  => _options;
+        /// <summary>
+        /// Visszaadja a kategóriakód lokalizált feliratát.
+        /// </summary>
         public string ResolveLabel(int code, string culture)
         {
-            // Nincs FirstOrDefault: kézi keresés
             for (var i = 0; i < _options.Count; i++)
             {
                 
@@ -30,13 +35,15 @@ namespace KvizCommando.Client.Services.Visual
                 {
                     "hu" => _options[i].LabelHu,
                     "en" => _options[i].LabelEn,
-                    //"de" => row.ShortDe,
                     _ => throw new ArgumentOutOfRangeException(nameof(culture))
                 }; 
             }
             return $"Ismeretlen ({code})";
         }
 
+        /// <summary>
+        /// Megkísérli feloldani a kategóriakód lokalizált feliratát.
+        /// </summary>
         public bool TryResolveLabel(int code, out string label, string culture)
         {
             for (var i = 0; i < _options.Count; i++)
@@ -47,7 +54,6 @@ namespace KvizCommando.Client.Services.Visual
                     {
                         "hu" => _options[i].LabelHu,
                         "en" => _options[i].LabelEn,
-                        //"de" => row.ShortDe,
                         _ => throw new ArgumentOutOfRangeException(nameof(culture))
                     };
                     return true;

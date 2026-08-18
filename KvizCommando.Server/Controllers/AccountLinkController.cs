@@ -7,7 +7,7 @@ namespace KvizCommando.Server.Controllers;
 
 [ApiController]
 [Route("api/account")]
-[Authorize(Policy = "Api")]  // policy-séma szerint
+[Authorize(Policy = "Api")]
 public sealed class AccountLinkController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
@@ -17,7 +17,9 @@ public sealed class AccountLinkController : ControllerBase
         _userManager = userManager;
     }
 
-    // 3) Játékból indított unlink — aktuális felhasználótól leválasztja a Facebookot
+    /// <summary>
+    /// Leválasztja a Facebook-bejelentkezést az aktuális felhasználóról.
+    /// </summary>
     [HttpPost("unlink/facebook")]
     public async Task<IActionResult> UnlinkFacebookAsync()
     {
@@ -28,17 +30,14 @@ public sealed class AccountLinkController : ControllerBase
         var fb = logins.FirstOrDefault(l => l.LoginProvider == "Facebook");
         if (fb is null) return NotFound(new { error = "no_facebook_link" });
 
-        // Login leválasztása
         var rmLogin = await _userManager.RemoveLoginAsync(user, fb.LoginProvider, fb.ProviderKey);
         if (!rmLogin.Succeeded)
             return Problem("remove_login_failed", statusCode: 500);
 
-        // Tokenek törlése (gyári kulcsok)
+        // A szolgáltatói tokenek a leválasztott bejelentkezéssel együtt érvényüket vesztik.
         await _userManager.RemoveAuthenticationTokenAsync(user, "Facebook", "access_token");
         await _userManager.RemoveAuthenticationTokenAsync(user, "Facebook", "expires_at");
         await _userManager.RemoveAuthenticationTokenAsync(user, "Facebook", "token_type");
-
-        // (Opcionális) ha ez volt az utolsó belépési mód és nincs jelszó, itt jelezhetsz a kliensnek
 
         return Ok(new { status = "ok" });
     }

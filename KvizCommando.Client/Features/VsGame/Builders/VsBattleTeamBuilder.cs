@@ -18,6 +18,9 @@ public sealed class VsBattleTeamBuilder
         _lang = lang;
     }
 
+    /// <summary>
+    /// Összeállítja a bemeneti adatokhoz tartozó megjelenítési modellt.
+    /// </summary>
     public VsBattleTeamVm Build(
         VsGameDtos data,
         IReadOnlyCollection<int> selectedSlots,

@@ -31,6 +31,9 @@ namespace KvizCommando.Server.Services.DtoMapping
             _env = env;
         }
 
+        /// <summary>
+        /// Lekéri a kezdőképernyő megjelenítéséhez szükséges adatokat.
+        /// </summary>
         public async Task<HomeDTOs?> GetHomeScreenAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
 
@@ -52,11 +55,10 @@ namespace KvizCommando.Server.Services.DtoMapping
             var url = Path.Combine(_env.WebRootPath, "BulletinBoard", culture, "bb.html");
 
             var dt = File.GetLastWriteTimeUtc(url);
-            // --- Karakterek számlálása egy passzban, null-safe ---
+            // A darabszámok ugyanabból a karakterpillanatképből készülnek.
             int characterCount = 0;
             int activeChars = 0;
 
-            // ha a collection null lehet, kezeljük
             var charValues = player.Characters;
             if (charValues is not null)
             {
@@ -77,9 +79,6 @@ namespace KvizCommando.Server.Services.DtoMapping
 
             var nextLevelXp = RankRewards.List[player.Core.RankEnum].NextLevelTeam;
 
-            // 
-            //  Place holder itt majd lesz db lekérés 
-            // 
             var extendedInfo = new HomeExtendedInfo
             {
                 LastInfo = dt,
@@ -88,6 +87,8 @@ namespace KvizCommando.Server.Services.DtoMapping
 
             var homeScreen = new HomeScreen
             {
+                // A még nem implementált modulok gombjai tiltottak; a hozzájuk tartozó
+                // számlálók jelenleg kizárólag a felület statikus helykitöltő adatai.
                 NavBarEnable = true,
                 Team = new ScreenButtonEntity
                 {
@@ -125,18 +126,18 @@ namespace KvizCommando.Server.Services.DtoMapping
                 {
                     Enable = false,
                     FooterData1 = 5,
-                    FooterData2 = 3  // TODO
+                    FooterData2 = 3
                 },
                 Ranking = new ScreenButtonEntity
                 {
                     Enable = false,
-                    FooterData1 = 9 // TODO
+                    FooterData1 = 9
                 },
                 Events = new ScreenButtonEntity
                 {
-                    Enable = false,     // ← korábban kétszer állítottad (true majd false)
-                    FooterData1 = 99,   // TODO
-                    FooterData2 = 8     // TODO
+                    Enable = false,
+                    FooterData1 = 99,
+                    FooterData2 = 8
                 },
                 InfoBoard = new ScreenButtonEntity
                 {
@@ -145,8 +146,6 @@ namespace KvizCommando.Server.Services.DtoMapping
 
             };
 
-            // FIGYELEM: ha nem akarod visszaadni a cache-ben lévő referenciát,
-            // másold át külön DTO-ba a UserMainData-t.
             var userMain = new UserMainData
             {
                 PlayerId = playerId,
@@ -166,6 +165,9 @@ namespace KvizCommando.Server.Services.DtoMapping
             };
         }
 
+        /// <summary>
+        /// Lekéri az egyéni játék választóképernyőjének adatait.
+        /// </summary>
         public async Task<SoloGameDtos?> GetSoloGameScreenAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
             var cacheResult = await _cache.GetOrLoadLockedAsync(
@@ -223,6 +225,9 @@ namespace KvizCommando.Server.Services.DtoMapping
 
         }
 
+        /// <summary>
+        /// Lekéri a többjátékos mód választóképernyőjének adatait.
+        /// </summary>
         public async Task<VsGameDtos?> GetVsGameScreenAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
             var cacheResult = await _cache.GetOrLoadLockedAsync(
@@ -361,9 +366,6 @@ namespace KvizCommando.Server.Services.DtoMapping
             };
         }
 
-        /// <summary>
-        /// Itt vanna az osztály privát helperei
-        /// </summary>
         private static ResultDto[] GetCatResultFromCache(List<PlayerCategoryStat> data)
         {
             int ix;

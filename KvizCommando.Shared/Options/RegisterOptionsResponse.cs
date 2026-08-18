@@ -9,7 +9,7 @@ namespace KvizCommando.Shared.Options
    
         public class RegisterOptionsResponse
         {
-            // Password policy
+            // Jelszóházirend
             public int RequiredLength { get; set; }
             public bool RequireNonAlphanumeric { get; set; }
             public bool RequireDigit { get; set; }
@@ -17,14 +17,14 @@ namespace KvizCommando.Shared.Options
             public bool RequireUppercase { get; set; }
             public int RequiredUniqueChars { get; set; }
 
-            // User policy
+            // Felhasználói fiók
             public bool RequireUniqueEmail { get; set; }
 
-            // SignIn policy
+            // Bejelentkezési követelmények
             public bool RequireConfirmedEmail { get; set; }
             public bool RequireConfirmedAccount { get; set; }
 
-            // Custom rules
+            // Alkalmazásspecifikus szabályok
             public int DisplayNameMaxLength { get; set; }
             public int DisplayNameMinLength { get; set; }
 

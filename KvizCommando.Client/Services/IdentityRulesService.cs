@@ -11,7 +11,7 @@ public class IdentityRulesService
     private readonly IJSRuntime _js;
 
     private const string StorageKey = "identity-options";
-    private RegisterOptionsResponse? _rules; // memória cache
+    private RegisterOptionsResponse? _rules;
 
     public IdentityRulesService(HttpClient http, IJSRuntime js)
     {
@@ -19,13 +19,15 @@ public class IdentityRulesService
         _js = js;
     }
 
+    /// <summary>
+    /// Lekéri az Identity aktuális regisztrációs szabályait.
+    /// </summary>
     public async Task<RegisterOptionsResponse> GetRulesAsync()
     {
-        // ha memóriában van
         if (_rules != null)
             return _rules;
 
-        // sessionStorage check
+        // A sessionStorage böngészőfrissítés után is megőrzi az egyszer már lekért szabályokat.
         var stored = await _js.InvokeAsync<string?>("sessionStorage.getItem", StorageKey);
         if (!string.IsNullOrEmpty(stored))
         {
@@ -33,12 +35,10 @@ public class IdentityRulesService
             return _rules;
         }
 
-        // ha nincs: API hívás
         var rules = await _http.GetFromJsonAsync<RegisterOptionsResponse>("api/auth/options");
         if (rules == null)
             throw new InvalidOperationException("Nem sikerült lekérni az IdentityOptions beállításokat.");
 
-        // betesszük storage-ba
         var json = JsonSerializer.Serialize(rules);
         await _js.InvokeVoidAsync("sessionStorage.setItem", StorageKey, json);
 

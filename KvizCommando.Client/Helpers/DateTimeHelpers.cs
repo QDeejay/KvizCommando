@@ -2,6 +2,9 @@
 {
     public static class DateTimeHelpers
     {
+        /// <summary>
+        /// Kiszámítja a célidőpontig hátralévő teljes órákat és perceket.
+        /// </summary>
         public static void GetTimeLeft(DateTime utcTarget, out int hours, out int minutes)
         {
             DateTime utcNow = DateTime.UtcNow;

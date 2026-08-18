@@ -15,9 +15,12 @@ namespace KvizCommando.Server.Endpoints;
 
 public static class FacebookAuthEndpoints
 {
+    /// <summary>
+    /// Regisztrálja a Facebook-hitelesítés végpontjait.
+    /// </summary>
     public static IEndpointRouteBuilder MapFacebookAuthEndpoints(this IEndpointRouteBuilder app)
     {
-        // 1) Login indítás → Facebook redirect
+        // A külső szolgáltató callbackje a befejező végpontra tér vissza.
         app.MapGet("/login/facebook", async (
              SignInManager<ApplicationUser> signInManager,
              HttpContext ctx) =>
@@ -26,8 +29,6 @@ public static class FacebookAuthEndpoints
                 .ConfigureExternalAuthenticationProperties("Facebook", "/finished");
             await ctx.ChallengeAsync("Facebook", props);
         });
-        // 2) Finish → gyári info + token perzisztálás AspNetUserTokens táblába
-        // 2) Callback – mind a 4 fő eset korrekt lekezelése + token persist
         app.MapGet("/finished", async (
                 SignInManager<ApplicationUser> signInManager,
                 UserManager<ApplicationUser> userManager,
@@ -38,8 +39,8 @@ public static class FacebookAuthEndpoints
             var uriReturn = $"/checkin?name={Uri.EscapeDataString("OK")}";
             if (!string.IsNullOrEmpty(qs) && qs.Contains("error=", StringComparison.OrdinalIgnoreCase))
             {
-                await ctx.SignOutAsync(IdentityConstants.ExternalScheme); // takarítás
-                return Results.Redirect("/" + qs); // egy az egyben továbbadjuk
+                await ctx.SignOutAsync(IdentityConstants.ExternalScheme);
+                return Results.Redirect("/" + qs);
             }
 
 
@@ -47,10 +48,9 @@ public static class FacebookAuthEndpoints
             if (info == null)
                 return Results.Redirect("/?error=NoInfo");
 
-            // (A) Már van ilyen külső login → user megvan
             var user = await userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
 
-            // (B) Ha nincs, próbáljuk e-mail alapján (linkelés vagy új user)
+            // Meglévő e-mail-cím esetén a külső azonosító a már létező fiókhoz kapcsolódik.
             if (user == null)
             {
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email)
@@ -63,7 +63,8 @@ public static class FacebookAuthEndpoints
                     {
                         UserName = email,
                         Email = email,
-                        // Dev-barát: külső login esetén megerősítettnek tekintjük (ha prod-ban nem akarod, vedd ki)
+                        // A külső szolgáltató által átadott e-mail-cím jelenleg megerősítettnek minősül.
+                        // A bizalmi szint megváltoztatása regisztrációs és fiók-összekapcsolási döntés is.
                         EmailConfirmed = true
                     };
                     var cr = await userManager.CreateAsync(user);
@@ -79,7 +80,7 @@ public static class FacebookAuthEndpoints
                     return Results.Redirect("/?error=LinkFailed");
             }
 
-            // (opcionális, de rövid és hasznos): ha Confirmed kötelező és az e-mail egyezik, erősítsük meg
+            // Csak a fiók e-mail-címével pontosan egyező külső claim igazolhatja a címet.
             if (!user.EmailConfirmed)
             {
                 var claimEmail = info.Principal.FindFirstValue(ClaimTypes.Email);
@@ -92,15 +93,14 @@ public static class FacebookAuthEndpoints
             }
 
             await signInManager.SignInAsync(user, isPersistent: false);
-            await signInManager.UpdateExternalAuthenticationTokensAsync(info); // access_token, expires_at → AspNetUserTokens
-            await ctx.SignOutAsync(IdentityConstants.ExternalScheme);          // external cookie takarítás
+            await signInManager.UpdateExternalAuthenticationTokensAsync(info);
+            await ctx.SignOutAsync(IdentityConstants.ExternalScheme);
            
 
 
             return Results.Redirect(uriReturn);
         });
-        // 3) Facebook DEAUTHORIZE callback — user app-eltávolítás: link + token törlés
-        // FB: POST form 'signed_request'; válasz: 200 OK elég. (Meta: Deauthorize)
+        // Az alkalmazás eltávolításakor a külső bejelentkezés és minden Facebook-token törlendő.
         app.MapPost("/facebook/deauthorize", async (
             [FromForm] string signed_request,
             IConfiguration config,
@@ -132,8 +132,7 @@ public static class FacebookAuthEndpoints
             return Results.Ok(new { status = "ok" });
         }).AllowAnonymous();
 
-        // 4) Facebook DATA DELETION callback — FB elvárása: { url, confirmation_code } JSON
-        // (Meta: Data Deletion Callback)
+        // A Meta adateltávolítási callbackje visszakövethető állapotcímet és megerősítő kódot vár.
         app.MapPost("/facebook/deletion", (
             HttpContext ctx,
             [FromForm] string signed_request,
@@ -158,8 +157,6 @@ public static class FacebookAuthEndpoints
         return app;
     }
 
-    // --- Helpers (Facebook 'signed_request' HMAC-SHA256 + base64url) ---
-
     private static bool TryVerifyAndDecodeSignedRequest(string signedRequest, string appSecret, out JsonElement payload)
     {
         payload = default;
@@ -178,7 +175,8 @@ public static class FacebookAuthEndpoints
         try
         {
             using var doc = JsonDocument.Parse(payloadBytes);
-            payload = doc.RootElement.Clone(); // detach az eldobás előtt
+            // A klónozás leválasztja az eredményt a metódus végén felszabaduló dokumentumról.
+            payload = doc.RootElement.Clone();
             return true;
         }
         catch

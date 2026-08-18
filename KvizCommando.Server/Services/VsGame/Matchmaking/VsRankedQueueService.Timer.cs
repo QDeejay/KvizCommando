@@ -167,6 +167,9 @@ public sealed partial class VsRankedQueueService
             CancellationToken.None);
     }
 
+    /// <summary>
+    /// Aszinkron módon felszabadítja a példány által használt erőforrásokat.
+    /// </summary>
     public async ValueTask DisposeAsync()
     {
         _lifetimeCts.Cancel();

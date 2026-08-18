@@ -21,6 +21,9 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
         _questionIndex = questionIndex;
     }
 
+    /// <summary>
+    /// Betölti a szolgáltatás működéséhez szükséges adatokat.
+    /// </summary>
     public async Task<VsMatchQuestionSet> LoadAsync(
             IReadOnlyCollection<VsMatchPlayerSeed> players,
             int normalRoundCount,

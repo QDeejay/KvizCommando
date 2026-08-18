@@ -25,6 +25,9 @@ namespace KvizCommando.Server.Services.DtoMapping
             _logger = logger;
         }
 
+        /// <summary>
+        /// Elmenti a gyári kérdéshelyek összeállítását.
+        /// </summary>
         public async Task<CacheUpdateResult> SaveFactorySlotsAsync(int playerId, SaveFactoryRequest dto, CancellationToken ct)
         {
             return await _cache.UpdatePlayerAndQuestionsLockedAsync(
@@ -91,6 +94,9 @@ namespace KvizCommando.Server.Services.DtoMapping
                 ct);
         }
 
+        /// <summary>
+        /// Végrehajtja a kérdéshelyeken kért kezelési műveletet.
+        /// </summary>
         public async Task<CacheUpdateResult> ManageSlotsAsync(int playerId, ManageSlotRequest dto, CancellationToken ct)
         {
             return await _cache.UpdateQuestionsLockedAsync(
@@ -210,6 +216,9 @@ namespace KvizCommando.Server.Services.DtoMapping
                 ct);
         }
 
+        /// <summary>
+        /// Beküldi az új felhasználói kérdést ellenőrzésre.
+        /// </summary>
         public async Task<CacheUpdateResult> SendNewQuestionAsync(int playerId, NewQuestionRequest dto, CancellationToken ct)
         {
             return await _cache.UpdateQuestionsLockedAsync(
@@ -275,6 +284,9 @@ namespace KvizCommando.Server.Services.DtoMapping
                 ct);
         }
 
+        /// <summary>
+        /// Lekéri a kérdéskezelő képernyő megjelenítési adatait.
+        /// </summary>
         public async Task<QuestionDtos?> GetQuestionScreenAsync(int playerId, string sessionId, CancellationToken ct = default)
         {
             var cacheResult = await _cache.GetOrLoadLockedAsync(

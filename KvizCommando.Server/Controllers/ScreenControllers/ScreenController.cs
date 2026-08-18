@@ -22,6 +22,9 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
         }
 
 
+        /// <summary>
+        /// Lekéri a kezdőképernyő megjelenítéséhez szükséges adatokat.
+        /// </summary>
         [HttpGet("home")]
         [ProducesResponseType(typeof(HomeDTOs), 200)]
         [ProducesResponseType(401)]
@@ -47,6 +50,9 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
             return Ok(dto);
         }
 
+        /// <summary>
+        /// Lekéri az egyéni játék választóképernyőjének adatait.
+        /// </summary>
         [HttpGet("sologame")]
         [ProducesResponseType(typeof(SoloGameDtos), 200)]
         [ProducesResponseType(401)]
@@ -68,6 +74,9 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
             return Ok(dto);
         }
 
+        /// <summary>
+        /// Lekéri a többjátékos mód választóképernyőjének adatait.
+        /// </summary>
         [HttpGet("vsgame")]
         [ProducesResponseType(typeof(VsGameDtos), 200)]
         [ProducesResponseType(401)]

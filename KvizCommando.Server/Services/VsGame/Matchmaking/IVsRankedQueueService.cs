@@ -5,8 +5,14 @@ namespace KvizCommando.Server.Services.VsGame.Matchmaking;
 
 public interface IVsRankedQueueService
 {
+    /// <summary>
+    /// Visszaadja a rangsorolt várólistákhoz csatlakozott játékosok számát.
+    /// </summary>
     IReadOnlyDictionary<int, int> GetConnectedPlayerCounts();
 
+    /// <summary>
+    /// Belépteti a játékost a kiválasztott rangsorolt várólistába.
+    /// </summary>
     Task<VsQueueJoinResult> JoinAsync(
         int playerId,
         string sessionId,
@@ -16,14 +22,23 @@ public interface IVsRankedQueueService
         VsConnectionQuality connectionQuality,
         CancellationToken ct = default);
 
+    /// <summary>
+    /// Eltávolítja a játékost a rangsorolt várólistából.
+    /// </summary>
     Task<VsQueueLeaveStatus> LeaveAsync(
         string connectionId,
         CancellationToken ct = default);
 
+    /// <summary>
+    /// Feldolgozza a klienskapcsolat megszakadását.
+    /// </summary>
     Task DisconnectAsync(
         string connectionId,
         CancellationToken ct = default);
 
+    /// <summary>
+    /// Eltávolítja a játékost a várólistából vagy a hozzá tartozó meccsből.
+    /// </summary>
     Task LeavePlayerAsync(
         int playerId,
         CancellationToken ct = default);

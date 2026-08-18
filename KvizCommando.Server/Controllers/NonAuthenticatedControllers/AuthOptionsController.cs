@@ -19,6 +19,9 @@ public class AuthOptionsController : ControllerBase
         _options = options.Value;
     }
 
+    /// <summary>
+    /// Visszaadja a regisztráció és beléptetés kliensoldali szabályait.
+    /// </summary>
     [HttpGet]
     public ActionResult<RegisterOptionsResponse> GetOptions()
     {

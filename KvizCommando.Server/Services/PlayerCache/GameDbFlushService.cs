@@ -13,6 +13,9 @@ namespace KvizCommando.Server.Services.PlayerCache
             _scopeFactory = scopeFactory;
         }
 
+        /// <summary>
+        /// A megadott játékosok módosított cache-adatait tartós tárba írja.
+        /// </summary>
         public async Task FlushAsync(
             int[] playerIds,
             CancellationToken ct = default)

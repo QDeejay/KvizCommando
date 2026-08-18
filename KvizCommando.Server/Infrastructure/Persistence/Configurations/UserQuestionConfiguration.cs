@@ -6,22 +6,25 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {
     public class UserQuestionConfiguration : IEntityTypeConfiguration<UserQuestion>
     {
+        /// <summary>
+        /// Beállítja az entitás EF Core leképezését és adatbázis-korlátait.
+        /// </summary>
         public void Configure(EntityTypeBuilder<UserQuestion> builder)
         {
             builder.HasKey(u => u.Id);
 
-            // PlayerId index kereséshez
+            // A játékoshoz tartozó kérdések lekérdezését külön index támogatja.
             builder.HasIndex(u => u.PlayerId);
 
-            // Számított oszlop konfiguráció
+            // SQLite alatt a REAL típus biztosítja, hogy az osztás ne egész számként történjen.
             builder.Property(u => u.Ratio)
                 .HasComputedColumnSql(
-                    // SQLite
                     "CASE WHEN Ask > 0 THEN CAST(OkAnswer AS REAL) / CAST(Ask AS REAL) ELSE 0 END",
                     stored: false
                 );
-            // SQL Server verzió (kommentben)
-            //.HasComputedColumnSql("CAST(CASE WHEN Ask > 0 THEN CAST(OkAnswer AS FLOAT) / CAST(Ask AS FLOAT) ELSE 0 END AS FLOAT)", stored: false);
+
+            // SQL Server használatakor a fenti kifejezést erre kell cserélni:
+            // .HasComputedColumnSql("CAST(CASE WHEN Ask > 0 THEN CAST(OkAnswer AS FLOAT) / CAST(Ask AS FLOAT) ELSE 0 END AS FLOAT)", stored: false);
         }
     }
 }

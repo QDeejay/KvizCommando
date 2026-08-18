@@ -6,38 +6,23 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {
     public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
     {
+        /// <summary>
+        /// Beállítja az entitás EF Core leképezését és adatbázis-korlátait.
+        /// </summary>
         public void Configure(EntityTypeBuilder<ApplicationUser> b)
         {
-            // Oszlophosszak a kijelzőnévhez
             b.Property(u => u.DisplayName).HasMaxLength(256);
             b.Property(u => u.NormalizedDisplayName).HasMaxLength(256);
 
-            // Szűrt egyedi index élő userekre (IsDeleted = 0), csak ha nem null a név
+            // A törölt felhasználók neve újra felhasználható, az aktív nevek viszont egyediek.
             b.HasIndex(u => u.NormalizedDisplayName)
              .HasDatabaseName("UX_AspNetUsers_NormalizedDisplayName_Active")
              .IsUnique()
-             .HasFilter("[NormalizedDisplayName] IS NOT NULL AND [IsDeleted] = 0"); // SQL Server filter, SQLite figyelmen kívül hagyja
+             .HasFilter("[NormalizedDisplayName] IS NOT NULL AND [IsDeleted] = 0");
 
-            // Számított oszlop a check-in kész állapotra
-            /// sqlite syntax
-            //b.Property(u => u.IsCheckInCompleted)
-             //.HasColumnType("INTEGER")
-             //.HasComputedColumnSql(
-             //    "CASE WHEN [DisplayName] IS NOT NULL AND [AcceptTerms] = 1 THEN 1 ELSE 0 END",
-             //    stored: false);
-
-            /// sql server syntax
-            //
-            //b.Property(u => u.IsCheckInCompleted)
-            // .HasComputedColumnSql(
-            //     "CASE WHEN [DisplayName] IS NOT NULL AND [AcceptTerms] = 1 THEN CAST(1 AS bit) ELSE CAST(0 AS bit) END",
-            //     stored: true);
-            //
-
-            // Alapértékek
             b.Property(u => u.PreferredLocale).HasMaxLength(16).HasDefaultValue("hu-HU");
 
-            // Token bővítmény táblanév konfiguráció az Identity default sémához igazodva
+            // A bővített tokenentitás az Identity alapértelmezett tábláját használja.
             b.Metadata.Model.FindEntityType(typeof(ApplicationUserToken))!
                 .SetTableName("AspNetUserTokens");
         }

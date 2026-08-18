@@ -57,18 +57,30 @@ namespace KvizCommando.Shared.Models.Rules
                 LAST_MEMBER_LEVEL - FIRST_MEMBER_LEVEL + 1)
             .ToArray();
 
+        /// <summary>
+        /// Visszaadja a megadott csapatsegítség szabályait.
+        /// </summary>
         public static TeamHelpRule GetHelp(int helpId) =>
             HelpRules.First(rule => rule.HelpId == helpId);
 
+        /// <summary>
+        /// Visszaadja a karakterszinthez tartozó rendfokozati osztályt.
+        /// </summary>
         public static int GetMemberRankClass(int memberLevel) =>
             memberLevel == FIRST_MEMBER_LEVEL
                 ? 0
                 : (memberLevel - 1) / MEMBER_RANKS_PER_CLASS + 1;
 
+        /// <summary>
+        /// Jelzi, hogy az előléptetés rendfokozati osztályt is vált-e.
+        /// </summary>
         public static bool IsRankClassChangingPromotion(int currentLevel) =>
             GetMemberRankClass(currentLevel) !=
             GetMemberRankClass(currentLevel + 1);
 
+        /// <summary>
+        /// Kiszámítja a karakter számára jóváírható tapasztalatot.
+        /// </summary>
         public static int GetCreditableMemberExperience(
             int earnedXp,
             int level,
@@ -83,13 +95,22 @@ namespace KvizCommando.Shared.Models.Rules
                 availableXp);
         }
 
+        /// <summary>
+        /// Jelzi, hogy a karakter rendelkezik-e felhasználható életerővel.
+        /// </summary>
         public static bool HasVitality(int vitality) =>
             vitality > 0;
 
+        /// <summary>
+        /// Visszaadja a karakterszinthez tartozó maximális életerőt.
+        /// </summary>
         public static int GetMemberMaxVitality(int level) =>
             MEMBER_BASE_VITALITY +
             level * MEMBER_VITALITY_PER_LEVEL;
 
+        /// <summary>
+        /// Kiszámítja a karakter életerejének százalékos értékét.
+        /// </summary>
         public static int GetMemberVitalityPercent(
             int vitality,
             int level) =>
@@ -98,6 +119,9 @@ namespace KvizCommando.Shared.Models.Rules
                 0,
                 100);
 
+        /// <summary>
+        /// Visszaadja a karakter életerőállapotát.
+        /// </summary>
         public static MemberVitalityState GetMemberVitalityState(
             int vitality,
             int level) =>
@@ -110,6 +134,9 @@ namespace KvizCommando.Shared.Models.Rules
                 _ => MemberVitalityState.Critical
             };
 
+        /// <summary>
+        /// Jelzi, hogy elindítható-e a gyógyítást adó egyéni játék.
+        /// </summary>
         public static bool CanStartSoloHealingGame(
             int vitality,
             int developmentPoints,
@@ -120,6 +147,9 @@ namespace KvizCommando.Shared.Models.Rules
             (!nextHealingGameUtc.HasValue ||
              nextHealingGameUtc.Value <= utcNow);
 
+        /// <summary>
+        /// Visszaadja a következő gyógyító egyéni játék legkorábbi időpontját.
+        /// </summary>
         public static DateTime GetNextSoloHealingGameUtc(
             DateTime completedUtc) =>
             completedUtc.AddHours(SOLO_HEALING_COOLDOWN_HOURS);

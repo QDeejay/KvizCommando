@@ -33,6 +33,9 @@ public sealed class SoloGameClientService : ISoloGameClientService
     public bool IsConnected =>
         _connection?.State == HubConnectionState.Connected;
 
+    /// <summary>
+    /// Létrehozza a SignalR-kapcsolatot, ellenőrzi annak minőségét, majd elindítja az egyéni játékot.
+    /// </summary>
     public async Task<StartSoloGameResponse?> StartAsync(
         StartSoloGameRequest request,
         CancellationToken ct = default)
@@ -113,6 +116,9 @@ public sealed class SoloGameClientService : ISoloGameClientService
         }
     }
 
+    /// <summary>
+    /// Kiértékelésre beküldi az egyéni játék válaszát.
+    /// </summary>
     public async Task<SoloHubAnswerResponse?> SubmitAnswerAsync(
         SoloAnswerDto answer,
         CancellationToken ct = default)
@@ -155,6 +161,9 @@ public sealed class SoloGameClientService : ISoloGameClientService
         }
     }
 
+    /// <summary>
+    /// Megszakítja az aktuális egyéni játékot.
+    /// </summary>
     public async Task<bool> AbandonAsync(
         CancellationToken ct = default)
     {
@@ -182,6 +191,9 @@ public sealed class SoloGameClientService : ISoloGameClientService
         }
     }
 
+    /// <summary>
+    /// Leállítja az aktuális játékkapcsolatot.
+    /// </summary>
     public async Task StopAsync(
         CancellationToken ct = default)
     {
@@ -237,6 +249,9 @@ public sealed class SoloGameClientService : ISoloGameClientService
 
     private void NotifyChanged() => OnChanged?.Invoke();
 
+    /// <summary>
+    /// Aszinkron módon felszabadítja a példány által használt erőforrásokat.
+    /// </summary>
     public async ValueTask DisposeAsync()
     {
         await StopAsync();

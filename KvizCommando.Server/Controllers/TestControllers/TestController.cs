@@ -12,6 +12,9 @@ namespace KvizCommando.Server.Controllers.TestControllers
     // cookie/bearer hitelesítésének gyors ellenőrzéséhez.
     public class TestController : ControllerBase
     {
+        /// <summary>
+        /// Visszaadja a hitelesített tesztfelhasználó azonosítóját.
+        /// </summary>
         [HttpGet("me")]
         public IActionResult GetMe()
         {

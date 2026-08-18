@@ -36,15 +36,8 @@ namespace KvizCommando.Server.Infrastructure.Persistence
         {
             base.OnModelCreating(modelBuilder);
 
-            // Konfigurációk külön osztályokban
+            // Az entitások leképezései külön konfigurációs osztályokban maradnak áttekinthetők.
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
     }
 }
-//  Tools manage nutget packages ---> Package manager Console --->
-//  Add-Migration ---Ide adunk egy bármilyen nevet pl: AddRankTable vagy CreateInitTable   --- > 
-//  Update-Database
-
-/// Add-Migration InitialIdentity -Context ApplicationDbContext -OutputDir "Data\Migrations\Identity"
-/// Update-Database -Context ApplicationDbContext
-///

@@ -27,9 +27,11 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>
         _options = appoptions.Value;
     }
 
+    /// <summary>
+    /// Előkészíti és fájlba írja a regisztrációt megerősítő levelet.
+    /// </summary>
     public async Task SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink)
     {
-        // confirmationLink = már kész URL a gyári Identity-től
         var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
         if (culture != "hu" && culture != "en")
             culture = "en";
@@ -44,6 +46,9 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>
                                   subject, textBody, htmlBody, CancellationToken.None);
     }
 
+    /// <summary>
+    /// Előkészíti és fájlba írja a jelszó-visszaállító hivatkozást tartalmazó levelet.
+    /// </summary>
     public async Task SendPasswordResetLinkAsync(ApplicationUser user, string email, string resetLink)
     {
         var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
@@ -60,6 +65,9 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>
                                   subject, textBody, htmlBody, CancellationToken.None);
     }
 
+    /// <summary>
+    /// Előkészíti és fájlba írja a jelszó-visszaállító kódot tartalmazó levelet.
+    /// </summary>
     public async Task SendPasswordResetCodeAsync(ApplicationUser user, string email, string resetCode)
     {
         var resetLink = $"https://Localhost:7229/Auth/reset-password?email={Uri.EscapeDataString(email)}&code={Uri.EscapeDataString(resetCode)}\r\n";
@@ -85,15 +93,14 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>
         var hours = _options.TokenValidityHours;
         var TempHost = _options.TempServerIp;
         var appUrl = _options.WebUrl;
-        // 1) Query string kiszedése a gyári linkből
         var uri = new Uri(confirmationLink);
-        var query = uri.Query; // pl. "?userId=...&code=..."
+        var query = uri.Query;
         var pagePath = $"/auth/{page}";
 
-        // 2) Új link építése a Blazor oldalra
+        // A callback jelenleg az ideiglenes publikus fejlesztői hostra mutat.
+        // Az éles kézbesítési és hostkonfigurációt a docs/infrastructure-status.md rögzíti.
         var customLink = $"https://kviz-commando.ngrok.app{pagePath}{query}";
 
-        // 3) Sablonfájlok betöltése
         var templateDir = Path.Combine(AppContext.BaseDirectory,
             "Infrastructure", "Email", "Templates", "EmailTemplates", "Auth");
 
@@ -108,7 +115,6 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>
             : "";
        
         var DisplayName = _localizer["DisplayName.Fallback"];
-        // 4) Link behelyettesítése
         htmlBody = htmlBody
                     .Replace("{{AppName}}", appName)
                     .Replace("{{DisplayName}}", DisplayName)
@@ -126,7 +132,6 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>
             .Replace("{{Year}}", DateTime.UtcNow.Year.ToString());
 
 
-        // 5) Subject lokalizálva
         var subjectKey = baseName == "RegistrationConfirm"
             ? "Email.Confirm.Subject"
             : "Email.Reset.Subject";

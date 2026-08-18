@@ -6,6 +6,9 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {
     public class PlayerOrientStatConfiguration : IEntityTypeConfiguration<PlayerOrientStat>
     {
+        /// <summary>
+        /// Beállítja az entitás EF Core leképezését és adatbázis-korlátait.
+        /// </summary>
         public void Configure(EntityTypeBuilder<PlayerOrientStat> b)
         {
             b.ToTable("PlayerOrientStat");

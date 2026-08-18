@@ -11,10 +11,9 @@ using Microsoft.Extensions.Localization;
 namespace KvizCommando.Server.Services.CheckIn
 {
     /// <summary>
-    /// Check-in üzleti logika: DisplayName + Terms (ÁSZF).
-    /// - Nincs extra DTO a POST-hoz; hiba esetén kulcsok listája tér vissza (ProblemDetails.Errors kulcsaiként megy tovább).
-    /// - Audit: TermsConsent táblába append-only sor; GDPR-minimum (UA/IP HMAC), tokenbe/cookie-ba nem kerül PII.
-    /// - Claim-szinkron: AspNetUserClaims upsert a UserManager-rel; cookie esetén RefreshSignIn, bearer/opaque esetén kliens /refresh.
+    /// A játékosnév megadását és az ÁSZF elfogadását kezelő beléptetési szolgáltatás.
+    /// Az elfogadás append-only auditbejegyzést és claimfrissítést hoz létre;
+    /// személyes adat nem kerül a cookie-ba vagy a bearer tokenbe.
     /// </summary>
     public sealed class CheckInService : ICheckInService
     {
@@ -48,6 +47,9 @@ namespace KvizCommando.Server.Services.CheckIn
             _vsMatch = vsMatch;
         }
 
+        /// <summary>
+        /// Visszaadja a felhasználó aktuális beléptetési követelményeit.
+        /// </summary>
         public async Task<CheckInGetResponse> GetStatusAsync(string userId, string sessionid, CancellationToken ct)
         {
             var response = await _playerDb.LoadCheckinDataFromDbAsync(userId, ct);
@@ -80,6 +82,9 @@ namespace KvizCommando.Server.Services.CheckIn
             };
         }
 
+        /// <summary>
+        /// Befejezi a beléptetési folyamatot, és elmenti az elfogadott adatokat.
+        /// </summary>
         public async Task<(IReadOnlyList<string> Errors, string Suggested, bool PreviousSessionReplaced)> CompleteAsync(
             string userId,
             CheckInPostRequest request,
@@ -98,24 +103,17 @@ namespace KvizCommando.Server.Services.CheckIn
             var needsTermsAcceptance = string.IsNullOrWhiteSpace(_lastAcceptedTerms)
                                        || !string.Equals(_lastAcceptedTerms, currentTerms.Version, StringComparison.Ordinal);
 
-            // 3) DISPLAY NAME validáció (ha kell, vagy ha küldött újat)
             var providedName = request.DisplayName?.Trim();
 
             var suggested = string.Empty;
             if (needsDisplayName || !string.IsNullOrEmpty(providedName))
             {
-                // formátum/szabályok a központi validatorból
                 foreach (var code in DisplayNameValidator.Validate(providedName))
                     errorKeys.Add(code);
 
-                // egyediség (case-insensitive) csak akkor, ha formailag átment
+                // Az egyediség csak formailag érvényes névnél ellenőrizhető.
                 if (errorKeys.Count == 0 && !string.IsNullOrEmpty(providedName))
                 {
-                    // Identity-konform normalizálás (ugyanazt használjuk, mint UserName/Email esetén)
-
-                    // Egyediség ellenőrzés a NORMALIZÁLT mezőn
-                    //  .AnyAsync(u => u.Id != userId
-                    //           && u.NormalizedDisplayName == norm, ct);
                     suggested = await _playerDb.SuggestAsync(providedName, ct);
                     if (providedName != suggested)
                     {
@@ -126,7 +124,6 @@ namespace KvizCommando.Server.Services.CheckIn
                 }
             }
 
-            // 4) TERMS validáció (ha kell)
             if (needsTermsAcceptance)
             {
                 if (string.IsNullOrWhiteSpace(request.AcceptedTermsVersion))
@@ -135,18 +132,14 @@ namespace KvizCommando.Server.Services.CheckIn
                 }
                 else if (!string.Equals(request.AcceptedTermsVersion, currentTerms.Version, StringComparison.Ordinal))
                 {
-                    // GET→POST közben frissült a Terms
+                    // A GET és POST között megváltozott ÁSZF-et nem szabad elfogadottnak tekinteni.
                     errorKeys.Add(IdentityErrorCodes.TermsVersionOutdated);
                 }
             }
 
-            // 5) Ha van hiba, visszaadjuk a kulcsokat (endpoint 400/409 ProblemDetails-t fog csinálni belőle)
             if (errorKeys.Count > 0)
                 return (errorKeys, suggested, false);
 
-            // 6) MENTÉSEK
-
-            // 6/a) DisplayName frissítése (ha küldött és változik)
             if (!string.IsNullOrEmpty(providedName) &&
                 !string.Equals(_user.DisplayName, providedName, StringComparison.Ordinal))
             {
@@ -156,16 +149,16 @@ namespace KvizCommando.Server.Services.CheckIn
             }
 
             var acceptedAtUtc = DateTime.UtcNow;
-            // 6/b) Terms elfogadás beszúrása (idempotens a (UserId, TermsVersion) pároson)
+            // Az egyedi adatbázis-kulcs az ÁSZF-elfogadás ismételt beszúrását idempotenssé teszi.
             if (needsTermsAcceptance &&
                 string.Equals(request.AcceptedTermsVersion, currentTerms.Version, StringComparison.Ordinal))
             {
                 await _playerDb.SaveTermsToDbAsync(_user, request.AcceptedTermsVersion, currentTerms.Version, acceptedAtUtc, ct);
             }
 
-            // --- 6/b/2) User-claim upsert + (ha cookie) RefreshSignIn ---
             await _claimsSync.UpsertTermsClaimsAsync(_user, currentTerms.Version, acceptedAtUtc, ct);
-            // 6/c) Player ENSURE (ha nincs, létrehozunk egyet; versenyhelyzet-biztos)
+
+            // A játékosrekord első beléptetéskor, az elfogadott adatok mentése után jön létre.
             var playerId = _playerId ?? 0;
             if (providedName != null && needsDisplayName == true)
             {

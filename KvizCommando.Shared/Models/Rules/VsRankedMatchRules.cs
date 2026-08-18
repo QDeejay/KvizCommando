@@ -1,5 +1,8 @@
 namespace KvizCommando.Shared.Models.Rules;
 
+/// <summary>
+/// A rangsorolt mérkőzés szerver- és kliensoldalon közösen használt játékszabályai.
+/// </summary>
 public static class VsRankedMatchRules
 {
     public const int PREPARATION_SECONDS = 20;
@@ -11,6 +14,9 @@ public static class VsRankedMatchRules
     public const double WINNER_COMPENSATION_MIN = 1.0;
     public const double WINNER_COMPENSATION_MAX = 3.0;
 
+    /// <summary>
+    /// Kiszámítja a győztesnek járó szintkompenzációt.
+    /// </summary>
     public static double GetWinnerCompensation(int teamLevel)
     {
         var maximumLevel = RankRewards.List.Count - 1;
@@ -22,6 +28,9 @@ public static class VsRankedMatchRules
             MidpointRounding.AwayFromZero);
     }
 
+    /// <summary>
+    /// Kiszámítja a rangsorolt mérkőzés eredménypontját.
+    /// </summary>
     public static double GetRankedScore(
         int netPoints,
         double winnerCompensation) =>
@@ -30,9 +39,3 @@ public static class VsRankedMatchRules
             1,
             MidpointRounding.AwayFromZero);
 }
-
-/**
- * A rangsorolt VS helpben is megjelenő, publikus játékszabályok
- * egyetlen közös forrása. A szerver meccsprofilja és a kliens
- * help-tokenjei egyaránt ezeket az értékeket használják.
- */

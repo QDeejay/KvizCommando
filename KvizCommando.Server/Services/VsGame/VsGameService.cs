@@ -12,6 +12,9 @@ public sealed class VsGameService : IVsGameService
         _cache = cache;
     }
 
+    /// <summary>
+    /// Elmenti a rangsorolt játékhoz összeállított csapatot.
+    /// </summary>
     public Task<CacheUpdateResult> SaveBattleTeamAsync(
         int playerId,
         SaveBattleTeamRequest request,

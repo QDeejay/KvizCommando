@@ -33,7 +33,7 @@ namespace KvizCommando.Server.Identity
                 errors.Add(IdentityErrorCodes.DisplayNameTooLong);
 
             // Karakterkészlet ellenőrzése (csak az engedélyezett készletből származhat minden karakter).
-            // Megjegyzés: az AllowedChars ASCII készlet; ha később bővülne Unicode-ra, itt kell módosítani.
+            // Az engedélyezett készlet jelenleg ASCII; Unicode támogatásakor a validációs szabályt is bővíteni kell.
             if (!string.IsNullOrEmpty(CheckInValidationOptions.DisplayNameAllowedChars))
             {
                 // HashSet a gyors kereséshez

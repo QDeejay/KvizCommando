@@ -41,12 +41,8 @@ namespace KvizCommando.Server.Services.Db
         }
 
         /// <summary>
-        /// Teljes player csomag betöltése az adatbázisból
+        /// Betölti a játékos teljes, gyorsítótárba helyezhető állapotát az adatbázisból.
         /// </summary>
-        /// <param name="playerId"></param>
-        /// <param name="sessionId"></param>
-        /// <param name="ct"></param>
-        /// <returns></returns>
         public async Task<CachedPlayer?> LoadPlayerFromDbAsync(
             int playerId,
             string sessionId,
@@ -127,13 +123,8 @@ namespace KvizCommando.Server.Services.Db
         }
 
         /// <summary>
-        /// player adatok mentése a dirty flag alapján, csak azt mentjük ami változott
+        /// A dirty jelzők alapján elmenti a játékos módosított adatszegmenseit.
         /// </summary>
-        /// <param name="player"></param>
-        /// <param name="flags"></param>
-        /// <param name="playerId"></param>
-        /// <param name="ct"></param>
-        /// <returns></returns>
         public async Task<bool> SavePlayerToDbAsync(
             CachedPlayer player,
             DirtyFlags flags,
@@ -142,18 +133,18 @@ namespace KvizCommando.Server.Services.Db
         {
             try
             {
-                // --- Core Player ---
+                // Játékos törzsadatai
                 if ((flags & DirtyFlags.Core) != 0)
                     _db.Update(player.Core);
 
-                // --- Loadout ---
+                // Kérdéslista
                 if ((flags & DirtyFlags.Loadout) != 0)
                 {
                     player.Loadout.UpdatedUtc = DateTime.UtcNow;
                     _db.Update(player.Loadout);
                 }
 
-                // --- Characters ---
+                // Karakterek és jelöltek
                 if ((flags & DirtyFlags.Characters) != 0)
                 {
                     var serializedChars = System.Text.Json.JsonSerializer.Serialize(player.Characters);
@@ -179,11 +170,11 @@ namespace KvizCommando.Server.Services.Db
                     }
                 }
 
-                // --- AskStats ---
+                // Kérdésstatisztika
                 if ((flags & DirtyFlags.AskStats) != 0)
                     _db.Update(player.AskStats);
 
-                // --- CategoryStats ---
+                // Kategóriastatisztika
                 if ((flags & DirtyFlags.CategoryStats) != 0)
                 {
                     foreach (var stat in player.CategoryStats)
@@ -216,18 +207,14 @@ namespace KvizCommando.Server.Services.Db
         }
 
         /// <summary>
-        /// Check in folyamán lekérjük hogy van e display név és hogy Terms elfogadása up-to date e
+        /// Betölti a beléptetéshez szükséges Identity-, játékosnév- és játékosazonosító-adatokat.
         /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="ct"></param>
-        /// <returns></returns>
         public async Task<(ApplicationUser?, string?, int?)> LoadCheckinDataFromDbAsync(
             string userId,
             CancellationToken ct)
         {
             var user = await _userManager.Users
                 .Where(u => u.Id == userId)
-                //.Select(u => new { u.DisplayName })
                 .SingleAsync(ct);
             var playerId = await _db.Players
                 .Where(p => p.UserId == userId)
@@ -245,16 +232,12 @@ namespace KvizCommando.Server.Services.Db
             return (user, lastAcceptedVersion, playerId);
         }
         /// <summary>
-        /// Display név elmentése
+        /// Ellenőrzi és elmenti a felhasználó nyilvános játékosnevét.
         /// </summary>
-        /// <param name="user"></param>
-        /// <param name="displayName"></param>
-        /// <param name="ct"></param>
-        /// <returns></returns>
         public async Task<(IReadOnlyList<string>, bool success)> SaveDisplayNameToDbAsync(ApplicationUser user, string displayName, CancellationToken ct)
         {
             var errorKeys = new List<string>();
-            // Beállítjuk a display nevet és a normalizált párját is.
+            // A keresési és egyediségi ellenőrzéshez a nyilvános név normalizált párját is tárolni kell.
             user.DisplayName = displayName;
             user.NormalizedDisplayName = _normalizer.NormalizeName(displayName);
             user.PreferredLocale = CultureInfo.CurrentUICulture.Name;
@@ -262,7 +245,6 @@ namespace KvizCommando.Server.Services.Db
             var updateResult = await _userManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
             {
-                // az Identity a saját kódjait adja – továbbítjuk
                 errorKeys.AddRange(updateResult.Errors.Select(e => e.Code));
                 return (errorKeys, false);
             }
@@ -270,14 +252,8 @@ namespace KvizCommando.Server.Services.Db
         }
 
         /// <summary>
-        /// Terms elfogadás frissitése a táblában
+        /// Append-only auditbejegyzésként elmenti az ÁSZF elfogadását.
         /// </summary>
-        /// <param name="user"></param>
-        /// <param name="acceptedTerms"></param>
-        /// <param name="currentTerms"></param>
-        /// <param name="acceptedAt"></param>
-        /// <param name="ct"></param>
-        /// <returns></returns>
         public async Task<bool> SaveTermsToDbAsync(
             ApplicationUser user,
             string acceptedTerms,
@@ -290,7 +266,7 @@ namespace KvizCommando.Server.Services.Db
 
             if (!exists)
             {
-                // --- UA/IP + SECRET beolvasása ---
+                // A user-agent és IP csak kulcsos hash formájában kerül az auditbejegyzésbe.
                 var http = _httpContextAccessor.HttpContext;
                 var ua = http?.Request?.Headers["User-Agent"].ToString();
                 var ip = http?.Connection?.RemoteIpAddress?.ToString();
@@ -299,9 +275,17 @@ namespace KvizCommando.Server.Services.Db
                 var secretB64 = _config["AuditHash:Secret"];
                 if (!string.IsNullOrWhiteSpace(secretB64))
                 {
-                    try { secretKey = Convert.FromBase64String(secretB64); } catch { /* marad null */ }
+                    try
+                    {
+                        secretKey = Convert.FromBase64String(secretB64);
+                    }
+                    catch
+                    {
+                        // Érvénytelen auditkulcs esetén a hálózati metaadatok hash nélkül maradnak.
+                        secretKey = null;
+                    }
                 }
-                // --- időbélyeg egységesen a DB és a claim számára ---
+                // Az adatbázis és a claim ugyanazt az elfogadási időpontot kapja.
 
 
                 _db.Add(new TermsConsent
@@ -321,13 +305,8 @@ namespace KvizCommando.Server.Services.Db
             return true;
         }
         /// <summary>
-        /// Játékos adatok létrehozás, az első terms elfogadása után
+        /// Létrehozza az Identity-felhasználóhoz tartozó játékosrekordot és alapadatait.
         /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="displayname"></param>
-        /// <param name="teamname"></param>
-        /// <param name="ct"></param>
-        /// <returns></returns>
         public async Task<int> CreatePlayerToDbAsync(
             string userId,
             string displayname,
@@ -428,27 +407,23 @@ namespace KvizCommando.Server.Services.Db
         }
 
         /// <summary>
-        /// Facebook-os bejelentkezás után javaslunk display nevet a kereszt név alapján
+        /// Szabad játékosnevet javasol a külső szolgáltatótól kapott név alapján.
         /// </summary>
-        /// <param name="rawName"></param>
-        /// <param name="ct"></param>
-        /// <returns></returns>
         public async Task<string> SuggestAsync(string? rawName, CancellationToken ct = default)
         {
             var raw = (rawName ?? string.Empty).Trim();
 
-            // 1) Vizuális alap: ékezetek le (Regex \p{Mn}), csak [A-Za-z0-9], max 20, EREDETI case megtartva
+            // A megjelenítési alap megőrzi a kis- és nagybetűket, de csak az engedélyezett ASCII-karaktereket tartja meg.
             var baseRaw = ToAsciiBase(raw);
             if (string.IsNullOrEmpty(baseRaw)) baseRaw = "Player";
 
-            // 2) Normalizált (DB) alap: csupa nagy
             var baseNorm = baseRaw.ToUpperInvariant();
 
-            // 3) Ha pontosan szabad → a vizuális alapot adjuk (nem csupa nagy!)
+            // Szabad névnél a megjelenítési alak változatlan marad.
             var exactTaken = await _db.Users.AnyAsync(u => u.NormalizedDisplayName == baseNorm, ct);
             if (!exactTaken) return baseRaw;
 
-            // 4) Foglalt: keressük a max numerikus suffixet a NORMALIZÁLT mezőn
+            // Foglalt névnél a normalizált mező legnagyobb numerikus utótagja határozza meg a következő értéket.
             var taken = await _db.Users
                 .Where(u => u.NormalizedDisplayName.StartsWith(baseNorm))
                 .Select(u => u.NormalizedDisplayName)
@@ -467,17 +442,14 @@ namespace KvizCommando.Server.Services.Db
             var next = maxSuffix + 1;
             var digits = next.ToString();
 
-            // 5) 20-as limit tartása a VIZUÁLIS javaslatnál is
+            // Az utótag számára szükséges helyet a név maximális hosszából kell fenntartani.
             var allowed = Math.Max(0, 20 - digits.Length);
             var cutRaw = baseRaw.Length > allowed ? baseRaw[..allowed] : baseRaw;
 
             return cutRaw + digits;
         }
 
-        /// <summary>
-        /// Helperek a db szervizhez
-        /// Diakritikák levágása Regex-szel: FormD bontás + \p{Mn} (combining marks) eltávolítása
-        /// </summary>
+        // A FormD bontás után a kombináló jelek eltávolítása ad stabil ASCII névalapot.
         private static readonly Regex _combiningMarks = new(@"\p{Mn}+", RegexOptions.Compiled);
         private static string ToAsciiBase(string s)
         {

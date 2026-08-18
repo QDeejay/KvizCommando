@@ -6,6 +6,9 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
     public static class MBoxBuilder
     {
         private const string BUTTON_STYLE = "background-color: ";
+        /// <summary>
+        /// Összeállítja a megadott típushoz tartozó modális ablak paramétereit.
+        /// </summary>
         public static ModalBoxVm BuildParam(ModalTypes type, ILanguageService lang)
         {
             if ((int)type == 0)

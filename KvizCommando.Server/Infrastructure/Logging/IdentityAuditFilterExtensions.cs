@@ -7,6 +7,9 @@ namespace KvizCommando.Server.Infrastructure.Logging;
 
 public static class IdentityAuditFilterExtensions
 {
+    /// <summary>
+    /// Auditnaplózást kapcsol az Identity végpontokra.
+    /// </summary>
     public static IEndpointConventionBuilder WithIdentityAudit(this IEndpointConventionBuilder builder)
     {
         builder.AddEndpointFilter(async (context, next) =>
@@ -16,11 +19,11 @@ public static class IdentityAuditFilterExtensions
 
             var path = httpContext.Request.Path.Value?.ToLowerInvariant() ?? string.Empty;
             var userId = httpContext.User?.Identity?.IsAuthenticated == true
-                ? httpContext.User.FindFirst("sub")?.Value // vagy ClaimTypes.NameIdentifier
+                ? httpContext.User.FindFirst("sub")?.Value
                 : null;
             var ip = httpContext.Connection.RemoteIpAddress?.ToString();
 
-            // ----- Forgot password -----
+            // Elfelejtett jelszó
             if (path.EndsWith("/forgotpassword"))
             {
                 await audit.LogAsync(AuditEvents.ForgotPasswordRequested, "Anonymous", ip);
@@ -40,7 +43,7 @@ public static class IdentityAuditFilterExtensions
                 return result;
             }
 
-            // ----- Reset password -----
+            // Jelszó-visszaállítás
             if (path.EndsWith("/resetpassword"))
             {
                 await audit.LogAsync(AuditEvents.PasswordResetAttempted, "Anonymous", ip);
@@ -61,7 +64,7 @@ public static class IdentityAuditFilterExtensions
                 return result;
             }
 
-            // ----- Manage/info (authenticated profile update incl. password change) -----
+            // Hitelesített profil- és jelszómódosítás
             if (path.EndsWith("/manage/info") && httpContext.Request.Method == HttpMethods.Post)
             {
                 await audit.LogAsync(AuditEvents.ManageInfoRequested, userId ?? "Anonymous", ip);

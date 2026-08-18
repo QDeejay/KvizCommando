@@ -46,6 +46,9 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
         Ui.Header.OnTitleChanged += OnPageChanged;
     }
 
+    /// <summary>
+    /// Automatikusan megjeleníti az aktuális oldal még nem látott súgóját.
+    /// </summary>
     public async Task ShowAutomaticAsync()
     {
         if (_showHelp)
@@ -62,8 +65,14 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
         await LoadPackageAsync(helpKey, showNavigation: false, isAutomatic: true);
     }
 
+    /// <summary>
+    /// Felhasználói kérésre megnyitja a súgó kezdőoldalát.
+    /// </summary>
     public Task ShowManualAsync() => LoadLandingPageAsync();
 
+    /// <summary>
+    /// Megjeleníti az aktuális oldalhoz tartozó súgót.
+    /// </summary>
     public async Task ShowCurrentAsync()
     {
         if (_showHelp)
@@ -264,6 +273,9 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
         _pages = [];
     }
 
+    /// <summary>
+    /// Felszabadítja a példány által használt erőforrásokat.
+    /// </summary>
     public void Dispose()
     {
         Ui.Header.OnTitleChanged -= OnPageChanged;

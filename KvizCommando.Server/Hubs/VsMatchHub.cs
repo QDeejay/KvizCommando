@@ -31,6 +31,9 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
         _matches = matches;
     }
 
+    /// <summary>
+    /// Belépteti a kapcsolat játékosát a rangsorolt várólistába.
+    /// </summary>
     public async Task<VsQueueJoinResult> JoinRankedQueue(
         int classificationId,
         string sessionId)
@@ -69,6 +72,9 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
             ct);
     }
 
+    /// <summary>
+    /// Megméri a kliens és a szerver közötti SignalR-kapcsolat válaszidejét.
+    /// </summary>
     public async Task<VsConnectionCheckResult> CheckConnection()
     {
         var responseTimeMilliseconds =
@@ -91,13 +97,22 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
         };
     }
 
+    /// <summary>
+    /// Visszaadja a szerver aktuális UTC-időpontját.
+    /// </summary>
     public DateTime GetServerUtc() => DateTime.UtcNow;
 
+    /// <summary>
+    /// Kilépteti a kapcsolat játékosát a rangsorolt várólistából.
+    /// </summary>
     public Task<VsQueueLeaveStatus> LeaveRankedQueue() =>
         _queue.LeaveAsync(
             Context.ConnectionId,
             Context.ConnectionAborted);
 
+    /// <summary>
+    /// A karaktert a megadott előkészítési helyhez rendeli.
+    /// </summary>
     public Task SelectCharacter(
         int slotNumber) =>
         _matches.SelectCharacterAsync(
@@ -105,6 +120,9 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
             slotNumber,
             Context.ConnectionAborted);
 
+    /// <summary>
+    /// A kiválasztott kérdéskategóriát a megadott körhöz rendeli.
+    /// </summary>
     public Task AssignLoadout(
         VsLoadoutAssignmentRequest request) =>
         _matches.AssignLoadoutAsync(
@@ -112,6 +130,9 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
             request,
             Context.ConnectionAborted);
 
+    /// <summary>
+    /// A kiválasztott segítséget a megadott előkészítési helyhez rendeli.
+    /// </summary>
     public Task AssignHelp(
         VsHelpAssignmentRequest request) =>
         _matches.AssignHelpAsync(
@@ -119,16 +140,25 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
             request,
             Context.ConnectionAborted);
 
+    /// <summary>
+    /// Törli a játékos előkészítési választásait.
+    /// </summary>
     public Task ResetPreparation() =>
         _matches.ResetPreparationAsync(
             Context.ConnectionId,
             Context.ConnectionAborted);
 
+    /// <summary>
+    /// Lezárja a játékos előkészítési szakaszát.
+    /// </summary>
     public Task FinishPreparation() =>
         _matches.FinishPreparationAsync(
             Context.ConnectionId,
             Context.ConnectionAborted);
 
+    /// <summary>
+    /// Beküldi a becslős meccskérdés válaszát.
+    /// </summary>
     public Task SubmitGuess(
         VsGuessAnswerRequest request) =>
         _matches.SubmitGuessAsync(
@@ -136,6 +166,9 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
             request,
             Context.ConnectionAborted);
 
+    /// <summary>
+    /// Beküldi a feleletválasztós meccskérdés válaszát.
+    /// </summary>
     public Task SubmitChoice(
         VsChoiceAnswerRequest request) =>
         _matches.SubmitChoiceAsync(
@@ -143,6 +176,9 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
             request,
             Context.ConnectionAborted);
 
+    /// <summary>
+    /// Felhasználja a kiválasztott segítséget az aktuális kérdésnél.
+    /// </summary>
     public Task UseHelp(
         VsUseHelpRequest request) =>
         _matches.UseHelpAsync(
@@ -150,6 +186,9 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
             request,
             Context.ConnectionAborted);
 
+    /// <summary>
+    /// Kiválasztja a kapitányi kör kérdését.
+    /// </summary>
     public Task SelectCaptainQuestion(
         VsCaptainQuestionRequest request) =>
         _matches.SelectCaptainQuestionAsync(
@@ -157,6 +196,9 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
             request,
             Context.ConnectionAborted);
 
+    /// <summary>
+    /// Feldolgozza a SignalR-kapcsolat megszakadását.
+    /// </summary>
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         await _queue.DisconnectAsync(

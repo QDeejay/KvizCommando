@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace KvizCommando.Shared.Contracts.Auth
 {
-    // <summary>
-    /// WASM regisztrációs kérés szerződés (DTO).
-    /// A jelszó szabályok szerveroldalon az Identity Options-ben érvényesülnek,
-    /// itt a minimumokat validáljuk.
+    /// <summary>
+    /// A kliens regisztrációs kérésének közös adatszerződése.
+    /// A jelszóházirendet véglegesen a szerver Identity-beállításai érvényesítik.
     /// </summary>
   
 
@@ -27,5 +26,4 @@ namespace KvizCommando.Shared.Contracts.Auth
         public string ConfirmPassword { get; set; } = default!;
     }
 }
-
 

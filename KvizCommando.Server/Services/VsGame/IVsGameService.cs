@@ -5,6 +5,9 @@ namespace KvizCommando.Server.Services.VsGame
 {
     public interface IVsGameService
     {
+        /// <summary>
+        /// Elmenti a rangsorolt játékhoz összeállított csapatot.
+        /// </summary>
         Task<CacheUpdateResult> SaveBattleTeamAsync(
             int playerId,
             SaveBattleTeamRequest request,

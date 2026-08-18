@@ -6,6 +6,9 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {
     public class PlayerCategoryStatConfiguration : IEntityTypeConfiguration<PlayerCategoryStat>
     {
+        /// <summary>
+        /// Beállítja az entitás EF Core leképezését és adatbázis-korlátait.
+        /// </summary>
         public void Configure(EntityTypeBuilder<PlayerCategoryStat> b)
         {
             b.ToTable("PlayerCategoryStats");
@@ -19,26 +22,25 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
             b.Property(x => x.HighScore).IsRequired();
             b.Property(x => x.HighScoreTime).IsRequired();
 
-            // Perzisztált számított oszlop a helyességi arányra
-            /// SQLite syntax
+            // SQLite számított oszlop a helyességi arányhoz.
             b.Property(x => x.Ratio)
              .HasColumnType("REAL")
              .HasComputedColumnSql(
                  "CASE WHEN [Answered] = 0 THEN 0.0 ELSE (1.0 * [Correct] / [Answered]) END",
                  stored: false);
 
-            /// SQL Server syntax (későbbre meghagyva)
+            // SQL Server alternatíva
             // b.Property(x => x.Ratio)
             //  .HasColumnType("decimal(9,4)")
             //  .HasComputedColumnSql(
             //      "CAST([Correct] * 1.0 / NULLIF([Answered],0) AS decimal(9,4))",
             //      stored: true);
 
-            // Ha gyakran kérdezel "legjobb pontosság kategória szerint"
+            // Kategóriánkénti statisztikai lekérdezések
             b.HasIndex(x => x.CategoryId)
              .HasDatabaseName("IX_PlayerCategoryStats_CategoryId");
 
-            // Ha lesz "Top kategória pontosság" rangsor
+            // Helyességi arány szerinti rangsor
             b.HasIndex(x => x.Ratio)
              .HasDatabaseName("IX_PlayerCategoryStats_Ratio_DESC");
         }

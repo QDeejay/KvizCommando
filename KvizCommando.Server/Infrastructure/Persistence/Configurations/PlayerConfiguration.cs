@@ -6,6 +6,9 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {
     public class PlayerConfiguration : IEntityTypeConfiguration<Player>
     {
+        /// <summary>
+        /// Beállítja az entitás EF Core leképezését és adatbázis-korlátait.
+        /// </summary>
         public void Configure(EntityTypeBuilder<Player> b)
         {
             b.ToTable("Players");
@@ -21,22 +24,20 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 
             b.Property(p => p.TeamName).HasMaxLength(128);
 
-            // Leaderboard indexek
+            // A rangsor lekérdezéseit külön XP- és kreditindex támogatja.
             b.HasIndex(p => p.XP)
              .HasDatabaseName("IX_Players_XP");
 
             b.HasIndex(p => p.Credit)
              .HasDatabaseName("IX_Players_Credit");
 
-            // Opcionális kombinált
-            // b.HasIndex(p => new { p.XP, p.Credit }).HasDatabaseName("IX_Players_XP_Credit");
-
             b.Property(p => p.CreatedUtc).IsRequired();
             b.Property(p => p.UpdatedUtc).IsRequired();
 
-            /// sqlite verziótól függően:
+            // SQLite alatt a mező alkalmazásoldali konkurenciajelzőként működik.
+            // SQL Server providerrel az IsRowVersion használható.
             b.Property(p => p.RowVersion)
-            // .IsRowVersion()    // SQLite nem támogatja szervernél visszakapcsolni
+            // .IsRowVersion()
              .IsConcurrencyToken();
         }
     }

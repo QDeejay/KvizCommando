@@ -3,24 +3,22 @@
 namespace KvizCommando.Server.Services.CheckIn
 {
     /// <summary>
-    /// Központi Terms (ÁSZF) információ-szolgáltató.
-    /// Fő feladata a jelenlegi (aktuális) Terms metaadatainak biztosítása.
+    /// Az aktuális ÁSZF kultúrafüggő metaadatait biztosító szolgáltatás szerződése.
     /// </summary>
     public interface ITermsProvider
     {
         /// <summary>
-        /// Az aktuális Terms metaadatai (kultúrafüggő).
+        /// Visszaadja az aktuális, kultúrafüggő ÁSZF metaadatait.
         /// </summary>
         TermsMeta GetCurrentTerms();
 
         /// <summary>
-        /// Gyors ellenőrzéshez: érvényes-e a megadott verzió az aktuális Terms-hez képest?
+        /// Jelzi, hogy a megadott verzió megfelel-e az aktuális ÁSZF-verziónak.
         /// </summary>
         bool IsValidVersion(string version);
 
         /// <summary>
-        /// Az aktuális Terms ETag/Version azonosítója (kultúrafüggő).
-        /// Funkcionálisan <see cref="GetCurrentTerms"/>.Version rövidítése.
+        /// Az aktuális ÁSZF kultúrafüggő verzióazonosítója.
         /// </summary>
         string CurrentTermsEtag { get; }
     }

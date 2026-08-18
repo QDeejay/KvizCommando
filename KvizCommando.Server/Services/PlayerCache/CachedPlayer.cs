@@ -5,9 +5,9 @@ using KvizCommando.Server.Models;
 namespace KvizCommando.Server.Services.PlayerCache
 {
     /// <summary>
-    /// Egy játékos teljes cache-elt állapota.
-    /// A szerveroldali logika számára authoritative forrás,
-    /// DB-vel periodikusan szinkronizálva.
+    /// Egy játékos teljes gyorsítótárazott állapota.
+    /// A szerveroldali üzleti logika elsődleges állapotforrása, amelyet a háttérfolyamat
+    /// rendszeresen szinkronizál az adatbázissal.
     /// </summary>
     public sealed class CachedPlayer
     {
@@ -20,8 +20,8 @@ namespace KvizCommando.Server.Services.PlayerCache
 
         /// <summary>
         /// Az aktuális rangsorolt csatacsapat karakterhelyei.
-        /// Üres: még nincs összeállítva.
-        /// Csak nullák: karakterváltozás miatt újra össze kell állítani.
+        /// Az üres tömb még össze nem állított, a csak nulla értékeket tartalmazó tömb
+        /// karakterváltozás miatt érvénytelenített csapatot jelent.
         /// </summary>
         public int[] BattleTeamSlots { get; set; } = [];
 
@@ -30,7 +30,7 @@ namespace KvizCommando.Server.Services.PlayerCache
         public List<PlayerOrientStat> OrientStats { get; set; } = [];
         public TeamStatistic TeamStats { get; set; } = default!;
         /// <summary>
-        /// Session ID azonosító (pl. bejelentkezés után).
+        /// A játékos aktuális munkamenetének azonosítója.
         /// </summary>
         public string SessionId { get; set; } = string.Empty;
 

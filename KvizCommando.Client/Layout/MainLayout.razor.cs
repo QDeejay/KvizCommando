@@ -349,6 +349,9 @@ namespace KvizCommando.Client.Layout
 
             return CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         }
+        /// <summary>
+        /// Felszabadítja a példány által használt erőforrásokat.
+        /// </summary>
         public void Dispose()
         {
             Ui.Header.OnTitleChanged -= UpdateTitle;

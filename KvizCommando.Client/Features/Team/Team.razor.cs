@@ -117,6 +117,9 @@ public partial class Team : KcComponentBase, IDisposable
         OnBoxClick((int)HomeBoxKey.Team);
     }
 
+    /// <summary>
+    /// Felszabadítja a példány által használt erőforrásokat.
+    /// </summary>
     public void Dispose()
     {
         Ui.Header.OnBackBtnClicked -= HandleBack;

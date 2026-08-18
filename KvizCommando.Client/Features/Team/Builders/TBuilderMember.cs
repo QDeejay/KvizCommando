@@ -16,11 +16,13 @@ namespace KvizCommando.Client.Features.Team.Builders
         {
             _lang = lang;
         }
+        /// <summary>
+        /// Összeállítja a karakter felső adatblokkjának nézetmodelljét.
+        /// </summary>
         public UpperBlockVm BuildMemberUpperVm(TeamMemberDto member, string culture)
         {
             var vm = new UpperBlockVm();
 
-            // Közös adatok
             string name = member.Name;
             string publicLevel = RankNameTable.Data[member.Level].PublicLevel ?? "";
             string devPointsDisplay = member.SkillPoints.ToString();
@@ -50,11 +52,13 @@ namespace KvizCommando.Client.Features.Team.Builders
 
             return vm;
         }
+        /// <summary>
+        /// Összeállítja a karakter adatainak alsó nézetmodelljét.
+        /// </summary>
         public BottomBlockVm BuildMemberBottomVm(TeamMemberDto member, string culture)
         {
             var vm = new BottomBlockVm();
 
-            // Header row
             vm.Rows.Add(
                 new BottomRow(
                     _lang["team.Label.Modifiers"],
@@ -65,6 +69,9 @@ namespace KvizCommando.Client.Features.Team.Builders
             BuildMemberRows(member, vm, culture);
             return vm;
         }
+        /// <summary>
+        /// Összeállítja a karakter fejlesztési adatainak alsó nézetmodelljét.
+        /// </summary>
         public BottomDevVm BuildMemberBottomDevVm(int subPos, TeamMemberDto member, int[] usedPoints, string culture)
         {
             int ori = TeamHelpers.NormalizeCategory(member.SecondAttitude.Category[0]);
@@ -80,10 +87,8 @@ namespace KvizCommando.Client.Features.Team.Builders
                 HeaderText = _lang[$"team.Label.Attitude.{headerType}"].FormatSafe(modifyType),
                 ResetButtonText = usedPoints.Sum() > 0 ? _lang["team.Button.Modify"].FormatSafe(usedPoints.Sum()) : ""
             };
-            // 2) a megfelelő attitude DTO-t kiválasztjuk
             var attitude = subPos == 1 ? member.SecondAttitude : member.GenderAttitude;
 
-            // 3) sorok létrehozása
             for (int i = 0; i < attitude.Skill.Length; i++)
             {
                 vm.Rows.Add(
@@ -106,12 +111,11 @@ namespace KvizCommando.Client.Features.Team.Builders
         private static void BuildMemberRows(TeamMemberDto mem, BottomBlockVm vm, string culture)
         {
             int lvl = mem.Level;
-            //int skill = mem.SkillPoints;
             string levelShort = TeamHelpers.Right(RankNameTable.Data[lvl].PublicLevel ?? "", 2);
             var mainAt = mem.MaintAttitude;
             var secAt = mem.SecondAttitude;
             var genAt = mem.GenderAttitude;
-            // - értékű sorok
+            // A módosítók megjelenítési sorrendje a képernyő két oszlopát követi.
             vm.Rows.Add(BuildMainSkillRow(0, mainAt.Category[0], mem.Level, levelShort, culture));
             vm.Rows.Add(BuildMainSkillRow(2, mainAt.Category[2], mem.Level, levelShort, culture));
 
@@ -120,11 +124,9 @@ namespace KvizCommando.Client.Features.Team.Builders
             vm.Rows.Add(BuildSkillRow(genAt.Skill[0], genAt.Category[0], 4, culture));
             vm.Rows.Add(BuildSkillRow(genAt.Skill[2], genAt.Category[2], 6, culture));
 
-            // + értékű sorok
             vm.Rows.Add(BuildMainSkillRow(1, mainAt.Category[1], mem.Level, levelShort, culture));
             vm.Rows.Add(BuildMainSkillRow(3, mainAt.Category[3], mem.Level, levelShort, culture));
 
-            // Hátsó sorok
             vm.Rows.Add(BuildSkillRow(secAt.Skill[1], secAt.Category[1], 1, culture));
             vm.Rows.Add(BuildSkillRow(secAt.Skill[3], secAt.Category[3], 3, culture));
             vm.Rows.Add(BuildSkillRow(genAt.Skill[1], genAt.Category[1], 5, culture));

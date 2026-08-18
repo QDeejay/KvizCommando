@@ -5,6 +5,9 @@ public static class QuestionLoadoutRules
     public const int MAX_LOADOUT_SIZE = 10;
     public const int OWN_QUESTION_CATEGORY = 17;
 
+    /// <summary>
+    /// Visszaadja a csapatszinthez tartozó kérdéslista méretét.
+    /// </summary>
     public static int GetLoadoutSize(int teamLevel)
     {
         if (teamLevel <= 0)
@@ -20,6 +23,9 @@ public static class QuestionLoadoutRules
             MAX_LOADOUT_SIZE);
     }
 
+    /// <summary>
+    /// Visszaadja a kérdéslistában használható saját kérdések legnagyobb számát.
+    /// </summary>
     public static int GetOwnQuestionLimit(
         int loadoutSize,
         int occupiedUserSlots)

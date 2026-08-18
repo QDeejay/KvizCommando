@@ -250,6 +250,9 @@ public partial class MemberManager : IDisposable
         _usedPoints = [0, 0, 0, 0];
     }
 
+    /// <summary>
+    /// Felszabadítja a példány által használt erőforrásokat.
+    /// </summary>
     public void Dispose()
     {
         Ui.SubHeader.OnButtonClicked -= HandleSubHeaderClicked;

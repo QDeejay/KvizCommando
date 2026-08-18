@@ -16,6 +16,9 @@ namespace KvizCommando.Server.Services
             _GameDb = gamedb;
         }
 
+        /// <summary>
+        /// Elmenti az importált kérdéseket az adatbázisba.
+        /// </summary>
         public async Task<bool> saveImportedQuestionsToDb(List<FactoryQuestion> dto)
         {
             try 
@@ -37,6 +40,9 @@ namespace KvizCommando.Server.Services
             }
         }
 
+        /// <summary>
+        /// Elmenti a függőben lévő kérdést az adatbázisba.
+        /// </summary>
         public async Task<bool> savePendingQuestionToDb(PendingQuestion dto)
         {
 
@@ -58,6 +64,9 @@ namespace KvizCommando.Server.Services
         }
 
 
+        /// <summary>
+        /// Lekéri a megadott kategória gyári kérdéseit.
+        /// </summary>
         public async Task<List<FactoryQuestion>> getFactoryQuestionsByCategoryAsync(int category)
         {
             var questions = await _GameDb.FactoryQuestions
@@ -67,6 +76,9 @@ namespace KvizCommando.Server.Services
 
             return questions;
         }
+        /// <summary>
+        /// Lekéri a megadott kategória függőben lévő kérdéseit.
+        /// </summary>
         public async Task<List<PendingQuestion>> getPendingQuestionsByCategoryAsync(bool status)
         {
             var questions = await _GameDb.PendingQuestions

@@ -48,6 +48,9 @@ namespace KvizCommando.Client.Features.Shared
             };
 
         }
+        /// <summary>
+        /// Felszabadítja a példány által használt erőforrásokat.
+        /// </summary>
         public void Dispose()
         {
             Toast.OnChanged -= ToastChanged;

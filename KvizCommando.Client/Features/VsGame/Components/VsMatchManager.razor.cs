@@ -339,6 +339,9 @@ public partial class VsMatchManager : IAsyncDisposable
                     (deadlineUtc -
                      MatchClient.ServerUtcNow).TotalSeconds));
 
+    /// <summary>
+    /// Aszinkron módon felszabadítja a példány által használt erőforrásokat.
+    /// </summary>
     public async ValueTask DisposeAsync()
     {
         if (_disposed)

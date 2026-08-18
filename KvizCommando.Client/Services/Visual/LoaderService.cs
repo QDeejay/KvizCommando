@@ -11,6 +11,9 @@ namespace KvizCommando.Client.Services.Visual
         private DateTime _hideAt = DateTime.MinValue;
         private bool _running = false;
 
+        /// <summary>
+        /// Elindítja a késleltetett betöltésjelző időzítését.
+        /// </summary>
         public void Trigger()
         {
             _triggerAt = DateTime.UtcNow;
@@ -21,6 +24,9 @@ namespace KvizCommando.Client.Services.Visual
             }
         }
 
+        /// <summary>
+        /// Elrejti az aktuális felületi elemet.
+        /// </summary>
         public void Hide()
         {
             _hideAt = DateTime.UtcNow;
@@ -33,36 +39,32 @@ namespace KvizCommando.Client.Services.Visual
                 await Task.Delay(50);
                 var now = DateTime.UtcNow;
 
-                // 1. Még nem látszik
                 if (!IsVisible)
                 {
-                    // Volt Hide az utolsó Trigger után? Akkor cooldown van
+                    // A gyorsan befejeződő műveletek nem villantják fel a betöltésjelzőt.
                     if (_hideAt > _triggerAt)
                     {
-                        // Cooldown lejárt 1s után
                         if (now - _hideAt >= TimeSpan.FromSeconds(1))
                         {
                             _running = false;
                             return;
                         }
-                        // Cooldown alatt jött új Trigger -> azonnal mutat
+                        // A várakozási idő alatt érkező új művelet azonnal láthatóvá teszi a jelzőt.
                         if (_triggerAt > _hideAt)
                         {
                             IsVisible = true;
                             OnShow?.Invoke();
                         }
                     }
-                    // Nincs Hide, eltelt 500ms -> mutat
                     else if (now - _triggerAt >= TimeSpan.FromMilliseconds(500))
                     {
                         IsVisible = true;
                         OnShow?.Invoke();
                     }
                 }
-                // 2. Látszik
                 else
                 {
-                    // Volt Hide és eltelt 1s -> elrejt
+                    // A minimális láthatósági idő megakadályozza a rövid felvillanást.
                     if (_hideAt > _triggerAt && now - _hideAt >= TimeSpan.FromSeconds(1))
                     {
                         IsVisible = false;

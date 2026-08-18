@@ -7,11 +7,8 @@ namespace KvizCommando.Client.Features.Solo.Builders
 {
     internal enum SgameBoxKeyRoot
     {
-        // -------------- Root ----------------- //
         Category = (int)HomeBoxKey.GameSolo * 100 + 20,
-        //------------------  
         Orientation = (int)HomeBoxKey.GameSolo * 100 + 50,
-        // ------------------
         Campaign = (int)HomeBoxKey.GameSolo * 100 + 3
 
 
@@ -21,7 +18,6 @@ namespace KvizCommando.Client.Features.Solo.Builders
     {
         BtnCat,
         BtnOri,
-        // ------------------ 
         GameBoxCat,
         GameBoxOri
     }

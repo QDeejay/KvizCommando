@@ -21,6 +21,9 @@ public static class VsBoxBuilder
         VsBoxKeyContent.RankedMatchManager.ToString()
     ];
 
+    /// <summary>
+    /// Összeállítja a képernyő tartalmi dobozait.
+    /// </summary>
     public static Dictionary<string, ContentBoxVm> BuildBoxes(
         VsGameDtos data,
         VsComponentParameters parameters,

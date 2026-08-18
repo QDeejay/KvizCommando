@@ -6,6 +6,9 @@ namespace KvizCommando.Server.Extensions;
 
 public static class RateLimitingExtensions
 {
+    /// <summary>
+    /// Regisztrálja az alkalmazásszintű forgalomkorlátozást.
+    /// </summary>
     public static IServiceCollection AddAppRateLimiting(this IServiceCollection services)
     {
         services.AddRateLimiter(options =>

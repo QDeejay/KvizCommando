@@ -4,13 +4,12 @@ using Microsoft.Data.SqlClient;
 namespace KvizCommando.Server.Infrastructure.Security
 {
     /// <summary>
-    /// Helper az Always Encrypted bekapcsolásához SqlClient-ben.
+    /// Az SQL Server Always Encrypted kapcsolati beállítását kezelő segédosztály.
     /// </summary>
     public static class SqlClientColumnEncryptionConfigurator
     {
         /// <summary>
-        /// Visszaad egy connection stringet, amelyben engedélyezve van a Column Encryption Setting=Enabled.
-        /// Ha már be van állítva, változatlanul adja vissza.
+        /// Engedélyezi a Column Encryption Setting értéket a kapcsolati karakterláncban.
         /// </summary>
         public static string WithAlwaysEncrypted(string connectionString)
         {

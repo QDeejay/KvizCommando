@@ -21,22 +21,33 @@ namespace KvizCommando.Client.Services.Visual.UiService
 
         public event Action? OnChanged;
 
-        //----------------------------------------------------
-
+        /// <summary>
+        /// Sikeres értesítést jelenít meg.
+        /// </summary>
         public void Success(string text)
             => _ = Show(text, ToastType.Success);
 
+        /// <summary>
+        /// Hibaértesítést jelenít meg.
+        /// </summary>
         public void Error(string text)
             => _ = Show(text, ToastType.Error);
 
+        /// <summary>
+        /// Figyelmeztető értesítést jelenít meg.
+        /// </summary>
         public void Brief(string text)
             => _ = Show(text, ToastType.Warning);
 
+        /// <summary>
+        /// Tájékoztató értesítést jelenít meg.
+        /// </summary>
         public void Complete(string text)
             => _ = Show(text, ToastType.Info);
 
-        //----------------------------------------------------
-
+        /// <summary>
+        /// Megjeleníti a felületi elemet a megadott adatokkal.
+        /// </summary>
         public async Task Show(string text, ToastType type)
         {
             var toast = new ToastMessage
@@ -54,8 +65,9 @@ namespace KvizCommando.Client.Services.Visual.UiService
             _ = ProcessQueueAsync();
         }
 
-        //----------------------------------------------------
-
+        /// <summary>
+        /// Bezárja az aktuálisan megjelenített értesítést.
+        /// </summary>
         public void Close()
         {
             if (!IsVisible)
@@ -63,9 +75,6 @@ namespace KvizCommando.Client.Services.Visual.UiService
 
             _closeSignal?.TrySetResult();
         }
-
-
-        //----------------------------------------------------
 
         private async Task ProcessQueueAsync()
         {

@@ -10,6 +10,9 @@ namespace ResxExporter;
 
 public static class ResxExporterLogic
 {
+    /// <summary>
+    /// A RESX-erőforrásokat kliensoldali JSON-fájlokká alakítja.
+    /// </summary>
     public static bool ProcessResx(string resxRoot, string outputRoot, Action<string> logInfo, Action<string> logWarning, Action<string> logError)
     {
         if (!Directory.Exists(resxRoot))

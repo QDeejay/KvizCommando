@@ -11,6 +11,9 @@ namespace KvizCommando.Client.Services.Visual.UiService
         public event Action? OnModalShow;
         public event Action? OnModalHide;
 
+        /// <summary>
+        /// Megjeleníti a modális ablakot vagy a betöltésjelzőt.
+        /// </summary>
         public Task<ModalResult> ShowAsync(ModalBoxVm param)
         {
             Parameter = param;
@@ -22,6 +25,9 @@ namespace KvizCommando.Client.Services.Visual.UiService
             return _tcs.Task;
         }
 
+        /// <summary>
+        /// Átadja a modális művelet eredményét a várakozó hívónak.
+        /// </summary>
         public void SendResult(ModalResult result)
         {
             var completion = _tcs;
@@ -36,6 +42,9 @@ namespace KvizCommando.Client.Services.Visual.UiService
             completion.SetResult(result);
         }
 
+        /// <summary>
+        /// Eredmény nélkül lezárja az aktuális modális műveletet.
+        /// </summary>
         public void Cancel()
         {
             SendResult(ModalResult.Close);

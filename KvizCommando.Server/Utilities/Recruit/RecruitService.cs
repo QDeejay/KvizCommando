@@ -8,6 +8,9 @@ namespace KvizCommando.Server.Utilities.Recruit
     public static class RecruitService
     {
 
+        /// <summary>
+        /// Létrehozza a megadott számú és lejáratú toborzási helyet.
+        /// </summary>
         public static RecruitSlot Generate(int count, int expDays)
         {
             return new RecruitSlot
@@ -17,6 +20,9 @@ namespace KvizCommando.Server.Utilities.Recruit
                 ExpirationTime = DateTime.UtcNow.AddDays(expDays)
             };
         }
+        /// <summary>
+        /// Kiszámítja a csapattag- és jelölthelyek elosztását.
+        /// </summary>
         public static (int[], int[], int[]) RecruitResolver(int member, int candidate)
         {
             string m = RecruitData.OrientKeys[member - 1];

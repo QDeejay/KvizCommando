@@ -28,7 +28,7 @@ namespace KvizCommando.Server.Services.PlayerCache
         public CachedPlayer Player { get; set; }
 
         /// <summary>
-        /// Lock az adott játékoshoz tartozó műveletek sorba rendezésére.
+        /// A játékoshoz tartozó párhuzamos műveleteket sorba rendező szemafor.
         /// </summary>
         public SemaphoreSlim Lock { get; }
 

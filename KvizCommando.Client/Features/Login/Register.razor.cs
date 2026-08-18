@@ -41,7 +41,7 @@ namespace KvizCommando.Client.Features.Login
         {
             _resultMessage = string.Empty;
             
-            // --- Email ---
+            // E-mail-cím
             if (!LoginHelper.IsValidEmail(_formData.Email))
             {
                 _resultMessage = Ui.Lang["identityerrors.InvalidEmail"].FormatSafe(_formData.Email);
@@ -52,7 +52,7 @@ namespace KvizCommando.Client.Features.Login
                 _emailFiledSW = false;
             }
 
-            // --- Password: IdentityOptions alapján teljes ellenőrzés ---
+            // A kliens ugyanazokat a jelszószabályokat ellenőrzi, amelyeket a szerver közzétesz.
             _passwordFiledSW = false;
             if (_options is not null)
             {

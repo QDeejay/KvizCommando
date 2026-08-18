@@ -12,6 +12,9 @@ namespace KvizCommando.Client.Features.Solo.Builders
         public static readonly string[] SubCat = BuildNames(SgameBoxKeySub.BtnCat, SoloBoxSpecs.CATEGORY_BOX_COUNT);
         public static readonly string[] SubOri = BuildNames(SgameBoxKeySub.BtnOri, SoloBoxSpecs.ORIENTATION_BOX_COUNT);
 
+        /// <summary>
+        /// Összeállítja a képernyő tartalmi dobozait.
+        /// </summary>
         public static Dictionary<string, ContentBoxVm> BuildBoxes(
             SoloGameDtos ss,
             SoloComponentParameters parameters,

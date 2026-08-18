@@ -26,7 +26,6 @@ public class AuthRedirectHandler : DelegatingHandler
 
         if (response.StatusCode == HttpStatusCode.Unauthorized)
         {
-            // nézd meg, hogy a kérés path-ja benne van-e az ignore listában
             var path = request.RequestUri!.AbsolutePath.ToLowerInvariant();
 
             if (path == "/api/logout")
@@ -34,7 +33,6 @@ public class AuthRedirectHandler : DelegatingHandler
 
             if (!_ignore401Endpoints.Contains(path))
             {
-                //_navigation.NavigateTo("/login", true);
                 _navigation.NavigateTo("/?reason=expired", forceLoad: true);
             }
         }

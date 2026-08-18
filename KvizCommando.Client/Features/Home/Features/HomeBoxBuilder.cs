@@ -8,6 +8,9 @@ public static class HomeBoxBuilder
 {
     public static readonly string[] BtnOrder = Enum.GetNames<HomeBoxKey>();
 
+    /// <summary>
+    /// Összeállítja a bemeneti adatokhoz tartozó megjelenítési modellt.
+    /// </summary>
     public static Dictionary<string, ContentBoxVm> Build(HomeScreen hs, ILanguageService lang)
     {
         var dict = new Dictionary<string, ContentBoxVm>(HomeBoxSpecs.Specs.Count);

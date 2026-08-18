@@ -1,14 +1,14 @@
-﻿// src/Shared/Contracts/CheckIn/CheckInPostRequest.cs
+﻿
 
     namespace KvizCommando.Shared.Contracts.CheckIn
     {
         /// <summary>
-        /// POST /api/check-in kérés: opcionális megjelenített név + kötelező Terms verzió.
+        /// A beléptetés befejezéséhez megadott játékosnév és ÁSZF-verzió.
         /// </summary>
         public sealed class CheckInPostRequest
         {
             /// <summary>
-            /// Opcionális. Ha a felhasználónak nincs DisplayName-je, itt küldi meg.
+            /// A felhasználó nyilvános játékosneve. Már beállított név esetén elhagyható.
             /// </summary>
             public string? DisplayName { get; set; }
             public string? TeamName { get; set; }
@@ -16,10 +16,8 @@
           
 
         /// <summary>
-        /// Kötelező. A felhasználó által elfogadott Terms verziója (vagy hash),
-        /// igazodva a <see cref="TermsMeta"/> reprezentációjához.
+        /// A felhasználó által elfogadott ÁSZF <see cref="TermsMeta.Version"/> értéke.
         /// </summary>
         public string AcceptedTermsVersion { get; set; } = string.Empty;
         }
     }
-

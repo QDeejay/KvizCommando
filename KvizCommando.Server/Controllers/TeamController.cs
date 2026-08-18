@@ -36,6 +36,9 @@ namespace KvizCommando.Server.Controllers
         }
 
 
+        /// <summary>
+        /// Lekéri a csapatképernyő megjelenítési adatait.
+        /// </summary>
         [HttpGet("screen")]
         [ProducesResponseType(typeof(TeamDtos), 200)]
         [ProducesResponseType(401)]
@@ -59,7 +62,10 @@ namespace KvizCommando.Server.Controllers
 
 
 
-        [HttpPost("modify")] // POST /api/team/modify
+        /// <summary>
+        /// Feldolgozza a karakter képességpontjainak mentési kérését.
+        /// </summary>
+        [HttpPost("modify")]
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ApiResponse), 200)]
@@ -68,7 +74,6 @@ namespace KvizCommando.Server.Controllers
         [ProducesResponseType(typeof(ApiResponse), 500)]
         [ProducesResponseType(typeof(ApiResponse), 404)]
         [ProducesResponseType(typeof(ApiResponse), 409)]
-
         public async Task<ActionResult<ApiResponse>> SaveSkillsAsync(
            [FromBody] ModifySkillRequest dto,
            CancellationToken ct)
@@ -109,6 +114,9 @@ namespace KvizCommando.Server.Controllers
         }
 
         [HttpPost("manage")] // POST /api/team/manage
+        /// <summary>
+        /// Végrehajtja a csapaton kért kezelési műveletet.
+        /// </summary>
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ApiResponse), 200)]
@@ -175,7 +183,13 @@ namespace KvizCommando.Server.Controllers
 
         public sealed record ApiResponse(bool Success, string? ServerVersion = null)
         {
+            /// <summary>
+            /// Sikeres API-választ hoz létre.
+            /// </summary>
             public static ApiResponse Ok() => new(true);
+            /// <summary>
+            /// Sikertelen API-választ hoz létre.
+            /// </summary>
             public static ApiResponse Fail() => new(false);
         }
 

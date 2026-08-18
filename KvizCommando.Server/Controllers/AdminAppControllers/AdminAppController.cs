@@ -19,6 +19,9 @@ namespace KvizCommando.Server.Controllers.AdminAppControllers
             _adminAppService = adminAppService;
         }
 
+        /// <summary>
+        /// Importálja a beküldött kérdéslistát.
+        /// </summary>
         [HttpPost("import")]
         public async Task<string> ImportQuestions([FromBody] List<ModelQuestions> questions)
         {
@@ -46,6 +49,9 @@ namespace KvizCommando.Server.Controllers.AdminAppControllers
             return "Success";
         }
 
+        /// <summary>
+        /// Jóváhagyja a függőben lévő kérdést, és átvezeti a gyári kérdések közé.
+        /// </summary>
         [HttpPost("pendingapprove")]
         public async Task<string> ApprovePendingQuestion([FromBody] ModelQuestions question)
         {
@@ -78,6 +84,9 @@ namespace KvizCommando.Server.Controllers.AdminAppControllers
 
 
 
+        /// <summary>
+        /// Visszaadja a megadott kategória gyári kérdéseit.
+        /// </summary>
         [HttpGet("factory")]
         public async Task<FactoryResponse> GetFactoryAsync([FromQuery] int category)
         {
@@ -125,6 +134,9 @@ namespace KvizCommando.Server.Controllers.AdminAppControllers
             };
         }
 
+        /// <summary>
+        /// Visszaadja a függőben lévő kérdéseket.
+        /// </summary>
         [HttpGet("pending")]
         public async Task<FactoryResponse> GetPendingAsync([FromQuery] bool? status = null)
         {

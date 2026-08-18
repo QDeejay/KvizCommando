@@ -11,10 +11,8 @@ using Microsoft.Extensions.Primitives;
 namespace KvizCommando.Server.Services.CheckIn
 {
     /// <summary>
-    /// Fájl-alapú (wwwroot/legal/{culture}/manifest.json) Terms provider rövid memóriacache-sel.
-    /// - Minden kultúrára külön cache entry.
-    /// - Cache érvénytelenítés: rövid TTL + file change token (ha a fájl változik).
-    /// - GDPR-minimum: csak metaadatot szolgáltat (Version/ETag, URL, PublishedAt).
+    /// Az ÁSZF kultúránkénti manifestjét fájlból betöltő szolgáltatás rövid életű memóriacache-sel.
+    /// A cache-t lejárati idő és fájlváltozási token érvényteleníti; a szolgáltatás csak metaadatot ad vissza.
     /// </summary>
     public sealed class TermsProvider : ITermsProvider
     {
@@ -39,6 +37,9 @@ namespace KvizCommando.Server.Services.CheckIn
 
         public string CurrentTermsEtag => GetCurrentTerms().Version;
 
+        /// <summary>
+        /// Visszaadja az aktuális ÁSZF-verzió metaadatait.
+        /// </summary>
         public TermsMeta GetCurrentTerms()
         {
             var culture = NormalizeCulture(CultureInfo.CurrentUICulture?.Name ?? CultureInfo.CurrentCulture.Name);
@@ -98,6 +99,9 @@ namespace KvizCommando.Server.Services.CheckIn
             return meta;
         }
 
+        /// <summary>
+        /// Jelzi, hogy az ÁSZF-verzió elfogadható-e.
+        /// </summary>
         public bool IsValidVersion(string version)
         {
             if (string.IsNullOrWhiteSpace(version)) return false;

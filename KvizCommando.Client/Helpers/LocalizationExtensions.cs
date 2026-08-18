@@ -2,6 +2,9 @@
 {
     public static class LocalizationExtensions
     {
+        /// <summary>
+        /// A formázási helyőrzőket a hiányzó argumentumok mellett is biztonságosan behelyettesíti.
+        /// </summary>
         public static string FormatSafe(this string template, params object[] args)
         {
             if (string.IsNullOrEmpty(template) || args == null || args.Length == 0)
@@ -13,11 +16,10 @@
             }
             catch (FormatException)
             {
-                // Visszaadjuk az eredeti stringet – vagy megpróbáljuk részlegesen behelyettesíteni
+                // Hibás formátum esetén az eredeti sablon biztonságosabb, mint egy renderelési kivétel.
                 return TryPartialReplace(template, args);
             }
         }
-        // Részleges helyettesítés megkísérlése, ha a formázás sikertelen
         private static string TryPartialReplace(string template, object[] args)
         {
             string result = template;

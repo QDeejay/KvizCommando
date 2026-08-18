@@ -6,8 +6,15 @@ using KvizCommando.Shared.Models.Rules;
 
 namespace KvizCommando.Client.Features.Shared.Help.VsRules;
 
+/// <summary>
+/// A rangsorolt súgó változó értékeit a betöltött képernyőadatokból
+/// és a közös meccsszabályokból állítja elő.
+/// </summary>
 public static class VsRankedHelpRules
 {
+    /// <summary>
+    /// Összeállítja a súgószöveg dinamikus helyettesítési értékeit.
+    /// </summary>
     public static IReadOnlyDictionary<string, string> BuildTokens(
         AppState appStates)
     {
@@ -85,9 +92,3 @@ public static class VsRankedHelpRules
         return tokens;
     }
 }
-
-/**
- * A rangsorolt VS help változó értékeit a már betöltött VS
- * képernyő-snapshotból és a közös meccsszabályokból készíti el.
- * A besorolási táblát nem másolja át a kliensbe.
- */

@@ -196,8 +196,6 @@ namespace KvizCommando.Client.Features.Login
             await User.LogoutAsync(true);
             Ui.Nav.NavigateTo("/login");
         }
-        /// Helpers
-        /// 
         private static string ExtractSection(string html, string id)
         {
             var startTag = $"<div id=\"{id}\">";

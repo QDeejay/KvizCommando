@@ -17,6 +17,9 @@ namespace KvizCommando.Client.Services.Visual.UiService
 
         public event Action<int>? OnButtonClicked;
 
+        /// <summary>
+        /// Megjeleníti a felületi elemet a megadott adatokkal.
+        /// </summary>
         public void Show(List<SubHeaderVm> buttons, int index)
         {
             _tabs = [.. buttons];
@@ -24,11 +27,17 @@ namespace KvizCommando.Client.Services.Visual.UiService
             OnButtonsChanged?.Invoke();
         }
 
+        /// <summary>
+        /// Elrejti az aktuális felületi elemet.
+        /// </summary>
         public void Hide()
         {
             Show([], 0);
         }
 
+        /// <summary>
+        /// Továbbítja a kiválasztott alfejlécgomb indexét a feliratkozóknak.
+        /// </summary>
         public void Click(int index)
         {
             if ((uint)index > (uint)_tabs.Length)

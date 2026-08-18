@@ -3,6 +3,9 @@
 
     public class LocationNormalizer
     {
+        /// <summary>
+        /// Egységes alkalmazási formára alakítja a kultúra azonosítóját.
+        /// </summary>
         public static string CultFormat(string? culture)
         {
             if (string.IsNullOrWhiteSpace(culture)) return "en";

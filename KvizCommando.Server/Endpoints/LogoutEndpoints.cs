@@ -1,5 +1,4 @@
-﻿// src/Server/Endpoints/LogoutEndpoints.cs
-#nullable enable
+﻿#nullable enable
 using KvizCommando.Server.Identity;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.Players;
@@ -11,6 +10,9 @@ namespace KvizCommando.Server.Endpoints;
 
 public static class LogoutEndpoints
 {
+    /// <summary>
+    /// Regisztrálja a kijelentkezési végpontokat.
+    /// </summary>
     public static IEndpointRouteBuilder MapLogoutEndpoints(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("/api/logout")
@@ -48,24 +50,20 @@ public static class LogoutEndpoints
             if (sessionStatus == CacheReadStatus.SessionMismatch)
                 return Results.Conflict();
 
-            // Döntés: Bearer vagy Cookie?
             var hasBearer = httpContext.Request.Headers.Authorization
                 .ToString()
                 .StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase);
 
             if (hasBearer)
             {
-                // Bearer → SecurityStamp frissítés (összes session kill)
+                // Bearer kijelentkezésnél a security stamp frissítése minden kiadott tokent érvénytelenít.
                 await userManager.UpdateSecurityStampAsync(user);
             }
             else
             {
-                // Cookie → gyári sign out
                 await signInManager.SignOutAsync();
             }
 
-            // TODO: cache invalidálás (ha lesz PlayerCache)
-            // PlayerCache.Remove(user.Id);
             Console.WriteLine($"Kijelentkezés User{userId} Session:{sessionId}");
             await playerService.LogoutAndRemoveCacheAsync(userId, sessionId, ct);
 

@@ -1,5 +1,4 @@
-﻿// src/Shared/Contracts/CheckIn/TermsMeta.cs
-namespace KvizCommando.Shared.Contracts.CheckIn
+﻿namespace KvizCommando.Shared.Contracts.CheckIn
 {
     public class TermsMeta
     {
@@ -7,7 +6,7 @@ namespace KvizCommando.Shared.Contracts.CheckIn
         public string Url { get; set; } = default!;
 
         /// <summary>
-        /// UTC time in ISO-8601 "O" (round-trip) format.
+        /// Az ÁSZF közzétételének UTC-időpontja ISO 8601 round-trip formátumban.
         /// </summary>
         public DateTime PublishedAt { get; set; }
     }

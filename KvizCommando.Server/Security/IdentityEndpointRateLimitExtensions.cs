@@ -4,6 +4,9 @@ namespace KvizCommando.Server.Security.RateLimiting;
 
 public static class IdentityEndpointRateLimitExtensions
 {
+    /// <summary>
+    /// A végpontok műveletéhez illeszkedő forgalomkorlátozást állít be.
+    /// </summary>
     public static IEndpointConventionBuilder WithPerEndpointRateLimiting(this IEndpointConventionBuilder builder)
     {
         builder.Add(endpointBuilder =>

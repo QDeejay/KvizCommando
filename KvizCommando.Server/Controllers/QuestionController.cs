@@ -40,8 +40,10 @@ namespace KvizCommando.Server.Controllers
             _idCache = userPlayerId;
         }
 
-        /// <summary>Kérdés képernyő komponált DTO.</summary>
-        [HttpGet("screen")] // GET /api/questions/screen
+        /// <summary>
+        /// Lekéri a kérdéskezelő képernyő megjelenítési adatait.
+        /// </summary>
+        [HttpGet("screen")]
         [ProducesResponseType(typeof(QuestionDtos), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
@@ -69,9 +71,10 @@ namespace KvizCommando.Server.Controllers
 
 
 
-        /// <summary>Factory slotok mentése az aktuális játékoshoz.</summary>
-        /// <remarks>Elvárt body: <see cref="UpdateFactorySlotsDto"/>.</remarks>
-        [HttpPost("factory")] // POST /api/questions/factory
+        /// <summary>
+        /// Elmenti az aktuális játékos gyári kérdéshelyeinek összeállítását.
+        /// </summary>
+        [HttpPost("factory")]
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ApiResponse), 200)]
@@ -91,7 +94,6 @@ namespace KvizCommando.Server.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            // alap validáció
             if (dto?.CategorySlots is null || dto.CategorySlots.Length == 0)
                 return FailToast(400, _localizer["Error.MustOneSlot"].Value);
 
@@ -130,6 +132,9 @@ namespace KvizCommando.Server.Controllers
         }
 
         [HttpPost("manageslot")] // POST /api/questions/manageslot
+        /// <summary>
+        /// Végrehajtja a kérdéshelyen kért kezelési műveletet.
+        /// </summary>
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ApiResponse), 200)]
@@ -185,6 +190,9 @@ namespace KvizCommando.Server.Controllers
         }
 
         [HttpPost("sendnew")] // POST /api/questions/sendnew
+        /// <summary>
+        /// Beküldi az új felhasználói kérdést ellenőrzésre.
+        /// </summary>
         [Consumes("application/json")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(ApiResponse), 200)]
@@ -260,7 +268,13 @@ namespace KvizCommando.Server.Controllers
         // Egységes API válasz
         public sealed record ApiResponse(bool Success, string? ServerVersion = null)
         {
+            /// <summary>
+            /// Sikeres API-választ hoz létre.
+            /// </summary>
             public static ApiResponse Ok() => new(true);
+            /// <summary>
+            /// Sikertelen API-választ hoz létre.
+            /// </summary>
             public static ApiResponse Fail() => new(false);
         }
 

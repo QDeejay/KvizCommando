@@ -19,6 +19,9 @@ namespace KvizCommando.Client.Services.Visual.UiService.Language
             _http = http;
         }
         public string this[string key] => Get(key);
+        /// <summary>
+        /// Visszaadja a lokalizációs kulcshoz tartozó szöveget.
+        /// </summary>
         public string Get(string key)
         {
             if (string.IsNullOrEmpty(key))
@@ -26,11 +29,17 @@ namespace KvizCommando.Client.Services.Visual.UiService.Language
 
             return _translations.TryGetValue(key, out var value) ? value : $"#{key}";
         }
+        /// <summary>
+        /// Visszaadja a lokalizált és paraméterekkel formázott szöveget.
+        /// </summary>
         public string GetFormatted(string key, params object[] args)
         {
             var template = Get(key);
             return template.FormatSafe(args);
         }
+        /// <summary>
+        /// Betölti a megadott lokalizációs modult.
+        /// </summary>
         public async Task LoadModuleAsync(string culture, string moduleName)
         {
             if (_loadedModules.Contains(moduleName))
@@ -75,6 +84,9 @@ namespace KvizCommando.Client.Services.Visual.UiService.Language
         }
 
 
+        /// <summary>
+        /// Törli a megadott nyelvhez tartozó lokalizációs gyorsítótárat.
+        /// </summary>
         public async Task ClearLanguageCacheAsync(string deleteculture)
         {
             Console.WriteLine($"--- Törlés indul: {deleteculture}");

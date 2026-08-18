@@ -8,6 +8,9 @@ public sealed class VsMatchStore
     private readonly ConcurrentDictionary<string, Guid> _connectionMatches = [];
     private readonly ConcurrentDictionary<int, Guid> _playerMatches = [];
 
+    /// <summary>
+    /// Megkísérli hozzáadni a meccset a meccstárhoz.
+    /// </summary>
     public bool TryAdd(VsMatchSession match)
     {
         if (!_matches.TryAdd(match.MatchId, match))
@@ -52,12 +55,21 @@ public sealed class VsMatchStore
         return true;
     }
 
+    /// <summary>
+    /// Jelzi, hogy a meccstár tartalmazza-e a megadott játékost.
+    /// </summary>
     public bool ContainsPlayer(int playerId) =>
         _playerMatches.ContainsKey(playerId);
 
+    /// <summary>
+    /// Megkísérli visszaadni a megadott azonosítójú elemet.
+    /// </summary>
     public bool TryGet(Guid matchId, out VsMatchSession? match) =>
         _matches.TryGetValue(matchId, out match);
 
+    /// <summary>
+    /// Megkísérli visszaadni a kapcsolathoz tartozó meccset és játékost.
+    /// </summary>
     public bool TryGetByConnection(
         string connectionId,
         out VsMatchSession? match)
@@ -70,6 +82,9 @@ public sealed class VsMatchStore
                _matches.TryGetValue(matchId, out match);
     }
 
+    /// <summary>
+    /// Megkísérli visszaadni a játékoshoz tartozó meccset és játékosállapotot.
+    /// </summary>
     public bool TryGetByPlayer(
         int playerId,
         out VsMatchSession? match)
@@ -80,6 +95,9 @@ public sealed class VsMatchStore
                _matches.TryGetValue(matchId, out match);
     }
 
+    /// <summary>
+    /// Felszabadítja a játékos meccshez tartozó foglalásait.
+    /// </summary>
     public void ReleasePlayer(VsMatchSession match, VsMatchPlayerState player)
     {
         if (_connectionMatches.TryGetValue(
@@ -125,6 +143,9 @@ public sealed class VsMatchStore
         return [.. players];
     }
 
+    /// <summary>
+    /// Megkísérli eltávolítani a meccset a meccstárból.
+    /// </summary>
     public bool TryRemove(Guid matchId, out VsMatchSession? match)
     {
         match = null;

@@ -15,6 +15,9 @@ public static class TBoxBuilder
     public static readonly string[] SubRecruit =
         [TBoxKeyContent.RecruitContent.ToString()];
 
+    /// <summary>
+    /// Összeállítja a képernyő tartalmi dobozait.
+    /// </summary>
     public static Dictionary<string, ContentBoxVm> BuildBoxes(
         TeamRootBoxInfo rootInfo,
         TeamComponentParameters parameters,

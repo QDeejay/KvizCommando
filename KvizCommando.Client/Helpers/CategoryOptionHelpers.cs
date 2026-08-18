@@ -9,6 +9,9 @@ namespace KvizCommando.Client.Helpers
         {
             _lookup = lookup;
         }
+        /// <summary>
+        /// A kategóriamaszk alapján frissíti a választható kategóriákat.
+        /// </summary>
         public CategoryOption[] OptionsUpdate(optionType otype, bool[] categorymask)
         {
             var MergedMask = new bool[18];
@@ -31,6 +34,9 @@ namespace KvizCommando.Client.Helpers
             }
             return catOption;
         }
+        /// <summary>
+        /// Visszaadja a kategóriakód lokalizált feliratát.
+        /// </summary>
         public string ResolveLabel(int code, string culture)
         {
             return _lookup.ResolveLabel(code, culture);

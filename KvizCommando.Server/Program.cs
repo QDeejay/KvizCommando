@@ -17,25 +17,25 @@ using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- MVC + Razor ---
+// Webes keretrendszer és állapottartó szolgáltatások
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddMemoryCache();
 builder.Services.AddSignalR();
-// --- Saját szolgáltatások ---
+// Alkalmazásszolgáltatások
 builder.Services.AddCustomServices();
 
-// --- Background szolgáltatások ---
+// Háttérfolyamatok
 builder.Services.AddBackgroundWorkers();
 
 builder.Services.AddHttpContextAccessor();
 
 
-// --- EF Core ---
+// Adatbázis-kapcsolatok
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-    // SQL Server verzió:
+    // SQL Server alternatíva; a központi szolgáltatókapcsoló elkészültéig kikommentelve marad.
     // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
     //     sqlOptions => sqlOptions.EnableRetryOnFailure());
 });
@@ -43,17 +43,17 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDbContext<GameDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("GameConnection"));
-    // SQL Server verzió:
+    // SQL Server alternatíva; a központi szolgáltatókapcsoló elkészültéig kikommentelve marad.
     // options.UseSqlServer(builder.Configuration.GetConnectionString("GameConnection"),
     //     sqlOptions => sqlOptions.EnableRetryOnFailure());
 });
 
 
-// PII + security réteg
+// Biztonsági és személyesadat-kezelési réteg
 builder.Services.AddSecurityAndPii(builder.Configuration);
 
 
-// --- Authentikáció + autorizáció ---
+// Hitelesítéshez kapcsolódó infrastruktúra
 builder.Services.AddAppCors(builder.Configuration);
 builder.Services.AddAppRateLimiting();
 builder.Services.AddAppDataProtection(builder.Configuration, builder.Environment);
@@ -81,7 +81,7 @@ builder.Services.AddTransient<IEmailSender<ApplicationUser>, WhitelistedEmailSen
 builder.Services.Configure<AppOptions>(
     builder.Configuration.GetSection("App"));
 
-// --- Identity ---
+// Identity
 builder.Services.AddCustomIdentity(builder.Configuration);
 
 builder.Logging.ClearProviders();
@@ -95,7 +95,7 @@ var categoryQuestionIndexCache =
     app.Services.GetRequiredService<ICategoryQuestionIndexCache>();
 
 await categoryQuestionIndexCache.LoadAsync();
-// --- Dev eszközök ---
+// Fejlesztői eszközök
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -104,11 +104,10 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-// --- Lokalizáció ---
+// Lokalizáció
 app.UseAppLocalization("hu-HU", new[] { "hu-HU", "en-US" });
 
-// --- Middleware lánc ---
-//app.UseHttpsRedirection();
+// HTTP-feldolgozási lánc
 
 var clientAssetCacheOptions = new StaticFileOptions
 {
@@ -131,6 +130,8 @@ app.UseStaticFiles(clientAssetCacheOptions);
 app.UseRouting();
 
 app.UseCors("Spa");
+// Fejlesztési callback-diagnosztika. A principal naplózása miatt éles környezetben
+// nem maradhat nyilvánosan elérhető; lezárását a docs/infrastructure-status.md rögzíti.
 app.MapGet("/signin-facebook", async ctx =>
 {
     var authRes = await ctx.AuthenticateAsync(IdentityConstants.ExternalScheme);
@@ -139,11 +140,12 @@ app.MapGet("/signin-facebook", async ctx =>
     Console.WriteLine("Principal: " + authRes.Principal);
 });
 
-app.UseAuthentication();   // <<< fontos: routing után
+// Az endpoint kiválasztása megelőzi, a jogosultságvizsgálat pedig követi a hitelesítést.
+app.UseAuthentication();
 app.UseAuthorization();
 
-// Alapból ki van kapcsolva. Asztali vagy mobil kliens tesztelésekor segít eldönteni,
-// hogy a cookie vagy a bearer hitelesítés akadt-e el. Tokent és felhasználói adatot nem ír a naplóba.
+// A diagnosztika mobil és asztali kliens tesztelésekor elkülöníti a cookie- és bearer-hibákat.
+// Alapértelmezetten ki van kapcsolva, és tokent vagy felhasználói adatot nem naplóz.
 if (builder.Configuration.GetValue<bool>("Diagnostics:EnableAuthenticationDebugLogging"))
 {
     app.Use(async (context, next) =>
@@ -176,7 +178,7 @@ if (builder.Configuration.GetValue<bool>("Diagnostics:EnableAuthenticationDebugL
 app.UseRateLimiter();
 app.UseExceptionHandler();
 
-// --- Endpointok ---
+// Végpontok
 app.MapRazorPages();
 
 
@@ -184,9 +186,9 @@ app.MapControllers();
 app.MapHub<VsMatchHub>("/hubs/vs-match");
 app.MapHub<SoloGameHub>("/hubs/solo-game");
 
-// Identity API endpointok (login, register, confirm, reset)
+// Identity API: bejelentkezés, regisztráció, megerősítés és jelszó-visszaállítás
 app.MapGroup("/")
-   .MapIdentityApi<ApplicationUser>()   // gyári .NET 8 login/register/refresh
+   .MapIdentityApi<ApplicationUser>()
    .WithPerEndpointRateLimiting()
    .WithIdentityAudit();
 app.MapLogoutEndpoints();

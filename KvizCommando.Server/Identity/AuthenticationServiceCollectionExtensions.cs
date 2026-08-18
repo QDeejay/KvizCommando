@@ -6,6 +6,9 @@ namespace KvizCommando.Server.Identity;
 
 public static class AuthenticationServiceCollectionExtensions
 {
+    /// <summary>
+    /// Regisztrálja a cookie- és bearer-alapú hitelesítési sémákat.
+    /// </summary>
     public static IServiceCollection AddCustomAuthentication(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -13,15 +16,13 @@ public static class AuthenticationServiceCollectionExtensions
         services
             .AddAuthentication(options =>
             {
-                // alap séma → Identity.Application
+                // A böngészős kérések alapértelmezett sémája az alkalmazás cookie-ja.
                 options.DefaultScheme = IdentityConstants.ApplicationScheme;
 
-                // ideiglenes külső login cookie → Identity.External
+                // A külső szolgáltató válaszát külön, rövid életű cookie kezeli.
                 options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
             })
-            // végleges auth cookie (WASM, web)
             .AddCookie(IdentityConstants.ApplicationScheme)
-            // ideiglenes külső provider cookie
             .AddCookie(IdentityConstants.ExternalScheme, options =>
             {
                 options.Cookie.Name = "QC_External_CookieCooker";
@@ -30,44 +31,38 @@ public static class AuthenticationServiceCollectionExtensions
             })
             .AddCookie(IdentityConstants.TwoFactorRememberMeScheme)
             .AddCookie(IdentityConstants.TwoFactorUserIdScheme)
-            // opaque bearer token (mobil/desktop)
             .AddBearerToken(IdentityConstants.BearerScheme)
-            // Facebook provider
             .AddFacebook(options =>
             {
 
                 options.AppId = configuration["Authentication:Facebook:AppId"];
                 options.AppSecret = configuration["Authentication:Facebook:AppSecret"];
-                options.CallbackPath = "/signin-facebook"; // gyári endpoint
+                options.CallbackPath = "/signin-facebook";
                 options.Scope.Add("email");
-                options.SaveTokens = true; // <<< fontos
+                options.SaveTokens = true;
 
-                // extra log, hogy lásd a raw payloadot
                 options.Events = new OAuthEvents
                 {
                     OnRemoteFailure = ctx =>
                     {
-                        // Facebook visszadobta: error=access_denied, error_reason=user_denied, stb.
                         var redirect = ctx.Properties?.RedirectUri;
                         if (string.IsNullOrEmpty(redirect))
-                            redirect = "/"; // ha nincs beállítva, essünk vissza a főoldalra
+                            redirect = "/";
 
-                        // Gyűjtsük ki a FB által adott hibákat
-                        var err = ctx.Request.Query["error"].ToString();              // pl. access_denied
-                        var reas = ctx.Request.Query["error_reason"].ToString();       // pl. user_denied
-                        var desc = ctx.Request.Query["error_description"].ToString();  // pl. Permissions error
+                        var err = ctx.Request.Query["error"].ToString();
+                        var reas = ctx.Request.Query["error_reason"].ToString();
+                        var desc = ctx.Request.Query["error_description"].ToString();
 
-                        // Állítsunk be egy egységes kódot – ha nincs, legyen 'external_login_failed'
+                        // Az egységes hibakódot a kliens szolgáltatófüggetlenül tudja feldolgozni.
                         var code = string.IsNullOrEmpty(err) ? "external_login_failed" : err;
 
-                        // Építsük fel az egységes ?error=... query-t
                         var sep = redirect.Contains('?') ? '&' : '?';
                         var q = $"{sep}error={Uri.EscapeDataString(code)}";
                         if (!string.IsNullOrEmpty(reas)) q += $"&reason={Uri.EscapeDataString(reas)}";
                         if (!string.IsNullOrEmpty(desc)) q += $"&desc={Uri.EscapeDataString(desc)}";
 
                         ctx.Response.Redirect(redirect + q);
-                        ctx.HandleResponse(); // fontos: ne dobja tovább az exception-t
+                        ctx.HandleResponse();
                         return Task.CompletedTask;
                     },
 
@@ -81,23 +76,19 @@ public static class AuthenticationServiceCollectionExtensions
                     }
 
                 };
-                // Plusz log az auth URL-hez
-
             });
 
-        // SecurityStamp validator
+        // A bélyeg minden kérésnél történő ellenőrzése azonnal érvényteleníti a visszavont munkameneteket.
         services.Configure<SecurityStampValidatorOptions>(options =>
         {
             options.ValidationInterval = TimeSpan.Zero;
         });
 
-        // Data protection token providers
         services.Configure<DataProtectionTokenProviderOptions>(options =>
         {
             options.TokenLifespan = TimeSpan.FromHours(24);
         });
 
-        // Application cookie finomhangolás
         services.ConfigureApplicationCookie(options =>
         {
             options.Cookie.Name = "Quiz_Commando_CookieCooker";

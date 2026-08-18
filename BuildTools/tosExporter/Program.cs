@@ -6,29 +6,24 @@ namespace tosExporter;
 
 internal static class Program
 {
-    // FIXED PATHS – állítsd, ha kell
-    private const string InputRoot = @"C:\Exports\TermsExporter\Input";   // pl. ...\Input\hu-HU\*.html
-    private const string OutputRoot = @"C:\Exports\TermsExporter\Outputs"; // pl. ...\Outputs\hu-HU\terms-v1.1.html
+    // A segédprogram jelenleg helyi fejlesztői könyvtárakkal működik.
+    private const string InputRoot = @"C:\Exports\TermsExporter\Input";
+    private const string OutputRoot = @"C:\Exports\TermsExporter\Outputs";
 
-    // Támogatott kultúrák
     private static readonly string[] Cultures = { "hu-HU", "en-US" };
 
-    // Fix kimeneti alapnév: terms-v{version}.html
     private const string OutputBaseName = "terms";
 
-    // Verzió-kinyerő regexek (sorrendben próbáljuk)
-    // 1) "...v1.2.3" vagy "...V1.2" (szóhatár vagy nem-betű/szám jel után)
+    // A fájlnév verzióját a minták az itt megadott sorrendben keresik.
     private static readonly Regex RxV123 = new(@"[vV](?<ver>\d+(?:\.\d+){0,2})\b", RegexOptions.CultureInvariant);
-    // 2) elválasztás ponttal/kötőjellel/alsóvonással + verzió "1.2.3"
     private static readonly Regex RxSep123 = new(@"[.\-_](?<ver>\d+(?:\.\d+){0,2})\b", RegexOptions.CultureInvariant);
-    // 3) a név végén álló sima szám (pl. "terms2.html" → 2)
     private static readonly Regex RxTrailingInt = new(@"(?<ver>\d+)\b", RegexOptions.CultureInvariant);
 
     private sealed class Manifest
     {
         public string Culture { get; set; } = "";
         public string Version { get; set; } = "";
-        public DateTime UpdatedAt { get; set; }  // UTC
+        public DateTime UpdatedAt { get; set; }
         public string Path { get; set; } = "";
     }
 
@@ -36,7 +31,7 @@ internal static class Program
     {
         Console.OutputEncoding = Encoding.UTF8;
 
-        // 1) opcionális: --version 1.1  vagy --version=1.1  (levágjuk a vezető 'v'-t)
+        // A parancssori verzió elsőbbséget élvez a fájlnévből felismert értékkel szemben.
         var versionArg = ParseVersionArg(args);
 
         int created = 0, errors = 0;
@@ -54,7 +49,6 @@ internal static class Program
                     continue;
                 }
 
-                // Válasszuk a legfrissebb *.html fájlt
                 var candidate = Directory.EnumerateFiles(inputDir, "*.html", SearchOption.TopDirectoryOnly)
                                          .OrderByDescending(f => new FileInfo(f).LastWriteTimeUtc)
                                          .FirstOrDefault();
@@ -65,7 +59,6 @@ internal static class Program
                     continue;
                 }
 
-                // 2) verzió eldöntése: CLI > fájlnévből > hiba
                 var version = !string.IsNullOrWhiteSpace(versionArg)
                               ? versionArg
                               : ExtractVersionFromFileName(Path.GetFileNameWithoutExtension(candidate));
@@ -80,10 +73,8 @@ internal static class Program
                 var outputFileName = $"{OutputBaseName}-v{version}.html";
                 var outputFilePath = Path.Combine(outputDir, outputFileName);
 
-                // Másolás (felülírással)
                 File.Copy(candidate, outputFilePath, overwrite: true);
 
-                // Manifest írás
                 var manifest = new Manifest
                 {
                     Culture = culture,
@@ -111,7 +102,7 @@ internal static class Program
 
     private static string ParseVersionArg(string[] args)
     {
-        // Elfogadjuk: --version 1.1  vagy  --version=1.1  (és levágjuk a vezető 'v'-t, ha van)
+        // Mind a „--version 1.1”, mind a „--version=1.1” alak támogatott.
         for (int i = 0; i < args.Length; i++)
         {
             var a = args[i];
@@ -140,7 +131,7 @@ internal static class Program
 
     private static string ExtractVersionFromFileName(string name)
     {
-        // Próbáljuk a különböző mintákat:
+        // Az első illeszkedő verzióminta határozza meg az eredményt.
         // aszfv1.1, aszf.v1.1, aszf-v1.1, aszf_1.1, terms2, stb.
         var m = RxV123.Match(name);
         if (m.Success) return m.Groups["ver"].Value;

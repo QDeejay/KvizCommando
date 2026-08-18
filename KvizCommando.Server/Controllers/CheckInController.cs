@@ -38,6 +38,9 @@ public sealed class CheckInController : ControllerBase
         _signInManager = signInManager;
     }
 
+    /// <summary>
+    /// Lekéri az aktuális beléptetési állapotot.
+    /// </summary>
     [HttpGet]
     [ProducesResponseType(typeof(CheckInGetResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -54,6 +57,9 @@ public sealed class CheckInController : ControllerBase
         return Ok(dto);
     }
 
+    /// <summary>
+    /// Feldolgozza és elmenti a beléptetés során megadott adatokat.
+    /// </summary>
     [HttpPost]
     [Consumes("application/json")]
     [ProducesResponseType(typeof(CheckInPostResponse), StatusCodes.Status200OK)]

@@ -66,6 +66,9 @@ public static class VsBattleClassificationRules
         }
     ];
 
+    /// <summary>
+    /// Visszaadja azokat a rangsorolt osztályokat, amelyekbe a csapat beléphet.
+    /// </summary>
     public static int[] GetEligibleClassificationIds(
         int teamRank,
         IReadOnlyCollection<int> memberRanks)
@@ -82,9 +85,15 @@ public static class VsBattleClassificationRules
         ];
     }
 
+    /// <summary>
+    /// Jelzi, hogy a megadott csapatlétszám támogatott-e.
+    /// </summary>
     public static bool IsSupportedPartySize(int partySize) =>
         List.Any(rule => rule.RequiredPartySize == partySize);
 
+    /// <summary>
+    /// Jelzi, hogy a karakter kiválasztható-e a rangsorolt csapatba.
+    /// </summary>
     public static bool CanSelectMember(
         int teamRank,
         int energyPoints,
@@ -95,6 +104,9 @@ public static class VsBattleClassificationRules
         (memberRank > 0 ||
          teamRank >= UnrankedMemberMinimumTeamRank);
 
+    /// <summary>
+    /// Jelzi, hogy a karakter nyugdíjazásra vár-e.
+    /// </summary>
     public static bool IsAwaitingRetirement(
         int memberRank,
         int memberXp) =>
@@ -123,6 +135,9 @@ public static class VsBattleClassificationRules
                rule.RequiredMembersInRankClassRange;
     }
 
+    /// <summary>
+    /// Visszaadja a ranghoz tartozó rendfokozati osztályt.
+    /// </summary>
     public static int ResolveRankClass(int rank) =>
         rank == 0 ? 0 : (rank - 1) / 3 + 1;
 }

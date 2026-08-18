@@ -42,6 +42,9 @@ namespace KvizCommando.Client.Services.User
             _sessionCache = sessionCache;
         }
 
+        /// <summary>
+        /// Hitelesíti a felhasználót a megadott bejelentkezési adatokkal.
+        /// </summary>
         public async Task<(bool Success, string Errors)> LoginAsync(LoginRequestForm formData)
         {
             // Query param a RememberMe logikának megfelelően
@@ -66,6 +69,9 @@ namespace KvizCommando.Client.Services.User
 
             return (false, "identityerrors.LoginFailed");
         }
+        /// <summary>
+        /// Kijelentkezteti az aktuális felhasználót.
+        /// </summary>
         public async Task LogoutAsync(bool soft)
         {
             var SessionId = _sessionCache.SessionId;
@@ -115,6 +121,9 @@ namespace KvizCommando.Client.Services.User
             _sessionCache.Clear();
             _nav.NavigateTo($"/?reason={reason}", forceLoad: true);
         }
+        /// <summary>
+        /// Megerősíti a felhasználó e-mail-címét az Identity kódjával.
+        /// </summary>
         public async Task<bool> ConfirmEmailAsync(string userId, string code)
         {
 
@@ -136,6 +145,9 @@ namespace KvizCommando.Client.Services.User
             }
 
         }
+        /// <summary>
+        /// Elindítja az elfelejtett jelszó helyreállítási folyamatát.
+        /// </summary>
         public async Task<bool> ForgotPswAsync(ForgotPasswordRequestForm formData)
         {
             // 
@@ -156,6 +168,9 @@ namespace KvizCommando.Client.Services.User
 
 
         }
+        /// <summary>
+        /// Beállítja az új jelszót a helyreállítási kód alapján.
+        /// </summary>
         public async Task<(bool Success, List<string> Errors)> RecoverPasswordAsync(ResetPasswordForm formData)
         {
             var dto = new ResetPasswordDto()
@@ -181,14 +196,19 @@ namespace KvizCommando.Client.Services.User
 
             if (problem?.Errors != null && problem.Errors.Count > 0)
             {
-                // simán visszaadjuk a szerver által adott kulcsokat
                 var ErrorKeyList = problem.Errors.Keys.ToList();
                 return (false, ErrorKeyList);
             }
 
             return (false, new List<string> { "DefaultError" });
         }
+        /// <summary>
+        /// Törli az aktuális felhasználói profilt.
+        /// </summary>
         public Task<bool> ProfileDeleteAsync() => Task.FromResult(true);
+        /// <summary>
+        /// Regisztrálja a megadott felhasználói profilt.
+        /// </summary>
         public async Task<(bool Success, List<string> Errors)> ProfileRegistAsync(RegisterRequestForm formData)
         {
             var dto = new RegisterRequestDto()
@@ -215,13 +235,15 @@ namespace KvizCommando.Client.Services.User
 
             if (problem?.Errors != null && problem.Errors.Count > 0)
             {
-                // simán visszaadjuk a szerver által adott kulcsokat
                 var ErrorKeyList = problem.Errors.Keys.ToList();
                 return (false, ErrorKeyList);
             }
 
             return (false, new List<string> { "DefaultError" });
         }
+        /// <summary>
+        /// Lekéri a bejelentkezés utáni beléptetési állapotot, és szükség esetén navigál.
+        /// </summary>
         public async Task<(bool CanNavigateHome, List<string> Errors)> CheckInStartAsync(bool needToRoute, CancellationToken ct = default)
         {
             string sessionId = Guid.NewGuid().ToString("N");
@@ -265,7 +287,7 @@ namespace KvizCommando.Client.Services.User
             return (true, new List<string>());
         }
         /// <summary>
-        /// POST /api/checkin → siker: 204 → (true, []); hiba: 4xx + ProblemDetails → (false, ErrorKeys)
+        /// Elküldi a beléptetési adatokat, és visszaadja a lokalizálható hibakódokat.
         /// </summary>
         public async Task<(bool Success, List<string> Errors, string SugDispName)> CheckInFinishedAsync(CheckInPostRequest request, CancellationToken ct = default)
         {

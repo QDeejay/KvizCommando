@@ -19,6 +19,9 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
         private const string UNLOCK_SEP = " => ";
 
+        /// <summary>
+        /// Összeállítja a jelölt felvételéhez tartozó modális nézetmodellt.
+        /// </summary>
         public ModalHireVm BuildHireVm(CandidateDto candidate, int hpos, int candno, string culture)
         {
             var vm = new ModalHireVm();
@@ -64,6 +67,9 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             return vm;
         }
 
+        /// <summary>
+        /// Összeállítja a csapat előléptetéséhez tartozó modális nézetmodellt.
+        /// </summary>
         public ModalTeamPromoteVm BuildTeamPromoteVm(
             TeamExtendedInfo info,
             HelpDto help,
@@ -167,6 +173,9 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
             return vm;
         }
+        /// <summary>
+        /// Összeállítja a karakter előléptetéséhez tartozó modális nézetmodellt.
+        /// </summary>
         public ModalPromoteVm BuildPromoteVm(TeamMemberDto member, string culture)
         {
             var vm = new ModalPromoteVm();
@@ -215,6 +224,9 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             AttitudeLineResolver(member.GenderAttitude, vm, RankConstants.startLevels[8..12], newLevel, culture, [0, 1, 0, 1]);
             return vm;
         }
+        /// <summary>
+        /// Összeállítja a karakter nyugdíjazásához tartozó modális nézetmodellt.
+        /// </summary>
         public ModalRetireVm BuildRetireVm(TeamMemberDto member, string culture)
         {
             var vm = new ModalRetireVm();
@@ -248,6 +260,9 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
             return vm;
         }
+        /// <summary>
+        /// Összeállítja a karakter kezeléséhez tartozó modális nézetmodellt.
+        /// </summary>
         public ModalHandleVm BuildHandleVm(TeamMemberDto member, string culture)
         {
             var vm = new ModalHandleVm();

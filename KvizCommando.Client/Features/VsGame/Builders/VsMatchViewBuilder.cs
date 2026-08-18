@@ -40,6 +40,9 @@ public sealed class VsMatchViewBuilder
         _lang = lang;
     }
 
+    /// <summary>
+    /// Összeállítja a rangsorolt várólista nézetadatait.
+    /// </summary>
     public VsQueueViewData BuildQueue(
         VsRankedQueueSnapshot snapshot)
     {
@@ -63,6 +66,9 @@ public sealed class VsMatchViewBuilder
         };
     }
 
+    /// <summary>
+    /// Összeállítja a bemeneti adatokhoz tartozó megjelenítési modellt.
+    /// </summary>
     public VsMatchViewData Build(
         VsMatchSnapshot snapshot,
         string culture)

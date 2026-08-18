@@ -9,6 +9,9 @@ public sealed class SoloGameCache : ISoloGameCache
     private readonly ConcurrentDictionary<int, Guid> _playerGames = new();
     public SoloGameCache(IMemoryCache cache) => _cache = cache;
 
+    /// <summary>
+    /// Megkísérli létrehozni az aktív egyéni játék cache-bejegyzését.
+    /// </summary>
     public bool TryCreate(SoloGameSession session)
     {
         if (!_playerGames.TryAdd(session.PlayerId, session.GameId)) return false;
@@ -22,9 +25,15 @@ public sealed class SoloGameCache : ISoloGameCache
         return true;
     }
 
+    /// <summary>
+    /// Megkísérli visszaadni a megadott azonosítójú elemet.
+    /// </summary>
     public bool TryGet(Guid gameId, out SoloGameSession? session)
         => _cache.TryGetValue(CacheKey(gameId), out session);
 
+    /// <summary>
+    /// Megkísérli visszaadni a játékos aktív egyéni játékát.
+    /// </summary>
     public bool TryGetActiveGame(
         int playerId,
         out SoloGameSession? session)
@@ -46,6 +55,9 @@ public sealed class SoloGameCache : ISoloGameCache
         return false;
     }
 
+    /// <summary>
+    /// Eltávolítja a megadott játékot a gyorsítótárból.
+    /// </summary>
     public void Remove(Guid gameId)
     {
         if (TryGet(gameId, out var game) && game is not null)

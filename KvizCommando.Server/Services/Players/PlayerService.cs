@@ -33,6 +33,9 @@ namespace KvizCommando.Server.Services.Players
             _vsMatch = vsMatch;
         }
 
+        /// <summary>
+        /// Ellenőrzi, hogy a játékos munkamenete továbbra is érvényes-e.
+        /// </summary>
         public async Task<CacheReadStatus> CheckSessionAsync(
             string userId,
             string sessionId,
@@ -48,6 +51,9 @@ namespace KvizCommando.Server.Services.Players
                 ct);
         }
 
+        /// <summary>
+        /// Kijelentkezteti a játékost, és eltávolítja a gyorsítótárból.
+        /// </summary>
         public async Task LogoutAndRemoveCacheAsync(string userId, string sessionId, CancellationToken ct = default)
         {
             var playerId = await _idCasche.GetPlayerIdAsync(userId);

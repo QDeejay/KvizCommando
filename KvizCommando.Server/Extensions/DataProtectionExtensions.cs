@@ -4,6 +4,9 @@ namespace KvizCommando.Server.Extensions;
 
 public static class DataProtectionExtensions
 {
+    /// <summary>
+    /// Regisztrálja és konfigurálja az alkalmazás adatvédelmi kulcskezelését.
+    /// </summary>
     public static IServiceCollection AddAppDataProtection(this IServiceCollection services, IConfiguration cfg, IHostEnvironment env)
     {
         var dp = services.AddDataProtection();

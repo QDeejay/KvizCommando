@@ -4,9 +4,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using KvizCommando.Server.Domain.Entities.Compliance;
-using KvizCommando.Server.Infrastructure.Auth;           // CustomClaimTypes
-using KvizCommando.Server.Infrastructure.Persistence;   // ApplicationDbContext
-using KvizCommando.Server.Services.CheckIn;             // ITermsProvider
+using KvizCommando.Server.Infrastructure.Auth;
+using KvizCommando.Server.Infrastructure.Persistence;
+using KvizCommando.Server.Services.CheckIn;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,8 +15,8 @@ using Microsoft.Extensions.Logging;
 namespace KvizCommando.Server.Authorization
 {
     /// <summary>
-    /// Authorization handler, amely összeveti a principal ÁSZF-claimjét (terms.accepted.etag)
-    /// az aktuális központi ETag-gel. Opcionálisan – csak ha a claim HIÁNYZIK – egy gyors DB-fallbacket is végez.
+    /// Az ÁSZF-claimet az aktuális központi verzióval összevető jogosultságkezelő.
+    /// Hiányzó claim esetén konfigurálható adatbázis-ellenőrzést alkalmazhat.
     /// </summary>
     public sealed class TermsAcceptedHandler : AuthorizationHandler<TermsAcceptedRequirement>
     {
@@ -39,37 +39,33 @@ namespace KvizCommando.Server.Authorization
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, TermsAcceptedRequirement requirement)
         {
-            // 0) Authenticated user kell – ha nincs, nem itt a helye eldönteni
             if (context.User?.Identity?.IsAuthenticated != true)
                 return;
 
-            // 1) Aktuális központi ETag
             var currentEtag = _termsProvider.CurrentTermsEtag;
             if (string.IsNullOrWhiteSpace(currentEtag))
-                return; // nincs mire ellenőrizni → ne succeed, ne is fail (más handler még érvényesülhet)
+                return;
 
-            // 2) Claimből olvasás (nincs FirstOrDefault – beépített API-t használunk)
             var claimedEtag = context.User.FindFirst(CustomClaimTypes.TermsAcceptedEtag)?.Value;
 
             if (!string.IsNullOrEmpty(claimedEtag))
             {
-                // 2/a) Claim megvan → pontos egyezést várunk
                 if (string.Equals(claimedEtag, currentEtag, StringComparison.Ordinal))
                 {
                     context.Succeed(requirement);
                 }
                 else
                 {
-                    // Egyértelmű, régi ÁSZF – direkt fail (ne legyen további „mentő” próbálkozás)
+                    // Az elavult claim kifejezett elutasítása megakadályozza a DB-fallback használatát.
                     context.Fail();
                 }
                 return;
             }
 
-            // 3) Opcionális defense-in-depth: claim HIÁNYZIK → DB fallback (kikapcsolható appsettingsből)
+            // Az adatbázis-ellenőrzés csak hiányzó claimnél használható; elavult claimet nem írhat felül.
             var enableDbFallback = _config.GetValue<bool>("Auth:TermsPolicy:EnableDbFallback", false);
             if (!enableDbFallback)
-                return; // nincs claim → nem succeed, nem is fail (marad 403, ha ez az egyetlen handler)
+                return;
 
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrWhiteSpace(userId))
@@ -77,7 +73,6 @@ namespace KvizCommando.Server.Authorization
 
             try
             {
-                // Utolsó elfogadott Terms verzió lekérdezése – LINQ nélkül indexeléshez igazodva
                 var lastAccepted = await _db.Set<TermsConsent>()
                     .AsNoTracking()
                     .Where(x => x.UserId == userId)
@@ -92,18 +87,17 @@ namespace KvizCommando.Server.Authorization
                 if (!string.IsNullOrEmpty(lastVersion) &&
                     string.Equals(lastVersion, currentEtag, StringComparison.Ordinal))
                 {
-                    // A DB szerint naprakész – succeed (a következő refresh/login frissíti majd a claimet)
+                    // A következő tokenfrissítés vagy cookie-belépés pótolja a hiányzó claimet.
                     context.Succeed(requirement);
                 }
                 else
                 {
-                    // Nincs egyezés → fail
                     context.Fail();
                 }
             }
             catch (Exception ex)
             {
-                // Ha bármi gond, nem engedünk át (biztonságos default)
+                // Ellenőrzési hiba esetén a jogosultság nem adható meg.
                 _logger.LogWarning(ex, "Terms policy DB-fallback hiba. UserId={UserId}", userId);
                 context.Fail();
             }

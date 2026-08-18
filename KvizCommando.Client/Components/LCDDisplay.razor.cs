@@ -94,6 +94,9 @@ namespace KvizCommando.Client.Components
             IsVisible = CurrentText is not null;
         }
 
+        /// <summary>
+        /// Felszabadítja a példány által használt erőforrásokat.
+        /// </summary>
         public void Dispose()
         {
             _isDisposed = true;
