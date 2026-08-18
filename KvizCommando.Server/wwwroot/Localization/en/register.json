@@ -2,7 +2,8 @@
   "Button": "Regist",
   "ConfirmPassword": "Confirm password",
   "Email": "E-mail address",
-  "ResultMsg01": "Registration Succesful!",
-  "ResultMsg02": "We sent the validation link to the e-mail address!",
+  "EmailOutputHint": "Development file delivery is active. The HTML preview of the confirmation e-mail is available here: {0}",
+  "ResultMsg01": "Registration successful!",
+  "ResultMsg02": "We sent the confirmation link to the provided e-mail address.",
   "Title": "Registration"
 }

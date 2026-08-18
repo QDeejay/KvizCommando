@@ -1,5 +1,6 @@
 {
   "Email": "Please give your e-mail address!",
+  "EmailOutputHint": "Development file delivery is active. The HTML preview of the password reset e-mail is available here: {0}",
   "Error.Email": "Invalid e-mail address!",
   "Succes.Email": "Please follow the instructions in the e-mail to reset your password!",
   "Title": "Forgot password request"

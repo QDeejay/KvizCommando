@@ -1,0 +1,76 @@
+﻿#nullable enable
+using KvizCommando.Server.Identity;
+using KvizCommando.Server.Services.PlayerCache;
+using KvizCommando.Server.Services.Players;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+
+namespace KvizCommando.Server.Startup;
+
+public static class LogoutEndpoints
+{
+    /// <summary>
+    /// Regisztrálja a kijelentkezési végpontokat.
+    /// </summary>
+    /// <param name="routes">A végpontokat fogadó útvonalcsoport.</param>
+    public static IEndpointRouteBuilder MapLogoutEndpoints(this IEndpointRouteBuilder routes)
+    {
+        var group = routes.MapGroup("/api/logout")
+            .WithTags("Auth")
+            .RequireAuthorization("Api"); // minden logout auth-ot igényel
+           
+        // POST /api/logout
+        group.MapPost("", async (
+            [FromBody] string sessionId,
+            HttpContext httpContext,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IPlayerService playerService,
+            CancellationToken ct) =>
+        {
+            var userId = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)
+                       ?? httpContext.User.FindFirstValue("sub");
+
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return Results.Unauthorized();
+            }
+
+            var user = await userManager.FindByIdAsync(userId);
+            if (user is null)
+            {
+                return Results.Unauthorized();
+            }
+
+            var sessionStatus = await playerService.CheckSessionAsync(
+                userId,
+                sessionId,
+                ct);
+
+            if (sessionStatus == CacheReadStatus.SessionMismatch)
+                return Results.Conflict();
+
+            var hasBearer = httpContext.Request.Headers.Authorization
+                .ToString()
+                .StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase);
+
+            if (hasBearer)
+            {
+                // Bearer kijelentkezésnél a security stamp frissítése minden kiadott tokent érvénytelenít.
+                await userManager.UpdateSecurityStampAsync(user);
+            }
+            else
+            {
+                await signInManager.SignOutAsync();
+            }
+
+            Console.WriteLine($"Kijelentkezés User{userId} Session:{sessionId}");
+            await playerService.LogoutAndRemoveCacheAsync(userId, sessionId, ct);
+
+            return Results.NoContent();
+        });
+
+        return routes;
+    }
+}

@@ -2,7 +2,8 @@
   "Button": "Regisztráció",
   "ConfirmPassword": "Jelszó megerősítése",
   "Email": "E-mail cím",
+  "EmailOutputHint": "Fejlesztői fájlkézbesítés aktív. A megerősítő levél HTML-előnézete itt található: {0}",
   "ResultMsg01": "Sikeres regisztráció!",
-  "ResultMsg02": "Megadott emailre elküdtük a megerősítő linket!",
+  "ResultMsg02": "A megadott e-mail-címre elküldtük a megerősítő linket.",
   "Title": "Regisztráció"
 }

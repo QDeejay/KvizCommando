@@ -28,5 +28,9 @@ namespace KvizCommando.Shared.Options
             public int DisplayNameMaxLength { get; set; }
             public int DisplayNameMinLength { get; set; }
 
+            // Kizárólag Development környezetben, fájlos kézbesítésnél kap értéket.
+            public string? RegistrationEmailOutputPath { get; set; }
+            public string? PasswordResetEmailOutputPath { get; set; }
+
         }
  }

@@ -1,8 +1,5 @@
-﻿using KvizCommando.Client;
-using KvizCommando.Infrastructure.Email;
 using KvizCommando.Server.Identity;
 using KvizCommando.Server.Infrastructure.Options;
-using Microsoft.AspNetCore.Builder.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
@@ -11,143 +8,195 @@ using System.Text;
 
 namespace KvizCommando.Server.Infrastructure.Email;
 
+/// <summary>
+/// Elkészíti az Identity által igényelt, lokalizált rendszerleveleket.
+/// A kézbesítés módját az <see cref="IEmailDelivery"/> aktuális implementációja határozza meg.
+/// </summary>
 public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>
 {
     private readonly ILogger<WhitelistedEmailSender> _logger;
     private readonly IStringLocalizer<WhitelistedEmailSender> _localizer;
-    private readonly AppOptions _options;
+    private readonly AppOptions _appOptions;
+    private readonly EmailOptions _emailOptions;
+    private readonly IEmailDelivery _delivery;
+    private readonly ICallbackUrlValidator _callbackUrlValidator;
 
     public WhitelistedEmailSender(
         ILogger<WhitelistedEmailSender> logger,
         IStringLocalizer<WhitelistedEmailSender> localizer,
-        IOptions<AppOptions> appoptions)     
+        IOptions<AppOptions> appOptions,
+        IOptions<EmailOptions> emailOptions,
+        IEmailDelivery delivery,
+        ICallbackUrlValidator callbackUrlValidator)
     {
         _logger = logger;
         _localizer = localizer;
-        _options = appoptions.Value;
+        _appOptions = appOptions.Value;
+        _emailOptions = emailOptions.Value;
+        _delivery = delivery;
+        _callbackUrlValidator = callbackUrlValidator;
     }
 
-    /// <summary>
-    /// Előkészíti és fájlba írja a regisztrációt megerősítő levelet.
-    /// </summary>
-    /// <param name="user">Az érintett Identity-felhasználó.</param>
-    /// <param name="email">A feldolgozandó e-mail-cím.</param>
-    /// <param name="confirmationLink">A felhasználói fiók megerősítésére szolgáló hivatkozás.</param>
-    public async Task SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink)
+    /// <inheritdoc />
+    public Task SendConfirmationLinkAsync(
+        ApplicationUser user,
+        string email,
+        string confirmationLink)
     {
-        var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
-        if (culture != "hu" && culture != "en")
-            culture = "en";
-
-        var (subject, htmlBody, textBody) =
-            await LoadTemplateAsync("RegistrationConfirm", culture, confirmationLink,"confirm");
-
-        _logger.LogInformation("Confirmation email sent to {Email}. Subject: {Subject}", user.Email, subject);
-
-        var delivery = new FileEmailDelivery();
-        await delivery.WriteAsync(user.Email, "no-reply@kvizcommando.local",
-                                  subject, textBody, htmlBody, CancellationToken.None);
+        return CreateAndDeliverAsync(
+            EmailMessageType.Registration,
+            email,
+            "RegistrationConfirm",
+            "auth/confirm",
+            GetQuery(confirmationLink));
     }
 
-    /// <summary>
-    /// Előkészíti és fájlba írja a jelszó-visszaállító hivatkozást tartalmazó levelet.
-    /// </summary>
-    /// <param name="user">Az érintett Identity-felhasználó.</param>
-    /// <param name="email">A feldolgozandó e-mail-cím.</param>
-    /// <param name="resetLink">A jelszó visszaállítására szolgáló hivatkozás.</param>
-    public async Task SendPasswordResetLinkAsync(ApplicationUser user, string email, string resetLink)
+    /// <inheritdoc />
+    public Task SendPasswordResetLinkAsync(
+        ApplicationUser user,
+        string email,
+        string resetLink)
     {
-        var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
-        if (culture != "hu" && culture != "en")
-            culture = "en";
-
-        var (subject, htmlBody, textBody) =
-            await LoadTemplateAsync("ResetPassword", culture, resetLink, "reset-password");
-
-        _logger.LogInformation("Password reset link sent to {Email}. Subject: {Subject}", user.Email, subject);
-
-        var delivery = new FileEmailDelivery();
-        await delivery.WriteAsync(user.Email, "no-reply@kvizcommando.local",
-                                  subject, textBody, htmlBody, CancellationToken.None);
+        return CreateAndDeliverAsync(
+            EmailMessageType.PasswordReset,
+            email,
+            "ResetPassword",
+            "auth/reset-password",
+            GetQuery(resetLink));
     }
 
-    /// <summary>
-    /// Előkészíti és fájlba írja a jelszó-visszaállító kódot tartalmazó levelet.
-    /// </summary>
-    /// <param name="user">Az érintett Identity-felhasználó.</param>
-    /// <param name="email">A feldolgozandó e-mail-cím.</param>
-    /// <param name="resetCode">A jelszó-visszaállítás egyszer használatos kódja.</param>
-    public async Task SendPasswordResetCodeAsync(ApplicationUser user, string email, string resetCode)
+    /// <inheritdoc />
+    public Task SendPasswordResetCodeAsync(
+        ApplicationUser user,
+        string email,
+        string resetCode)
     {
-        var resetLink = $"https://Localhost:7229/Auth/reset-password?email={Uri.EscapeDataString(email)}&code={Uri.EscapeDataString(resetCode)}\r\n";
-        var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
-        if (culture != "hu" && culture != "en")
-            culture = "en";
+        var query = QueryString.Create(new Dictionary<string, string?>
+        {
+            ["email"] = email,
+            ["code"] = resetCode
+        }).Value;
 
-        var (subject, htmlBody, textBody) =
-            await LoadTemplateAsync("ResetPassword", culture, resetLink, "reset-password");
-
-        _logger.LogInformation("Password reset email sent to {Email}. Subject: {Subject}", user.Email, subject);
-
-        var delivery = new FileEmailDelivery();
-        await delivery.WriteAsync(user.Email, "no-reply@kvizcommando.local",
-                                  subject, textBody, htmlBody, CancellationToken.None);
+        return CreateAndDeliverAsync(
+            EmailMessageType.PasswordReset,
+            email,
+            "ResetPassword",
+            "auth/reset-password",
+            query);
     }
-    
-    private async Task<(string subject, string htmlBody, string textBody)> LoadTemplateAsync(
-    string baseName, string culture, string confirmationLink, string page)
+
+    private async Task CreateAndDeliverAsync(
+        EmailMessageType type,
+        string recipient,
+        string templateName,
+        string targetPath,
+        string query)
     {
-        var appName = _options.Name;
-        var supporEmail = _options.SupportEmail;
-        var hours = _options.TokenValidityHours;
-        var TempHost = _options.TempServerIp;
-        var appUrl = _options.WebUrl;
-        var uri = new Uri(confirmationLink);
-        var query = uri.Query;
-        var pagePath = $"/auth/{page}";
+        var culture = GetSupportedCulture();
+        var targetUrl = BuildTargetUrl(targetPath, query);
+        var content = await LoadTemplateAsync(
+            templateName,
+            culture,
+            targetUrl);
 
-        // A callback jelenleg az ideiglenes publikus fejlesztői hostra mutat.
-        // Az éles kézbesítési és hostkonfigurációt a docs/infrastructure-status.md rögzíti.
-        var customLink = $"https://kviz-commando.ngrok.app{pagePath}{query}";
+        var message = new EmailMessage(
+            type,
+            recipient,
+            "no-reply@kvizcommando.local",
+            content.Subject,
+            content.TextBody,
+            content.HtmlBody);
 
-        var templateDir = Path.Combine(AppContext.BaseDirectory,
-            "Infrastructure", "Email", "Templates", "EmailTemplates", "Auth");
+        await _delivery.DeliverAsync(message, CancellationToken.None);
+        _logger.LogInformation(
+            "A {EmailType} típusú Identity-levél átadásra került a kézbesítő adapternek.",
+            type);
+    }
 
-        var htmlPath = Path.Combine(templateDir, $"{baseName}.{culture}.html");
-        var txtPath = Path.Combine(templateDir, $"{baseName}.{culture}.txt");
+    private async Task<(string Subject, string HtmlBody, string TextBody)> LoadTemplateAsync(
+        string baseName,
+        string culture,
+        string targetUrl)
+    {
+        var templateDirectory = Path.Combine(
+            AppContext.BaseDirectory,
+            "Infrastructure",
+            "Email",
+            "Templates",
+            "EmailTemplates",
+            "Auth");
 
-        var htmlBody = File.Exists(htmlPath)
-            ? await File.ReadAllTextAsync(htmlPath, Encoding.UTF8)
-            : "";
-        var textBody = File.Exists(txtPath)
-            ? await File.ReadAllTextAsync(txtPath, Encoding.UTF8)
-            : "";
-       
-        var DisplayName = _localizer["DisplayName.Fallback"];
-        htmlBody = htmlBody
-                    .Replace("{{AppName}}", appName)
-                    .Replace("{{DisplayName}}", DisplayName)
-                     .Replace("{{ConfirmUrl}}", customLink)
-                     .Replace("{{TokenValidityHours}}", hours.ToString())
-                     .Replace("{{SupportEmail}}", supporEmail)
-                     .Replace("{{Year}}", DateTime.UtcNow.Year.ToString());
+        var htmlPath = Path.Combine(templateDirectory, $"{baseName}.{culture}.html");
+        var textPath = Path.Combine(templateDirectory, $"{baseName}.{culture}.txt");
 
-        textBody = textBody
-            .Replace("{{AppName}}", appName)
-            .Replace("{{DisplayName}}", DisplayName)
-            .Replace("{{ConfirmUrl}}", customLink)
-            .Replace("{{TokenValidityHours}}", hours.ToString())
-            .Replace("{{SupportEmail}}", supporEmail)
-            .Replace("{{Year}}", DateTime.UtcNow.Year.ToString());
+        if (!File.Exists(htmlPath) || !File.Exists(textPath))
+        {
+            throw new FileNotFoundException(
+                $"Hiányzik a(z) {baseName}.{culture} e-mail-sablon.");
+        }
 
+        var htmlBody = await File.ReadAllTextAsync(htmlPath, Encoding.UTF8);
+        var textBody = await File.ReadAllTextAsync(textPath, Encoding.UTF8);
+        var displayName = _localizer["DisplayName.Fallback"].Value;
+
+        htmlBody = ReplaceTemplateTokens(htmlBody, displayName, targetUrl);
+        textBody = ReplaceTemplateTokens(textBody, displayName, targetUrl);
 
         var subjectKey = baseName == "RegistrationConfirm"
             ? "Email.Confirm.Subject"
-            : "Email.Reset.Subject";
-       
-        var subject = _localizer[subjectKey].Value;
-        subject = subject.Replace("{{AppName}}", appName);  
+            : "Email.Subject.ResetPassword";
+        var subject = _localizer[subjectKey].Value
+            .Replace("{{AppName}}", _appOptions.Name);
+
         return (subject, htmlBody, textBody);
     }
 
+    private string ReplaceTemplateTokens(
+        string template,
+        string displayName,
+        string targetUrl) => template
+        .Replace("{{AppName}}", _appOptions.Name)
+        .Replace("{{DisplayName}}", displayName)
+        .Replace("{{ConfirmUrl}}", targetUrl)
+        .Replace("{{TokenValidityHours}}", _appOptions.TokenValidityHours.ToString())
+        .Replace("{{SupportEmail}}", _appOptions.SupportEmail)
+        .Replace("{{Year}}", DateTime.UtcNow.Year.ToString());
+
+    private string BuildTargetUrl(string targetPath, string query)
+    {
+        var builder = new UriBuilder(_emailOptions.GetActiveBaseUri())
+        {
+            Path = targetPath.TrimStart('/'),
+            Query = query.TrimStart('?')
+        };
+
+        var targetUrl = builder.Uri.AbsoluteUri;
+        if (!_callbackUrlValidator.IsAllowedAbsoluteUrl(targetUrl))
+        {
+            throw new InvalidOperationException(
+                "Az e-mail visszahívási URL-je nem engedélyezett hostra mutat.");
+        }
+
+        return targetUrl;
+    }
+
+    private static string GetQuery(string absoluteUrl)
+    {
+        if (!Uri.TryCreate(absoluteUrl, UriKind.Absolute, out var uri))
+        {
+            throw new InvalidOperationException(
+                "Az Identity érvénytelen visszahívási URL-t adott át az e-mail-küldőnek.");
+        }
+
+        return uri.Query;
+    }
+
+    private static string GetSupportedCulture()
+    {
+        var culture = CultureInfo.CurrentUICulture
+            .TwoLetterISOLanguageName
+            .ToLowerInvariant();
+
+        return culture is "hu" or "en" ? culture : "en";
+    }
 }

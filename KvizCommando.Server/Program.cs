@@ -1,10 +1,5 @@
-﻿using KvizCommando.Server.DependencyInjection;
-using KvizCommando.Server.Endpoints;
-using KvizCommando.Server.Extensions;
+﻿using KvizCommando.Server.Startup;
 using KvizCommando.Server.Hubs;
-using KvizCommando.Server.Identity;
-using KvizCommando.Server.Infrastructure.Logging;
-using KvizCommando.Server.Security.RateLimiting;
 using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,8 +16,11 @@ builder.Services
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
-builder.Logging.AddDebug();
-builder.Logging.SetMinimumLevel(LogLevel.Debug);
+if (builder.Environment.IsDevelopment())
+{
+    builder.Logging.AddDebug();
+    builder.Logging.SetMinimumLevel(LogLevel.Debug);
+}
 
 var app = builder.Build();
 
@@ -30,6 +28,7 @@ var categoryQuestionIndexCache =
     app.Services.GetRequiredService<ICategoryQuestionIndexCache>();
 
 await categoryQuestionIndexCache.LoadAsync();
+
 // Fejlesztői eszközök
 if (app.Environment.IsDevelopment())
 {
@@ -37,6 +36,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseWebAssemblyDebugging();
     app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler();
 }
 
 // Lokalizáció
@@ -74,23 +77,14 @@ app.UseAuthorization();
 app.UseAuthenticationDiagnostics(builder.Configuration);
 
 app.UseRateLimiter();
-app.UseExceptionHandler();
 
 // Végpontok
 app.MapRazorPages();
-
-
 app.MapControllers();
 app.MapHub<VsMatchHub>("/hubs/vs-match");
 app.MapHub<SoloGameHub>("/hubs/solo-game");
 
-// Identity API: bejelentkezés, regisztráció, megerősítés és jelszó-visszaállítás
-app.MapGroup("/")
-   .MapIdentityApi<ApplicationUser>()
-   .WithPerEndpointRateLimiting()
-   .WithIdentityAudit();
-app.MapLogoutEndpoints();
-app.MapFacebookAuthEndpoints();
+app.MapKvizCommandoIdentityEndpoints();
 
 app.MapFallbackToFile("index.html", clientAssetCacheOptions);
 

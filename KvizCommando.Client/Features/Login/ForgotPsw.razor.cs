@@ -1,12 +1,18 @@
-﻿using KvizCommando.Client.Services.User;
+﻿using KvizCommando.Client.Helpers;
+using KvizCommando.Client.Services;
+using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.Auth;
+using KvizCommando.Shared.Options;
+using Microsoft.AspNetCore.Components;
 using System.Globalization;
 
 namespace KvizCommando.Client.Features.Login
 {
     partial class ForgotPsw : KcComponentBase
     {
+        [Inject] private IdentityRulesService IdentityRules { get; set; } = default!;
+
         readonly string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
         private ForgotPasswordRequestForm formData { get; set; } = new();
@@ -14,6 +20,18 @@ namespace KvizCommando.Client.Features.Login
         private bool ColorSW { get; set; } = false;
         private bool CanSend => !string.IsNullOrWhiteSpace(formData.email);
         private bool Success { get; set; } = false;
+        private RegisterOptionsResponse? _options;
+        private string PasswordResetEmailHint =>
+            string.IsNullOrWhiteSpace(_options?.PasswordResetEmailOutputPath)
+                ? string.Empty
+                : Ui.Lang["forgotosw.EmailOutputHint"]
+                    .FormatSafe(_options.PasswordResetEmailOutputPath);
+
+        protected override async Task OnInitializedAsync()
+        {
+            _options = await IdentityRules.GetRulesAsync();
+        }
+
         protected async Task SendEmail()
         {
             if (!IsValidEmail(formData.email))
@@ -22,16 +40,11 @@ namespace KvizCommando.Client.Features.Login
                 ColorSW = true;
                 return;
             }
-            else
-            {
-                ColorSW = false;
-                await User.ForgotPswAsync(formData);
-                    Success = true;
-                    ResultMessage = Ui.Lang["forgotosw.Succes.Email"];
-                    formData.email = string.Empty;
-                    return;  
-            }
-
+            ColorSW = false;
+            await User.ForgotPswAsync(formData);
+            Success = true;
+            ResultMessage = Ui.Lang["forgotosw.Succes.Email"];
+            formData.email = string.Empty;
         }
         private void NavigateHome()
         {

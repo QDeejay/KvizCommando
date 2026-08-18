@@ -1,4 +1,5 @@
 ﻿using KvizCommando.Server.Identity;
+using KvizCommando.Server.Infrastructure.Email;
 using KvizCommando.Shared.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,10 +14,17 @@ namespace KvizCommando.Server.Controllers.NonAuthenticatedControllers;
 public class AuthOptionsController : ControllerBase
 {
     private readonly IdentityOptions _options;
+    private readonly EmailOptions _emailOptions;
+    private readonly IWebHostEnvironment _environment;
 
-    public AuthOptionsController(IOptions<IdentityOptions> options)
+    public AuthOptionsController(
+        IOptions<IdentityOptions> options,
+        IOptions<EmailOptions> emailOptions,
+        IWebHostEnvironment environment)
     {
         _options = options.Value;
+        _emailOptions = emailOptions.Value;
+        _environment = environment;
     }
 
     /// <summary>
@@ -43,6 +51,20 @@ public class AuthOptionsController : ControllerBase
             DisplayNameMaxLength = CheckInValidationOptions.DisplayNameMaxLength,
             DisplayNameMinLength = CheckInValidationOptions.DisplayNameMinLength,
         };
+
+        if (_environment.IsDevelopment() &&
+            string.Equals(
+                _emailOptions.Service,
+                EmailOptions.FileService,
+                StringComparison.OrdinalIgnoreCase))
+        {
+            dto.RegistrationEmailOutputPath = Path.Combine(
+                _emailOptions.OutputRoot,
+                FileEmailDelivery.GetDirectoryName(EmailMessageType.Registration));
+            dto.PasswordResetEmailOutputPath = Path.Combine(
+                _emailOptions.OutputRoot,
+                FileEmailDelivery.GetDirectoryName(EmailMessageType.PasswordReset));
+        }
 
         return Ok(dto);
     }

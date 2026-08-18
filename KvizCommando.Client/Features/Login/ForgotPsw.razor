@@ -28,6 +28,11 @@
                 <br><br>
             }
             <label style="@((ColorSW ? "color: red;" : null))" class="label-text">@ResultMessage</label>
+            @if (Success && !string.IsNullOrWhiteSpace(PasswordResetEmailHint))
+            {
+                <br>
+                <label class="label-text">@PasswordResetEmailHint</label>
+            }
     </div>
 
 
@@ -39,7 +44,3 @@
     </div>
 </div> 
 </LangGuard>
-
-
-   
-        

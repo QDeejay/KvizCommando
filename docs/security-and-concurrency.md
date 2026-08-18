@@ -29,4 +29,8 @@ Az aktív egyéni játékok gyorsítótára játékazonosító és játékosazon
 
 ## Auditnapló
 
-A helyi auditfájl írását folyamaton belüli lock védi. Ez kizárólag az egy alkalmazáspéldányból érkező sorok összecsúszását akadályozza meg; több példány, fájlrotáció és manipuláció elleni védelem nincs megoldva. Az IP-cím hash-elése önmagában nem jelent anonimizálást, ezért a megőrzési és hozzáférési szabályokat az éles naplózási megoldásban külön kell meghatározni.
+A fájlos auditlogger singleton élettartamú; egy közös `SemaphoreSlim` akadályozza meg, hogy az ugyanazon alkalmazáspéldányból érkező sorok összecsússzanak. A zárolás hatóköre kizárólag a könyvtárkarbantartásra és a fájlírásra terjed ki. Több alkalmazáspéldány közötti koordinációt és manipuláció elleni védelmet nem biztosít.
+
+Az auditfájlok naponta elkülönülnek, a konfigurált megőrzési időnél régebbi fájlokat a logger eltávolítja. A takarítás kizárólag a beállított auditkönyvtár közvetlen `audit-*.jsonl` fájljait érintheti; általános könyvtártörlés nem vezethető be.
+
+IP-cím csak bekapcsolt opció és külön titkos kulcs mellett, HMAC formában kerülhet a bejegyzésbe. A hash nem jelent automatikus anonimizálást. E-mail-cím, token, jelszó-visszaállító kód, cookie, Authorization fejléc és request body auditba írása tilos.

@@ -127,10 +127,13 @@
     <value>E-mail address</value>
   </data>
   <data name="ResultMsg01" xml:space="preserve">
-    <value>Registration Succesful!</value>
+    <value>Registration successful!</value>
   </data>
   <data name="ResultMsg02" xml:space="preserve">
-    <value>We sent the validation link to the e-mail address!</value>
+    <value>We sent the confirmation link to the provided e-mail address.</value>
+  </data>
+  <data name="EmailOutputHint" xml:space="preserve">
+    <value>Development file delivery is active. The HTML preview of the confirmation e-mail is available here: {0}</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Registration</value>

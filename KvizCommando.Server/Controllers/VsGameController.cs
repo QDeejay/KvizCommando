@@ -1,5 +1,5 @@
 using KvizCommando.Server.Authorization;
-using KvizCommando.Server.Extensions;
+using KvizCommando.Server.Infrastructure.Http;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.UserPlayerIdCache;
 using KvizCommando.Server.Services.VsGame;
