@@ -10,7 +10,7 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Policy = TermsAcceptedRequirement.PolicyName)]
+    [Authorize(Policy = TermsAcceptedRequirement.POLICY_NAME)]
     public class ScreenController : ControllerBase
     {
         private readonly IScreenService _screenService;

@@ -39,7 +39,7 @@ public static class LogoutEndpoints
             {
                 await audit.LogAsync(
                     new AuditEntry(
-                        AuditEvents.Logout,
+                        AuditEvents.LOGOUT,
                         AuditOutcome.Failed,
                         ActorId: null,
                         SubjectId: null,
@@ -53,7 +53,7 @@ public static class LogoutEndpoints
             {
                 await audit.LogAsync(
                     new AuditEntry(
-                        AuditEvents.Logout,
+                        AuditEvents.LOGOUT,
                         AuditOutcome.Failed,
                         ActorId: null,
                         SubjectId: userId,
@@ -71,7 +71,7 @@ public static class LogoutEndpoints
             {
                 await audit.LogAsync(
                     new AuditEntry(
-                        AuditEvents.Logout,
+                        AuditEvents.LOGOUT,
                         AuditOutcome.Denied,
                         userId,
                         userId,
@@ -92,7 +92,7 @@ public static class LogoutEndpoints
                 {
                     await audit.LogAsync(
                         new AuditEntry(
-                            AuditEvents.SessionRevoked,
+                            AuditEvents.SESSION_REVOKED,
                             AuditOutcome.Failed,
                             userId,
                             userId,
@@ -100,7 +100,7 @@ public static class LogoutEndpoints
                             httpContext.TraceIdentifier));
                     await audit.LogAsync(
                         new AuditEntry(
-                            AuditEvents.Logout,
+                            AuditEvents.LOGOUT,
                             AuditOutcome.Failed,
                             userId,
                             userId,
@@ -123,7 +123,7 @@ public static class LogoutEndpoints
             {
                 await audit.LogAsync(
                     new AuditEntry(
-                        AuditEvents.SessionRevoked,
+                        AuditEvents.SESSION_REVOKED,
                         AuditOutcome.Succeeded,
                         userId,
                         userId,
@@ -133,7 +133,7 @@ public static class LogoutEndpoints
 
             await audit.LogAsync(
                 new AuditEntry(
-                    AuditEvents.Logout,
+                    AuditEvents.LOGOUT,
                     AuditOutcome.Succeeded,
                     userId,
                     userId,

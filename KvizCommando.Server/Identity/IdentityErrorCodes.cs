@@ -8,14 +8,14 @@ namespace KvizCommando.Server.Identity
     public static class IdentityErrorCodes
     {
         // DisplayName hibák
-        public const string DisplayNameRequired = "DisplayNameRequired";
-        public const string DisplayNameTooShort = "DisplayNameTooShort";
-        public const string DisplayNameTooLong = "DisplayNameTooLong";
-        public const string DisplayNameInvalidCharacters = "DisplayNameInvalidCharacters";
-        public const string DisplayNameAlreadyTaken = "DisplayNameAlreadyTaken";
+        public const string DISPLAY_NAME_REQUIRED = "DisplayNameRequired";
+        public const string DISPLAY_NAME_TOO_SHORT = "DisplayNameTooShort";
+        public const string DISPLAY_NAME_TOO_LONG = "DisplayNameTooLong";
+        public const string DISPLAY_NAME_INVALID_CHARACTERS = "DisplayNameInvalidCharacters";
+        public const string DISPLAY_NAME_ALREADY_TAKEN = "DisplayNameAlreadyTaken";
 
         // Terms hibák
-        public const string TermsNotAccepted = "TermsNotAccepted";
-        public const string TermsVersionOutdated = "TermsVersionOutdated";
+        public const string TERMS_NOT_ACCEPTED = "TermsNotAccepted";
+        public const string TERMS_VERSION_OUTDATED = "TermsVersionOutdated";
     }
 }

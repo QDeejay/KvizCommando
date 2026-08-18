@@ -2,31 +2,31 @@
 
 public static class AuditEvents
 {
-    public const string AccountRegistered = "Account.Registered";
-    public const string AccountDeactivated = "Account.Deactivated";
-    public const string AccountDeleted = "Account.Deleted";
+    public const string ACCOUNT_REGISTERED = "Account.Registered";
+    public const string ACCOUNT_DEACTIVATED = "Account.Deactivated";
+    public const string ACCOUNT_DELETED = "Account.Deleted";
 
-    public const string Login = "Auth.Login";
-    public const string AccountLocked = "Auth.AccountLocked";
-    public const string Logout = "Auth.Logout";
-    public const string SessionReplaced = "Auth.SessionReplaced";
-    public const string SessionRevoked = "Auth.SessionRevoked";
+    public const string LOGIN = "Auth.Login";
+    public const string ACCOUNT_LOCKED = "Auth.AccountLocked";
+    public const string LOGOUT = "Auth.Logout";
+    public const string SESSION_REPLACED = "Auth.SessionReplaced";
+    public const string SESSION_REVOKED = "Auth.SessionRevoked";
 
-    public const string PasswordChanged = "Identity.PasswordChanged";
-    public const string PasswordResetRequested = "Identity.PasswordResetRequested";
-    public const string PasswordReset = "Identity.PasswordReset";
-    public const string EmailChanged = "Identity.EmailChanged";
-    public const string ExternalLoginLinked = "Identity.ExternalLoginLinked";
-    public const string ExternalLoginRemoved = "Identity.ExternalLoginRemoved";
+    public const string PASSWORD_CHANGED = "Identity.PasswordChanged";
+    public const string PASSWORD_RESET_REQUESTED = "Identity.PasswordResetRequested";
+    public const string PASSWORD_RESET = "Identity.PasswordReset";
+    public const string EMAIL_CHANGED = "Identity.EmailChanged";
+    public const string EXTERNAL_LOGIN_LINKED = "Identity.ExternalLoginLinked";
+    public const string EXTERNAL_LOGIN_REMOVED = "Identity.ExternalLoginRemoved";
 
-    public const string TermsAccepted = "Privacy.TermsAccepted";
-    public const string MarketingConsentGranted = "Privacy.MarketingConsentGranted";
-    public const string MarketingConsentWithdrawn = "Privacy.MarketingConsentWithdrawn";
+    public const string TERMS_ACCEPTED = "Privacy.TermsAccepted";
+    public const string MARKETING_CONSENT_GRANTED = "Privacy.MarketingConsentGranted";
+    public const string MARKETING_CONSENT_WITHDRAWN = "Privacy.MarketingConsentWithdrawn";
 
     // A még nem létező GDPR-folyamatok számára fenntartott eseménynevek.
-    public const string DataExport = "Privacy.DataExport";
-    public const string Rectification = "Privacy.Rectification";
-    public const string Erasure = "Privacy.Erasure";
-    public const string Restriction = "Privacy.Restriction";
-    public const string ObjectionRecorded = "Privacy.ObjectionRecorded";
+    public const string DATA_EXPORT = "Privacy.DataExport";
+    public const string RECTIFICATION = "Privacy.Rectification";
+    public const string ERASURE = "Privacy.Erasure";
+    public const string RESTRICTION = "Privacy.Restriction";
+    public const string OBJECTION_RECORDED = "Privacy.ObjectionRecorded";
 }

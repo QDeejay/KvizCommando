@@ -474,9 +474,9 @@ public sealed class VsMatchViewBuilder
     {
         return categoryId switch
         {
-            VsLoadoutCategoryIds.OwnQuestion =>
+            VsLoadoutCategoryIds.OWN_QUESTION =>
                 _lang["vsgame.Match.Category.Own"],
-            VsLoadoutCategoryIds.AllCategories =>
+            VsLoadoutCategoryIds.ALL_CATEGORIES =>
                 _lang["vsgame.Match.Category.All"],
             _ => CategoryNameLocalizer.GetCategory(
                 categoryId,
@@ -486,10 +486,10 @@ public sealed class VsMatchViewBuilder
 
     private static string ResolveCategoryImage(int categoryId)
     {
-        if (categoryId == VsLoadoutCategoryIds.OwnQuestion)
+        if (categoryId == VsLoadoutCategoryIds.OWN_QUESTION)
             return "images/buttons/question/usr.webp";
 
-        if (categoryId == VsLoadoutCategoryIds.AllCategories)
+        if (categoryId == VsLoadoutCategoryIds.ALL_CATEGORIES)
             return "images/buttons/solo/categories.webp";
 
         return categoryId >= 1 &&

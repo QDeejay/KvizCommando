@@ -10,6 +10,6 @@
         /// Az aktuálisan felhasználó által elfogadott ÁSZF (Terms) ETag/Version azonosítója.
         /// Példa érték: "2025-09-01-ETAG".
         /// </summary>
-        public const string TermsAcceptedEtag = "terms.accepted.etag";
+        public const string TERMS_ACCEPTED_ETAG = "terms.accepted.etag";
     }
 }

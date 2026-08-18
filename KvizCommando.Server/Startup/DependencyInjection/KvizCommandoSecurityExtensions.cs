@@ -28,7 +28,7 @@ public static class KvizCommandoSecurityExtensions
         services.Configure<AppOptions>(
             configuration.GetSection("App"));
         services.AddOptions<EmailOptions>()
-            .Bind(configuration.GetSection(EmailOptions.SectionName))
+            .Bind(configuration.GetSection(EmailOptions.SECTION_NAME))
             .Validate(
                 options => !string.IsNullOrWhiteSpace(options.OutputRoot),
                 "Az Email:OutputRoot beállítás kötelező.")
@@ -45,17 +45,17 @@ public static class KvizCommandoSecurityExtensions
                 "Az Email:ActiveBaseUrl beállításhoz érvényes abszolút URL szükséges.")
             .ValidateOnStart();
 
-        var emailService = configuration[$"{EmailOptions.SectionName}:Service"];
+        var emailService = configuration[$"{EmailOptions.SECTION_NAME}:Service"];
         if (string.Equals(
                 emailService,
-                EmailOptions.FileService,
+                EmailOptions.FILE_SERVICE,
                 StringComparison.OrdinalIgnoreCase))
         {
             services.AddSingleton<IEmailDelivery, FileEmailDelivery>();
         }
         else if (string.Equals(
                      emailService,
-                     EmailOptions.MailService,
+                     EmailOptions.MAIL_SERVICE,
                      StringComparison.OrdinalIgnoreCase))
         {
             throw new InvalidOperationException(
@@ -71,7 +71,7 @@ public static class KvizCommandoSecurityExtensions
         services.Configure<CallbackWhitelistOptions>(options =>
         {
             var baseUrls = configuration
-                .GetSection($"{EmailOptions.SectionName}:BaseUrls")
+                .GetSection($"{EmailOptions.SECTION_NAME}:BaseUrls")
                 .Get<Dictionary<string, string>>() ?? new();
 
             options.AllowedDomains = baseUrls.Values
@@ -89,7 +89,7 @@ public static class KvizCommandoSecurityExtensions
         services.AddSingleton<ICallbackUrlValidator, CallbackUrlValidator>();
 
         services.AddOptions<AuditOptions>()
-            .Bind(configuration.GetSection(AuditOptions.SectionName))
+            .Bind(configuration.GetSection(AuditOptions.SECTION_NAME))
             .Validate(
                 options => string.Equals(
                     options.Provider,

@@ -42,7 +42,7 @@ public static class IdentityServiceCollectionExtensions
                      IdentityConstants.BearerScheme)
                  .RequireAuthenticatedUser());
 
-            options.AddPolicy(TermsAcceptedRequirement.PolicyName, p =>
+            options.AddPolicy(TermsAcceptedRequirement.POLICY_NAME, p =>
                 p.AddAuthenticationSchemes(
                        IdentityConstants.ApplicationScheme,
                        IdentityConstants.BearerScheme

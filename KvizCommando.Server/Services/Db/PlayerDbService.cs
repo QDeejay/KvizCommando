@@ -294,7 +294,7 @@ namespace KvizCommando.Server.Services.Db
                 await _db.SaveChangesAsync(ct);
                 await _audit.LogAsync(
                     new AuditEntry(
-                        AuditEvents.TermsAccepted,
+                        AuditEvents.TERMS_ACCEPTED,
                         AuditOutcome.Succeeded,
                         user.Id,
                         user.Id,

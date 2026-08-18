@@ -404,11 +404,11 @@ public sealed partial class VsRankedQueueService :
 
         if (matchLoadout.Any(category =>
                 category !=
-                    VsLoadoutCategoryIds.AllCategories &&
+                    VsLoadoutCategoryIds.ALL_CATEGORIES &&
                 (category <
-                    VsLoadoutCategoryIds.MinimumFactoryCategory ||
+                    VsLoadoutCategoryIds.MINIMUM_FACTORY_CATEGORY ||
                  category >
-                    VsLoadoutCategoryIds.OwnQuestion)))
+                    VsLoadoutCategoryIds.OWN_QUESTION)))
         {
             return false;
         }
@@ -416,13 +416,13 @@ public sealed partial class VsRankedQueueService :
         if (matchLoadout
             .Skip(loadoutSize / 2)
             .Any(category =>
-                category == VsLoadoutCategoryIds.OwnQuestion))
+                category == VsLoadoutCategoryIds.OWN_QUESTION))
         {
             return false;
         }
 
         var ownQuestionCount = matchLoadout.Count(category =>
-            category == VsLoadoutCategoryIds.OwnQuestion);
+            category == VsLoadoutCategoryIds.OWN_QUESTION);
         var ownQuestionLimit =
             QuestionLoadoutRules.GetOwnQuestionLimit(
                 loadoutSize,
@@ -431,7 +431,7 @@ public sealed partial class VsRankedQueueService :
         return
             matchLoadout.Count(category =>
                 category !=
-                    VsLoadoutCategoryIds.OwnQuestion) >=
+                    VsLoadoutCategoryIds.OWN_QUESTION) >=
             requiredPartySize &&
             ownQuestionCount <= ownQuestionLimit;
     }

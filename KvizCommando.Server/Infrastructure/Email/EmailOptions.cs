@@ -2,11 +2,11 @@ namespace KvizCommando.Server.Infrastructure.Email;
 
 public sealed class EmailOptions
 {
-    public const string SectionName = "Email";
-    public const string FileService = "File";
-    public const string MailService = "Mail";
+    public const string SECTION_NAME = "Email";
+    public const string FILE_SERVICE = "File";
+    public const string MAIL_SERVICE = "Mail";
 
-    public string Service { get; set; } = FileService;
+    public string Service { get; set; } = FILE_SERVICE;
     public string OutputRoot { get; set; } = @"C:\KvizCommando\Email";
     public string ActiveBaseUrl { get; set; } = "PublicTunnel";
     public Dictionary<string, string> BaseUrls { get; set; } = new(StringComparer.OrdinalIgnoreCase);

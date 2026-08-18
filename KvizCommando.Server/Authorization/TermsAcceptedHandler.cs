@@ -46,7 +46,7 @@ namespace KvizCommando.Server.Authorization
             if (string.IsNullOrWhiteSpace(currentEtag))
                 return;
 
-            var claimedEtag = context.User.FindFirst(CustomClaimTypes.TermsAcceptedEtag)?.Value;
+            var claimedEtag = context.User.FindFirst(CustomClaimTypes.TERMS_ACCEPTED_ETAG)?.Value;
 
             if (!string.IsNullOrEmpty(claimedEtag))
             {

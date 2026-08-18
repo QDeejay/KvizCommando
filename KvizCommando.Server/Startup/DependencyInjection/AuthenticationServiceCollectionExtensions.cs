@@ -72,7 +72,7 @@ public static class AuthenticationServiceCollectionExtensions
                             .GetRequiredService<IAuditLogger>();
                         await audit.LogAsync(
                             new AuditEntry(
-                                AuditEvents.Login,
+                                AuditEvents.LOGIN,
                                 AuditOutcome.Failed,
                                 ActorId: null,
                                 SubjectId: null,

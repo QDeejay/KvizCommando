@@ -115,9 +115,9 @@ internal static partial class VsMatchSnapshotBuilder
                      !round.IsCaptainRound))
         {
             for (var categoryId =
-                     VsLoadoutCategoryIds.MinimumFactoryCategory;
+                     VsLoadoutCategoryIds.MINIMUM_FACTORY_CATEGORY;
                  categoryId <=
-                     VsLoadoutCategoryIds.MaximumFactoryCategory;
+                     VsLoadoutCategoryIds.MAXIMUM_FACTORY_CATEGORY;
                  categoryId++)
             {
                 var seconds = 0d;

@@ -7,12 +7,12 @@ namespace tosExporter;
 internal static class Program
 {
     // A segédprogram jelenleg helyi fejlesztői könyvtárakkal működik.
-    private const string InputRoot = @"C:\Exports\TermsExporter\Input";
-    private const string OutputRoot = @"C:\Exports\TermsExporter\Outputs";
+    private const string INPUT_ROOT = @"C:\Exports\TermsExporter\Input";
+    private const string OUTPUT_ROOT = @"C:\Exports\TermsExporter\Outputs";
 
     private static readonly string[] Cultures = { "hu-HU", "en-US" };
 
-    private const string OutputBaseName = "terms";
+    private const string OUTPUT_BASE_NAME = "terms";
 
     // A fájlnév verzióját a minták az itt megadott sorrendben keresik.
     private static readonly Regex RxV123 = new(@"[vV](?<ver>\d+(?:\.\d+){0,2})\b", RegexOptions.CultureInvariant);
@@ -40,8 +40,8 @@ internal static class Program
         {
             try
             {
-                var inputDir = Path.Combine(InputRoot, culture);
-                var outputDir = Path.Combine(OutputRoot, culture);
+                var inputDir = Path.Combine(INPUT_ROOT, culture);
+                var outputDir = Path.Combine(OUTPUT_ROOT, culture);
 
                 if (!Directory.Exists(inputDir))
                 {
@@ -70,7 +70,7 @@ internal static class Program
 
                 Directory.CreateDirectory(outputDir);
 
-                var outputFileName = $"{OutputBaseName}-v{version}.html";
+                var outputFileName = $"{OUTPUT_BASE_NAME}-v{version}.html";
                 var outputFilePath = Path.Combine(outputDir, outputFileName);
 
                 File.Copy(candidate, outputFilePath, overwrite: true);

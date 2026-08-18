@@ -16,8 +16,8 @@ namespace KvizCommando.Client.Services.User
     public sealed class UserService : IUserService
     {
         private readonly IHomeState _home;
-        private const string CheckInRoute = "api/checkin";
-        private const string CheckInCacheKey = "checkin:status";
+        private const string CHECK_IN_ROUTE = "api/checkin";
+        private const string CHECK_IN_CACHE_KEY = "checkin:status";
 
         private readonly HttpClient _http;
         private readonly ISessionStorageService _session;
@@ -231,7 +231,7 @@ namespace KvizCommando.Client.Services.User
         {
             string sessionId = Guid.NewGuid().ToString("N");
 
-            var resp = await _http.GetAsync($"{CheckInRoute}?sessionId={sessionId}", ct);
+            var resp = await _http.GetAsync($"{CHECK_IN_ROUTE}?sessionId={sessionId}", ct);
 
 
             if (resp.StatusCode == HttpStatusCode.Unauthorized)
@@ -255,7 +255,7 @@ namespace KvizCommando.Client.Services.User
                     url = dto.CurrentTerms.Url,
                     PublishedAt = dto.CurrentTerms.PublishedAt
                 };
-                await _session.SetItemAsync(CheckInCacheKey, cacheData, ct);
+                await _session.SetItemAsync(CHECK_IN_CACHE_KEY, cacheData, ct);
 
                 if (needToRoute)
                     _nav.NavigateTo("/checkin");
@@ -276,7 +276,7 @@ namespace KvizCommando.Client.Services.User
             var sessionId = Guid.NewGuid().ToString("N");
             request.SessionId = sessionId;
             var errors = new List<string> { "DefaultError" };
-            var resp = await _http.PostAsJsonAsync(CheckInRoute, request, cancellationToken: ct);
+            var resp = await _http.PostAsJsonAsync(CHECK_IN_ROUTE, request, cancellationToken: ct);
             var content = await resp.Content.ReadFromJsonAsync<CheckInPostResponse>(ct);
 
             if (resp.IsSuccessStatusCode && content?.Success == true)

@@ -48,14 +48,14 @@ public class AuthOptionsController : ControllerBase
             RequireConfirmedEmail = _options.SignIn.RequireConfirmedEmail,
             RequireConfirmedAccount = _options.SignIn.RequireConfirmedAccount,
 
-            DisplayNameMaxLength = CheckInValidationOptions.DisplayNameMaxLength,
-            DisplayNameMinLength = CheckInValidationOptions.DisplayNameMinLength,
+            DisplayNameMaxLength = CheckInValidationOptions.DISPLAY_NAME_MAX_LENGTH,
+            DisplayNameMinLength = CheckInValidationOptions.DISPLAY_NAME_MIN_LENGTH,
         };
 
         if (_environment.IsDevelopment() &&
             string.Equals(
                 _emailOptions.Service,
-                EmailOptions.FileService,
+                EmailOptions.FILE_SERVICE,
                 StringComparison.OrdinalIgnoreCase))
         {
             dto.RegistrationEmailOutputPath = Path.Combine(

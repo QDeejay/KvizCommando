@@ -113,7 +113,7 @@ namespace KvizCommando.Server.Services.CheckIn
                     suggested = await _playerDb.SuggestAsync(providedName, ct);
                     if (providedName != suggested)
                     {
-                        errorKeys.Add(IdentityErrorCodes.DisplayNameAlreadyTaken);
+                        errorKeys.Add(IdentityErrorCodes.DISPLAY_NAME_ALREADY_TAKEN);
                     }
 
 
@@ -124,12 +124,12 @@ namespace KvizCommando.Server.Services.CheckIn
             {
                 if (string.IsNullOrWhiteSpace(request.AcceptedTermsVersion))
                 {
-                    errorKeys.Add(IdentityErrorCodes.TermsNotAccepted);
+                    errorKeys.Add(IdentityErrorCodes.TERMS_NOT_ACCEPTED);
                 }
                 else if (!string.Equals(request.AcceptedTermsVersion, currentTerms.Version, StringComparison.Ordinal))
                 {
                     // A GET és POST között megváltozott ÁSZF-et nem szabad elfogadottnak tekinteni.
-                    errorKeys.Add(IdentityErrorCodes.TermsVersionOutdated);
+                    errorKeys.Add(IdentityErrorCodes.TERMS_VERSION_OUTDATED);
                 }
             }
 

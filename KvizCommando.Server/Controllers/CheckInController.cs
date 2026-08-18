@@ -135,7 +135,7 @@ public sealed class CheckInController : ControllerBase
         {
             await _audit.LogAsync(
                 new AuditEntry(
-                    AuditEvents.SessionReplaced,
+                    AuditEvents.SESSION_REPLACED,
                     AuditOutcome.Failed,
                     userId,
                     userId,
@@ -146,7 +146,7 @@ public sealed class CheckInController : ControllerBase
 
         await _audit.LogAsync(
             new AuditEntry(
-                AuditEvents.SessionReplaced,
+                AuditEvents.SESSION_REPLACED,
                 AuditOutcome.Succeeded,
                 userId,
                 userId,

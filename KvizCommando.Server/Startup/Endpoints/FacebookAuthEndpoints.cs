@@ -49,7 +49,7 @@ public static class FacebookAuthEndpoints
             {
                 await audit.LogAsync(
                     new AuditEntry(
-                        AuditEvents.Login,
+                        AuditEvents.LOGIN,
                         AuditOutcome.Failed,
                         ActorId: null,
                         SubjectId: null,
@@ -82,7 +82,7 @@ public static class FacebookAuthEndpoints
                     {
                         await audit.LogAsync(
                             new AuditEntry(
-                                AuditEvents.AccountRegistered,
+                                AuditEvents.ACCOUNT_REGISTERED,
                                 AuditOutcome.Failed,
                                 ActorId: null,
                                 SubjectId: null,
@@ -90,7 +90,7 @@ public static class FacebookAuthEndpoints
                                 RequestId: ctx.TraceIdentifier));
                         await audit.LogAsync(
                             new AuditEntry(
-                                AuditEvents.Login,
+                                AuditEvents.LOGIN,
                                 AuditOutcome.Failed,
                                 ActorId: null,
                                 SubjectId: null,
@@ -100,7 +100,7 @@ public static class FacebookAuthEndpoints
                     }
                     await audit.LogAsync(
                         new AuditEntry(
-                            AuditEvents.AccountRegistered,
+                            AuditEvents.ACCOUNT_REGISTERED,
                             AuditOutcome.Succeeded,
                             user.Id,
                             user.Id,
@@ -116,7 +116,7 @@ public static class FacebookAuthEndpoints
                 {
                     await audit.LogAsync(
                         new AuditEntry(
-                            AuditEvents.ExternalLoginLinked,
+                            AuditEvents.EXTERNAL_LOGIN_LINKED,
                             AuditOutcome.Failed,
                             ActorId: null,
                             SubjectId: user.Id,
@@ -124,7 +124,7 @@ public static class FacebookAuthEndpoints
                             RequestId: ctx.TraceIdentifier));
                     await audit.LogAsync(
                         new AuditEntry(
-                            AuditEvents.Login,
+                            AuditEvents.LOGIN,
                             AuditOutcome.Failed,
                             ActorId: null,
                             SubjectId: user.Id,
@@ -134,7 +134,7 @@ public static class FacebookAuthEndpoints
                 }
                 await audit.LogAsync(
                     new AuditEntry(
-                        AuditEvents.ExternalLoginLinked,
+                        AuditEvents.EXTERNAL_LOGIN_LINKED,
                         AuditOutcome.Succeeded,
                         user.Id,
                         user.Id,
@@ -161,7 +161,7 @@ public static class FacebookAuthEndpoints
             var ipAddress = ctx.Connection.RemoteIpAddress?.ToString();
             await audit.LogAsync(
                 new AuditEntry(
-                    AuditEvents.Login,
+                    AuditEvents.LOGIN,
                     AuditOutcome.Succeeded,
                     user.Id,
                     user.Id,
@@ -204,7 +204,7 @@ public static class FacebookAuthEndpoints
 
                 await audit.LogAsync(
                     new AuditEntry(
-                        AuditEvents.ExternalLoginRemoved,
+                        AuditEvents.EXTERNAL_LOGIN_REMOVED,
                         removeResult.Succeeded
                             ? AuditOutcome.Succeeded
                             : AuditOutcome.Failed,

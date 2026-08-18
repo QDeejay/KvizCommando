@@ -50,14 +50,14 @@ namespace KvizCommando.Server.Services.Auth
             Claim? existingEtag = null;
             foreach (var c in claims)
             {
-                if (string.Equals(c.Type, CustomClaimTypes.TermsAcceptedEtag, StringComparison.Ordinal))
+                if (string.Equals(c.Type, CustomClaimTypes.TERMS_ACCEPTED_ETAG, StringComparison.Ordinal))
                 {
                     existingEtag = c;
                     break;
                 }
             }
 
-            var newEtag = new Claim(CustomClaimTypes.TermsAcceptedEtag, termsEtag);
+            var newEtag = new Claim(CustomClaimTypes.TERMS_ACCEPTED_ETAG, termsEtag);
 
             // A változatlan claimet nem írjuk újra, így a biztonsági bélyeg sem módosul feleslegesen.
             bool changed = false;

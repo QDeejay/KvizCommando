@@ -6,9 +6,9 @@ namespace KvizCommando.Server.Services.VsGame;
 
 public static class VsBattleClassificationRules
 {
-    public const int RequiredBattleReadyCharacters = 3;
-    public const int RequiredCreditBalance = 50;
-    public const int UnrankedMemberMinimumTeamRank = 28;
+    public const int REQUIRED_BATTLE_READY_CHARACTERS = 3;
+    public const int REQUIRED_CREDIT_BALANCE = 50;
+    public const int UNRANKED_MEMBER_MINIMUM_TEAM_RANK = 28;
 
     // Első, központi szabálytábla. A konkrét minimumok és létszámok
     // a játékszabály véglegesítésekor kizárólag itt módosítandók.
@@ -109,7 +109,7 @@ public static class VsBattleClassificationRules
         energyPoints > 0 &&
         !IsAwaitingRetirement(memberRank, memberXp) &&
         (memberRank > 0 ||
-         teamRank >= UnrankedMemberMinimumTeamRank);
+         teamRank >= UNRANKED_MEMBER_MINIMUM_TEAM_RANK);
 
     /// <summary>
     /// Jelzi, hogy a karakter nyugdíjazásra vár-e.

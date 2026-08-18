@@ -40,8 +40,8 @@ public enum VsHelpType
 
 public static class VsLoadoutCategoryIds
 {
-    public const int AllCategories = 0;
-    public const int MinimumFactoryCategory = 1;
-    public const int MaximumFactoryCategory = 16;
-    public const int OwnQuestion = 17;
+    public const int ALL_CATEGORIES = 0;
+    public const int MINIMUM_FACTORY_CATEGORY = 1;
+    public const int MAXIMUM_FACTORY_CATEGORY = 16;
+    public const int OWN_QUESTION = 17;
 }

@@ -14,7 +14,7 @@ namespace KvizCommando.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Policy = TermsAcceptedRequirement.PolicyName)]
+[Authorize(Policy = TermsAcceptedRequirement.POLICY_NAME)]
 public sealed class VsGameController : ControllerBase
 {
     private readonly ILogger<VsGameController> _logger;

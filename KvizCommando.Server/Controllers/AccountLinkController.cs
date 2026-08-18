@@ -56,7 +56,7 @@ public sealed class AccountLinkController : ControllerBase
     {
         return _audit.LogAsync(
             new AuditEntry(
-                AuditEvents.ExternalLoginRemoved,
+                AuditEvents.EXTERNAL_LOGIN_REMOVED,
                 outcome,
                 userId,
                 userId,

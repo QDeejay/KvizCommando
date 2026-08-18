@@ -8,7 +8,7 @@ namespace KvizCommando.Server.Services.VsGame.Match;
 
 public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
 {
-    private const int GuessCategoryId = 99;
+    private const int GUESS_CATEGORY_ID = 99;
 
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ICategoryQuestionIndexCache _questionIndex;
@@ -93,7 +93,7 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
     private int[] SelectGuessQuestionIds(int count)
     {
         var ids = _questionIndex
-            .GetQuestionIds(GuessCategoryId)
+            .GetQuestionIds(GUESS_CATEGORY_ID)
             .ToArray();
 
         Shuffle(ids);
@@ -114,7 +114,7 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
         {
             var categoryId = player.LoadoutCategories[index];
 
-            if (categoryId == VsLoadoutCategoryIds.OwnQuestion)
+            if (categoryId == VsLoadoutCategoryIds.OWN_QUESTION)
             {
                 if (ownQuestionIndex >= ownQuestions.Length)
                 {
@@ -133,15 +133,15 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
             }
 
             var selectedCategory = categoryId ==
-                                   VsLoadoutCategoryIds.AllCategories
+                                   VsLoadoutCategoryIds.ALL_CATEGORIES
                 ? Random.Shared.Next(
-                    VsLoadoutCategoryIds.MinimumFactoryCategory,
-                    VsLoadoutCategoryIds.MaximumFactoryCategory + 1)
+                    VsLoadoutCategoryIds.MINIMUM_FACTORY_CATEGORY,
+                    VsLoadoutCategoryIds.MAXIMUM_FACTORY_CATEGORY + 1)
                 : categoryId;
 
             if (selectedCategory is <
-                    VsLoadoutCategoryIds.MinimumFactoryCategory or >
-                    VsLoadoutCategoryIds.MaximumFactoryCategory)
+                    VsLoadoutCategoryIds.MINIMUM_FACTORY_CATEGORY or >
+                    VsLoadoutCategoryIds.MAXIMUM_FACTORY_CATEGORY)
             {
                 throw new InvalidOperationException(
                     $"Player {player.PlayerId} has an invalid VS loadout category.");
@@ -212,7 +212,7 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
             question.Id,
             false,
             plan.DisplayCategoryId ==
-                VsLoadoutCategoryIds.AllCategories,
+                VsLoadoutCategoryIds.ALL_CATEGORIES,
             question.Question,
             question.AnswersJson);
     }

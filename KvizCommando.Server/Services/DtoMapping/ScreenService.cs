@@ -311,12 +311,12 @@ namespace KvizCommando.Server.Services.DtoMapping
                     IsCreateBattlefieldEnabled = false,
                     IsJoinBattlefieldEnabled = false,
                     IsRankedBattlefieldsEnabled = 
-                        battleReadyMemberCount >= VsBattleClassificationRules.RequiredBattleReadyCharacters &&
-                        player.Core.Credit >= VsBattleClassificationRules.RequiredCreditBalance,
+                        battleReadyMemberCount >= VsBattleClassificationRules.REQUIRED_BATTLE_READY_CHARACTERS &&
+                        player.Core.Credit >= VsBattleClassificationRules.REQUIRED_CREDIT_BALANCE,
                     BattleReadyCharacterCount =  battleReadyMemberCount,
-                    RequiredBattleReadyCharacterCount = VsBattleClassificationRules.RequiredBattleReadyCharacters,
+                    RequiredBattleReadyCharacterCount = VsBattleClassificationRules.REQUIRED_BATTLE_READY_CHARACTERS,
                     CreditBalance = player.Core.Credit,
-                    RequiredCreditBalance = VsBattleClassificationRules.RequiredCreditBalance,
+                    RequiredCreditBalance = VsBattleClassificationRules.REQUIRED_CREDIT_BALANCE,
                     TeamRank = player.Core.RankEnum,
                     PrivatePlayerCount = 0,
                     RankedPlayerCount =

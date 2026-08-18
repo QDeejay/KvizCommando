@@ -6,7 +6,7 @@ namespace KvizCommando.Server.Services.VsGame.Match;
 
 internal static class VsMatchRewardCalculator
 {
-    internal const double BotFinalTimeSeconds = 9999;
+    internal const double BOT_FINAL_TIME_SECONDS = 9999;
 
     internal static VsMatchRewardState Calculate(VsMatchSession match)
     {
@@ -16,7 +16,7 @@ internal static class VsMatchRewardCalculator
                 player.IsBot ? 0 : player.TotalPoints)
             .ThenBy(player =>
                 player.IsBot
-                    ? BotFinalTimeSeconds
+                    ? BOT_FINAL_TIME_SECONDS
                     : RoundToTenth(player.TotalTimeSeconds))
             .ThenBy(player => player.Position)
             .ToArray();
@@ -95,7 +95,7 @@ internal static class VsMatchRewardCalculator
             RankedScore = rankedScore,
             FinalPoints = player.IsBot ? 0 : player.TotalPoints,
             FinalTimeSeconds = player.IsBot
-                ? BotFinalTimeSeconds
+                ? BOT_FINAL_TIME_SECONDS
                 : player.TotalTimeSeconds,
             CharacterAverageXp = teamXp.CharacterAverage,
             ScoreXp = teamXp.Score,

@@ -15,7 +15,7 @@ namespace KvizCommando.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Policy = TermsAcceptedRequirement.PolicyName)]
+    [Authorize(Policy = TermsAcceptedRequirement.POLICY_NAME)]
     public class TeamController : ControllerBase
     {
         private readonly ILogger<TeamController> _logger;

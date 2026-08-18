@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace KvizCommando.Server.Hubs;
 
-[Authorize(Policy = TermsAcceptedRequirement.PolicyName)]
+[Authorize(Policy = TermsAcceptedRequirement.POLICY_NAME)]
 public sealed class VsMatchHub : Hub<IVsMatchHubClient>
 {
     private const int RESPONSE_TIME_PROBE_COUNT = 5;

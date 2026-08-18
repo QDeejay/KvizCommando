@@ -334,8 +334,8 @@ public sealed class VsMatchSetupService
         double value)
     {
         if (categoryId is <
-                VsLoadoutCategoryIds.MinimumFactoryCategory or >
-                VsLoadoutCategoryIds.MaximumFactoryCategory)
+                VsLoadoutCategoryIds.MINIMUM_FACTORY_CATEGORY or >
+                VsLoadoutCategoryIds.MAXIMUM_FACTORY_CATEGORY)
         {
             return;
         }

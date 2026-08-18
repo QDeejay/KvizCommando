@@ -21,25 +21,25 @@ namespace KvizCommando.Server.Identity
 
             if (string.IsNullOrWhiteSpace(displayName))
             {
-                errors.Add(IdentityErrorCodes.DisplayNameRequired);
+                errors.Add(IdentityErrorCodes.DISPLAY_NAME_REQUIRED);
                 return errors;
             }
 
             var name = displayName.Trim();
 
-            if (name.Length < CheckInValidationOptions.DisplayNameMinLength)
-                errors.Add(IdentityErrorCodes.DisplayNameTooShort);
+            if (name.Length < CheckInValidationOptions.DISPLAY_NAME_MIN_LENGTH)
+                errors.Add(IdentityErrorCodes.DISPLAY_NAME_TOO_SHORT);
 
-            if (name.Length > CheckInValidationOptions.DisplayNameMaxLength)
-                errors.Add(IdentityErrorCodes.DisplayNameTooLong);
+            if (name.Length > CheckInValidationOptions.DISPLAY_NAME_MAX_LENGTH)
+                errors.Add(IdentityErrorCodes.DISPLAY_NAME_TOO_LONG);
 
             // Karakterkészlet ellenőrzése (csak az engedélyezett készletből származhat minden karakter).
             // Az engedélyezett készlet jelenleg ASCII; Unicode támogatásakor a validációs szabályt is bővíteni kell.
-            if (!string.IsNullOrEmpty(CheckInValidationOptions.DisplayNameAllowedChars))
+            if (!string.IsNullOrEmpty(CheckInValidationOptions.DISPLAY_NAME_ALLOWED_CHARS))
             {
-                var allowed = CheckInValidationOptions.DisplayNameAllowedChars.ToHashSet();
+                var allowed = CheckInValidationOptions.DISPLAY_NAME_ALLOWED_CHARS.ToHashSet();
                 if (name.Any(ch => !allowed.Contains(ch)))
-                    errors.Add(IdentityErrorCodes.DisplayNameInvalidCharacters);
+                    errors.Add(IdentityErrorCodes.DISPLAY_NAME_INVALID_CHARACTERS);
             }
 
             return errors;

@@ -7,7 +7,7 @@ namespace KvizCommando.Server.Controllers.TestControllers
 {
     [ApiController]
     [Route("api/game/[controller]")]
-    [Authorize(Policy = TermsAcceptedRequirement.PolicyName)]
+    [Authorize(Policy = TermsAcceptedRequirement.POLICY_NAME)]
     // Szándékosan megmaradó próba-végpont a mobil és asztali kliensek
     // cookie/bearer hitelesítésének gyors ellenőrzéséhez.
     public class TestController : ControllerBase

@@ -19,7 +19,7 @@ namespace KvizCommando.Server.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Policy = TermsAcceptedRequirement.PolicyName)]
+    [Authorize(Policy = TermsAcceptedRequirement.POLICY_NAME)]
     public class QuestionController : ControllerBase
     {
         private readonly ILogger<QuestionController> _logger;

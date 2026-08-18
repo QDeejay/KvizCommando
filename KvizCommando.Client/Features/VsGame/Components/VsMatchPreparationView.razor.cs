@@ -195,8 +195,8 @@ public partial class VsMatchPreparationView : IDisposable
 
         if (!categoryId.HasValue ||
             categoryId.Value is
-                VsLoadoutCategoryIds.OwnQuestion or
-                VsLoadoutCategoryIds.AllCategories)
+                VsLoadoutCategoryIds.OWN_QUESTION or
+                VsLoadoutCategoryIds.ALL_CATEGORIES)
         {
             return "—";
         }

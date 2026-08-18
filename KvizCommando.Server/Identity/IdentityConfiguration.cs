@@ -53,7 +53,7 @@ public static class IdentityConfiguration
 }
 public static class CheckInValidationOptions
 {
-    public const int DisplayNameMaxLength = 20;
-    public const int DisplayNameMinLength = 3;
-    public const string DisplayNameAllowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
+    public const int DISPLAY_NAME_MAX_LENGTH = 20;
+    public const int DISPLAY_NAME_MIN_LENGTH = 3;
+    public const string DISPLAY_NAME_ALLOWED_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
 }
