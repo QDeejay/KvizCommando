@@ -66,17 +66,7 @@ public static class AuthenticationServiceCollectionExtensions
                         ctx.Response.Redirect(redirect + q);
                         ctx.HandleResponse();
                         return Task.CompletedTask;
-                    },
-
-                    OnCreatingTicket = ctx =>
-                    {
-                        foreach (var kv in ctx.Properties.Items)
-                        {
-                            Console.WriteLine($"[OnCreatingTicket] {kv.Key} = {kv.Value}");
-                        }
-                        return Task.CompletedTask;
                     }
-
                 };
             });
 

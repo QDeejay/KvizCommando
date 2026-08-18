@@ -44,7 +44,7 @@ A végleges GDPR-folyamatnak legalább az alábbiakat kell lefednie:
 
 A `Diagnostics:EnableAuthenticationDebugLogging` kapcsoló a cookie- és bearer-hitelesítés hibáinak vizsgálatára szolgál mobil és asztali kliens tesztelésekor. Alapértéke `false`. A diagnosztika nem naplózhat tokent, teljes Authorization fejlécet vagy felhasználói azonosítót.
 
-A `/signin-facebook` callback-diagnosztikai végpont jelenleg kiírja a külső principalt a konzolra, és nincs fejlesztői környezethez kötve. Élesítés előtt el kell távolítani vagy kizárólag fejlesztői környezetben, személyes adatok naplózása nélkül szabad regisztrálni.
+A `/signin-facebook` callback-diagnosztika ugyanehhez a kapcsolóhoz kötött, és kizárólag a külső hitelesítés sikerességét naplózza. A külső principalt és a hitelesítési tulajdonságok értékeit nem írja ki.
 
 ## Háttérfolyamatok
 
