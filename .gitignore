@@ -1,0 +1,42 @@
+# Visual Studio and .NET build output
+.vs/
+**/bin/
+**/obj/
+artifacts/
+TestResults/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# IDEs and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local databases and SQLite sidecar files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite3
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+appsettings.*.local.json
+secrets.json
+DataProtection-Keys/
+**/DataProtection-Keys/
+
+# Logs, coverage and temporary files
+*.log
+coverage/
+coverage.*
+*.tmp
+*.bak
+*.orig
