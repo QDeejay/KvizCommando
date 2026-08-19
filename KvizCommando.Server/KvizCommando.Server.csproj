@@ -41,7 +41,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\Identity\" />
     <Folder Include="Resources\Client\localization\en\" />
     <Folder Include="Resources\Client\localization\hu\" />
     <Folder Include="Services\VsGame\" />

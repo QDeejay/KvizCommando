@@ -32,11 +32,7 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
             b.Property(p => p.CreatedUtc).IsRequired();
             b.Property(p => p.UpdatedUtc).IsRequired();
 
-            // SQLite alatt a mező alkalmazásoldali konkurenciajelzőként működik.
-            // SQL Server providerrel az IsRowVersion használható.
-            b.Property(p => p.RowVersion)
-            // .IsRowVersion()
-             .IsConcurrencyToken();
+            // A RowVersion működését a provider konfigurációja adja meg.
         }
     }
 }

@@ -34,23 +34,7 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 
 
 
-            // Szolgáltatófüggő CHECK constraint minták. A központi adatbázis-kapcsoló
-            // bevezetésekor pontosan az aktív szolgáltatóhoz tartozó blokk engedélyezhető.
-            // SQLite BLOB mezőn a length() a bájtok számát adja vissza.
-            // b.ToTable(t => {
-            //     t.HasCheckConstraint("CK_TermsConsents_UserAgentHash_Len",
-            //         "UserAgentHash IS NULL OR length(UserAgentHash) = 32");
-            //     t.HasCheckConstraint("CK_TermsConsents_IpHash_Len",
-            //         "IpHash IS NULL OR length(IpHash) = 32");
-            // });
-
-            // SQL Server varbinary mezőn a DATALENGTH adja vissza a bájtok számát.
-            // b.ToTable(t => {
-            //     t.HasCheckConstraint("CK_TermsConsents_UserAgentHash_Len",
-            //         "UserAgentHash IS NULL OR DATALENGTH(UserAgentHash) = 32");
-            //     t.HasCheckConstraint("CK_TermsConsents_IpHash_Len",
-            //         "IpHash IS NULL OR DATALENGTH(IpHash) = 32");
-            // });
+            // A providerfüggő hosszellenőrzést a központi modellkonfiguráció adja hozzá.
         }
     }
 }

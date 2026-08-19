@@ -20,19 +20,7 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
             b.Property(x => x.HighScore).IsRequired();
             b.Property(x => x.HighScoreTime).IsRequired();
 
-            // SQLite számított oszlop a helyességi arányhoz.
-            b.Property(x => x.Ratio)
-             .HasColumnType("REAL")
-             .HasComputedColumnSql(
-                 "CASE WHEN [Answered] = 0 THEN 0.0 ELSE (1.0 * [Correct] / [Answered]) END",
-                 stored: false);
-
-            // SQL Server alternatíva
-            // b.Property(x => x.Ratio)
-            //  .HasColumnType("decimal(9,4)")
-            //  .HasComputedColumnSql(
-            //      "CAST([Correct] * 1.0 / NULLIF([Answered],0) AS decimal(9,4))",
-            //      stored: true);
+            // A számított oszlop SQL-kifejezését a provider konfigurációja adja meg.
 
             // Kategóriánkénti statisztikai lekérdezések
             b.HasIndex(x => x.CategoryId)

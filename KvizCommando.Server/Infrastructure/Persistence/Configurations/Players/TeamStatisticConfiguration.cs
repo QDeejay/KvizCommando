@@ -11,10 +11,7 @@ public sealed class TeamStatisticConfiguration :
     /// <inheritdoc />
     public void Configure(EntityTypeBuilder<TeamStatistic> builder)
     {
-        builder.ToTable("TeamStatistics", table =>
-            table.HasCheckConstraint(
-                "CK_TeamStatistics_RankedPlacementsJson_Valid",
-                "json_valid([RankedPlacementsJson])"));
+        builder.ToTable("TeamStatistics");
 
         builder.HasKey(statistic => statistic.PlayerId);
         builder.Property(statistic => statistic.PlayerId)
@@ -30,23 +27,19 @@ public sealed class TeamStatisticConfiguration :
         builder.Property(statistic => statistic.RankedWon)
             .IsRequired();
         builder.Property(statistic => statistic.RankedHighScore)
-            .HasColumnType("REAL")
             .IsRequired();
         builder.Property(statistic => statistic.RankedHighScoreTime)
             .IsRequired();
         builder.Property(statistic => statistic.RankedGuessCount)
             .IsRequired();
         builder.Property(statistic => statistic.RankedGuessErrorTotal)
-            .HasColumnType("REAL")
             .IsRequired();
-        builder.Property(statistic => statistic.RankedGuessErrorRatio)
-            .HasColumnType("REAL")
-            .HasComputedColumnSql(
-                "CASE WHEN [RankedGuessCount] = 0 THEN 0.0 ELSE (1.0 * [RankedGuessErrorTotal] / [RankedGuessCount]) END",
-                stored: false);
+        builder.Property(statistic => statistic.RankedGuessErrorRatio);
         builder.Property(statistic => statistic.RankedPlacementsJson)
-            .IsRequired()
-            .HasColumnType("TEXT");
+            .IsRequired();
+
+        // A providerfüggő oszloptípusokat, JSON-ellenőrzést és számított
+        // oszlopot a központi provider konfiguráció adja meg.
 
         builder.HasIndex(statistic => new
             {

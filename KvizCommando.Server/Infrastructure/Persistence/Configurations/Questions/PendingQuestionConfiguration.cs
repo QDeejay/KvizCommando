@@ -1,7 +1,6 @@
 ﻿using KvizCommando.Server.Domain.Entities.Questions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Reflection.Emit;
 
 namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {

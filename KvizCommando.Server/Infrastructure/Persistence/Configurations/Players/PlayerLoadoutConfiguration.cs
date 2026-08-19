@@ -13,29 +13,11 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 
             b.HasKey(pl => pl.PlayerId);
 
-            // SQLite-konfiguráció
-            b.Property(pl => pl.FactorySlotsJson).IsRequired().HasColumnType("TEXT");
-            b.Property(pl => pl.UserSlotsJson).IsRequired().HasColumnType("TEXT");
-            b.Property(pl => pl.PendingSlotsJson).IsRequired().HasColumnType("TEXT");
+            b.Property(pl => pl.FactorySlotsJson).IsRequired();
+            b.Property(pl => pl.UserSlotsJson).IsRequired();
+            b.Property(pl => pl.PendingSlotsJson).IsRequired();
 
-            // Az SQLite JSON-ellenőrzése megakadályozza sérült kérdéslisták mentését.
-            b.ToTable(t =>
-            {
-                t.HasCheckConstraint("CK_PlayerLoadouts_FactorySlots_Json", "json_valid([FactorySlotsJson])");
-                t.HasCheckConstraint("CK_PlayerLoadouts_UserSlots_Json", "json_valid([UserSlotsJson])");
-                t.HasCheckConstraint("CK_PlayerLoadouts_PendingSlots_Json", "json_valid([PendingSlotsJson])");
-            });
-
-            // SQL Server alternatíva
-            // b.Property(pl => pl.FactorySlotsJson).IsRequired().HasColumnType("nvarchar(max)");
-            // b.Property(pl => pl.UserSlotsJson).IsRequired().HasColumnType("nvarchar(max)");
-            // b.Property(pl => pl.PendingSlotsJson).IsRequired().HasColumnType("nvarchar(max)");
-            // b.ToTable(t =>
-            // {
-            //     t.HasCheckConstraint("CK_PlayerLoadouts_FactorySlots_Json", "ISJSON([FactorySlotsJson]) = 1");
-            //     t.HasCheckConstraint("CK_PlayerLoadouts_UserSlots_Json", "ISJSON([UserSlotsJson]) = 1");
-            //     t.HasCheckConstraint("CK_PlayerLoadouts_PendingSlots_Json", "ISJSON([PendingSlotsJson]) = 1");
-            // });
+            // Az oszloptípust és a JSON-ellenőrzést a provider konfigurációja adja meg.
 
             b.Property(pl => pl.UpdatedUtc).IsRequired();
         }

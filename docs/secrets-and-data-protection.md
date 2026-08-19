@@ -48,11 +48,19 @@ A jelenlegi szerkezet:
   },
   "PiiEncryption": {
     "Key": "MASIK_32_VELETLEN_BAJT_BASE64_FORMABAN"
+  },
+  "Database": {
+    "Provider": "Sqlite",
+    "EnableRetryOnFailure": false
+  },
+  "ConnectionStrings": {
+    "SqlServerApplication": "",
+    "SqlServerGame": ""
   }
 }
 ```
 
-Az auditkulcs és a PII-kulcs két külön érték. Nem cserélhetők fel, mert eltérő adatot és eltérő műveletet védenek.
+Az auditkulcs és a PII-kulcs két külön érték. Nem cserélhetők fel, mert eltérő adatot és eltérő műveletet védenek. Az SQL Server connection string szintén helyi vagy éles titok lehet, mert hitelesítési adatot tartalmazhat. SQLite használatakor a két SQL Server-érték maradhat üres.
 
 ## Facebook App ID és App Secret
 
@@ -165,33 +173,6 @@ A bírálói csomagban:
 - a Data Protection fejlesztői XML-kulcsait nem szükséges átadni;
 - élesítés előtt a Facebook-, audit- és PII-kulcsot le kell cserélni.
 
-## Üres adatbázis újrainicializálása
+## Adatbázis újrainicializálása
 
-Ha nincs megtartandó felhasználói adat, a megváltozott PII-séma tiszta kezdőmigrációval hozható létre.
-
-Leállított szerver mellett törlendő:
-
-```text
-KvizCommando.Server/GameUser.db
-KvizCommando.Server/GameUser.db-shm
-KvizCommando.Server/GameUser.db-wal
-KvizCommando.Server/Data/Migrations/Identity/20260819101355_InitialIdentity.cs
-KvizCommando.Server/Data/Migrations/Identity/20260819101355_InitialIdentity.Designer.cs
-KvizCommando.Server/Data/Migrations/Identity/ApplicationDbContextModelSnapshot.cs
-```
-
-A `Game.db` kérdésadatbázist nem szabad törölni.
-
-Ezután a Visual Studio Package Manager Console-ban:
-
-```powershell
-Add-Migration InitialIdentity -Context ApplicationDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -OutputDir Data/Migrations/Identity
-```
-
-Az új migráció `Up` metódusának a táblákat létrehozó `CreateTable` műveleteket kell tartalmaznia. Ezután:
-
-```powershell
-Update-Database -Context ApplicationDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server
-```
-
-Az így létrejövő `GameUser.db` már nem tartalmaz e-mailes vagy pepperes mezőket a `UserPii` táblában.
+Az SQLite- és SQL Server-migrációk mostantól külön láncot alkotnak. A `GameUser.db` és az exportált kérdésadatok miatt már nélkülözhető `Game.db` is tisztán újra létrehozható. A pontos parancsok és a visszaimportálás sorrendje a `docs/database-providers-and-migrations.md` fájlban található.

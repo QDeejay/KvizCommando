@@ -14,9 +14,11 @@ Az `Identity` mappa az Identity modelljeit és szabályait, az `Infrastructure` 
 
 ## Adatbázis-szolgáltató
 
-A fejlesztési és bírálói környezet SQLite adatbázist használ, mert nem igényel külön adatbázis-szervert, és másik gépen is elindítható. Az SQL Serverhez szükséges EF Core csomag és a kapcsolódó konfigurációs minták megmaradtak, de a `Database:Provider` beállítás még nem vezérli a `DbContext` regisztrációját.
+A fejlesztési és bírálói környezet alapértelmezetten SQLite adatbázist használ, mert nem igényel külön adatbázis-szervert, és másik gépen is elindítható. A `Database:Provider` értéke `Sqlite` vagy `SqlServer` lehet, és mindkét `DbContext` mindig ugyanazt a kiválasztott szolgáltatót használja.
 
-A szolgáltatókapcsoló külön fejlesztési fázis feladata. Mindkét `DbContext` ugyanazt a szolgáltatót kell használja, a migrációkat pedig SQLite és SQL Server alatt külön ellenőrizni kell.
+Az SQL Server-kapcsolati karakterláncok üresen maradnak a repóban. Csak a helyi `secrets.json` vagy az éles környezet titkos konfigurációja töltheti ki őket. SQLite kiválasztásakor az SQL Server kontextusai nem kerülnek a futó alkalmazásba, és a program nem próbál SQL Serverhez kapcsolódni.
+
+A négy külön migrációs lánc és az adatbázisok frissítési menete a `docs/database-providers-and-migrations.md` fájlban található.
 
 ## E-mail-kézbesítés
 

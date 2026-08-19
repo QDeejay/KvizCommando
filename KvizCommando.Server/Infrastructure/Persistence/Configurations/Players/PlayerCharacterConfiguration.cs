@@ -13,44 +13,13 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 
             b.HasKey(pc => pc.PlayerId);
 
-            // SQLite-konfiguráció
             b.Property(pc => pc.CharactersJson)
-             .IsRequired()
-             .HasColumnType("TEXT");
+             .IsRequired();
 
             b.Property(pc => pc.CandidatesJson)
-            .IsRequired()
-            .HasColumnType("TEXT");
+            .IsRequired();
 
-            b.ToTable(t =>
-            {
-                t.HasCheckConstraint(
-                    "CK_PlayerCharacters_CharactersJson_Valid",
-                    "json_valid([CharactersJson])"
-                );
-
-                t.HasCheckConstraint(
-                    "CK_PlayerCharacters_CandidatesJson_Valid",
-                    "json_valid([CandidatesJson])"
-                );
-            });
-
-            // SQL Server alternatíva
-            // b.Property(pc => pc.CharactersJson)
-            //  .IsRequired()
-            //  .HasColumnType("nvarchar(max)");
-            // b.Property(pc => pc.CandidatesJson)
-            //  .IsRequired()
-            //  .HasColumnType("nvarchar(max)");
-            //
-            // b.ToTable(t =>
-            // {
-            //     t.HasCheckConstraint("CK_PlayerCharacters_CharactersJson_Valid", "ISJSON([CharactersJson]) = 1");
-            // });
-            // b.ToTable(t =>
-            // {
-            //     t.HasCheckConstraint("CK_PlayerCharacters_CandidatesJson_Valid", "ISJSON([CandidatesJson]) = 1");
-            // });
+            // Az oszloptípust és a JSON-ellenőrzést a provider konfigurációja adja meg.
 
             b.Property(pc => pc.UpdatedUtc).IsRequired();
         }

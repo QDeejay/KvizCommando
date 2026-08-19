@@ -10,6 +10,9 @@ builder.Configuration.AddJsonFile(
     optional: true,
     reloadOnChange: true);
 
+// A parancssori providerkapcsoló az appsettings és a helyi secrets értékét is felülírhatja.
+builder.Configuration.AddCommandLine(args);
+
 builder.Services
     .AddKvizCommandoWeb()
     .AddKvizCommandoPersistence(builder.Configuration)
