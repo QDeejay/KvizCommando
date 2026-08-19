@@ -3,7 +3,6 @@ using KvizCommando.Client.Services;
 using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.Auth;
-using KvizCommando.Shared.Options;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
 

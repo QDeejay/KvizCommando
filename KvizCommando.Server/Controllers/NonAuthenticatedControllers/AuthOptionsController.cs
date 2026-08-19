@@ -1,6 +1,6 @@
 ﻿using KvizCommando.Server.Identity;
 using KvizCommando.Server.Infrastructure.Email;
-using KvizCommando.Shared.Options;
+using KvizCommando.Shared.Contracts.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

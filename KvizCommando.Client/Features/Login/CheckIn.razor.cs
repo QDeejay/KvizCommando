@@ -5,8 +5,8 @@ using KvizCommando.Client.Features.Shared.Modal.ViewModels;
 using KvizCommando.Client.Models.StoreModels;
 using KvizCommando.Client.Services;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Shared.Contracts.Auth;
 using KvizCommando.Shared.Contracts.CheckIn;
-using KvizCommando.Shared.Options;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
 

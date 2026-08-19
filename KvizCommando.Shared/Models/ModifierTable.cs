@@ -1,4 +1,4 @@
-﻿namespace KvizCommando.Shared.Models
+namespace KvizCommando.Shared.Models
 {
     public static class ModifierTable
     {
@@ -18,9 +18,9 @@
             new(11, -5.0, 4.7, -5.0, 2.8, null, null, null, null,null,   20, null,null),
             new(12, -5.3, 4.4, -5.3, 2.4, null, null, null, null,null,   18,null, null),
             new(13, -5.6, 4.1, -5.6, 2.0, null, null, null, null,null,   16, null,null),
-            new(14, -6.0, 3.8, -6.0, 1.5, null, null, null, null,null,   14, null,null),
+            new(14, -6.0, 3.8, -6.0, 1.5, null, null, null, null,null,   14,null, null),
             new(15, -6.3, 3.5, null, null, null, null, null, null,null,  12,null, null),
-            new(16, -6.6, 3.2, null, null, null, null, null, null,null,  10, null,null),
+            new(16, -6.6, 3.2, null, null, null, null, null, null,null,  10,null, null),
             new(17, -7.0, 2.9, null, null, null, null, null, null,null,   8,null, null),
             new(18, -7.3, 2.6, null, null, null, null, null, null,null, null, null,null),
             new(19, -7.6, 2.3, null, null, null, null, null, null,null, null, null,null),

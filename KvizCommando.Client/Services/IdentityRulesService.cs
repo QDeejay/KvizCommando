@@ -1,4 +1,4 @@
-﻿using KvizCommando.Shared.Options;
+﻿using KvizCommando.Shared.Contracts.Auth;
 using Microsoft.JSInterop;
 using System.Net.Http.Json;
 using System.Text.Json;
