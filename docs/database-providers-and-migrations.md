@@ -4,14 +4,14 @@ Ez a leírás azt foglalja össze, hogyan használja a Kviz Commando ugyanazt az
 
 ## Melyik adatbázis mikor fut?
 
-Az alapértelmezett provider SQLite:
+Az adatbázis-provider nem titok, ezért nem a `secrets.json` kapcsolja át. Egyetlen kapcsoló van a `Program.cs` fájl elején:
 
-```json
-"Database": {
-  "Provider": "Sqlite",
-  "EnableRetryOnFailure": false
-}
+```csharp
+const bool USE_SQL_SERVER = false;
 ```
+
+- `false`: SQLite;
+- `true`: SQL Server.
 
 Ebben az állapotban az alkalmazás a következő két kapcsolatot használja:
 
@@ -24,11 +24,63 @@ Ebben az állapotban az alkalmazás a következő két kapcsolatot használja:
 
 Az SQL Server kódja és NuGet-csomagja ettől még a projekt része, de SQLite kiválasztásakor nem jön létre SQL Server-kapcsolat.
 
+A váltáshoz csak ezt az egy `true`/`false` értéket kell átírni, mást nem. A `secrets.json` csak a helyi SQL Server-kapcsolati karakterláncokat tartalmazza. A migrációs parancsokban szereplő `--Database:Provider=...` csak az adott EF-parancs idejére választ providert; az sem ír át konfigurációs fájlt.
+
 ## SQL Server 2022 helyi beállítása
 
-Fejlesztéshez a SQL Server 2022 Developer kiadás megfelelő. Az SSMS csak kezelőprogram: a meglévő SSMS 21.6.17 használható hozzá, nem kell emiatt SSMS 22-re frissíteni.
+Fejlesztéshez a SQL Server 2022 Developer kiadás megfelelő és ingyenes, de éles üzemeltetésre nem használható. Az SSMS csak kezelőprogram: a meglévő SSMS 21.6.17 használható hozzá, nem kell emiatt SSMS 22-re frissíteni.
 
-Az SSMS telepítése önmagában nem jelenti azt, hogy az SQL Server motor is telepítve van. Kapcsolódás után ezzel lehet ellenőrizni a tényleges szerververziót:
+### 1. Ellenőrzés: van-e már SQL Server motor?
+
+Az SSMS megléte nem bizonyítja, hogy az adatbázismotor is telepítve van. Először próbálj csatlakozni az SSMS-ben:
+
+- `Server type`: `Database Engine`;
+- `Server name`: `localhost`;
+- `Authentication`: `Windows Authentication`;
+- `Encryption`: `Mandatory`;
+- helyi fejlesztéshez jelöld be a `Trust server certificate` lehetőséget.
+
+Ha a `localhost` nem található, a Windows Szolgáltatások között is megnézheted, van-e `SQL Server (MSSQLSERVER)` vagy például `SQL Server (SQLEXPRESS)` nevű szolgáltatás. Ha nincs SQL Server szolgáltatás, telepíteni kell a motort.
+
+### 2. SQL Server 2022 Developer telepítése
+
+1. Nyisd meg a [Microsoft SQL Server letöltési oldalát](https://www.microsoft.com/en-us/sql-server/sql-server-downloads), és töltsd le a SQL Server 2022 Developer kiadást.
+2. Indítsd el a letöltött telepítőt rendszergazdaként.
+3. Válaszd a `Custom` telepítést. A letöltési mappa maradhat az alapértelmezett.
+4. A megnyíló SQL Server Installation Center bal oldalán válaszd az `Installation` pontot.
+5. Indítsd a `New SQL Server standalone installation or add features to an existing installation` lehetőséget.
+6. Az Edition oldalon a `Developer` kiadás legyen kiválasztva. Ne az időkorlátos Evaluation kiadást válaszd.
+7. Fogadd el a licencfeltételeket, majd várd meg a telepítési szabályok ellenőrzését.
+8. Az `Azure Extension for SQL Server` nem kell ehhez a helyi fejlesztői adatbázishoz, ezért kikapcsolható.
+9. A `Feature Selection` oldalon ehhez a projekthez elég a `Database Engine Services`. Analysis Services, Reporting Services és Machine Learning nem szükséges.
+10. Az `Instance Configuration` oldalon válaszd a `Default instance` lehetőséget. Ennek neve `MSSQLSERVER`, és az alkalmazás `Server=localhost` címen éri el. Ha már van alapértelmezett instance, használhatod azt, vagy készíthetsz például `KVIZCOMMANDO` nevű named instance-t.
+11. A `Server Configuration` szolgáltatásfiókjait hagyd az alapértelmezett értéken.
+12. A `Database Engine Configuration` oldalon válaszd a `Windows authentication mode` beállítást, majd kattints az `Add Current User` gombra. Így a saját Windows-fiókod kezelheti a helyi szervert.
+13. Az adatkönyvtárak maradhatnak alapértelmezettek. Indítsd el az installálást, és csak akkor indítsd újra a gépet, ha a telepítő kéri.
+
+A Microsoft telepítővarázslójának részletes háttere: [Install SQL Server from the Installation Wizard](https://learn.microsoft.com/en-us/sql/database-engine/install-windows/install-sql-server-from-the-installation-wizard-setup?view=sql-server-ver16).
+
+### 3. Kapcsolódás SSMS 21.6.17-ből
+
+Alapértelmezett instance esetén:
+
+```text
+Server type: Database Engine
+Server name: localhost
+Authentication: Windows Authentication
+Encryption: Mandatory
+Trust server certificate: bekapcsolva
+```
+
+`KVIZCOMMANDO` nevű instance esetén a szervernév:
+
+```text
+localhost\KVIZCOMMANDO
+```
+
+A `Trust server certificate` itt csak a helyi fejlesztői, saját aláírású tanúsítvány miatt szerepel. Éles szervernél megbízható TLS-tanúsítványt kell használni.
+
+Kapcsolódás után nyiss egy új lekérdezést, és futtasd:
 
 ```sql
 SELECT
@@ -36,7 +88,9 @@ SELECT
     SERVERPROPERTY('Edition') AS Edition;
 ```
 
-SQL Server 2022 esetén a termékverzió főszáma `16`.
+SQL Server 2022 esetén a `ProductVersion` főszáma `16`; az `Edition` eredményben a Developer kiadásnak kell megjelennie.
+
+### 4. A Kviz Commando helyi kapcsolatai
 
 Az SQL Serveren két külön adatbázist használunk:
 
@@ -45,14 +99,10 @@ KvizCommandoApplication
 KvizCommandoGame
 ```
 
-Windows-hitelesítés és alapértelmezett helyi SQL Server-példány esetén a `secrets.json` vonatkozó része:
+Windows-hitelesítés és alapértelmezett helyi SQL Server-instance esetén a `secrets.json` vonatkozó része kizárólag ez:
 
 ```json
 {
-  "Database": {
-    "Provider": "SqlServer",
-    "EnableRetryOnFailure": true
-  },
   "ConnectionStrings": {
     "SqlServerApplication": "Server=localhost;Database=KvizCommandoApplication;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True",
     "SqlServerGame": "Server=localhost;Database=KvizCommandoGame;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True"
@@ -60,13 +110,15 @@ Windows-hitelesítés és alapértelmezett helyi SQL Server-példány esetén a 
 }
 ```
 
-Ha a telepített példány neve például `SQLEXPRESS`, a szerver neve:
+Ha a telepített instance neve például `KVIZCOMMANDO`, mindkét connection stringben a szerver neve:
 
 ```text
-Server=localhost\SQLEXPRESS
+Server=localhost\KVIZCOMMANDO
 ```
 
-SQL Server-felhasználónév és jelszó használatakor azok kizárólag a `secrets.json` fájlba vagy az éles környezet titoktárába kerülhetnek. Repóbeli `appsettings` fájlba nem írhatók.
+Ezután állítsd a `Program.cs` elején lévő `USE_SQL_SERVER` kapcsolót `true` értékre. A géphez vagy hitelesítéshez kötött connection string a secretsben marad.
+
+SQL Server-felhasználónév és jelszó használatakor azok kizárólag a `secrets.json` fájlba vagy az éles környezet titoktárába kerülhetnek. Repóbeli `appsettings` fájlba nem írhatók. Helyi fejlesztéshez egyszerűbb a fenti Windows-hitelesítés.
 
 Az alkalmazás nem készít adatbázist és nem futtat migrációt automatikusan induláskor. A séma frissítése mindig külön, tudatos művelet.
 
@@ -161,7 +213,7 @@ A kérdésadatok csak az új séma létrejötte után importálhatók vissza. K�
 
 ## SQL Server adatbázisok létrehozása
 
-A `secrets.json` SQL Server-beállításai mellett:
+A `secrets.json` connection stringjei mellett nem szükséges kézzel létrehozni a két üres adatbázist. A migráció létrehozza őket, ha a Windows-felhasználód megfelelő jogosultságot kapott:
 
 ```powershell
 Update-Database -Context SqlServerApplicationDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -Args "--Database:Provider=SqlServer"
@@ -181,7 +233,7 @@ Egy provider migrációját soha nem másoljuk át kézzel a másik provider map
 
 ## Iskolai SQLite-ellenőrzés
 
-Az átadható alapkonfiguráció továbbra is `Provider: Sqlite`. Az ellenőrzés menete:
+Az átadható alapkonfigurációban a `USE_SQL_SERVER` értéke továbbra is `false`. Az ellenőrzés menete:
 
 1. üres ideiglenes Application és Game SQLite-fájl;
 2. a két SQLite migráció alkalmazása;

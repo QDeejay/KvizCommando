@@ -49,10 +49,6 @@ A jelenlegi szerkezet:
   "PiiEncryption": {
     "Key": "MASIK_32_VELETLEN_BAJT_BASE64_FORMABAN"
   },
-  "Database": {
-    "Provider": "Sqlite",
-    "EnableRetryOnFailure": false
-  },
   "ConnectionStrings": {
     "SqlServerApplication": "",
     "SqlServerGame": ""
@@ -61,6 +57,8 @@ A jelenlegi szerkezet:
 ```
 
 Az auditkulcs és a PII-kulcs két külön érték. Nem cserélhetők fel, mert eltérő adatot és eltérő műveletet védenek. Az SQL Server connection string szintén helyi vagy éles titok lehet, mert hitelesítési adatot tartalmazhat. SQLite használatakor a két SQL Server-érték maradhat üres.
+
+Az adatbázis-provider nem titok, ezért nem ebbe a fájlba tartozik. A `Program.cs` elején lévő `USE_SQL_SERVER` kapcsoló választ: `false` esetén SQLite, `true` esetén SQL Server. A `secrets.json` ettől függetlenül csak a kapcsolati adatot őrzi.
 
 ## Facebook App ID és App Secret
 

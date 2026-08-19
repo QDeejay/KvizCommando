@@ -3,6 +3,8 @@ using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
 using KvizCommando.Server.Startup;
 using Microsoft.AspNetCore.HttpOverrides;
 
+const bool USE_SQL_SERVER = false;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile(
@@ -10,7 +12,12 @@ builder.Configuration.AddJsonFile(
     optional: true,
     reloadOnChange: true);
 
-// A parancssori providerkapcsoló az appsettings és a helyi secrets értékét is felülírhatja.
+builder.Configuration["Database:Provider"] =
+    USE_SQL_SERVER ? "SqlServer" : "Sqlite";
+builder.Configuration["Database:EnableRetryOnFailure"] =
+    USE_SQL_SERVER ? "true" : "false";
+
+// Az EF migrációs parancsa szükség esetén csak a saját futására felülírhatja a kapcsolót.
 builder.Configuration.AddCommandLine(args);
 
 builder.Services
