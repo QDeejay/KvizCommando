@@ -11,27 +11,6 @@ namespace KvizCommando.Server.Application.Abstractions.Security
     public interface IUserPiiService
     {
         /// <summary>
-        /// Elmenti a felhasználó e-mail-címét.
-        /// </summary>
-        /// <param name="userId">Az Identity-felhasználó azonosítója.</param>
-        /// <param name="email">A mentendő e-mail-cím.</param>
-        /// <param name="ct">A művelet megszakítását jelző token.</param>
-        Task SetEmailAsync(string userId, string email, CancellationToken ct = default);
-        /// <summary>
-        /// Visszaadja a felhasználó tárolt e-mail-címét.
-        /// </summary>
-        /// <param name="userId">Az Identity-felhasználó azonosítója.</param>
-        /// <param name="ct">A művelet megszakítását jelző token.</param>
-        Task<string?> GetEmailAsync(string userId, CancellationToken ct = default);
-
-        /// <summary>
-        /// Megkeresi a normalizált e-mail-hashhez tartozó felhasználóazonosítót.
-        /// </summary>
-        /// <param name="email">A feldolgozandó e-mail-cím.</param>
-        /// <param name="ct">A művelet megszakítását jelző token.</param>
-        Task<string?> FindUserIdByEmailAsync(string email, CancellationToken ct = default);
-
-        /// <summary>
         /// Elmenti a felhasználó telefonszámát.
         /// </summary>
         /// <param name="userId">Az Identity-felhasználó azonosítója.</param>

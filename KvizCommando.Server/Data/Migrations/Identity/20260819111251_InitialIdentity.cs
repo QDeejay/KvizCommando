@@ -238,33 +238,6 @@ namespace KvizCommando.Server.Data.Migrations.Identity
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserPii",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    EmailEncrypted = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    EmailNonce = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    EmailTag = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    EmailNormHash = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    PhoneEncrypted = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    PhoneNonce = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    PhoneTag = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    PhoneNormHash = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    BillingNameEncrypted = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    BillingNameNonce = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    BillingNameTag = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    BillingAddressEncrypted = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    BillingAddressNonce = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    BillingAddressTag = table.Column<byte[]>(type: "BLOB", nullable: true),
-                    CreatedUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedUtc = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserPii", x => x.UserId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserQuestion",
                 columns: table => new
                 {
@@ -385,6 +358,34 @@ namespace KvizCommando.Server.Data.Migrations.Identity
                     table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserPii",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    PhoneEncrypted = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    PhoneNonce = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    PhoneTag = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    BillingNameEncrypted = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    BillingNameNonce = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    BillingNameTag = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    BillingAddressEncrypted = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    BillingAddressNonce = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    BillingAddressTag = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    CreatedUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedUtc = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserPii", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_UserPii_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -541,18 +542,6 @@ namespace KvizCommando.Server.Data.Migrations.Identity
                 columns: new[] { "UserId", "IsDefault" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserPii_PhoneNormHash",
-                table: "UserPii",
-                column: "PhoneNormHash");
-
-            migrationBuilder.CreateIndex(
-                name: "UX_UserPii_EmailNormHash",
-                table: "UserPii",
-                column: "EmailNormHash",
-                unique: true,
-                filter: "[EmailNormHash] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserQuestion_PlayerId",
                 table: "UserQuestion",
                 column: "PlayerId");
@@ -616,10 +605,10 @@ namespace KvizCommando.Server.Data.Migrations.Identity
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Players");
 
             migrationBuilder.DropTable(
-                name: "Players");
+                name: "AspNetUsers");
         }
     }
 }

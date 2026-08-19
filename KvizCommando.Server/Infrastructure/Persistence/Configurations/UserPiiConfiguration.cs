@@ -1,9 +1,13 @@
 ﻿using KvizCommando.Server.Domain.Entities.Security;
+using KvizCommando.Server.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 {
+    /// <summary>
+    /// Meghatározza a titkosított felhasználói PII-rekord adatbázis-leképezését.
+    /// </summary>
     public class UserPiiConfiguration : IEntityTypeConfiguration<UserPii>
     {
         /// <inheritdoc />
@@ -13,15 +17,10 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
 
             b.HasKey(x => x.UserId);
 
-            // Az e-mail-hash egyedisége megakadályozza ugyanazon cím többszöri regisztrálását.
-            b.HasIndex(x => x.EmailNormHash)
-             .IsUnique()
-             .HasDatabaseName("UX_UserPii_EmailNormHash")
-             .HasFilter("[EmailNormHash] IS NOT NULL");
-
-            // A telefonszám-hash kereshető, de üzleti szabály nem követeli meg az egyediségét.
-            b.HasIndex(x => x.PhoneNormHash)
-             .HasDatabaseName("IX_UserPii_PhoneNormHash");
+            b.HasOne<ApplicationUser>()
+                .WithOne()
+                .HasForeignKey<UserPii>(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             b.Property(x => x.CreatedUtc).IsRequired();
             b.Property(x => x.UpdatedUtc).IsRequired();

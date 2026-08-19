@@ -4,35 +4,46 @@ using KvizCommando.Server.Infrastructure.Options;
 
 namespace KvizCommando.Server.Startup;
 
+/// <summary>
+/// A mezőszintű PII-titkosítás és -tárolás szolgáltatásregisztrációit tartalmazza.
+/// </summary>
 public static class SecurityAndPiiExtensions
 {
     /// <summary>
-    /// Regisztrálja a személyes adatok keresési, titkosítási és tárolási absztrakcióit.
+    /// Regisztrálja a személyes adatok titkosítási és tárolási szolgáltatásait.
     /// </summary>
     /// <param name="services">A bővítendő szolgáltatásgyűjtemény.</param>
     /// <param name="configuration">A biztonsági beállításokat tartalmazó konfiguráció.</param>
-    /// <param name="environment">Az adapterek engedélyezését meghatározó futtatási környezet.</param>
     /// <returns>A további regisztrációkhoz használható szolgáltatásgyűjtemény.</returns>
     public static IServiceCollection AddSecurityAndPii(
         this IServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment)
+        IConfiguration configuration)
     {
-        services.Configure<SecurityOptions>(
-            configuration.GetSection("Security"));
+        services.AddOptions<PiiEncryptionOptions>()
+            .Bind(configuration.GetSection(PiiEncryptionOptions.SECTION_NAME))
+            .Validate(
+                options => HasValidKey(options.Key),
+                "A PiiEncryption:Key beállításnak 32 bájtos, Base64-formátumú AES-kulcsot kell tartalmaznia.")
+            .ValidateOnStart();
 
-        services.AddSingleton<IEmailLookup, EmailLookup>();
-
-        if (!environment.IsDevelopment())
-        {
-            throw new InvalidOperationException(
-                "A személyesadat-mezők production titkosítási adaptere még nincs konfigurálva. " +
-                "A DummyEncryptionProvider kizárólag Development környezetben használható.");
-        }
-
-        services.AddSingleton<IEncryptionProvider, DummyEncryptionProvider>();
+        services.AddSingleton<IEncryptionProvider, AesGcmEncryptionProvider>();
         services.AddScoped<IUserPiiService, UserPiiService>();
 
         return services;
+    }
+
+    private static bool HasValidKey(string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+            return false;
+
+        try
+        {
+            return Convert.FromBase64String(key).Length == PiiEncryptionOptions.KEY_SIZE_BYTES;
+        }
+        catch (FormatException)
+        {
+            return false;
+        }
     }
 }

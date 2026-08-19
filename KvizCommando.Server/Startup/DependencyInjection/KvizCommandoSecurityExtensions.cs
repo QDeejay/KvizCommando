@@ -20,7 +20,7 @@ public static class KvizCommandoSecurityExtensions
         IConfiguration configuration,
         IHostEnvironment environment)
     {
-        services.AddSecurityAndPii(configuration, environment);
+        services.AddSecurityAndPii(configuration);
         services.AddAppCors(configuration);
         services.AddAppRateLimiting();
         services.AddAppDataProtection(configuration, environment);

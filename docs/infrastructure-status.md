@@ -80,13 +80,13 @@ A helyi fájl nem változtathatatlan, nem kezel több alkalmazáspéldányt és 
 
 ## Személyes adatok mezőszintű védelme
 
-A `UserPiiService` végzi a személyesadat-mezők adatbázisba írását és visszaolvasását. A védelem módját az `IEncryptionProvider` határozza meg.
+A `UserPiiService` kizárólag az Identityn kívüli telefonszám- és számlázási mezők adatbázisba írását és visszaolvasását végzi. Az e-mail-cím az ASP.NET Core Identity `AspNetUsers` táblájában marad; a `UserPii` nem tárol e-mail-másolatot vagy keresési hasht.
 
-Development környezetben a `DummyEncryptionProvider` Base64-kódolást használ. Ez nem titkosítás, nem biztosít bizalmasságot, és valós személyes adatok védelmére nem alkalmas. Az adapter csak a tárolási folyamat és az interfész kipróbálására szolgál.
+Az `AesGcmEncryptionProvider` AES-256-GCM hitelesített titkosítást használ. Minden mezőhöz új 12 bájtos nonce és 16 bájtos hitelesítési tag készül. A `PiiEncryption:Key` beállításnak 32 véletlen bájt Base64-alakját kell tartalmaznia. A program hiányzó vagy hibás kulccsal nem indul el.
 
-Production környezetben a dummy adapter nem regisztrálható. Amíg hitelesített titkosítást, külső kulcskezelést és kulcsrotációt biztosító implementáció nincs, az alkalmazás világos indítási hibával jelzi a hiányzó production infrastruktúrát.
+A kulcs fejlesztésben a Gitből kizárt `secrets.json` fájlban tárolható. Production környezetben a választott platform titoktára szükséges. A jelenlegi egyszerű szolgáltatás nem végez automatikus kulcsrotációt: meglévő adatok mellett a kulcs csak a mezők ellenőrzött visszafejtése és újratitkosítása után cserélhető.
 
-Az ASP.NET Data Protection nem azonos a mezőszintű PII-titkosítással. Előbbi a framework cookie- és tokenfolyamatait védi, utóbbi az alkalmazás által tárolt személyesadat-mezők külön cserepontja.
+Az ASP.NET Data Protection nem azonos a mezőszintű PII-titkosítással. Előbbi a framework cookie- és tokenfolyamatait védi, utóbbi a számlázási és kapcsolattartási mezőket. A részletes működést és az adatbázis újrainicializálását a `docs/secrets-and-data-protection.md` tartalmazza.
 
 ## GDPR-folyamatok
 

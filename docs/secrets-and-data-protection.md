@@ -1,14 +1,39 @@
-# A Kviz Commando titkos beállításai
+# Titkos kulcsok és személyes adatok a Kviz Commandóban
 
-Ez a leírás azt foglalja össze, hogy a Kviz Commando fejlesztői környezetében melyik titkos érték mire való. Nem általános kriptográfiai dokumentáció: a jelenlegi program konkrét működését írja le.
+Ez a leírás a Kviz Commando jelenlegi működését foglalja össze. A célja az, hogy egyértelmű legyen, melyik adat hol található, melyik kulcs mire szolgál, és mit kell megőrizni vagy lecserélni.
+
+## A működő rendszer röviden
+
+Az ASP.NET Core Identity kezeli a fiók működéséhez szükséges adatokat. Az e-mail-cím az `AspNetUsers` táblában marad, mert a beépített Identity erre építi a regisztrációt, az egyediségvizsgálatot, a bejelentkezést, a jelszó-visszaállítást és a Facebook-fiók egyeztetését.
+
+A külön `UserPii` tábla nem másolja le az e-mail-címet. Kizárólag az Identityn kívüli, fokozottabban védendő kapcsolattartási és számlázási adatokat tárolja:
+
+```text
+UserId
+PhoneEncrypted + PhoneNonce + PhoneTag
+BillingNameEncrypted + BillingNameNonce + BillingNameTag
+BillingAddressEncrypted + BillingAddressNonce + BillingAddressTag
+CreatedUtc
+UpdatedUtc
+```
+
+A `UserId` olvasható marad, mert ez kapcsolja a PII-rekordot az `AspNetUsers.Id` értékéhez. Valódi idegen kulcs védi a kapcsolatot, és az Identity-fiók fizikai törlése a hozzá tartozó `UserPii` rekordot is törli. A titkosítás célja nem az adatbázis teljes anonimizálása, hanem az, hogy az adatbázisfájl megszerzése önmagában ne tegye olvashatóvá a telefonszámot, a számlázási nevet és a számlázási címet.
+
+## Mi nincs a rendszerben?
+
+Nincs külön e-mail-hash és nincs e-mail pepper. Ezekre nincs szükség, mert az e-mailt továbbra is az ASP.NET Core Identity kezeli és keresi az `AspNetUsers` táblában.
+
+Nincs külön telefonszám-hash sem. A program jelenleg nem keres felhasználót telefonszám alapján.
+
+A korábbi `EmailLookup`, `IEmailLookup`, `EmailHashPepper` és `DummyEncryptionProvider` csak egy félkész, a működő Identityvel párhuzamos irány részei voltak. Ezeket a rendszer már nem használja.
 
 ## A `secrets.json` szerepe
 
-A `KvizCommando.Server/secrets.json` olyan helyi beállításokat tartalmaz, amelyeket nem akarunk az `appsettings.json` fájlba és a Git repóba tenni. A szerver induláskor az általános beállítások után tölti be ezt a fájlt, ezért az itt megadott értékek felülírják az `appsettings` azonos nevű, üres vagy helykitöltő értékeit.
+A `KvizCommando.Server/secrets.json` helyi konfigurációs fájl. A szerver az általános `appsettings` fájlok után tölti be, ezért az itt megadott titkos értékek felülírják a repóban található üres helykitöltőket.
 
-A fájl szándékosan szerepel a `.gitignore` listáján. Ettől egy kézzel készített ZIP-be még bekerülhet, ezért átadás előtt mindig tudni kell, hogy a csomag fejlesztői vagy éles titkokat tartalmaz-e.
+A fájl a `.gitignore` listáján szerepel, így Git nem követi. Ez azonban nem akadályozza meg, hogy kézi ZIP-készítéskor bekerüljön a csomagba. A bírálói csomagba kizárólag lecserélhető fejlesztői titkok kerülhetnek, és maga a csomag csak egyéni jogosultságú helyen adható át.
 
-A jelenlegi fejlesztői fájl szerkezete:
+A jelenlegi szerkezet:
 
 ```json
 {
@@ -19,101 +44,154 @@ A jelenlegi fejlesztői fájl szerkezete:
     }
   },
   "AuditHash": {
-    "Secret": "KULON_GENERALT_BASE64_KULCS"
+    "Secret": "32_VELETLEN_BAJT_BASE64_FORMABAN"
   },
-  "Security": {
-    "EmailHashPepper": "MASIK_KULON_GENERALT_KULCS"
+  "PiiEncryption": {
+    "Key": "MASIK_32_VELETLEN_BAJT_BASE64_FORMABAN"
   }
 }
 ```
 
-A példában nincsenek valódi kulcsok. A Facebook titka, az auditkulcs és az e-mail pepper három külön érték.
+Az auditkulcs és a PII-kulcs két külön érték. Nem cserélhetők fel, mert eltérő adatot és eltérő műveletet védenek.
 
 ## Facebook App ID és App Secret
 
-Az `AppId` azonosítja a Facebook fejlesztői alkalmazást. Az `AppSecret` bizonyítja a Facebook felé, hogy a szerver ehhez az alkalmazáshoz tartozik. A Facebook-bejelentkezés ezek nélkül nem indul el.
+Az `AppId` azonosítja a Facebook fejlesztői alkalmazást. Az `AppSecret` igazolja a Facebook felé, hogy a szerver ehhez az alkalmazáshoz tartozik.
 
-Az App Secret nem a felhasználói adatbázist titkosítja. Akkor is titoknak számít, ha a `GameUser.db` üres. A jelenlegi bírálói csomagban fejlesztői érték használható, ha a csomag egyéni jogosultságú mappába kerül, a Facebook-alkalmazás továbbra is fejlesztői módban marad, és a bíráló nincs felvéve tesztelőnek. Ebben az esetben a bíráló látja a konfigurációt, de a saját Facebook-fiókjával nem tud belépni.
-
-Élesítéskor új éles hitelesítő adatokat kell használni, a fejlesztői értékeket pedig vissza kell vonni vagy le kell cserélni.
+Az App Secret akkor is titok, ha a felhasználói adatbázis üres. Fejlesztői módban, egyéni jogosultságú bírálói átadásnál használható lecserélhető tesztérték. Élesítéskor új éles hitelesítő adat szükséges, a fejlesztői értéket pedig vissza kell vonni vagy le kell cserélni.
 
 ## `AuditHash:Secret`
 
-Az auditnapló nem tárol nyers IP-címet. Ha az `Audit:IncludeIpHash` be van kapcsolva, a szerver az IP-címből és az `AuditHash:Secret` kulcsból HMAC-SHA256 lenyomatot készít.
-
-Egyszerűsítve:
+Az auditnapló nem tárol nyers IP-címet. Bekapcsolt `Audit:IncludeIpHash` esetén a szerver az IP-címből és az `AuditHash:Secret` értékből HMAC-SHA256 lenyomatot készít.
 
 ```text
 IP-cím + AuditHash:Secret -> ipHash
 ```
 
-Az auditfájlba csak az `ipHash` kerül. A kulcs hiányában vagy hibás Base64-formátum esetén az auditálás nem áll le, de az `ipHash` értéke kimarad, és a szerver figyelmeztetést ír a normál naplóba.
+Ugyanezt a kulcsot használja a feltételek elfogadásakor mentett IP- és User-Agent-lenyomat. A hash nem visszafejthető titkosítás.
 
-Ugyanezt a kulcsot használja a feltételek elfogadásakor mentett IP- és User-Agent-lenyomat is. Ez nem PII-titkosítás, és a hashből nem lehet visszafejteni az eredeti IP-címet vagy User-Agentet.
+Hiányzó vagy hibás Base64-kulcs esetén az auditálás folytatódik, de az IP-hash kimarad. A kulcs cseréje után ugyanaz az IP-cím más hasht ad, ezért a csere előtti és utáni lenyomatok nem hasonlíthatók össze közvetlenül.
 
-A kulcsot működés közben nem célszerű lecserélni. Kulcscsere után ugyanaz az IP-cím más lenyomatot ad, ezért a csere előtti és utáni auditbejegyzések ezen az alapon már nem kapcsolhatók össze. A régi napló nem sérül meg, csak ez az összehasonlíthatóság vész el.
+## `PiiEncryption:Key`
 
-## `Security:EmailHashPepper`
+Ez a kulcs védi a `UserPii` tábla telefonszám-, számlázásinév- és számlázásicím-mezőit.
 
-Az e-mail pepper a későbbi PII-rendszer keresési hashéhez tartozik. Feladata, hogy az e-mail-címből ne egyszerű, előre kiszámítható SHA-256 hash készüljön.
+A kulcs követelménye:
 
-Egyszerűsítve:
+- pontosan 32 véletlen bájt;
+- Base64-formátumban kerül a konfigurációba;
+- nem kerül az adatbázisba vagy Gitbe;
+- nem lehet azonos az auditkulccsal.
 
-```text
-normalizált e-mail + EmailHashPepper -> EmailNormHash
+PowerShellben fejlesztői kulcs készíthető így:
+
+```powershell
+$bytes = New-Object byte[] 32
+$rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+$rng.GetBytes($bytes)
+[Convert]::ToBase64String($bytes)
+$rng.Dispose()
 ```
 
-Az `EmailLookup` már beolvassa ezt a beállítást és képes elkészíteni a hasht. A teljes `UserPii` adatfolyam azonban még nincs élesítve. A jelenlegi regisztráció nem készít `UserPii` rekordot, és nem ír `EmailNormHash` értéket az adatbázisba. A pepper most konfigurálva és használatra kész, de önmagában nem kapcsolja be a PII-tárolást.
+A program induláskor ellenőrzi a kulcs formátumát és hosszát. Hiányzó vagy hibás kulccsal nem indul el, mert ilyen állapotban a PII-adatok védelmét nem lehetne garantálni.
 
-Ez a pepper nem titkosítja az e-mail-címet, és nem azonos a személyes adatokat később védő valódi titkosítási kulccsal. A jelenlegi `DummyEncryptionProvider` csak fejlesztői helykitöltő, nem valódi titkosítás. A teljes mezőszintű PII-védelem külön GDPR-fejlesztési csomag feladata.
+## Hogyan működik a PII-titkosítás?
 
-Ha a peppert az `EmailNormHash` értékek használata után lecseréljük, ugyanaz az e-mail más hasht kap. Ilyenkor a korábbi rekordokat újra kellene számolni. Ezért az éles PII-rendszer bekapcsolása előtt végleges, tartós pepper szükséges.
+A program AES-256-GCM hitelesített titkosítást használ. Minden mező minden titkosításakor új, véletlen 12 bájtos nonce készül. A titkosított tartalom mellett egy 16 bájtos hitelesítési tag is elmentésre kerül.
 
-## Miért külön kulcs az audit secret és az e-mail pepper?
+```text
+számlázási cím + PII-kulcs + új nonce
+    -> titkosított tartalom + nonce + hitelesítési tag
+```
 
-A két kulcs eltérő célhoz tartozik:
+A nonce nem titok, ezért az adatbázisban tárolható. A hitelesítési tag gondoskodik arról, hogy a szerver észrevegye a titkosított tartalom módosítását vagy sérülését. Hibás tartalom, nonce, tag vagy kulcs esetén a visszafejtés nem ad vissza részleges vagy találgatott szöveget, hanem hibával leáll.
 
-- az `AuditHash:Secret` az IP- és User-Agent-lenyomatokat védi;
-- az `EmailHashPepper` az e-mail keresési hasht védi.
+A titkosítás hitelesítési kontextusa a `UserId`-t és a mező nevét is tartalmazza. Emiatt egy érvényes titkosított telefonszám vagy számlázási cím nem másolható át észrevétlenül másik felhasználóhoz vagy másik mezőbe.
 
-Ha ugyanazt a kulcsot használnánk minden célra, az egyik rendszer kulcscseréje vagy kompromittálódása a másik rendszert is érintené. A külön kulcsokkal az audit és a PII-rendszer egymástól függetlenül kezelhető.
+.NET 8 alatt a szolgáltatás a kötelező tagméretet megadó `AesGcm` konstruktort használja. A tagméret nélküli konstruktor .NET 8-tól elavult. Lásd: [Microsoft SYSLIB0053](https://learn.microsoft.com/en-us/dotnet/fundamentals/syslib-diagnostics/syslib0053).
+
+Az AES-GCM a .NET 8 része, ezért ehhez nem szükséges külön NuGet-csomag.
+
+## Mi történik a PII-kulcs elvesztésekor vagy cseréjekor?
+
+Ha a kulcs elveszik, a már elmentett PII-adatok nem fejthetők vissza. Az adatbázis mentése önmagában nem elég: a titkos kulcsról külön, védett mentés szükséges.
+
+A kulcs egyszerű lecserélése után a régi adatok szintén nem fejthetők vissza az új kulccsal. Kulcscsere előtt a meglévő adatokat a régi kulccsal vissza kell fejteni, majd az új kulccsal újra kell titkosítani. A jelenlegi egyszerű rendszer nem végez automatikus kulcsrotációt, ezért a kulcsot nem szabad kézzel lecserélni meglévő PII-adatok mellett.
+
+Éles környezetben a kulcsot nem repóbeli JSON-fájlban, hanem a választott üzemeltetési környezet titoktárában kell tárolni. A Microsoft fejlesztéshez Secret Managert vagy helyi titkos konfigurációt, production környezetben pedig például felügyelt titoktárat javasol. Lásd: [Microsoft alkalmazástitok-kezelési útmutató](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/secure-net-microservices-web-applications/developer-app-secrets-storage).
 
 ## Data Protection XML-kulcsok
 
-A `DataProtection-Keys` mappában található XML-fájlokat nem mi írjuk kézzel. Az ASP.NET Core automatikusan hozza létre és kezeli őket.
-
-Ezekkel védi többek között:
+A `DataProtection-Keys` mappa XML-fájljait az ASP.NET Core hozza létre. Ezek védik többek között:
 
 - a bejelentkezési cookie-kat;
 - az e-mail-megerősítő tokeneket;
 - a jelszó-visszaállító tokeneket;
-- az ASP.NET Core Identity opaque access és refresh tokenjeit;
+- az Identity opaque access és refresh tokenjeit;
 - a külső bejelentkezés rövid életű cookie-ját.
 
-Ezek a kulcsok nem JWT-kulcsok, nem Facebook-titkok, és nem az adatbázis személyes mezőinek titkosító kulcsai.
+Ezek nem PII-titkosítási kulcsok, nem auditkulcsok és nem Facebook-titkok. Nem kerülnek a `secrets.json` fájlba vagy Gitbe.
 
-A kulcskészlet azért marad meg a szerver újraindítása után, hogy a korábban kiadott cookie-k és tokenek továbbra is ellenőrizhetők legyenek. Ha a fejlesztői kulcsmappát töröljük, a szerver új kulcsot készít. Az adatbázis nem sérül, de a korábbi cookie-k, megerősítő linkek, jelszó-visszaállító linkek és opaque tokenek érvénytelenné válhatnak.
+A fejlesztői mappa törlése nem törli az adatbázist, de érvénytelenítheti a korábban kiadott cookie-kat, aktiváló linkeket, reset linkeket és opaque tokeneket. Éles környezetben a Data Protection-kulcskészletnek telepítéseken át megmaradó, hozzáférés-védett és biztonságosan mentett hely szükséges.
 
-Az XML-fájlok nem kerülnek a `secrets.json` fájlba és nem kerülnek Gitbe. A `.gitignore` külön kizárja a `DataProtection-Keys` mappákat.
+## Mit jelent itt a GDPR-megfelelőség?
 
-Fejlesztésben a helyi fájlos tárolás megfelelő. Éles környezetben a kulcskészletnek telepítéseken át megmaradó, hozzáférés-védett hely kell, és külön gondoskodni kell a fájlban lévő kulcsanyag nyugalmi állapotú védelméről. Ennek végleges módja az éles üzemeltetési környezettől függ, ezért a jelenlegi csomag nem változtatja meg a Data Protection beállítását.
+A GDPR nem ír elő konkrét AES-algoritmust, peppert vagy kötelező mezőszintű titkosítást minden személyes adatra. A kockázathoz igazodó technikai és szervezési intézkedéseket követel. A titkosítás ennek fontos része lehet, de önmagában nem teszi a teljes rendszert megfelelővé.
 
-## Fejlesztői csomag átadása
+A teljes folyamat része többek között:
 
-A jelenlegi bírálói csomag üres felhasználói adatbázissal és lecserélhető fejlesztői kulcsokkal készül. Egyéni hozzáférésű mappában a fejlesztői `secrets.json` is átadható, ha a bírálónak a konfigurációt is látnia kell.
+- az adatkezelés céljának és jogalapjának meghatározása;
+- csak a ténylegesen szükséges adatok gyűjtése;
+- adatkezelési tájékoztató;
+- hozzáférések korlátozása;
+- HTTPS és biztonságos hitelesítés;
+- megőrzési és törlési szabályok;
+- adatexport, helyesbítés és törlés kezelése;
+- a kötelezően megőrzendő számlázási adatok elkülönítése;
+- védett biztonsági mentések;
+- audit- és incidensnyilvántartás;
+- a biztonsági intézkedések rendszeres ellenőrzése.
 
-Az átadás szabályai:
+A GDPR 25. cikke az alapértelmezett adatvédelemről és adattakarékosságról, a 32. cikke pedig a kockázatarányos biztonságról rendelkezik. Lásd: [GDPR](https://eur-lex.europa.eu/eli/reg/2016/679/2016-05-04) és [EDPB biztonsági útmutató](https://www.edpb.europa.eu/sme/be-compliant/secure-personal-data_hu).
 
-- a csomag ne kerüljön nyilvános letöltési helyre;
-- éles kulcs soha ne kerüljön bele;
-- élesítés előtt a fejlesztői Facebook-adatokat, auditkulcsot és e-mail peppert le kell cserélni;
-- a Data Protection fejlesztői XML-fájljait nem szükséges átadni, mert a bíráló gépe saját kulcskészletet készít;
-- a fejlesztői e-mail-mappában lévő leveleket átadás előtt ellenőrizni vagy törölni kell, mert egyszer használatos linkeket és címzettet tartalmazhatnak.
+## A fejlesztői csomag átadása
 
-## Jelenlegi állapot röviden
+A bírálói csomagban:
 
-- A böngészős bejelentkezés cookie-t használ.
-- A külön tokenes útvonal ASP.NET Core Identity opaque tokent használ, nem JWT-t.
-- Az audit IP-hash működik, ha érvényes `AuditHash:Secret` érkezik a helyi konfigurációból.
-- Az e-mail pepper be van kötve az `EmailLookup` szolgáltatásba, de a UserPII adatfolyam még nincs bekapcsolva.
-- A Data Protection fájlos kulcskészlete működik, de production környezetben külön végleges tárolási és kulcsvédelmi döntés szükséges.
+- csak lecserélhető fejlesztői kulcs lehet;
+- éles kulcs nem lehet;
+- a csomag nem kerülhet nyilvános letöltési helyre;
+- a `GameUser.db` és a fejlesztői e-mail-fájlok átadás előtt ellenőrzendők;
+- a Data Protection fejlesztői XML-kulcsait nem szükséges átadni;
+- élesítés előtt a Facebook-, audit- és PII-kulcsot le kell cserélni.
+
+## Üres adatbázis újrainicializálása
+
+Ha nincs megtartandó felhasználói adat, a megváltozott PII-séma tiszta kezdőmigrációval hozható létre.
+
+Leállított szerver mellett törlendő:
+
+```text
+KvizCommando.Server/GameUser.db
+KvizCommando.Server/GameUser.db-shm
+KvizCommando.Server/GameUser.db-wal
+KvizCommando.Server/Data/Migrations/Identity/20260819101355_InitialIdentity.cs
+KvizCommando.Server/Data/Migrations/Identity/20260819101355_InitialIdentity.Designer.cs
+KvizCommando.Server/Data/Migrations/Identity/ApplicationDbContextModelSnapshot.cs
+```
+
+A `Game.db` kérdésadatbázist nem szabad törölni.
+
+Ezután a Visual Studio Package Manager Console-ban:
+
+```powershell
+Add-Migration InitialIdentity -Context ApplicationDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -OutputDir Data/Migrations/Identity
+```
+
+Az új migráció `Up` metódusának a táblákat létrehozó `CreateTable` műveleteket kell tartalmaznia. Ezután:
+
+```powershell
+Update-Database -Context ApplicationDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server
+```
+
+Az így létrejövő `GameUser.db` már nem tartalmaz e-mailes vagy pepperes mezőket a `UserPii` táblában.

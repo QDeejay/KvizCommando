@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KvizCommando.Server.Data.Migrations.Identity
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260819101355_InitialIdentity")]
+    [Migration("20260819111251_InitialIdentity")]
     partial class InitialIdentity
     {
         /// <inheritdoc />
@@ -392,25 +392,10 @@ namespace KvizCommando.Server.Data.Migrations.Identity
                     b.Property<DateTime>("CreatedUtc")
                         .HasColumnType("TEXT");
 
-                    b.Property<byte[]>("EmailEncrypted")
-                        .HasColumnType("BLOB");
-
-                    b.Property<byte[]>("EmailNonce")
-                        .HasColumnType("BLOB");
-
-                    b.Property<byte[]>("EmailNormHash")
-                        .HasColumnType("BLOB");
-
-                    b.Property<byte[]>("EmailTag")
-                        .HasColumnType("BLOB");
-
                     b.Property<byte[]>("PhoneEncrypted")
                         .HasColumnType("BLOB");
 
                     b.Property<byte[]>("PhoneNonce")
-                        .HasColumnType("BLOB");
-
-                    b.Property<byte[]>("PhoneNormHash")
                         .HasColumnType("BLOB");
 
                     b.Property<byte[]>("PhoneTag")
@@ -420,14 +405,6 @@ namespace KvizCommando.Server.Data.Migrations.Identity
                         .HasColumnType("TEXT");
 
                     b.HasKey("UserId");
-
-                    b.HasIndex("EmailNormHash")
-                        .IsUnique()
-                        .HasDatabaseName("UX_UserPii_EmailNormHash")
-                        .HasFilter("[EmailNormHash] IS NOT NULL");
-
-                    b.HasIndex("PhoneNormHash")
-                        .HasDatabaseName("IX_UserPii_PhoneNormHash");
 
                     b.ToTable("UserPii", (string)null);
                 });
@@ -772,6 +749,15 @@ namespace KvizCommando.Server.Data.Migrations.Identity
                     b.HasOne("KvizCommando.Server.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Security.UserPii", b =>
+                {
+                    b.HasOne("KvizCommando.Server.Identity.ApplicationUser", null)
+                        .WithOne()
+                        .HasForeignKey("KvizCommando.Server.Domain.Entities.Security.UserPii", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

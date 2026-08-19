@@ -14,50 +14,24 @@ namespace KvizCommando.Server.Application.Security
     /// </summary>
     public class UserPiiService : IUserPiiService
     {
+        private const string PHONE_FIELD = "Phone";
+        private const string BILLING_NAME_FIELD = "BillingName";
+        private const string BILLING_ADDRESS_FIELD = "BillingAddress";
+
         private readonly ApplicationDbContext _db;
-        private readonly IEmailLookup _emailLookup;
         private readonly IEncryptionProvider _enc;
 
+        /// <summary>
+        /// Létrehozza a titkosított PII-adatok tárolási szolgáltatását.
+        /// </summary>
+        /// <param name="db">Az Identity- és PII-adatokat kezelő adatbáziskontextus.</param>
+        /// <param name="enc">A mezőszintű hitelesített titkosítás szolgáltatása.</param>
         public UserPiiService(
             ApplicationDbContext db,
-            IEmailLookup emailLookup,
             IEncryptionProvider enc)
         {
             _db = db;
-            _emailLookup = emailLookup;
             _enc = enc;
-        }
-
-        /// <inheritdoc />
-        public async Task SetEmailAsync(string userId, string email, CancellationToken ct = default)
-        {
-            var entity = await EnsureEntity(userId, ct);
-
-            var (cipher, nonce, tag) = _enc.Encrypt(email);
-            entity.EmailEncrypted = cipher;
-            entity.EmailNonce = nonce;
-            entity.EmailTag = tag;
-            entity.EmailNormHash = _emailLookup.ComputeHashFromRaw(email);
-            entity.UpdatedUtc = DateTime.UtcNow;
-
-            await _db.SaveChangesAsync(ct);
-        }
-
-        /// <inheritdoc />
-        public async Task<string?> GetEmailAsync(string userId, CancellationToken ct = default)
-        {
-            var entity = await _db.UserPii.FirstOrDefaultAsync(x => x.UserId == userId, ct);
-            if (entity?.EmailEncrypted is null || entity.EmailNonce is null || entity.EmailTag is null)
-                return null;
-            return _enc.Decrypt(entity.EmailEncrypted, entity.EmailNonce, entity.EmailTag);
-        }
-
-        /// <inheritdoc />
-        public async Task<string?> FindUserIdByEmailAsync(string email, CancellationToken ct = default)
-        {
-            var hash = _emailLookup.ComputeHashFromRaw(email);
-            var entity = await _db.UserPii.FirstOrDefaultAsync(x => x.EmailNormHash == hash, ct);
-            return entity?.UserId;
         }
 
         /// <inheritdoc />
@@ -65,13 +39,11 @@ namespace KvizCommando.Server.Application.Security
         {
             var entity = await EnsureEntity(userId, ct);
 
-            var (cipher, nonce, tag) = _enc.Encrypt(phoneE164);
+            var context = BuildContext(userId, PHONE_FIELD);
+            var (cipher, nonce, tag) = _enc.Encrypt(phoneE164, context);
             entity.PhoneEncrypted = cipher;
             entity.PhoneNonce = nonce;
             entity.PhoneTag = tag;
-            // Az egységes hash-szolgáltatás ideiglenesen telefonszámhoz is használatos.
-            // Élesítés előtt külön normalizálási szabály szükséges a telefonszámokhoz.
-            entity.PhoneNormHash = _emailLookup.ComputeNormalizedHash(phoneE164);
             entity.UpdatedUtc = DateTime.UtcNow;
 
             await _db.SaveChangesAsync(ct);
@@ -83,7 +55,11 @@ namespace KvizCommando.Server.Application.Security
             var entity = await _db.UserPii.FirstOrDefaultAsync(x => x.UserId == userId, ct);
             if (entity?.PhoneEncrypted is null || entity.PhoneNonce is null || entity.PhoneTag is null)
                 return null;
-            return _enc.Decrypt(entity.PhoneEncrypted, entity.PhoneNonce, entity.PhoneTag);
+            return _enc.Decrypt(
+                entity.PhoneEncrypted,
+                entity.PhoneNonce,
+                entity.PhoneTag,
+                BuildContext(userId, PHONE_FIELD));
         }
 
         /// <inheritdoc />
@@ -91,12 +67,16 @@ namespace KvizCommando.Server.Application.Security
         {
             var entity = await EnsureEntity(userId, ct);
 
-            var e1 = _enc.Encrypt(billingName);
+            var e1 = _enc.Encrypt(
+                billingName,
+                BuildContext(userId, BILLING_NAME_FIELD));
             entity.BillingNameEncrypted = e1.Cipher;
             entity.BillingNameNonce = e1.Nonce;
             entity.BillingNameTag = e1.Tag;
 
-            var e2 = _enc.Encrypt(billingAddress);
+            var e2 = _enc.Encrypt(
+                billingAddress,
+                BuildContext(userId, BILLING_ADDRESS_FIELD));
             entity.BillingAddressEncrypted = e2.Cipher;
             entity.BillingAddressNonce = e2.Nonce;
             entity.BillingAddressTag = e2.Tag;
@@ -113,9 +93,17 @@ namespace KvizCommando.Server.Application.Security
 
             string? name = null, addr = null;
             if (entity.BillingNameEncrypted != null && entity.BillingNameNonce != null && entity.BillingNameTag != null)
-                name = _enc.Decrypt(entity.BillingNameEncrypted, entity.BillingNameNonce, entity.BillingNameTag);
+                name = _enc.Decrypt(
+                    entity.BillingNameEncrypted,
+                    entity.BillingNameNonce,
+                    entity.BillingNameTag,
+                    BuildContext(userId, BILLING_NAME_FIELD));
             if (entity.BillingAddressEncrypted != null && entity.BillingAddressNonce != null && entity.BillingAddressTag != null)
-                addr = _enc.Decrypt(entity.BillingAddressEncrypted, entity.BillingAddressNonce, entity.BillingAddressTag);
+                addr = _enc.Decrypt(
+                    entity.BillingAddressEncrypted,
+                    entity.BillingAddressNonce,
+                    entity.BillingAddressTag,
+                    BuildContext(userId, BILLING_ADDRESS_FIELD));
 
             return (name, addr);
         }
@@ -135,5 +123,8 @@ namespace KvizCommando.Server.Application.Security
             await _db.SaveChangesAsync(ct);
             return entity;
         }
+
+        private static string BuildContext(string userId, string fieldName) =>
+            $"UserPii:{userId}:{fieldName}";
     }
 }
