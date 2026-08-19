@@ -1,4 +1,4 @@
-﻿using KvizCommando.Server.Domain.Entities.Questions;
+using KvizCommando.Server.Domain.Entities.Questions;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Models;
@@ -8,88 +8,8 @@ using System.Text.Json;
 
 namespace KvizCommando.Server.Services.DtoMapping
 {
-    public sealed class QuestionService : IQuestionService
+    partial class QuestionService
     {
-        private readonly IPlayerCacheService _cache;
-
-
-        private readonly ILogger<QuestionService> _logger;
-
-        public QuestionService(
-            IPlayerCacheService cache,
-            ILogger<QuestionService> logger)
-        {
-            _cache = cache;
-            _logger = logger;
-        }
-
-        /// <inheritdoc />
-        public async Task<CacheUpdateResult> SaveFactorySlotsAsync(int playerId, SaveFactoryRequest dto, CancellationToken ct)
-        {
-            return await _cache.UpdatePlayerAndQuestionsLockedAsync(
-                playerId,
-                dto.SessionId,
-                (player, question) =>
-                {
-                    var level = player.Core.RankEnum;
-                    if (level <= 0)
-                        return null;
-
-                    var loadoutSize =
-                        QuestionLoadoutRules.GetLoadoutSize(level);
-
-                    if (dto.CategorySlots.Length < loadoutSize)
-                        return null;
-
-                    var categorySlots = dto.CategorySlots
-                        .Take(loadoutSize)
-                        .ToArray();
-
-                    if (categorySlots.Any(category =>
-                            category is < 0 or >
-                                QuestionLoadoutRules.OWN_QUESTION_CATEGORY))
-                    {
-                        return null;
-                    }
-
-                    var maxUserSlot = Math.Min(
-                        RankRewards.List[level].OwnQuestSlot,
-                        question.uSlots.Length);
-
-                    var occupiedUserSlots = question.uSlots
-                        .Take(maxUserSlot)
-                        .Count(slot => slot.CategoryNo > 0);
-
-                    var ownQuestionLimit =
-                        QuestionLoadoutRules.GetOwnQuestionLimit(
-                            loadoutSize,
-                            occupiedUserSlots);
-
-                    if (categorySlots.Count(category =>
-                            category ==
-                                QuestionLoadoutRules.OWN_QUESTION_CATEGORY) >
-                        ownQuestionLimit)
-                    {
-                        return null;
-                    }
-
-                    if (categorySlots
-                        .Skip(loadoutSize / 2)
-                        .Any(category =>
-                            category ==
-                                QuestionLoadoutRules.OWN_QUESTION_CATEGORY))
-                    {
-                        return null;
-                    }
-
-                    player.Loadout.FactorySlotsJson =
-                        JsonSerializer.Serialize(categorySlots);
-
-                    return DirtyFlags.Loadout;
-                },
-                ct);
-        }
-
         /// <inheritdoc />
         public async Task<CacheUpdateResult> ManageSlotsAsync(int playerId, ManageSlotRequest dto, CancellationToken ct)
         {
@@ -209,74 +129,5 @@ namespace KvizCommando.Server.Services.DtoMapping
                 },
                 ct);
         }
-
-        /// <inheritdoc />
-        public async Task<CacheUpdateResult> SendNewQuestionAsync(int playerId, NewQuestionRequest dto, CancellationToken ct)
-        {
-            return await _cache.UpdateQuestionsLockedAsync(
-                playerId,
-                dto.SessionId,
-                (player, question) =>
-                {
-                    if (player.Core.RankEnum <= 0)
-                        return null;
-
-                    var categoryMaskIndex = (dto.Category - 1) % 8;
-                    if (dto.Category is < 1 or > 16 ||
-                        categoryMaskIndex >= player.CharCatMask.Length ||
-                        !player.CharCatMask[categoryMaskIndex])
-                    {
-                        _logger.LogWarning(
-                            "SendNewQuestion: Category is not available. userId={PlayerId}, Category={Category}",
-                            playerId,
-                            dto.Category);
-                        return null;
-                    }
-
-                    var freePendingSlots = question.pSlots
-                        .Take(5)
-                        .Count(item => item.CategoryNo == 0);
-
-                    if (freePendingSlots == 0)
-                    {
-                        _logger.LogWarning(
-                            "SendNewQuestion: No free pending slot. userId={PlayerId}",
-                            playerId);
-                        return null;
-                    }
-
-                    var maxPendingSlot = Math.Min(
-                        RankRewards.List[player.Core.RankEnum].OwnQuestSlot >> 1,
-                        question.pSlots.Length);
-
-                    if (dto.SlotNo < 0 ||
-                        dto.SlotNo >= maxPendingSlot)
-                    {
-                        _logger.LogWarning(
-                            "SendNewQuestion: Invalid pending slot number. userId={PlayerId}, SlotNo={SlotNo}",
-                            playerId,
-                            dto.SlotNo);
-                        return null;
-                    }
-
-                    var id = question.pSlots[dto.SlotNo].Id;
-                    question.pSlots[dto.SlotNo] = new PendingQuestion
-                    {
-                        Id = id,
-                        PlayerId = playerId,
-                        Question = dto.Question,
-                        AnswersJson = JsonSerializer.Serialize(dto.Answers),
-                        CategoryNo = dto.Category,
-                        Status = (QuestionStatus)1,
-                        SubmittedAt = DateTime.UtcNow
-                    };
-
-                    return 1u << (dto.SlotNo + 16);
-                },
-                ct);
-        }
-
-
-
     }
 }
