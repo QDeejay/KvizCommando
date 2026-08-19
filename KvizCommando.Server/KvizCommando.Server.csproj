@@ -42,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\StaticData\" />
+    <Folder Include="Data\Migrations\Identity\" />
     <Folder Include="Resources\Client\localization\en\" />
     <Folder Include="Resources\Client\localization\hu\" />
     <Folder Include="Services\VsGame\" />
@@ -54,12 +54,16 @@
 		<Content Include="Infrastructure\Email\Templates\**\*.*" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Compile Remove="Data\StaticData\**" />
 	  <Compile Remove="Data\UserJsons\**" />
 	  <Compile Remove="wwwroot\Board\**" />
+	  <Content Remove="Data\StaticData\**" />
 	  <Content Remove="Data\UserJsons\**" />
 	  <Content Remove="wwwroot\Board\**" />
+	  <EmbeddedResource Remove="Data\StaticData\**" />
 	  <EmbeddedResource Remove="Data\UserJsons\**" />
 	  <EmbeddedResource Remove="wwwroot\Board\**" />
+	  <None Remove="Data\StaticData\**" />
 	  <None Remove="Data\UserJsons\**" />
 	  <None Remove="wwwroot\Board\**" />
 	</ItemGroup>

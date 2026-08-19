@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KvizCommando.Server.Data.Migrations.Identity
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260111152614_InsertCategoryStatistics")]
-    partial class InsertCategoryStatistics
+    [Migration("20260819101355_InitialIdentity")]
+    partial class InitialIdentity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -493,6 +493,75 @@ namespace KvizCommando.Server.Data.Migrations.Identity
                     b.ToTable("PlayerCategoryStats", (string)null);
                 });
 
+            modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Statistics.PlayerOrientStat", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<short>("OrientId")
+                        .HasColumnType("smallint");
+
+                    b.Property<int>("HighScore")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("HighScoreTime")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("PlayerId", "OrientId");
+
+                    b.HasIndex("OrientId")
+                        .HasDatabaseName("IX_PlayerOrientStat_CategoryId");
+
+                    b.ToTable("PlayerOrientStat", (string)null);
+                });
+
+            modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Statistics.TeamStatistic", b =>
+                {
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RankedGuessCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("RankedGuessErrorRatio")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("REAL")
+                        .HasComputedColumnSql("CASE WHEN [RankedGuessCount] = 0 THEN 0.0 ELSE (1.0 * [RankedGuessErrorTotal] / [RankedGuessCount]) END", false);
+
+                    b.Property<decimal>("RankedGuessErrorTotal")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("RankedHighScore")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("RankedHighScoreTime")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("RankedPlacementsJson")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("RankedPlayed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RankedWon")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("PlayerId");
+
+                    b.HasIndex("RankedGuessErrorRatio")
+                        .HasDatabaseName("IX_TeamStatistics_RankedGuessErrorRatio");
+
+                    b.HasIndex("RankedHighScore", "RankedHighScoreTime")
+                        .IsDescending(true, false)
+                        .HasDatabaseName("IX_TeamStatistics_RankedHighScore_Time");
+
+                    b.ToTable("TeamStatistics", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_TeamStatistics_RankedPlacementsJson_Valid", "json_valid([RankedPlacementsJson])");
+                        });
+                });
+
             modelBuilder.Entity("KvizCommando.Server.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -703,6 +772,15 @@ namespace KvizCommando.Server.Data.Migrations.Identity
                     b.HasOne("KvizCommando.Server.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Statistics.TeamStatistic", b =>
+                {
+                    b.HasOne("KvizCommando.Server.Domain.Entities.Players.Player", null)
+                        .WithOne()
+                        .HasForeignKey("KvizCommando.Server.Domain.Entities.Statistics.TeamStatistic", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
