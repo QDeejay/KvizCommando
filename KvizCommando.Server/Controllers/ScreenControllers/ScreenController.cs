@@ -53,6 +53,67 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
         }
 
         /// <summary>
+        /// Lekéri a kérdéskezelő képernyő megjelenítési adatait.
+        /// </summary>
+        /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
+        [HttpGet("question")]
+        [ProducesResponseType(typeof(QuestionDtos), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<QuestionDtos>> GetQuestionScreenAsync([FromQuery] string sessionId, CancellationToken ct)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                     ?? User.FindFirstValue("sub")
+                     ?? throw new InvalidOperationException("Missing user id");
+
+            if (userId == null)
+                return Unauthorized();
+
+            var playerId = await _idCache.GetPlayerIdAsync(userId, ct);
+
+            if (playerId is null or 0)
+                return NotFound("No Player record found for this user.");
+
+            var dto = await _screenService.GetQuestionScreenAsync(playerId.Value, sessionId, ct);
+            if (dto is null)
+                return NotFound();
+
+            return Ok(dto);
+        }
+
+
+
+
+        /// <summary>
+        /// Lekéri a csapatképernyő megjelenítési adatait.
+        /// </summary>
+        /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
+        [HttpGet("team")]
+        [ProducesResponseType(typeof(TeamDtos), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<TeamDtos>> GetTeamScreenAsync([FromQuery] string sessionId, CancellationToken ct)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                     ?? User.FindFirstValue("sub")
+                     ?? throw new InvalidOperationException("Missing user id");
+            if (userId == null)
+                return Unauthorized();
+            var playerId = await _idCache.GetPlayerIdAsync(userId, ct);
+            if (playerId is null or 0)
+                return NotFound("No Player record found for this user.");
+
+            var dto = await _screenService.GetTeamScreenDataAsync(playerId.Value, sessionId, ct);
+            if (dto == null)
+                return NotFound();
+            return Ok(dto);
+        }
+
+
+
+        /// <summary>
         /// Lekéri az egyéni játék választóképernyőjének adatait.
         /// </summary>
         /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
@@ -87,7 +148,7 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
         [ProducesResponseType(typeof(VsGameDtos), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<VsGameDtos>> GetVsGameScreenAsync([FromQuery] string sessionId,CancellationToken ct)
+        public async Task<ActionResult<VsGameDtos>> GetVsGameScreenAsync([FromQuery] string sessionId, CancellationToken ct)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
                      ?? User.FindFirstValue("sub")
@@ -110,5 +171,7 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
 
             return Ok(dto);
         }
+
+
     }
 }

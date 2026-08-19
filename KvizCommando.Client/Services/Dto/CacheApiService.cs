@@ -10,9 +10,6 @@ namespace KvizCommando.Client.Services.Dto
         private readonly HttpClient _http;
         private readonly SessionService _sessionCache;
         private const string SCREEN_ROUTE = "/api/screen";
-        private const string SCREEN_ROUTE_QUESTION = "/api/question/screen";
-        private const string SCREEN_ROUTE_TEAM = "/api/team/screen";
-        private const string SCREEN_ROUTE_HOME = "/api/home/screen";
         public CacheApiService(HttpClient http, SessionService sessioncache)
         {
             _http = http;
@@ -33,9 +30,7 @@ namespace KvizCommando.Client.Services.Dto
         {
             var sessionId = _sessionCache.SessionId;
 
-            return GetAsync<QuestionDtos>(
-                $"{SCREEN_ROUTE_QUESTION}?sessionId={sessionId}",
-                ct);
+            return GetAsync<QuestionDtos>($"{SCREEN_ROUTE}/question?sessionId={sessionId}", ct);
         }
 
         /// <inheritdoc />
@@ -44,9 +39,7 @@ namespace KvizCommando.Client.Services.Dto
         {
             var sessionId = _sessionCache.SessionId;
 
-            return GetAsync<TeamDtos>(
-                $"{SCREEN_ROUTE_TEAM}?sessionId={sessionId}",
-                ct);
+            return GetAsync<TeamDtos>($"{SCREEN_ROUTE}/team?sessionId={sessionId}", ct);
         }
 
         /// <inheritdoc />

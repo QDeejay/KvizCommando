@@ -1,6 +1,5 @@
-﻿using KvizCommando.Shared.Contracts.Question;
-using KvizCommando.Shared.Models.Dtos;
-using KvizCommando.Server.Services.PlayerCache;
+﻿using KvizCommando.Server.Services.PlayerCache;
+using KvizCommando.Shared.Contracts.Question;
 
 namespace KvizCommando.Server.Services.DtoMapping
 {
@@ -28,12 +27,6 @@ namespace KvizCommando.Server.Services.DtoMapping
         /// <param name="dto">A feldolgozandó kérés adatai.</param>
         /// <param name="ct">A művelet megszakítását jelző token.</param>
         Task<CacheUpdateResult> SendNewQuestionAsync(int playerId, NewQuestionRequest dto, CancellationToken ct);
-        /// <summary>
-        /// Lekéri a kérdéskezelő képernyő megjelenítési adatait.
-        /// </summary>
-        /// <param name="playerId">A játékos adatbázis-azonosítója.</param>
-        /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
-        /// <param name="ct">A művelet megszakítását jelző token.</param>
-        Task<QuestionDtos?> GetQuestionScreenAsync(int playerId, string sessionId, CancellationToken ct = default);
+
     }
 }

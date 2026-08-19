@@ -18,91 +18,20 @@ public sealed partial class VsMatchService
 
         ct.ThrowIfCancellationRequested();
 
-        var removeMatch = false;
-        var releasePlayer = false;
-        VsMatchRewardState? abandonedReward = null;
-        (string ConnectionId, VsMatchSnapshot Snapshot)[] messages = [];
+        DisconnectResult? result;
 
         lock (match.SyncRoot)
         {
-            var player = match.FindByConnection(connectionId);
-
-            if (match.IsClosed ||
-                player is null ||
-                !player.IsConnected)
-            {
-                return;
-            }
-
-            if (match.Phase == VsMatchPhase.GameCompleted)
-            {
-                player.IsConnected = false;
-                releasePlayer = true;
-                removeMatch = match.Players.All(item => !item.IsConnected);
-            }
-            else
-            {
-                VsMatchBotRules.Activate(match, player);
-
-                if (IsPreparationPhase(match.Phase))
-                {
-                    VsMatchPreparationRules.ApplyTimeoutDefaults(
-                        match,
-                        player);
-                }
-
-                player.IsFinished = true;
-            }
-
-            AddLog(
-                match,
-                player.PlayerId,
-                "Disconnected",
-                string.Empty);
-
-            if (!releasePlayer &&
-                match.Players.All(item => item.IsBot))
-            {
-                match.IsClosed = true;
-                match.PhaseTimerCts.Cancel();
-                abandonedReward =
-                    VsMatchRewardCalculator.Calculate(match);
-                match.Reward = abandonedReward;
-                removeMatch = true;
-
-                AddLog(
-                    match,
-                    null,
-                    "AllPlayersDisconnected",
-                    string.Empty);
-            }
-            else if (!releasePlayer && IsPreparationPhase(match.Phase))
-            {
-                AdvanceIfReadyLocked(match);
-            }
-            else if (!releasePlayer && IsAnswerPhase(match.Phase) &&
-                     VsMatchGameRules
-                         .HaveAllParticipantsAnswered(match))
-            {
-                StartAnswerResultDelayLocked(match);
-            }
-            else if (!releasePlayer && IsAnswerPhase(match.Phase))
-            {
-                ScheduleBotAnswerLocked(match, player);
-            }
-
-            if (!releasePlayer &&
-                match.Players.Any(item => item.IsConnected))
-            {
-                messages =
-                    VsMatchSnapshotBuilder.BuildMessages(match);
-            }
+            result = ApplyDisconnectLocked(match, connectionId);
         }
 
-        if (releasePlayer)
-            _store.ReleasePlayer(match, match.Players.First(player =>
-                player.ConnectionId == connectionId));
+        if (result is null)
+            return;
 
+        if (result.ReleasePlayer)
+            _store.ReleasePlayer(match, result.Player);
+
+        var abandonedReward = result.AbandonedReward;
         if (abandonedReward is not null)
         {
             await _rewardPersistence.SaveAsync(
@@ -111,13 +40,106 @@ public sealed partial class VsMatchService
                 abandonedReward);
         }
 
-        if (removeMatch)
+        if (result.RemoveMatch)
         {
             _store.TryRemove(match.MatchId, out _);
             return;
         }
 
-        await SendBroadcastMessagesAsync(messages);
+        await SendBroadcastMessagesAsync(result.Messages);
+    }
+
+    private DisconnectResult? ApplyDisconnectLocked(
+        VsMatchSession match,
+        string connectionId)
+    {
+        var player = match.FindByConnection(connectionId);
+
+        if (match.IsClosed ||
+            player is null ||
+            !player.IsConnected)
+        {
+            return null;
+        }
+
+        var result = new DisconnectResult(player);
+
+        if (match.Phase == VsMatchPhase.GameCompleted)
+        {
+            player.IsConnected = false;
+            result.ReleasePlayer = true;
+            result.RemoveMatch = match.Players.All(item => !item.IsConnected);
+        }
+        else
+        {
+            VsMatchBotRules.Activate(match, player);
+
+            if (IsPreparationPhase(match.Phase))
+            {
+                VsMatchPreparationRules.ApplyTimeoutDefaults(
+                    match,
+                    player);
+            }
+
+            player.IsFinished = true;
+        }
+
+        AddLog(
+            match,
+            player.PlayerId,
+            "Disconnected",
+            string.Empty);
+
+        ContinueAfterDisconnectLocked(match, player, result);
+
+        if (!result.ReleasePlayer &&
+            match.Players.Any(item => item.IsConnected))
+        {
+            result.Messages =
+                VsMatchSnapshotBuilder.BuildMessages(match);
+        }
+
+        return result;
+    }
+
+    private void ContinueAfterDisconnectLocked(
+        VsMatchSession match,
+        VsMatchPlayerState player,
+        DisconnectResult result)
+    {
+        if (result.ReleasePlayer)
+            return;
+
+        if (match.Players.All(item => item.IsBot))
+        {
+            match.IsClosed = true;
+            match.PhaseTimerCts.Cancel();
+            result.AbandonedReward =
+                VsMatchRewardCalculator.Calculate(match);
+            match.Reward = result.AbandonedReward;
+            result.RemoveMatch = true;
+
+            AddLog(
+                match,
+                null,
+                "AllPlayersDisconnected",
+                string.Empty);
+            return;
+        }
+
+        if (IsPreparationPhase(match.Phase))
+        {
+            AdvanceIfReadyLocked(match);
+        }
+        else if (IsAnswerPhase(match.Phase) &&
+                 VsMatchGameRules.HaveAllParticipantsAnswered(match))
+        {
+            StartAnswerResultDelayLocked(match);
+        }
+        else if (IsAnswerPhase(match.Phase))
+        {
+            ScheduleBotAnswerLocked(match, player);
+        }
     }
 
     /// <inheritdoc />
@@ -142,5 +164,23 @@ public sealed partial class VsMatchService
         return connectionId is null
             ? Task.CompletedTask
             : DisconnectAsync(connectionId, ct);
+    }
+
+    private sealed class DisconnectResult
+    {
+        internal DisconnectResult(VsMatchPlayerState player)
+        {
+            Player = player;
+        }
+
+        internal VsMatchPlayerState Player { get; }
+        internal bool ReleasePlayer { get; set; }
+        internal bool RemoveMatch { get; set; }
+        internal VsMatchRewardState? AbandonedReward { get; set; }
+        internal (string ConnectionId, VsMatchSnapshot Snapshot)[] Messages
+        {
+            get;
+            set;
+        } = [];
     }
 }

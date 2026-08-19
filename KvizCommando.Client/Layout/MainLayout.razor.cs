@@ -202,12 +202,8 @@ namespace KvizCommando.Client.Layout
             var allViaCheckIn = reqTypes[0] == ReqStates.AllViaCheckIn;
             var allStates = reqTypes[0] is ReqStates.All or ReqStates.AllViaCheckIn;
 
-            if (allViaCheckIn && !await RestoreSessionAsync())
-            {
-                _isLoggedIn = false;
-                await InvokeAsync(StateHasChanged);
+            if (!await RestoreCheckInSessionAsync(allViaCheckIn))
                 return;
-            }
 
             if (allStates)
                 reqTypes = Enum.GetValues<ReqStates>()[2..];
@@ -216,83 +212,138 @@ namespace KvizCommando.Client.Layout
 
             foreach (var reqType in reqTypes)
             {
-                switch (reqType)
-                {
-                    case ReqStates.Home:
-                        HState.Invalidate();
-                        await HState.EnsureLoadedAsync();
-                        if (!HState.IsLoaded)
-                            return;
-                        _appState.Home = HState.Snapshot;
-                        UpdateHeadDisplay();
-                        break;
-
-                    case ReqStates.Question:
-                        QState.Invalidate();
-                        await QState.EnsureLoadedAsync();
-                        if (!QState.IsLoaded)
-                            return;
-
-                        _appState.Question = QState.Snapshot;
-                        break;
-
-                    case ReqStates.Team:
-                        TState.Invalidate();
-                        await TState.EnsureLoadedAsync();
-                        if (!TState.IsLoaded)
-                            return;
-                        _appState.Team = TState.Snapshot;
-                        break;
-
-                    case ReqStates.SoloGame:
-                        SState.Invalidate();
-                        await SState.EnsureLoadedAsync();
-                        if (!SState.IsLoaded)
-                            return;
-                        _appState.SoloGame = SState.Snapshot;
-                        break;
-
-                    case ReqStates.VsGame:
-                        VState.Invalidate();
-                        await VState.EnsureLoadedAsync();
-                        if (!VState.IsLoaded)
-                            return;
-                        _appState.VsGame = VState.Snapshot;
-                        break;
-
-                    case ReqStates.LocalSotrage:
-                        _appState.LocStoreStates.ChkBxNotShowDel =
-                            await LocalStorage.GetItemAsync<bool>(_localNotShowDel);
-                        _appState.LocStoreStates.ChkBxNotShowNew =
-                            await LocalStorage.GetItemAsync<bool>(_localNotShowNew);
-                        _appState.LocStoreStates.LastBboardChk =
-                            await LocalStorage.GetItemAsync<DateTime>(LOCAL_LAST_B_BOARD);
-                        _appState.LocStoreStates.SeenHelps =
-                            await LocalStorage.GetItemAsync<HashSet<int>>(
-                                HelpCollection.SEEN_STORAGE_KEY) ?? [];
-                        break;
-                }
+                if (!await LoadStateAsync(reqType))
+                    return;
             }
 
             if (allViaCheckIn)
                 _isLoggedIn = true;
 
-            if (allStates)
-            {
-                await Audio.PlayMusicAsync(MusicTrack.MenuMain);
-
-                if (SessionService.PendingSessionReplacementWarning)
-                {
-                    SessionService.PendingSessionReplacementWarning = false;
-                    Ui.Toast.Brief(Ui.Lang["mainlayout.Toast.Login.Replaced"]);
-                }
-            }
+            await CompleteStateInitializationAsync(allStates);
 
             await InvokeAsync(StateHasChanged);
+        }
 
+        private async Task<bool> RestoreCheckInSessionAsync(
+            bool allViaCheckIn)
+        {
+            if (!allViaCheckIn || await RestoreSessionAsync())
+                return true;
 
+            _isLoggedIn = false;
+            await InvokeAsync(StateHasChanged);
+            return false;
+        }
 
+        private async Task<bool> LoadStateAsync(ReqStates reqType)
+        {
+            switch (reqType)
+            {
+                case ReqStates.Home:
+                    return await LoadHomeStateAsync();
 
+                case ReqStates.Question:
+                    return await LoadQuestionStateAsync();
+
+                case ReqStates.Team:
+                    return await LoadTeamStateAsync();
+
+                case ReqStates.SoloGame:
+                    return await LoadSoloGameStateAsync();
+
+                case ReqStates.VsGame:
+                    return await LoadVsGameStateAsync();
+
+                case ReqStates.LocalSotrage:
+                    await LoadLocalStorageStateAsync();
+                    return true;
+
+                default:
+                    return true;
+            }
+        }
+
+        private async Task<bool> LoadHomeStateAsync()
+        {
+            HState.Invalidate();
+            await HState.EnsureLoadedAsync();
+            if (!HState.IsLoaded)
+                return false;
+
+            _appState.Home = HState.Snapshot;
+            UpdateHeadDisplay();
+            return true;
+        }
+
+        private async Task<bool> LoadQuestionStateAsync()
+        {
+            QState.Invalidate();
+            await QState.EnsureLoadedAsync();
+            if (!QState.IsLoaded)
+                return false;
+
+            _appState.Question = QState.Snapshot;
+            return true;
+        }
+
+        private async Task<bool> LoadTeamStateAsync()
+        {
+            TState.Invalidate();
+            await TState.EnsureLoadedAsync();
+            if (!TState.IsLoaded)
+                return false;
+
+            _appState.Team = TState.Snapshot;
+            return true;
+        }
+
+        private async Task<bool> LoadSoloGameStateAsync()
+        {
+            SState.Invalidate();
+            await SState.EnsureLoadedAsync();
+            if (!SState.IsLoaded)
+                return false;
+
+            _appState.SoloGame = SState.Snapshot;
+            return true;
+        }
+
+        private async Task<bool> LoadVsGameStateAsync()
+        {
+            VState.Invalidate();
+            await VState.EnsureLoadedAsync();
+            if (!VState.IsLoaded)
+                return false;
+
+            _appState.VsGame = VState.Snapshot;
+            return true;
+        }
+
+        private async Task LoadLocalStorageStateAsync()
+        {
+            _appState.LocStoreStates.ChkBxNotShowDel =
+                await LocalStorage.GetItemAsync<bool>(_localNotShowDel);
+            _appState.LocStoreStates.ChkBxNotShowNew =
+                await LocalStorage.GetItemAsync<bool>(_localNotShowNew);
+            _appState.LocStoreStates.LastBboardChk =
+                await LocalStorage.GetItemAsync<DateTime>(LOCAL_LAST_B_BOARD);
+            _appState.LocStoreStates.SeenHelps =
+                await LocalStorage.GetItemAsync<HashSet<int>>(
+                    HelpCollection.SEEN_STORAGE_KEY) ?? [];
+        }
+
+        private async Task CompleteStateInitializationAsync(bool allStates)
+        {
+            if (!allStates)
+                return;
+
+            await Audio.PlayMusicAsync(MusicTrack.MenuMain);
+
+            if (!SessionService.PendingSessionReplacementWarning)
+                return;
+
+            SessionService.PendingSessionReplacementWarning = false;
+            Ui.Toast.Brief(Ui.Lang["mainlayout.Toast.Login.Replaced"]);
         }
 
         private async Task<bool> RestoreSessionAsync()

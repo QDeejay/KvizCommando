@@ -82,20 +82,10 @@ internal static class VsMatchScoring
                        : 1);
         var questioner = match.Players.First(player =>
             player.Position == question.QuestionerPosition);
-
-        var correctResponders = match.Players
-            .Where(player =>
-                player != questioner &&
-                player.CurrentAnswer?.AnswerIndex ==
-                question.CorrectOptionIndex)
-            .Select(player => new SpeedCandidate(
-                player,
-                CalculateModifiedTime(
-                    match,
-                    player,
-                    question)))
-            .ToArray();
-
+        var correctResponders = GetCorrectResponders(
+            match,
+            question,
+            questioner);
         var speedWinner = ResolveSpeedWinner(correctResponders);
 
         if (correctResponders.Length > 1 &&
@@ -112,117 +102,36 @@ internal static class VsMatchScoring
             unit * (match.Players.Count - 1) -
             unit * otherCorrect +
             unit * otherNoAnswer;
+
+        UpdateQuestionerStatistics(
+            match,
+            question,
+            questioner,
+            isCaptain,
+            otherCorrect);
+
         var results = new List<VsMatchQuestionPlayerResultState>(
             match.Players.Count);
 
-        if (isCaptain)
-        {
-            questioner.Statistics.QuestionsAsked +=
-                match.Players.Count - 1;
-            questioner.Statistics.CorrectAnswersToAskedQuestions +=
-                otherCorrect;
-        }
-
-        if (question.IsOwnQuestion)
-        {
-            if (!questioner.Statistics.OwnQuestions.TryGetValue(
-                    question.QuestionId,
-                    out var ownQuestion))
-            {
-                ownQuestion = new VsMatchOwnQuestionStatisticsState();
-                questioner.Statistics.OwnQuestions.Add(
-                    question.QuestionId,
-                    ownQuestion);
-            }
-
-            ownQuestion.Asked += match.Players.Count - 1;
-            ownQuestion.CorrectAnswers += otherCorrect;
-        }
-
         foreach (var player in match.Players)
         {
-            var answer = player.CurrentAnswer;
-            var hasAnswer = answer?.AnswerIndex.HasValue == true;
-            var isCorrect =
-                answer?.AnswerIndex ==
-                question.CorrectOptionIndex;
-            var answerTime = isCorrect
-                ? answer!.AnswerTimeSeconds
-                : match.Profile.QuestionSeconds +
-                  (hasAnswer &&
-                   player.ActiveQuestionHelp ==
-                       VsHelpType.TimeFreeze
-                      ? match.Profile
-                          .TimeFreezeWrongAnswerPenaltySeconds
-                      : 0);
-            var points = player == questioner
-                ? ResolveQuestionerPoints(
-                    hasAnswer,
-                    isCorrect,
-                    questionerScore,
-                    unit * (match.Players.Count - 1))
-                : ResolveResponderPoints(
-                    hasAnswer,
-                    isCorrect,
-                    unit);
-            var hasSpeedBonus = player == speedWinner;
+            var result = CreateChoicePlayerResult(
+                match,
+                question,
+                player,
+                questioner,
+                speedWinner,
+                questionerScore,
+                unit);
 
-            if (question.CategoryId is >= 1 and <= 16)
-            {
-                if (!player.Statistics.Categories.TryGetValue(
-                        question.CategoryId,
-                        out var category))
-                {
-                    category = new VsMatchCategoryStatisticsState();
-                    player.Statistics.Categories.Add(
-                        question.CategoryId,
-                        category);
-                }
-
-                category.Answered++;
-
-                if (isCorrect)
-                    category.Correct++;
-            }
-
-            if (isCorrect)
-                player.Statistics.CorrectAnswers++;
-
-            if (hasSpeedBonus)
-                points += unit;
-
-            var losesVitality =
-                !isCaptain &&
-                player != questioner &&
-                hasAnswer &&
-                !isCorrect;
-
-            if (losesVitality)
-                VsMatchGameRules.DeductVitality(match, player);
-
-            player.RoundPoints += points;
-
-            if (player != questioner)
-                player.RoundTimeSeconds += answerTime;
-
-            player.RoundProgress.Add(points);
-
-            results.Add(new VsMatchQuestionPlayerResultState
-            {
-                Position = player.Position,
-                AnswerIndex = answer?.AnswerIndex,
-                IsCorrect = isCorrect,
-                AnswerTimeSeconds = answerTime,
-                ModifiedTimeSeconds =
-                    isCorrect && player != questioner
-                        ? CalculateModifiedTime(
-                            match,
-                            player,
-                            question)
-                        : null,
-                Points = points,
-                HasSpeedBonus = hasSpeedBonus
-            });
+            ApplyChoicePlayerResult(
+                match,
+                question,
+                player,
+                questioner,
+                result,
+                isCaptain);
+            results.Add(result);
         }
 
         match.Game.QuestionResult = new VsMatchQuestionResultState
@@ -231,6 +140,163 @@ internal static class VsMatchScoring
             CorrectOptionIndex = question.CorrectOptionIndex,
             Players = [.. results]
         };
+    }
+
+    private static SpeedCandidate[] GetCorrectResponders(
+        VsMatchSession match,
+        VsMatchQuestionState question,
+        VsMatchPlayerState questioner) =>
+        match.Players
+            .Where(player =>
+                player != questioner &&
+                player.CurrentAnswer?.AnswerIndex ==
+                question.CorrectOptionIndex)
+            .Select(player => new SpeedCandidate(
+                player,
+                CalculateModifiedTime(
+                    match,
+                    player,
+                    question)))
+            .ToArray();
+
+    private static void UpdateQuestionerStatistics(
+        VsMatchSession match,
+        VsMatchQuestionState question,
+        VsMatchPlayerState questioner,
+        bool isCaptain,
+        int otherCorrect)
+    {
+        if (isCaptain)
+        {
+            questioner.Statistics.QuestionsAsked +=
+                match.Players.Count - 1;
+            questioner.Statistics.CorrectAnswersToAskedQuestions +=
+                otherCorrect;
+        }
+
+        if (!question.IsOwnQuestion)
+            return;
+
+        if (!questioner.Statistics.OwnQuestions.TryGetValue(
+                question.QuestionId,
+                out var ownQuestion))
+        {
+            ownQuestion = new VsMatchOwnQuestionStatisticsState();
+            questioner.Statistics.OwnQuestions.Add(
+                question.QuestionId,
+                ownQuestion);
+        }
+
+        ownQuestion.Asked += match.Players.Count - 1;
+        ownQuestion.CorrectAnswers += otherCorrect;
+    }
+
+    private static VsMatchQuestionPlayerResultState
+        CreateChoicePlayerResult(
+            VsMatchSession match,
+            VsMatchQuestionState question,
+            VsMatchPlayerState player,
+            VsMatchPlayerState questioner,
+            VsMatchPlayerState? speedWinner,
+            int questionerScore,
+            int unit)
+    {
+        var answer = player.CurrentAnswer;
+        var hasAnswer = answer?.AnswerIndex.HasValue == true;
+        var isCorrect =
+            answer?.AnswerIndex == question.CorrectOptionIndex;
+        var answerTime = isCorrect
+            ? answer!.AnswerTimeSeconds
+            : match.Profile.QuestionSeconds +
+              (hasAnswer &&
+               player.ActiveQuestionHelp == VsHelpType.TimeFreeze
+                  ? match.Profile.TimeFreezeWrongAnswerPenaltySeconds
+                  : 0);
+        var points = player == questioner
+            ? ResolveQuestionerPoints(
+                hasAnswer,
+                isCorrect,
+                questionerScore,
+                unit * (match.Players.Count - 1))
+            : ResolveResponderPoints(
+                hasAnswer,
+                isCorrect,
+                unit);
+        var hasSpeedBonus = player == speedWinner;
+
+        if (hasSpeedBonus)
+            points += unit;
+
+        return new VsMatchQuestionPlayerResultState
+        {
+            Position = player.Position,
+            AnswerIndex = answer?.AnswerIndex,
+            IsCorrect = isCorrect,
+            AnswerTimeSeconds = answerTime,
+            ModifiedTimeSeconds =
+                isCorrect && player != questioner
+                    ? CalculateModifiedTime(
+                        match,
+                        player,
+                        question)
+                    : null,
+            Points = points,
+            HasSpeedBonus = hasSpeedBonus
+        };
+    }
+
+    private static void ApplyChoicePlayerResult(
+        VsMatchSession match,
+        VsMatchQuestionState question,
+        VsMatchPlayerState player,
+        VsMatchPlayerState questioner,
+        VsMatchQuestionPlayerResultState result,
+        bool isCaptain)
+    {
+        UpdateCategoryStatistics(player, question, result.IsCorrect);
+
+        if (result.IsCorrect)
+            player.Statistics.CorrectAnswers++;
+
+        var losesVitality =
+            !isCaptain &&
+            player != questioner &&
+            result.AnswerIndex.HasValue &&
+            !result.IsCorrect;
+
+        if (losesVitality)
+            VsMatchGameRules.DeductVitality(match, player);
+
+        player.RoundPoints += result.Points;
+
+        if (player != questioner)
+            player.RoundTimeSeconds += result.AnswerTimeSeconds;
+
+        player.RoundProgress.Add(result.Points);
+    }
+
+    private static void UpdateCategoryStatistics(
+        VsMatchPlayerState player,
+        VsMatchQuestionState question,
+        bool isCorrect)
+    {
+        if (question.CategoryId is < 1 or > 16)
+            return;
+
+        if (!player.Statistics.Categories.TryGetValue(
+                question.CategoryId,
+                out var category))
+        {
+            category = new VsMatchCategoryStatisticsState();
+            player.Statistics.Categories.Add(
+                question.CategoryId,
+                category);
+        }
+
+        category.Answered++;
+
+        if (isCorrect)
+            category.Correct++;
     }
 
     internal static void BuildRoundResult(

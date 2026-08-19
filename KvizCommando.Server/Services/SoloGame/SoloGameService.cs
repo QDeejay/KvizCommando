@@ -44,53 +44,18 @@ public sealed class SoloGameService : ISoloGameService
             ct);
 
         if (cacheResult.Status == CacheReadStatus.SessionMismatch)
-        {
-            return new SoloStartResult
-            {
-                Status = SoloGameOperationStatus.SessionMismatch
-            };
-        }
+            return CreateStartFailure(
+                SoloGameOperationStatus.SessionMismatch);
 
         var player = cacheResult.Player;
         if (player is null)
-        {
-            return new SoloStartResult
-            {
-                Status = SoloGameOperationStatus.Rejected
-            };
-        }
+            return CreateStartFailure(SoloGameOperationStatus.Rejected);
 
-        if (request.Mode is not SoloGameMode.Category and
-            not SoloGameMode.Orientation ||
-            request.SelectionId < 1 ||
-            request.Mode == SoloGameMode.Orientation &&
-            request.SelectionId > player.Characters.Length)
-        {
-            return new SoloStartResult
-            {
-                Status = SoloGameOperationStatus.Rejected
-            };
-        }
+        if (!IsValidStartRequest(player, request))
+            return CreateStartFailure(SoloGameOperationStatus.Rejected);
 
-        if (_gameCache.TryGetActiveGame(playerId, out var activeGame) &&
-            activeGame is not null)
-        {
-            await activeGame.Lock.WaitAsync(ct);
-            try
-            {
-                activeGame.Status = SoloGameStatus.Abandoned;
-                _gameCache.Remove(activeGame.GameId);
-            }
-            finally
-            {
-                activeGame.Lock.Release();
-            }
-
-            return new SoloStartResult
-            {
-                Status = SoloGameOperationStatus.Rejected
-            };
-        }
+        if (await AbandonActiveGameAsync(playerId, ct))
+            return CreateStartFailure(SoloGameOperationStatus.Rejected);
 
         var character = request.Mode == SoloGameMode.Orientation
             ? player.Characters[request.SelectionId - 1]
@@ -98,12 +63,7 @@ public sealed class SoloGameService : ISoloGameService
 
         if (request.Mode == SoloGameMode.Orientation &&
             character is null)
-        {
-            return new SoloStartResult
-            {
-                Status = SoloGameOperationStatus.Rejected
-            };
-        }
+            return CreateStartFailure(SoloGameOperationStatus.Rejected);
 
         var utcNow = DateTime.UtcNow;
         var isHealing = character is not null &&
@@ -121,29 +81,78 @@ public sealed class SoloGameService : ISoloGameService
             : GetOrientationCategories(character!.Attitude.Main.CatNo);
 
         if (level < 0 || categoryIds.Length == 0)
-            return new SoloStartResult
-            {
-                Status = SoloGameOperationStatus.Rejected
-            };
+            return CreateStartFailure(SoloGameOperationStatus.Rejected);
 
         var questionCount = SoloGameRules.GetQuestionCount(level);
-        var questionIds = GetQuestionIds(categoryIds, questionCount);
+        var questions = await LoadQuestionsAsync(
+            categoryIds,
+            questionCount,
+            ct);
 
+        if (questions is null)
+            return CreateStartFailure(SoloGameOperationStatus.Rejected);
+
+        var game = CreateGame(
+            playerId,
+            request,
+            level,
+            isHealing,
+            utcNow,
+            questions);
+
+        if (!_gameCache.TryCreate(game))
+            return CreateStartFailure(SoloGameOperationStatus.Rejected);
+
+        return CreateStartSuccess(game);
+    }
+
+    private static bool IsValidStartRequest(
+        CachedPlayer player,
+        StartSoloGameRequest request) =>
+        (request.Mode is SoloGameMode.Category or
+            SoloGameMode.Orientation) &&
+        request.SelectionId >= 1 &&
+        (request.Mode != SoloGameMode.Orientation ||
+         request.SelectionId <= player.Characters.Length);
+
+    private async Task<bool> AbandonActiveGameAsync(
+        int playerId,
+        CancellationToken ct)
+    {
+        if (!_gameCache.TryGetActiveGame(playerId, out var activeGame) ||
+            activeGame is null)
+        {
+            return false;
+        }
+
+        await activeGame.Lock.WaitAsync(ct);
+        try
+        {
+            activeGame.Status = SoloGameStatus.Abandoned;
+            _gameCache.Remove(activeGame.GameId);
+        }
+        finally
+        {
+            activeGame.Lock.Release();
+        }
+
+        return true;
+    }
+
+    private async Task<List<CachedSoloQuestion>?> LoadQuestionsAsync(
+        int[] categoryIds,
+        int questionCount,
+        CancellationToken ct)
+    {
+        var questionIds = GetQuestionIds(categoryIds, questionCount);
         if (questionIds.Count != questionCount)
-            return new SoloStartResult
-            {
-                Status = SoloGameOperationStatus.Rejected
-            };
+            return null;
 
         var entities = await _questionRepository.LoadByIdsAsync(
             questionIds,
             ct);
-
         if (entities.Count != questionCount)
-            return new SoloStartResult
-            {
-                Status = SoloGameOperationStatus.Rejected
-            };
+            return null;
 
         var entityMap = entities.ToDictionary(question => question.Id);
         var questions = new List<CachedSoloQuestion>(questionCount);
@@ -152,18 +161,27 @@ public sealed class SoloGameService : ISoloGameService
         {
             var question = CreateQuestion(entityMap[questionId]);
             if (question is null)
-                return new SoloStartResult
-                {
-                    Status = SoloGameOperationStatus.Rejected
-                };
+                return null;
 
             questions.Add(question);
         }
 
+        return questions;
+    }
+
+    private static SoloGameSession CreateGame(
+        int playerId,
+        StartSoloGameRequest request,
+        int level,
+        bool isHealing,
+        DateTime utcNow,
+        List<CachedSoloQuestion> questions)
+    {
         var gameTime = TimeSpan.FromSeconds(
-            questionCount *
+            questions.Count *
             (SoloGameRules.ANSWER_SECONDS + FEEDBACK_SECONDS));
-        var game = new SoloGameSession
+
+        return new SoloGameSession
         {
             GameId = Guid.NewGuid(),
             PlayerId = playerId,
@@ -177,29 +195,24 @@ public sealed class SoloGameService : ISoloGameService
                 .AddSeconds(EXPIRATION_ALLOWANCE_SECONDS),
             Questions = questions
         };
+    }
 
-        if (!_gameCache.TryCreate(game))
-        {
-            return new SoloStartResult
-            {
-                Status = SoloGameOperationStatus.Rejected
-            };
-        }
-
-        return new SoloStartResult
+    private static SoloStartResult CreateStartSuccess(
+        SoloGameSession game) =>
+        new()
         {
             Status = SoloGameOperationStatus.Success,
             Response = new StartSoloGameResponse
             {
                 GameId = game.GameId,
                 IsHealing = game.IsHealing,
-                QuestionCount = questionCount,
+                QuestionCount = game.Questions.Count,
                 AnswerTimeSeconds = SoloGameRules.ANSWER_SECONDS,
                 FeedbackTimeSeconds = FEEDBACK_SECONDS,
                 MaxPointsPerQuestion = game.PointsPerLevel,
                 Questions =
                 [
-                    .. questions.Select(question => new SoloQuestionDto
+                    .. game.Questions.Select(question => new SoloQuestionDto
                     {
                         Question = question.Question,
                         Answers = question.Answers
@@ -207,7 +220,10 @@ public sealed class SoloGameService : ISoloGameService
                 ]
             }
         };
-    }
+
+    private static SoloStartResult CreateStartFailure(
+        SoloGameOperationStatus status) =>
+        new() { Status = status };
 
     /// <inheritdoc />
     public async Task<SoloAnswerResult> SubmitAnswerAsync(
