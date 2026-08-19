@@ -74,20 +74,46 @@ namespace KvizCommando.Client.Features.Login
             _options = await IdentityRules.GetRulesAsync();
             var uri = Ui.Nav.ToAbsoluteUri(Ui.Nav.Uri);
             var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
-            var SugDispName = query["name"];
-            if (!string.IsNullOrEmpty(SugDispName))
+            var suggestedName = query["name"];
+            if (!string.IsNullOrWhiteSpace(suggestedName))
             {
-                _formData.DisplayName = !string.IsNullOrEmpty(SugDispName) && SugDispName.Length > 3
-                                        ? SugDispName
-                                        : string.Empty;
+                _formData.DisplayName = suggestedName.Length > 3
+                    ? suggestedName
+                    : string.Empty;
                 Ui.Nav.NavigateTo(uri.GetLeftPart(UriPartial.Path), replace: true);
-                await User.CheckInStartAsync(false);
             }
-            _cacheData = await SessionStorage.GetItemAsync<CheckInSessionCache>(CHEKIN_CACHE_KEY);
-            if (_cacheData is not null)
+
+            var cacheData = await SessionStorage.GetItemAsync<CheckInSessionCache>(
+                CHEKIN_CACHE_KEY);
+
+            if (cacheData is null)
             {
-                _fullHtml = await Http.GetStringAsync(_cacheData.url);
+                var result = await User.CheckInStartAsync(false);
+
+                if (result.CanNavigateHome)
+                {
+                    Ui.Nav.NavigateTo("/home");
+                    return;
+                }
+
+                if (result.Errors.Count > 0)
+                {
+                    Ui.Nav.NavigateTo("/login");
+                    return;
+                }
+
+                cacheData = await SessionStorage.GetItemAsync<CheckInSessionCache>(
+                    CHEKIN_CACHE_KEY);
             }
+
+            if (cacheData is null)
+            {
+                Ui.Nav.NavigateTo("/login");
+                return;
+            }
+
+            _cacheData = cacheData;
+            _fullHtml = await Http.GetStringAsync(_cacheData.url);
             _isLoaded = true;
         }
 

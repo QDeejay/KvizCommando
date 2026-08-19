@@ -1,8 +1,14 @@
-﻿using KvizCommando.Server.Startup;
-using KvizCommando.Server.Hubs;
+﻿using KvizCommando.Server.Hubs;
 using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
+using KvizCommando.Server.Startup;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddJsonFile(
+    "secrets.json",
+    optional: true,
+    reloadOnChange: true);
 
 builder.Services
     .AddKvizCommandoWeb()
@@ -22,8 +28,15 @@ if (builder.Environment.IsDevelopment())
     builder.Logging.SetMinimumLevel(LogLevel.Debug);
 }
 
+// az Ngork-os ideiglenes domain név miatt a ForwardedHeaders beállításokat kell alkalmazni, hogy a helyes protokollt és IP-címet kapjuk meg a kérésekből ellenkező esetben vissza dobja a kérést
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor |
+        ForwardedHeaders.XForwardedProto;
+});
 var app = builder.Build();
-
+app.UseForwardedHeaders();
 var categoryQuestionIndexCache =
     app.Services.GetRequiredService<ICategoryQuestionIndexCache>();
 

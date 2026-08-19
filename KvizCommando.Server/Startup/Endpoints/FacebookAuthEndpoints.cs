@@ -20,225 +20,255 @@ public static class FacebookAuthEndpoints
     public static IEndpointRouteBuilder MapFacebookAuthEndpoints(this IEndpointRouteBuilder app)
     {
         // A külső szolgáltató callbackje a befejező végpontra tér vissza.
-        app.MapGet("/login/facebook", async (
-             SignInManager<ApplicationUser> signInManager,
-             HttpContext ctx) =>
-        {
-            var props = signInManager
-                .ConfigureExternalAuthenticationProperties("Facebook", "/finished");
-            await ctx.ChallengeAsync("Facebook", props);
-        });
-        app.MapGet("/finished", async (
-                SignInManager<ApplicationUser> signInManager,
-                UserManager<ApplicationUser> userManager,
-                IPlayerDbService playerDb,
-                IAuditLogger audit,
-                HttpContext ctx) =>
-        {
-            var qs = ctx.Request.QueryString.Value;
-            var uriReturn = $"/checkin?name={Uri.EscapeDataString("OK")}";
-            if (!string.IsNullOrEmpty(qs) && qs.Contains("error=", StringComparison.OrdinalIgnoreCase))
-            {
-                await ctx.SignOutAsync(IdentityConstants.ExternalScheme);
-                return Results.Redirect("/" + qs);
-            }
+        app.MapGet("/login/facebook", (
+            SignInManager<ApplicationUser> signInManager,
+            HttpContext ctx) =>
+            StartFacebookLoginAsync(signInManager, ctx));
+        app.MapGet("/finished", (
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            IPlayerDbService playerDb,
+            IAuditLogger audit,
+            HttpContext ctx) =>
+            FinishFacebookLoginAsync(
+                signInManager,
+                userManager,
+                playerDb,
+                audit,
+                ctx));
 
-
-            var info = await signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
-            {
-                await audit.LogAsync(
-                    new AuditEntry(
-                        AuditEvents.LOGIN,
-                        AuditOutcome.Failed,
-                        ActorId: null,
-                        SubjectId: null,
-                        IpAddress: ctx.Connection.RemoteIpAddress?.ToString(),
-                        RequestId: ctx.TraceIdentifier));
-                return Results.Redirect("/?error=NoInfo");
-            }
-
-            var user = await userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
-
-            // Meglévő e-mail-cím esetén a külső azonosító a már létező fiókhoz kapcsolódik.
-            if (user == null)
-            {
-                var email = info.Principal.FindFirstValue(ClaimTypes.Email)
-                            ?? $"fb_{info.ProviderKey}@example.com";
-
-                user = await userManager.FindByEmailAsync(email);
-                if (user == null)
-                {
-                    user = new ApplicationUser
-                    {
-                        UserName = email,
-                        Email = email,
-                        // A külső szolgáltató által átadott e-mail-cím jelenleg megerősítettnek minősül.
-                        // A bizalmi szint megváltoztatása regisztrációs és fiók-összekapcsolási döntés is.
-                        EmailConfirmed = true
-                    };
-                    var cr = await userManager.CreateAsync(user);
-                    if (!cr.Succeeded)
-                    {
-                        await audit.LogAsync(
-                            new AuditEntry(
-                                AuditEvents.ACCOUNT_REGISTERED,
-                                AuditOutcome.Failed,
-                                ActorId: null,
-                                SubjectId: null,
-                                IpAddress: ctx.Connection.RemoteIpAddress?.ToString(),
-                                RequestId: ctx.TraceIdentifier));
-                        await audit.LogAsync(
-                            new AuditEntry(
-                                AuditEvents.LOGIN,
-                                AuditOutcome.Failed,
-                                ActorId: null,
-                                SubjectId: null,
-                                IpAddress: ctx.Connection.RemoteIpAddress?.ToString(),
-                                RequestId: ctx.TraceIdentifier));
-                        return Results.Redirect("/?error=CreateFailed");
-                    }
-                    await audit.LogAsync(
-                        new AuditEntry(
-                            AuditEvents.ACCOUNT_REGISTERED,
-                            AuditOutcome.Succeeded,
-                            user.Id,
-                            user.Id,
-                            ctx.Connection.RemoteIpAddress?.ToString(),
-                            ctx.TraceIdentifier));
-                    var FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName);
-                    var SuggestedName = await playerDb.SuggestAsync(FirstName);
-                    uriReturn = $"/checkin?name={Uri.EscapeDataString(SuggestedName)}";
-                }
-
-                var lr = await userManager.AddLoginAsync(user, info);
-                if (!lr.Succeeded)
-                {
-                    await audit.LogAsync(
-                        new AuditEntry(
-                            AuditEvents.EXTERNAL_LOGIN_LINKED,
-                            AuditOutcome.Failed,
-                            ActorId: null,
-                            SubjectId: user.Id,
-                            IpAddress: ctx.Connection.RemoteIpAddress?.ToString(),
-                            RequestId: ctx.TraceIdentifier));
-                    await audit.LogAsync(
-                        new AuditEntry(
-                            AuditEvents.LOGIN,
-                            AuditOutcome.Failed,
-                            ActorId: null,
-                            SubjectId: user.Id,
-                            IpAddress: ctx.Connection.RemoteIpAddress?.ToString(),
-                            RequestId: ctx.TraceIdentifier));
-                    return Results.Redirect("/?error=LinkFailed");
-                }
-                await audit.LogAsync(
-                    new AuditEntry(
-                        AuditEvents.EXTERNAL_LOGIN_LINKED,
-                        AuditOutcome.Succeeded,
-                        user.Id,
-                        user.Id,
-                        ctx.Connection.RemoteIpAddress?.ToString(),
-                        ctx.TraceIdentifier));
-            }
-
-            // Csak a fiók e-mail-címével pontosan egyező külső claim igazolhatja a címet.
-            if (!user.EmailConfirmed)
-            {
-                var claimEmail = info.Principal.FindFirstValue(ClaimTypes.Email);
-                if (!string.IsNullOrWhiteSpace(claimEmail) &&
-                    string.Equals(claimEmail, user.Email, StringComparison.OrdinalIgnoreCase))
-                {
-                    var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                    await userManager.ConfirmEmailAsync(user, code);
-                }
-            }
-
-            await signInManager.SignInAsync(user, isPersistent: false);
-            await signInManager.UpdateExternalAuthenticationTokensAsync(info);
-            await ctx.SignOutAsync(IdentityConstants.ExternalScheme);
-
-            var ipAddress = ctx.Connection.RemoteIpAddress?.ToString();
-            await audit.LogAsync(
-                new AuditEntry(
-                    AuditEvents.LOGIN,
-                    AuditOutcome.Succeeded,
-                    user.Id,
-                    user.Id,
-                    ipAddress,
-                    ctx.TraceIdentifier));
-
-
-            return Results.Redirect(uriReturn);
-        });
         // Az alkalmazás eltávolításakor a külső bejelentkezés és minden Facebook-token törlendő.
-        app.MapPost("/facebook/deauthorize", async (
+        app.MapPost("/facebook/deauthorize", (
             [FromForm] string signed_request,
             IConfiguration config,
             UserManager<ApplicationUser> userManager,
             IAuditLogger audit,
             HttpContext ctx) =>
-        {
-            if (string.IsNullOrWhiteSpace(signed_request))
-                return Results.BadRequest(new { error = "missing_signed_request" });
-
-            var appSecret = config["Authentication:Facebook:AppSecret"];
-            if (string.IsNullOrWhiteSpace(appSecret))
-                return Results.BadRequest(new { error = "missing_app_secret" });
-
-            if (!TryVerifyAndDecodeSignedRequest(signed_request, appSecret, out var payload) ||
-                !payload.TryGetProperty("user_id", out var uid) ||
-                string.IsNullOrWhiteSpace(uid.GetString()))
-            {
-                return Results.BadRequest(new { error = "invalid_signed_request" });
-            }
-
-            var fbUserId = uid.GetString()!;
-            var user = await userManager.FindByLoginAsync("Facebook", fbUserId);
-            if (user != null)
-            {
-                var removeResult = await userManager.RemoveLoginAsync(user, "Facebook", fbUserId);
-                await userManager.RemoveAuthenticationTokenAsync(user, "Facebook", "access_token");
-                await userManager.RemoveAuthenticationTokenAsync(user, "Facebook", "expires_at");
-                await userManager.RemoveAuthenticationTokenAsync(user, "Facebook", "token_type");
-
-                await audit.LogAsync(
-                    new AuditEntry(
-                        AuditEvents.EXTERNAL_LOGIN_REMOVED,
-                        removeResult.Succeeded
-                            ? AuditOutcome.Succeeded
-                            : AuditOutcome.Failed,
-                        ActorId: null,
-                        SubjectId: user.Id,
-                        IpAddress: ctx.Connection.RemoteIpAddress?.ToString(),
-                        RequestId: ctx.TraceIdentifier));
-            }
-            return Results.Ok(new { status = "ok" });
-        }).AllowAnonymous();
+            DeauthorizeFacebookAsync(
+                signed_request,
+                config,
+                userManager,
+                audit,
+                ctx)).AllowAnonymous();
 
         // A Meta adateltávolítási callbackje visszakövethető állapotcímet és megerősítő kódot vár.
         app.MapPost("/facebook/deletion", (
             HttpContext ctx,
             [FromForm] string signed_request,
             IConfiguration config) =>
-        {
-            if (string.IsNullOrWhiteSpace(signed_request))
-                return Results.BadRequest(new { error = "missing_signed_request" });
-
-            var appSecret = config["Authentication:Facebook:AppSecret"];
-            if (string.IsNullOrWhiteSpace(appSecret))
-                return Results.BadRequest(new { error = "missing_app_secret" });
-
-            if (!TryVerifyAndDecodeSignedRequest(signed_request, appSecret, out _))
-                return Results.BadRequest(new { error = "invalid_signed_request" });
-
-            var code = Guid.NewGuid().ToString("N");
-            var baseUrl = $"{ctx.Request.Scheme}://{ctx.Request.Host}";
-            var statusUrl = $"{baseUrl}/privacy/data-deletion?code={code}";
-            return Results.Ok(new { url = statusUrl, confirmation_code = code });
-        }).AllowAnonymous();
+            CreateFacebookDeletionResponse(ctx, signed_request, config))
+            .AllowAnonymous();
 
         return app;
+    }
+
+    private static async Task StartFacebookLoginAsync(
+        SignInManager<ApplicationUser> signInManager,
+        HttpContext ctx)
+    {
+        var props = signInManager
+            .ConfigureExternalAuthenticationProperties("Facebook", "/finished");
+        await ctx.ChallengeAsync("Facebook", props);
+    }
+
+    private static async Task<IResult> FinishFacebookLoginAsync(
+        SignInManager<ApplicationUser> signInManager,
+        UserManager<ApplicationUser> userManager,
+        IPlayerDbService playerDb,
+        IAuditLogger audit,
+        HttpContext ctx)
+    {
+        var qs = ctx.Request.QueryString.Value;
+        var uriReturn = "/checkin";
+        if (!string.IsNullOrEmpty(qs) && qs.Contains("error=", StringComparison.OrdinalIgnoreCase))
+        {
+            await ctx.SignOutAsync(IdentityConstants.ExternalScheme);
+            return Results.Redirect("/" + qs);
+        }
+
+        var info = await signInManager.GetExternalLoginInfoAsync();
+        if (info == null)
+        {
+            await WriteAuditAsync(audit, ctx, AuditEvents.LOGIN, AuditOutcome.Failed, null, null);
+            return Results.Redirect("/?error=NoInfo");
+        }
+
+        var user = await userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+        if (user == null)
+        {
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                        ?? $"fb_{info.ProviderKey}@example.com";
+            user = await userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                user = await CreateFacebookUserAsync(email, userManager, audit, ctx);
+                if (user == null)
+                {
+                    await WriteAuditAsync(audit, ctx, AuditEvents.LOGIN, AuditOutcome.Failed, null, null);
+                    return Results.Redirect("/?error=CreateFailed");
+                }
+
+                var firstName = info.Principal.FindFirstValue(ClaimTypes.GivenName);
+                var suggestedName = await playerDb.SuggestAsync(firstName);
+                uriReturn = $"/checkin?name={Uri.EscapeDataString(suggestedName)}";
+            }
+
+            if (!await LinkFacebookLoginAsync(user, info, userManager, audit, ctx))
+            {
+                await WriteAuditAsync(audit, ctx, AuditEvents.LOGIN, AuditOutcome.Failed, null, user.Id);
+                return Results.Redirect("/?error=LinkFailed");
+            }
+        }
+
+        await ConfirmMatchingFacebookEmailAsync(user, info, userManager);
+        await signInManager.SignInAsync(user, isPersistent: false);
+        await signInManager.UpdateExternalAuthenticationTokensAsync(info);
+        await ctx.SignOutAsync(IdentityConstants.ExternalScheme);
+        await WriteAuditAsync(audit, ctx, AuditEvents.LOGIN, AuditOutcome.Succeeded, user.Id, user.Id);
+        return Results.Redirect(uriReturn);
+    }
+
+    private static async Task<ApplicationUser?> CreateFacebookUserAsync(
+        string email,
+        UserManager<ApplicationUser> userManager,
+        IAuditLogger audit,
+        HttpContext ctx)
+    {
+        var user = new ApplicationUser
+        {
+            UserName = email,
+            Email = email,
+            // A külső szolgáltató által átadott e-mail-cím jelenleg megerősítettnek minősül.
+            // A bizalmi szint megváltoztatása regisztrációs és fiók-összekapcsolási döntés is.
+            EmailConfirmed = true
+        };
+        var createResult = await userManager.CreateAsync(user);
+        if (!createResult.Succeeded)
+        {
+            await WriteAuditAsync(audit, ctx, AuditEvents.ACCOUNT_REGISTERED, AuditOutcome.Failed, null, null);
+            return null;
+        }
+
+        await WriteAuditAsync(audit, ctx, AuditEvents.ACCOUNT_REGISTERED, AuditOutcome.Succeeded, user.Id, user.Id);
+        return user;
+    }
+
+    private static async Task<bool> LinkFacebookLoginAsync(
+        ApplicationUser user,
+        ExternalLoginInfo info,
+        UserManager<ApplicationUser> userManager,
+        IAuditLogger audit,
+        HttpContext ctx)
+    {
+        var linkResult = await userManager.AddLoginAsync(user, info);
+        if (!linkResult.Succeeded)
+        {
+            await WriteAuditAsync(audit, ctx, AuditEvents.EXTERNAL_LOGIN_LINKED, AuditOutcome.Failed, null, user.Id);
+            return false;
+        }
+
+        await WriteAuditAsync(audit, ctx, AuditEvents.EXTERNAL_LOGIN_LINKED, AuditOutcome.Succeeded, user.Id, user.Id);
+        return true;
+    }
+
+    private static async Task ConfirmMatchingFacebookEmailAsync(
+        ApplicationUser user,
+        ExternalLoginInfo info,
+        UserManager<ApplicationUser> userManager)
+    {
+        if (user.EmailConfirmed)
+            return;
+
+        var claimEmail = info.Principal.FindFirstValue(ClaimTypes.Email);
+        if (string.IsNullOrWhiteSpace(claimEmail) ||
+            !string.Equals(claimEmail, user.Email, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+        await userManager.ConfirmEmailAsync(user, code);
+    }
+
+    private static async Task<IResult> DeauthorizeFacebookAsync(
+        [FromForm] string signed_request,
+        IConfiguration config,
+        UserManager<ApplicationUser> userManager,
+        IAuditLogger audit,
+        HttpContext ctx)
+    {
+        if (string.IsNullOrWhiteSpace(signed_request))
+            return Results.BadRequest(new { error = "missing_signed_request" });
+
+        var appSecret = config["Authentication:Facebook:AppSecret"];
+        if (string.IsNullOrWhiteSpace(appSecret))
+            return Results.BadRequest(new { error = "missing_app_secret" });
+
+        if (!TryVerifyAndDecodeSignedRequest(signed_request, appSecret, out var payload) ||
+            !payload.TryGetProperty("user_id", out var uid) ||
+            string.IsNullOrWhiteSpace(uid.GetString()))
+        {
+            return Results.BadRequest(new { error = "invalid_signed_request" });
+        }
+
+        var fbUserId = uid.GetString()!;
+        var user = await userManager.FindByLoginAsync("Facebook", fbUserId);
+        if (user != null)
+        {
+            var removeResult = await userManager.RemoveLoginAsync(user, "Facebook", fbUserId);
+            await userManager.RemoveAuthenticationTokenAsync(user, "Facebook", "access_token");
+            await userManager.RemoveAuthenticationTokenAsync(user, "Facebook", "expires_at");
+            await userManager.RemoveAuthenticationTokenAsync(user, "Facebook", "token_type");
+
+            await WriteAuditAsync(
+                audit,
+                ctx,
+                AuditEvents.EXTERNAL_LOGIN_REMOVED,
+                removeResult.Succeeded ? AuditOutcome.Succeeded : AuditOutcome.Failed,
+                null,
+                user.Id);
+        }
+
+        return Results.Ok(new { status = "ok" });
+    }
+
+    private static IResult CreateFacebookDeletionResponse(
+        HttpContext ctx,
+        [FromForm] string signed_request,
+        IConfiguration config)
+    {
+        if (string.IsNullOrWhiteSpace(signed_request))
+            return Results.BadRequest(new { error = "missing_signed_request" });
+
+        var appSecret = config["Authentication:Facebook:AppSecret"];
+        if (string.IsNullOrWhiteSpace(appSecret))
+            return Results.BadRequest(new { error = "missing_app_secret" });
+
+        if (!TryVerifyAndDecodeSignedRequest(signed_request, appSecret, out _))
+            return Results.BadRequest(new { error = "invalid_signed_request" });
+
+        var code = Guid.NewGuid().ToString("N");
+        var baseUrl = $"{ctx.Request.Scheme}://{ctx.Request.Host}";
+        var statusUrl = $"{baseUrl}/privacy/data-deletion?code={code}";
+        return Results.Ok(new { url = statusUrl, confirmation_code = code });
+    }
+
+    private static Task WriteAuditAsync(
+        IAuditLogger audit,
+        HttpContext ctx,
+        string eventName,
+        AuditOutcome outcome,
+        string? actorId,
+        string? subjectId)
+    {
+        return audit.LogAsync(
+            new AuditEntry(
+                eventName,
+                outcome,
+                actorId,
+                subjectId,
+                ctx.Connection.RemoteIpAddress?.ToString(),
+                ctx.TraceIdentifier));
     }
 
     private static bool TryVerifyAndDecodeSignedRequest(string signedRequest, string appSecret, out JsonElement payload)

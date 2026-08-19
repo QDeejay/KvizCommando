@@ -65,18 +65,13 @@
 	</ItemGroup>
 	<PropertyGroup>
 		<ResxExporterAssembly>$(MSBuildThisFileDirectory)..\BuildTools\ResxExporter\bin\Release\net472\ResxExporter.dll</ResxExporterAssembly>
+		<UserSecretsId>66c00aba-ecb3-4d1e-89f0-b323f37e8306</UserSecretsId>
 	</PropertyGroup>
 
-	<UsingTask TaskName="ResxExporter.ResxExporter"
-		AssemblyFile="$(ResxExporterAssembly)"
-		Condition="Exists('$(ResxExporterAssembly)')" />
+	<UsingTask TaskName="ResxExporter.ResxExporter" AssemblyFile="$(ResxExporterAssembly)" Condition="Exists('$(ResxExporterAssembly)')" />
 
-	<Target Name="RunResxExporter"
-		BeforeTargets="Build"
-		Condition="'$(Configuration)' == 'Debug' and Exists('$(ResxExporterAssembly)')">
-		<ResxExporter
-			SourceRoot="$(MSBuildProjectDirectory)\Resources\Client"
-			OutputRoot="$(MSBuildProjectDirectory)\wwwroot\localization" />
+	<Target Name="RunResxExporter" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug' and Exists('$(ResxExporterAssembly)')">
+		<ResxExporter SourceRoot="$(MSBuildProjectDirectory)\Resources\Client" OutputRoot="$(MSBuildProjectDirectory)\wwwroot\localization" />
 	</Target>
 	
 

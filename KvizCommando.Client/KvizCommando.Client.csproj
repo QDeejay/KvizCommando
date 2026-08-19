@@ -12,6 +12,7 @@
 	<PropertyGroup>
 		<InvariantGlobalization>false</InvariantGlobalization>
 		<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+		<UserSecretsId>17452c6f-a4f7-4ef5-98d2-0319e5a5559e</UserSecretsId>
 	</PropertyGroup>
 	<ItemGroup>
 	  <Compile Remove="wwwroot\Images\question\**" />
