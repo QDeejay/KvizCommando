@@ -14,7 +14,17 @@
     display: flex;
     flex-direction: column;
     border-radius: 22px;
-    background-color: rgba(51, 51, 51, 0.9);
+   
+   background:
+    repeating-linear-gradient(
+        0deg,
+        rgba(190, 190, 190, 0.018) 0,
+        rgba(190, 190, 190, 0.018) 1px,
+        transparent 1px,
+        transparent 4px),
+    radial-gradient(circle at 50% 0, #303230, #181a18 70%);
+
+
     border-width: 2px;
     border-style: solid;
     border-color: rgba(64, 64, 64, 0.7);

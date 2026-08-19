@@ -21,17 +21,34 @@
         
                 <button class="military-button" disabled="@(!CanSend)" type="button" @onclick="SendEmail">
                         @Ui.Lang["common.Button.Send"]
-                </button>     
+                </button>
+                @if (!string.IsNullOrWhiteSpace(ResultMessage))
+                {
+                    <p class="kc-auth-field-error">@ResultMessage</p>
+                }
             }
             else
             {
-                <br><br>
-            }
-            <label style="@((ColorSW ? "color: red;" : null))" class="label-text">@ResultMessage</label>
-            @if (Success && !string.IsNullOrWhiteSpace(PasswordResetEmailHint))
-            {
-                <br>
-                <label class="label-text">@PasswordResetEmailHint</label>
+                <div class="kc-auth-status kc-auth-status--success">
+                    <i class="bi bi-envelope-check-fill kc-auth-status__icon"></i>
+                    <div>
+                        <h2 class="kc-auth-status__title">@Ui.Lang["forgotosw.Success.Title"]</h2>
+                        <p class="kc-auth-status__text">@ResultMessage</p>
+                    </div>
+                </div>
+                @if (!string.IsNullOrWhiteSpace(PasswordResetEmailOutputPath))
+                {
+                    <div class="kc-dev-email-location">
+                        <div class="kc-dev-email-location__title">
+                            <i class="bi bi-folder2-open"></i>
+                            <span>@Ui.Lang["forgotosw.EmailOutput.Title"]</span>
+                        </div>
+                        <p class="kc-dev-email-location__text">
+                            @Ui.Lang["forgotosw.EmailOutput.Description"]
+                        </p>
+                        <code class="kc-dev-email-location__path">@PasswordResetEmailOutputPath</code>
+                    </div>
+                }
             }
     </div>
 

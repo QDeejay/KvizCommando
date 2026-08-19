@@ -35,8 +35,11 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
         ForwardedHeaders.XForwardedFor |
         ForwardedHeaders.XForwardedProto;
 });
+
 var app = builder.Build();
+
 app.UseForwardedHeaders();
+
 var categoryQuestionIndexCache =
     app.Services.GetRequiredService<ICategoryQuestionIndexCache>();
 

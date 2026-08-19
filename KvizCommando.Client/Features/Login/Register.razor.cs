@@ -26,11 +26,8 @@ namespace KvizCommando.Client.Features.Login
             _showPassword[0] ? "bi bi-eye-slash" : "bi bi-eye";
         private string EyeIcon2 =>
            _showPassword[1] ? "bi bi-eye-slash" : "bi bi-eye";
-        private string RegistrationEmailHint =>
-            string.IsNullOrWhiteSpace(_options?.RegistrationEmailOutputPath)
-                ? string.Empty
-                : Ui.Lang["register.EmailOutputHint"]
-                    .FormatSafe(_options.RegistrationEmailOutputPath);
+        private string RegistrationEmailOutputPath =>
+            _options?.RegistrationEmailOutputPath ?? string.Empty;
 
         private void TogglePassword(int pw)
         {

@@ -121,22 +121,34 @@
     <value>To login</value>
   </data>
   <data name="buttton.RecoverPsw" xml:space="preserve">
-    <value>Recover</value>
+    <value>Change password</value>
   </data>
   <data name="email.Fail" xml:space="preserve">
-    <value>The confirmation has been failed. Link is obscoleted.</value>
+    <value>Confirmation failed</value>
+  </data>
+  <data name="email.Fail.Description" xml:space="preserve">
+    <value>The link has expired, is invalid, or has already been used.</value>
   </data>
   <data name="email.Loading" xml:space="preserve">
     <value>E-mail confirmation in progress</value>
   </data>
+  <data name="email.Loading.Description" xml:space="preserve">
+    <value>Please wait while we verify the link.</value>
+  </data>
   <data name="email.Success" xml:space="preserve">
-    <value>The confirmation is successed. You can login. </value>
+    <value>E-mail address confirmed</value>
+  </data>
+  <data name="email.Success.Description" xml:space="preserve">
+    <value>Your account is active. You can now sign in.</value>
   </data>
   <data name="email.Title" xml:space="preserve">
     <value>E-mail confirmation</value>
   </data>
   <data name="psw.Fail" xml:space="preserve">
-    <value>Password recovery is not possible!</value>
+    <value>Password change failed</value>
+  </data>
+  <data name="psw.Fail.Description" xml:space="preserve">
+    <value>The link has expired, is invalid, or has already been used.</value>
   </data>
   <data name="psw.Loading" xml:space="preserve">
     <value>Password recovery is in progress</value>
@@ -148,9 +160,12 @@
     <value>New password confirm</value>
   </data>
   <data name="psw.Success" xml:space="preserve">
-    <value>Password recover succesfull</value>
+    <value>Password changed successfully</value>
+  </data>
+  <data name="psw.Success.Description" xml:space="preserve">
+    <value>You can now sign in with your new password.</value>
   </data>
   <data name="psw.Title" xml:space="preserve">
-    <value>Password recovery</value>
+    <value>Set a new password</value>
   </data>
 </root>

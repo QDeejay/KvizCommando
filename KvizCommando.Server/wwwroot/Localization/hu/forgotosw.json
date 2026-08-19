@@ -1,7 +1,9 @@
 {
   "Email": "Add meg az e-mail címed!",
-  "EmailOutputHint": "Fejlesztői fájlkézbesítés aktív. A jelszó-visszaállító levél HTML-előnézete itt található: {0}",
+  "EmailOutput.Description": "A jelszó-visszaállító levél ebben a mappában található:",
+  "EmailOutput.Title": "Fejlesztői fájlkézbesítés",
   "Error.Email": "Érvénytlen e-mail cím!",
-  "Succes.Email": "Új jelszó megadásához kövesd az e-mailben található utasításokat.",
+  "Succes.Email": "Ha a megadott e-mail-címhez tartozik fiók, elküldtük a jelszó-visszaállítási útmutatót.",
+  "Success.Title": "Ellenőrizd az e-mailjeidet",
   "Title": "Elfelejtett jelszó kérés"
 }

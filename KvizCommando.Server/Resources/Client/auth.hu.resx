@@ -118,25 +118,37 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="button.RedirectToLogin" xml:space="preserve">
-    <value>Főoldalra</value>
+    <value>Bejelentkezés</value>
   </data>
   <data name="buttton.RecoverPsw" xml:space="preserve">
-    <value>Jóváhagy</value>
+    <value>Jelszó módosítása</value>
   </data>
   <data name="email.Fail" xml:space="preserve">
-    <value>A megerősítés nem sikerült. Lehet, hogy a link lejárt vagy hibás.</value>
+    <value>A megerősítés nem sikerült</value>
+  </data>
+  <data name="email.Fail.Description" xml:space="preserve">
+    <value>A hivatkozás lejárt, hibás vagy már felhasználták.</value>
   </data>
   <data name="email.Loading" xml:space="preserve">
     <value>E-mail megerősítés folyamatban</value>
   </data>
+  <data name="email.Loading.Description" xml:space="preserve">
+    <value>Kérlek, várj, amíg ellenőrizzük a hivatkozást.</value>
+  </data>
   <data name="email.Success" xml:space="preserve">
-    <value>Sikeres e-mail megerősítés. Most már beléphetsz.</value>
+    <value>E-mail-cím megerősítve</value>
+  </data>
+  <data name="email.Success.Description" xml:space="preserve">
+    <value>A fiókod aktív, most már bejelentkezhetsz.</value>
   </data>
   <data name="email.Title" xml:space="preserve">
     <value>E-mail megerősítés</value>
   </data>
   <data name="psw.Fail" xml:space="preserve">
-    <value>Jelszó visszaállítás  nem lehetséges!</value>
+    <value>A jelszó módosítása nem sikerült</value>
+  </data>
+  <data name="psw.Fail.Description" xml:space="preserve">
+    <value>A hivatkozás lejárt, hibás vagy már felhasználták.</value>
   </data>
   <data name="psw.Loading" xml:space="preserve">
     <value>Jelszó visszaállítás folyamatban</value>
@@ -148,9 +160,12 @@
     <value>Új jelszó megerősítése</value>
   </data>
   <data name="psw.Success" xml:space="preserve">
-    <value>Jelszó visszaállítás sikeres</value>
+    <value>A jelszó sikeresen megváltozott</value>
+  </data>
+  <data name="psw.Success.Description" xml:space="preserve">
+    <value>Most már az új jelszavaddal jelentkezhetsz be.</value>
   </data>
   <data name="psw.Title" xml:space="preserve">
-    <value>Jelszó visszaállítás</value>
+    <value>Új jelszó megadása</value>
   </data>
 </root>

@@ -1,5 +1,4 @@
-﻿using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Services;
+﻿using KvizCommando.Client.Services;
 using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.Auth;
@@ -21,11 +20,8 @@ namespace KvizCommando.Client.Features.Login
         private bool CanSend => !string.IsNullOrWhiteSpace(formData.email);
         private bool Success { get; set; } = false;
         private RegisterOptionsResponse? _options;
-        private string PasswordResetEmailHint =>
-            string.IsNullOrWhiteSpace(_options?.PasswordResetEmailOutputPath)
-                ? string.Empty
-                : Ui.Lang["forgotosw.EmailOutputHint"]
-                    .FormatSafe(_options.PasswordResetEmailOutputPath);
+        private string PasswordResetEmailOutputPath =>
+            _options?.PasswordResetEmailOutputPath ?? string.Empty;
 
         protected override async Task OnInitializedAsync()
         {

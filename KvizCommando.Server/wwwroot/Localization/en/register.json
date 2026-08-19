@@ -2,8 +2,9 @@
   "Button": "Regist",
   "ConfirmPassword": "Confirm password",
   "Email": "E-mail address",
-  "EmailOutputHint": "Development file delivery is active. The HTML preview of the confirmation e-mail is available here: {0}",
-  "ResultMsg01": "Registration successful!",
-  "ResultMsg02": "We sent the confirmation link to the provided e-mail address.",
+  "EmailOutput.Description": "The confirmation e-mail is available in this folder:",
+  "EmailOutput.Title": "Development file delivery",
+  "ResultMsg01": "Registration successful",
+  "ResultMsg02": "Open the confirmation e-mail to activate your account.",
   "Title": "Registration"
 }

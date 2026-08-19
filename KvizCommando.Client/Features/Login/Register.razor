@@ -57,11 +57,25 @@
             else
             {
                 <div class="kc-regist-body--success">
-                    <label style="color:limegreen; font-size: 24px;" class=" label-text">@Ui.Lang["register.ResultMsg01"]</label>
-                    <label class="label-text">@Ui.Lang["register.ResultMsg02"]</label>
-                    @if (!string.IsNullOrWhiteSpace(RegistrationEmailHint))
+                    <div class="kc-auth-status kc-auth-status--success">
+                        <i class="bi bi-check-circle-fill kc-auth-status__icon"></i>
+                        <div>
+                            <h2 class="kc-auth-status__title">@Ui.Lang["register.ResultMsg01"]</h2>
+                            <p class="kc-auth-status__text">@Ui.Lang["register.ResultMsg02"]</p>
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(RegistrationEmailOutputPath))
                     {
-                        <label class="label-text">@RegistrationEmailHint</label>
+                        <div class="kc-dev-email-location">
+                            <div class="kc-dev-email-location__title">
+                                <i class="bi bi-folder2-open"></i>
+                                <span>@Ui.Lang["register.EmailOutput.Title"]</span>
+                            </div>
+                            <p class="kc-dev-email-location__text">
+                                @Ui.Lang["register.EmailOutput.Description"]
+                            </p>
+                            <code class="kc-dev-email-location__path">@RegistrationEmailOutputPath</code>
+                        </div>
                     }
                 </div>
 
@@ -72,7 +86,7 @@
             <div class="kc-regist-error-row">
                 @if (!string.IsNullOrEmpty(_resultMessage))
                 {
-                    <p style="color:red">@_resultMessage</p>
+                    <p class="kc-auth-field-error">@_resultMessage</p>
                 }
             </div>  
            

@@ -50,3 +50,103 @@
             background:none;
         }
 
+/* === BEJELENTKEZESI ALLAPOTOK === */
+.kc-auth-status {
+    width: 100%;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 14px;
+    align-items: center;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    background: rgba(15, 15, 15, 0.55);
+    text-align: left;
+}
+
+.kc-auth-status--success {
+    border-color: rgba(81, 179, 109, 0.65);
+    background: rgba(37, 88, 53, 0.25);
+}
+
+.kc-auth-status--error {
+    border-color: rgba(209, 95, 82, 0.65);
+    background: rgba(105, 38, 32, 0.25);
+}
+
+.kc-auth-status--loading {
+    border-color: rgba(215, 189, 79, 0.55);
+    background: rgba(91, 77, 24, 0.2);
+}
+
+.kc-auth-status__icon {
+    font-size: 32px;
+    text-align: center;
+}
+
+.kc-auth-status--success .kc-auth-status__icon {
+    color: #51b36d;
+}
+
+.kc-auth-status--error .kc-auth-status__icon {
+    color: #d15f52;
+}
+
+.kc-auth-status--loading .kc-auth-status__icon {
+    color: #d7bd4f;
+}
+
+.kc-auth-status__title {
+    margin: 0 0 4px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.kc-auth-status__text {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.4;
+}
+
+.kc-auth-field-error {
+    margin: 8px 0 0;
+    color: #d15f52;
+    text-align: center;
+}
+
+.kc-dev-email-location {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border-left: 4px solid #d7bd4f;
+    border-radius: 6px;
+    background: rgba(215, 189, 79, 0.12);
+    text-align: left;
+}
+
+.kc-dev-email-location__title {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+    color: #e4cd70;
+    font-weight: 600;
+}
+
+.kc-dev-email-location__text {
+    margin: 0 0 8px;
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.kc-dev-email-location__path {
+    display: block;
+    max-width: 100%;
+    padding: 8px 10px;
+    overflow-wrap: anywhere;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.45);
+    color: #f1f1f1;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 13px;
+}

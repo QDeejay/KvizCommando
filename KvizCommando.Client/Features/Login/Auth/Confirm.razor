@@ -11,19 +11,33 @@
         <div class="emailconfirm-body">
             @if (_isLoading)
             {
-                <label class="label-text">@Ui.Lang["auth.email.Loading"]</label>
+                <div class="kc-auth-status kc-auth-status--loading">
+                    <i class="bi bi-hourglass-split kc-auth-status__icon"></i>
+                    <div>
+                        <h2 class="kc-auth-status__title">@Ui.Lang["auth.email.Loading"]</h2>
+                        <p class="kc-auth-status__text">@Ui.Lang["auth.email.Loading.Description"]</p>
+                    </div>
+                </div>
             }
             else if (_isSuccess == true)
             {
-                <br>
-                <label style="color:limegreen; font-size: 24px;" class=" label-text">✅ @Ui.Lang["auth.email.Success"]</label>
-              <br><br>
+                <div class="kc-auth-status kc-auth-status--success">
+                    <i class="bi bi-check-circle-fill kc-auth-status__icon"></i>
+                    <div>
+                        <h2 class="kc-auth-status__title">@Ui.Lang["auth.email.Success"]</h2>
+                        <p class="kc-auth-status__text">@Ui.Lang["auth.email.Success.Description"]</p>
+                    </div>
+                </div>
             }
             else
             {
-                <br>
-                <label style="color: red; font-size: 24px;" class=" label-text">❌ @Ui.Lang["auth.email.Fail"]</label>
-                <br><br>
+                <div class="kc-auth-status kc-auth-status--error">
+                    <i class="bi bi-x-circle-fill kc-auth-status__icon"></i>
+                    <div>
+                        <h2 class="kc-auth-status__title">@Ui.Lang["auth.email.Fail"]</h2>
+                        <p class="kc-auth-status__text">@Ui.Lang["auth.email.Fail.Description"]</p>
+                    </div>
+                </div>
             }
         </div>
 

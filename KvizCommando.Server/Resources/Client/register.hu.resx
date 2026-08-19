@@ -127,13 +127,16 @@
     <value>E-mail cím</value>
   </data>
   <data name="ResultMsg01" xml:space="preserve">
-    <value>Sikeres regisztráció!</value>
+    <value>A regisztráció sikerült</value>
   </data>
   <data name="ResultMsg02" xml:space="preserve">
-    <value>A megadott e-mail-címre elküldtük a megerősítő linket.</value>
+    <value>A fiók aktiválásához nyisd meg a megerősítő levelet.</value>
   </data>
-  <data name="EmailOutputHint" xml:space="preserve">
-    <value>Fejlesztői fájlkézbesítés aktív. A megerősítő levél HTML-előnézete itt található: {0}</value>
+  <data name="EmailOutput.Description" xml:space="preserve">
+    <value>A megerősítő levél ebben a mappában található:</value>
+  </data>
+  <data name="EmailOutput.Title" xml:space="preserve">
+    <value>Fejlesztői fájlkézbesítés</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Regisztráció</value>

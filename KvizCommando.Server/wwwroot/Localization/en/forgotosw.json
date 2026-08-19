@@ -1,7 +1,9 @@
 {
   "Email": "Please give your e-mail address!",
-  "EmailOutputHint": "Development file delivery is active. The HTML preview of the password reset e-mail is available here: {0}",
+  "EmailOutput.Description": "The password reset e-mail is available in this folder:",
+  "EmailOutput.Title": "Development file delivery",
   "Error.Email": "Invalid e-mail address!",
-  "Succes.Email": "Please follow the instructions in the e-mail to reset your password!",
+  "Succes.Email": "If an account belongs to the provided e-mail address, we sent password reset instructions.",
+  "Success.Title": "Check your e-mail",
   "Title": "Forgot password request"
 }
