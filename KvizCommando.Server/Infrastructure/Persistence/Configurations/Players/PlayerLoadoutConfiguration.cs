@@ -12,6 +12,8 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
             b.ToTable("PlayerLoadouts");
 
             b.HasKey(pl => pl.PlayerId);
+            b.Property(pl => pl.PlayerId)
+             .ValueGeneratedNever();
 
             b.Property(pl => pl.FactorySlotsJson).IsRequired();
             b.Property(pl => pl.UserSlotsJson).IsRequired();

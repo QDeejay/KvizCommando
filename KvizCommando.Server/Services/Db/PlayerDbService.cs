@@ -341,6 +341,7 @@ namespace KvizCommando.Server.Services.Db
 
                 _db.Add(new PlayerLoadout
                 {
+                    PlayerId = player.PlayerId,
                     FactorySlotsJson = "[" + string.Join(",", Enumerable.Repeat(0, 12)) + "]",
                     UserSlotsJson = "[]",
                     PendingSlotsJson = "[]",
@@ -399,9 +400,12 @@ namespace KvizCommando.Server.Services.Db
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogDebug(ex, "EnsurePlayerExists: concurrent insert ignored. UserId={UserId}", userId);
                 await tx.RollbackAsync(ct);
-                return 0;
+                _logger.LogError(
+                    ex,
+                    "Player creation failed. UserId={UserId}",
+                    userId);
+                throw;
             }
 
         }

@@ -12,6 +12,8 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
             b.ToTable("PlayerAskStats");
 
             b.HasKey(x => x.PlayerId);
+            b.Property(x => x.PlayerId)
+             .ValueGeneratedNever();
 
             b.Property(x => x.TotalQuestionsAsked).IsRequired();
             b.Property(x => x.TotalAskPointsEarned).IsRequired();

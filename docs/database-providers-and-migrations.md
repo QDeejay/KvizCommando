@@ -26,37 +26,33 @@ Az SQL Server kódja és NuGet-csomagja ettől még a projekt része, de SQLite 
 
 A váltáshoz csak ezt az egy `true`/`false` értéket kell átírni, mást nem. A `secrets.json` csak a helyi SQL Server-kapcsolati karakterláncokat tartalmazza. A migrációs parancsokban szereplő `--Database:Provider=...` csak az adott EF-parancs idejére választ providert; az sem ír át konfigurációs fájlt.
 
-## SQL Server 2022 helyi beállítása
+## SQL Server 2022 Express helyi beállítása
 
-Fejlesztéshez a SQL Server 2022 Developer kiadás megfelelő és ingyenes, de éles üzemeltetésre nem használható. Az SSMS csak kezelőprogram: a meglévő SSMS 21.6.17 használható hozzá, nem kell emiatt SSMS 22-re frissíteni.
+A Kviz Commando a már használt SQL Server 2022 Express kiadással fut. Nem kell mellé Developer kiadást telepíteni. Az Express ingyenesen használható fejlesztésre és kisebb éles rendszerhez is. Az SSMS csak kezelőprogram: a meglévő SSMS 21.6.17 használható hozzá, nem kell emiatt SSMS 22-re frissíteni.
 
 ### 1. Ellenőrzés: van-e már SQL Server motor?
 
 Az SSMS megléte nem bizonyítja, hogy az adatbázismotor is telepítve van. Először próbálj csatlakozni az SSMS-ben:
 
 - `Server type`: `Database Engine`;
-- `Server name`: `localhost`;
+- `Server name`: `localhost\SQLEXPRESS`;
 - `Authentication`: `Windows Authentication`;
 - `Encryption`: `Mandatory`;
 - helyi fejlesztéshez jelöld be a `Trust server certificate` lehetőséget.
 
-Ha a `localhost` nem található, a Windows Szolgáltatások között is megnézheted, van-e `SQL Server (MSSQLSERVER)` vagy például `SQL Server (SQLEXPRESS)` nevű szolgáltatás. Ha nincs SQL Server szolgáltatás, telepíteni kell a motort.
+Ha nem kapcsolódik, a Windows Szolgáltatások között ellenőrizd, hogy fut-e a `SQL Server (SQLEXPRESS)` szolgáltatás. Ha ez megvan, a motor telepítve van, ezért a következő telepítési részt át kell ugrani.
 
-### 2. SQL Server 2022 Developer telepítése
+### 2. SQL Server 2022 Express telepítése új gépen
 
-1. Nyisd meg a [Microsoft SQL Server letöltési oldalát](https://www.microsoft.com/en-us/sql-server/sql-server-downloads), és töltsd le a SQL Server 2022 Developer kiadást.
+Ezt csak olyan gépen kell elvégezni, amelyen még nincs `SQL Server (SQLEXPRESS)` szolgáltatás.
+
+1. Nyisd meg a [Microsoft SQL Server letöltési oldalát](https://www.microsoft.com/en-us/sql-server/sql-server-downloads), és töltsd le a SQL Server 2022 Express kiadást.
 2. Indítsd el a letöltött telepítőt rendszergazdaként.
-3. Válaszd a `Custom` telepítést. A letöltési mappa maradhat az alapértelmezett.
-4. A megnyíló SQL Server Installation Center bal oldalán válaszd az `Installation` pontot.
-5. Indítsd a `New SQL Server standalone installation or add features to an existing installation` lehetőséget.
-6. Az Edition oldalon a `Developer` kiadás legyen kiválasztva. Ne az időkorlátos Evaluation kiadást válaszd.
-7. Fogadd el a licencfeltételeket, majd várd meg a telepítési szabályok ellenőrzését.
-8. Az `Azure Extension for SQL Server` nem kell ehhez a helyi fejlesztői adatbázishoz, ezért kikapcsolható.
-9. A `Feature Selection` oldalon ehhez a projekthez elég a `Database Engine Services`. Analysis Services, Reporting Services és Machine Learning nem szükséges.
-10. Az `Instance Configuration` oldalon válaszd a `Default instance` lehetőséget. Ennek neve `MSSQLSERVER`, és az alkalmazás `Server=localhost` címen éri el. Ha már van alapértelmezett instance, használhatod azt, vagy készíthetsz például `KVIZCOMMANDO` nevű named instance-t.
-11. A `Server Configuration` szolgáltatásfiókjait hagyd az alapértelmezett értéken.
-12. A `Database Engine Configuration` oldalon válaszd a `Windows authentication mode` beállítást, majd kattints az `Add Current User` gombra. Így a saját Windows-fiókod kezelheti a helyi szervert.
-13. Az adatkönyvtárak maradhatnak alapértelmezettek. Indítsd el az installálást, és csak akkor indítsd újra a gépet, ha a telepítő kéri.
+3. Válaszd a `Basic` telepítést.
+4. Fogadd el a licencfeltételeket; a telepítési hely maradhat az alapértelmezett.
+5. Indítsd el a telepítést. Az elkészült named instance szokásos neve `SQLEXPRESS`.
+6. A befejező képernyőn jegyezd fel az `Instance name` és a `Connection string` értékét.
+7. Az SSMS-t nem kell újratelepíteni, ha a 21.6.17 már a gépen van.
 
 A Microsoft telepítővarázslójának részletes háttere: [Install SQL Server from the Installation Wizard](https://learn.microsoft.com/en-us/sql/database-engine/install-windows/install-sql-server-from-the-installation-wizard-setup?view=sql-server-ver16).
 
@@ -66,13 +62,15 @@ Alapértelmezett instance esetén:
 
 ```text
 Server type: Database Engine
-Server name: localhost
+Server name: localhost\SQLEXPRESS
 Authentication: Windows Authentication
 Encryption: Mandatory
 Trust server certificate: bekapcsolva
 ```
 
-`KVIZCOMMANDO` nevű instance esetén a szervernév:
+Ha a telepítő befejező képernyője más instance-nevet mutatott, a `SQLEXPRESS` helyére azt kell írni.
+
+Például `KVIZCOMMANDO` nevű instance esetén:
 
 ```text
 localhost\KVIZCOMMANDO
@@ -88,7 +86,15 @@ SELECT
     SERVERPROPERTY('Edition') AS Edition;
 ```
 
-SQL Server 2022 esetén a `ProductVersion` főszáma `16`; az `Edition` eredményben a Developer kiadásnak kell megjelennie.
+SQL Server 2022 esetén a `ProductVersion` főszáma `16`; az `Edition` eredményben az Express kiadásnak kell megjelennie.
+
+### Express éles használata
+
+Az Express élesben is használható. SQL Server 2022 alatt a fő korlátai adatbázisonként 10 GB tárhely, legfeljebb 4 processzormag és körülbelül 1,4 GB buffer pool memória; SQL Server Agentet nem tartalmaz. A két Kviz Commando-adatbázis külön-külön kapja a 10 GB-os határt.
+
+Kezdeti éles használatra ez megfelelő. Ha a mért terhelés vagy valamelyik adatbázis mérete később kinövi, SQL Server Standardra lehet váltani. A program providerkapcsolója ekkor is SQL Server marad; csak a connection stringben szereplő szerverpéldány változik.
+
+A Microsoft aktuális kiadás- és korlátlistája: [SQL Server 2022 editions and supported features](https://learn.microsoft.com/en-us/sql/sql-server/editions-and-components-of-sql-server-2022?view=sql-server-ver16).
 
 ### 4. A Kviz Commando helyi kapcsolatai
 
@@ -104,13 +110,13 @@ Windows-hitelesítés és alapértelmezett helyi SQL Server-instance esetén a `
 ```json
 {
   "ConnectionStrings": {
-    "SqlServerApplication": "Server=localhost;Database=KvizCommandoApplication;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True",
-    "SqlServerGame": "Server=localhost;Database=KvizCommandoGame;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True"
+    "SqlServerApplication": "Server=localhost\\SQLEXPRESS;Database=KvizCommandoApplication;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True",
+    "SqlServerGame": "Server=localhost\\SQLEXPRESS;Database=KvizCommandoGame;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True"
   }
 }
 ```
 
-Ha a telepített instance neve például `KVIZCOMMANDO`, mindkét connection stringben a szerver neve:
+Ha a telepített instance neve nem `SQLEXPRESS`, mindkét connection stringben azt a nevet kell használni. Például:
 
 ```text
 Server=localhost\KVIZCOMMANDO

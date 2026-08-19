@@ -12,6 +12,8 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
             b.ToTable("PlayerCharacters");
 
             b.HasKey(pc => pc.PlayerId);
+            b.Property(pc => pc.PlayerId)
+             .ValueGeneratedNever();
 
             b.Property(pc => pc.CharactersJson)
              .IsRequired();
