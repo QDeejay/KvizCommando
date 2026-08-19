@@ -74,7 +74,7 @@ A működő folyamatok a regisztrációt, a helyi és külső bejelentkezést, a
 
 A még nem működő export-, helyesbítési, törlési, korlátozási és tiltakozási folyamatok eseménynevei csak fenntartott konstansok. Ezeket jelenleg semmilyen végpont nem írja az auditnaplóba.
 
-Az `IncludeIpHash` alapértéke `false`. Bekapcsolásakor csak érvényes Base64-formátumú `AuditHash:Secret` mellett készül HMAC-SHA256 hash. Az IP-cím a hash előtt normalizálásra kerül, így az IPv4 és annak IPv4-be ágyazott IPv6 alakja azonos bemenetet ad. A hash-elt IP továbbra is személyhez kapcsolható adat lehet, ezért használata külön célt és megőrzési szabályt igényel.
+Az `IncludeIpHash` jelenleg be van kapcsolva. Csak érvényes Base64-formátumú `AuditHash:Secret` mellett készül HMAC-SHA256 hash. Az IP-cím a hash előtt normalizálásra kerül, így az IPv4 és annak IPv4-be ágyazott IPv6 alakja azonos bemenetet ad. A hash-elt IP továbbra is személyhez kapcsolható adat lehet, ezért használata külön célt és megőrzési szabályt igényel.
 
 A helyi fájl nem változtathatatlan, nem kezel több alkalmazáspéldányt és nem biztosít központi jogosultságkezelést. Production környezetben központi, hozzáférés-szabályozott audittároló szükséges. A GDPR szempontjából az audit célhoz kötöttségét, adattakarékosságát, megőrzését és védelmét együtt kell meghatározni; a kiinduló elvek a GDPR 5. és 32. cikkében találhatók.
 
