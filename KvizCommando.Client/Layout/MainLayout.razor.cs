@@ -1,4 +1,4 @@
-﻿using Blazored.LocalStorage;
+using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Shared.Help;
@@ -17,9 +17,12 @@ using System.Globalization;
 
 namespace KvizCommando.Client.Layout
 {
+    /// <summary>
+    /// Az alkalmazás fő elrendezését és közös kliensállapotát kezeli.
+    /// </summary>
     public partial class MainLayout : KcLayoutComponentBase, IDisposable
     {
-        [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
+[Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
         [Inject] private ISessionStorageService SessionStorage { get; set; } = default!;
         [Inject] private IHomeState HState { get; set; } = default!;
         [Inject] private IQuestionState QState { get; set; } = default!;
@@ -62,19 +65,6 @@ namespace KvizCommando.Client.Layout
                 : new();
         private bool IsRenderReady =>
                 _isReady && (!_isLoggedIn || _appState.Home is not null);
-        private void ToggleDesktopSidebar()
-        {
-            if (CanToggleSidebar)
-                _isDesktopNavOpen = !_isDesktopNavOpen;
-        }
-
-        private void ToggleMobileSidebar()
-        {
-            if (CanToggleSidebar)
-                _isMobileNavOpen = !_isMobileNavOpen;
-        }
-
-        private void CloseMobileSidebar() => _isMobileNavOpen = false;
 
         protected override async Task OnInitializedAsync()
         {
@@ -112,7 +102,7 @@ namespace KvizCommando.Client.Layout
             _isReady = true;
         }
 
-       
+
         protected override void OnInitialized()
         {
             Ui.Header.OnTitleChanged += UpdateTitle;
@@ -122,284 +112,7 @@ namespace KvizCommando.Client.Layout
             Ui.ReloadRequested += OnRefreshRequired;
             Ui.SubHeader.OnButtonsChanged += Refresh;
         }
-        private bool ShowLogoutToast(Uri uri)
-        {
-            var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
-            var reason = query["reason"];
 
-            if (string.IsNullOrWhiteSpace(reason))
-                return false;
-
-            Ui.Nav.NavigateTo(uri.GetLeftPart(UriPartial.Path), replace: true);
-
-            switch (reason.ToLowerInvariant())
-            {
-                case "success":
-                    Ui.Toast.Complete(Ui.Lang["mainlayout.Toast.Logout.Success"]);
-                    break;
-
-                case "session":
-                    Ui.Toast.Brief(Ui.Lang["mainlayout.Toast.Logout.Session"]);
-
-                    break;
-
-                case "expired":
-                    Ui.Toast.Brief(Ui.Lang["mainlayout.Toast.Logout.Expired"]);
-                    break;
-
-                case "error":
-                    Ui.Toast.Error(Ui.Lang["mainlayout.Toast.Logout.Error"]);
-                    break;
-            }
-            return true;
-        }
-
-        private void UpdateTitle()
-        {
-            _currentTitle = Ui.Header.Title;
-
-            if (IsFullScreenGame)
-                _isMobileNavOpen = false;
-
-            InvokeAsync(StateHasChanged);
-        }
-        private void UpdateBackBtnEna()
-        {
-            _isBckBtnEna = Ui.Header.BackEna;
-            InvokeAsync(StateHasChanged);
-        }
-
-        private void OnBackClick()
-        {
-            Ui.SubHeader.Hide();
-            Ui.Header.SetBackBtnToPushState();
-        }
-        private void ShowModal() => _ = _mainModal!.ShowAsync(Ui.Modal.Parameter!);
-        private void HideModal() => _ = _mainModal!.HideAsync();
-        private void Refresh() => InvokeAsync(StateHasChanged);
-        private void ModalAction(ModalResult result) => Ui.Modal.SendResult(result);
-        
-        private async Task SetSoundEnabledAsync(bool enabled)
-        {
-            await Audio.SetMutedAsync(!enabled);
-        }
-        private async Task Logout()
-        {
-            await User.LogoutAsync(false);
-            Console.WriteLine("User logged out.");
-        }
-        private Task OpenHelpAsync() =>
-            _helpNavigator?.ShowManualAsync() ?? Task.CompletedTask;
-        private Task OpenCurrentHelpAsync() =>
-            _helpNavigator?.ShowCurrentAsync() ?? Task.CompletedTask;
-
-        private Task OnRefreshRequired(ReqStates[] reqTypes) =>
-            InitStatesAsync(reqTypes);
-
-        private async Task InitStatesAsync(params ReqStates[] reqTypes)
-        {
-
-            var allViaCheckIn = reqTypes[0] == ReqStates.AllViaCheckIn;
-            var allStates = reqTypes[0] is ReqStates.All or ReqStates.AllViaCheckIn;
-
-            if (!await RestoreCheckInSessionAsync(allViaCheckIn))
-                return;
-
-            if (allStates)
-                reqTypes = Enum.GetValues<ReqStates>()[2..];
-
-            _appState.Culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-
-            foreach (var reqType in reqTypes)
-            {
-                if (!await LoadStateAsync(reqType))
-                    return;
-            }
-
-            if (allViaCheckIn)
-                _isLoggedIn = true;
-
-            await CompleteStateInitializationAsync(allStates);
-
-            await InvokeAsync(StateHasChanged);
-        }
-
-        private async Task<bool> RestoreCheckInSessionAsync(
-            bool allViaCheckIn)
-        {
-            if (!allViaCheckIn || await RestoreSessionAsync())
-                return true;
-
-            _isLoggedIn = false;
-            await InvokeAsync(StateHasChanged);
-            return false;
-        }
-
-        private async Task<bool> LoadStateAsync(ReqStates reqType)
-        {
-            switch (reqType)
-            {
-                case ReqStates.Home:
-                    return await LoadHomeStateAsync();
-
-                case ReqStates.Question:
-                    return await LoadQuestionStateAsync();
-
-                case ReqStates.Team:
-                    return await LoadTeamStateAsync();
-
-                case ReqStates.SoloGame:
-                    return await LoadSoloGameStateAsync();
-
-                case ReqStates.VsGame:
-                    return await LoadVsGameStateAsync();
-
-                case ReqStates.LocalSotrage:
-                    await LoadLocalStorageStateAsync();
-                    return true;
-
-                default:
-                    return true;
-            }
-        }
-
-        private async Task<bool> LoadHomeStateAsync()
-        {
-            HState.Invalidate();
-            await HState.EnsureLoadedAsync();
-            if (!HState.IsLoaded)
-                return false;
-
-            _appState.Home = HState.Snapshot;
-            UpdateHeadDisplay();
-            return true;
-        }
-
-        private async Task<bool> LoadQuestionStateAsync()
-        {
-            QState.Invalidate();
-            await QState.EnsureLoadedAsync();
-            if (!QState.IsLoaded)
-                return false;
-
-            _appState.Question = QState.Snapshot;
-            return true;
-        }
-
-        private async Task<bool> LoadTeamStateAsync()
-        {
-            TState.Invalidate();
-            await TState.EnsureLoadedAsync();
-            if (!TState.IsLoaded)
-                return false;
-
-            _appState.Team = TState.Snapshot;
-            return true;
-        }
-
-        private async Task<bool> LoadSoloGameStateAsync()
-        {
-            SState.Invalidate();
-            await SState.EnsureLoadedAsync();
-            if (!SState.IsLoaded)
-                return false;
-
-            _appState.SoloGame = SState.Snapshot;
-            return true;
-        }
-
-        private async Task<bool> LoadVsGameStateAsync()
-        {
-            VState.Invalidate();
-            await VState.EnsureLoadedAsync();
-            if (!VState.IsLoaded)
-                return false;
-
-            _appState.VsGame = VState.Snapshot;
-            return true;
-        }
-
-        private async Task LoadLocalStorageStateAsync()
-        {
-            _appState.LocStoreStates.ChkBxNotShowDel =
-                await LocalStorage.GetItemAsync<bool>(_localNotShowDel);
-            _appState.LocStoreStates.ChkBxNotShowNew =
-                await LocalStorage.GetItemAsync<bool>(_localNotShowNew);
-            _appState.LocStoreStates.LastBboardChk =
-                await LocalStorage.GetItemAsync<DateTime>(LOCAL_LAST_B_BOARD);
-            _appState.LocStoreStates.SeenHelps =
-                await LocalStorage.GetItemAsync<HashSet<int>>(
-                    HelpCollection.SEEN_STORAGE_KEY) ?? [];
-        }
-
-        private async Task CompleteStateInitializationAsync(bool allStates)
-        {
-            if (!allStates)
-                return;
-
-            await Audio.PlayMusicAsync(MusicTrack.MenuMain);
-
-            if (!SessionService.PendingSessionReplacementWarning)
-                return;
-
-            SessionService.PendingSessionReplacementWarning = false;
-            Ui.Toast.Brief(Ui.Lang["mainlayout.Toast.Login.Replaced"]);
-        }
-
-        private async Task<bool> RestoreSessionAsync()
-        {
-            var sessionId = await SessionStorage.GetItemAsync<string>("SessionId");
-            if (string.IsNullOrWhiteSpace(sessionId))
-                return false;
-
-            SessionService.SessionId = sessionId;
-
-            return true;
-        }
-
-        private void UpdateHeadDisplay()
-        {
-            var home = _appState.Home;
-            if (home?.UserMainData is null ||
-                home.ExtendedInfo is null)
-            {
-                return;
-            }
-
-            var main = home.UserMainData;
-            var level = RankNameTable.Data[main.RankEnum]
-                .PublicLevel ?? string.Empty;
-
-            Ui.HeadDisplay.SetMessages(
-            [
-                Ui.Lang["mainlayout.Text.TeamName"]
-                    .FormatSafe(main.TeamName),
-                Ui.Lang["mainlayout.Text.TeamLevel"]
-                    .FormatSafe(level),
-                Ui.Lang["mainlayout.Text.Xp"]
-                    .FormatSafe(main.XP),
-                Ui.Lang["mainlayout.Text.NextLevelXp"]
-                    .FormatSafe(home.ExtendedInfo.NextXp),
-                Ui.Lang["mainlayout.Text.Credit"]
-                    .FormatSafe(main.Credit),
-                Ui.Lang["mainlayout.Text.Voucher"]
-                    .FormatSafe(main.Voucher)
-            ]);
-        }
-
-        private async Task<string> InitCultureAsync()
-        {
-            var culture = await LocalStorage.GetItemAsync<string>("userLang");
-            if (string.IsNullOrWhiteSpace(culture))
-            {
-                culture = "hu-HU";
-                await LocalStorage.SetItemAsync("userLang", culture);
-            }
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(culture);
-            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(culture);
-
-            return CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-        }
         /// <inheritdoc />
         public void Dispose()
         {

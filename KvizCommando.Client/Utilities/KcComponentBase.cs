@@ -1,4 +1,4 @@
-﻿using KvizCommando.Client.Services.Dto;
+﻿using KvizCommando.Client.Services.ScreenData;
 using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Services.Visual.UiService;

@@ -1,24 +1,26 @@
-﻿using KvizCommando.Client.Services.Dto;
+﻿using KvizCommando.Client.Services.ScreenData;
 using KvizCommando.Shared.Models.Dtos;
-using KvizCommando.Shared.Models.User;
+using System.Threading;
 
 namespace KvizCommando.Client.Services.ClientCache
 {
-    public sealed class HomeState : IHomeState
+    public sealed class QuestionState : IQuestionState
     {
         private readonly ICacheApiService _api;
-        private HomeDTOs? _snapshot;
+
+        private QuestionDtos? _snapshot;
         private bool _dirty = true;
         private readonly SemaphoreSlim _gate = new(1, 1);
 
-        public HomeState(ICacheApiService api) => _api = api;
+        public QuestionState(ICacheApiService api) => _api = api;
 
         public bool IsLoaded => _snapshot is not null && !_dirty;
-        public HomeDTOs? Snapshot => _snapshot;
-        public UserMainData? UserMainData => _snapshot?.UserMainData;
-        public HomeScreen? HomeScreen => _snapshot?.HomeScreen;
-        public HomeExtendedInfo? ExtendedInfo => _snapshot?.ExtendedInfo;
-        
+
+        public QuestionDtos? Snapshot => _snapshot;
+        public int[]? FactorySlots => _snapshot?.FactorySlots;
+        public UserSlot[]? Userlots => _snapshot?.Userlots;
+        public PendingSlot[]? PendingSlots => _snapshot?.PendingSlots;
+        public QuestionExtendedInfo? ExtendedInfo => _snapshot?.ExtendedInfo;
 
         /// <inheritdoc />
         public async Task EnsureLoadedAsync()
@@ -28,7 +30,7 @@ namespace KvizCommando.Client.Services.ClientCache
             try
             {
                 if (IsLoaded) return; // double-check
-                _snapshot = await _api.GetHomeScreenAsync();
+                _snapshot = await _api.GetQuestionAsync();
                 _dirty = false;
             }
             finally { _gate.Release(); }
@@ -40,7 +42,7 @@ namespace KvizCommando.Client.Services.ClientCache
             await _gate.WaitAsync();
             try
             {
-                _snapshot = await _api.GetHomeScreenAsync();
+                _snapshot = await _api.GetQuestionAsync();
                 _dirty = false;
             }
             finally { _gate.Release(); }

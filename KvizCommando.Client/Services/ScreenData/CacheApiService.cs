@@ -3,13 +3,22 @@ using KvizCommando.Shared.Models.Dtos;
 using System.Net;
 using System.Net.Http.Json;
 
-namespace KvizCommando.Client.Services.Dto
+namespace KvizCommando.Client.Services.ScreenData
 {
+    /// <summary>
+    /// HTTP-n keresztül lekéri a fő kliensképernyők állapotpillanatképeit.
+    /// </summary>
     public sealed class CacheApiService : ICacheApiService
     {
         private readonly HttpClient _http;
         private readonly SessionService _sessionCache;
         private const string SCREEN_ROUTE = "/api/screen";
+
+        /// <summary>
+        /// Létrehozza a képernyőadatokat lekérő szolgáltatást.
+        /// </summary>
+        /// <param name="http">A szerverhívásokhoz használt HTTP-kliens.</param>
+        /// <param name="sessioncache">Az aktuális munkamenet kliensoldali tárolója.</param>
         public CacheApiService(HttpClient http, SessionService sessioncache)
         {
             _http = http;

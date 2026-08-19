@@ -43,9 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Question\" />
-    <Folder Include="Features\Team\" />
-    <Folder Include="Services\Logic\" />
     <Folder Include="wwwroot\audio\sfx\" />
     <Folder Include="wwwroot\Data\" />
     <Folder Include="wwwroot\Images\buttons\vsgame\" /> 
@@ -62,11 +59,3 @@
 
 
 </Project>
-
-<!--
-  MÓDOSÍTÁS: hozzáadja a .NET 8 SignalR klienscsomagot a VS
-  multiplayer kapcsolathoz.
-
-  A projektfájl a Blazor WebAssembly kliens build- és
-  csomagbeállításait tartalmazza.
--->

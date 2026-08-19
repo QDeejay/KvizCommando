@@ -1,4 +1,4 @@
-﻿using KvizCommando.Client.Services.Dto;
+﻿using KvizCommando.Client.Services.ScreenData;
 using KvizCommando.Shared.Models.Dtos;
 
 namespace KvizCommando.Client.Services.ClientCache

@@ -1,6 +1,6 @@
 using KvizCommando.Client.Features.Team.Builders;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Pages.Home.Features;
+using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;

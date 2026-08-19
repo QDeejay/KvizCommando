@@ -1,4 +1,4 @@
-﻿namespace KvizCommando.Client.Pages.Home.Features
+﻿namespace KvizCommando.Client.Features.Home.Builders
 {
     internal enum HomeBoxKey
     {

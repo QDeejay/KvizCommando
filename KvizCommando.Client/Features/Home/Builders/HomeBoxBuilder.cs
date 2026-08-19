@@ -2,10 +2,14 @@
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 
-namespace KvizCommando.Client.Pages.Home.Features;
+namespace KvizCommando.Client.Features.Home.Builders;
 
+/// <summary>
+/// Összeállítja a kezdőképernyő tartalomdobozainak nézetmodelljeit.
+/// </summary>
 public static class HomeBoxBuilder
 {
+    /// <summary>A kezdőképernyő dobozainak megjelenítési sorrendje.</summary>
     public static readonly string[] BtnOrder = Enum.GetNames<HomeBoxKey>();
 
     /// <summary>
@@ -46,7 +50,12 @@ public static class HomeBoxBuilder
 
 
 }
+
+/// <summary>
+/// A kezdőképernyő gyökérdobozainak sorrendjét teszi elérhetővé.
+/// </summary>
 public static class BxOrdHome
 {
+    /// <summary>A gyökérdobozok neveinek sorrendje.</summary>
     public static readonly string[] Root = Enum.GetNames<HomeBoxKey>();
 }

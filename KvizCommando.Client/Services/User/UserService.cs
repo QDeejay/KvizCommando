@@ -2,7 +2,6 @@
 using KvizCommando.Client.Models.StoreModels;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
-using KvizCommando.Client.Services.Dto;
 using KvizCommando.Shared.Contracts.Auth;
 using KvizCommando.Shared.Contracts.CheckIn;
 using Microsoft.AspNetCore.Components;

@@ -3,7 +3,7 @@ using KvizCommando.Client.Features.Solo.Services;
 using KvizCommando.Client.Features.Team.Services;
 using KvizCommando.Client.Features.VsGame.Services;
 using KvizCommando.Client.Services;
-using KvizCommando.Client.Services.Dto;
+using KvizCommando.Client.Services.ScreenData;
 using KvizCommando.Client.Services.User;
 
 namespace KvizCommando.Client.DependencyInjection;

@@ -6,7 +6,7 @@ using KvizCommando.Client.Features.Question.Builders;
 using KvizCommando.Client.Features.Solo.Builders;
 using KvizCommando.Client.Features.Team.Builders;
 using KvizCommando.Client.Features.VsGame.Builders;
-using KvizCommando.Client.Pages.Home.Features;
+using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Client.Services.ClientCache;
 
 namespace KvizCommando.Client.Features.Shared.Help;

@@ -1,26 +1,22 @@
-﻿using KvizCommando.Client.Services.Dto;
+﻿using KvizCommando.Client.Services.ScreenData;
 using KvizCommando.Shared.Models.Dtos;
-using System.Threading;
 
 namespace KvizCommando.Client.Services.ClientCache
 {
-    public sealed class QuestionState : IQuestionState
+    public class SoloState : ISoloState
     {
         private readonly ICacheApiService _api;
 
-        private QuestionDtos? _snapshot;
+        private SoloGameDtos? _snapshot;
         private bool _dirty = true;
         private readonly SemaphoreSlim _gate = new(1, 1);
-
-        public QuestionState(ICacheApiService api) => _api = api;
-
+        public SoloState(ICacheApiService api) => _api = api;
         public bool IsLoaded => _snapshot is not null && !_dirty;
 
-        public QuestionDtos? Snapshot => _snapshot;
-        public int[]? FactorySlots => _snapshot?.FactorySlots;
-        public UserSlot[]? Userlots => _snapshot?.Userlots;
-        public PendingSlot[]? PendingSlots => _snapshot?.PendingSlots;
-        public QuestionExtendedInfo? ExtendedInfo => _snapshot?.ExtendedInfo;
+        public SoloGameDtos? Snapshot => _snapshot;
+        public SoloEnables? Enables => _snapshot?.Enables;
+        public SoloResults? REsults => _snapshot?.Results;
+
 
         /// <inheritdoc />
         public async Task EnsureLoadedAsync()
@@ -30,7 +26,7 @@ namespace KvizCommando.Client.Services.ClientCache
             try
             {
                 if (IsLoaded) return; // double-check
-                _snapshot = await _api.GetQuestionAsync();
+                _snapshot = await _api.GetSoloAsync();
                 _dirty = false;
             }
             finally { _gate.Release(); }
@@ -42,15 +38,13 @@ namespace KvizCommando.Client.Services.ClientCache
             await _gate.WaitAsync();
             try
             {
-                _snapshot = await _api.GetQuestionAsync();
+                _snapshot = await _api.GetSoloAsync();
                 _dirty = false;
             }
             finally { _gate.Release(); }
         }
-
         /// <inheritdoc />
         public void Invalidate() => _dirty = true;
-
         /// <inheritdoc />
         public void Clear()
         {
@@ -58,4 +52,5 @@ namespace KvizCommando.Client.Services.ClientCache
             _dirty = true;
         }
     }
+
 }

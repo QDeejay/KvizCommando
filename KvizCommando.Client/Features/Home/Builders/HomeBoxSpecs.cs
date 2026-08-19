@@ -3,8 +3,11 @@ using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos; // itt van a HomeDTOs, HomeScreen, ScreenButtonEntity
 
-namespace KvizCommando.Client.Pages.Home.Features;
+namespace KvizCommando.Client.Features.Home.Builders;
 
+/// <summary>
+/// Egy kezdőképernyő-doboz megjelenítési szabályait tartalmazza.
+/// </summary>
 public sealed class HomeSpecs : VmSpecs
 {
     internal HomeBoxKey Key { get; init; }
@@ -13,9 +16,14 @@ public sealed class HomeSpecs : VmSpecs
         { get; init; } = (_, _) => string.Empty;
 }
 
+/// <summary>
+/// A kezdőképernyő összes dobozának rögzített megjelenítési leírása.
+/// </summary>
 public static class HomeBoxSpecs
 {
     private const string IMAGE_ROOT = "images/buttons/home";
+
+    /// <summary>A kezdőképernyő dobozainak sorrendbe rendezett leírása.</summary>
     public static readonly IReadOnlyList<HomeSpecs> Specs = new[]
     {
         new HomeSpecs {

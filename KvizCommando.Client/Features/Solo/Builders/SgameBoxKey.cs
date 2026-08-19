@@ -1,4 +1,4 @@
-﻿using KvizCommando.Client.Pages.Home.Features;
+﻿using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Shared.Contracts.SoloGame;
 using Microsoft.AspNetCore.Components;
 

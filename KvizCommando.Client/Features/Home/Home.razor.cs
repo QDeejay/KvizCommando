@@ -1,6 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Pages.Home.Features;
+using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Utilities;

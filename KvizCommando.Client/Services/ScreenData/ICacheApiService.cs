@@ -1,7 +1,10 @@
 ﻿using KvizCommando.Shared.Models.Dtos;
 
-namespace KvizCommando.Client.Services.Dto
+namespace KvizCommando.Client.Services.ScreenData
 {
+    /// <summary>
+    /// Lekéri a fő kliensképernyők szerveroldalon összeállított adatait.
+    /// </summary>
     public interface ICacheApiService
     {
         /// <summary>

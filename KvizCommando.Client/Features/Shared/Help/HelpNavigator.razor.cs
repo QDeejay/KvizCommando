@@ -1,5 +1,5 @@
 using Blazored.LocalStorage;
-using KvizCommando.Client.Pages.Home.Features;
+using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Utilities;
 using Microsoft.AspNetCore.Components;
