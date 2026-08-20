@@ -25,8 +25,6 @@ public partial class ProfileNavigator : KcComponentBase
     private bool _isTeamNameBusy;
     private bool _isAvatarBusy;
 
-    private string Text(string key) => Ui.Lang[$"profile.{key}"];
-
     private bool CanEditTeamName =>
         _profile is not null &&
         ProfileRules.CanChangeTeamName(
@@ -34,18 +32,28 @@ public partial class ProfileNavigator : KcComponentBase
             _profile.TeamNameChangedUtc,
             DateTime.UtcNow);
 
+    private bool HasTeamNameChanged =>
+        _profile is not null &&
+        !string.Equals(
+            _teamNameDraft.Trim(),
+            _profile.TeamName.Trim(),
+            StringComparison.OrdinalIgnoreCase);
+
+    private bool CanCheckTeamName =>
+        CanEditTeamName &&
+        !_isTeamNameBusy &&
+        HasTeamNameChanged;
+
     private bool CanSaveTeamName =>
         CanEditTeamName &&
         !_isTeamNameBusy &&
+        HasTeamNameChanged &&
         _teamNameState == TeamNameCheckState.Available &&
         string.Equals(
-            _teamNameDraft,
+            _teamNameDraft.Trim(),
             _checkedTeamName,
             StringComparison.Ordinal) &&
-        !string.Equals(
-            _teamNameDraft,
-            _profile!.TeamName,
-            StringComparison.Ordinal);
+        !string.IsNullOrWhiteSpace(_checkedTeamName);
 
     private bool CanEditAvatar =>
         _profile is not null &&
@@ -69,25 +77,25 @@ public partial class ProfileNavigator : KcComponentBase
 
             if (_profile.RankEnum < _profile.TeamNameRequiredRank)
             {
-                return Text("TeamName.RequiredRank")
+                return Ui.Lang["profile.TeamName.RequiredRank"]
                     .FormatSafe(GetPublicLevel(_profile.TeamNameRequiredRank));
             }
 
             if (_profile.NextTeamNameChangeUtc is DateTime nextChangeUtc &&
                 nextChangeUtc > DateTime.UtcNow)
             {
-                return Text("TeamName.NextChange")
+                return Ui.Lang["profile.TeamName.NextChange"]
                     .FormatSafe(nextChangeUtc.ToLocalTime().ToString("yyyy.MM.dd. HH:mm"));
             }
 
-            return Text("TeamName.ChangeAvailable");
+            return Ui.Lang["profile.TeamName.ChangeAvailable"];
         }
     }
 
     private string AvatarRuleText =>
         _profile is null
             ? string.Empty
-            : Text("Avatar.RequiredRank")
+            : Ui.Lang["profile.Avatar.RequiredRank"]
                 .FormatSafe(GetPublicLevel(_profile.AvatarRequiredRank));
 
     private string TeamNameStatusSymbol => _teamNameState switch
@@ -105,7 +113,7 @@ public partial class ProfileNavigator : KcComponentBase
     };
 
     private string TeamNameStatusText =>
-        Text($"TeamName.State.{_teamNameState}");
+        Ui.Lang[$"profile.TeamName.State.{_teamNameState}"];
 
     public async Task ShowAsync()
     {
@@ -146,7 +154,7 @@ public partial class ProfileNavigator : KcComponentBase
 
     private async Task CheckTeamNameAsync()
     {
-        if (!CanEditTeamName)
+        if (!CanCheckTeamName)
             return;
 
         _isTeamNameBusy = true;
@@ -157,7 +165,7 @@ public partial class ProfileNavigator : KcComponentBase
             ProfileRequestState.NotFound or
             ProfileRequestState.ServerError)
         {
-            Ui.Toast.Error(Text("Error.Request"));
+            Ui.Toast.Error(Ui.Lang["profile.Error.Request"]);
             ResetTeamNameCheck();
             return;
         }
@@ -180,7 +188,7 @@ public partial class ProfileNavigator : KcComponentBase
             response.Profile is not null)
         {
             ApplyProfile(response.Profile);
-            Ui.Toast.Success(Text("TeamName.SaveSuccess"));
+            Ui.Toast.Success(Ui.Lang["profile.TeamName.SaveSuccess"]);
             await OnProfileChanged.InvokeAsync();
             return;
         }
@@ -195,7 +203,7 @@ public partial class ProfileNavigator : KcComponentBase
             ApplyProfile(response.Profile);
         }
 
-        Ui.Toast.Error(Text($"SaveState.{response.State}"));
+        Ui.Toast.Error(Ui.Lang[$"profile.SaveState.{response.State}"]);
     }
 
     private async Task SaveAvatarAsync()
@@ -212,7 +220,7 @@ public partial class ProfileNavigator : KcComponentBase
             response.Profile is not null)
         {
             ApplyProfile(response.Profile);
-            Ui.Toast.Success(Text("Avatar.SaveSuccess"));
+            Ui.Toast.Success(Ui.Lang["profile.Avatar.SaveSuccess"]);
             await OnProfileChanged.InvokeAsync();
             return;
         }
@@ -220,7 +228,7 @@ public partial class ProfileNavigator : KcComponentBase
         if (response.Profile is not null)
             ApplyProfile(response.Profile);
 
-        Ui.Toast.Error(Text($"SaveState.{response.State}"));
+        Ui.Toast.Error(Ui.Lang[$"profile.SaveState.{response.State}"]);
     }
 
     private void PreviousAvatar()

@@ -23,8 +23,6 @@ public partial class SettingsNavigator : KcComponentBase
     private bool _isOpen;
     private bool _helpsReset;
 
-    private string Text(string key) => Ui.Lang[$"mainlayout.Settings.{key}"];
-
     public async Task ShowAsync()
     {
         await Settings.LoadAsync();

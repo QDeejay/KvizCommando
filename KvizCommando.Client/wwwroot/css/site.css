@@ -238,6 +238,23 @@ button.kc-help-page-dot:not(:disabled) {
     background-color: var(--kc-lcd-background);
 }
 
+.kc-avatar-surface {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+.kc-avatar-surface::after {
+    content: "";
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow:
+        inset 5px 5px 9px rgba(0, 0, 0, .68),
+        inset -3px -3px 6px rgba(0, 0, 0, .42);
+}
+
 .kc-lcd-content {
     color: var(--kc-lcd-color);
     font-family: var(--kc-lcd-font);
