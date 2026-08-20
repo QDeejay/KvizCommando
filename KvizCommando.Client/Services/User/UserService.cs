@@ -2,6 +2,7 @@
 using KvizCommando.Client.Models.StoreModels;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Settings;
 using KvizCommando.Shared.Contracts.Auth;
 using KvizCommando.Shared.Contracts.CheckIn;
 using Microsoft.AspNetCore.Components;
@@ -22,6 +23,7 @@ namespace KvizCommando.Client.Services.User
         private readonly ISessionStorageService _session;
         private readonly NavigationManager _nav;
         private readonly AudioService _audio;
+        private readonly ISettingsService _settings;
         private readonly SessionService _sessionCache;
         public UserService(
 
@@ -30,6 +32,7 @@ namespace KvizCommando.Client.Services.User
             ISessionStorageService session,
             NavigationManager navigationManager,
             AudioService audio,
+            ISettingsService settings,
             SessionService sessionCache
             )
         {
@@ -38,6 +41,7 @@ namespace KvizCommando.Client.Services.User
             _session = session;
             _nav = navigationManager;
             _audio = audio;
+            _settings = settings;
             _sessionCache = sessionCache;
         }
 
@@ -93,6 +97,7 @@ namespace KvizCommando.Client.Services.User
                     return;
 
                 await _audio.StopAllAsync();
+                await _settings.ExitFullscreenAsync();
                 _nav.NavigateTo("/");
                 return;
             }
@@ -111,6 +116,7 @@ namespace KvizCommando.Client.Services.User
         private async Task CompleteClientLogoutAsync(string reason)
         {
             await _audio.StopAllAsync();
+            await _settings.ExitFullscreenAsync();
             await _session.ClearAsync();
             _home.Clear();
             _sessionCache.Clear();
@@ -265,7 +271,8 @@ namespace KvizCommando.Client.Services.User
             await _session.SetItemAsync("SessionId", sessionId, ct);
             _sessionCache.SessionId = sessionId;
             _sessionCache.PendingSessionReplacementWarning = dto.PreviousSessionReplaced;
-            await _audio.SetMutedAsync(false);
+            await _settings.LoadAsync();
+            await _settings.TryEnterStartFullscreenAsync();
             return (true, new List<string>());
         }
         /// <inheritdoc />
@@ -283,7 +290,8 @@ namespace KvizCommando.Client.Services.User
                 await _session.SetItemAsync("SessionId", sessionId, ct);
                 _sessionCache.SessionId = sessionId;
                 _sessionCache.PendingSessionReplacementWarning = content.PreviousSessionReplaced;
-                await _audio.SetMutedAsync(false);
+                await _settings.LoadAsync();
+                await _settings.TryEnterStartFullscreenAsync();
                 return (true, new List<string>(), "");
             }
 

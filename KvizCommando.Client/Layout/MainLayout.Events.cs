@@ -92,7 +92,7 @@ namespace KvizCommando.Client.Layout
 
         private async Task SetSoundEnabledAsync(bool enabled)
         {
-            await Audio.SetMutedAsync(!enabled);
+            await Settings.SetSoundEnabledAsync(enabled);
         }
         private async Task Logout()
         {

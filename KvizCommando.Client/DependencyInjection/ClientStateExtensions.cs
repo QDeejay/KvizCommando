@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Settings;
 
 namespace KvizCommando.Client.DependencyInjection;
 
@@ -23,6 +24,7 @@ public static class ClientStateExtensions
         services.AddScoped<ISoloState, SoloState>();
         services.AddScoped<IVsState, VsState>();
         services.AddSingleton<SessionService>();
+        services.AddScoped<ISettingsService, SettingsService>();
 
         return services;
     }

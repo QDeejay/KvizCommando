@@ -9,6 +9,7 @@ using KvizCommando.Client.Features.VsGame.Builders;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Settings;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Models.Dtos;
@@ -30,6 +31,7 @@ namespace KvizCommando.Client.Layout
         [Inject] private ISoloState SState { get; set; } = default!;
         [Inject] private IVsState VState { get; set; } = default!;
         [Inject] private AudioService Audio { get; set; } = default!;
+        [Inject] private ISettingsService Settings { get; set; } = default!;
         [Inject] private SessionService SessionService { get; set; } = default!;
 
         private static readonly string _localNotShowNew = ModalConst.LOCAL_NOT_SHOW_NEW;
@@ -82,6 +84,7 @@ namespace KvizCommando.Client.Layout
 
             if (await RestoreSessionAsync() && !loggedOut)
             {
+                await Settings.LoadAsync();
                 await InitStatesAsync(ReqStates.All);
                 _isLoggedIn = true;
             }

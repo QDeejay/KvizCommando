@@ -100,7 +100,7 @@
                             </div>
                             <div class="kc-mainlayout-content-header--center">
                                 <div class="kc-header-lcd-display">
-                                    <LCDDisplay SoundEnabled="@(!Audio.IsMuted)"
+                                    <LCDDisplay SoundEnabled="@Settings.Current.SoundEnabled"
                                                 SoundEnabledChanged="SetSoundEnabledAsync" />
                                 </div>
                             </div>

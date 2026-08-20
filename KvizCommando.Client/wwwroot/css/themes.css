@@ -1,0 +1,75 @@
+:root,
+:root[data-theme="default"] {
+    --kc-page-bg-start: #1a1f1a;
+    --kc-page-bg-end: #0f130f;
+    --kc-page-glow-primary: rgba(0, 255, 0, 0.05);
+    --kc-page-glow-secondary: rgba(0, 180, 0, 0.04);
+    --kc-shell-bg: #0c1f17;
+    --kc-footer-bg: rgba(51, 51, 51, 0.5);
+    --kc-primary: #1b6ec2;
+    --kc-primary-border: #1861ac;
+}
+
+:root[data-theme="olive"] {
+    --kc-page-bg-start: #24291b;
+    --kc-page-bg-end: #11150c;
+    --kc-page-glow-primary: rgba(151, 174, 88, 0.10);
+    --kc-page-glow-secondary: rgba(83, 105, 46, 0.10);
+    --kc-shell-bg: #273018;
+    --kc-footer-bg: rgba(39, 48, 24, 0.65);
+    --kc-primary: #667c35;
+    --kc-primary-border: #52652a;
+}
+
+:root[data-theme="desert"] {
+    --kc-page-bg-start: #30261b;
+    --kc-page-bg-end: #17110c;
+    --kc-page-glow-primary: rgba(214, 165, 92, 0.10);
+    --kc-page-glow-secondary: rgba(135, 88, 48, 0.10);
+    --kc-shell-bg: #3b2b1a;
+    --kc-footer-bg: rgba(59, 43, 26, 0.65);
+    --kc-primary: #a56d32;
+    --kc-primary-border: #835426;
+}
+
+:root[data-theme="steel"] {
+    --kc-page-bg-start: #20272d;
+    --kc-page-bg-end: #0e1317;
+    --kc-page-glow-primary: rgba(147, 188, 211, 0.09);
+    --kc-page-glow-secondary: rgba(75, 112, 135, 0.09);
+    --kc-shell-bg: #1d2a32;
+    --kc-footer-bg: rgba(29, 42, 50, 0.65);
+    --kc-primary: #467a98;
+    --kc-primary-border: #365f77;
+}
+
+:root[data-theme="night"] {
+    --kc-page-bg-start: #171923;
+    --kc-page-bg-end: #08090e;
+    --kc-page-glow-primary: rgba(104, 91, 190, 0.10);
+    --kc-page-glow-secondary: rgba(54, 65, 126, 0.10);
+    --kc-shell-bg: #141625;
+    --kc-footer-bg: rgba(20, 22, 37, 0.70);
+    --kc-primary: #4f579e;
+    --kc-primary-border: #3c437c;
+}
+
+html,
+body {
+    background: radial-gradient(circle at 30% 20%, var(--kc-page-glow-primary), transparent 25%),
+                radial-gradient(circle at 70% 80%, var(--kc-page-glow-secondary), transparent 35%),
+                linear-gradient(180deg, var(--kc-page-bg-start), var(--kc-page-bg-end));
+}
+
+header {
+    background-color: var(--kc-shell-bg);
+}
+
+footer {
+    background-color: var(--kc-footer-bg);
+}
+
+.btn-primary {
+    background-color: var(--kc-primary);
+    border-color: var(--kc-primary-border);
+}
