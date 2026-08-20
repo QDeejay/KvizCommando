@@ -34,15 +34,31 @@
                 hidden
                 @onclick="OpenCurrentHelpAsync">
         </button>
-        <AppHeader DisplayName="@_appState.Home!.UserMainData.UserName"
-                lclRow1="@Ui.Lang["mainlayout.Bootstrap.Label.Profile"]"
-                lclRow2="@Ui.Lang["mainlayout.Bootstrap.Label.Settings"]"
-                lclRow3="@Ui.Lang["mainlayout.Bootstrap.Label.Help"]"
-                lclLogout="@Ui.Lang["mainlayout.Bootstrap.Label.Logout"]"
-                OnProfile="OpenProfileAsync"
-                OnSettings="OpenSettingsAsync"
-                OnHelp="OpenHelpAsync"
-                OnLogout="Logout" />
+        <button id="kc-settings-trigger"
+                type="button"
+                hidden
+                disabled="@IsFullScreenGame"
+                @onclick="OpenSettingsAsync">
+        </button>
+        <button id="kc-profile-trigger"
+                type="button"
+                hidden
+                disabled="@IsFullScreenGame"
+                @onclick="OpenProfileAsync">
+        </button>
+
+        @if (!IsFullScreenGame)
+        {
+            <AppHeader DisplayName="@_appState.Home!.UserMainData.UserName"
+                    lclRow1="@Ui.Lang["mainlayout.Bootstrap.Label.Profile"]"
+                    lclRow2="@Ui.Lang["mainlayout.Bootstrap.Label.Settings"]"
+                    lclRow3="@Ui.Lang["mainlayout.Bootstrap.Label.Help"]"
+                    lclLogout="@Ui.Lang["mainlayout.Bootstrap.Label.Logout"]"
+                    OnProfile="OpenProfileAsync"
+                    OnSettings="OpenSettingsAsync"
+                    OnHelp="OpenHelpAsync"
+                    OnLogout="Logout" />
+        }
     }
     else
     {

@@ -54,15 +54,19 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
         if (_showHelp)
             return;
 
-        var helpKey = Ui.Header.PageIndex;
+        var helpKey = HelpCollection.ResolvePackageKey(
+            Ui.Header.PageIndex);
 
-        if (!HelpCollection.Packages.ContainsKey(helpKey) ||
-            AppStates.LocStoreStates.SeenHelps.Contains(helpKey))
+        if (!helpKey.HasValue ||
+            AppStates.LocStoreStates.SeenHelps.Contains(helpKey.Value))
         {
             return;
         }
 
-        await LoadPackageAsync(helpKey, showNavigation: false, isAutomatic: true);
+        await LoadPackageAsync(
+            helpKey.Value,
+            showNavigation: false,
+            isAutomatic: true);
     }
 
     /// <summary>
@@ -93,12 +97,20 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
             return;
         }
 
-        var helpKey = Ui.Header.PageIndex;
+        var helpKey = HelpCollection.ResolvePackageKey(
+            Ui.Header.PageIndex);
 
-        if (HelpCollection.Packages.ContainsKey(helpKey))
-            await LoadPackageAsync(helpKey, showNavigation: true, isAutomatic: false);
+        if (helpKey.HasValue)
+        {
+            await LoadPackageAsync(
+                helpKey.Value,
+                showNavigation: true,
+                isAutomatic: false);
+        }
         else
+        {
             await LoadLandingPageAsync();
+        }
     }
 
     private async Task LoadPackageAsync(

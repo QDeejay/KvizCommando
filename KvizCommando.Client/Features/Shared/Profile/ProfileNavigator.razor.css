@@ -163,6 +163,11 @@
     outline: none;
 }
 
+.kc-profile-check-button:disabled,
+.kc-profile-avatar-arrow:disabled {
+    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+}
+
 .kc-profile-validation {
     min-height: 38px;
     margin: 9px 0 0 38px;
@@ -192,12 +197,7 @@
     position: relative;
     width: min(100%, 276px);
     aspect-ratio: 276 / 352;
-    padding: 4px;
     overflow: hidden;
-    background: #111;
-    border: inset 4px #555;
-    box-shadow: inset 6px 6px 10px rgba(0, 0, 0, .75),
-                inset -2px -2px 4px rgba(150, 150, 100, .2);
 }
 
 .kc-profile-avatar-frame img {
@@ -206,13 +206,6 @@
     display: block;
     object-fit: cover;
     object-position: center bottom;
-}
-
-.kc-profile-avatar-count {
-    margin-top: 9px;
-    color: color-mix(in srgb, var(--kc-lcd-background) 76%, white);
-    font-family: 'Share Tech Mono', monospace;
-    text-align: center;
 }
 
 .kc-profile-loading,

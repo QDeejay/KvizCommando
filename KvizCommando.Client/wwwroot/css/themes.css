@@ -15,7 +15,6 @@
     --kc-panel-glow-start: #1b291f;
     --kc-panel-glow-end: #101712;
     --kc-accent: #4b5320;
-    --kc-footer-bg: rgba(51, 51, 51, .5);
     --kc-primary: #1b6ec2;
     --kc-primary-border: #1861ac;
     --kc-lcd-background: rgba(210, 255, 57, .9);
@@ -42,7 +41,6 @@
     --kc-panel-glow-start: #303b20;
     --kc-panel-glow-end: #141a0e;
     --kc-accent: #667c35;
-    --kc-footer-bg: rgba(39, 48, 24, .65);
     --kc-primary: #667c35;
     --kc-primary-border: #52652a;
     --kc-lcd-background: rgba(193, 218, 108, .92);
@@ -69,7 +67,6 @@
     --kc-panel-glow-start: #422f1d;
     --kc-panel-glow-end: #1d140c;
     --kc-accent: #8a5e2f;
-    --kc-footer-bg: rgba(59, 43, 26, .65);
     --kc-primary: #a56d32;
     --kc-primary-border: #835426;
     --kc-lcd-background: rgba(242, 190, 82, .92);
@@ -96,7 +93,6 @@
     --kc-panel-glow-start: #283b45;
     --kc-panel-glow-end: #111b20;
     --kc-accent: #466f84;
-    --kc-footer-bg: rgba(29, 42, 50, .65);
     --kc-primary: #467a98;
     --kc-primary-border: #365f77;
     --kc-lcd-background: rgba(150, 205, 225, .92);
@@ -123,7 +119,6 @@
     --kc-panel-glow-start: #252943;
     --kc-panel-glow-end: #0d101c;
     --kc-accent: #4f579e;
-    --kc-footer-bg: rgba(20, 22, 37, .7);
     --kc-primary: #4f579e;
     --kc-primary-border: #3c437c;
     --kc-lcd-background: rgba(139, 154, 230, .9);
@@ -144,10 +139,6 @@ body {
 
 header {
     background-color: var(--kc-shell-bg);
-}
-
-footer {
-    background-color: var(--kc-footer-bg);
 }
 
 .btn-primary {

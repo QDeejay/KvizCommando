@@ -170,4 +170,33 @@ public static class HelpCollection
                 BackgroundImage = "/images/buttons/solo/orients.webp"
             }
         };
+
+    internal static int? ResolvePackageKey(int pageIndex)
+    {
+        if (Packages.ContainsKey(pageIndex))
+            return pageIndex;
+
+        if (pageIndex is > (int)SgameBoxKeyRoot.Category and
+            <= (int)SgameBoxKeyRoot.Category +
+            SoloBoxSpecs.CATEGORY_BOX_COUNT)
+        {
+            return (int)SgameBoxKeyRoot.Category;
+        }
+
+        if (pageIndex is > (int)SgameBoxKeyRoot.Orientation and
+            <= (int)SgameBoxKeyRoot.Orientation +
+            SoloBoxSpecs.ORIENTATION_BOX_COUNT)
+        {
+            return (int)SgameBoxKeyRoot.Orientation;
+        }
+
+        if (pageIndex is > (int)VsBoxKeyRanked.Classification and
+            <= (int)VsBoxKeyRanked.Classification +
+            VsGameBoxSpecs.CLASSIFICATION_BOX_COUNT)
+        {
+            return (int)VsBoxKeyRoot.RankedBattlefields;
+        }
+
+        return null;
+    }
 }

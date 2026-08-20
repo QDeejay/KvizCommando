@@ -12,11 +12,17 @@
 };
 
 document.addEventListener("keydown", (event) => {
-    if (event.key !== "F1") return;
+    const triggerId = {
+        F1: "kc-help-trigger",
+        F2: "kc-settings-trigger",
+        F3: "kc-profile-trigger"
+    }[event.key];
 
-    const helpTrigger = document.getElementById("kc-help-trigger");
-    if (!helpTrigger) return;
+    if (!triggerId) return;
+
+    const trigger = document.getElementById(triggerId);
+    if (!trigger) return;
 
     event.preventDefault();
-    helpTrigger.click();
+    trigger.click();
 });
