@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Title" xml:space="preserve"><value>Profil</value></data>
+  <data name="Navigation" xml:space="preserve"><value>Profil menü</value></data>
+  <data name="Section.Team" xml:space="preserve"><value>Csapat</value></data>
+  <data name="Loading" xml:space="preserve"><value>Profil betöltése...</value></data>
+  <data name="Error.Load" xml:space="preserve"><value>A profil nem tölthető be.</value></data>
+  <data name="Error.Request" xml:space="preserve"><value>A művelet nem hajtható végre.</value></data>
+  <data name="Footer" xml:space="preserve"><value>A módosítások mentés után lépnek életbe.</value></data>
+  <data name="Button.Close" xml:space="preserve"><value>Bezárás</value></data>
+  <data name="TeamName.Title" xml:space="preserve"><value>Csapatnév</value></data>
+  <data name="TeamName.Label" xml:space="preserve"><value>Új csapatnév</value></data>
+  <data name="TeamName.Check" xml:space="preserve"><value>Csapatnév ellenőrzése</value></data>
+  <data name="TeamName.Save" xml:space="preserve"><value>Csapatnév mentése</value></data>
+  <data name="TeamName.RequiredRank" xml:space="preserve"><value>Csapat módosításához szükséges szint: {0}</value></data>
+  <data name="TeamName.NextChange" xml:space="preserve"><value>A csapatnév legközelebb ekkor módosítható: {0}</value></data>
+  <data name="TeamName.ChangeAvailable" xml:space="preserve"><value>A csapatnév módosítható. Mentés előtt ellenőrizd a nevet.</value></data>
+  <data name="TeamName.SaveSuccess" xml:space="preserve"><value>A csapatnév mentése sikerült.</value></data>
+  <data name="TeamName.State.NotChecked" xml:space="preserve"><value>A név még nincs ellenőrizve.</value></data>
+  <data name="TeamName.State.Available" xml:space="preserve"><value>A név szabad és megfelel a szabályoknak.</value></data>
+  <data name="TeamName.State.Required" xml:space="preserve"><value>Adj meg csapatnevet.</value></data>
+  <data name="TeamName.State.TooShort" xml:space="preserve"><value>A csapatnév legalább 3 karakter legyen.</value></data>
+  <data name="TeamName.State.TooLong" xml:space="preserve"><value>A csapatnév legfeljebb 20 karakter lehet.</value></data>
+  <data name="TeamName.State.InvalidCharacters" xml:space="preserve"><value>Csak betű, szám, kötőjel és aláhúzásjel használható.</value></data>
+  <data name="TeamName.State.Taken" xml:space="preserve"><value>Ez a csapatnév már foglalt.</value></data>
+  <data name="Avatar.Title" xml:space="preserve"><value>Kapitány avatar</value></data>
+  <data name="Avatar.RequiredRank" xml:space="preserve"><value>Avatar módosításához szükséges szint: {0}</value></data>
+  <data name="Avatar.ChangeAvailable" xml:space="preserve"><value>Az avatar korlátozás nélkül módosítható.</value></data>
+  <data name="Avatar.Previous" xml:space="preserve"><value>Előző avatar</value></data>
+  <data name="Avatar.Next" xml:space="preserve"><value>Következő avatar</value></data>
+  <data name="Avatar.Preview" xml:space="preserve"><value>Kiválasztott kapitány avatar</value></data>
+  <data name="Avatar.Save" xml:space="preserve"><value>Avatar mentése</value></data>
+  <data name="Avatar.SaveSuccess" xml:space="preserve"><value>Az avatar mentése sikerült.</value></data>
+  <data name="SaveState.RankLocked" xml:space="preserve"><value>A szükséges szintet még nem érted el.</value></data>
+  <data name="SaveState.CooldownActive" xml:space="preserve"><value>A csapatnév 30 napos módosítási ideje még nem telt le.</value></data>
+  <data name="SaveState.SameValue" xml:space="preserve"><value>Nem történt módosítás.</value></data>
+  <data name="SaveState.TeamNameRejected" xml:space="preserve"><value>A csapatnév nem menthető.</value></data>
+  <data name="SaveState.InvalidAvatar" xml:space="preserve"><value>Érvénytelen avatar.</value></data>
+  <data name="SaveState.SessionMismatch" xml:space="preserve"><value>A munkamenet megváltozott. Jelentkezz be újra.</value></data>
+  <data name="SaveState.NotFound" xml:space="preserve"><value>A játékosprofil nem található.</value></data>
+  <data name="SaveState.ServerError" xml:space="preserve"><value>Szerverhiba történt a mentés közben.</value></data>
+</root>

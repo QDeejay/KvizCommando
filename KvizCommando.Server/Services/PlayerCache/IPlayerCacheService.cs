@@ -8,6 +8,12 @@
         /// </summary>
         IReadOnlyCollection<int> GetActivePlayerIds();
         /// <summary>
+        /// Ellenőrzi a cache-ben élő, akár még ki nem írt normalizált csapatneveket.
+        /// </summary>
+        bool IsNormalizedTeamNameInUse(
+            string normalizedTeamName,
+            int excludedPlayerId);
+        /// <summary>
         /// A játékoslock alatt visszaadja vagy adatbázisból betölti a cache-bejegyzést.
         /// </summary>
         /// <param name="playerId">A játékos adatbázis-azonosítója.</param>

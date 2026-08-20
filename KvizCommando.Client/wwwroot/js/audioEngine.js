@@ -53,7 +53,7 @@
 
             if (helpControl !== null) {
                 if (!isDisabledControl(helpControl))
-                    playSfx(clickSfxPath);
+                    playSfxInternal(uiTouchSfxPath, false);
 
                 return;
             }
@@ -61,7 +61,8 @@
             const uiControl = source.closest(
                 ".kc-lcd-surface button, button.kc-lcd-surface, " +
                 ".button-on-lcd, .button-on-lcd--text, .navigation-button, " +
-                ".app-header .dropdown-item, .htp-tab, .kc-back-button");
+                ".app-header .dropdown-item, .htp-tab, .kc-back-button, " +
+                ".kc-profile-window button, .kc-profile-window [role='button']");
 
             if (uiControl === null || isDisabledControl(uiControl))
                 return;

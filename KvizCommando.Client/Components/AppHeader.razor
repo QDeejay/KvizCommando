@@ -14,7 +14,7 @@
 
         <ul id="userMenu" class="dropdown-menu dropdown-menu-end">
             <li><h6 class="dropdown-header">@DisplayName</h6></li>
-            <li><a class="dropdown-item" href="/profile">@lclRow1</a></li>
+            <li><button type="button" class="dropdown-item" @onclick="OnProfile">@lclRow1</button></li>
             <li><button type="button" class="dropdown-item" @onclick="OnSettings">@lclRow2</button></li>
             <li><button type="button" class="dropdown-item" @onclick="OnHelp">@lclRow3</button></li>
             <li><hr class="dropdown-divider" /></li>

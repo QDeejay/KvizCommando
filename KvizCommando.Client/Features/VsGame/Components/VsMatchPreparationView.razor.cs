@@ -106,6 +106,10 @@ public partial class VsMatchPreparationView : IDisposable
             ? Lang["vsgame.Match.Title.Preparation"]
             : Data.InfoText;
 
+    private string CaptainAvatarCode =>
+        Data.Players.FirstOrDefault(player => player.IsMe)?.TeamPictureCode ??
+        "1";
+
     private string InventoryTitle => Data.Phase switch
     {
         VsMatchPhase.PreparationOrder =>

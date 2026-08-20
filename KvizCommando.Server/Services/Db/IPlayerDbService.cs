@@ -69,6 +69,13 @@ namespace KvizCommando.Server.Services.Db
             string teamname,
             CancellationToken ct);
         /// <summary>
+        /// Ellenőrzi, hogy a normalizált csapatnév más játékos tartós adatai között szerepel-e.
+        /// </summary>
+        Task<bool> IsNormalizedTeamNameTakenAsync(
+            string normalizedTeamName,
+            int excludedPlayerId,
+            CancellationToken ct = default);
+        /// <summary>
         /// Szabad játékosnevet javasol a külső szolgáltatótól kapott név alapján.
         /// </summary>
         /// <param name="rawName">A névjavaslat kiinduló értéke, amely hiányozhat.</param>

@@ -106,7 +106,7 @@ partial class SoloGameManager
                 OrientationName = OrientationLocalizer.GetOrientation(
                     9,
                     Culture),
-                ImageSrc = "images/avatars/basic.webp"
+                CaptainAvatar = UserData.CaptainAvatar
             };
         }
 

@@ -40,8 +40,8 @@
                         @if (round.IsCaptainRound)
                         {
                             <div class="kc-vs-prep-captain-picture">
-                                <img src="images/avatars/basic.webp"
-                                     alt="@Lang["vsgame.Match.Round.Captain"]" />
+                                <CaptainAvatarView AvatarCode="@CaptainAvatarCode"
+                                                   Alt="@Lang["vsgame.Match.Round.Captain"]" />
                             </div>
                         }
                         else

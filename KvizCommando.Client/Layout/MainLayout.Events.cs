@@ -101,6 +101,8 @@ namespace KvizCommando.Client.Layout
         }
         private Task OpenHelpAsync() =>
             _helpNavigator?.ShowManualAsync() ?? Task.CompletedTask;
+        private Task OpenProfileAsync() =>
+            _profileNavigator?.ShowAsync() ?? Task.CompletedTask;
         private Task OpenSettingsAsync() =>
             _settingsNavigator?.ShowAsync() ?? Task.CompletedTask;
         private Task OpenCurrentHelpAsync() =>
@@ -108,5 +110,8 @@ namespace KvizCommando.Client.Layout
 
         private Task OnRefreshRequired(ReqStates[] reqTypes) =>
             InitStatesAsync(reqTypes);
+
+        private Task RefreshProfileAsync() =>
+            InitStatesAsync(ReqStates.Home);
     }
 }

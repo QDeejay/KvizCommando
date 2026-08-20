@@ -1,0 +1,143 @@
+@inherits Utilities.KcComponentBase
+@using KvizCommando.Shared.Models.Rules
+@using KvizCommando.Client.Components.CharacterComponent
+
+@if (_isOpen)
+{
+    <div class="kc-profile-backdrop">
+        <section class="kc-profile-window kc-window-shell"
+                 role="dialog"
+                 aria-modal="true"
+                 aria-labelledby="kc-profile-title">
+            <header class="kc-profile-header kc-window-header">
+                <div>
+                    <span class="kc-profile-kicker">KCV // PLAYER PROFILE</span>
+                    <h2 id="kc-profile-title" class="kc-window-title">@Text("Title")</h2>
+                </div>
+                <button type="button"
+                        class="kc-window-close"
+                        aria-label="@Text("Button.Close")"
+                        @onclick="Close">
+                    ×
+                </button>
+            </header>
+
+            <div class="kc-profile-main">
+                <aside class="kc-profile-navigation" aria-label="@Text("Navigation")">
+                    <div class="kc-profile-navigation-title">@Text("Navigation")</div>
+                    <nav>
+                        <button type="button"
+                                class="kc-profile-nav-button active"
+                                aria-current="page">
+                            <span aria-hidden="true">▶</span>
+                            <span>@Text("Section.Team")</span>
+                        </button>
+                    </nav>
+                </aside>
+
+                <div class="kc-profile-content kc-window-body kc-themed-window-content">
+                    @if (_isLoading)
+                    {
+                        <div class="kc-profile-loading" role="status">
+                            @Text("Loading")
+                        </div>
+                    }
+                    else if (_profile is null)
+                    {
+                        <div class="kc-profile-error" role="alert">
+                            @Text("Error.Load")
+                        </div>
+                    }
+                    else
+                    {
+                        <section class="kc-profile-team-name" aria-labelledby="kc-profile-team-name-title">
+                            <h3 id="kc-profile-team-name-title">@Text("TeamName.Title")</h3>
+                            <p class="kc-profile-rule-message">@TeamNameRuleText</p>
+
+                            <label for="kc-profile-team-name-input">@Text("TeamName.Label")</label>
+                            <div class="kc-profile-name-row">
+                                <span class="kc-profile-name-status @TeamNameStatusClass"
+                                      aria-label="@TeamNameStatusText">
+                                    @TeamNameStatusSymbol
+                                </span>
+                                <input id="kc-profile-team-name-input"
+                                       class="lcd-input kc-profile-name-input"
+                                       value="@_teamNameDraft"
+                                       maxlength="@PublicNameRules.NAME_MAX_LENGTH"
+                                       disabled="@(!CanEditTeamName || _isTeamNameBusy)"
+                                       @oninput="OnTeamNameInput" />
+                                <button type="button"
+                                        class="kc-profile-check-button"
+                                        disabled="@(!CanEditTeamName || _isTeamNameBusy)"
+                                        aria-label="@Text("TeamName.Check")"
+                                        title="@Text("TeamName.Check")"
+                                        @onclick="CheckTeamNameAsync">
+                                    <i class="bi bi-binoculars-fill" aria-hidden="true"></i>
+                                </button>
+                            </div>
+
+                            <p class="kc-profile-validation @TeamNameStatusClass"
+                               role="status">
+                                @TeamNameStatusText
+                            </p>
+
+                            <div class="kc-profile-actions">
+                                <button type="button"
+                                        class="military-button"
+                                        disabled="@(!CanSaveTeamName)"
+                                        @onclick="SaveTeamNameAsync">
+                                    @Text("TeamName.Save")
+                                </button>
+                            </div>
+                        </section>
+
+                        <section class="kc-profile-avatar" aria-labelledby="kc-profile-avatar-title">
+                            <h3 id="kc-profile-avatar-title">@Text("Avatar.Title")</h3>
+                            <p class="kc-profile-rule-message">@AvatarRuleText</p>
+
+                            <div class="kc-profile-avatar-picker">
+                                <button type="button"
+                                        class="kc-profile-avatar-arrow"
+                                        disabled="@(!CanEditAvatar || _isAvatarBusy)"
+                                        aria-label="@Text("Avatar.Previous")"
+                                        @onclick="PreviousAvatar">
+                                    ◀
+                                </button>
+
+                           
+
+                                <button type="button"
+                                        class="kc-profile-avatar-arrow"
+                                        disabled="@(!CanEditAvatar || _isAvatarBusy)"
+                                        aria-label="@Text("Avatar.Next")"
+                                        @onclick="NextAvatar">
+                                    ▶
+                                </button>
+                            </div>
+
+                            <div class="kc-profile-avatar-count">
+                                @_avatarDraft / @_profile.AvatarCount
+                            </div>
+
+                            <div class="kc-profile-actions">
+                                <button type="button"
+                                        class="military-button"
+                                        disabled="@(!CanSaveAvatar)"
+                                        @onclick="SaveAvatarAsync">
+                                    @Text("Avatar.Save")
+                                </button>
+                            </div>
+                        </section>
+                    }
+                </div>
+            </div>
+
+            <footer class="kc-profile-footer kc-window-footer">
+                <span>@Text("Footer")</span>
+                <button type="button" class="military-button" @onclick="Close">
+                    @Text("Button.Close")
+                </button>
+            </footer>
+        </section>
+    </div>
+}

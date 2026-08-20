@@ -17,6 +17,11 @@
                         <CharacterView PicCode="@Data.Player.PictureCode" />
                     </div>
                 }
+                else if (!string.IsNullOrWhiteSpace(Data.Player.CaptainAvatar))
+                {
+                    <CaptainAvatarView AvatarCode="@Data.Player.CaptainAvatar"
+                                       Alt="@Data.Player.Name" />
+                }
                 else if (!string.IsNullOrWhiteSpace(Data.Player.ImageSrc))
                 {
                     <img class="kc-solo-player-image"

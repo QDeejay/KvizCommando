@@ -1,6 +1,7 @@
 ﻿@using KvizCommando.Client.Services
 @using KvizCommando.Client.Features.Shared.Help
 @using KvizCommando.Client.Features.Shared.Modal;
+@using KvizCommando.Client.Features.Shared.Profile
 @using KvizCommando.Client.Features.Shared.Settings
 
 
@@ -22,6 +23,9 @@
     if (_isLoggedIn)
     {
         <HelpNavigator @ref="_helpNavigator" AppStates="@_appState" />
+        <ProfileNavigator @ref="_profileNavigator"
+                          AppStates="@_appState"
+                          OnProfileChanged="RefreshProfileAsync" />
         <SettingsNavigator @ref="_settingsNavigator"
                            AppStates="@_appState"
                            OnSettingsChanged="Refresh" />
@@ -35,6 +39,7 @@
                 lclRow2="@Ui.Lang["mainlayout.Bootstrap.Label.Settings"]"
                 lclRow3="@Ui.Lang["mainlayout.Bootstrap.Label.Help"]"
                 lclLogout="@Ui.Lang["mainlayout.Bootstrap.Label.Logout"]"
+                OnProfile="OpenProfileAsync"
                 OnSettings="OpenSettingsAsync"
                 OnHelp="OpenHelpAsync"
                 OnLogout="Logout" />

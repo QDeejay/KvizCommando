@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Title" xml:space="preserve"><value>Profile</value></data>
+  <data name="Navigation" xml:space="preserve"><value>Profile menu</value></data>
+  <data name="Section.Team" xml:space="preserve"><value>Team</value></data>
+  <data name="Loading" xml:space="preserve"><value>Loading profile...</value></data>
+  <data name="Error.Load" xml:space="preserve"><value>The profile could not be loaded.</value></data>
+  <data name="Error.Request" xml:space="preserve"><value>The operation could not be completed.</value></data>
+  <data name="Footer" xml:space="preserve"><value>Changes take effect after saving.</value></data>
+  <data name="Button.Close" xml:space="preserve"><value>Close</value></data>
+  <data name="TeamName.Title" xml:space="preserve"><value>Team name</value></data>
+  <data name="TeamName.Label" xml:space="preserve"><value>New team name</value></data>
+  <data name="TeamName.Check" xml:space="preserve"><value>Check team name</value></data>
+  <data name="TeamName.Save" xml:space="preserve"><value>Save team name</value></data>
+  <data name="TeamName.RequiredRank" xml:space="preserve"><value>Level required to change the team: {0}</value></data>
+  <data name="TeamName.NextChange" xml:space="preserve"><value>The team name can next be changed at: {0}</value></data>
+  <data name="TeamName.ChangeAvailable" xml:space="preserve"><value>The team name can be changed. Check it before saving.</value></data>
+  <data name="TeamName.SaveSuccess" xml:space="preserve"><value>The team name was saved.</value></data>
+  <data name="TeamName.State.NotChecked" xml:space="preserve"><value>The name has not been checked yet.</value></data>
+  <data name="TeamName.State.Available" xml:space="preserve"><value>The name is available and meets the rules.</value></data>
+  <data name="TeamName.State.Required" xml:space="preserve"><value>Enter a team name.</value></data>
+  <data name="TeamName.State.TooShort" xml:space="preserve"><value>The team name must contain at least 3 characters.</value></data>
+  <data name="TeamName.State.TooLong" xml:space="preserve"><value>The team name can contain at most 20 characters.</value></data>
+  <data name="TeamName.State.InvalidCharacters" xml:space="preserve"><value>Use letters, numbers, hyphens and underscores only.</value></data>
+  <data name="TeamName.State.Taken" xml:space="preserve"><value>This team name is already taken.</value></data>
+  <data name="Avatar.Title" xml:space="preserve"><value>Captain avatar</value></data>
+  <data name="Avatar.RequiredRank" xml:space="preserve"><value>Level required to change the avatar: {0}</value></data>
+  <data name="Avatar.ChangeAvailable" xml:space="preserve"><value>The avatar can be changed without a cooldown.</value></data>
+  <data name="Avatar.Previous" xml:space="preserve"><value>Previous avatar</value></data>
+  <data name="Avatar.Next" xml:space="preserve"><value>Next avatar</value></data>
+  <data name="Avatar.Preview" xml:space="preserve"><value>Selected captain avatar</value></data>
+  <data name="Avatar.Save" xml:space="preserve"><value>Save avatar</value></data>
+  <data name="Avatar.SaveSuccess" xml:space="preserve"><value>The avatar was saved.</value></data>
+  <data name="SaveState.RankLocked" xml:space="preserve"><value>You have not reached the required level yet.</value></data>
+  <data name="SaveState.CooldownActive" xml:space="preserve"><value>The 30-day team-name cooldown has not expired yet.</value></data>
+  <data name="SaveState.SameValue" xml:space="preserve"><value>Nothing was changed.</value></data>
+  <data name="SaveState.TeamNameRejected" xml:space="preserve"><value>The team name cannot be saved.</value></data>
+  <data name="SaveState.InvalidAvatar" xml:space="preserve"><value>Invalid avatar.</value></data>
+  <data name="SaveState.SessionMismatch" xml:space="preserve"><value>The session has changed. Sign in again.</value></data>
+  <data name="SaveState.NotFound" xml:space="preserve"><value>The player profile could not be found.</value></data>
+  <data name="SaveState.ServerError" xml:space="preserve"><value>A server error occurred while saving.</value></data>
+</root>

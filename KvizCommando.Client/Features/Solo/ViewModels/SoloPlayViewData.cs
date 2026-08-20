@@ -18,6 +18,7 @@ namespace KvizCommando.Client.Features.Solo.ViewModels
         public string Level { get; init; } = string.Empty;
         public string OrientationName { get; init; } = string.Empty;
         public string PictureCode { get; init; } = string.Empty;
+        public string CaptainAvatar { get; init; } = string.Empty;
         public string ImageSrc { get; init; } = string.Empty;
         public int? SoloBestScore { get; set; }
     }

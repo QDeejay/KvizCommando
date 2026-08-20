@@ -136,6 +136,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                 PlayerId = playerId,
                 UserName = player.Core.DisplayName,
                 TeamName = player.Core.TeamName,
+                CaptainAvatar = player.Core.CaptainAvatar,
                 RankEnum = player.Core.RankEnum,
                 XP = player.Core.XP,
                 Credit = player.Core.Credit,

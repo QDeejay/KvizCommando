@@ -1,4 +1,5 @@
 using KvizCommando.Client.Features.Question.Services;
+using KvizCommando.Client.Features.Shared.Profile;
 using KvizCommando.Client.Features.Solo.Services;
 using KvizCommando.Client.Features.Team.Services;
 using KvizCommando.Client.Features.VsGame.Services;
@@ -19,6 +20,7 @@ public static class ClientApiServiceExtensions
         this IServiceCollection services)
     {
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IProfileClientService, ProfileClientService>();
         services.AddScoped<ICacheApiService, CacheApiService>();
         services.AddScoped<IQuestionClientService, QuestionClientService>();
         services.AddScoped<ISoloGameClientService, SoloGameClientService>();

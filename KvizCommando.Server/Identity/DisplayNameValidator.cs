@@ -1,6 +1,5 @@
 ﻿#nullable enable
-using System.Collections.Generic;
-using System.Linq;
+using KvizCommando.Shared.Models.Rules;
 
 namespace KvizCommando.Server.Identity
 {
@@ -17,32 +16,19 @@ namespace KvizCommando.Server.Identity
         /// <param name="displayName">A menteni kívánt nyilvános játékosnév.</param>
         public static IReadOnlyList<string> Validate(string? displayName)
         {
-            var errors = new List<string>();
-
-            if (string.IsNullOrWhiteSpace(displayName))
+            return PublicNameRules.Validate(displayName) switch
             {
-                errors.Add(IdentityErrorCodes.DISPLAY_NAME_REQUIRED);
-                return errors;
-            }
-
-            var name = displayName.Trim();
-
-            if (name.Length < CheckInValidationOptions.DISPLAY_NAME_MIN_LENGTH)
-                errors.Add(IdentityErrorCodes.DISPLAY_NAME_TOO_SHORT);
-
-            if (name.Length > CheckInValidationOptions.DISPLAY_NAME_MAX_LENGTH)
-                errors.Add(IdentityErrorCodes.DISPLAY_NAME_TOO_LONG);
-
-            // Karakterkészlet ellenőrzése (csak az engedélyezett készletből származhat minden karakter).
-            // Az engedélyezett készlet jelenleg ASCII; Unicode támogatásakor a validációs szabályt is bővíteni kell.
-            if (!string.IsNullOrEmpty(CheckInValidationOptions.DISPLAY_NAME_ALLOWED_CHARS))
-            {
-                var allowed = CheckInValidationOptions.DISPLAY_NAME_ALLOWED_CHARS.ToHashSet();
-                if (name.Any(ch => !allowed.Contains(ch)))
-                    errors.Add(IdentityErrorCodes.DISPLAY_NAME_INVALID_CHARACTERS);
-            }
-
-            return errors;
+                PublicNameValidationResult.Valid => [],
+                PublicNameValidationResult.Required =>
+                    [IdentityErrorCodes.DISPLAY_NAME_REQUIRED],
+                PublicNameValidationResult.TooShort =>
+                    [IdentityErrorCodes.DISPLAY_NAME_TOO_SHORT],
+                PublicNameValidationResult.TooLong =>
+                    [IdentityErrorCodes.DISPLAY_NAME_TOO_LONG],
+                PublicNameValidationResult.InvalidCharacters =>
+                    [IdentityErrorCodes.DISPLAY_NAME_INVALID_CHARACTERS],
+                _ => [IdentityErrorCodes.DISPLAY_NAME_INVALID_CHARACTERS]
+            };
         }
     }
 }

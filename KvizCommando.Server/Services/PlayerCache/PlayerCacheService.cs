@@ -25,6 +25,17 @@ namespace KvizCommando.Server.Services.PlayerCache
         public IReadOnlyCollection<int> GetActivePlayerIds()
             => _entries.Keys.ToList();
 
+        /// <inheritdoc />
+        public bool IsNormalizedTeamNameInUse(
+            string normalizedTeamName,
+            int excludedPlayerId) =>
+            _entries.Any(entry =>
+                entry.Key != excludedPlayerId &&
+                string.Equals(
+                    entry.Value.Player.Core.NormalizedTeamName,
+                    normalizedTeamName,
+                    StringComparison.Ordinal));
+
         private async Task<CacheEntry?> GetOrCreateEntryAsync(
             int playerId,
             string sessionId,

@@ -21,8 +21,7 @@ partial class VsMatchViewBuilder
             TeamLevel =
                 RankNameTable.Data[player.TeamLevel].PublicLevel ??
                 string.Empty,
-            TeamPictureSrc =
-                "images/avatars/basic.webp",
+            TeamPictureCode = player.TeamPictureCode,
             IsMe = player.IsMe,
             IsConnected = player.IsConnected,
             IsBot = player.IsBot,

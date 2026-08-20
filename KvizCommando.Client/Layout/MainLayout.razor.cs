@@ -4,6 +4,7 @@ using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Shared.Help;
 using KvizCommando.Client.Features.Shared.Modal;
 using KvizCommando.Client.Features.Shared.Modal.Builders;
+using KvizCommando.Client.Features.Shared.Profile;
 using KvizCommando.Client.Features.Shared.Settings;
 using KvizCommando.Client.Features.Solo.Builders;
 using KvizCommando.Client.Features.VsGame.Builders;
@@ -42,6 +43,7 @@ namespace KvizCommando.Client.Layout
         private readonly AppState _appState = new();
 
         private HelpNavigator? _helpNavigator;
+        private ProfileNavigator? _profileNavigator;
         private SettingsNavigator? _settingsNavigator;
         private KcModal? _mainModal;
 

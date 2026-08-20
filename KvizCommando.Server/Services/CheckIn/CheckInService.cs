@@ -6,7 +6,6 @@ using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.VsGame.Match;
 using KvizCommando.Server.Services.VsGame.Matchmaking;
 using KvizCommando.Shared.Contracts.CheckIn;          // CheckInGetResponse, CheckInPostRequest
-using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Server.Services.CheckIn
 {
@@ -20,7 +19,6 @@ namespace KvizCommando.Server.Services.CheckIn
         private readonly IPlayerDbService _playerDb;
         private readonly ITermsProvider _termsProvider;
         private readonly ILogger<CheckInService> _logger;
-        private readonly IStringLocalizer<CheckInService> _localizer;
         private readonly IPlayerCacheService _cacheService;
         private readonly IClaimsSyncService _claimsSync;
         private readonly IVsRankedQueueService _rankedQueue;
@@ -31,7 +29,6 @@ namespace KvizCommando.Server.Services.CheckIn
             ITermsProvider termsProvider,
             ILogger<CheckInService> logger,
             IPlayerCacheService cacheService,
-            IStringLocalizer<CheckInService> localizer,
             IClaimsSyncService claimsSync,
             IVsRankedQueueService rankedQueue,
             IVsMatchService vsMatch)
@@ -40,7 +37,6 @@ namespace KvizCommando.Server.Services.CheckIn
             _playerDb = playerdb;
             _termsProvider = termsProvider;
             _logger = logger;
-            _localizer = localizer;
             _claimsSync = claimsSync;
             _cacheService = cacheService;
             _rankedQueue = rankedQueue;
@@ -159,7 +155,7 @@ namespace KvizCommando.Server.Services.CheckIn
             if (providedName != null && needsDisplayName == true)
             {
                 var displayName = providedName;
-                var teamName = providedName + _localizer["team.Append"];
+                var teamName = providedName;
 
                 if (playerId == 0)
                 {

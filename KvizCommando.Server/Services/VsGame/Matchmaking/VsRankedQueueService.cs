@@ -373,6 +373,7 @@ public sealed partial class VsRankedQueueService :
                     ClassificationId = rule.ClassificationId,
                     DisplayName = player.Core.DisplayName,
                     TeamName = player.Core.TeamName,
+                    CaptainAvatar = player.Core.CaptainAvatar,
                     TeamLevel = player.Core.RankEnum,
                     ResponseTimeMilliseconds =
                         responseTimeMilliseconds,
@@ -500,6 +501,7 @@ public sealed partial class VsRankedQueueService :
                                 Position = index + 1,
                                 DisplayName = entry.DisplayName,
                                 TeamName = entry.TeamName,
+                                TeamPictureCode = entry.CaptainAvatar,
                                 TeamLevel = entry.TeamLevel,
                                 ResponseTimeMilliseconds =
                                     entry.ResponseTimeMilliseconds,

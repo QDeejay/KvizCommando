@@ -333,6 +333,10 @@ namespace KvizCommando.Server.Services.Db
                     Credit = 0,
                     DisplayName = displayname,
                     TeamName = teamname,
+                    NormalizedTeamName =
+                        _normalizer.NormalizeName(teamname) ??
+                        teamname.ToUpperInvariant(),
+                    CaptainAvatar = "1",
                     CreatedUtc = now,
                     UpdatedUtc = now
                 };
@@ -409,6 +413,18 @@ namespace KvizCommando.Server.Services.Db
             }
 
         }
+
+        /// <inheritdoc />
+        public Task<bool> IsNormalizedTeamNameTakenAsync(
+            string normalizedTeamName,
+            int excludedPlayerId,
+            CancellationToken ct = default) =>
+            _db.Set<Player>()
+                .AsNoTracking()
+                .AnyAsync(player =>
+                    player.PlayerId != excludedPlayerId &&
+                    player.NormalizedTeamName == normalizedTeamName,
+                    ct);
 
         /// <inheritdoc />
         public async Task<string> SuggestAsync(string? rawName, CancellationToken ct = default)

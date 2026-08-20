@@ -2,6 +2,7 @@ using KvizCommando.Server.Services;
 using KvizCommando.Server.Services.DtoMapping;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.Players;
+using KvizCommando.Server.Services.Profile;
 using KvizCommando.Server.Services.SoloGame;
 using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
 using KvizCommando.Server.Services.SoloGame.GameCache;
@@ -23,6 +24,7 @@ public static class KvizCommandoGameplayExtensions
         this IServiceCollection services)
     {
         services.AddScoped<IPlayerService, PlayerService>();
+        services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<IPlayerCacheService, PlayerCacheService>();
         services.AddScoped<IUserPlayerIdCacheService, UserPlayerIdCacheService>();
 

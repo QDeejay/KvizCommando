@@ -73,6 +73,7 @@ public sealed class VsMatchSetupService
 
                 player.DisplayName = seed.DisplayName;
                 player.TeamName = seed.TeamName;
+                player.TeamPictureCode = seed.CaptainAvatar;
                 player.TeamLevel = seed.TeamLevel;
                 player.TeamXp = seed.TeamXp;
                 player.Characters = seed.Characters;
@@ -189,6 +190,7 @@ public sealed class VsMatchSetupService
                     ConnectionId = matchPlayer.ConnectionId,
                     DisplayName = player.Core.DisplayName,
                     TeamName = player.Core.TeamName,
+                    CaptainAvatar = player.Core.CaptainAvatar,
                     TeamLevel = player.Core.RankEnum,
                     TeamXp = player.Core.XP,
                     LoadoutCategories =
