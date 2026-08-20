@@ -272,7 +272,6 @@ public partial class VsMatchPreparationView : IDisposable
         if (!Data.Preparation.CanReset)
             return;
 
-        await PlayClickAsync();
         _selectedLoadoutPosition = null;
         _selectedCategoryId = null;
         _selectedHelp = VsHelpType.None;
@@ -287,7 +286,6 @@ public partial class VsMatchPreparationView : IDisposable
             return;
         }
 
-        await PlayClickAsync();
         await OnFinish.InvokeAsync();
     }
 

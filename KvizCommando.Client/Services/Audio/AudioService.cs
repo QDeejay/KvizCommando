@@ -7,6 +7,7 @@ namespace KvizCommando.Client.Services.Audio
         private const string AUDIO_ASSET_VERSION = "2";
 
         public const string SFX_CLICK = "Click.webm";
+        public const string SFX_UI_TOUCH = "UiTouch.webm";
         public const string SFX_SELECT = "Select.webm";
         public const string SFX_HIT = "Hit.webm";
         public const string SFX_EMPTY = "Empty.webm";
@@ -20,6 +21,7 @@ namespace KvizCommando.Client.Services.Audio
         private static readonly string[] SFX_FILES =
         [
             SFX_CLICK,
+            SFX_UI_TOUCH,
             SFX_SELECT,
             SFX_HIT,
             SFX_EMPTY,

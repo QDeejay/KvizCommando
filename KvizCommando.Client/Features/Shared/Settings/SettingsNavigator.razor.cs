@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 using KvizCommando.Client.Features.Shared.Help;
 using KvizCommando.Client.Models.Settings;
+using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Settings;
 using KvizCommando.Client.Utilities;
@@ -12,6 +13,7 @@ public partial class SettingsNavigator : KcComponentBase
 {
     [Inject] private ISettingsService Settings { get; set; } = default!;
     [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
+    [Inject] private AudioService Audio { get; set; } = default!;
 
     [Parameter] public AppState AppStates { get; set; } = default!;
     [Parameter] public EventCallback OnSettingsChanged { get; set; }
@@ -56,6 +58,12 @@ public partial class SettingsNavigator : KcComponentBase
         await Settings.SaveAsync(_draft);
         _draft = Copy(Settings.Current);
         await OnSettingsChanged.InvokeAsync();
+    }
+
+    private async Task SaveSfxVolumeAsync()
+    {
+        await SaveAsync();
+        await Audio.PlaySfxAsync(AudioService.SFX_CLICK);
     }
 
     private async Task ResetHelpsAsync()

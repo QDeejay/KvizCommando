@@ -2,7 +2,11 @@
 
     let musicPlayer = null;
     const activeSfx = new Set();
+    const forcedUiSfx = new Set();
     const preloadedSfx = new Map();
+
+    const clickSfxPath = "audio/sfx/Click.webm?v=2";
+    const uiTouchSfxPath = "audio/sfx/UiTouch.webm?v=2";
 
     let currentMusicPath = null;
 
@@ -17,7 +21,7 @@
 
     function registerAudioUnlock() {
         const unlockAudio = () => {
-            const audio = new Audio("audio/sfx/Click.webm?v=2");
+            const audio = new Audio(clickSfxPath);
             audio.volume = 0;
             audio.play()
                 .then(() => {
@@ -35,6 +39,43 @@
     }
 
     registerAudioUnlock();
+
+    function registerUiClickDelegation() {
+        document.addEventListener("click", event => {
+            const source = event.target instanceof Element
+                ? event.target
+                : null;
+
+            if (source === null)
+                return;
+
+            const helpControl = source.closest(".kc-help-window button, .kc-help-window [role='button']");
+
+            if (helpControl !== null) {
+                if (!isDisabledControl(helpControl))
+                    playSfx(clickSfxPath);
+
+                return;
+            }
+
+            const uiControl = source.closest(
+                ".kc-lcd-surface button, button.kc-lcd-surface, " +
+                ".button-on-lcd, .button-on-lcd--text, .navigation-button, " +
+                ".app-header .dropdown-item, .htp-tab");
+
+            if (uiControl === null || isDisabledControl(uiControl))
+                return;
+
+            const isMasterSoundControl = uiControl.matches(".lcd-sound-control");
+            playSfxInternal(uiTouchSfxPath, isMasterSoundControl);
+        }, true);
+    }
+
+    function isDisabledControl(control) {
+        return control.matches(":disabled, .disabled, [aria-disabled='true']");
+    }
+
+    registerUiClickDelegation();
 
     async function fadeVolume(audio, start, end, duration, operationId) {
 
@@ -223,6 +264,11 @@
 
     function playSfx(path) {
 
+        playSfxInternal(path, false);
+    }
+
+    function playSfxInternal(path, forceAudible) {
+
         let sfx = preloadedSfx.get(path);
 
         if (sfx === undefined || !sfx.paused) {
@@ -234,11 +280,16 @@
             sfx.currentTime = 0;
         }
 
-        sfx.muted = masterMuted || !sfxEnabled;
+        sfx.muted = forceAudible
+            ? false
+            : masterMuted || !sfxEnabled;
         sfx.volume = sfxVolume;
-        activeSfx.add(sfx);
+        const collection = forceAudible
+            ? forcedUiSfx
+            : activeSfx;
+        collection.add(sfx);
 
-        const release = () => activeSfx.delete(sfx);
+        const release = () => collection.delete(sfx);
         sfx.onended = release;
         sfx.onerror = release;
 
@@ -257,6 +308,14 @@
         }
 
         activeSfx.clear();
+
+        for (const sfx of forcedUiSfx) {
+
+            sfx.pause();
+            sfx.currentTime = 0;
+        }
+
+        forcedUiSfx.clear();
     }
 
     function setSfxEnabled(enabled) {

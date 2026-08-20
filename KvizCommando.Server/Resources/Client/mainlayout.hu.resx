@@ -223,7 +223,7 @@
   <data name="Settings.Sound.SfxVolume" xml:space="preserve"><value>SFX hangerő</value></data>
   <data name="Settings.Appearance.Theme" xml:space="preserve"><value>Színtéma</value></data>
   <data name="Settings.Appearance.Fullscreen" xml:space="preserve"><value>Bejelentkezés után teljes képernyős mód</value></data>
-  <data name="Settings.Theme.Default" xml:space="preserve"><value>Alapértelmezett</value></data>
+  <data name="Settings.Theme.Default" xml:space="preserve"><value>Alap</value></data>
   <data name="Settings.Theme.Olive" xml:space="preserve"><value>Olive</value></data>
   <data name="Settings.Theme.Desert" xml:space="preserve"><value>Desert</value></data>
   <data name="Settings.Theme.Steel" xml:space="preserve"><value>Steel</value></data>

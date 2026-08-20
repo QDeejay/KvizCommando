@@ -29,7 +29,7 @@
 .kc-solo-reward-panel {
     min-width: 0;
     padding: 12px 14px;
-    background: rgba(17, 22, 16, .94);
+    background: var(--kc-panel-bg-end);
     border: 1px solid #55583f;
     border-radius: 7px;
     box-shadow: inset 0 0 9px rgba(0, 0, 0, .55),

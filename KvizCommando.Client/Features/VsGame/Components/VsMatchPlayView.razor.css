@@ -15,7 +15,7 @@
     overflow: hidden;
     box-sizing: border-box;
     color: #cccccc;
-    background: rgba(30, 32, 27, .96);
+    background: var(--kc-surface-bg-soft);
     border: 2px solid #151713;
     border-radius: 10px;
     box-shadow:
@@ -231,7 +231,7 @@
     justify-content: center;
     gap: 3px;
     color: #c6ef39;
-    background: rgba(17, 22, 16, .94);
+    background: var(--kc-panel-bg-end);
     border: 1px solid #777850;
     border-radius: 4px;
     box-sizing: border-box;
@@ -431,7 +431,7 @@
     justify-content: center;
     gap: 7px;
     color: #aaa99f;
-    background: rgba(17, 22, 16, .94);
+    background: var(--kc-panel-bg-end);
     border: 1px solid #55583f;
     border-radius: 4px;
     box-sizing: border-box;
@@ -621,7 +621,7 @@
     align-items: center;
     gap: 6px;
     color: #aaa99f;
-    background: rgba(17, 22, 16, .94);
+    background: var(--kc-panel-bg-end);
     border: 1px solid #55583f;
     border-radius: 4px;
     font-family: 'Share Tech Mono', monospace;
@@ -842,7 +842,7 @@
 
 .kc-vs-round-result-row {
     color: #e6e2d5;
-    background: rgba(17, 22, 16, .94);
+    background: var(--kc-panel-bg-end);
     border: 1px solid #55583f;
     border-radius: 5px;
 }
@@ -885,7 +885,7 @@
     align-items: center;
     justify-content: center;
     gap: 9px;
-    background: rgba(17, 22, 16, .94);
+    background: var(--kc-panel-bg-end);
     border: 1px solid #55583f;
     border-radius: 6px;
     overflow: hidden;

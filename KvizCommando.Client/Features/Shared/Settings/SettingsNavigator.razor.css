@@ -98,9 +98,11 @@
     min-height: 0;
     overflow: auto;
     padding: clamp(16px, 3vw, 30px);
-    background:
+    background-color: var(--kc-surface-bg);
+    background-image:
         repeating-linear-gradient(0deg, rgba(168, 180, 120, .018) 0, rgba(168, 180, 120, .018) 1px, transparent 1px, transparent 4px),
-        radial-gradient(circle at 50% 0, var(--kc-panel-glow-start), var(--kc-panel-glow-end) 70%);
+        radial-gradient(circle at 50% 0, var(--kc-panel-glow-start), transparent 68%),
+        linear-gradient(180deg, var(--kc-panel-bg-start), var(--kc-surface-bg));
     scrollbar-color: #77714f var(--kc-panel-bg-end);
 }
 
@@ -115,7 +117,7 @@
     display: block;
     padding: 18px;
     color: #c9c9bd;
-    background: var(--kc-surface-bg-soft);
+    background: linear-gradient(180deg, var(--kc-panel-bg-start), var(--kc-panel-bg-end));
     border: 1px solid color-mix(in srgb, var(--kc-shell-border) 62%, #777);
     border-radius: 7px;
 }
