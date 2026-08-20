@@ -31,18 +31,22 @@
 
 /* itemek */
 #userMenu .dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
     border-radius: 6px;
     padding: .5rem .75rem;
     color: #444;
     cursor: url('/Images/cursors/active.cur'), pointer;
 }
 
+
     #userMenu .dropdown-item:hover,
     #userMenu .dropdown-item:focus {
         background-color: #ffe8a3;
         color: #111;
         
-        display: block;
         width: 100%;
         text-align: inherit;
         cursor: url('/Images/cursors/active.cur'), pointer;

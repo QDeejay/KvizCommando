@@ -177,9 +177,6 @@
     width: 38px;
     aspect-ratio: 138 / 176;
     overflow: hidden;
-    background: rgba(23, 23, 23, .75);
-    border: inset 2px #555;
-    border-radius: 4px;
 }
 
 .kc-vs-prep-captain-picture img {

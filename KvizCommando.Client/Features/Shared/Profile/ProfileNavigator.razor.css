@@ -165,6 +165,12 @@
 
 .kc-profile-check-button:disabled,
 .kc-profile-avatar-arrow:disabled {
+    color: #777;
+    background: #343434;
+    border-color: #555;
+    box-shadow: none;
+    filter: grayscale(1);
+    opacity: .72;
     cursor: url('/Images/cursors/disabled.cur'), not-allowed;
 }
 
@@ -198,6 +204,7 @@
     width: min(100%, 276px);
     aspect-ratio: 276 / 352;
     overflow: hidden;
+  
 }
 
 .kc-profile-avatar-frame img {
@@ -206,6 +213,8 @@
     display: block;
     object-fit: cover;
     object-position: center bottom;
+
+   
 }
 
 .kc-profile-loading,
