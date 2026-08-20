@@ -213,6 +213,27 @@
   <data name="Help.Button.Close" xml:space="preserve">
     <value>Bezárás</value>
   </data>
+  <data name="Settings.Title" xml:space="preserve"><value>BEÁLLÍTÁSOK</value></data>
+  <data name="Settings.Navigation" xml:space="preserve"><value>MENÜ</value></data>
+  <data name="Settings.Section.Sound" xml:space="preserve"><value>HANG</value></data>
+  <data name="Settings.Section.Appearance" xml:space="preserve"><value>MEGJELENÉS</value></data>
+  <data name="Settings.Section.Help" xml:space="preserve"><value>SÚGÓ</value></data>
+  <data name="Settings.Sound.Enabled" xml:space="preserve"><value>Hang BE/KI</value></data>
+  <data name="Settings.Sound.MusicVolume" xml:space="preserve"><value>Zene hangerő</value></data>
+  <data name="Settings.Sound.SfxVolume" xml:space="preserve"><value>SFX hangerő</value></data>
+  <data name="Settings.Appearance.Theme" xml:space="preserve"><value>Színtéma</value></data>
+  <data name="Settings.Appearance.Fullscreen" xml:space="preserve"><value>Bejelentkezés után teljes képernyős mód</value></data>
+  <data name="Settings.Theme.Default" xml:space="preserve"><value>Alapértelmezett</value></data>
+  <data name="Settings.Theme.Olive" xml:space="preserve"><value>Olive</value></data>
+  <data name="Settings.Theme.Desert" xml:space="preserve"><value>Desert</value></data>
+  <data name="Settings.Theme.Steel" xml:space="preserve"><value>Steel</value></data>
+  <data name="Settings.Theme.Night" xml:space="preserve"><value>Night</value></data>
+  <data name="Settings.Help.Reset.Title" xml:space="preserve"><value>Súgók visszaállítása</value></data>
+  <data name="Settings.Help.Reset.Description" xml:space="preserve"><value>Az eddig megtekintett súgók ismét automatikusan megjelennek.</value></data>
+  <data name="Settings.Help.Reset.Button" xml:space="preserve"><value>SÚGÓK VISSZAÁLLÍTÁSA</value></data>
+  <data name="Settings.Help.Reset.Success" xml:space="preserve"><value>A súgók visszaállítva.</value></data>
+  <data name="Settings.Autosave" xml:space="preserve"><value>A módosítások automatikusan mentődnek.</value></data>
+  <data name="Settings.Button.Close" xml:space="preserve"><value>Bezárás</value></data>
   <data name="Toast.Logout.Success" xml:space="preserve">
     <value>Sikeresen kijelentkeztél.</value>
   </data>

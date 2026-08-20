@@ -8,7 +8,7 @@
     box-sizing: border-box;
     overflow: hidden;
     color: #cccccc;
-    background-color: rgba(27, 33, 27, 0.88);
+    background-color: var(--kc-surface-bg-soft);
     border: 1px solid #55583f;
     border-radius: 8px;
     box-shadow:

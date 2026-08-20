@@ -9,7 +9,7 @@
     justify-content: space-between;
     gap: 8px;
     padding: 7px 16px;
-    background: #0c1f17;
+    background: var(--kc-shell-bg);
     opacity: 0.85;
     border-left: 8px solid;
     border-top: 2px solid;

@@ -12,6 +12,7 @@ namespace KvizCommando.Client.Components
        
         [Parameter] public string? lclRow3 { get; set; } // help
         [Parameter] public string? lclLogout { get; set; }
+        [Parameter] public EventCallback OnSettings { get; set; }
         [Parameter] public EventCallback OnHelp { get; set; }
         [Parameter] public EventCallback OnLogout { get; set; }
     }

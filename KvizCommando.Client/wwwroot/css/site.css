@@ -1,12 +1,7 @@
 ﻿:root {
-    --kc-lcd-background: rgba(210, 255, 57, 0.9);
-    --kc-lcd-scanline: rgba(20, 28, 10, 0.025);
-    --kc-lcd-color: #222f16;
     --kc-lcd-border: #484848;
     --kc-lcd-font: 'Share Tech Mono', monospace;
     --kc-lcd-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 4px 8px rgba(0, 0, 0, 0.7);
-    --kc-lcd-input-background: #001f3f;
-    --kc-lcd-input-color: #bfa800;
     --kc-lcd-input-disabled-background: #2a2a2a;
 }
 
@@ -44,7 +39,7 @@
 }
 
 .military-button {
-    background-color: #4b5320;
+    background-color: var(--kc-accent);
 }
 
 .military-button--secondary {
@@ -111,14 +106,14 @@
     gap: 16px;
     width: 100%;
     box-sizing: border-box;
-    background: linear-gradient(180deg, #30332c, #20231f);
+    background: linear-gradient(180deg, var(--kc-panel-bg-start), var(--kc-panel-bg-end));
 }
 
 .kc-window-header {
     position: relative;
     min-height: 64px;
     padding: 10px 54px 9px 18px;
-    border-bottom: 1px solid #6e6d52;
+    border-bottom: 1px solid var(--kc-shell-border);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 
@@ -141,8 +136,8 @@
     place-items: center;
     padding: 0 0 3px;
     color: #d7d3b8;
-    background-color: #191c18;
-    border: 1px solid #666451;
+    background-color: var(--kc-panel-bg-end);
+    border: 1px solid var(--kc-shell-border);
     border-radius: 6px;
     box-shadow: none;
     font: normal 1.7rem/1 Arial, sans-serif;
@@ -153,8 +148,8 @@
 .kc-window-close:hover,
 .kc-window-close:focus-visible {
     color: #fffbdc;
-    background-color: #34382f;
-    border-color: #9a9667;
+    background-color: var(--kc-shell-hover);
+    border-color: var(--kc-lcd-background);
     outline: none;
 }
 
@@ -174,7 +169,7 @@ button.kc-help-page-dot:not(:disabled) {
     margin: 10px;
     padding: 15px;
     color: #cccccc;
-    background-color: #1b211b;
+    background-color: var(--kc-surface-bg);
     border: 2px inset rgba(160, 160, 130, 0.16);
     border-radius: 8px;
     box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.66);
@@ -185,7 +180,7 @@ button.kc-help-page-dot:not(:disabled) {
     position: relative;
     min-height: 66px;
     padding: 10px 16px 14px;
-    border-top: 1px solid #55564c;
+    border-top: 1px solid var(--kc-shell-border);
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.28);
 }
 
@@ -297,7 +292,7 @@ button.kc-help-page-dot:not(:disabled) {
     padding: 0 12px;
     font-family: Arial, sans-serif;
     color: #d3d3d3;
-    background-color: #0c1f17;
+    background-color: var(--kc-shell-bg);
     text-decoration: none;
     transition: background-color 0.2s, border-right-width 0.2s;
     box-sizing: border-box;
@@ -321,7 +316,7 @@ button.kc-help-page-dot:not(:disabled) {
     }
 
     .navigation-button:hover {
-        background-color: #11292E;
+        background-color: var(--kc-shell-hover);
         border-right: 4px solid whitesmoke;
         color: whitesmoke;
     }
@@ -333,15 +328,15 @@ button.kc-help-page-dot:not(:disabled) {
     .navigation-button.active {
         background-color: whitesmoke;
         border-right: 6px solid whitesmoke;
-        color: #004400;
+        color: var(--kc-shell-border);
     }
 
     .navigation-button.disabled {
         background-color: #666666;
         color: #d3d3d3;
 
-        border: 1px solid #004400;
-        border-right: 4px solid #004400;
+        border: 1px solid var(--kc-shell-border);
+        border-right: 4px solid var(--kc-shell-border);
         cursor: url('/Images/cursors/disabled.cur'), not-allowed;
     }
         .navigation-button.disabled i {
@@ -381,7 +376,7 @@ button.kc-help-page-dot:not(:disabled) {
     align-items: center;
     font-family: Arial, sans-serif;
     color: #d3d3d3;
-    background-color: #0c1f17;
+    background-color: var(--kc-shell-bg);
     border-radius: 8px;
     text-decoration: none;
     opacity: 0.6;
@@ -427,7 +422,7 @@ button.kc-help-page-dot:not(:disabled) {
     align-items: center;
     justify-content: center;
     color: #d3d3d3;
-    background-color: #0c1f17;
+    background-color: var(--kc-shell-bg);
     background-image: linear-gradient(
         180deg,
         rgba(255, 255, 255, 0.1),

@@ -5,7 +5,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #0c1f17;
+    background-color: var(--kc-shell-bg);
     z-index: 9999;
     display: flex;
     justify-content: center;

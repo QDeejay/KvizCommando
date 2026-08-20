@@ -112,7 +112,7 @@
     justify-content: center;
     overflow: hidden;
     padding: 0px;
-    background-color: #1b211b;
+    background-color: var(--kc-surface-bg);
 
     border-top: 1px solid rgba(64, 64, 64, 0.3);
     border-bottom: 1px solid rgba(64, 64, 64, 0.3);

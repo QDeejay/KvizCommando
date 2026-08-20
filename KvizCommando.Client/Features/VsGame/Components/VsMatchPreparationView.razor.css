@@ -558,7 +558,7 @@
 .kc-vs-prep-actions .button-on-lcd.finished:disabled,
 .kc-vs-prep-actions .button-on-lcd.finished:disabled i {
     color: #c6ef39;
-    background-color: #0c1f17;
+    background-color: var(--kc-shell-bg);
     border-color: rgba(198, 239, 57, .72);
     opacity: .88;
     box-shadow:

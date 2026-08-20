@@ -60,8 +60,8 @@
             rgba(168, 180, 120, .018) 1px,
             transparent 1px,
             transparent 4px),
-        linear-gradient(180deg, #1a211a, #111611);
-    border: 1px solid #4f5541;
+        linear-gradient(180deg, var(--kc-panel-bg-start), var(--kc-panel-bg-end));
+    border: 1px solid var(--kc-shell-border);
     border-radius: 8px;
     box-shadow: inset 0 3px 7px rgba(0, 0, 0, .66);
     scrollbar-color: #77714f #11150f;
@@ -75,8 +75,8 @@
     color: #d8d5a6;
     font: 700 .76rem/1.1 'Share Tech Mono', monospace;
     letter-spacing: .14em;
-    background: linear-gradient(180deg, #2d3228, #1d211b);
-    border-bottom: 1px solid #5d604b;
+    background: var(--kc-shell-bg);
+    border-bottom: 1px solid var(--kc-shell-border);
 }
 
 .kc-help-tree {
@@ -113,7 +113,7 @@
 .kc-help-root-button:not(:disabled):hover,
 .kc-help-root-button:not(:disabled):focus-visible {
     color: #f0eec2;
-    background: rgba(101, 108, 73, .2);
+    background: color-mix(in srgb, var(--kc-accent) 32%, transparent);
     outline: none;
 }
 
@@ -123,7 +123,7 @@
 }
 
 .kc-help-tree-arrow {
-    color: #aaa474;
+    color: color-mix(in srgb, var(--kc-lcd-background) 72%, white);
     font-family: Arial, sans-serif;
     text-align: center;
 }
@@ -145,7 +145,7 @@
     bottom: 0;
     left: 0;
     width: 1px;
-    background: #515742;
+    background: var(--kc-shell-border);
 }
 
 .kc-help-package-button {
@@ -165,20 +165,20 @@
     left: -12px;
     width: 9px;
     height: 1px;
-    background: #515742;
+    background: var(--kc-shell-border);
 }
 
 .kc-help-package-button:hover,
 .kc-help-package-button:focus-visible {
     color: #f0eec2;
-    background: rgba(101, 108, 73, .2);
+    background: color-mix(in srgb, var(--kc-accent) 32%, transparent);
     outline: none;
 }
 
 .kc-help-package-button.active {
     color: #f0eec2;
-    background: rgba(143, 148, 92, .25);
-    box-shadow: inset 3px 0 #c4bd72;
+    background: color-mix(in srgb, var(--kc-accent) 44%, transparent);
+    box-shadow: inset 3px 0 var(--kc-lcd-background);
 }
 
 .kc-help-content {
@@ -188,11 +188,11 @@
     --kc-help-text: #cccccc;
     --kc-help-text-soft: #b9bca8;
     --kc-help-title: #f0eec2;
-    --kc-help-accent: #c4bd72;
-    --kc-help-accent-soft: #969b68;
-    --kc-help-panel: rgba(37, 48, 36, .72);
-    --kc-help-panel-strong: #1b241b;
-    --kc-help-border: #596047;
+    --kc-help-accent: color-mix(in srgb, var(--kc-lcd-background) 76%, white);
+    --kc-help-accent-soft: color-mix(in srgb, var(--kc-lcd-background) 60%, #777);
+    --kc-help-panel: var(--kc-surface-bg-soft);
+    --kc-help-panel-strong: var(--kc-surface-bg);
+    --kc-help-border: var(--kc-shell-border);
     position: relative;
     isolation: isolate;
     min-height: 0;
@@ -207,7 +207,7 @@
             rgba(168, 180, 120, .018) 1px,
             transparent 1px,
             transparent 4px),
-        radial-gradient(circle at 50% 0, #1b291f, #101712 70%);
+        radial-gradient(circle at 50% 0, var(--kc-panel-glow-start), var(--kc-panel-glow-end) 70%);
     scrollbar-color: #77714f #11150f;
 }
 

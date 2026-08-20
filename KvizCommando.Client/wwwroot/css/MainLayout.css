@@ -11,19 +11,37 @@ body {
 }
 
 .kc-mainlayout-root {
+    position: relative;
+    isolation: isolate;
     display: flex;
     flex-direction: row;
     height: 100%;
     width: 100%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-color: var(--kc-page-bg-end);
     margin: 0;
     padding: 0;
     background-attachment: fixed; /* opcionális: ne mozogjon görgetésre */
     image-rendering: auto; /* vagy 'crisp-edges' kísérletnek */
     z-index:0;
-    opacity:0.95;
+    overflow: hidden;
+}
+
+.kc-mainlayout-root::before {
+    content: '';
+    position: absolute;
+    inset: -2%;
+    z-index: -1;
+    background-image: var(--kc-main-background-image);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    filter: var(--kc-lobby-filter);
+    opacity: .95;
+    pointer-events: none;
+}
+
+.kc-mainlayout-root.guest::before {
+    filter: none;
 }
 .kc-unsupported-screen {
     display: none;

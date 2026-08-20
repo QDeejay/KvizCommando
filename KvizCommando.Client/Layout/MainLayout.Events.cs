@@ -101,6 +101,8 @@ namespace KvizCommando.Client.Layout
         }
         private Task OpenHelpAsync() =>
             _helpNavigator?.ShowManualAsync() ?? Task.CompletedTask;
+        private Task OpenSettingsAsync() =>
+            _settingsNavigator?.ShowAsync() ?? Task.CompletedTask;
         private Task OpenCurrentHelpAsync() =>
             _helpNavigator?.ShowCurrentAsync() ?? Task.CompletedTask;
 

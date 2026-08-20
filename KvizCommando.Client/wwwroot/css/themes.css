@@ -2,63 +2,144 @@
 :root[data-theme="default"] {
     --kc-page-bg-start: #1a1f1a;
     --kc-page-bg-end: #0f130f;
-    --kc-page-glow-primary: rgba(0, 255, 0, 0.05);
-    --kc-page-glow-secondary: rgba(0, 180, 0, 0.04);
+    --kc-page-glow-primary: rgba(0, 255, 0, .05);
+    --kc-page-glow-secondary: rgba(0, 180, 0, .04);
     --kc-shell-bg: #0c1f17;
-    --kc-footer-bg: rgba(51, 51, 51, 0.5);
+    --kc-shell-hover: #11292e;
+    --kc-shell-border: #004400;
+    --kc-shell-inset-border: rgba(22, 44, 22, .2);
+    --kc-surface-bg: #1b211b;
+    --kc-surface-bg-soft: rgba(27, 33, 27, .9);
+    --kc-panel-bg-start: #1a211a;
+    --kc-panel-bg-end: #111611;
+    --kc-panel-glow-start: #1b291f;
+    --kc-panel-glow-end: #101712;
+    --kc-accent: #4b5320;
+    --kc-footer-bg: rgba(51, 51, 51, .5);
     --kc-primary: #1b6ec2;
     --kc-primary-border: #1861ac;
+    --kc-lcd-background: rgba(210, 255, 57, .9);
+    --kc-lcd-scanline: rgba(20, 28, 10, .025);
+    --kc-lcd-color: #222f16;
+    --kc-lcd-input-background: #001f3f;
+    --kc-lcd-input-color: #bfa800;
+    --kc-lobby-filter: brightness(.92) saturate(.95) sepia(.08) hue-rotate(55deg);
 }
 
 :root[data-theme="olive"] {
     --kc-page-bg-start: #24291b;
     --kc-page-bg-end: #11150c;
-    --kc-page-glow-primary: rgba(151, 174, 88, 0.10);
-    --kc-page-glow-secondary: rgba(83, 105, 46, 0.10);
+    --kc-page-glow-primary: rgba(151, 174, 88, .1);
+    --kc-page-glow-secondary: rgba(83, 105, 46, .1);
     --kc-shell-bg: #273018;
-    --kc-footer-bg: rgba(39, 48, 24, 0.65);
+    --kc-shell-hover: #354222;
+    --kc-shell-border: #657a35;
+    --kc-shell-inset-border: rgba(91, 111, 48, .28);
+    --kc-surface-bg: #242b1b;
+    --kc-surface-bg-soft: rgba(36, 43, 27, .92);
+    --kc-panel-bg-start: #2c341f;
+    --kc-panel-bg-end: #161b10;
+    --kc-panel-glow-start: #303b20;
+    --kc-panel-glow-end: #141a0e;
+    --kc-accent: #667c35;
+    --kc-footer-bg: rgba(39, 48, 24, .65);
     --kc-primary: #667c35;
     --kc-primary-border: #52652a;
+    --kc-lcd-background: rgba(193, 218, 108, .92);
+    --kc-lcd-scanline: rgba(35, 48, 16, .035);
+    --kc-lcd-color: #283517;
+    --kc-lcd-input-background: #263219;
+    --kc-lcd-input-color: #d5df8b;
+    --kc-lobby-filter: brightness(.88) saturate(1.05) sepia(.22) hue-rotate(35deg);
 }
 
 :root[data-theme="desert"] {
     --kc-page-bg-start: #30261b;
     --kc-page-bg-end: #17110c;
-    --kc-page-glow-primary: rgba(214, 165, 92, 0.10);
-    --kc-page-glow-secondary: rgba(135, 88, 48, 0.10);
+    --kc-page-glow-primary: rgba(214, 165, 92, .1);
+    --kc-page-glow-secondary: rgba(135, 88, 48, .1);
     --kc-shell-bg: #3b2b1a;
-    --kc-footer-bg: rgba(59, 43, 26, 0.65);
+    --kc-shell-hover: #503823;
+    --kc-shell-border: #8b5e2d;
+    --kc-shell-inset-border: rgba(121, 80, 39, .3);
+    --kc-surface-bg: #302419;
+    --kc-surface-bg-soft: rgba(48, 36, 25, .92);
+    --kc-panel-bg-start: #3a2b1d;
+    --kc-panel-bg-end: #1c140d;
+    --kc-panel-glow-start: #422f1d;
+    --kc-panel-glow-end: #1d140c;
+    --kc-accent: #8a5e2f;
+    --kc-footer-bg: rgba(59, 43, 26, .65);
     --kc-primary: #a56d32;
     --kc-primary-border: #835426;
+    --kc-lcd-background: rgba(242, 190, 82, .92);
+    --kc-lcd-scanline: rgba(68, 38, 8, .035);
+    --kc-lcd-color: #3b260c;
+    --kc-lcd-input-background: #3a2615;
+    --kc-lcd-input-color: #efc36f;
+    --kc-lobby-filter: brightness(.9) saturate(1.08) sepia(.38) hue-rotate(345deg);
 }
 
 :root[data-theme="steel"] {
     --kc-page-bg-start: #20272d;
     --kc-page-bg-end: #0e1317;
-    --kc-page-glow-primary: rgba(147, 188, 211, 0.09);
-    --kc-page-glow-secondary: rgba(75, 112, 135, 0.09);
+    --kc-page-glow-primary: rgba(147, 188, 211, .09);
+    --kc-page-glow-secondary: rgba(75, 112, 135, .09);
     --kc-shell-bg: #1d2a32;
-    --kc-footer-bg: rgba(29, 42, 50, 0.65);
+    --kc-shell-hover: #293b46;
+    --kc-shell-border: #436b80;
+    --kc-shell-inset-border: rgba(65, 102, 122, .28);
+    --kc-surface-bg: #1b252b;
+    --kc-surface-bg-soft: rgba(27, 37, 43, .92);
+    --kc-panel-bg-start: #26343c;
+    --kc-panel-bg-end: #11191e;
+    --kc-panel-glow-start: #283b45;
+    --kc-panel-glow-end: #111b20;
+    --kc-accent: #466f84;
+    --kc-footer-bg: rgba(29, 42, 50, .65);
     --kc-primary: #467a98;
     --kc-primary-border: #365f77;
+    --kc-lcd-background: rgba(150, 205, 225, .92);
+    --kc-lcd-scanline: rgba(14, 43, 55, .035);
+    --kc-lcd-color: #162b34;
+    --kc-lcd-input-background: #172d37;
+    --kc-lcd-input-color: #a9d8e8;
+    --kc-lobby-filter: brightness(.88) saturate(.8) grayscale(.22) sepia(.08) hue-rotate(155deg);
 }
 
 :root[data-theme="night"] {
     --kc-page-bg-start: #171923;
     --kc-page-bg-end: #08090e;
-    --kc-page-glow-primary: rgba(104, 91, 190, 0.10);
-    --kc-page-glow-secondary: rgba(54, 65, 126, 0.10);
+    --kc-page-glow-primary: rgba(104, 91, 190, .1);
+    --kc-page-glow-secondary: rgba(54, 65, 126, .1);
     --kc-shell-bg: #141625;
-    --kc-footer-bg: rgba(20, 22, 37, 0.70);
+    --kc-shell-hover: #22263d;
+    --kc-shell-border: #454d8c;
+    --kc-shell-inset-border: rgba(66, 73, 132, .3);
+    --kc-surface-bg: #171925;
+    --kc-surface-bg-soft: rgba(23, 25, 37, .93);
+    --kc-panel-bg-start: #202337;
+    --kc-panel-bg-end: #0d0f19;
+    --kc-panel-glow-start: #252943;
+    --kc-panel-glow-end: #0d101c;
+    --kc-accent: #4f579e;
+    --kc-footer-bg: rgba(20, 22, 37, .7);
     --kc-primary: #4f579e;
     --kc-primary-border: #3c437c;
+    --kc-lcd-background: rgba(139, 154, 230, .9);
+    --kc-lcd-scanline: rgba(20, 24, 67, .04);
+    --kc-lcd-color: #151a38;
+    --kc-lcd-input-background: #191d3a;
+    --kc-lcd-input-color: #aeb8f2;
+    --kc-lobby-filter: brightness(.7) saturate(.95) sepia(.12) hue-rotate(185deg);
 }
 
 html,
 body {
-    background: radial-gradient(circle at 30% 20%, var(--kc-page-glow-primary), transparent 25%),
-                radial-gradient(circle at 70% 80%, var(--kc-page-glow-secondary), transparent 35%),
-                linear-gradient(180deg, var(--kc-page-bg-start), var(--kc-page-bg-end));
+    background:
+        radial-gradient(circle at 30% 20%, var(--kc-page-glow-primary), transparent 25%),
+        radial-gradient(circle at 70% 80%, var(--kc-page-glow-secondary), transparent 35%),
+        linear-gradient(180deg, var(--kc-page-bg-start), var(--kc-page-bg-end));
 }
 
 header {

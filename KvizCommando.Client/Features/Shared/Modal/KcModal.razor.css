@@ -36,7 +36,7 @@
             rgba(168, 180, 120, .018) 1px,
             transparent 1px,
             transparent 4px),
-        radial-gradient(circle at 50% 0, #1b291f, #101712 70%);
+        radial-gradient(circle at 50% 0, var(--kc-panel-glow-start), var(--kc-panel-glow-end) 70%);
 }
 
 .kc-modal-body ::deep > * {

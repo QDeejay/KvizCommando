@@ -1,6 +1,7 @@
 ﻿@using KvizCommando.Client.Services
 @using KvizCommando.Client.Features.Shared.Help
 @using KvizCommando.Client.Features.Shared.Modal;
+@using KvizCommando.Client.Features.Shared.Settings
 
 
 @inherits Utilities.KcLayoutComponentBase
@@ -21,6 +22,9 @@
     if (_isLoggedIn)
     {
         <HelpNavigator @ref="_helpNavigator" AppStates="@_appState" />
+        <SettingsNavigator @ref="_settingsNavigator"
+                           AppStates="@_appState"
+                           OnSettingsChanged="Refresh" />
         <button id="kc-help-trigger"
                 type="button"
                 hidden
@@ -31,6 +35,7 @@
                 lclRow2="@Ui.Lang["mainlayout.Bootstrap.Label.Settings"]"
                 lclRow3="@Ui.Lang["mainlayout.Bootstrap.Label.Help"]"
                 lclLogout="@Ui.Lang["mainlayout.Bootstrap.Label.Logout"]"
+                OnSettings="OpenSettingsAsync"
                 OnHelp="OpenHelpAsync"
                 OnLogout="Logout" />
     }
@@ -42,10 +47,8 @@
     <div class="kc-unsupported-screen">
         <ScreenTooSmall />
     </div>
-    <div class="kc-mainlayout-root @(_isDesktopNavOpen && CanToggleSidebar ? "desktop-nav-open" : "")"
-         style="@(_isLoggedIn
-                  ? "background-image: url('/images/lobby.webp');" 
-                  : "background-image: url('/images/login.webp');")">
+    <div class="kc-mainlayout-root @(_isLoggedIn ? "authenticated" : "guest") @(_isDesktopNavOpen && CanToggleSidebar ? "desktop-nav-open" : "")"
+         style="--kc-main-background-image: url('@MainBackgroundImage');">
         
         @if (_isLoggedIn)
         {

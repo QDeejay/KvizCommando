@@ -4,6 +4,7 @@ using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Shared.Help;
 using KvizCommando.Client.Features.Shared.Modal;
 using KvizCommando.Client.Features.Shared.Modal.Builders;
+using KvizCommando.Client.Features.Shared.Settings;
 using KvizCommando.Client.Features.Solo.Builders;
 using KvizCommando.Client.Features.VsGame.Builders;
 using KvizCommando.Client.Helpers;
@@ -41,6 +42,7 @@ namespace KvizCommando.Client.Layout
         private readonly AppState _appState = new();
 
         private HelpNavigator? _helpNavigator;
+        private SettingsNavigator? _settingsNavigator;
         private KcModal? _mainModal;
 
         private string _culture = "hu";
@@ -60,6 +62,8 @@ namespace KvizCommando.Client.Layout
             Ui.Header.PageIndex is >= (int)SgameBoxKeyRoot.Orientation and <= (int)SgameBoxKeyRoot.Orientation + SoloBoxSpecs.ORIENTATION_BOX_COUNT ||
             Ui.Header.PageIndex is > (int)VsBoxKeyRanked.Classification and <= (int)VsBoxKeyRanked.Classification + VsGameBoxSpecs.CLASSIFICATION_BOX_COUNT;
         private bool CanToggleSidebar => _isLoggedIn && Hs.NavBarEnable;
+        private string MainBackgroundImage =>
+            _isLoggedIn ? "/images/lobby.webp" : "/images/login.webp";
         private bool BackNavigationEna => (!_isMobileNavOpen && Ui.Header.PageIndex != 0) || _isBckBtnEna;
         private HomeScreen Hs =>
             _isLoggedIn && !IsFullScreenGame

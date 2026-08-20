@@ -1,0 +1,155 @@
+@inherits Utilities.KcComponentBase
+@using KvizCommando.Client.Models.Settings
+
+@if (_isOpen)
+{
+    <div class="kc-settings-backdrop">
+        <section class="kc-settings-window kc-window-shell"
+                 role="dialog"
+                 aria-modal="true"
+                 aria-labelledby="kc-settings-title">
+            <header class="kc-settings-header kc-window-header">
+                <div>
+                    <span class="kc-settings-kicker">KCV // CLIENT CONFIG</span>
+                    <h2 id="kc-settings-title" class="kc-window-title">@Text("Title")</h2>
+                </div>
+                <button type="button"
+                        class="kc-window-close"
+                        aria-label="@Text("Button.Close")"
+                        @onclick="Close">
+                    ×
+                </button>
+            </header>
+
+            <div class="kc-settings-main">
+                <aside class="kc-settings-navigation" aria-label="@Text("Navigation")">
+                    <div class="kc-settings-navigation-title">@Text("Navigation")</div>
+                    <nav>
+                        @foreach (var section in Enum.GetValues<SettingsSection>())
+                        {
+                            <button type="button"
+                                    class="kc-settings-nav-button @(section == _selectedSection ? "active" : null)"
+                                    aria-current="@(section == _selectedSection ? "page" : null)"
+                                    @onclick="() => SelectSection(section)">
+                                <span class="kc-settings-nav-mark" aria-hidden="true">@(section == _selectedSection ? "▶" : "·")</span>
+                                <span>@Text($"Section.{section}")</span>
+                            </button>
+                        }
+                    </nav>
+                </aside>
+
+                <div class="kc-settings-content kc-window-body">
+                    @switch (_selectedSection)
+                    {
+                        case SettingsSection.Sound:
+                            <section aria-labelledby="kc-settings-sound-title">
+                                <h3 id="kc-settings-sound-title">@Text("Section.Sound")</h3>
+
+                                <label class="kc-settings-row kc-settings-toggle-row">
+                                    <strong>@Text("Sound.Enabled")</strong>
+                                    <span class="kc-settings-switch">
+                                        <input type="checkbox"
+                                               @bind="_draft.SoundEnabled"
+                                               @bind:after="SaveAsync" />
+                                        <span aria-hidden="true"></span>
+                                    </span>
+                                </label>
+
+                                <label class="kc-settings-row kc-settings-range-row">
+                                    <span>
+                                        <strong>@Text("Sound.MusicVolume")</strong>
+                                        <output>@_draft.MusicVolume%</output>
+                                    </span>
+                                    <input type="range"
+                                           min="0"
+                                           max="100"
+                                           step="1"
+                                           @bind="_draft.MusicVolume"
+                                           @bind:after="SaveAsync" />
+                                </label>
+
+                                <label class="kc-settings-row kc-settings-range-row">
+                                    <span>
+                                        <strong>@Text("Sound.SfxVolume")</strong>
+                                        <output>@_draft.SfxVolume%</output>
+                                    </span>
+                                    <input type="range"
+                                           min="0"
+                                           max="100"
+                                           step="1"
+                                           @bind="_draft.SfxVolume"
+                                           @bind:after="SaveAsync" />
+                                </label>
+                            </section>
+                            break;
+
+                        case SettingsSection.Appearance:
+                            <section aria-labelledby="kc-settings-appearance-title">
+                                <h3 id="kc-settings-appearance-title">@Text("Section.Appearance")</h3>
+
+                                <div class="kc-settings-row">
+                                    <strong>@Text("Appearance.Theme")</strong>
+                                    <div class="kc-settings-themes">
+                                        @foreach (var theme in Enum.GetValues<VisualTheme>())
+                                        {
+                                            <button type="button"
+                                                    class="kc-settings-theme kc-settings-theme-@theme.ToString().ToLowerInvariant() @(theme == _draft.Theme ? "active" : null)"
+                                                    aria-pressed="@(theme == _draft.Theme)"
+                                                    @onclick="() => SetThemeAsync(theme)">
+                                                <span class="kc-settings-theme-swatch" aria-hidden="true">
+                                                    <span></span><span></span><span></span>
+                                                </span>
+                                                <span>@Text($"Theme.{theme}")</span>
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+
+                                <label class="kc-settings-row kc-settings-toggle-row">
+                                    <strong>@Text("Appearance.Fullscreen")</strong>
+                                    <span class="kc-settings-switch">
+                                        <input type="checkbox"
+                                               @bind="_draft.StartFullscreen"
+                                               @bind:after="SaveAsync" />
+                                        <span aria-hidden="true"></span>
+                                    </span>
+                                </label>
+                            </section>
+                            break;
+
+                        case SettingsSection.Help:
+                            <section aria-labelledby="kc-settings-help-title">
+                                <h3 id="kc-settings-help-title">@Text("Section.Help")</h3>
+
+                                <div class="kc-settings-row kc-settings-help-row">
+                                    <div>
+                                        <strong>@Text("Help.Reset.Title")</strong>
+                                        <p>@Text("Help.Reset.Description")</p>
+                                    </div>
+                                    <button type="button"
+                                            class="military-button"
+                                            @onclick="ResetHelpsAsync">
+                                        @Text("Help.Reset.Button")
+                                    </button>
+                                    @if (_helpsReset)
+                                    {
+                                        <div class="kc-settings-success" role="status">
+                                            @Text("Help.Reset.Success")
+                                        </div>
+                                    }
+                                </div>
+                            </section>
+                            break;
+                    }
+                </div>
+            </div>
+
+            <footer class="kc-settings-footer kc-window-footer">
+                <span class="kc-settings-autosave">@Text("Autosave")</span>
+                <button type="button" class="military-button" @onclick="Close">
+                    @Text("Button.Close")
+                </button>
+            </footer>
+        </section>
+    </div>
+}

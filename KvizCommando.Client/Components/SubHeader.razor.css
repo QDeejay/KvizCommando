@@ -44,9 +44,9 @@
     }
 
 .htp-tab.active {
-    background: #0c1f17;
+    background: var(--kc-shell-bg);
     font-weight: bold;
-    border: 1px solid #004400;
+    border: 1px solid var(--kc-shell-border);
     box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.6);
     cursor: url('/Images/cursors/normal.cur'), default;
     width: max-content;

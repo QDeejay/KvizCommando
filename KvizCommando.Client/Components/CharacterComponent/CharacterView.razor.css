@@ -14,7 +14,7 @@
     left: 0;
     height: 100%;
     width: 100%;
-    background-color: rgba(210, 255, 57, 0.2);
+    background-color: color-mix(in srgb, var(--kc-lcd-background) 22%, transparent);
     z-index: 2;
 }
 

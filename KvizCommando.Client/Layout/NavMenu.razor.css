@@ -1,10 +1,10 @@
 ﻿.side-nav {
-    background-color: #0c1f17;
+    background-color: var(--kc-shell-bg);
     display: flex;
     flex-direction: column;
     padding: 0;
-    border-bottom: 1px solid #004400;
-    border-right: 1px solid #004400;
+    border-bottom: 1px solid var(--kc-shell-border);
+    border-right: 1px solid var(--kc-shell-border);
     box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.6);
     height: 100%;
     width: 100%;
@@ -49,7 +49,7 @@
         align-items: center;
         gap: 8px;
         color: #d3d3d3;
-        border-bottom: 1px solid #004400;
+        border-bottom: 1px solid var(--kc-shell-border);
         font-family: 'Special Elite', cursive;
     }
 
