@@ -35,7 +35,7 @@ public sealed class VsRosterPlayerVm
     public string DisplayName { get; set; } = string.Empty;
     public string TeamName { get; set; } = string.Empty;
     public string TeamLevel { get; set; } = string.Empty;
-    public string TeamPictureCode { get; set; } = "1";
+    public string TeamPictureSrc { get; set; } = string.Empty;
     public bool IsMe { get; set; }
     public bool IsConnected { get; set; }
     public bool IsBot { get; set; }

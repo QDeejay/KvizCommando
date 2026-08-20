@@ -59,6 +59,9 @@ public partial class ProfileNavigator : KcComponentBase
             _profile!.CaptainAvatar,
             StringComparison.Ordinal);
 
+    private string AvatarImageSrc =>
+        $"images/avatars/avatar-{_avatarDraft:D2}.webp";
+
     private string TeamNameRuleText
     {
         get
@@ -228,8 +231,8 @@ public partial class ProfileNavigator : KcComponentBase
         if (!CanEditAvatar || _profile is null)
             return;
 
-        _avatarDraft = _avatarDraft <= 1
-            ? _profile.AvatarCount
+        _avatarDraft = _avatarDraft <= ProfileRules.DEFAULT_AVATAR_NO
+            ? _profile.AvatarCount - 1
             : _avatarDraft - 1;
     }
 
@@ -238,8 +241,8 @@ public partial class ProfileNavigator : KcComponentBase
         if (!CanEditAvatar || _profile is null)
             return;
 
-        _avatarDraft = _avatarDraft >= _profile.AvatarCount
-            ? 1
+        _avatarDraft = _avatarDraft >= _profile.AvatarCount - 1
+            ? ProfileRules.DEFAULT_AVATAR_NO
             : _avatarDraft + 1;
     }
 

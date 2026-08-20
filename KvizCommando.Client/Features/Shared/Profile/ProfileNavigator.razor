@@ -1,6 +1,5 @@
 @inherits Utilities.KcComponentBase
 @using KvizCommando.Shared.Models.Rules
-@using KvizCommando.Client.Components.CharacterComponent
 
 @if (_isOpen)
 {
@@ -104,7 +103,10 @@
                                     ◀
                                 </button>
 
-                           
+                                <div class="kc-profile-avatar-frame">
+                                    <img src="@AvatarImageSrc"
+                                         alt="@Text("Avatar.Title")" />
+                                </div>
 
                                 <button type="button"
                                         class="kc-profile-avatar-arrow"
@@ -116,7 +118,7 @@
                             </div>
 
                             <div class="kc-profile-avatar-count">
-                                @_avatarDraft / @_profile.AvatarCount
+                                @(_avatarDraft + 1) / @_profile.AvatarCount
                             </div>
 
                             <div class="kc-profile-actions">

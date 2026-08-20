@@ -5,7 +5,7 @@ namespace KvizCommando.Shared.Models.User
         public int PlayerId { get; set; } = 0;   // lÉTREHOZÁS UTÁN NEM VÁLTOZHAT
         public string UserName { get; set; } = string.Empty;  // lÉTREHOZÁS UTÁN NEM VÁLTOZHAT EZ A DISPLAY NÉV DE AZ IDENTITY  INKÁBB
         public string TeamName { get; set; } = string.Empty; // VÁLTOZHAT
-        public string CaptainAvatar { get; set; } = "1";
+        public string CaptainAvatar { get; set; } = "0";
         public int RankEnum { get; set; } = 0;  // TÖBB MECCS UTÁN VÁLTOZHAT
         public int XP { get; set; } = 0;  // MECSEK UTÁN VÁLTOZHAT      // nincs rá szűrás,
         public int Voucher { get; set; } = 0;   // RITKÁN VÁLTOZHAT     // nincs rá szűrás,

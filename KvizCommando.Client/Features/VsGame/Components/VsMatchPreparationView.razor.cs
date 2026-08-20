@@ -4,6 +4,7 @@ using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.VsGame.Match;
 using KvizCommando.Shared.Models.Enums.VsGame;
+using KvizCommando.Shared.Models.Rules;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
 
@@ -106,9 +107,9 @@ public partial class VsMatchPreparationView : IDisposable
             ? Lang["vsgame.Match.Title.Preparation"]
             : Data.InfoText;
 
-    private string CaptainAvatarCode =>
-        Data.Players.FirstOrDefault(player => player.IsMe)?.TeamPictureCode ??
-        "1";
+    private string MyTeamPictureSrc =>
+        Data.Players.FirstOrDefault(player => player.IsMe)?.TeamPictureSrc ??
+        $"images/avatars/avatar-{ProfileRules.DEFAULT_AVATAR_NO:D2}.webp";
 
     private string InventoryTitle => Data.Phase switch
     {

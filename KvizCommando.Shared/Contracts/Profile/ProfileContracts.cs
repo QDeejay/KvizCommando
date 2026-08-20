@@ -27,7 +27,7 @@ public enum TeamNameCheckState
 public sealed class TeamProfileDto
 {
     public string TeamName { get; set; } = string.Empty;
-    public string CaptainAvatar { get; set; } = "1";
+    public string CaptainAvatar { get; set; } = "0";
     public int RankEnum { get; set; }
     public int TeamNameRequiredRank { get; set; }
     public int AvatarRequiredRank { get; set; }
@@ -64,7 +64,7 @@ public sealed class SaveTeamNameRequest
 public sealed class SaveAvatarRequest
 {
     public string SessionId { get; set; } = string.Empty;
-    public string CaptainAvatar { get; set; } = "1";
+    public string CaptainAvatar { get; set; } = "0";
 }
 
 public sealed class SaveProfileResponse

@@ -12,7 +12,7 @@ namespace KvizCommando.Server.Domain.Entities.Players
         public string DisplayName { get; set; } = string.Empty;
         public string TeamName { get; set; } = string.Empty;
         public string NormalizedTeamName { get; set; } = string.Empty;
-        public string CaptainAvatar { get; set; } = "1";
+        public string CaptainAvatar { get; set; } = "0";
         public DateTime? TeamNameChangedUtc { get; set; }
 
         /// <summary>Rang enum integer reprezentációja.</summary>

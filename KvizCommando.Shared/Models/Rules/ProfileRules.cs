@@ -11,7 +11,7 @@ public static class ProfileRules
     public const int AVATAR_REWARD_NO = 205;
     public const int TEAM_NAME_CHANGE_COOLDOWN_DAYS = 30;
     public const int AVATAR_COUNT = 21;
-    public const int DEFAULT_AVATAR_NO = 1;
+    public const int DEFAULT_AVATAR_NO = 0;
 
     public static int GetTeamNameRequiredRank() =>
         GetRequiredRank(TEAM_NAME_REWARD_NO);
@@ -43,5 +43,6 @@ public static class ProfileRules
         string? value,
         out int avatarNumber) =>
         int.TryParse(value, out avatarNumber) &&
-        avatarNumber is >= DEFAULT_AVATAR_NO and <= AVATAR_COUNT;
+        avatarNumber >= DEFAULT_AVATAR_NO &&
+        avatarNumber < AVATAR_COUNT;
 }

@@ -65,7 +65,7 @@ public sealed class VsRankedQueueEntry
     public int ClassificationId { get; init; }
     public string DisplayName { get; init; } = string.Empty;
     public string TeamName { get; init; } = string.Empty;
-    public string CaptainAvatar { get; init; } = "1";
+    public string CaptainAvatar { get; init; } = "0";
     public int TeamLevel { get; init; }
     public int ResponseTimeMilliseconds { get; init; }
     public VsConnectionQuality ConnectionQuality { get; init; }

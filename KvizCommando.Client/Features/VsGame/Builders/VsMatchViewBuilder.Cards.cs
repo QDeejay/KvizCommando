@@ -4,6 +4,7 @@ using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.VsGame.Match;
 using KvizCommando.Shared.Models.Enums.VsGame;
+using KvizCommando.Shared.Models.Rules;
 
 namespace KvizCommando.Client.Features.VsGame.Builders;
 
@@ -21,7 +22,7 @@ partial class VsMatchViewBuilder
             TeamLevel =
                 RankNameTable.Data[player.TeamLevel].PublicLevel ??
                 string.Empty,
-            TeamPictureCode = player.TeamPictureCode,
+            TeamPictureSrc = AvatarImageSrc(player.TeamPictureCode),
             IsMe = player.IsMe,
             IsConnected = player.IsConnected,
             IsBot = player.IsBot,
@@ -41,6 +42,11 @@ partial class VsMatchViewBuilder
                         culture)
         };
     }
+
+    private static string AvatarImageSrc(string? avatar) =>
+        ProfileRules.TryGetAvatarNumber(avatar, out var avatarNumber)
+            ? $"images/avatars/avatar-{avatarNumber:D2}.webp"
+            : $"images/avatars/avatar-{ProfileRules.DEFAULT_AVATAR_NO:D2}.webp";
 
     private static VsCharacterCardVm BuildCharacter(
         VsCharacterCardDto character,

@@ -131,7 +131,7 @@ public sealed class VsMatchPlayerSeed
     public string ConnectionId { get; init; } = string.Empty;
     public string DisplayName { get; init; } = string.Empty;
     public string TeamName { get; init; } = string.Empty;
-    public string CaptainAvatar { get; init; } = "1";
+    public string CaptainAvatar { get; init; } = "0";
     public int TeamLevel { get; init; }
     public int TeamXp { get; init; }
     public int[] LoadoutCategories { get; init; } = [];

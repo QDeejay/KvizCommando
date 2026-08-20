@@ -178,7 +178,7 @@
     aspect-ratio: 138 / 176;
     overflow: hidden;
     background: rgba(23, 23, 23, .75);
-    border: 2px solid #687037;
+    border: inset 2px #555;
     border-radius: 4px;
 }
 

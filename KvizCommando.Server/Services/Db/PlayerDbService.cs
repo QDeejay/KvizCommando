@@ -336,7 +336,7 @@ namespace KvizCommando.Server.Services.Db
                     NormalizedTeamName =
                         _normalizer.NormalizeName(teamname) ??
                         teamname.ToUpperInvariant(),
-                    CaptainAvatar = "1",
+                    CaptainAvatar = "0",
                     CreatedUtc = now,
                     UpdatedUtc = now
                 };
