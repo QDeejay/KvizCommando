@@ -29,17 +29,14 @@
   <data name="TeamName.State.Taken" xml:space="preserve"><value>This team name is already taken.</value></data>
   <data name="Avatar.Title" xml:space="preserve"><value>Captain avatar</value></data>
   <data name="Avatar.RequiredRank" xml:space="preserve"><value>Level required to change the avatar: {0}</value></data>
-  <data name="Avatar.ChangeAvailable" xml:space="preserve"><value>The avatar can be changed without a cooldown.</value></data>
   <data name="Avatar.Previous" xml:space="preserve"><value>Previous avatar</value></data>
   <data name="Avatar.Next" xml:space="preserve"><value>Next avatar</value></data>
-  <data name="Avatar.Preview" xml:space="preserve"><value>Selected captain avatar</value></data>
   <data name="Avatar.Save" xml:space="preserve"><value>Save avatar</value></data>
   <data name="Avatar.SaveSuccess" xml:space="preserve"><value>The avatar was saved.</value></data>
   <data name="SaveState.RankLocked" xml:space="preserve"><value>You have not reached the required level yet.</value></data>
   <data name="SaveState.CooldownActive" xml:space="preserve"><value>The 30-day team-name cooldown has not expired yet.</value></data>
   <data name="SaveState.SameValue" xml:space="preserve"><value>Nothing was changed.</value></data>
   <data name="SaveState.TeamNameRejected" xml:space="preserve"><value>The team name cannot be saved.</value></data>
-  <data name="SaveState.InvalidAvatar" xml:space="preserve"><value>Invalid avatar.</value></data>
   <data name="SaveState.SessionMismatch" xml:space="preserve"><value>The session has changed. Sign in again.</value></data>
   <data name="SaveState.NotFound" xml:space="preserve"><value>The player profile could not be found.</value></data>
   <data name="SaveState.ServerError" xml:space="preserve"><value>A server error occurred while saving.</value></data>

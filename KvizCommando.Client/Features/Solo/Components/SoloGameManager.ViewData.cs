@@ -106,7 +106,7 @@ partial class SoloGameManager
                 OrientationName = OrientationLocalizer.GetOrientation(
                     9,
                     Culture),
-                ImageSrc = AvatarImageSrc(UserData.CaptainAvatar)
+                ImageSrc = $"images/avatars/avatar-{ProfileRules.GetAvatarNumber(UserData.CaptainAvatar):D2}.webp"
             };
         }
 
@@ -124,11 +124,6 @@ partial class SoloGameManager
             SoloBestScore = member.SoloBestScore
         };
     }
-
-    private static string AvatarImageSrc(string? avatar) =>
-        ProfileRules.TryGetAvatarNumber(avatar, out var avatarNumber)
-            ? $"images/avatars/avatar-{avatarNumber:D2}.webp"
-            : $"images/avatars/avatar-{ProfileRules.DEFAULT_AVATAR_NO:D2}.webp";
 
     private static int CalculateAnswerPoints(
         int maximumPoints,

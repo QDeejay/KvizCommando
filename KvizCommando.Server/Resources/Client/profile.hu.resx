@@ -29,17 +29,14 @@
   <data name="TeamName.State.Taken" xml:space="preserve"><value>Ez a csapatnév már foglalt.</value></data>
   <data name="Avatar.Title" xml:space="preserve"><value>Kapitány avatar</value></data>
   <data name="Avatar.RequiredRank" xml:space="preserve"><value>Avatar módosításához szükséges szint: {0}</value></data>
-  <data name="Avatar.ChangeAvailable" xml:space="preserve"><value>Az avatar korlátozás nélkül módosítható.</value></data>
   <data name="Avatar.Previous" xml:space="preserve"><value>Előző avatar</value></data>
   <data name="Avatar.Next" xml:space="preserve"><value>Következő avatar</value></data>
-  <data name="Avatar.Preview" xml:space="preserve"><value>Kiválasztott kapitány avatar</value></data>
   <data name="Avatar.Save" xml:space="preserve"><value>Avatar mentése</value></data>
   <data name="Avatar.SaveSuccess" xml:space="preserve"><value>Az avatar mentése sikerült.</value></data>
   <data name="SaveState.RankLocked" xml:space="preserve"><value>A szükséges szintet még nem érted el.</value></data>
   <data name="SaveState.CooldownActive" xml:space="preserve"><value>A csapatnév 30 napos módosítási ideje még nem telt le.</value></data>
   <data name="SaveState.SameValue" xml:space="preserve"><value>Nem történt módosítás.</value></data>
   <data name="SaveState.TeamNameRejected" xml:space="preserve"><value>A csapatnév nem menthető.</value></data>
-  <data name="SaveState.InvalidAvatar" xml:space="preserve"><value>Érvénytelen avatar.</value></data>
   <data name="SaveState.SessionMismatch" xml:space="preserve"><value>A munkamenet megváltozott. Jelentkezz be újra.</value></data>
   <data name="SaveState.NotFound" xml:space="preserve"><value>A játékosprofil nem található.</value></data>
   <data name="SaveState.ServerError" xml:space="preserve"><value>Szerverhiba történt a mentés közben.</value></data>

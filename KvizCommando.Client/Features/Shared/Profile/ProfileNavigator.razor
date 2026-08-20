@@ -92,7 +92,10 @@
 
                         <section class="kc-profile-avatar" aria-labelledby="kc-profile-avatar-title">
                             <h3 id="kc-profile-avatar-title">@Text("Avatar.Title")</h3>
-                            <p class="kc-profile-rule-message">@AvatarRuleText</p>
+                            @if (!CanEditAvatar)
+                            {
+                                <p class="kc-profile-rule-message">@AvatarRuleText</p>
+                            }
 
                             <div class="kc-profile-avatar-picker">
                                 <button type="button"
@@ -118,7 +121,7 @@
                             </div>
 
                             <div class="kc-profile-avatar-count">
-                                @(_avatarDraft + 1) / @_profile.AvatarCount
+                                @_avatarDraft
                             </div>
 
                             <div class="kc-profile-actions">

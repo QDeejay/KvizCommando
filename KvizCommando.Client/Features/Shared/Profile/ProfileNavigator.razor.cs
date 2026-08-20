@@ -54,10 +54,8 @@ public partial class ProfileNavigator : KcComponentBase
     private bool CanSaveAvatar =>
         CanEditAvatar &&
         !_isAvatarBusy &&
-        !string.Equals(
-            _avatarDraft.ToString(),
-            _profile!.CaptainAvatar,
-            StringComparison.Ordinal);
+        _avatarDraft != ProfileRules.GetAvatarNumber(
+            _profile!.CaptainAvatar);
 
     private string AvatarImageSrc =>
         $"images/avatars/avatar-{_avatarDraft:D2}.webp";
@@ -87,11 +85,10 @@ public partial class ProfileNavigator : KcComponentBase
     }
 
     private string AvatarRuleText =>
-        _profile is not null &&
-        _profile.RankEnum < _profile.AvatarRequiredRank
-            ? Text("Avatar.RequiredRank")
-                .FormatSafe(GetPublicLevel(_profile.AvatarRequiredRank))
-            : Text("Avatar.ChangeAvailable");
+        _profile is null
+            ? string.Empty
+            : Text("Avatar.RequiredRank")
+                .FormatSafe(GetPublicLevel(_profile.AvatarRequiredRank));
 
     private string TeamNameStatusSymbol => _teamNameState switch
     {
@@ -231,8 +228,8 @@ public partial class ProfileNavigator : KcComponentBase
         if (!CanEditAvatar || _profile is null)
             return;
 
-        _avatarDraft = _avatarDraft <= ProfileRules.DEFAULT_AVATAR_NO
-            ? _profile.AvatarCount - 1
+        _avatarDraft = _avatarDraft <= ProfileRules.MIN_AVATAR_NO
+            ? ProfileRules.MAX_AVATAR_NO
             : _avatarDraft - 1;
     }
 
@@ -241,8 +238,8 @@ public partial class ProfileNavigator : KcComponentBase
         if (!CanEditAvatar || _profile is null)
             return;
 
-        _avatarDraft = _avatarDraft >= _profile.AvatarCount - 1
-            ? ProfileRules.DEFAULT_AVATAR_NO
+        _avatarDraft = _avatarDraft >= ProfileRules.MAX_AVATAR_NO
+            ? ProfileRules.MIN_AVATAR_NO
             : _avatarDraft + 1;
     }
 
@@ -253,11 +250,8 @@ public partial class ProfileNavigator : KcComponentBase
         _checkedTeamName = string.Empty;
         _teamNameState = TeamNameCheckState.NotChecked;
 
-        _avatarDraft = ProfileRules.TryGetAvatarNumber(
-            profile.CaptainAvatar,
-            out var avatarNumber)
-                ? avatarNumber
-                : ProfileRules.DEFAULT_AVATAR_NO;
+        _avatarDraft = ProfileRules.GetAvatarNumber(
+            profile.CaptainAvatar);
     }
 
     private void ResetTeamNameCheck()

@@ -9,7 +9,6 @@ public enum ProfileRequestState
     CooldownActive,
     SameValue,
     TeamNameRejected,
-    InvalidAvatar,
     ServerError
 }
 
@@ -33,7 +32,6 @@ public sealed class TeamProfileDto
     public int AvatarRequiredRank { get; set; }
     public DateTime? TeamNameChangedUtc { get; set; }
     public DateTime? NextTeamNameChangeUtc { get; set; }
-    public int AvatarCount { get; set; }
 }
 
 public sealed class ProfileLoadResponse

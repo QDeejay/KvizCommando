@@ -209,12 +209,8 @@ public sealed class ProfileService : IProfileService
         SaveAvatarRequest request,
         CancellationToken ct = default)
     {
-        if (!ProfileRules.TryGetAvatarNumber(
-                request.CaptainAvatar,
-                out var avatarNumber))
-        {
-            return Failed(ProfileRequestState.InvalidAvatar);
-        }
+        var avatarNumber = ProfileRules.GetAvatarNumber(
+            request.CaptainAvatar);
 
         var cacheResult = await _cache.GetOrLoadLockedAsync(
             playerId,
@@ -277,14 +273,14 @@ public sealed class ProfileService : IProfileService
     private static TeamProfileDto BuildProfile(CachedPlayer player) => new()
     {
         TeamName = player.Core.TeamName,
-        CaptainAvatar = player.Core.CaptainAvatar,
+        CaptainAvatar = ProfileRules.GetAvatarNumber(
+            player.Core.CaptainAvatar).ToString(CultureInfo.InvariantCulture),
         RankEnum = player.Core.RankEnum,
         TeamNameRequiredRank = ProfileRules.GetTeamNameRequiredRank(),
         AvatarRequiredRank = ProfileRules.GetAvatarRequiredRank(),
         TeamNameChangedUtc = player.Core.TeamNameChangedUtc,
         NextTeamNameChangeUtc = ProfileRules.GetNextTeamNameChangeUtc(
-            player.Core.TeamNameChangedUtc),
-        AvatarCount = ProfileRules.AVATAR_COUNT
+            player.Core.TeamNameChangedUtc)
     };
 
     private static ProfileRequestState MapReadState(CacheReadStatus status) =>

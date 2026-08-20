@@ -1,5 +1,3 @@
-using KvizCommando.Shared.Models;
-
 namespace KvizCommando.Shared.Models.Rules;
 
 /// <summary>
@@ -7,10 +5,11 @@ namespace KvizCommando.Shared.Models.Rules;
 /// </summary>
 public static class ProfileRules
 {
-    public const int TEAM_NAME_REWARD_NO = 202;
+    public const int TEAM_NAME_REWARD_NO = 201;
     public const int AVATAR_REWARD_NO = 205;
     public const int TEAM_NAME_CHANGE_COOLDOWN_DAYS = 30;
-    public const int AVATAR_COUNT = 21;
+    public const int MIN_AVATAR_NO = 0;
+    public const int MAX_AVATAR_NO = 20;
     public const int DEFAULT_AVATAR_NO = 0;
 
     public static int GetTeamNameRequiredRank() =>
@@ -39,10 +38,9 @@ public static class ProfileRules
     public static bool CanChangeAvatar(int rankEnum) =>
         rankEnum >= GetAvatarRequiredRank();
 
-    public static bool TryGetAvatarNumber(
-        string? value,
-        out int avatarNumber) =>
-        int.TryParse(value, out avatarNumber) &&
-        avatarNumber >= DEFAULT_AVATAR_NO &&
-        avatarNumber < AVATAR_COUNT;
+    public static int GetAvatarNumber(string? value) =>
+        int.TryParse(value, out var avatarNumber) &&
+        avatarNumber is >= MIN_AVATAR_NO and <= MAX_AVATAR_NO
+            ? avatarNumber
+            : DEFAULT_AVATAR_NO;
 }
