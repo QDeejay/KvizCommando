@@ -5,8 +5,8 @@
     const forcedUiSfx = new Set();
     const preloadedSfx = new Map();
 
-    const clickSfxPath = "audio/sfx/Click.webm?v=2";
-    const uiTouchSfxPath = "audio/sfx/UiTouch.webm?v=2";
+    const clickSfxPath = "audio/sfx/Click.webm?v=3";
+    const uiTouchSfxPath = "audio/sfx/UiTouch.webm?v=3";
 
     let currentMusicPath = null;
 
@@ -61,7 +61,7 @@
             const uiControl = source.closest(
                 ".kc-lcd-surface button, button.kc-lcd-surface, " +
                 ".button-on-lcd, .button-on-lcd--text, .navigation-button, " +
-                ".app-header .dropdown-item, .htp-tab");
+                ".app-header .dropdown-item, .htp-tab, .kc-back-button");
 
             if (uiControl === null || isDisabledControl(uiControl))
                 return;

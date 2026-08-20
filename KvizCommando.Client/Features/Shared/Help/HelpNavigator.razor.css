@@ -200,14 +200,6 @@
     padding: clamp(14px, 2.4vw, 28px);
     color: var(--kc-help-text);
     font-family: var(--kc-help-font-body);
-    background:
-        repeating-linear-gradient(
-            0deg,
-            rgba(168, 180, 120, .018) 0,
-            rgba(168, 180, 120, .018) 1px,
-            transparent 1px,
-            transparent 4px),
-        radial-gradient(circle at 50% 0, var(--kc-panel-glow-start), var(--kc-panel-glow-end) 70%);
     scrollbar-color: #77714f #11150f;
 }
 

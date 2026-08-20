@@ -23,7 +23,7 @@
     --kc-lcd-color: #222f16;
     --kc-lcd-input-background: #001f3f;
     --kc-lcd-input-color: #bfa800;
-    --kc-lobby-filter: brightness(.92) saturate(.95) sepia(.08) hue-rotate(55deg);
+    --kc-lobby-filter: none;
 }
 
 :root[data-theme="olive"] {

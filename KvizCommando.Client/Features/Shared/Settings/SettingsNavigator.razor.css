@@ -98,11 +98,6 @@
     min-height: 0;
     overflow: auto;
     padding: clamp(16px, 3vw, 30px);
-    background-color: var(--kc-surface-bg);
-    background-image:
-        repeating-linear-gradient(0deg, rgba(168, 180, 120, .018) 0, rgba(168, 180, 120, .018) 1px, transparent 1px, transparent 4px),
-        radial-gradient(circle at 50% 0, var(--kc-panel-glow-start), transparent 68%),
-        linear-gradient(180deg, var(--kc-panel-bg-start), var(--kc-surface-bg));
     scrollbar-color: #77714f var(--kc-panel-bg-end);
 }
 

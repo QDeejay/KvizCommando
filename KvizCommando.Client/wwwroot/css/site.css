@@ -176,6 +176,21 @@ button.kc-help-page-dot:not(:disabled) {
     box-sizing: border-box;
 }
 
+/* A Help es a Settings ugyanazt a temaerzekeny content hatteret hasznalja. */
+.kc-themed-window-content {
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(168, 180, 120, .018) 0,
+            rgba(168, 180, 120, .018) 1px,
+            transparent 1px,
+            transparent 4px),
+        radial-gradient(
+            circle at 50% 0,
+            var(--kc-panel-glow-start),
+            var(--kc-panel-glow-end) 70%);
+}
+
 .kc-window-footer {
     position: relative;
     min-height: 66px;
