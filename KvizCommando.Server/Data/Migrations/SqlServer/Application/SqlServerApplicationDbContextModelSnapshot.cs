@@ -182,6 +182,11 @@ namespace KvizCommando.Server.Data.Migrations.SqlServer.Application
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PlayerId"));
 
+                    b.Property<string>("CaptainAvatar")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
                     b.Property<DateTime>("CreatedUtc")
                         .HasColumnType("datetime2");
 
@@ -195,6 +200,11 @@ namespace KvizCommando.Server.Data.Migrations.SqlServer.Application
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("NormalizedTeamName")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<int>("RankEnum")
                         .HasColumnType("int");
 
@@ -206,8 +216,11 @@ namespace KvizCommando.Server.Data.Migrations.SqlServer.Application
 
                     b.Property<string>("TeamName")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime?>("TeamNameChangedUtc")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("UpdatedUtc")
                         .HasColumnType("datetime2");
@@ -226,6 +239,10 @@ namespace KvizCommando.Server.Data.Migrations.SqlServer.Application
 
                     b.HasIndex("Credit")
                         .HasDatabaseName("IX_Players_Credit");
+
+                    b.HasIndex("NormalizedTeamName")
+                        .IsUnique()
+                        .HasDatabaseName("UX_Players_NormalizedTeamName");
 
                     b.HasIndex("UserId")
                         .IsUnique()

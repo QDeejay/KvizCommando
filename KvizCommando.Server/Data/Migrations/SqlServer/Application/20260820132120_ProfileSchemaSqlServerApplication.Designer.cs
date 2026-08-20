@@ -3,36 +3,44 @@ using System;
 using KvizCommando.Server.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
+namespace KvizCommando.Server.Data.Migrations.SqlServer.Application
 {
-    [DbContext(typeof(SqliteApplicationDbContext))]
-    partial class SqliteApplicationDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(SqlServerApplicationDbContext))]
+    [Migration("20260820132120_ProfileSchemaSqlServerApplication")]
+    partial class ProfileSchemaSqlServerApplication
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.18");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "8.0.18")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("ApplicationUserToken", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTimeOffset>("ExpiresAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Value")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
@@ -46,46 +54,48 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("CardBrand")
                         .IsRequired()
                         .HasMaxLength(32)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<string>("CardLast4")
                         .IsRequired()
                         .HasMaxLength(4)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(4)");
 
                     b.Property<DateTime>("CreatedUtc")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("ExpMonth")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("ExpYear")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsDefault")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<string>("PaymentMethodToken")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Processor")
                         .IsRequired()
                         .HasMaxLength(32)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -99,17 +109,19 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("ChangedAtUtc")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("Granted")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -123,27 +135,29 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("AcceptedAtUtc")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<byte[]>("IpHash")
                         .HasMaxLength(32)
-                        .HasColumnType("BLOB");
+                        .HasColumnType("varbinary(32)");
 
                     b.Property<string>("TermsVersion")
                         .IsRequired()
                         .HasMaxLength(32)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(32)");
 
                     b.Property<byte[]>("UserAgentHash")
                         .HasMaxLength(32)
-                        .HasColumnType("BLOB");
+                        .HasColumnType("varbinary(32)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -157,9 +171,9 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
 
                     b.ToTable("TermsConsents", null, t =>
                         {
-                            t.HasCheckConstraint("CK_TermsConsents_IpHash_Len", "IpHash IS NULL OR length(IpHash) = 32");
+                            t.HasCheckConstraint("CK_TermsConsents_IpHash_Len", "IpHash IS NULL OR DATALENGTH(IpHash) = 32");
 
-                            t.HasCheckConstraint("CK_TermsConsents_UserAgentHash_Len", "UserAgentHash IS NULL OR length(UserAgentHash) = 32");
+                            t.HasCheckConstraint("CK_TermsConsents_UserAgentHash_Len", "UserAgentHash IS NULL OR DATALENGTH(UserAgentHash) = 32");
                         });
                 });
 
@@ -167,59 +181,62 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
                 {
                     b.Property<int>("PlayerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PlayerId"));
 
                     b.Property<string>("CaptainAvatar")
                         .IsRequired()
                         .HasMaxLength(64)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(64)");
 
                     b.Property<DateTime>("CreatedUtc")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Credit")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("DevPoint")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedTeamName")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("RankEnum")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .IsRequired()
-                        .HasColumnType("BLOB");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<string>("TeamName")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime?>("TeamNameChangedUtc")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Voucher")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("XP")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("PlayerId");
 
@@ -243,102 +260,102 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
             modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Players.PlayerCharacter", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("CandidatesJson")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CharactersJson")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("PlayerId");
 
                     b.ToTable("PlayerCharacters", null, t =>
                         {
-                            t.HasCheckConstraint("CK_PlayerCharacters_CandidatesJson_Valid", "json_valid([CandidatesJson])");
+                            t.HasCheckConstraint("CK_PlayerCharacters_CandidatesJson_Valid", "ISJSON([CandidatesJson]) = 1");
 
-                            t.HasCheckConstraint("CK_PlayerCharacters_CharactersJson_Valid", "json_valid([CharactersJson])");
+                            t.HasCheckConstraint("CK_PlayerCharacters_CharactersJson_Valid", "ISJSON([CharactersJson]) = 1");
                         });
                 });
 
             modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Players.PlayerLoadout", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("FactorySlotsJson")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HelpLevelsJson")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PendingSlotsJson")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserSlotsJson")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PlayerId");
 
                     b.ToTable("PlayerLoadouts", null, t =>
                         {
-                            t.HasCheckConstraint("CK_PlayerLoadouts_FactorySlots_Json", "json_valid([FactorySlotsJson])");
+                            t.HasCheckConstraint("CK_PlayerLoadouts_FactorySlots_Json", "ISJSON([FactorySlotsJson]) = 1");
 
-                            t.HasCheckConstraint("CK_PlayerLoadouts_PendingSlots_Json", "json_valid([PendingSlotsJson])");
+                            t.HasCheckConstraint("CK_PlayerLoadouts_PendingSlots_Json", "ISJSON([PendingSlotsJson]) = 1");
 
-                            t.HasCheckConstraint("CK_PlayerLoadouts_UserSlots_Json", "json_valid([UserSlotsJson])");
+                            t.HasCheckConstraint("CK_PlayerLoadouts_UserSlots_Json", "ISJSON([UserSlotsJson]) = 1");
                         });
                 });
 
             modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Security.UserPii", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<byte[]>("BillingAddressEncrypted")
-                        .HasColumnType("BLOB");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("BillingAddressNonce")
-                        .HasColumnType("BLOB");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("BillingAddressTag")
-                        .HasColumnType("BLOB");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("BillingNameEncrypted")
-                        .HasColumnType("BLOB");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("BillingNameNonce")
-                        .HasColumnType("BLOB");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("BillingNameTag")
-                        .HasColumnType("BLOB");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<DateTime>("CreatedUtc")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<byte[]>("PhoneEncrypted")
-                        .HasColumnType("BLOB");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("PhoneNonce")
-                        .HasColumnType("BLOB");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("PhoneTag")
-                        .HasColumnType("BLOB");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.HasKey("UserId");
 
@@ -348,18 +365,18 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
             modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Statistics.PlayerAskStats", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<decimal>("AveragePointsPerAsk")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("REAL")
-                        .HasComputedColumnSql("CASE WHEN [TotalQuestionsAsked] = 0 THEN 0.0 ELSE (1.0 * [TotalAskPointsEarned] / [TotalQuestionsAsked]) END", false);
+                        .HasColumnType("decimal(9,2)")
+                        .HasComputedColumnSql("CAST(CASE WHEN [TotalQuestionsAsked] = 0 THEN 0.0 ELSE ([TotalAskPointsEarned] * 1.0 / [TotalQuestionsAsked]) END AS decimal(9,2))", true);
 
                     b.Property<int>("TotalAskPointsEarned")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("TotalQuestionsAsked")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("PlayerId");
 
@@ -372,27 +389,27 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
             modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Statistics.PlayerCategoryStat", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<short>("CategoryId")
                         .HasColumnType("smallint");
 
                     b.Property<int>("Answered")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("Correct")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("HighScore")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<double>("HighScoreTime")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
                     b.Property<decimal>("Ratio")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("REAL")
-                        .HasComputedColumnSql("CASE WHEN [Answered] = 0 THEN 0.0 ELSE (1.0 * [Correct] / [Answered]) END", false);
+                        .HasColumnType("decimal(9,4)")
+                        .HasComputedColumnSql("CAST(CASE WHEN [Answered] = 0 THEN 0.0 ELSE ([Correct] * 1.0 / [Answered]) END AS decimal(9,4))", true);
 
                     b.HasKey("PlayerId", "CategoryId");
 
@@ -408,16 +425,16 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
             modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Statistics.PlayerOrientStat", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<short>("OrientId")
                         .HasColumnType("smallint");
 
                     b.Property<int>("HighScore")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<double>("HighScoreTime")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
                     b.HasKey("PlayerId", "OrientId");
 
@@ -430,34 +447,34 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
             modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Statistics.TeamStatistic", b =>
                 {
                     b.Property<int>("PlayerId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("RankedGuessCount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<decimal>("RankedGuessErrorRatio")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("REAL")
-                        .HasComputedColumnSql("CASE WHEN [RankedGuessCount] = 0 THEN 0.0 ELSE (1.0 * [RankedGuessErrorTotal] / [RankedGuessCount]) END", false);
+                        .HasColumnType("decimal(18,4)")
+                        .HasComputedColumnSql("CAST(CASE WHEN [RankedGuessCount] = 0 THEN 0.0 ELSE ([RankedGuessErrorTotal] / [RankedGuessCount]) END AS decimal(18,4))", true);
 
                     b.Property<decimal>("RankedGuessErrorTotal")
-                        .HasColumnType("REAL");
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<double>("RankedHighScore")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
                     b.Property<double>("RankedHighScoreTime")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
                     b.Property<string>("RankedPlacementsJson")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RankedPlayed")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int>("RankedWon")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.HasKey("PlayerId");
 
@@ -470,88 +487,88 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
 
                     b.ToTable("TeamStatistics", null, t =>
                         {
-                            t.HasCheckConstraint("CK_TeamStatistics_RankedPlacementsJson_Valid", "json_valid([RankedPlacementsJson])");
+                            t.HasCheckConstraint("CK_TeamStatistics_RankedPlacementsJson_Valid", "ISJSON([RankedPlacementsJson]) = 1");
                         });
                 });
 
             modelBuilder.Entity("KvizCommando.Server.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("AcceptTerms")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("DisplayName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("MarketingConsent")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<string>("NormalizedDisplayName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<string>("PreferredLocale")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(16)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(16)")
                         .HasDefaultValue("hu-HU");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
@@ -565,7 +582,8 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasDatabaseName("UserNameIndex");
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -573,25 +591,26 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasDatabaseName("RoleNameIndex");
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -600,17 +619,19 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -623,17 +644,19 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -645,17 +668,17 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -667,10 +690,10 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("UserId", "RoleId");
 

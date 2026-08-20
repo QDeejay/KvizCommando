@@ -11,6 +11,9 @@ namespace KvizCommando.Server.Domain.Entities.Players
         public string UserId { get; set; } = default!;         // FK → AspNetUsers.Id (UNIQUE)
         public string DisplayName { get; set; } = string.Empty;
         public string TeamName { get; set; } = string.Empty;
+        public string NormalizedTeamName { get; set; } = string.Empty;
+        public string CaptainAvatar { get; set; } = "1";
+        public DateTime? TeamNameChangedUtc { get; set; }
 
         /// <summary>Rang enum integer reprezentációja.</summary>
         public int RankEnum { get; set; }

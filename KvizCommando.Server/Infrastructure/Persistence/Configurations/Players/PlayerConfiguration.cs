@@ -20,7 +20,24 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
              .IsUnique()
              .HasDatabaseName("UX_Players_UserId");
 
-            b.Property(p => p.TeamName).HasMaxLength(128);
+            b.Property(p => p.TeamName)
+             .IsRequired()
+             .HasMaxLength(20);
+
+            b.Property(p => p.NormalizedTeamName)
+             .IsRequired()
+             .HasMaxLength(20);
+
+            b.HasIndex(p => p.NormalizedTeamName)
+             .IsUnique()
+             .HasDatabaseName("UX_Players_NormalizedTeamName");
+
+            b.Property(p => p.CaptainAvatar)
+             .IsRequired()
+             .HasMaxLength(64);
+
+            b.Property(p => p.TeamNameChangedUtc)
+             .IsRequired(false);
 
             // A rangsor lekérdezéseit külön XP- és kreditindex támogatja.
             b.HasIndex(p => p.XP)
