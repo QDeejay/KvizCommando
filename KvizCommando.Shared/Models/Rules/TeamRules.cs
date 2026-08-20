@@ -22,7 +22,7 @@ namespace KvizCommando.Shared.Models.Rules
 
     public static class TeamRules
     {
-        public const int HIRED_CHAR_STARTLEVEL = 1;
+        public const int HIRED_CHAR_STARTLEVEL = 0;
         public const int FIRST_MEMBER_LEVEL = 0;
         public const int LAST_MEMBER_LEVEL = 21;
         public const int MEMBER_RANKS_PER_CLASS = 3;

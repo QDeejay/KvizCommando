@@ -1,6 +1,7 @@
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Utilities;
 using KvizCommando.Shared.Contracts.Team;
+using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Rules;
 using System.Text.Json;
 

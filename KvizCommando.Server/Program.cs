@@ -3,6 +3,7 @@ using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
 using KvizCommando.Server.Startup;
 using Microsoft.AspNetCore.HttpOverrides;
 
+// Kizárólag a fejlesztői környezetben használható kapcsoló, amely meghatározza, hogy az alkalmazás SQL Server vagy SQLite adatbázist használjon. A tényleges adatbázis-kapcsolatot a konfigurációs fájlokban és a parancssori argumentumokban lehet felülírni.
 const bool USE_SQL_SERVER = false;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +18,29 @@ builder.Configuration["Database:Provider"] =
 builder.Configuration["Database:EnableRetryOnFailure"] =
     USE_SQL_SERVER ? "true" : "false";
 
-// Az EF migrációs parancsa szükség esetén csak a saját futására felülírhatja a kapcsolót.
+//  Sql server migrációs utasítások: Migration -custom elnevezés-
+/*
+     Add - Migration InitialSqlServerApplication - Context SqlServerApplicationDbContext - Project KvizCommando.Server - StartupProject KvizCommando.Server - OutputDir Data / Migrations / SqlServer / Application - Args "--Database:Provider=SqlServer"
+
+     Add - Migration InitialSqlServerGame - Context SqlServerGameDbContext - Project KvizCommando.Server - StartupProject KvizCommando.Server - OutputDir Data / Migrations / SqlServer / Game - Args "--Database:Provider=SqlServer"
+
+     Update - Database - Context SqlServerApplicationDbContext - Project KvizCommando.Server - StartupProject KvizCommando.Server - Args "--Database:Provider=SqlServer"
+
+     Update - Database - Context SqlServerGameDbContext - Project KvizCommando.Server - StartupProject KvizCommando.Server - Args "--Database:Provider=SqlServer" 
+*/
+
+// SQLite migrációs utasítások: Migration -custom elnevezés-
+/*
+     Add-Migration InitialSqliteApplication -Context SqliteApplicationDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -OutputDir Data/Migrations/Sqlite/Application -Args "--Database:Provider=Sqlite"
+
+     Add-Migration InitialSqliteGame -Context SqliteGameDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -OutputDir Data/Migrations/Sqlite/Game -Args "--Database:Provider=Sqlite"
+
+     Update-Database -Context SqliteApplicationDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -Args "--Database:Provider=Sqlite"
+
+     Update-Database -Context SqliteGameDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -Args "--Database:Provider=Sqlite"
+ */
+
+// Az EF migráció miatt kell itt a fejlesztői környezetben, migraciós parancsok futtatásához. A tényleges adatbázis-kapcsolatot a konfigurációs fájlokban és a parancssori argumentumokban lehet felülírni.
 builder.Configuration.AddCommandLine(args);
 
 builder.Services
@@ -32,6 +55,7 @@ builder.Services
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
+
 if (builder.Environment.IsDevelopment())
 {
     builder.Logging.AddDebug();
@@ -94,6 +118,7 @@ app.UseStaticFiles(clientAssetCacheOptions);
 app.UseRouting();
 
 app.UseCors("Spa");
+
 // Az endpoint kiválasztása megelőzi, a jogosultságvizsgálat pedig követi a hitelesítést.
 app.UseAuthentication();
 app.UseAuthorization();
