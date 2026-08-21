@@ -15,9 +15,9 @@
     <p class="lead">Minden lépésre <b>{{VS_PREPARATION_SECONDS}}</b> másodperc áll rendelkezésre. A Kész gomb lezárja az adott lépést; utána már nem módosítható.</p>
 
     <div class="phase-grid">
-        <div class="phase"><small>1 / 3</small><b>Karakterek sorrendje</b>A csapat minden karakterét rendeld egy normál körhöz. Ugyanaz a karakter csak egyszer használható.</div>
-        <div class="phase"><small>2 / 3</small><b>Kategóriák kiosztása</b>Válassz egy kategóriát a Felszerelésből, majd kattints a fogadó körre. Egy felszerelési sor csak egyszer osztható ki.</div>
-        <div class="phase"><small>3 / 3</small><b>Segítségek kiosztása</b>A segítség használata nem kötelező. Egy segítségtípus legfeljebb egy körhöz rendelhető.</div>
+        <div class="phase"><small>1 / 3</small><b>Karakterek sorrendje</b>Állítsd be, melyik karakter melyik normál körben harcol. Egy karakter csak egy körhöz rendelhető.</div>
+        <div class="phase"><small>2 / 3</small><b>Kategóriák kiosztása</b>Válassz egy kérdéskategóriát a felszerelésből, majd kattints arra a normál körre, amelyben használni szeretnéd. Egy felszerelési hely csak egyszer osztható ki.</div>
+        <div class="phase"><small>3 / 3</small><b>Segítségek kiosztása</b>Ha segítséget szeretnél vinni egy körbe, válaszd ki, majd kattints a célkörre. Ugyanaz a segítségtípus csak egy körhöz rendelhető.</div>
     </div>
 
     <div class="prep-stage" aria-label="Felkészülési kör mintája">
@@ -31,7 +31,7 @@
         <div class="kc-vs-prep-actions"><button type="button" class="button-on-lcd" tabindex="-1" aria-label="Visszaállítás"><i class="bi bi-arrow-counterclockwise"></i></button><button type="button" class="button-on-lcd" tabindex="-1" aria-label="Kész"><i class="bi bi-check2"></i></button></div>
     </div>
 
-    <div class="help-note"><b>Kapitánykör:</b> a saját kérdés nem osztható normál körhöz; a megmaradt felszerelési sorok között választható majd a kapitánykörben. Az 50–50 és az AI-segítség oda is kiosztható, a Tippsáv és az Időtlenítő csak normál körben használható. Ha lejár az idő, a kötelező karakter- és kategóriahelyeket a rendszer kitölti; a segítség kihagyható.</div>
+    <div class="help-note"><b>Kapitánykör:</b> a normál körökhöz fel nem használt kérdések maradnak meg a kapitánykörre. A saját kérdést tartalmazó felszerelési helyet nem lehet normál körhöz rendelni, ezért az biztosan ott lesz a későbbi választékban. Az 50–50 és az AI-segítség már a felkészüléskor hozzárendelhető a kapitánykörhöz; a Tippsáv és az Időtlenítő csak normál körben használható. Ha lejár az idő, a rendszer automatikusan kitölti a kötelező karakter- és kategóriahelyeket. Segítséget nem kötelező kiosztani.</div>
 </section>
 </body>
 </html>

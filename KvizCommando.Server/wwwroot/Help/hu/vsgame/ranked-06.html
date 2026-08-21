@@ -12,12 +12,12 @@
 <section class="kc-help-document kc-vs-help">
     <div class="eyebrow">RANGSOROLÁSOS CSATATEREK // 06 / 06</div>
     <h1>Kapitánykör és végeredmény</h1>
-    <p class="lead">A normál körök után minden játékos egyszer kérdező lesz a kapitánykörben.</p>
+    <p class="lead">A normál körök után minden játékos egyszer kérdező lesz. A többiek – és maga a kérdező is – válaszolnak a kiválasztott kapitánykérdésre.</p>
 
     <div class="captain">
-        <div><b>Fordított sorrend</b>Az addigi utolsó helyezett választ először kapitánykérdést, az éllovas utoljára.</div>
-        <div><b>Megmaradt kérdések</b>A játékos a normál körökben fel nem használt felszerelési sorai közül választ.</div>
-        <div><b>{{VS_CAPTAIN_MULTIPLIER}}× pontérték</b>A kapitánykör alapegysége {{VS_CAPTAIN_POINT_UNIT}} pont. Nincs körgyőztes-, karakter-XP- vagy vitalitásváltozás, de a {{VS_CAPTAIN_POINT_UNIT}} pontról induló összesített gyorsasági bónuszt a legjobb kapitányköri összidő kapja. A kérdező saját kérdésének ideje itt sem számít.</div>
+        <div><b>Ki választ először?</b>Az aktuálisan utolsó helyen álló játékos kezdi a kapitánykört, az éllovas pedig utolsóként kerül sorra.</div>
+        <div><b>Miből lehet választani?</b>Amikor rád kerül a sor, csak azok a kérdéseid jelennek meg, amelyeket a normál körökben nem használtál fel. Egy kártyára kattintva véglegesíted a választást; ezután röviden kiemelve látható a kiválasztott kérdés, majd indul a válaszadás.</div>
+        <div><b>{{VS_CAPTAIN_MULTIPLIER}}× pontérték</b>Minden kérdéspont kétszeres: a helyes és hibás válasz, a kérdező eredménye és a kérdésenkénti gyorsasági pont is {{VS_CAPTAIN_POINT_UNIT}} pontos egységekkel számol. Nincs külön körgyőztes-pont, karakter-XP vagy vitalitásvesztés. A kapitánykör végén a legjobb összesített idő kapja a {{VS_CAPTAIN_POINT_UNIT}} pontról induló gyorsasági bónuszt; a kérdező saját kérdésének ideje ebbe sem számít bele.</div>
     </div>
 
     <div class="reward-stage" aria-label="Végeredmény mintája">
@@ -33,7 +33,7 @@
 
     <div class="reward-grid">
         <div class="reward"><b>Végső sorrend</b>Először az összpont dönt. Pontegyenlőségnél az alacsonyabb összesített idő kerül előrébb.</div>
-        <div class="reward"><b>Ranglistás eredmény</b>A győztes nettó pontja az eredmény elérésekor érvényes csapatszint alapján {{VS_WINNER_COMPENSATION_MIN}}–{{VS_WINNER_COMPENSATION_MAX}} közötti győzteskompenzációt kap. A többiek szorzója {{VS_WINNER_COMPENSATION_MIN}}, így náluk a ranglistás eredmény a nettó ponttal azonos. Minden játékos saját legjobb eredménye kerül az all-time rekordjába.</div>
+        <div class="reward"><b>Ranglistás eredmény</b>A győztes nettó pontját az eredmény elérésekor érvényes csapatszint alapján {{VS_WINNER_COMPENSATION_MIN}}–{{VS_WINNER_COMPENSATION_MAX}} közötti szorzó növeli. A többiek szorzója {{VS_WINNER_COMPENSATION_MIN}}, ezért náluk a ranglistás eredmény megegyezik a nettó ponttal. A ranglista minden játékostól csak az eddigi legjobb eredményét tartja meg.</div>
         <div class="reward"><b>Kreditek</b>A győztesnél külön látható a visszakapott tét, a nyeremény és a csapatszintből származó bónusz.</div>
         <div class="reward"><b>Csapat</b>Ha jár csapat-XP, az eredmény külön mutatja a karakterek átlagos XP-jéből és a pontszámból származó részt.</div>
         <div class="reward"><b>Karakterek</b>A normál körökben szerzett XP, vitalitásvesztés és az esetleges nyugdíjalap karakterenként jelenik meg.</div>

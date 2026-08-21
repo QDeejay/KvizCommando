@@ -69,11 +69,13 @@
                         {
                             <button type="button"
                                     class="@CaptainQuestionClass(item.LoadoutPosition)"
-                                    title="@item.CategoryName"
                                     @onclick="() => SelectCaptainQuestionAsync(item.LoadoutPosition)">
                                 <img src="@item.ImageSrc"
                                      alt="@item.CategoryName" />
                                 <span>@item.Question</span>
+                                <span class="tooltip-box">
+                                    @item.CategoryName
+                                </span>
                             </button>
                         }
                     </div>

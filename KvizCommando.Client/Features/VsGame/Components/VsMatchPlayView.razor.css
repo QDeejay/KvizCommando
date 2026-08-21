@@ -787,6 +787,7 @@
 }
 
 .kc-vs-captain-questions button {
+    position: relative;
     min-width: 0;
     min-height: 62px;
     padding: 5px;
@@ -802,6 +803,19 @@
     cursor: url('/Images/cursors/active.cur'), pointer;
     font-family: 'Courier New', monospace;
     text-align: left;
+}
+
+.kc-vs-captain-questions button:hover {
+    z-index: 2;
+}
+
+.kc-vs-captain-questions button:hover > .tooltip-box {
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 20;
+    display: block;
+    padding: 6px 9px;
+    white-space: nowrap;
 }
 
 .kc-vs-captain-questions.selection-complete button {

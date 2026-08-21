@@ -12,12 +12,12 @@
 <section class="kc-help-document kc-vs-help">
     <div class="eyebrow">RANKED BATTLEFIELDS // 06 / 06</div>
     <h1>Captain round and final result</h1>
-    <p class="lead">After the normal rounds, every player becomes the questioner once during the captain round.</p>
+    <p class="lead">After the normal rounds, every player becomes the questioner once. The other players – and the questioner as well – answer the selected captain question.</p>
 
     <div class="captain">
-        <div><b>Reverse order</b>The player currently in last place selects a captain question first; the leader selects last.</div>
-        <div><b>Remaining questions</b>Each player chooses from loadout slots not used during the normal rounds.</div>
-        <div><b>{{VS_CAPTAIN_MULTIPLIER}}× point value</b>The captain-round base unit is {{VS_CAPTAIN_POINT_UNIT}} points. There is no round-winner bonus, character XP or vitality change, but the player with the best combined captain-round time receives the speed bonus starting at {{VS_CAPTAIN_POINT_UNIT}} points. A questioner's own-question time is excluded here as well.</div>
+        <div><b>Who chooses first?</b>The player currently in last place starts the captain round, while the leader takes the final turn.</div>
+        <div><b>Which questions are available?</b>When it is your turn, you see only questions you did not use in the normal rounds. Clicking a card locks your choice. The selected question is highlighted briefly, then answering begins.</div>
+        <div><b>{{VS_CAPTAIN_MULTIPLIER}}× point value</b>Every question point is doubled: correct and wrong answers, the questioner's result and the per-question speed point all use {{VS_CAPTAIN_POINT_UNIT}}-point units. There is no separate round-winner point, character XP or vitality loss. At the end of the captain round, the best combined time receives the speed bonus starting at {{VS_CAPTAIN_POINT_UNIT}} points; the questioner's own-question time is excluded from that total.</div>
     </div>
 
     <div class="reward-stage" aria-label="Final result example">
@@ -33,7 +33,7 @@
 
     <div class="reward-grid">
         <div class="reward"><b>Final order</b>Total points decide first. If points are equal, the lower combined time ranks higher.</div>
-        <div class="reward"><b>Leaderboard result</b>The winner's net points receive a {{VS_WINNER_COMPENSATION_MIN}}–{{VS_WINNER_COMPENSATION_MAX}} winner-compensation multiplier based on the team level held when the result was achieved. Every other player uses {{VS_WINNER_COMPENSATION_MIN}}, so their leaderboard result equals their net points. Each player's best result becomes their all-time record.</div>
+        <div class="reward"><b>Leaderboard result</b>The winner's net points are increased by a {{VS_WINNER_COMPENSATION_MIN}}–{{VS_WINNER_COMPENSATION_MAX}} multiplier based on the team level held when the result was achieved. Every other player uses {{VS_WINNER_COMPENSATION_MIN}}, so their leaderboard result equals their net points. The leaderboard keeps only each player's best result.</div>
         <div class="reward"><b>Credits</b>The winner sees the returned stake, prize and team-level bonus separately.</div>
         <div class="reward"><b>Team</b>When team XP is available, the result separates the character-average and score-derived portions.</div>
         <div class="reward"><b>Characters</b>XP earned in normal rounds, vitality loss and any retirement fund are shown for each character.</div>

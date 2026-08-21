@@ -21,7 +21,7 @@
     --kc-lcd-scanline: rgba(20, 28, 10, .025);
     --kc-lcd-color: #222f16;
     --kc-lobby-filter: none;
-    --kc-content-picture-overlay: rgba(75, 83, 32, 0.32);
+    --kc-content-picture-overlay: rgba(75, 83, 32, 0.27);
 }
 
 :root[data-theme="olive"] {
@@ -46,7 +46,7 @@
     --kc-lcd-scanline: rgba(35, 48, 16, .035);
     --kc-lcd-color: #283517;
     --kc-lobby-filter: brightness(.88) saturate(1.05) sepia(.22) hue-rotate(35deg);
-    --kc-content-picture-overlay: rgba(102, 124, 53, 0.32);
+    --kc-content-picture-overlay: rgba(102, 124, 53, 0.27);
 }
 
 :root[data-theme="desert"] {
@@ -71,7 +71,7 @@
     --kc-lcd-scanline: rgba(68, 38, 8, .035);
     --kc-lcd-color: #3b260c;
     --kc-lobby-filter: brightness(.9) saturate(1.08) sepia(.38) hue-rotate(345deg);
-    --kc-content-picture-overlay: rgba(138, 94, 47, 0.32);
+    --kc-content-picture-overlay: rgba(138, 94, 47, 0.27);
 }
 
 :root[data-theme="steel"] {
@@ -96,7 +96,7 @@
     --kc-lcd-scanline: rgba(14, 43, 55, .035);
     --kc-lcd-color: #162b34;
     --kc-lobby-filter: brightness(.88) saturate(.8) grayscale(.22) sepia(.08) hue-rotate(155deg);
-    --kc-content-picture-overlay: rgba(70, 111, 132, 0.32);
+    --kc-content-picture-overlay: rgba(70, 111, 132, 0.27);
 }
 
 :root[data-theme="night"] {
@@ -121,7 +121,7 @@
     --kc-lcd-scanline: rgba(20, 24, 67, .04);
     --kc-lcd-color: #151a38;
     --kc-lobby-filter: brightness(.7) saturate(.95) sepia(.12) hue-rotate(185deg);
-    --kc-content-picture-overlay: rgba(79, 87, 158, 0.34);
+    --kc-content-picture-overlay: rgba(79, 87, 158, 0.29);
 }
 
 :root[data-theme="lily"] {
@@ -146,7 +146,7 @@
     --kc-lcd-scanline: rgba(61, 25, 76, .035);
     --kc-lcd-color: #361b42;
     --kc-lobby-filter: brightness(.78) saturate(.92) sepia(.08) hue-rotate(225deg);
-    --kc-content-picture-overlay: rgba(128, 81, 154, 0.34);
+    --kc-content-picture-overlay: rgba(128, 81, 154, 0.29);
 }
 
 :root[data-theme="candy"] {
@@ -171,7 +171,7 @@
     --kc-lcd-scanline: rgba(75, 24, 46, .035);
     --kc-lcd-color: #461a2d;
     --kc-lobby-filter: brightness(.82) saturate(.95) sepia(.12) hue-rotate(285deg);
-    --kc-content-picture-overlay: rgba(157, 79, 114, 0.34);
+    --kc-content-picture-overlay: rgba(157, 79, 114, 0.29);
 }
 
 :root[data-theme="phone"] {
@@ -196,7 +196,7 @@
     --kc-lcd-scanline: rgba(80, 0, 51, .045);
     --kc-lcd-color: #3f082f;
     --kc-lobby-filter: brightness(.72) saturate(1.15) sepia(.08) hue-rotate(275deg);
-    --kc-content-picture-overlay: rgba(179, 34, 132, 0.34);
+    --kc-content-picture-overlay: rgba(179, 34, 132, 0.29);
 }
 
 :root[data-theme="wolf"] {
@@ -221,7 +221,7 @@
     --kc-lcd-scanline: rgba(22, 25, 28, .035);
     --kc-lcd-color: #252a2e;
     --kc-lobby-filter: brightness(.68) saturate(.25) grayscale(.7) contrast(1.05);
-    --kc-content-picture-overlay: rgba(98, 107, 114, 0.34);
+    --kc-content-picture-overlay: rgba(98, 107, 114, 0.29);
 }
 
 html,

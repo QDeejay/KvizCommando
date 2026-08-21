@@ -46,12 +46,15 @@
     left: 7px;
     display: grid;
     place-items: center;
-    width: 18px;
+    width: 24px;
     height: 18px;
     color: #777850;
     font-size: .9rem;
     line-height: 1;
     text-shadow: 0 1px 2px #000;
+    background-color: rgba(44,44,44,0.5);
+    box-shadow: 2px 2px rgba(0,0,0,0.5);
+    border-radius:6px;
 }
 
 .kc-solo-connection.good { color: #51b36d; }
@@ -641,6 +644,8 @@
         grid-row: 1;
         align-self: center;
         justify-self: center;
+        background-color: transparent; 
+        box-shadow:none;
     }
 
     .kc-solo-player-image-box {
@@ -671,6 +676,8 @@
     .kc-solo-question-panel {
         grid-template-rows: auto auto minmax(110px, auto) auto auto;
     }
+
+
 }
 @media (max-width: 520px) {
     .kc-solo-player-panel {
@@ -694,4 +701,7 @@
     .kc-solo-progress-number {
         display: none;
     }
+ 
+    
 }
+

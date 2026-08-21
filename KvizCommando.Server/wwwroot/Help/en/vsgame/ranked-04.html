@@ -15,9 +15,9 @@
     <p class="lead">Each step allows <b>{{VS_PREPARATION_SECONDS}}</b> seconds. The Finish button locks the current step; it can no longer be changed afterwards.</p>
 
     <div class="phase-grid">
-        <div class="phase"><small>1 / 3</small><b>Character order</b>Assign every team member to a normal round. The same character can only be used once.</div>
-        <div class="phase"><small>2 / 3</small><b>Assign categories</b>Select a loadout category, then click its destination round. Each loadout slot can only be assigned once.</div>
-        <div class="phase"><small>3 / 3</small><b>Assign helps</b>Using a help is optional. Each help type can be assigned to no more than one round.</div>
+        <div class="phase"><small>1 / 3</small><b>Character order</b>Choose which character will fight in each normal round. A character can be assigned to only one round.</div>
+        <div class="phase"><small>2 / 3</small><b>Assign categories</b>Select a question category from your equipment, then click the normal round in which you want to use it. Each equipment slot can be assigned only once.</div>
+        <div class="phase"><small>3 / 3</small><b>Assign helps</b>To take a help into a round, select it and then click the target round. The same help type can be assigned to only one round.</div>
     </div>
 
     <div class="prep-stage" aria-label="Preparation round example">
@@ -31,7 +31,7 @@
         <div class="kc-vs-prep-actions"><button type="button" class="button-on-lcd" tabindex="-1" aria-label="Reset"><i class="bi bi-arrow-counterclockwise"></i></button><button type="button" class="button-on-lcd" tabindex="-1" aria-label="Finish"><i class="bi bi-check2"></i></button></div>
     </div>
 
-    <div class="help-note"><b>Captain round:</b> an own-question slot cannot be assigned to a normal round; it remains available among the captain-round choices. 50–50 and AI Help can also be assigned there, while Guess Range and Time Freeze can only be used in normal rounds. When time expires, required character and category slots are filled automatically; helps may remain unused.</div>
+    <div class="help-note"><b>Captain round:</b> questions not used in the normal rounds remain available for the captain round. An equipment slot containing your own question cannot be assigned to a normal round, so it is guaranteed to remain among those later choices. The 50–50 and AI helps can be assigned to the captain round during preparation; Guess Range and Time Freeze can be used only in normal rounds. When time expires, the required character and category slots are filled automatically. Assigning a help is optional.</div>
 </section>
 </body>
 </html>
