@@ -32,7 +32,7 @@ namespace KvizCommando.Client.Components
         private string BackgroundStyle =>
             string.IsNullOrWhiteSpace(_vm.BgImageSrc)
                 ? ""
-                : $"background-image: url('{_vm.BgImageSrc}'); background-size: cover; background-position: center;";
+                : $"background-image:  linear-gradient(var(--kc-content-picture-overlay), var(--kc-content-picture-overlay)), url('{_vm.BgImageSrc}'); background-size: cover; background-position: center;";
         private string BackgroundContentClass =>
             !string.IsNullOrWhiteSpace(_vm.BgImageSrc) &&
             _vm.RenderContent > 0

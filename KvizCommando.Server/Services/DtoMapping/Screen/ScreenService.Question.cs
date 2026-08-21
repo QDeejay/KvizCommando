@@ -1,17 +1,8 @@
-using KvizCommando.Server.Domain.Entities.Statistics;
-using KvizCommando.Server.Models;
 using KvizCommando.Server.Services.PlayerCache;
-using KvizCommando.Server.Services.VsGame;
-using KvizCommando.Server.Services.VsGame.Matchmaking;
 using KvizCommando.Server.Utilities;
-using KvizCommando.Server.Utilities.Recruit;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
-using KvizCommando.Shared.Models.Enums;
 using KvizCommando.Shared.Models.Rules;
-using KvizCommando.Shared.Models.User;
-using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 using System.Text.Json;
 
 namespace KvizCommando.Server.Services.DtoMapping
@@ -105,7 +96,9 @@ namespace KvizCommando.Server.Services.DtoMapping
                 Math.Min(storedFactorySlots.Length, loadoutSize));
 
             context.AvailablePendingSlot = Math.Min(
-                context.AvailableUserSlot >> 1,
+                context.AvailableUserSlot == 0
+                    ? 0
+                    : Math.Max(1, context.AvailableUserSlot >> 1),
                 slot.pSlots.Length);
 
             context.OwnQuestionCount = context.FactorySlots.Count(c =>

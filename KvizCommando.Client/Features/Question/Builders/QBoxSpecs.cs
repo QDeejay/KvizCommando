@@ -1,6 +1,6 @@
-﻿using KvizCommando.Client.Helpers;
+﻿using KvizCommando.Client.Features.Question.Components;
+using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Features.Question.Components;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 
@@ -12,10 +12,10 @@ namespace KvizCommando.Client.Features.Question.Builders
     public sealed class QBoxSpecs : VmSpecs
     {
         internal Enum Key { get; init; } = default!;
-        internal Func<QuestionExtendedInfo, bool> CheckEnable 
-            { get; init; } =  _ => true;
+        internal Func<QuestionExtendedInfo, bool> CheckEnable
+        { get; init; } = _ => true;
         internal Func<ILanguageService, QuestionExtendedInfo, string> BuildBoxText
-            { get; init; } = (_, _) => string.Empty;
+        { get; init; } = (_, _) => string.Empty;
     }
 
     public static class QuestionBoxSpecs
@@ -100,7 +100,7 @@ namespace KvizCommando.Client.Features.Question.Builders
             new QBoxSpecs {
                 Key = QBoxKeyContent.PendigSlots,
                 TitleKey = string.Empty,
-                BuildBoxText = (lang, qn) => $"{lang["home.SubBox.Title.Question.Pending"]} ({qn.OccupiedPendingSlot}/{qn.AvailableUserSlot >> 1})",
+                BuildBoxText = (lang, qn) => $"{lang["home.SubBox.Title.Question.Pending"]} ({qn.OccupiedPendingSlot}/{qn.AvailablePendingSlot})",
                 ImageSrc = string.Empty,
                  Size = ContentBoxSize.CONTENT_LARGE,
                 FooterDisplay = false, ClickId = 0,
