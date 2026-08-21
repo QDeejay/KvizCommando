@@ -15,6 +15,7 @@ public sealed class VsMatchProfile
     public int RoundResultSeconds { get; init; } = 5;
     public int PhasePauseSeconds { get; init; } = 3;
     public int CaptainSelectionSeconds { get; init; } = 10;
+    public int BotCaptainSelectionSeconds { get; init; } = 3;
     public int BotMinimumAnswerSeconds { get; init; } = 3;
     public int BotMaximumAnswerSeconds { get; init; } = 7;
     public double TimeFreezeModifierSeconds { get; init; } = -99;

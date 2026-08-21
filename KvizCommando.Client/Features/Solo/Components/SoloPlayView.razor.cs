@@ -18,7 +18,21 @@ public partial class SoloPlayView
     public SoloPlayViewData Data { get; set; } = new();
 
     [Parameter] public EventCallback<int> OnAnswerSelected { get; set; }
+    [Parameter] public EventCallback OnSkipQuestion { get; set; }
     [Parameter] public EventCallback OnSkipEvaluation { get; set; }
+
+    private bool IsQuestionSkip =>
+        Data.Panel.Mode == SoloPanelMode.Question;
+
+    private bool CanSkip =>
+        IsQuestionSkip
+            ? Data.Panel.AnswerEnabled
+            : Data.Panel.Mode == SoloPanelMode.Evaluation;
+
+    private string SkipIconClass =>
+        IsQuestionSkip
+            ? "bi-skip-end-fill"
+            : "bi-skip-forward-fill";
 
     private VsConnectionQuality DisplayedConnectionQuality =>
         Data.Game.IsConnectionActive
@@ -140,4 +154,11 @@ public partial class SoloPlayView
     private Task SelectAnswerAsync(int answerIndex) => Data.Panel.AnswerEnabled
        ? OnAnswerSelected.InvokeAsync(answerIndex)
        : Task.CompletedTask;
+
+    private Task SkipAsync() =>
+        IsQuestionSkip
+            ? OnSkipQuestion.InvokeAsync()
+            : Data.Panel.Mode == SoloPanelMode.Evaluation
+                ? OnSkipEvaluation.InvokeAsync()
+                : Task.CompletedTask;
 }

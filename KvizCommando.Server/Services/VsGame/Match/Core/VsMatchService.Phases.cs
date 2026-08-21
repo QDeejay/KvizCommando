@@ -59,8 +59,7 @@ public sealed partial class VsMatchService
         AddLog(match, null, "PhaseStarted", phase.ToString());
 
         var timerDeadlineUtc =
-            IsAnswerPhase(phase) ||
-            phase == VsMatchPhase.CaptainQuestionSelection
+            IsAnswerPhase(phase)
             ? match.DeadlineUtc.Value.AddSeconds(
                 match.Profile.AnswerRevealDelaySeconds)
             : match.DeadlineUtc.Value;
@@ -70,7 +69,7 @@ public sealed partial class VsMatchService
             timerDeadlineUtc,
             match.PhaseTimerCts.Token);
 
-        ScheduleBotAnswersLocked(match);
+        ScheduleBotActionsLocked(match);
 
         if (IsAnswerPhase(phase) &&
             VsMatchGameRules.HaveAllParticipantsAnswered(match))
@@ -204,9 +203,7 @@ public sealed partial class VsMatchService
             case VsMatchPhase.CaptainQuestionSelection:
                 VsMatchGameRules
                     .SelectDefaultCaptainQuestion(match);
-                StartPhaseLocked(
-                    match,
-                    VsMatchPhase.CaptainQuestion);
+                StartCaptainQuestionDelayLocked(match);
                 break;
 
             case VsMatchPhase.CaptainRoundResult:
@@ -261,11 +258,77 @@ public sealed partial class VsMatchService
 
         var answerResultUtc = DateTime.UtcNow.AddSeconds(
             match.Profile.AnswerRevealDelaySeconds);
-        var closeUtc = match.DeadlineUtc.HasValue &&  match.DeadlineUtc.Value < answerResultUtc
-            ? match.DeadlineUtc.Value
-            : answerResultUtc;
 
-        _ = RunPhaseTimerAsync(  match.MatchId,  closeUtc, match.PhaseTimerCts.Token);
+        _ = RunPhaseTimerAsync(
+            match.MatchId,
+            answerResultUtc,
+            match.PhaseTimerCts.Token);
+    }
+
+    private void StartCaptainQuestionDelayLocked(
+        VsMatchSession match)
+    {
+        match.PhaseTimerCts.Cancel();
+        match.PhaseTimerCts.Dispose();
+        match.PhaseTimerCts = new CancellationTokenSource();
+
+        _ = RunCaptainQuestionStartAsync(
+            match.MatchId,
+            TimeSpan.FromSeconds(
+                match.Profile.AnswerRevealDelaySeconds),
+            match.PhaseTimerCts.Token);
+    }
+
+    private async Task RunCaptainQuestionStartAsync(
+        Guid matchId,
+        TimeSpan delay,
+        CancellationToken ct)
+    {
+        try
+        {
+            await Task.Delay(delay, ct);
+
+            if (!_store.TryGet(matchId, out var match) ||
+                match is null)
+            {
+                return;
+            }
+
+            (string ConnectionId, VsMatchSnapshot Snapshot)[] messages;
+
+            lock (match.SyncRoot)
+            {
+                if (ct.IsCancellationRequested ||
+                    match.IsClosed ||
+                    match.Phase !=
+                        VsMatchPhase.CaptainQuestionSelection ||
+                    !match.Game.SelectedCaptainLoadoutPosition.HasValue)
+                {
+                    return;
+                }
+
+                VsMatchGameRules
+                    .BeginSelectedCaptainQuestion(match);
+                StartPhaseLocked(
+                    match,
+                    VsMatchPhase.CaptainQuestion);
+
+                messages =
+                    VsMatchSnapshotBuilder.BuildMessages(match);
+            }
+
+            await SendBroadcastMessagesAsync(messages);
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "VS captain question start failed. matchId={MatchId}",
+                matchId);
+        }
     }
 
     private void ContinueAfterQuestionResultLocked(

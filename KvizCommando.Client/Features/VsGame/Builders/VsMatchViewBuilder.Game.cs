@@ -130,6 +130,8 @@ partial class VsMatchViewBuilder
                     })
             ],
             CaptainOrder = data.CaptainOrder,
-            CaptainOrderIndex = data.CaptainOrderIndex
+            CaptainOrderIndex = data.CaptainOrderIndex,
+            SelectedCaptainLoadoutPosition =
+                data.SelectedCaptainLoadoutPosition
         };
 }

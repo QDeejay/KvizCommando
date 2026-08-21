@@ -183,11 +183,11 @@
             {
                 <button type="button"
                         class="button-on-lcd"
-                        disabled="@(Data.Panel.Mode != SoloPanelMode.Evaluation)"
+                        disabled="@(!CanSkip)"
                         aria-label="@Lang["solo.Button.Game.Skip"]"
                         title="@Lang["solo.Button.Game.Skip"]"
-                        @onclick="OnSkipEvaluation">
-                    <i class="bi bi-skip-forward-fill"></i>
+                        @onclick="SkipAsync">
+                    <i class="bi @SkipIconClass"></i>
                 </button>
             }
         </div>

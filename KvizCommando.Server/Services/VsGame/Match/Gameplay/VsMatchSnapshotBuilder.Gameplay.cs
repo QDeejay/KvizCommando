@@ -94,7 +94,9 @@ internal static partial class VsMatchSnapshotBuilder
             CaptainQuestions =
                 BuildCaptainQuestions(match, currentPlayer),
             CaptainOrder = game.CaptainOrder,
-            CaptainOrderIndex = game.CaptainOrderIndex
+            CaptainOrderIndex = game.CaptainOrderIndex,
+            SelectedCaptainLoadoutPosition =
+                game.SelectedCaptainLoadoutPosition
         };
     }
 
@@ -303,7 +305,7 @@ internal static partial class VsMatchSnapshotBuilder
         VsMatchSession match,
         VsMatchPlayerState currentPlayer)
     {
-        if (!CanChooseCaptainQuestion(match, currentPlayer))
+        if (!CanViewCaptainQuestions(match, currentPlayer))
             return [];
 
         return
@@ -321,6 +323,12 @@ internal static partial class VsMatchSnapshotBuilder
     }
 
     private static bool CanChooseCaptainQuestion(
+        VsMatchSession match,
+        VsMatchPlayerState currentPlayer) =>
+        CanViewCaptainQuestions(match, currentPlayer) &&
+        !match.Game.SelectedCaptainLoadoutPosition.HasValue;
+
+    private static bool CanViewCaptainQuestions(
         VsMatchSession match,
         VsMatchPlayerState currentPlayer) =>
         match.Phase ==

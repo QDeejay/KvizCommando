@@ -42,7 +42,9 @@ partial class SoloGameManager
                 EvaluationEffect(questionState));
             await RenderAsync();
 
-            var delay = Task.Delay(1000, ct);
+            var delay = Task.Delay(
+                SoloGameRules.EVALUATION_STEP_DELAY_MS,
+                ct);
             if (await Task.WhenAny(delay, _skipSignal.Task) == _skipSignal.Task)
                 break;
         }

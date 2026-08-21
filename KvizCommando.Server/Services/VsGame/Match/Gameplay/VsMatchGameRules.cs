@@ -68,6 +68,7 @@ internal static class VsMatchGameRules
                 .Select(player => player.Position)
         ];
         match.Game.CaptainOrderIndex = 0;
+        match.Game.SelectedCaptainLoadoutPosition = null;
         match.Game.QuestionKind = VsQuestionKind.None;
         match.Game.CurrentQuestion = null;
         match.Game.QuestionResult = null;
@@ -83,6 +84,7 @@ internal static class VsMatchGameRules
         if (match.Phase !=
                 VsMatchPhase.CaptainQuestionSelection ||
             IsLate(match, receivedUtc) ||
+            match.Game.SelectedCaptainLoadoutPosition.HasValue ||
             player is null ||
             !player.IsConnected ||
             player.Position !=
@@ -102,7 +104,8 @@ internal static class VsMatchGameRules
         if (loadout is null)
             return false;
 
-        BeginCaptainQuestion(match, player, loadout);
+        match.Game.SelectedCaptainLoadoutPosition =
+            loadout.LoadoutPosition;
         return true;
     }
 
@@ -116,6 +119,25 @@ internal static class VsMatchGameRules
         var loadout = GetCaptainChoices(match, player)
             .OrderBy(item => item.LoadoutPosition)
             .First();
+
+        match.Game.SelectedCaptainLoadoutPosition =
+            loadout.LoadoutPosition;
+    }
+
+    internal static void BeginSelectedCaptainQuestion(
+        VsMatchSession match)
+    {
+        var player = FindByPosition(
+            match,
+            match.Game.CaptainOrder[
+                match.Game.CaptainOrderIndex]);
+        var selectedPosition =
+            match.Game.SelectedCaptainLoadoutPosition ??
+            throw new InvalidOperationException(
+                "Captain question selection is missing.");
+        var loadout = GetCaptainChoices(match, player)
+            .First(item =>
+                item.LoadoutPosition == selectedPosition);
 
         BeginCaptainQuestion(match, player, loadout);
     }
@@ -350,6 +372,7 @@ internal static class VsMatchGameRules
         VsMatchSession match)
     {
         match.Game.CaptainOrderIndex++;
+        match.Game.SelectedCaptainLoadoutPosition = null;
         match.Game.QuestionKind = VsQuestionKind.None;
         match.Game.CurrentQuestion = null;
         match.Game.QuestionResult = null;
@@ -427,6 +450,7 @@ internal static class VsMatchGameRules
         VsMatchPlayerState player,
         VsMatchLoadoutItemState loadout)
     {
+        match.Game.SelectedCaptainLoadoutPosition = null;
         player.CaptainUsedLoadoutPositions.Add(
             loadout.LoadoutPosition);
         ClearAnswers(match);

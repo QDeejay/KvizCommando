@@ -184,9 +184,7 @@ public sealed partial class VsMatchService
                 "CaptainQuestionSelected",
                 $"Position={request.LoadoutPosition}");
 
-            StartPhaseLocked(
-                match,
-                VsMatchPhase.CaptainQuestion);
+            StartCaptainQuestionDelayLocked(match);
 
             messages =
                 VsMatchSnapshotBuilder.BuildMessages(match);

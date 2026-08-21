@@ -1,11 +1,19 @@
 using KvizCommando.Shared.Contracts.VsGame.Match;
+using KvizCommando.Shared.Models.Enums.VsGame;
 
 namespace KvizCommando.Server.Services.VsGame.Match;
 
 public sealed partial class VsMatchService
 {
-    private void ScheduleBotAnswersLocked(VsMatchSession match)
+    private void ScheduleBotActionsLocked(VsMatchSession match)
     {
+        if (match.Phase ==
+            VsMatchPhase.CaptainQuestionSelection)
+        {
+            ScheduleBotCaptainQuestionLocked(match);
+            return;
+        }
+
         if (!IsAnswerPhase(match.Phase))
             return;
 
@@ -14,6 +22,93 @@ public sealed partial class VsMatchService
                      player.CurrentAnswer is null))
         {
             ScheduleBotAnswerLocked(match, bot);
+        }
+    }
+
+    private void ScheduleBotCaptainQuestionLocked(
+        VsMatchSession match)
+    {
+        if (match.Game.CaptainOrder.Length <=
+            match.Game.CaptainOrderIndex)
+        {
+            return;
+        }
+
+        var captainPosition =
+            match.Game.CaptainOrder[
+                match.Game.CaptainOrderIndex];
+        var captain = match.Players.First(player =>
+            player.Position == captainPosition);
+
+        if (!captain.IsBot)
+            return;
+
+        _ = RunBotCaptainQuestionAsync(
+            match.MatchId,
+            TimeSpan.FromSeconds(
+                match.Profile.BotCaptainSelectionSeconds),
+            match.PhaseTimerCts.Token);
+    }
+
+    private async Task RunBotCaptainQuestionAsync(
+        Guid matchId,
+        TimeSpan delay,
+        CancellationToken ct)
+    {
+        try
+        {
+            await Task.Delay(delay, ct);
+
+            if (!_store.TryGet(matchId, out var match) ||
+                match is null)
+            {
+                return;
+            }
+
+            (string ConnectionId, VsMatchSnapshot Snapshot)[] messages;
+
+            lock (match.SyncRoot)
+            {
+                if (ct.IsCancellationRequested ||
+                    match.IsClosed ||
+                    match.Phase !=
+                        VsMatchPhase.CaptainQuestionSelection ||
+                    match.Game.SelectedCaptainLoadoutPosition.HasValue)
+                {
+                    return;
+                }
+
+                VsMatchGameRules
+                    .SelectDefaultCaptainQuestion(match);
+
+                var captainPosition =
+                    match.Game.CaptainOrder[
+                        match.Game.CaptainOrderIndex];
+                var captain = match.Players.First(player =>
+                    player.Position == captainPosition);
+
+                AddLog(
+                    match,
+                    captain.PlayerId,
+                    "BotCaptainQuestionSelected",
+                    $"Position={match.Game.SelectedCaptainLoadoutPosition}");
+
+                StartCaptainQuestionDelayLocked(match);
+                messages =
+                    VsMatchSnapshotBuilder.BuildMessages(match);
+            }
+
+            await SendBroadcastMessagesAsync(messages);
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "VS bot captain selection failed. matchId={MatchId}",
+                matchId);
         }
     }
 

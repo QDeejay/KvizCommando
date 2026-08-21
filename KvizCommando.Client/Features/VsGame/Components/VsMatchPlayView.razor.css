@@ -805,6 +805,18 @@
     text-align: left;
 }
 
+.kc-vs-captain-questions.selection-complete button {
+    cursor: url('/Images/cursors/normal.cur'), default;
+}
+
+.kc-vs-captain-questions button.selected {
+    border-color: #d8bb43;
+}
+
+.kc-vs-captain-questions button.unselected {
+    opacity: .53;
+}
+
 .kc-vs-captain-questions img {
     width: 58px;
     height: 48px;

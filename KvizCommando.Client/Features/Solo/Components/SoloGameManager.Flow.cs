@@ -100,9 +100,20 @@ partial class SoloGameManager
         {
             if (_answerSignal.Task.IsCompleted)
             {
+                var selectedOptionIndex =
+                    await _answerSignal.Task;
+
+                if (selectedOptionIndex == -1)
+                {
+                    _remainingSeconds = 0;
+                    _points = 0;
+                }
+
                 await SaveAnswerAsync(
-                    await _answerSignal.Task,
-                    (int)_questionWatch.ElapsedMilliseconds,
+                    selectedOptionIndex,
+                    selectedOptionIndex == -1
+                        ? _game.AnswerTimeSeconds * 1000
+                        : (int)_questionWatch.ElapsedMilliseconds,
                     ct);
                 return;
             }
@@ -166,6 +177,22 @@ partial class SoloGameManager
             await Audio.PlaySfxAsync(
                 AudioService.SFX_SELECT);
         }
+    }
+
+    private async Task SkipQuestionAsync()
+    {
+        if (_phase != SoloGamePhase.Playing ||
+            !_answerEnabled)
+        {
+            return;
+        }
+
+        _answerEnabled = false;
+        _answerSignal?.TrySetResult(-1);
+        await Task.Delay(
+            SoloGameRules.SKIP_EMPTY_SFX_DELAY_MS);
+        await Audio.PlaySfxAsync(
+            AudioService.SFX_EMPTY);
     }
 
     private async Task FinishGameAsync(CancellationToken ct)

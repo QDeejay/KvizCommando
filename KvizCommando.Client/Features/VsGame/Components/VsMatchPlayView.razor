@@ -61,14 +61,14 @@
                     }
                 </div>
 
-                @if (Data.Game.CanChooseCaptainQuestion)
+                @if (Data.Game.CaptainQuestions.Length > 0)
                 {
-                    <div class="kc-vs-captain-questions">
+                    <div class="kc-vs-captain-questions @(Data.Game.SelectedCaptainLoadoutPosition.HasValue ? "selection-complete" : "")">
                         @foreach (var item in
                                   Data.Game.CaptainQuestions)
                         {
                             <button type="button"
-                                    disabled="@_sending"
+                                    class="@CaptainQuestionClass(item.LoadoutPosition)"
                                     title="@item.CategoryName"
                                     @onclick="() => SelectCaptainQuestionAsync(item.LoadoutPosition)">
                                 <img src="@item.ImageSrc"

@@ -454,6 +454,18 @@ public partial class VsMatchPlayView : IDisposable
         }
     }
 
+    private string CaptainQuestionClass(
+        int loadoutPosition)
+    {
+        if (!Data.Game.SelectedCaptainLoadoutPosition.HasValue)
+            return string.Empty;
+
+        return Data.Game.SelectedCaptainLoadoutPosition ==
+               loadoutPosition
+            ? "selected"
+            : "unselected";
+    }
+
     private async Task SelectCaptainQuestionAsync(
         int loadoutPosition)
     {

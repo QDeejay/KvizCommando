@@ -167,6 +167,7 @@ public sealed class VsMatchGameState
     public int CurrentQuestionerIndex { get; set; }
     public int[] CaptainOrder { get; set; } = [];
     public int CaptainOrderIndex { get; set; }
+    public int? SelectedCaptainLoadoutPosition { get; set; }
     public VsMatchQuestionResultState? QuestionResult { get; set; }
     public VsMatchRoundResultState[] RoundResult { get; set; } = [];
 }
