@@ -168,4 +168,7 @@
   <data name="Password.Confirm" xml:space="preserve">
     <value>Confirm password</value>
   </data>
+  <data name="Password.Visibility" xml:space="preserve">
+    <value>Toggle password visibility</value>
+  </data>
 </root>

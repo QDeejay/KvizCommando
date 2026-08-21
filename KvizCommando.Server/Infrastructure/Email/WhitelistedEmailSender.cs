@@ -23,7 +23,6 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
     private readonly ICallbackUrlValidator _callbackUrlValidator;
     private readonly IServiceScopeFactory _scopeFactory;
 
-
     public WhitelistedEmailSender(
         ILogger<WhitelistedEmailSender> logger,
         IStringLocalizer<WhitelistedEmailSender> localizer,
@@ -41,17 +40,7 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
         _callbackUrlValidator = callbackUrlValidator;
         _scopeFactory = scopeFactory;
     }
-    /*
-    /// <inheritdoc />
-    public Task SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink)
-    {
-        var changedEmail = QueryHelpers.ParseQuery(new Uri(confirmationLink).Query)
-            .ContainsKey("changedEmail");
-        return CreateAndDeliverAsync(user,
-            changedEmail ? EmailMessageType.EmailChange : EmailMessageType.Registration,
-            email, changedEmail ? "EmailChangeConfirm" : "RegistrationConfirm",
-            "auth/confirm", GetQuery(confirmationLink), CancellationToken.None);
-    }*/
+
     /// <inheritdoc />
     public Task SendConfirmationLinkAsync(
         ApplicationUser user,
@@ -106,8 +95,6 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
         var culture = GetSupportedCulture();
         var targetUrl = string.IsNullOrEmpty(targetPath) ? string.Empty : BuildTargetUrl(targetPath, query);
         var rankEnum = await GetRankEnumAsync(user.Id, ct);
-        //var rankEnum = await _db.Players.AsNoTracking().Where(x => x.UserId == user.Id)
-        //    .Select(x => (int?)x.RankEnum).SingleOrDefaultAsync(ct) ?? 0;
         var content = await LoadTemplateAsync(templateName, culture, targetUrl,
             RankCatalog.GetName(rankEnum, culture), ct);
 
@@ -168,9 +155,10 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
         var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
         return culture is "hu" or "en" ? culture : "en";
     }
+
     private async Task<int> GetRankEnumAsync(
-    string userId,
-    CancellationToken ct)
+        string userId,
+        CancellationToken ct)
     {
         await using var scope = _scopeFactory.CreateAsyncScope();
 

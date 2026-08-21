@@ -3,6 +3,7 @@ using KvizCommando.Server.Identity;
 using KvizCommando.Shared.Contracts.Profile;
 using KvizCommando.Shared.Models.Rules;
 using Microsoft.AspNetCore.Identity;
+using System.Text.Json;
 
 namespace KvizCommando.Server.Services.Profile;
 
@@ -25,7 +26,11 @@ public sealed class ProfileAccountService : IProfileAccountService
             return new ProfileAccountResponse { State = ProfileAccountRequestState.NotFound };
 
         var pii = await _pii.GetProfileAsync(userId, ct);
-        return Success(user.Email ?? string.Empty, pii.Phone, pii.BillingName, pii.BillingAddress);
+        return Success(
+            user.Email ?? string.Empty,
+            ReadPhone(pii.Phone),
+            ReadBillingName(pii.BillingName),
+            ReadBillingAddress(pii.BillingAddress));
     }
 
     /// <inheritdoc />
@@ -46,40 +51,144 @@ public sealed class ProfileAccountService : IProfileAccountService
         if (user is null)
             return new ProfileAccountResponse { State = ProfileAccountRequestState.NotFound };
 
+        var phone = Normalize(request.Phone);
+        var billingName = Normalize(request.BillingName);
+        var billingAddress = Normalize(request.BillingAddress);
+
         await _pii.SetProfileAsync(
             userId,
-            request.Phone ?? string.Empty,
-            request.BillingName ?? string.Empty,
-            request.BillingAddress ?? string.Empty,
+            HasValue(phone) ? JsonSerializer.Serialize(phone) : string.Empty,
+            HasValue(billingName) ? JsonSerializer.Serialize(billingName) : string.Empty,
+            HasValue(billingAddress) ? JsonSerializer.Serialize(billingAddress) : string.Empty,
             ct);
-        return Success(user.Email ?? string.Empty, request.Phone, request.BillingName, request.BillingAddress);
+        return Success(user.Email ?? string.Empty, phone, billingName, billingAddress);
     }
 
     private static List<string> Validate(SaveProfileAccountRequest request)
     {
         var errors = new List<string>();
-        if ((request.Phone ?? string.Empty).Trim().Length > ProfileAccountRules.PHONE_MAX_LENGTH)
+        var phone = request.Phone ?? new ProfilePhoneDto();
+        var billingName = request.BillingName ?? new BillingNameDto();
+        var billingAddress = request.BillingAddress ?? new BillingAddressDto();
+
+        if ((phone.CountryCode ?? string.Empty).Trim().Length >
+            ProfileAccountRules.PHONE_COUNTRY_CODE_MAX_LENGTH)
+            errors.Add("PhoneCountryCodeTooLong");
+        if ((phone.Number ?? string.Empty).Trim().Length >
+            ProfileAccountRules.PHONE_NUMBER_MAX_LENGTH)
             errors.Add("PhoneTooLong");
-        if ((request.BillingName ?? string.Empty).Trim().Length > ProfileAccountRules.BILLING_NAME_MAX_LENGTH)
+        if ((billingName.LastName ?? string.Empty).Trim().Length >
+            ProfileAccountRules.BILLING_NAME_PART_MAX_LENGTH ||
+            (billingName.FirstName ?? string.Empty).Trim().Length >
+            ProfileAccountRules.BILLING_NAME_PART_MAX_LENGTH)
             errors.Add("BillingNameTooLong");
-        if ((request.BillingAddress ?? string.Empty).Trim().Length > ProfileAccountRules.BILLING_ADDRESS_MAX_LENGTH)
+        if ((billingAddress.PostalCode ?? string.Empty).Trim().Length >
+            ProfileAccountRules.BILLING_POSTAL_CODE_MAX_LENGTH)
+            errors.Add("BillingPostalCodeTooLong");
+        if ((billingAddress.City ?? string.Empty).Trim().Length >
+            ProfileAccountRules.BILLING_CITY_MAX_LENGTH)
+            errors.Add("BillingCityTooLong");
+        if ((billingAddress.AddressLine1 ?? string.Empty).Trim().Length >
+            ProfileAccountRules.BILLING_ADDRESS_LINE_MAX_LENGTH ||
+            (billingAddress.AddressLine2 ?? string.Empty).Trim().Length >
+            ProfileAccountRules.BILLING_ADDRESS_LINE_MAX_LENGTH)
             errors.Add("BillingAddressTooLong");
         return errors;
     }
 
     private static ProfileAccountResponse Success(
         string email,
-        string? phone,
-        string? billingName,
-        string? billingAddress) => new()
+        ProfilePhoneDto phone,
+        BillingNameDto billingName,
+        BillingAddressDto billingAddress) => new()
         {
             State = ProfileAccountRequestState.Success,
             Account = new ProfileAccountDto
             {
                 Email = email,
-                Phone = phone?.Trim() ?? string.Empty,
-                BillingName = billingName?.Trim() ?? string.Empty,
-                BillingAddress = billingAddress?.Trim() ?? string.Empty
+                Phone = Normalize(phone),
+                BillingName = Normalize(billingName),
+                BillingAddress = Normalize(billingAddress)
             }
         };
+
+    private static ProfilePhoneDto ReadPhone(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return new ProfilePhoneDto();
+
+        try
+        {
+            return Normalize(JsonSerializer.Deserialize<ProfilePhoneDto>(value));
+        }
+        catch (JsonException)
+        {
+            return new ProfilePhoneDto { Number = value.Trim() };
+        }
+    }
+
+    private static BillingNameDto ReadBillingName(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return new BillingNameDto();
+
+        try
+        {
+            return Normalize(JsonSerializer.Deserialize<BillingNameDto>(value));
+        }
+        catch (JsonException)
+        {
+            return new BillingNameDto { LastName = value.Trim() };
+        }
+    }
+
+    private static BillingAddressDto ReadBillingAddress(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return new BillingAddressDto();
+
+        try
+        {
+            return Normalize(JsonSerializer.Deserialize<BillingAddressDto>(value));
+        }
+        catch (JsonException)
+        {
+            return new BillingAddressDto { AddressLine1 = value.Trim() };
+        }
+    }
+
+    private static ProfilePhoneDto Normalize(ProfilePhoneDto? phone) => new()
+    {
+        CountryCode = string.IsNullOrWhiteSpace(phone?.CountryCode)
+            ? "+36"
+            : phone.CountryCode.Trim(),
+        Number = phone?.Number?.Trim() ?? string.Empty
+    };
+
+    private static BillingNameDto Normalize(BillingNameDto? billingName) => new()
+    {
+        LastName = billingName?.LastName?.Trim() ?? string.Empty,
+        FirstName = billingName?.FirstName?.Trim() ?? string.Empty
+    };
+
+    private static BillingAddressDto Normalize(BillingAddressDto? billingAddress) => new()
+    {
+        PostalCode = billingAddress?.PostalCode?.Trim() ?? string.Empty,
+        City = billingAddress?.City?.Trim() ?? string.Empty,
+        AddressLine1 = billingAddress?.AddressLine1?.Trim() ?? string.Empty,
+        AddressLine2 = billingAddress?.AddressLine2?.Trim() ?? string.Empty
+    };
+
+    private static bool HasValue(ProfilePhoneDto phone) =>
+        !string.IsNullOrWhiteSpace(phone.Number);
+
+    private static bool HasValue(BillingNameDto billingName) =>
+        !string.IsNullOrWhiteSpace(billingName.LastName) ||
+        !string.IsNullOrWhiteSpace(billingName.FirstName);
+
+    private static bool HasValue(BillingAddressDto billingAddress) =>
+        !string.IsNullOrWhiteSpace(billingAddress.PostalCode) ||
+        !string.IsNullOrWhiteSpace(billingAddress.City) ||
+        !string.IsNullOrWhiteSpace(billingAddress.AddressLine1) ||
+        !string.IsNullOrWhiteSpace(billingAddress.AddressLine2);
 }

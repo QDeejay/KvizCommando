@@ -15,5 +15,6 @@
   "Modal.Confirm.Cancel": "No",
   "Username": "Username",
   "Email": "E-mail address:",
-  "Password.Confirm": "Confirm password"
+  "Password.Confirm": "Confirm password",
+  "Password.Visibility": "Toggle password visibility"
 }

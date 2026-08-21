@@ -33,19 +33,30 @@
                             <span>@Ui.Lang["profile.Section.Team"]</span>
                         </button>
                         <button type="button"
-                                class="kc-profile-nav-button @(_activeSection == ProfileSection.Account ? "active" : null)"
-                                aria-current="@(_activeSection == ProfileSection.Account ? "page" : null)"
-                                @onclick="() => _activeSection = ProfileSection.Account">
+                                class="kc-profile-nav-button @(_activeSection == ProfileSection.Contact ? "active" : null)"
+                                aria-current="@(_activeSection == ProfileSection.Contact ? "page" : null)"
+                                @onclick="() => _activeSection = ProfileSection.Contact">
                             <span aria-hidden="true">▶</span>
-                            <span>@Ui.Lang["profile.Section.Account"]</span>
+                            <span>@Ui.Lang["profile.Section.Contact"]</span>
+                        </button>
+                        <button type="button"
+                                class="kc-profile-nav-button @(_activeSection == ProfileSection.Security ? "active" : null)"
+                                aria-current="@(_activeSection == ProfileSection.Security ? "page" : null)"
+                                @onclick="() => _activeSection = ProfileSection.Security">
+                            <span aria-hidden="true">▶</span>
+                            <span>@Ui.Lang["profile.Section.Security"]</span>
                         </button>
                     </nav>
                 </aside>
 
                 <div class="kc-profile-content kc-window-body kc-themed-window-content">
-                    @if (_activeSection == ProfileSection.Account)
+                    @if (_activeSection == ProfileSection.Contact)
                     {
-                        <ProfileAccountView />
+                        <ProfileAccountView Section="ProfileAccountSection.Contact" />
+                    }
+                    else if (_activeSection == ProfileSection.Security)
+                    {
+                        <ProfileAccountView Section="ProfileAccountSection.Security" />
                     }
                     else if (_isLoading)
                     {

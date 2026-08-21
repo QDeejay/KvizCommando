@@ -10,7 +10,7 @@ namespace KvizCommando.Client.Features.Shared.Profile;
 
 public partial class ProfileNavigator : KcComponentBase
 {
-    private enum ProfileSection { Team, Account }
+    private enum ProfileSection { Team, Contact, Security }
     [Inject] private IProfileClientService ProfileClient { get; set; } = default!;
 
     [Parameter] public AppState AppStates { get; set; } = default!;

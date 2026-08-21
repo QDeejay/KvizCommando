@@ -7,17 +7,25 @@
   <data name="Title" xml:space="preserve"><value>Profile</value></data>
   <data name="Navigation" xml:space="preserve"><value>Profile menu</value></data>
   <data name="Section.Team" xml:space="preserve"><value>Team</value></data>
-  <data name="Section.Account" xml:space="preserve"><value>Account</value></data>
+  <data name="Section.Contact" xml:space="preserve"><value>Contact</value></data>
+  <data name="Section.Security" xml:space="preserve"><value>Security</value></data>
   <data name="Account.Loading" xml:space="preserve"><value>Loading account data...</value></data>
   <data name="Account.Email.Title" xml:space="preserve"><value>Sign-in email</value></data>
   <data name="Account.Email.Current" xml:space="preserve"><value>Current email</value></data>
   <data name="Account.Email.New" xml:space="preserve"><value>New email</value></data>
   <data name="Account.Email.Change" xml:space="preserve"><value>Change email</value></data>
   <data name="Account.Email.ConfirmationSent" xml:space="preserve"><value>The confirmation email was sent to the new address.</value></data>
-  <data name="Account.Contact.Title" xml:space="preserve"><value>Contact and billing details</value></data>
+  <data name="Account.Contact.Title" xml:space="preserve"><value>Contact details</value></data>
   <data name="Account.Phone" xml:space="preserve"><value>Phone number</value></data>
-  <data name="Account.BillingName" xml:space="preserve"><value>Billing name</value></data>
-  <data name="Account.BillingAddress" xml:space="preserve"><value>Billing address</value></data>
+  <data name="Account.Phone.CountryCode" xml:space="preserve"><value>Country code</value></data>
+  <data name="Account.Phone.Number" xml:space="preserve"><value>Phone number</value></data>
+  <data name="Account.Billing.Title" xml:space="preserve"><value>Billing details</value></data>
+  <data name="Account.Billing.LastName" xml:space="preserve"><value>Last name</value></data>
+  <data name="Account.Billing.FirstName" xml:space="preserve"><value>First name</value></data>
+  <data name="Account.Billing.PostalCode" xml:space="preserve"><value>Postal code</value></data>
+  <data name="Account.Billing.City" xml:space="preserve"><value>City</value></data>
+  <data name="Account.Billing.AddressLine1" xml:space="preserve"><value>Address line 1</value></data>
+  <data name="Account.Billing.AddressLine2" xml:space="preserve"><value>Address line 2</value></data>
   <data name="Account.Save" xml:space="preserve"><value>Save details</value></data>
   <data name="Account.SaveSuccess" xml:space="preserve"><value>Account details saved.</value></data>
   <data name="Account.Password.Title" xml:space="preserve"><value>Change password</value></data>
@@ -26,7 +34,7 @@
   <data name="Account.Password.Repeat" xml:space="preserve"><value>Repeat new password</value></data>
   <data name="Account.Password.Change" xml:space="preserve"><value>Change password</value></data>
   <data name="Account.Password.SaveSuccess" xml:space="preserve"><value>Password changed successfully.</value></data>
-  <data name="Account.Security.Title" xml:space="preserve"><value>Security and payment</value></data>
+  <data name="Account.Security.Title" xml:space="preserve"><value>Two-factor authentication</value></data>
   <data name="Account.TwoFactor" xml:space="preserve"><value>Two-factor authentication (TOTP)</value></data>
   <data name="Account.ComingSoon" xml:space="preserve"><value>Coming soon.</value></data>
   <data name="Account.Payment" xml:space="preserve"><value>Payment method</value></data>

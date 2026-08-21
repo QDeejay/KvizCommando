@@ -15,5 +15,6 @@
   "Modal.Confirm.Cancel": "Nem",
   "Username": "Felhasználónév",
   "Email": "E-mail cím:",
-  "Password.Confirm": "Jelszó megerősítése"
+  "Password.Confirm": "Jelszó megerősítése",
+  "Password.Visibility": "Jelszó láthatóságának váltása"
 }

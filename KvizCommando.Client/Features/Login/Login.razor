@@ -46,7 +46,13 @@
                            @bind-value:event="oninput"
                            @onkeydown="OnKeyDown"
                             />
-                           <i class="@EyeIcon" @onclick="TogglePassword"></i>
+                           <button type="button"
+                                   class="password-toggle"
+                                   aria-label="@Ui.Lang["common.Password.Visibility"]"
+                                   aria-pressed="@_showPassword"
+                                   @onclick="TogglePassword">
+                               <i class="@EyeIcon" aria-hidden="true"></i>
+                           </button>
                     </div>
 
                 }

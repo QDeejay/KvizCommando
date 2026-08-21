@@ -115,12 +115,17 @@ namespace KvizCommando.Client.Services.User
 
         private async Task CompleteClientLogoutAsync(string reason)
         {
+            await ClearClientSessionAsync();
+            _nav.NavigateTo($"/?reason={reason}", forceLoad: true);
+        }
+
+        private async Task ClearClientSessionAsync()
+        {
             await _audio.StopAllAsync();
             await _settings.ExitFullscreenAsync();
             await _session.ClearAsync();
             _home.Clear();
             _sessionCache.Clear();
-            _nav.NavigateTo($"/?reason={reason}", forceLoad: true);
         }
         /// <inheritdoc />
         public async Task<bool> ConfirmEmailAsync(string userId, string code, string? changedEmail = null)
@@ -144,7 +149,13 @@ namespace KvizCommando.Client.Services.User
                 }
 
                 var response = await _http.GetAsync(url);
-                return response.IsSuccessStatusCode;
+                if (!response.IsSuccessStatusCode)
+                    return false;
+
+                if (!string.IsNullOrWhiteSpace(changedEmail))
+                    await ClearClientSessionAsync();
+
+                return true;
 
             }
             catch

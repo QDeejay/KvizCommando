@@ -24,8 +24,16 @@
                 <div class="kc-auth-status kc-auth-status--success">
                     <i class="bi bi-check-circle-fill kc-auth-status__icon"></i>
                     <div>
-                        <h2 class="kc-auth-status__title">@Ui.Lang["auth.email.Success"]</h2>
-                        <p class="kc-auth-status__text">@Ui.Lang["auth.email.Success.Description"]</p>
+                        <h2 class="kc-auth-status__title">
+                            @Ui.Lang[_isEmailChange
+                                ? "auth.email.Change.Success"
+                                : "auth.email.Success"]
+                        </h2>
+                        <p class="kc-auth-status__text">
+                            @Ui.Lang[_isEmailChange
+                                ? "auth.email.Change.Success.Description"
+                                : "auth.email.Success.Description"]
+                        </p>
                     </div>
                 </div>
             }

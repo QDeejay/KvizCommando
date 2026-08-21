@@ -7,17 +7,25 @@
   <data name="Title" xml:space="preserve"><value>Profil</value></data>
   <data name="Navigation" xml:space="preserve"><value>Profil menü</value></data>
   <data name="Section.Team" xml:space="preserve"><value>Csapat</value></data>
-  <data name="Section.Account" xml:space="preserve"><value>Fiók</value></data>
+  <data name="Section.Contact" xml:space="preserve"><value>Kapcsolat</value></data>
+  <data name="Section.Security" xml:space="preserve"><value>Biztonság</value></data>
   <data name="Account.Loading" xml:space="preserve"><value>Fiókadatok betöltése...</value></data>
   <data name="Account.Email.Title" xml:space="preserve"><value>Bejelentkezési e-mail</value></data>
   <data name="Account.Email.Current" xml:space="preserve"><value>Jelenlegi e-mail-cím</value></data>
   <data name="Account.Email.New" xml:space="preserve"><value>Új e-mail-cím</value></data>
   <data name="Account.Email.Change" xml:space="preserve"><value>E-mail módosítása</value></data>
   <data name="Account.Email.ConfirmationSent" xml:space="preserve"><value>A megerősítő levelet elküldtük az új címre.</value></data>
-  <data name="Account.Contact.Title" xml:space="preserve"><value>Kapcsolattartási és számlázási adatok</value></data>
+  <data name="Account.Contact.Title" xml:space="preserve"><value>Kapcsolattartási adatok</value></data>
   <data name="Account.Phone" xml:space="preserve"><value>Telefonszám</value></data>
-  <data name="Account.BillingName" xml:space="preserve"><value>Számlázási név</value></data>
-  <data name="Account.BillingAddress" xml:space="preserve"><value>Számlázási cím</value></data>
+  <data name="Account.Phone.CountryCode" xml:space="preserve"><value>Országhívó</value></data>
+  <data name="Account.Phone.Number" xml:space="preserve"><value>Telefonszám</value></data>
+  <data name="Account.Billing.Title" xml:space="preserve"><value>Számlázási adatok</value></data>
+  <data name="Account.Billing.LastName" xml:space="preserve"><value>Vezetéknév</value></data>
+  <data name="Account.Billing.FirstName" xml:space="preserve"><value>Utónév</value></data>
+  <data name="Account.Billing.PostalCode" xml:space="preserve"><value>Irányítószám</value></data>
+  <data name="Account.Billing.City" xml:space="preserve"><value>Város</value></data>
+  <data name="Account.Billing.AddressLine1" xml:space="preserve"><value>Cím 1</value></data>
+  <data name="Account.Billing.AddressLine2" xml:space="preserve"><value>Cím 2</value></data>
   <data name="Account.Save" xml:space="preserve"><value>Adatok mentése</value></data>
   <data name="Account.SaveSuccess" xml:space="preserve"><value>A fiókadatok mentése sikerült.</value></data>
   <data name="Account.Password.Title" xml:space="preserve"><value>Jelszó módosítása</value></data>
@@ -26,7 +34,7 @@
   <data name="Account.Password.Repeat" xml:space="preserve"><value>Új jelszó ismét</value></data>
   <data name="Account.Password.Change" xml:space="preserve"><value>Jelszó módosítása</value></data>
   <data name="Account.Password.SaveSuccess" xml:space="preserve"><value>A jelszó módosítása sikerült.</value></data>
-  <data name="Account.Security.Title" xml:space="preserve"><value>Biztonság és fizetés</value></data>
+  <data name="Account.Security.Title" xml:space="preserve"><value>Kétlépcsős azonosítás</value></data>
   <data name="Account.TwoFactor" xml:space="preserve"><value>Kétlépcsős azonosítás (TOTP)</value></data>
   <data name="Account.ComingSoon" xml:space="preserve"><value>Hamarosan elérhető.</value></data>
   <data name="Account.Payment" xml:space="preserve"><value>Fizetési mód</value></data>

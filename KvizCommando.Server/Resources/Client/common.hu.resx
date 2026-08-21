@@ -168,4 +168,7 @@
   <data name="Password.Confirm" xml:space="preserve">
     <value>Jelszó megerősítése</value>
   </data>
+  <data name="Password.Visibility" xml:space="preserve">
+    <value>Jelszó láthatóságának váltása</value>
+  </data>
 </root>

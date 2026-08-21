@@ -141,6 +141,12 @@
   <data name="email.Success.Description" xml:space="preserve">
     <value>A fiókod aktív, most már bejelentkezhetsz.</value>
   </data>
+  <data name="email.Change.Success" xml:space="preserve">
+    <value>Az e-mail-cím megváltozott</value>
+  </data>
+  <data name="email.Change.Success.Description" xml:space="preserve">
+    <value>A korábbi aktív bejelentkezések érvénytelenné váltak. Jelentkezz be újra az új e-mail-címeddel.</value>
+  </data>
   <data name="email.Title" xml:space="preserve">
     <value>E-mail megerősítés</value>
   </data>

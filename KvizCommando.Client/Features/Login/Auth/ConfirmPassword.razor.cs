@@ -22,12 +22,22 @@ public partial class ConfirmPassword : KcComponentBase
     public string ResultMessage { get; set; } = string.Empty;
     public string successMessage { get; set; } = string.Empty;
     private bool PasswordFiledSW { get; set; } = false;
+    private readonly bool[] _showPassword = new bool[2];
     
     private bool CanRecover =>
        !string.IsNullOrWhiteSpace(FormData.newPassword)
        && !string.IsNullOrWhiteSpace(FormData.email)
        && !string.IsNullOrWhiteSpace(FormData.resetCode)
        && !string.IsNullOrWhiteSpace(FormData.confirmedNewPsw);
+
+    private string PasswordType(int index) =>
+        _showPassword[index] ? "text" : "password";
+
+    private string EyeIcon(int index) =>
+        _showPassword[index] ? "bi bi-eye-slash" : "bi bi-eye";
+
+    private void TogglePassword(int index) =>
+        _showPassword[index] = !_showPassword[index];
 
     private async Task HandleValidSubmit()
     {

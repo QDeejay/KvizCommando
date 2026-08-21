@@ -28,7 +28,13 @@
                                @bind-value="_formData.Password"
                                @bind-value:event="oninput"
                                style="width:stretch; @((_passwordFiledSW ? "boder: 1px solid red;" : null))" />
-                                <i class="@EyeIcon1" @onclick="() => TogglePassword(0)"></i>
+                                <button type="button"
+                                        class="password-toggle"
+                                        aria-label="@Ui.Lang["common.Password.Visibility"]"
+                                        aria-pressed="@_showPassword[0]"
+                                        @onclick="() => TogglePassword(0)">
+                                    <i class="@EyeIcon1" aria-hidden="true"></i>
+                                </button>
                     </div>
                 </div>
                
@@ -45,7 +51,13 @@
                                @bind-value="_formData.ConfirmPassword"
                                @bind-value:event="oninput"
                                style="width:stretch; @((_passwordFiledSW ? "border: 1px solid red;" : null))" />
-                        <i class="@EyeIcon2" @onclick="() => TogglePassword(1)"></i>
+                        <button type="button"
+                                class="password-toggle"
+                                aria-label="@Ui.Lang["common.Password.Visibility"]"
+                                aria-pressed="@_showPassword[1]"
+                                @onclick="() => TogglePassword(1)">
+                            <i class="@EyeIcon2" aria-hidden="true"></i>
+                        </button>
                         </div>
                 </div>
                 <div class="kc-regist-body--button-row">

@@ -223,6 +223,52 @@ button.kc-help-page-dot:not(:disabled) {
     color: var(--kc-lcd-input-disabled-color);
 }
 
+.password-box {
+    position: relative;
+    width: 100%;
+}
+
+.password-box .lcd-input {
+    padding-right: 42px;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 7px;
+    display: grid;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    place-items: center;
+    color: #bfa800;
+    background: transparent;
+    border: 0;
+    border-radius: 8px;
+    opacity: .8;
+    transform: translateY(-50%);
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.password-toggle:hover:not(:disabled),
+.password-toggle:focus-visible:not(:disabled) {
+    background: rgba(255, 255, 255, .2);
+    opacity: .9;
+    outline: none;
+}
+
+.password-toggle:disabled {
+    color: #777;
+    background: transparent;
+    opacity: .65;
+    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+}
+
+.password-toggle i {
+    font-size: 1.1rem;
+    pointer-events: none;
+}
+
 .kc-lcd-surface,
 .lcd-input {
     background-image: repeating-linear-gradient(

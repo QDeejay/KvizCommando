@@ -22,13 +22,56 @@ label {
     font-size: .84rem;
 }
 
+.kc-account-label {
+    color: #c9c9bd;
+    font-size: .84rem;
+}
+
+.kc-account-email {
+    margin-bottom: 10px;
+    color: #f0eec2;
+    overflow-wrap: anywhere;
+}
+
 .lcd-input {
     width: 100%;
 }
 
-textarea.lcd-input {
-    min-height: 76px;
-    resize: vertical;
+.kc-account-phone-row,
+.kc-account-two-column-row,
+.kc-account-address-head-row {
+    display: grid;
+    gap: 12px;
+}
+
+.kc-account-phone-row {
+    grid-template-columns: minmax(72px, .25fr) minmax(0, 1fr);
+}
+
+.kc-account-two-column-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.kc-account-address-head-row {
+    grid-template-columns: minmax(100px, .4fr) minmax(0, 1fr);
+}
+
+.kc-account-phone-row > *,
+.kc-account-two-column-row > *,
+.kc-account-address-head-row > * {
+    min-width: 0;
+}
+
+.kc-account-two-column-row > div,
+.kc-account-address-head-row > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.password-box {
+    max-width: 100%;
 }
 
 .kc-profile-actions {
@@ -58,4 +101,11 @@ small {
 
 .kc-profile-error {
     color: #e47676;
+}
+
+@media (max-width: 680px) {
+    .kc-account-two-column-row,
+    .kc-account-address-head-row {
+        grid-template-columns: 1fr;
+    }
 }

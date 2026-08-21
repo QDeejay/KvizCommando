@@ -141,6 +141,12 @@
   <data name="email.Success.Description" xml:space="preserve">
     <value>Your account is active. You can now sign in.</value>
   </data>
+  <data name="email.Change.Success" xml:space="preserve">
+    <value>E-mail address changed</value>
+  </data>
+  <data name="email.Change.Success.Description" xml:space="preserve">
+    <value>Any previous active sign-in is now invalid. Sign in again with your new e-mail address.</value>
+  </data>
   <data name="email.Title" xml:space="preserve">
     <value>E-mail confirmation</value>
   </data>

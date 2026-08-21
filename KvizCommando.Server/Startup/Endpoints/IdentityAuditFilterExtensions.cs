@@ -3,6 +3,7 @@ using KvizCommando.Server.Infrastructure.Logging;
 using KvizCommando.Server.Infrastructure.Email;
 using KvizCommando.Server.Application.Abstractions.Security;
 using KvizCommando.Server.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
@@ -258,6 +259,7 @@ public static class IdentityAuditFilterExtensions
 
             if (!failed && !string.IsNullOrWhiteSpace(subjectId))
             {
+                await RefreshApplicationCookieAsync(httpContext, subjectId);
                 await TrySendPasswordChangedAsync(httpContext, subjectId);
             }
             return result;
@@ -304,7 +306,10 @@ public static class IdentityAuditFilterExtensions
             if (failed)
                 await transaction.RollbackAsync(httpContext.RequestAborted);
             else
+            {
                 await transaction.CommitAsync(httpContext.RequestAborted);
+                await httpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            }
 
             await WriteAuditAsync(
                 audit,
@@ -371,6 +376,26 @@ public static class IdentityAuditFilterExtensions
                 .CreateLogger(nameof(IdentityAuditFilterExtensions));
             logger.LogWarning(exception, "A jelszóváltozás értesítő levele nem volt kézbesíthető.");
         }
+    }
+
+    private static async Task RefreshApplicationCookieAsync(
+        HttpContext httpContext,
+        string userId)
+    {
+        var authentication = await httpContext.AuthenticateAsync(
+            IdentityConstants.ApplicationScheme);
+        if (!authentication.Succeeded)
+            return;
+
+        var userManager = httpContext.RequestServices
+            .GetRequiredService<UserManager<ApplicationUser>>();
+        var user = await userManager.FindByIdAsync(userId);
+        if (user is null)
+            return;
+
+        var signInManager = httpContext.RequestServices
+            .GetRequiredService<SignInManager<ApplicationUser>>();
+        await signInManager.RefreshSignInAsync(user);
     }
 
     private static string? GetAuthenticatedUserId(HttpContext httpContext) =>

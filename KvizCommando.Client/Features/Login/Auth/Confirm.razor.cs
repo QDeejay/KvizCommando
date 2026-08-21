@@ -14,6 +14,7 @@ public partial class Confirm : KcComponentBase
 
         private bool _isLoading = true;
         private bool? _isSuccess = null;
+        private bool _isEmailChange;
 
         protected override async Task OnInitializedAsync()
         {
@@ -24,6 +25,7 @@ public partial class Confirm : KcComponentBase
             var userId = query["userId"];
             var code = query["code"];
             var changedEmail = query["changedEmail"];
+            _isEmailChange = !string.IsNullOrWhiteSpace(changedEmail);
             _isLoading = true;
             _isSuccess = await User.ConfirmEmailAsync(userId!, code!, changedEmail);
             _isLoading = false;

@@ -12,16 +12,36 @@ public enum ProfileAccountRequestState
 public sealed class ProfileAccountDto
 {
     public string Email { get; set; } = string.Empty;
-    public string Phone { get; set; } = string.Empty;
-    public string BillingName { get; set; } = string.Empty;
-    public string BillingAddress { get; set; } = string.Empty;
+    public ProfilePhoneDto Phone { get; set; } = new();
+    public BillingNameDto BillingName { get; set; } = new();
+    public BillingAddressDto BillingAddress { get; set; } = new();
 }
 
 public sealed class SaveProfileAccountRequest
 {
-    public string Phone { get; set; } = string.Empty;
-    public string BillingName { get; set; } = string.Empty;
-    public string BillingAddress { get; set; } = string.Empty;
+    public ProfilePhoneDto Phone { get; set; } = new();
+    public BillingNameDto BillingName { get; set; } = new();
+    public BillingAddressDto BillingAddress { get; set; } = new();
+}
+
+public sealed class ProfilePhoneDto
+{
+    public string CountryCode { get; set; } = "+36";
+    public string Number { get; set; } = string.Empty;
+}
+
+public sealed class BillingNameDto
+{
+    public string LastName { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
+}
+
+public sealed class BillingAddressDto
+{
+    public string PostalCode { get; set; } = string.Empty;
+    public string City { get; set; } = string.Empty;
+    public string AddressLine1 { get; set; } = string.Empty;
+    public string AddressLine2 { get; set; } = string.Empty;
 }
 
 public sealed class ProfileAccountResponse
