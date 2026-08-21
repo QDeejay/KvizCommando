@@ -39,6 +39,7 @@ namespace KvizCommando.Server.Infrastructure.Persistence
 
         public DbSet<TermsConsent> TermsConsents => Set<TermsConsent>();
         public DbSet<MarketingConsent> MarketingConsents => Set<MarketingConsent>();
+        public DbSet<RegistrationBenefitClaim> RegistrationBenefitClaims => Set<RegistrationBenefitClaim>();
 
         public DbSet<UserPii> UserPii => Set<UserPii>();
         public DbSet<UserPaymentMethod> UserPaymentMethods => Set<UserPaymentMethod>();
@@ -53,6 +54,7 @@ namespace KvizCommando.Server.Infrastructure.Persistence
             modelBuilder.ApplyConfiguration(new ApplicationUserConfiguration());
             modelBuilder.ApplyConfiguration(new ApplicationUserTokenConfiguration());
             modelBuilder.ApplyConfiguration(new MarketingConsentConfiguration());
+            modelBuilder.ApplyConfiguration(new RegistrationBenefitClaimConfiguration());
             modelBuilder.ApplyConfiguration(new TermsConsentConfiguration());
             modelBuilder.ApplyConfiguration(new UserPaymentMethodConfiguration());
             modelBuilder.ApplyConfiguration(new UserPiiConfiguration());

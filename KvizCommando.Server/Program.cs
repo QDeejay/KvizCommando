@@ -20,13 +20,13 @@ builder.Configuration["Database:EnableRetryOnFailure"] =
 
 //  Sql server migrációs utasítások: Migration -custom elnevezés-
 /*
-     Add - Migration InitialSqlServerApplication - Context SqlServerApplicationDbContext - Project KvizCommando.Server - StartupProject KvizCommando.Server - OutputDir Data / Migrations / SqlServer / Application - Args "--Database:Provider=SqlServer"
+     Add-Migration InitialSqlServerApplication -Context SqlServerApplicationDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -OutputDir Data/Migrations/SqlServer/Application -Args "--Database:Provider=SqlServer"
 
-     Add - Migration InitialSqlServerGame - Context SqlServerGameDbContext - Project KvizCommando.Server - StartupProject KvizCommando.Server - OutputDir Data / Migrations / SqlServer / Game - Args "--Database:Provider=SqlServer"
+     Add-Migration InitialSqlServerGame -Context SqlServerGameDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -OutputDir Data/Migrations/SqlServer/Game -Args "--Database:Provider=SqlServer"
 
-     Update - Database - Context SqlServerApplicationDbContext - Project KvizCommando.Server - StartupProject KvizCommando.Server - Args "--Database:Provider=SqlServer"
+     Update-Database -Context SqlServerApplicationDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -Args "--Database:Provider=SqlServer"
 
-     Update - Database - Context SqlServerGameDbContext - Project KvizCommando.Server - StartupProject KvizCommando.Server - Args "--Database:Provider=SqlServer" 
+     Update-Database -Context SqlServerGameDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -Args "--Database:Provider=SqlServer" 
 */
 
 // SQLite migrációs utasítások: Migration -custom elnevezés-

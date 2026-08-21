@@ -1,4 +1,4 @@
-﻿Welcome Private!
+﻿Welcome, {{RankName}}!
 
 Please confirm your email to activate your {{AppName}} account.
 

@@ -65,9 +65,14 @@
     color: #f0eec2;
     font: .9rem/1.2 'Courier New', monospace;
     text-align: left;
-    background: color-mix(in srgb, var(--kc-accent) 42%, transparent);
+    background: transparent;
     border: 0;
     border-radius: 4px;
+    box-shadow: none;
+}
+
+.kc-profile-nav-button.active {
+    background: color-mix(in srgb, var(--kc-accent) 42%, transparent);
     box-shadow: inset 3px 0 color-mix(in srgb, var(--kc-lcd-background) 80%, white);
 }
 

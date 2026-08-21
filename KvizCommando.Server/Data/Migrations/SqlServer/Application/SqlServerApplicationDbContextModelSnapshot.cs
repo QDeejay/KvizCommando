@@ -316,6 +316,20 @@ namespace KvizCommando.Server.Data.Migrations.SqlServer.Application
                         });
                 });
 
+            modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Compliance.RegistrationBenefitClaim", b =>
+                {
+                    b.Property<string>("EmailFingerprint")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<DateTime>("EligibleAgainAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("EmailFingerprint");
+
+                    b.ToTable("RegistrationBenefitClaims", (string)null);
+                });
+
             modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Security.UserPii", b =>
                 {
                     b.Property<string>("UserId")

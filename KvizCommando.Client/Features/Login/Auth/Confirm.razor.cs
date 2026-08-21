@@ -23,8 +23,9 @@ public partial class Confirm : KcComponentBase
 
             var userId = query["userId"];
             var code = query["code"];
+            var changedEmail = query["changedEmail"];
             _isLoading = true;
-            _isSuccess = await User.ConfirmEmailAsync(userId!, code!);
+            _isSuccess = await User.ConfirmEmailAsync(userId!, code!, changedEmail);
             _isLoading = false;
 
         }

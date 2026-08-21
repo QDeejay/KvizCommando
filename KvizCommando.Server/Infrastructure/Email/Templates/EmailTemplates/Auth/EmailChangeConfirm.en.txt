@@ -1,0 +1,6 @@
+Welcome, {{RankName}}!
+
+Confirm the new email address for your {{AppName}} account:
+{{ConfirmUrl}}
+
+The link is valid for {{TokenValidityHours}} hours. If you did not request this: {{SupportEmail}}

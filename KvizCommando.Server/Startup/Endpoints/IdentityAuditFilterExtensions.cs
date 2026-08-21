@@ -1,7 +1,11 @@
 using KvizCommando.Server.Identity;
 using KvizCommando.Server.Infrastructure.Logging;
+using KvizCommando.Server.Infrastructure.Email;
+using KvizCommando.Server.Application.Abstractions.Security;
+using KvizCommando.Server.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace KvizCommando.Server.Startup;
@@ -242,14 +246,20 @@ public static class IdentityAuditFilterExtensions
         try
         {
             var result = await next(context);
+            var failed = IsFailedResult(result);
             await WriteAuditAsync(
                 audit,
                 httpContext,
                 AuditEvents.PASSWORD_CHANGED,
-                IsFailedResult(result) ? AuditOutcome.Failed : AuditOutcome.Succeeded,
+                failed ? AuditOutcome.Failed : AuditOutcome.Succeeded,
                 subjectId,
                 subjectId,
                 details);
+
+            if (!failed && !string.IsNullOrWhiteSpace(subjectId))
+            {
+                await TrySendPasswordChangedAsync(httpContext, subjectId);
+            }
             return result;
         }
         catch
@@ -273,12 +283,29 @@ public static class IdentityAuditFilterExtensions
         var httpContext = context.HttpContext;
         var audit = httpContext.RequestServices.GetRequiredService<IAuditLogger>();
         var subjectId = httpContext.Request.Query["userId"].ToString();
+        var oldEmail = await FindEmailByUserIdAsync(httpContext, subjectId);
         var details = new AuditDetails(ChangedFields: ["Email"]);
+        var db = httpContext.RequestServices.GetRequiredService<ApplicationDbContext>();
+        await using var transaction = await db.Database.BeginTransactionAsync(
+            httpContext.RequestAborted);
 
         try
         {
             var result = await next(context);
             var failed = IsFailedResult(result);
+            if (!failed && !string.IsNullOrWhiteSpace(oldEmail))
+            {
+                var claims = httpContext.RequestServices
+                    .GetRequiredService<IRegistrationBenefitClaimService>();
+                await claims.RecordAsync(oldEmail, DateTime.UtcNow.AddMonths(1),
+                    httpContext.RequestAborted);
+            }
+
+            if (failed)
+                await transaction.RollbackAsync(httpContext.RequestAborted);
+            else
+                await transaction.CommitAsync(httpContext.RequestAborted);
+
             await WriteAuditAsync(
                 audit,
                 httpContext,
@@ -291,6 +318,7 @@ public static class IdentityAuditFilterExtensions
         }
         catch
         {
+            await transaction.RollbackAsync(httpContext.RequestAborted);
             await WriteAuditAsync(
                 audit,
                 httpContext,
@@ -315,6 +343,34 @@ public static class IdentityAuditFilterExtensions
         var userManager = httpContext.RequestServices
             .GetRequiredService<UserManager<ApplicationUser>>();
         return (await userManager.FindByEmailAsync(email))?.Id;
+    }
+
+    private static async Task<string?> FindEmailByUserIdAsync(HttpContext httpContext, string? userId)
+    {
+        if (string.IsNullOrWhiteSpace(userId))
+            return null;
+        var userManager = httpContext.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+        return (await userManager.FindByIdAsync(userId))?.Email;
+    }
+
+    private static async Task TrySendPasswordChangedAsync(HttpContext httpContext, string userId)
+    {
+        var userManager = httpContext.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+        var user = await userManager.FindByIdAsync(userId);
+        if (user is null || string.IsNullOrWhiteSpace(user.Email))
+            return;
+
+        try
+        {
+            await httpContext.RequestServices.GetRequiredService<IAccountNotificationSender>()
+                .SendPasswordChangedAsync(user, httpContext.RequestAborted);
+        }
+        catch (Exception exception)
+        {
+            var logger = httpContext.RequestServices.GetRequiredService<ILoggerFactory>()
+                .CreateLogger(nameof(IdentityAuditFilterExtensions));
+            logger.LogWarning(exception, "A jelszóváltozás értesítő levele nem volt kézbesíthető.");
+        }
     }
 
     private static string? GetAuthenticatedUserId(HttpContext httpContext) =>

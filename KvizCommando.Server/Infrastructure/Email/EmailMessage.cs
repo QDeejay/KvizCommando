@@ -3,7 +3,9 @@ namespace KvizCommando.Server.Infrastructure.Email;
 public enum EmailMessageType
 {
     Registration,
-    PasswordReset
+    PasswordReset,
+    EmailChange,
+    PasswordChanged
 }
 
 public sealed record EmailMessage(

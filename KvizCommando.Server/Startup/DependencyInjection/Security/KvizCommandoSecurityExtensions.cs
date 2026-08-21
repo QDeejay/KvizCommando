@@ -67,7 +67,10 @@ public static class KvizCommandoSecurityExtensions
                 $"Ismeretlen Email:Service érték: '{emailService}'. Használható érték: File vagy Mail.");
         }
 
+        //services.AddTransient<WhitelistedEmailSender>();
         services.AddTransient<IEmailSender<ApplicationUser>, WhitelistedEmailSender>();
+        services.AddTransient<IAccountNotificationSender, WhitelistedEmailSender>();
+
         services.Configure<CallbackWhitelistOptions>(options =>
         {
             var baseUrls = configuration

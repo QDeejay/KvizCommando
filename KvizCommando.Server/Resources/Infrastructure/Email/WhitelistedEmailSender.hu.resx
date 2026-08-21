@@ -123,6 +123,12 @@
   <data name="Email.Subject.ResetPassword" xml:space="preserve">
     <value>{{AppName}} – Jelszó visszaállítása</value>
   </data>
+  <data name="Email.Subject.EmailChange" xml:space="preserve">
+    <value>{{AppName}} – Új e-mail-cím megerősítése</value>
+  </data>
+  <data name="Email.Subject.PasswordChanged" xml:space="preserve">
+    <value>{{AppName}} – A jelszavad megváltozott</value>
+  </data>
   <data name="Email.Footer.Disclaimer" xml:space="preserve">
     <value>Ez egy automatikus üzenet. Kérdés esetén: {{SupportEmail}}</value>
   </data>

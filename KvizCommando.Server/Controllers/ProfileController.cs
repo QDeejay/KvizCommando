@@ -14,14 +14,39 @@ namespace KvizCommando.Server.Controllers;
 public sealed class ProfileController : ControllerBase
 {
     private readonly IProfileService _profileService;
+    private readonly IProfileAccountService _accountService;
     private readonly IUserPlayerIdCacheService _idCache;
 
     public ProfileController(
         IProfileService profileService,
+        IProfileAccountService accountService,
         IUserPlayerIdCacheService idCache)
     {
         _profileService = profileService;
+        _accountService = accountService;
         _idCache = idCache;
+    }
+
+    /// <summary>Betölti a hitelesített felhasználó fiókadatait.</summary>
+    [HttpGet("account")]
+    public async Task<ActionResult<ProfileAccountResponse>> GetAccountAsync(CancellationToken ct)
+    {
+        var userId = GetUserId();
+        return userId is null
+            ? Unauthorized()
+            : Ok(await _accountService.GetAsync(userId, ct));
+    }
+
+    /// <summary>Elmenti a hitelesített felhasználó kapcsolattartási és számlázási adatait.</summary>
+    [HttpPut("account")]
+    public async Task<ActionResult<ProfileAccountResponse>> SaveAccountAsync(
+        [FromBody] SaveProfileAccountRequest request,
+        CancellationToken ct)
+    {
+        var userId = GetUserId();
+        return userId is null
+            ? Unauthorized()
+            : Ok(await _accountService.SaveAsync(userId, request, ct));
     }
 
     [HttpGet]
@@ -86,11 +111,14 @@ public sealed class ProfileController : ControllerBase
 
     private async Task<int?> GetPlayerIdAsync(CancellationToken ct)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ??
-                     User.FindFirstValue("sub");
+        var userId = GetUserId();
 
         return string.IsNullOrWhiteSpace(userId)
             ? null
             : await _idCache.GetPlayerIdAsync(userId, ct);
     }
+
+    private string? GetUserId() =>
+        User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+        User.FindFirstValue("sub");
 }

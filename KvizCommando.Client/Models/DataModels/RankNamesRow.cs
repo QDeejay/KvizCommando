@@ -1,32 +1,5 @@
 ﻿namespace KvizCommando.Client.Models.DataModels
 {
-    public sealed class RankNamesRow
-    {
-        public int EnumLevel { get; set; }
-        public string? PublicLevel { get; set; }
-        public string NameHu { get; set; }
-        public string ShortHu { get; set; }
-        public string NameEn { get; set; }
-        public string ShortEn { get; set; }
-
-        public RankNamesRow(
-            int enumlevel,
-            string publiclevel,
-            string namehu,
-            string shorthu,
-            string nameen,
-            string shorten
-         )
-        {
-            EnumLevel = enumlevel;
-            PublicLevel = publiclevel;
-            NameHu = namehu;
-            ShortHu = shorthu;
-            NameEn = nameen;
-            ShortEn = shorten;
-        }
-    }
-
     public sealed class RankClassNameRow
     {
         public int RankClass { get; set; }

@@ -10,6 +10,7 @@ namespace KvizCommando.Client.Features.Shared.Profile;
 
 public partial class ProfileNavigator : KcComponentBase
 {
+    private enum ProfileSection { Team, Account }
     [Inject] private IProfileClientService ProfileClient { get; set; } = default!;
 
     [Parameter] public AppState AppStates { get; set; } = default!;
@@ -24,6 +25,7 @@ public partial class ProfileNavigator : KcComponentBase
     private bool _isLoading;
     private bool _isTeamNameBusy;
     private bool _isAvatarBusy;
+    private ProfileSection _activeSection = ProfileSection.Team;
 
     private bool CanEditTeamName =>
         _profile is not null &&
@@ -118,6 +120,7 @@ public partial class ProfileNavigator : KcComponentBase
     public async Task ShowAsync()
     {
         _isOpen = true;
+        _activeSection = ProfileSection.Team;
         _isLoading = true;
         _profile = null;
         ResetTeamNameCheck();

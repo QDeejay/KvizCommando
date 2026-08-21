@@ -26,16 +26,28 @@
                     <div class="kc-profile-navigation-title">@Ui.Lang["profile.Navigation"]</div>
                     <nav>
                         <button type="button"
-                                class="kc-profile-nav-button active"
-                                aria-current="page">
+                                class="kc-profile-nav-button @(_activeSection == ProfileSection.Team ? "active" : null)"
+                                aria-current="@(_activeSection == ProfileSection.Team ? "page" : null)"
+                                @onclick="() => _activeSection = ProfileSection.Team">
                             <span aria-hidden="true">▶</span>
                             <span>@Ui.Lang["profile.Section.Team"]</span>
+                        </button>
+                        <button type="button"
+                                class="kc-profile-nav-button @(_activeSection == ProfileSection.Account ? "active" : null)"
+                                aria-current="@(_activeSection == ProfileSection.Account ? "page" : null)"
+                                @onclick="() => _activeSection = ProfileSection.Account">
+                            <span aria-hidden="true">▶</span>
+                            <span>@Ui.Lang["profile.Section.Account"]</span>
                         </button>
                     </nav>
                 </aside>
 
                 <div class="kc-profile-content kc-window-body kc-themed-window-content">
-                    @if (_isLoading)
+                    @if (_activeSection == ProfileSection.Account)
+                    {
+                        <ProfileAccountView />
+                    }
+                    else if (_isLoading)
                     {
                         <div class="kc-profile-loading" role="status">
                             @Ui.Lang["profile.Loading"]

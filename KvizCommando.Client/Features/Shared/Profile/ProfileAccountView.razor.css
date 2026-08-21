@@ -1,0 +1,61 @@
+section {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px;
+    color: #c9c9bd;
+    background: linear-gradient(180deg, var(--kc-panel-bg-start), var(--kc-panel-bg-end));
+    border: 1px solid color-mix(in srgb, var(--kc-shell-border) 62%, #777);
+    border-radius: 7px;
+}
+
+h3 {
+    margin: 0 0 10px;
+    color: #f0eec2;
+    font: 400 1.28rem/1.2 'Special Elite', cursive;
+    letter-spacing: .06em;
+}
+
+label {
+    color: #c9c9bd;
+    font-size: .84rem;
+}
+
+.lcd-input {
+    width: 100%;
+}
+
+textarea.lcd-input {
+    min-height: 76px;
+    resize: vertical;
+}
+
+.kc-profile-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 18px;
+}
+
+.kc-account-disabled-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    color: #858585;
+}
+
+small {
+    color: #8d9084;
+    margin-bottom: 12px;
+}
+
+.kc-profile-loading,
+.kc-profile-error {
+    grid-column: 1 / -1;
+    place-self: center;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.kc-profile-error {
+    color: #e47676;
+}

@@ -10,6 +10,20 @@ namespace KvizCommando.Server.Application.Abstractions.Security
     /// </summary>
     public interface IUserPiiService
     {
+        /// <summary>Atomikusan elmenti a profil kapcsolattartási és számlázási adatait; az üres mező törli a korábbi értéket.</summary>
+        /// <param name="userId">Az Identity-felhasználó azonosítója.</param>
+        /// <param name="phone">A telefonszám.</param>
+        /// <param name="billingName">A számlázási név.</param>
+        /// <param name="billingAddress">A számlázási cím.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
+        Task SetProfileAsync(string userId, string? phone, string? billingName, string? billingAddress, CancellationToken ct = default);
+
+        /// <summary>Visszaadja a profil titkosítva tárolt kapcsolattartási és számlázási adatait.</summary>
+        /// <param name="userId">Az Identity-felhasználó azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
+        /// <returns>A telefonszám, számlázási név és számlázási cím.</returns>
+        Task<(string? Phone, string? BillingName, string? BillingAddress)> GetProfileAsync(string userId, CancellationToken ct = default);
+
         /// <summary>
         /// Elmenti a felhasználó telefonszámát.
         /// </summary>

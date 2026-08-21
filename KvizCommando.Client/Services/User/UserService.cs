@@ -123,7 +123,7 @@ namespace KvizCommando.Client.Services.User
             _nav.NavigateTo($"/?reason={reason}", forceLoad: true);
         }
         /// <inheritdoc />
-        public async Task<bool> ConfirmEmailAsync(string userId, string code)
+        public async Task<bool> ConfirmEmailAsync(string userId, string code, string? changedEmail = null)
         {
 
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(code))
@@ -133,9 +133,18 @@ namespace KvizCommando.Client.Services.User
 
             try
             {
-                var response = await _http.GetAsync($"/confirmEmail?userId={userId}&code={code}");
-                if (response.IsSuccessStatusCode) { return true; }
-                else { return false; }
+                var url =
+                       $"/confirmEmail?userId={Uri.EscapeDataString(userId)}" +
+                       $"&code={Uri.EscapeDataString(code)}";
+
+                if (!string.IsNullOrWhiteSpace(changedEmail))
+                {
+                    url +=
+                        $"&changedEmail={Uri.EscapeDataString(changedEmail)}";
+                }
+
+                var response = await _http.GetAsync(url);
+                return response.IsSuccessStatusCode;
 
             }
             catch

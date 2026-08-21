@@ -1,4 +1,4 @@
-﻿Üdv, Közlegény!
+﻿Üdv, {{RankName}}!
 
 Kérjük, erősítsd meg az e-mail címed a {{AppName}} fiókod aktiválásához.
 

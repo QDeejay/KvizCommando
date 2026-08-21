@@ -1,6 +1,8 @@
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.User;
 using KvizCommando.Shared.Contracts.Profile;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace KvizCommando.Client.Features.Shared.Profile;
 
@@ -94,6 +96,98 @@ public sealed class ProfileClientService : IProfileClientService
             FailedSave(),
             ct);
 
+    /// <inheritdoc />
+    public async Task<ProfileAccountResponse> GetAccountAsync(CancellationToken ct = default)
+    {
+        try
+        {
+            return await _http.GetFromJsonAsync<ProfileAccountResponse>(
+                $"{PROFILE_ROUTE}/account", ct) ?? FailedAccount();
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Profile account load request failed.");
+            return FailedAccount();
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task<ProfileAccountResponse> SaveAccountAsync(
+        SaveProfileAccountRequest request,
+        CancellationToken ct = default)
+    {
+        try
+        {
+            using var response = await _http.PutAsJsonAsync($"{PROFILE_ROUTE}/account", request, ct);
+            if (!response.IsSuccessStatusCode)
+                return FailedAccount();
+            return await response.Content.ReadFromJsonAsync<ProfileAccountResponse>(cancellationToken: ct)
+                ?? FailedAccount();
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Profile account save request failed.");
+            return FailedAccount();
+        }
+    }
+
+    /// <inheritdoc />
+    public Task<ProfileIdentityUpdateResponse> RequestEmailChangeAsync(
+        string newEmail,
+        CancellationToken ct = default) =>
+        UpdateIdentityAsync(new IdentityInfoRequest { NewEmail = newEmail }, ct);
+
+    /// <inheritdoc />
+    public Task<ProfileIdentityUpdateResponse> ChangePasswordAsync(
+        string currentPassword,
+        string newPassword,
+        CancellationToken ct = default) =>
+        UpdateIdentityAsync(new IdentityInfoRequest
+        {
+            OldPassword = currentPassword,
+            NewPassword = newPassword
+        }, ct);
+
+    private async Task<ProfileIdentityUpdateResponse> UpdateIdentityAsync(
+        IdentityInfoRequest request,
+        CancellationToken ct)
+    {
+        try
+        {
+            using var response = await _http.PostAsJsonAsync("/manage/info", request, ct);
+            if (response.IsSuccessStatusCode)
+                return new ProfileIdentityUpdateResponse { Success = true };
+
+            var json = await response.Content.ReadAsStringAsync(ct);
+            var problem = string.IsNullOrWhiteSpace(json)
+                ? null
+                : JsonSerializer.Deserialize<IdentityProblemDetails>(json,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return new ProfileIdentityUpdateResponse
+            {
+                Errors = problem?.Errors?.SelectMany(x => x.Value).ToList()
+                    ?? ["DefaultError"]
+            };
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Identity profile update request failed.");
+            return new ProfileIdentityUpdateResponse { Errors = ["DefaultError"] };
+        }
+    }
+
     private async Task<TResponse> PostAsync<TRequest, TResponse>(
         string action,
         TRequest request,
@@ -138,4 +232,16 @@ public sealed class ProfileClientService : IProfileClientService
     {
         State = ProfileRequestState.ServerError
     };
+
+    private static ProfileAccountResponse FailedAccount() => new()
+    {
+        State = ProfileAccountRequestState.ServerError
+    };
+
+    private sealed class IdentityInfoRequest
+    {
+        public string? NewEmail { get; set; }
+        public string? NewPassword { get; set; }
+        public string? OldPassword { get; set; }
+    }
 }

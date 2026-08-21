@@ -302,6 +302,20 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
                         });
                 });
 
+            modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Compliance.RegistrationBenefitClaim", b =>
+                {
+                    b.Property<string>("EmailFingerprint")
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EligibleAgainAtUtc")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("EmailFingerprint");
+
+                    b.ToTable("RegistrationBenefitClaims", (string)null);
+                });
+
             modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Security.UserPii", b =>
                 {
                     b.Property<string>("UserId")

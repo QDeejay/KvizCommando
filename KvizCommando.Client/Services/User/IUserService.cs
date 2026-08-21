@@ -32,9 +32,10 @@ namespace KvizCommando.Client.Services.User
         /// Megerősíti a felhasználó e-mail-címét az Identity kódjával.
         /// </summary>
         /// <param name="userId">Az Identity-felhasználó azonosítója.</param>
-        /// <param name="code">A lokalizálandó kategóriakód.</param>
+        /// <param name="code">Az Identity megerősítő kódja.</param>
+        /// <param name="changedEmail">E-mail-csere esetén az Identity által küldött új cím.</param>
         /// <returns><see langword="true"/>, ha a művelet sikeresen befejeződött; egyébként <see langword="false"/>.</returns>
-        Task<bool> ConfirmEmailAsync(string userId, string code);
+        Task<bool> ConfirmEmailAsync(string userId, string code, string? changedEmail = null);
         /// <summary>
         /// Elindítja az elfelejtett jelszó helyreállítási folyamatát.
         /// </summary>

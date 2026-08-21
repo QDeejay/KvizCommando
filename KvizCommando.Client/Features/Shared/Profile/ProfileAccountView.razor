@@ -1,0 +1,53 @@
+@inherits Utilities.KcComponentBase
+@using KvizCommando.Shared.Models.Rules
+
+@if (_isLoading)
+{
+    <div class="kc-profile-loading" role="status">@Ui.Lang["profile.Account.Loading"]</div>
+}
+else if (_account is null)
+{
+    <div class="kc-profile-error" role="alert">@Ui.Lang["profile.Account.Error.Load"]</div>
+}
+else
+{
+    <section>
+        <h3>@Ui.Lang["profile.Account.Email.Title"]</h3>
+        <label for="kc-account-current-email">@Ui.Lang["profile.Account.Email.Current"]</label>
+        <input id="kc-account-current-email" class="lcd-input" value="@_account.Email" disabled />
+        <label for="kc-account-new-email">@Ui.Lang["profile.Account.Email.New"]</label>
+        <input id="kc-account-new-email" class="lcd-input" type="email" value="@_newEmail" disabled="@_isEmailBusy"
+               @oninput="e => _newEmail = e.Value?.ToString() ?? string.Empty" />
+        <div class="kc-profile-actions"><button class="military-button" disabled="@(!CanChangeEmail)" @onclick="ChangeEmailAsync">@Ui.Lang["profile.Account.Email.Change"]</button></div>
+    </section>
+
+    <section>
+        <h3>@Ui.Lang["profile.Account.Contact.Title"]</h3>
+        <label for="kc-account-phone">@Ui.Lang["profile.Account.Phone"]</label>
+        <input id="kc-account-phone" class="lcd-input" maxlength="@ProfileAccountRules.PHONE_MAX_LENGTH" value="@_phone" disabled="@_isPiiBusy" @oninput="e => _phone = e.Value?.ToString() ?? string.Empty" />
+        <label for="kc-account-billing-name">@Ui.Lang["profile.Account.BillingName"]</label>
+        <input id="kc-account-billing-name" class="lcd-input" maxlength="@ProfileAccountRules.BILLING_NAME_MAX_LENGTH" value="@_billingName" disabled="@_isPiiBusy" @oninput="e => _billingName = e.Value?.ToString() ?? string.Empty" />
+        <label for="kc-account-billing-address">@Ui.Lang["profile.Account.BillingAddress"]</label>
+        <textarea id="kc-account-billing-address" class="lcd-input" maxlength="@ProfileAccountRules.BILLING_ADDRESS_MAX_LENGTH" value="@_billingAddress" disabled="@_isPiiBusy" @oninput="e => _billingAddress = e.Value?.ToString() ?? string.Empty"></textarea>
+        <div class="kc-profile-actions"><button class="military-button" disabled="@_isPiiBusy" @onclick="SavePiiAsync">@Ui.Lang["profile.Account.Save"]</button></div>
+    </section>
+
+    <section>
+        <h3>@Ui.Lang["profile.Account.Password.Title"]</h3>
+        <label for="kc-account-current-password">@Ui.Lang["profile.Account.Password.Current"]</label>
+        <input id="kc-account-current-password" class="lcd-input" type="password" value="@_currentPassword" disabled="@_isPasswordBusy" @oninput="e => _currentPassword = e.Value?.ToString() ?? string.Empty" />
+        <label for="kc-account-new-password">@Ui.Lang["profile.Account.Password.New"]</label>
+        <input id="kc-account-new-password" class="lcd-input" type="password" value="@_newPassword" disabled="@_isPasswordBusy" @oninput="e => _newPassword = e.Value?.ToString() ?? string.Empty" />
+        <label for="kc-account-repeat-password">@Ui.Lang["profile.Account.Password.Repeat"]</label>
+        <input id="kc-account-repeat-password" class="lcd-input" type="password" value="@_repeatPassword" disabled="@_isPasswordBusy" @oninput="e => _repeatPassword = e.Value?.ToString() ?? string.Empty" />
+        <div class="kc-profile-actions"><button class="military-button" disabled="@(!CanChangePassword)" @onclick="ChangePasswordAsync">@Ui.Lang["profile.Account.Password.Change"]</button></div>
+    </section>
+
+    <section>
+        <h3>@Ui.Lang["profile.Account.Security.Title"]</h3>
+        <label class="kc-account-disabled-row"><input type="checkbox" disabled /> @Ui.Lang["profile.Account.TwoFactor"]</label>
+        <small>@Ui.Lang["profile.Account.ComingSoon"]</small>
+        <label for="kc-account-payment">@Ui.Lang["profile.Account.Payment"]</label>
+        <input id="kc-account-payment" class="lcd-input" value="@Ui.Lang["profile.Account.Payment.NotConfigured"]" disabled />
+    </section>
+}

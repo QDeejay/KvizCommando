@@ -1,0 +1,6 @@
+Üdv, {{RankName}}!
+
+Erősítsd meg a {{AppName}} fiókod új e-mail-címét:
+{{ConfirmUrl}}
+
+A link {{TokenValidityHours}} óráig érvényes. Ha nem te kérted: {{SupportEmail}}
