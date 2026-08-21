@@ -25,7 +25,7 @@
   <data name="TeamName.State.Required" xml:space="preserve"><value>Adj meg csapatnevet.</value></data>
   <data name="TeamName.State.TooShort" xml:space="preserve"><value>A csapatnév legalább 3 karakter legyen.</value></data>
   <data name="TeamName.State.TooLong" xml:space="preserve"><value>A csapatnév legfeljebb 20 karakter lehet.</value></data>
-  <data name="TeamName.State.InvalidCharacters" xml:space="preserve"><value>Csak betű, szám, kötőjel és aláhúzásjel használható.</value></data>
+  <data name="TeamName.State.InvalidCharacters" xml:space="preserve"><value>Csak betű, szám, szóköz, aposztróf, kötőjel és aláhúzásjel használható.</value></data>
   <data name="TeamName.State.Taken" xml:space="preserve"><value>Ez a csapatnév már foglalt.</value></data>
   <data name="Avatar.Title" xml:space="preserve"><value>Kapitány avatar</value></data>
   <data name="Avatar.RequiredRank" xml:space="preserve"><value>Avatar módosításához szükséges szint: {0}</value></data>

@@ -129,6 +129,110 @@
     --kc-lobby-filter: brightness(.7) saturate(.95) sepia(.12) hue-rotate(185deg);
 }
 
+:root[data-theme="lily"] {
+    --kc-page-bg-start: #302038;
+    --kc-page-bg-end: #140d18;
+    --kc-page-glow-primary: rgba(190, 122, 218, .11);
+    --kc-page-glow-secondary: rgba(112, 70, 142, .1);
+    --kc-shell-bg: #35213f;
+    --kc-shell-hover: #4a2e58;
+    --kc-shell-border: #81529a;
+    --kc-shell-inset-border: rgba(132, 82, 157, .3);
+    --kc-surface-bg: #2b1d33;
+    --kc-surface-bg-soft: rgba(43, 29, 51, .92);
+    --kc-panel-bg-start: #392442;
+    --kc-panel-bg-end: #1b1120;
+    --kc-panel-glow-start: #43294e;
+    --kc-panel-glow-end: #1b1021;
+    --kc-accent: #80519a;
+    --kc-primary: #8956a3;
+    --kc-primary-border: #69407e;
+    --kc-lcd-background: rgba(214, 167, 235, .92);
+    --kc-lcd-scanline: rgba(61, 25, 76, .035);
+    --kc-lcd-color: #361b42;
+    --kc-lcd-input-background: #351b40;
+    --kc-lcd-input-color: #e4b9f2;
+    --kc-lobby-filter: brightness(.78) saturate(.92) sepia(.08) hue-rotate(225deg);
+}
+
+:root[data-theme="candy"] {
+    --kc-page-bg-start: #3a202e;
+    --kc-page-bg-end: #180c12;
+    --kc-page-glow-primary: rgba(233, 126, 170, .11);
+    --kc-page-glow-secondary: rgba(151, 70, 108, .1);
+    --kc-shell-bg: #472637;
+    --kc-shell-hover: #603149;
+    --kc-shell-border: #98506f;
+    --kc-shell-inset-border: rgba(155, 78, 111, .3);
+    --kc-surface-bg: #38202d;
+    --kc-surface-bg-soft: rgba(56, 32, 45, .92);
+    --kc-panel-bg-start: #462636;
+    --kc-panel-bg-end: #211018;
+    --kc-panel-glow-start: #522a3c;
+    --kc-panel-glow-end: #220f19;
+    --kc-accent: #9d4f72;
+    --kc-primary: #aa557b;
+    --kc-primary-border: #853d5e;
+    --kc-lcd-background: rgba(243, 168, 200, .92);
+    --kc-lcd-scanline: rgba(75, 24, 46, .035);
+    --kc-lcd-color: #461a2d;
+    --kc-lcd-input-background: #411a2b;
+    --kc-lcd-input-color: #f6b8d2;
+    --kc-lobby-filter: brightness(.82) saturate(.95) sepia(.12) hue-rotate(285deg);
+}
+
+:root[data-theme="phone"] {
+    --kc-page-bg-start: #350b2a;
+    --kc-page-bg-end: #12030e;
+    --kc-page-glow-primary: rgba(255, 0, 161, .14);
+    --kc-page-glow-secondary: rgba(170, 0, 107, .11);
+    --kc-shell-bg: #441036;
+    --kc-shell-hover: #64164f;
+    --kc-shell-border: #a8227d;
+    --kc-shell-inset-border: rgba(180, 33, 132, .32);
+    --kc-surface-bg: #340d2b;
+    --kc-surface-bg-soft: rgba(52, 13, 43, .93);
+    --kc-panel-bg-start: #481039;
+    --kc-panel-bg-end: #1d0617;
+    --kc-panel-glow-start: #571146;
+    --kc-panel-glow-end: #1d0518;
+    --kc-accent: #b32284;
+    --kc-primary: #c32491;
+    --kc-primary-border: #96176d;
+    --kc-lcd-background: rgba(255, 85, 200, .93);
+    --kc-lcd-scanline: rgba(80, 0, 51, .045);
+    --kc-lcd-color: #3f082f;
+    --kc-lcd-input-background: #3d082e;
+    --kc-lcd-input-color: #ff8fd9;
+    --kc-lobby-filter: brightness(.72) saturate(1.15) sepia(.08) hue-rotate(275deg);
+}
+
+:root[data-theme="wolf"] {
+    --kc-page-bg-start: #282c30;
+    --kc-page-bg-end: #0e1012;
+    --kc-page-glow-primary: rgba(174, 184, 193, .08);
+    --kc-page-glow-secondary: rgba(102, 111, 120, .08);
+    --kc-shell-bg: #24282c;
+    --kc-shell-hover: #353b40;
+    --kc-shell-border: #596168;
+    --kc-shell-inset-border: rgba(100, 108, 115, .28);
+    --kc-surface-bg: #202326;
+    --kc-surface-bg-soft: rgba(32, 35, 38, .93);
+    --kc-panel-bg-start: #2b2f33;
+    --kc-panel-bg-end: #141619;
+    --kc-panel-glow-start: #31363a;
+    --kc-panel-glow-end: #131619;
+    --kc-accent: #626b72;
+    --kc-primary: #68727a;
+    --kc-primary-border: #50585f;
+    --kc-lcd-background: rgba(184, 192, 199, .92);
+    --kc-lcd-scanline: rgba(22, 25, 28, .035);
+    --kc-lcd-color: #252a2e;
+    --kc-lcd-input-background: #262b2f;
+    --kc-lcd-input-color: #cbd1d6;
+    --kc-lobby-filter: brightness(.68) saturate(.25) grayscale(.7) contrast(1.05);
+}
+
 html,
 body {
     background:

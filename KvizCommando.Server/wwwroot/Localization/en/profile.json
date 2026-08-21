@@ -20,7 +20,7 @@
   "TeamName.State.Required": "Enter a team name.",
   "TeamName.State.TooShort": "The team name must contain at least 3 characters.",
   "TeamName.State.TooLong": "The team name can contain at most 20 characters.",
-  "TeamName.State.InvalidCharacters": "Use letters, numbers, hyphens and underscores only.",
+  "TeamName.State.InvalidCharacters": "Use letters, numbers, spaces, apostrophes, hyphens and underscores only.",
   "TeamName.State.Taken": "This team name is already taken.",
   "Avatar.Title": "Captain avatar",
   "Avatar.RequiredRank": "Level required to change the avatar: {0}",

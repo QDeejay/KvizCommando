@@ -228,6 +228,10 @@
   <data name="Settings.Theme.Desert" xml:space="preserve"><value>Desert</value></data>
   <data name="Settings.Theme.Steel" xml:space="preserve"><value>Steel</value></data>
   <data name="Settings.Theme.Night" xml:space="preserve"><value>Night</value></data>
+  <data name="Settings.Theme.Lily" xml:space="preserve"><value>Lily</value></data>
+  <data name="Settings.Theme.Candy" xml:space="preserve"><value>Candy</value></data>
+  <data name="Settings.Theme.Phone" xml:space="preserve"><value>Phone</value></data>
+  <data name="Settings.Theme.Wolf" xml:space="preserve"><value>Wolf</value></data>
   <data name="Settings.Help.Reset.Title" xml:space="preserve"><value>Reset help guides</value></data>
   <data name="Settings.Help.Reset.Description" xml:space="preserve"><value>Previously viewed help guides will appear automatically again.</value></data>
   <data name="Settings.Help.Reset.Button" xml:space="preserve"><value>RESET HELP GUIDES</value></data>

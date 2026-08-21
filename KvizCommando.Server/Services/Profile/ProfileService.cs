@@ -74,7 +74,7 @@ public sealed class ProfileService : IProfileService
         }
 
         var teamName = request.TeamName?.Trim() ?? string.Empty;
-        var validation = MapValidation(PublicNameRules.Validate(teamName));
+        var validation = MapValidation(PublicNameRules.ValidateTeamName(teamName));
 
         if (validation != TeamNameCheckState.Available)
         {
@@ -120,7 +120,7 @@ public sealed class ProfileService : IProfileService
         CancellationToken ct = default)
     {
         var teamName = request.TeamName?.Trim() ?? string.Empty;
-        var validation = MapValidation(PublicNameRules.Validate(teamName));
+        var validation = MapValidation(PublicNameRules.ValidateTeamName(teamName));
 
         if (validation != TeamNameCheckState.Available)
             return TeamNameRejected(validation);

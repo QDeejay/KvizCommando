@@ -255,6 +255,10 @@
 .kc-settings-theme-desert { --preview-shell: #3b2b1a; --preview-surface: #302419; --preview-lcd: #f2be52; }
 .kc-settings-theme-steel { --preview-shell: #1d2a32; --preview-surface: #1b252b; --preview-lcd: #96cde1; }
 .kc-settings-theme-night { --preview-shell: #141625; --preview-surface: #171925; --preview-lcd: #8b9ae6; }
+.kc-settings-theme-lily { --preview-shell: #35213f; --preview-surface: #2b1d33; --preview-lcd: #d6a7eb; }
+.kc-settings-theme-candy { --preview-shell: #472637; --preview-surface: #38202d; --preview-lcd: #f3a8c8; }
+.kc-settings-theme-phone { --preview-shell: #441036; --preview-surface: #340d2b; --preview-lcd: #ff55c8; }
+.kc-settings-theme-wolf { --preview-shell: #24282c; --preview-surface: #202326; --preview-lcd: #b8c0c7; }
 
 .kc-settings-help-row p {
     margin: 8px 0 0;

@@ -112,6 +112,8 @@ namespace KvizCommando.Client.Layout
             InitStatesAsync(reqTypes);
 
         private Task RefreshProfileAsync() =>
-            InitStatesAsync(ReqStates.Home);
+            InitStatesAsync(
+                ReqStates.Home,
+                ReqStates.Team);
     }
 }

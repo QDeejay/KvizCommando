@@ -25,7 +25,7 @@
   <data name="TeamName.State.Required" xml:space="preserve"><value>Enter a team name.</value></data>
   <data name="TeamName.State.TooShort" xml:space="preserve"><value>The team name must contain at least 3 characters.</value></data>
   <data name="TeamName.State.TooLong" xml:space="preserve"><value>The team name can contain at most 20 characters.</value></data>
-  <data name="TeamName.State.InvalidCharacters" xml:space="preserve"><value>Use letters, numbers, hyphens and underscores only.</value></data>
+  <data name="TeamName.State.InvalidCharacters" xml:space="preserve"><value>Use letters, numbers, spaces, apostrophes, hyphens and underscores only.</value></data>
   <data name="TeamName.State.Taken" xml:space="preserve"><value>This team name is already taken.</value></data>
   <data name="Avatar.Title" xml:space="preserve"><value>Captain avatar</value></data>
   <data name="Avatar.RequiredRank" xml:space="preserve"><value>Level required to change the avatar: {0}</value></data>

@@ -224,10 +224,14 @@
   <data name="Settings.Appearance.Theme" xml:space="preserve"><value>Színtéma</value></data>
   <data name="Settings.Appearance.Fullscreen" xml:space="preserve"><value>Bejelentkezés után teljes képernyős mód</value></data>
   <data name="Settings.Theme.Default" xml:space="preserve"><value>Alap</value></data>
-  <data name="Settings.Theme.Olive" xml:space="preserve"><value>Olive</value></data>
-  <data name="Settings.Theme.Desert" xml:space="preserve"><value>Desert</value></data>
-  <data name="Settings.Theme.Steel" xml:space="preserve"><value>Steel</value></data>
-  <data name="Settings.Theme.Night" xml:space="preserve"><value>Night</value></data>
+  <data name="Settings.Theme.Olive" xml:space="preserve"><value>Olíva</value></data>
+  <data name="Settings.Theme.Desert" xml:space="preserve"><value>Sivatag</value></data>
+  <data name="Settings.Theme.Steel" xml:space="preserve"><value>Acél</value></data>
+  <data name="Settings.Theme.Night" xml:space="preserve"><value>Éjszaka</value></data>
+  <data name="Settings.Theme.Lily" xml:space="preserve"><value>Liliom</value></data>
+  <data name="Settings.Theme.Candy" xml:space="preserve"><value>Cukor</value></data>
+  <data name="Settings.Theme.Phone" xml:space="preserve"><value>Telefon</value></data>
+  <data name="Settings.Theme.Wolf" xml:space="preserve"><value>Farkas</value></data>
   <data name="Settings.Help.Reset.Title" xml:space="preserve"><value>Súgók visszaállítása</value></data>
   <data name="Settings.Help.Reset.Description" xml:space="preserve"><value>Az eddig megtekintett súgók ismét automatikusan megjelennek.</value></data>
   <data name="Settings.Help.Reset.Button" xml:space="preserve"><value>SÚGÓK VISSZAÁLLÍTÁSA</value></data>

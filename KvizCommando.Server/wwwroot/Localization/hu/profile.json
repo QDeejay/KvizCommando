@@ -20,7 +20,7 @@
   "TeamName.State.Required": "Adj meg csapatnevet.",
   "TeamName.State.TooShort": "A csapatnév legalább 3 karakter legyen.",
   "TeamName.State.TooLong": "A csapatnév legfeljebb 20 karakter lehet.",
-  "TeamName.State.InvalidCharacters": "Csak betű, szám, kötőjel és aláhúzásjel használható.",
+  "TeamName.State.InvalidCharacters": "Csak betű, szám, szóköz, aposztróf, kötőjel és aláhúzásjel használható.",
   "TeamName.State.Taken": "Ez a csapatnév már foglalt.",
   "Avatar.Title": "Kapitány avatar",
   "Avatar.RequiredRank": "Avatar módosításához szükséges szint: {0}",

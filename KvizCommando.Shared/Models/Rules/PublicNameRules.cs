@@ -10,7 +10,7 @@ public enum PublicNameValidationResult
 }
 
 /// <summary>
-/// A nyilvánosan megjelenő játékos- és csapatnevek közös szabályai.
+/// A nyilvánosan megjelenő játékos- és csapatnevek szabályai.
 /// </summary>
 public static class PublicNameRules
 {
@@ -18,8 +18,18 @@ public static class PublicNameRules
     public const int NAME_MAX_LENGTH = 20;
     public const string NAME_ALLOWED_CHARACTERS =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
+    public const string TEAM_NAME_ALLOWED_CHARACTERS =
+        NAME_ALLOWED_CHARACTERS + " '";
 
-    public static PublicNameValidationResult Validate(string? value)
+    public static PublicNameValidationResult Validate(string? value) =>
+        Validate(value, NAME_ALLOWED_CHARACTERS);
+
+    public static PublicNameValidationResult ValidateTeamName(string? value) =>
+        Validate(value, TEAM_NAME_ALLOWED_CHARACTERS);
+
+    private static PublicNameValidationResult Validate(
+        string? value,
+        string allowedCharacters)
     {
         if (string.IsNullOrWhiteSpace(value))
             return PublicNameValidationResult.Required;
@@ -33,7 +43,7 @@ public static class PublicNameRules
             return PublicNameValidationResult.TooLong;
 
         return name.Any(character =>
-            !NAME_ALLOWED_CHARACTERS.Contains(character))
+            !allowedCharacters.Contains(character))
                 ? PublicNameValidationResult.InvalidCharacters
                 : PublicNameValidationResult.Valid;
     }
