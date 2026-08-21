@@ -216,11 +216,9 @@ public partial class VsMatchPlayView : IDisposable
         Data.Game.CorrectGuess.HasValue;
 
     private string GuessInputClass =>
-        Data.Game.CorrectGuess.HasValue
+        IsGuessLocked
             ? "game-display kc-lcd-surface"
-            : Data.Game.MyGuess.HasValue
-                ? "game-display submitted kc-lcd-surface"
-                : string.Empty;
+            : string.Empty;
 
     private string GuessInputText
     {

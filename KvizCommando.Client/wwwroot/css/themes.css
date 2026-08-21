@@ -20,8 +20,6 @@
     --kc-lcd-background: rgba(210, 255, 57, .9);
     --kc-lcd-scanline: rgba(20, 28, 10, .025);
     --kc-lcd-color: #222f16;
-    --kc-lcd-input-background: #001f3f;
-    --kc-lcd-input-color: #bfa800;
     --kc-lobby-filter: none;
     --kc-content-picture-overlay: rgba(75, 83, 32, 0.32);
 }
@@ -47,8 +45,6 @@
     --kc-lcd-background: rgba(193, 218, 108, .92);
     --kc-lcd-scanline: rgba(35, 48, 16, .035);
     --kc-lcd-color: #283517;
-    --kc-lcd-input-background: #263219;
-    --kc-lcd-input-color: #d5df8b;
     --kc-lobby-filter: brightness(.88) saturate(1.05) sepia(.22) hue-rotate(35deg);
     --kc-content-picture-overlay: rgba(102, 124, 53, 0.32);
 }
@@ -74,8 +70,6 @@
     --kc-lcd-background: rgba(242, 190, 82, .92);
     --kc-lcd-scanline: rgba(68, 38, 8, .035);
     --kc-lcd-color: #3b260c;
-    --kc-lcd-input-background: #3a2615;
-    --kc-lcd-input-color: #efc36f;
     --kc-lobby-filter: brightness(.9) saturate(1.08) sepia(.38) hue-rotate(345deg);
     --kc-content-picture-overlay: rgba(138, 94, 47, 0.32);
 }
@@ -101,8 +95,6 @@
     --kc-lcd-background: rgba(150, 205, 225, .92);
     --kc-lcd-scanline: rgba(14, 43, 55, .035);
     --kc-lcd-color: #162b34;
-    --kc-lcd-input-background: #172d37;
-    --kc-lcd-input-color: #a9d8e8;
     --kc-lobby-filter: brightness(.88) saturate(.8) grayscale(.22) sepia(.08) hue-rotate(155deg);
     --kc-content-picture-overlay: rgba(70, 111, 132, 0.32);
 }
@@ -128,8 +120,6 @@
     --kc-lcd-background: rgba(139, 154, 230, .9);
     --kc-lcd-scanline: rgba(20, 24, 67, .04);
     --kc-lcd-color: #151a38;
-    --kc-lcd-input-background: #191d3a;
-    --kc-lcd-input-color: #aeb8f2;
     --kc-lobby-filter: brightness(.7) saturate(.95) sepia(.12) hue-rotate(185deg);
     --kc-content-picture-overlay: rgba(79, 87, 158, 0.34);
 }
@@ -155,8 +145,6 @@
     --kc-lcd-background: rgba(214, 167, 235, .92);
     --kc-lcd-scanline: rgba(61, 25, 76, .035);
     --kc-lcd-color: #361b42;
-    --kc-lcd-input-background: #351b40;
-    --kc-lcd-input-color: #e4b9f2;
     --kc-lobby-filter: brightness(.78) saturate(.92) sepia(.08) hue-rotate(225deg);
     --kc-content-picture-overlay: rgba(128, 81, 154, 0.34);
 }
@@ -182,8 +170,6 @@
     --kc-lcd-background: rgba(243, 168, 200, .92);
     --kc-lcd-scanline: rgba(75, 24, 46, .035);
     --kc-lcd-color: #461a2d;
-    --kc-lcd-input-background: #411a2b;
-    --kc-lcd-input-color: #f6b8d2;
     --kc-lobby-filter: brightness(.82) saturate(.95) sepia(.12) hue-rotate(285deg);
     --kc-content-picture-overlay: rgba(157, 79, 114, 0.34);
 }
@@ -209,8 +195,6 @@
     --kc-lcd-background: rgba(255, 85, 200, .93);
     --kc-lcd-scanline: rgba(80, 0, 51, .045);
     --kc-lcd-color: #3f082f;
-    --kc-lcd-input-background: #3d082e;
-    --kc-lcd-input-color: #ff8fd9;
     --kc-lobby-filter: brightness(.72) saturate(1.15) sepia(.08) hue-rotate(275deg);
     --kc-content-picture-overlay: rgba(179, 34, 132, 0.34);
 }
@@ -236,8 +220,6 @@
     --kc-lcd-background: rgba(184, 192, 199, .92);
     --kc-lcd-scanline: rgba(22, 25, 28, .035);
     --kc-lcd-color: #252a2e;
-    --kc-lcd-input-background: #262b2f;
-    --kc-lcd-input-color: #cbd1d6;
     --kc-lobby-filter: brightness(.68) saturate(.25) grayscale(.7) contrast(1.05);
     --kc-content-picture-overlay: rgba(98, 107, 114, 0.34);
 }

@@ -359,6 +359,11 @@ public partial class VsMatchManager : IAsyncDisposable
             {
                 leaveStatus = await MatchClient.LeaveQueueAsync();
             }
+            catch (OperationCanceledException)
+            {
+                Logger.LogDebug(
+                    "VS queue leave was canceled during component disposal.");
+            }
             finally
             {
                 await MatchClient.StopAsync();

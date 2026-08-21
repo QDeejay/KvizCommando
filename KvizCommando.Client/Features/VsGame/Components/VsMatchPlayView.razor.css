@@ -457,10 +457,9 @@
         color .3s ease;
 }
 
-.kc-vs-guess input.lcd-input.submitted,
-.kc-vs-guess input.lcd-input.submitted:disabled {
-    color: transparent;
-    caret-color: transparent;
+.kc-vs-guess input.lcd-input.game-display:disabled {
+    color: var(--kc-lcd-color);
+    background-color: var(--kc-lcd-background);
 }
 
 .kc-vs-guess input:disabled {
