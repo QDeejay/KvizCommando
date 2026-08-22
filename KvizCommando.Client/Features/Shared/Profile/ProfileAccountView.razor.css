@@ -80,6 +80,11 @@ label {
     margin-top: 18px;
 }
 
+.kc-account-save-actions {
+    align-self: end;
+    padding: 0 4px 4px;
+}
+
 .kc-account-disabled-row {
     display: flex;
     gap: 10px;

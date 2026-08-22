@@ -37,6 +37,41 @@ public partial class ProfileAccountView
             _account?.Email,
             StringComparison.OrdinalIgnoreCase);
 
+    private bool HasPiiChanges =>
+        _account is not null &&
+        (!string.Equals(
+             _phone.CountryCode,
+             _account.Phone.CountryCode,
+             StringComparison.Ordinal) ||
+         !string.Equals(
+             _phone.Number,
+             _account.Phone.Number,
+             StringComparison.Ordinal) ||
+         !string.Equals(
+             _billingName.LastName,
+             _account.BillingName.LastName,
+             StringComparison.Ordinal) ||
+         !string.Equals(
+             _billingName.FirstName,
+             _account.BillingName.FirstName,
+             StringComparison.Ordinal) ||
+         !string.Equals(
+             _billingAddress.PostalCode,
+             _account.BillingAddress.PostalCode,
+             StringComparison.Ordinal) ||
+         !string.Equals(
+             _billingAddress.City,
+             _account.BillingAddress.City,
+             StringComparison.Ordinal) ||
+         !string.Equals(
+             _billingAddress.AddressLine1,
+             _account.BillingAddress.AddressLine1,
+             StringComparison.Ordinal) ||
+         !string.Equals(
+             _billingAddress.AddressLine2,
+             _account.BillingAddress.AddressLine2,
+             StringComparison.Ordinal));
+
     private bool CanEnterNewPassword =>
         !_isPasswordBusy &&
         !string.IsNullOrWhiteSpace(_currentPassword);
@@ -68,6 +103,9 @@ public partial class ProfileAccountView
 
     private async Task SavePiiAsync()
     {
+        if (!HasPiiChanges)
+            return;
+
         _isPiiBusy = true;
         var response = await ProfileClient.SaveAccountAsync(
             new SaveProfileAccountRequest

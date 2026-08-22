@@ -99,11 +99,6 @@ else if (Section == ProfileAccountSection.Contact)
                disabled="@_isPiiBusy"
                @oninput="e => _billingAddress.AddressLine2 = e.Value?.ToString() ?? string.Empty" />
 
-        <div class="kc-profile-actions">
-            <button class="military-button" disabled="@_isPiiBusy" @onclick="SavePiiAsync">
-                @Ui.Lang["profile.Account.Save"]
-            </button>
-        </div>
     </section>
 
     <section>
@@ -112,6 +107,14 @@ else if (Section == ProfileAccountSection.Contact)
                value="@Ui.Lang["profile.Account.Payment.NotConfigured"]"
                disabled />
     </section>
+
+    <div class="kc-profile-actions kc-account-save-actions">
+        <button class="military-button"
+                disabled="@(_isPiiBusy || !HasPiiChanges)"
+                @onclick="SavePiiAsync">
+            @Ui.Lang["profile.Account.Save"]
+        </button>
+    </div>
 }
 else
 {
@@ -124,6 +127,8 @@ else
         <input id="kc-account-new-email"
                class="lcd-input"
                type="email"
+               name="kc-profile-new-email"
+               autocomplete="off"
                value="@_newEmail"
                disabled="@_isEmailBusy"
                @oninput="e => _newEmail = e.Value?.ToString() ?? string.Empty" />
@@ -142,6 +147,8 @@ else
             <input id="kc-account-current-password"
                    class="lcd-input"
                    type="@CurrentPasswordType"
+                   name="kc-profile-current-password"
+                   autocomplete="off"
                    value="@_currentPassword"
                    disabled="@_isPasswordBusy"
                    @oninput="OnCurrentPasswordInput" />
@@ -160,6 +167,8 @@ else
             <input id="kc-account-new-password"
                    class="lcd-input"
                    type="@NewPasswordType"
+                   name="kc-profile-new-password"
+                   autocomplete="new-password"
                    value="@_newPassword"
                    disabled="@(!CanEnterNewPassword)"
                    @oninput="OnNewPasswordInput" />
@@ -178,6 +187,8 @@ else
             <input id="kc-account-repeat-password"
                    class="lcd-input"
                    type="@RepeatPasswordType"
+                   name="kc-profile-repeat-password"
+                   autocomplete="new-password"
                    value="@_repeatPassword"
                    disabled="@(!CanEnterRepeatedPassword)"
                    @oninput="e => _repeatPassword = e.Value?.ToString() ?? string.Empty" />

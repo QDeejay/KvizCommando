@@ -27,6 +27,7 @@
                 .then(() => {
                     audio.pause();
                     audio.currentTime = 0;
+                    resumeMusicInternal();
                 })
                 .catch(() => { });
 
@@ -81,24 +82,35 @@
     async function fadeVolume(audio, start, end, duration, operationId) {
 
         const steps = 30;
-
         const interval = duration / steps;
+        const safeStart = clampVolume(start);
+        const safeEnd = clampVolume(end);
 
-        const delta = (end - start) / steps;
+        audio.volume = safeStart;
 
-        audio.volume = start;
-
-        for (let i = 0; i < steps; i++) {
+        for (let i = 1; i <= steps; i++) {
 
             if (operationId !== fadeOperationId)
                 return;
 
-            audio.volume += delta;
+            const progress = i / steps;
+            audio.volume = clampVolume(
+                safeStart + ((safeEnd - safeStart) * progress));
 
             await delay(interval);
         }
 
-        audio.volume = end;
+        audio.volume = safeEnd;
+    }
+
+    function clampVolume(value) {
+
+        const numericValue = Number(value);
+
+        if (!Number.isFinite(numericValue))
+            return 0;
+
+        return Math.min(1, Math.max(0, numericValue));
     }
 
     function delay(ms) {
@@ -189,6 +201,38 @@
         }
     }
 
+    async function resumeMusicInternal() {
+
+        if (masterMuted ||
+            !musicEnabled ||
+            musicPlayer === null ||
+            currentMusicPath === null ||
+            !musicPlayer.paused) {
+
+            return;
+        }
+
+        fadeOperationId++;
+
+        const operationId = fadeOperationId;
+
+        try {
+
+            await musicPlayer.play();
+
+            await fadeVolume(
+                musicPlayer,
+                musicPlayer.volume,
+                musicVolume,
+                700,
+                operationId);
+        }
+        catch (error) {
+
+            console.error("Music resume failed:", error);
+        }
+    }
+
     async function stopMusicInternal() {
 
         if (musicPlayer === null)
@@ -227,6 +271,9 @@
 
         for (const sfx of activeSfx)
             sfx.muted = masterMuted || !sfxEnabled;
+
+        if (!masterMuted)
+            resumeMusicInternal();
     }
 
     function setMusicEnabled(enabled) {
@@ -241,11 +288,11 @@
 
     function setMusicVolume(volume) {
 
-        musicVolume = volume;
+        musicVolume = clampVolume(volume);
 
         if (musicPlayer !== null) {
 
-            musicPlayer.volume = volume;
+            musicPlayer.volume = musicVolume;
         }
     }
 
@@ -329,7 +376,7 @@
 
     function setSfxVolume(volume) {
 
-        sfxVolume = volume;
+        sfxVolume = clampVolume(volume);
     }
 
     return {

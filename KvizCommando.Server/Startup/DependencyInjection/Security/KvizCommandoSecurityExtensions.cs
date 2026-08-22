@@ -46,17 +46,11 @@ public static class KvizCommandoSecurityExtensions
             .ValidateOnStart();
 
         var emailService = configuration[$"{EmailOptions.SECTION_NAME}:Service"];
-        if (string.Equals(
-                emailService,
-                EmailOptions.FILE_SERVICE,
-                StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(emailService, EmailOptions.FILE_SERVICE, StringComparison.OrdinalIgnoreCase))
         {
             services.AddSingleton<IEmailDelivery, FileEmailDelivery>();
         }
-        else if (string.Equals(
-                     emailService,
-                     EmailOptions.MAIL_SERVICE,
-                     StringComparison.OrdinalIgnoreCase))
+        else if (string.Equals(emailService, EmailOptions.MAIL_SERVICE, StringComparison.OrdinalIgnoreCase))
         {
             throw new InvalidOperationException(
                 "Az Email:Service értéke Mail, de valódi levélküldő adapter még nincs regisztrálva.");

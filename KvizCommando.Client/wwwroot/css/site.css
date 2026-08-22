@@ -250,6 +250,10 @@ button.kc-help-page-dot:not(:disabled) {
     cursor: url('/Images/cursors/active.cur'), pointer;
 }
 
+button.password-toggle:not(:disabled) {
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
 .password-toggle:hover:not(:disabled),
 .password-toggle:focus-visible:not(:disabled) {
     background: rgba(255, 255, 255, .2);
@@ -261,6 +265,10 @@ button.kc-help-page-dot:not(:disabled) {
     color: #777;
     background: transparent;
     opacity: .65;
+    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+}
+
+button.password-toggle:disabled {
     cursor: url('/Images/cursors/disabled.cur'), not-allowed;
 }
 
