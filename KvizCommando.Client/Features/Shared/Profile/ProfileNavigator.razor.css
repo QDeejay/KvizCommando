@@ -36,6 +36,7 @@
     min-height: 0;
     margin: 10px 0 10px 10px;
     color: #c9c9bd;
+    overflow: auto;
     background: linear-gradient(180deg, var(--kc-panel-bg-start), var(--kc-panel-bg-end));
     border: 1px solid var(--kc-shell-border);
     border-radius: 8px;

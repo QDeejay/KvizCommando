@@ -49,13 +49,16 @@
                                @bind-value="_loginForm.Password"
                                @bind-value:event="oninput"
                                @onkeydown="OnKeyDown" />
-                           <button type="button"
-                                   class="password-toggle"
-                                   aria-label="@Ui.Lang["common.Password.Visibility"]"
-                                   aria-pressed="@_showPassword"
-                                   @onclick="TogglePassword">
-                               <i class="@EyeIcon" aria-hidden="true"></i>
-                           </button>
+                        @if (!string.IsNullOrEmpty(_loginForm.Password))
+                        {
+                            <button type="button"
+                                    class="password-toggle"
+                                    aria-label="@Ui.Lang["common.Password.Visibility"]"
+                                    aria-pressed="@_showPassword"
+                                    @onclick="TogglePassword">
+                                <i class="@EyeIcon" aria-hidden="true"></i>
+                            </button>
+                        }
                     </div>
 
                 }

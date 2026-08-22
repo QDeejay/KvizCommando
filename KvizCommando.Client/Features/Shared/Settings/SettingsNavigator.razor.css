@@ -63,10 +63,10 @@
 .kc-settings-nav-button {
     width: 100%;
     display: grid;
-    grid-template-columns: 20px minmax(0, 1fr);
+    grid-template-columns: 18px minmax(0, 1fr);
     align-items: center;
     gap: 4px;
-    padding: 11px 8px;
+    padding: 8px 7px;
     color: #c7c9b8;
     font: .9rem/1.2 'Courier New', monospace;
     text-align: left;
@@ -91,6 +91,7 @@
 
 .kc-settings-nav-mark {
     color: color-mix(in srgb, var(--kc-lcd-background) 72%, white);
+    font: .9rem/1 Arial, sans-serif;
     text-align: center;
 }
 

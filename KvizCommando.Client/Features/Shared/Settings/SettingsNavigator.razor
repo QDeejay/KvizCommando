@@ -31,7 +31,7 @@
                                     class="kc-settings-nav-button @(section == _selectedSection ? "active" : null)"
                                     aria-current="@(section == _selectedSection ? "page" : null)"
                                     @onclick="() => SelectSection(section)">
-                                <span class="kc-settings-nav-mark" aria-hidden="true">@(section == _selectedSection ? "▶" : "·")</span>
+                                <span class="kc-settings-nav-mark" aria-hidden="true">@(section == _selectedSection ? "▸" : "·")</span>
                                 <span>@Ui.Lang[$"mainlayout.Settings.Section.{section}"]</span>
                             </button>
                         }

@@ -16,6 +16,8 @@
                 <div class="kc-regist-body--divider">
                     <label class="label-text">@Ui.Lang["register.Email"]</label>
                     <input class="lcd-input"
+                           name="kc-register-email"
+                           autocomplete="off"
                            @bind-value="_formData.Email"
                            @bind-value:event="oninput"
                            style="width:stretch; @((_emailFiledSW ? "border: 1px solid red;" : null))" />
@@ -25,9 +27,13 @@
                     <div class="password-box">
                         <input class="lcd-input" 
                                type="@PasswordType1"
+                               name="kc-register-password"
+                               autocomplete="new-password"
                                @bind-value="_formData.Password"
                                @bind-value:event="oninput"
                                style="width:stretch; @((_passwordFiledSW ? "boder: 1px solid red;" : null))" />
+                            @if (!string.IsNullOrEmpty(_formData.Password))
+                            {
                                 <button type="button"
                                         class="password-toggle"
                                         aria-label="@Ui.Lang["common.Password.Visibility"]"
@@ -35,6 +41,7 @@
                                         @onclick="() => TogglePassword(0)">
                                     <i class="@EyeIcon1" aria-hidden="true"></i>
                                 </button>
+                            }
                     </div>
                 </div>
                
@@ -48,16 +55,21 @@
                     <div class="password-box">
                         <input class="lcd-input"
                                type="@PasswordType2"
+                               name="kc-register-password-confirm"
+                               autocomplete="new-password"
                                @bind-value="_formData.ConfirmPassword"
                                @bind-value:event="oninput"
                                style="width:stretch; @((_passwordFiledSW ? "border: 1px solid red;" : null))" />
-                        <button type="button"
-                                class="password-toggle"
-                                aria-label="@Ui.Lang["common.Password.Visibility"]"
-                                aria-pressed="@_showPassword[1]"
-                                @onclick="() => TogglePassword(1)">
-                            <i class="@EyeIcon2" aria-hidden="true"></i>
-                        </button>
+                        @if (!string.IsNullOrEmpty(_formData.ConfirmPassword))
+                        {
+                            <button type="button"
+                                    class="password-toggle"
+                                    aria-label="@Ui.Lang["common.Password.Visibility"]"
+                                    aria-pressed="@_showPassword[1]"
+                                    @onclick="() => TogglePassword(1)">
+                                <i class="@EyeIcon2" aria-hidden="true"></i>
+                            </button>
+                        }
                         </div>
                 </div>
                 <div class="kc-regist-body--button-row">

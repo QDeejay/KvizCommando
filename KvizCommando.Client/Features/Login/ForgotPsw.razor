@@ -12,10 +12,12 @@
             {
                 <label class="label-text">@Ui.Lang["forgotosw.Email"] </label>
                 <input class="lcd-input"
-               type="text"
-               @bind-value="formData.email"
-               @bind-value:event="oninput"
-               style="@((ColorSW ? "border: 1px solid red;" : null))" />
+                       type="text"
+                       name="kc-forgot-password-email"
+                       autocomplete="off"
+                       @bind-value="formData.email"
+                       @bind-value:event="oninput"
+                       style="@((ColorSW ? "border: 1px solid red;" : null))" />
         
         
         

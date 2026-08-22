@@ -42,6 +42,13 @@ label {
     width: 100%;
 }
 
+.kc-account-field {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 2px;
+}
+
 .kc-account-editable-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 40px;
@@ -109,14 +116,6 @@ label {
 .kc-account-two-column-row > *,
 .kc-account-address-head-row > * {
     min-width: 0;
-}
-
-.kc-account-two-column-row > div,
-.kc-account-address-head-row > div {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    gap: 8px;
 }
 
 .password-box {

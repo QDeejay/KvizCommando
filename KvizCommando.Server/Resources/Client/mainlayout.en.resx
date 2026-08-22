@@ -214,10 +214,10 @@
     <value>Close</value>
   </data>
   <data name="Settings.Title" xml:space="preserve"><value>SETTINGS</value></data>
-  <data name="Settings.Navigation" xml:space="preserve"><value>MENU</value></data>
-  <data name="Settings.Section.Sound" xml:space="preserve"><value>SOUND</value></data>
-  <data name="Settings.Section.Appearance" xml:space="preserve"><value>APPEARANCE</value></data>
-  <data name="Settings.Section.Help" xml:space="preserve"><value>HELP</value></data>
+  <data name="Settings.Navigation" xml:space="preserve"><value>Menu</value></data>
+  <data name="Settings.Section.Sound" xml:space="preserve"><value>Sound</value></data>
+  <data name="Settings.Section.Appearance" xml:space="preserve"><value>Appearance</value></data>
+  <data name="Settings.Section.Help" xml:space="preserve"><value>Help</value></data>
   <data name="Settings.Sound.Enabled" xml:space="preserve"><value>Sound ON/OFF</value></data>
   <data name="Settings.Sound.MusicVolume" xml:space="preserve"><value>Music volume</value></data>
   <data name="Settings.Sound.SfxVolume" xml:space="preserve"><value>SFX volume</value></data>

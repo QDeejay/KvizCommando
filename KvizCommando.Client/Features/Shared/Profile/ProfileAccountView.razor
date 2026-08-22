@@ -14,23 +14,27 @@ else if (Section == ProfileAccountSection.Contact)
     <section>
         <h3>@Ui.Lang["profile.Account.Contact.Title"]</h3>
 
-        <span class="kc-account-label">@Ui.Lang["profile.Account.Email.Current"]</span>
-        <strong class="kc-account-email">@_account.Email</strong>
+        <div class="kc-account-field">
+            <span class="kc-account-label">@Ui.Lang["profile.Account.Email.Current"]</span>
+            <strong class="kc-account-email">@_account.Email</strong>
+        </div>
 
-        <label for="kc-international-phone">@Ui.Lang["profile.Account.Phone"]</label>
-        <div class="kc-account-editable-row">
-            <InternationalPhoneInput Value="@_phone"
-                                     ValueChanged="OnPhoneChanged"
-                                     Culture="@Culture"
-                                     Disabled="@(_isPiiBusy || !_isPhoneEditable)" />
-            <button type="button"
-                    class="kc-account-edit-button"
-                    disabled="@(_isPiiBusy || _isPhoneEditable)"
-                    aria-label="@Ui.Lang["profile.Account.Phone"]"
-                    title="@Ui.Lang["profile.Account.Phone"]"
-                    @onclick="EnablePhoneEditingAsync">
-                <i class="bi bi-pencil-square" aria-hidden="true"></i>
-            </button>
+        <div class="kc-account-field">
+            <label for="kc-international-phone">@Ui.Lang["profile.Account.Phone"]</label>
+            <div class="kc-account-editable-row">
+                <InternationalPhoneInput Value="@_phone"
+                                         ValueChanged="OnPhoneChanged"
+                                         Culture="@Culture"
+                                         Disabled="@(_isPiiBusy || !_isPhoneEditable)" />
+                <button type="button"
+                        class="kc-account-edit-button"
+                        disabled="@(_isPiiBusy || _isPhoneEditable)"
+                        aria-label="@Ui.Lang["profile.Account.Phone"]"
+                        title="@Ui.Lang["profile.Account.Phone"]"
+                        @onclick="EnablePhoneEditingAsync">
+                    <i class="bi bi-pencil-square" aria-hidden="true"></i>
+                </button>
+            </div>
         </div>
     </section>
 
@@ -48,7 +52,7 @@ else if (Section == ProfileAccountSection.Contact)
         </div>
 
         <div class="kc-account-two-column-row">
-            <div>
+            <div class="kc-account-field">
                 <label for="kc-account-last-name">@Ui.Lang["profile.Account.Billing.LastName"]</label>
                 <input id="kc-account-last-name"
                        class="lcd-input"
@@ -57,7 +61,7 @@ else if (Section == ProfileAccountSection.Contact)
                        disabled="@(_isPiiBusy || !_isBillingEditable)"
                        @oninput="e => _billingName.LastName = e.Value?.ToString() ?? string.Empty" />
             </div>
-            <div>
+            <div class="kc-account-field">
                 <label for="kc-account-first-name">@Ui.Lang["profile.Account.Billing.FirstName"]</label>
                 <input id="kc-account-first-name"
                        class="lcd-input"
@@ -69,7 +73,7 @@ else if (Section == ProfileAccountSection.Contact)
         </div>
 
         <div class="kc-account-address-head-row">
-            <div>
+            <div class="kc-account-field">
                 <label for="kc-account-postal-code">@Ui.Lang["profile.Account.Billing.PostalCode"]</label>
                 <input id="kc-account-postal-code"
                        class="lcd-input"
@@ -78,7 +82,7 @@ else if (Section == ProfileAccountSection.Contact)
                        disabled="@(_isPiiBusy || !_isBillingEditable)"
                        @oninput="e => _billingAddress.PostalCode = e.Value?.ToString() ?? string.Empty" />
             </div>
-            <div>
+            <div class="kc-account-field">
                 <label for="kc-account-city">@Ui.Lang["profile.Account.Billing.City"]</label>
                 <input id="kc-account-city"
                        class="lcd-input"
@@ -89,21 +93,25 @@ else if (Section == ProfileAccountSection.Contact)
             </div>
         </div>
 
-        <label for="kc-account-address-line1">@Ui.Lang["profile.Account.Billing.AddressLine1"]</label>
-        <input id="kc-account-address-line1"
-               class="lcd-input"
-               maxlength="@ProfileAccountRules.BILLING_ADDRESS_LINE_MAX_LENGTH"
-               value="@_billingAddress.AddressLine1"
-               disabled="@(_isPiiBusy || !_isBillingEditable)"
-               @oninput="e => _billingAddress.AddressLine1 = e.Value?.ToString() ?? string.Empty" />
+        <div class="kc-account-field">
+            <label for="kc-account-address-line1">@Ui.Lang["profile.Account.Billing.AddressLine1"]</label>
+            <input id="kc-account-address-line1"
+                   class="lcd-input"
+                   maxlength="@ProfileAccountRules.BILLING_ADDRESS_LINE_MAX_LENGTH"
+                   value="@_billingAddress.AddressLine1"
+                   disabled="@(_isPiiBusy || !_isBillingEditable)"
+                   @oninput="e => _billingAddress.AddressLine1 = e.Value?.ToString() ?? string.Empty" />
+        </div>
 
-        <label for="kc-account-address-line2">@Ui.Lang["profile.Account.Billing.AddressLine2"]</label>
-        <input id="kc-account-address-line2"
-               class="lcd-input"
-               maxlength="@ProfileAccountRules.BILLING_ADDRESS_LINE_MAX_LENGTH"
-               value="@_billingAddress.AddressLine2"
-               disabled="@(_isPiiBusy || !_isBillingEditable)"
-               @oninput="e => _billingAddress.AddressLine2 = e.Value?.ToString() ?? string.Empty" />
+        <div class="kc-account-field">
+            <label for="kc-account-address-line2">@Ui.Lang["profile.Account.Billing.AddressLine2"]</label>
+            <input id="kc-account-address-line2"
+                   class="lcd-input"
+                   maxlength="@ProfileAccountRules.BILLING_ADDRESS_LINE_MAX_LENGTH"
+                   value="@_billingAddress.AddressLine2"
+                   disabled="@(_isPiiBusy || !_isBillingEditable)"
+                   @oninput="e => _billingAddress.AddressLine2 = e.Value?.ToString() ?? string.Empty" />
+        </div>
 
     </section>
 
@@ -126,18 +134,22 @@ else
 {
     <section>
         <h3>@Ui.Lang["profile.Account.Email.Title"]</h3>
-        <span class="kc-account-label">@Ui.Lang["profile.Account.Email.Current"]</span>
-        <strong class="kc-account-email">@_account.Email</strong>
+        <div class="kc-account-field">
+            <span class="kc-account-label">@Ui.Lang["profile.Account.Email.Current"]</span>
+            <strong class="kc-account-email">@_account.Email</strong>
+        </div>
 
-        <label for="kc-account-new-email">@Ui.Lang["profile.Account.Email.New"]</label>
-        <input id="kc-account-new-email"
-               class="lcd-input"
-               type="email"
-               name="kc-profile-new-email"
-               autocomplete="off"
-               value="@_newEmail"
-               disabled="@_isEmailBusy"
-               @oninput="e => _newEmail = e.Value?.ToString() ?? string.Empty" />
+        <div class="kc-account-field">
+            <label for="kc-account-new-email">@Ui.Lang["profile.Account.Email.New"]</label>
+            <input id="kc-account-new-email"
+                   class="lcd-input"
+                   type="email"
+                   name="kc-profile-new-email"
+                   autocomplete="off"
+                   value="@_newEmail"
+                   disabled="@_isEmailBusy"
+                   @oninput="e => _newEmail = e.Value?.ToString() ?? string.Empty" />
+        </div>
         <div class="kc-profile-actions">
             <button class="military-button" disabled="@(!CanChangeEmail)" @onclick="ChangeEmailAsync">
                 @Ui.Lang["profile.Account.Email.Change"]
@@ -148,64 +160,77 @@ else
     <section>
         <h3>@Ui.Lang["profile.Account.Password.Title"]</h3>
 
-        <label for="kc-account-current-password">@Ui.Lang["profile.Account.Password.Current"]</label>
-        <div class="password-box">
-            <input id="kc-account-current-password"
-                   class="lcd-input"
-                   type="@CurrentPasswordType"
-                   name="kc-profile-current-password"
-                   autocomplete="off"
-                   value="@_currentPassword"
-                   disabled="@_isPasswordBusy"
-                   @oninput="OnCurrentPasswordInput" />
-            <button type="button"
-                    class="password-toggle"
-                    disabled="@_isPasswordBusy"
-                    aria-label="@Ui.Lang["common.Password.Visibility"]"
-                    aria-pressed="@_showPassword[0]"
-                    @onclick="() => TogglePassword(0)">
-                <i class="@GetEyeIcon(0)" aria-hidden="true"></i>
-            </button>
+        <div class="kc-account-field">
+            <label for="kc-account-current-password">@Ui.Lang["profile.Account.Password.Current"]</label>
+            <div class="password-box">
+                <input id="kc-account-current-password"
+                       class="lcd-input"
+                       type="@CurrentPasswordType"
+                       name="kc-profile-current-password"
+                       autocomplete="off"
+                       value="@_currentPassword"
+                       disabled="@_isPasswordBusy"
+                       @oninput="OnCurrentPasswordInput" />
+                @if (!string.IsNullOrEmpty(_currentPassword))
+                {
+                    <button type="button"
+                            class="password-toggle"
+                            disabled="@_isPasswordBusy"
+                            aria-label="@Ui.Lang["common.Password.Visibility"]"
+                            aria-pressed="@_showPassword[0]"
+                            @onclick="() => TogglePassword(0)">
+                        <i class="@GetEyeIcon(0)" aria-hidden="true"></i>
+                    </button>
+                }
+            </div>
         </div>
 
-        <label for="kc-account-new-password">@Ui.Lang["profile.Account.Password.New"]</label>
-        <div class="password-box">
-            <input id="kc-account-new-password"
-                   class="lcd-input"
-                   type="@NewPasswordType"
-                   name="kc-profile-new-password"
-                   autocomplete="new-password"
-                   value="@_newPassword"
-                   disabled="@(!CanEnterNewPassword)"
-                   @oninput="OnNewPasswordInput" />
-            <button type="button"
-                    class="password-toggle"
-                    disabled="@(!CanEnterNewPassword)"
-                    aria-label="@Ui.Lang["common.Password.Visibility"]"
-                    aria-pressed="@_showPassword[1]"
-                    @onclick="() => TogglePassword(1)">
-                <i class="@GetEyeIcon(1)" aria-hidden="true"></i>
-            </button>
+        <div class="kc-account-field">
+            <label for="kc-account-new-password">@Ui.Lang["profile.Account.Password.New"]</label>
+            <div class="password-box">
+                <input id="kc-account-new-password"
+                       class="lcd-input"
+                       type="@NewPasswordType"
+                       name="kc-profile-new-password"
+                       autocomplete="new-password"
+                       value="@_newPassword"
+                       disabled="@(!CanEnterNewPassword)"
+                       @oninput="OnNewPasswordInput" />
+                @if (!string.IsNullOrEmpty(_newPassword))
+                {
+                    <button type="button"
+                            class="password-toggle"
+                            aria-label="@Ui.Lang["common.Password.Visibility"]"
+                            aria-pressed="@_showPassword[1]"
+                            @onclick="() => TogglePassword(1)">
+                        <i class="@GetEyeIcon(1)" aria-hidden="true"></i>
+                    </button>
+                }
+            </div>
         </div>
 
-        <label for="kc-account-repeat-password">@Ui.Lang["profile.Account.Password.Repeat"]</label>
-        <div class="password-box">
-            <input id="kc-account-repeat-password"
-                   class="lcd-input"
-                   type="@RepeatPasswordType"
-                   name="kc-profile-repeat-password"
-                   autocomplete="new-password"
-                   value="@_repeatPassword"
-                   disabled="@(!CanEnterRepeatedPassword)"
-                   @oninput="e => _repeatPassword = e.Value?.ToString() ?? string.Empty" />
-            <button type="button"
-                    class="password-toggle"
-                    disabled="@(!CanEnterRepeatedPassword)"
-                    aria-label="@Ui.Lang["common.Password.Visibility"]"
-                    aria-pressed="@_showPassword[2]"
-                    @onclick="() => TogglePassword(2)">
-                <i class="@GetEyeIcon(2)" aria-hidden="true"></i>
-            </button>
+        <div class="kc-account-field">
+            <label for="kc-account-repeat-password">@Ui.Lang["profile.Account.Password.Repeat"]</label>
+            <div class="password-box">
+                <input id="kc-account-repeat-password"
+                       class="lcd-input"
+                       type="@RepeatPasswordType"
+                       name="kc-profile-repeat-password"
+                       autocomplete="new-password"
+                       value="@_repeatPassword"
+                       disabled="@(!CanEnterRepeatedPassword)"
+                       @oninput="e => _repeatPassword = e.Value?.ToString() ?? string.Empty" />
+                @if (!string.IsNullOrEmpty(_repeatPassword))
+                {
+                    <button type="button"
+                            class="password-toggle"
+                            aria-label="@Ui.Lang["common.Password.Visibility"]"
+                            aria-pressed="@_showPassword[2]"
+                            @onclick="() => TogglePassword(2)">
+                        <i class="@GetEyeIcon(2)" aria-hidden="true"></i>
+                    </button>
+                }
+            </div>
         </div>
 
         <div class="kc-profile-actions">
