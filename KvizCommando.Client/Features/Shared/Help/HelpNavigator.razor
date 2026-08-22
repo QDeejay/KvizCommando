@@ -2,14 +2,14 @@
 
 @if (_showHelp && _pages.Length > 0)
 {
-    <div class="kc-help-backdrop">
-        <section class="kc-help-window kc-window-shell @(_showNavigation ? "with-navigation" : null)"
+    <div class="kc-help-backdrop kc-window-backdrop">
+        <section class="kc-help-window kc-window-dialog kc-window-shell @(_showNavigation ? "with-navigation" : null)"
                  role="dialog"
                  aria-modal="true"
                  aria-labelledby="kc-help-title">
             <header class="kc-help-header kc-window-header">
                 <div>
-                    <span class="kc-help-kicker">KCV // FIELD MANUAL</span>
+                    <span class="kc-help-kicker kc-window-kicker">KCV // FIELD MANUAL</span>
                     <h2 id="kc-help-title" class="kc-window-title">
                         @WindowTitle
                     </h2>
@@ -22,7 +22,7 @@
                 </button>
             </header>
 
-            <div class="kc-help-main @(_showNavigation ? "with-navigation" : null)">
+            <div class="kc-help-main kc-window-main @(_showNavigation ? "with-navigation" : null)">
                 @if (_showNavigation)
                 {
                     <button type="button"
@@ -33,10 +33,10 @@
                         <span aria-hidden="true">@(_navigationOpen ? "▲" : "▼")</span>
                     </button>
 
-                    <aside class="kc-help-navigation @(_navigationOpen ? "open" : null)"
+                    <aside class="kc-help-navigation kc-window-navigation @(_navigationOpen ? "open" : null)"
                            aria-label="@NavigationLabel">
-                        <div class="kc-help-navigation-title">@NavigationLabel</div>
-                        <nav class="kc-help-tree">
+                        <div class="kc-help-navigation-title kc-window-navigation-title">@NavigationLabel</div>
+                        <nav class="kc-help-tree kc-window-navigation-list">
                             @foreach (var root in NavigationRoots)
                             {
                                 var seenPackages = GetSeenPackages(root).ToArray();
@@ -45,11 +45,11 @@
 
                                 <div class="kc-help-tree-root">
                                     <button type="button"
-                                            class="kc-help-root-button @(isExpanded ? "expanded" : null)"
+                                            class="kc-help-root-button kc-window-navigation-button @(isExpanded ? "expanded" : null)"
                                             disabled="@(!hasSeenPackages)"
                                             aria-expanded="@isExpanded"
                                             @onclick="() => ToggleRoot(root)">
-                                        <span class="kc-help-tree-arrow" aria-hidden="true">
+                                        <span class="kc-help-tree-arrow kc-window-navigation-mark" aria-hidden="true">
                                             @(hasSeenPackages ? (isExpanded ? "▾" : "▸") : "—")
                                         </span>
                                         <span>@Ui.Lang[$"home.Box.Title.{root}"]</span>

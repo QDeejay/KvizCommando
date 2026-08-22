@@ -1,81 +1,10 @@
-.kc-profile-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 2000;
-    display: grid;
-    place-items: center;
-    padding: 24px;
-    background: rgba(5, 7, 5, .78);
-    backdrop-filter: blur(7px) saturate(.7);
-}
-
 .kc-profile-window {
     width: min(1000px, calc(100vw - 48px));
     height: min(800px, calc(100vh - 48px));
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto;
-}
-
-.kc-profile-kicker {
-    display: block;
-    margin-bottom: 3px;
-    color: #aaa474;
-    font: 700 .7rem/1.1 'Share Tech Mono', monospace;
-    letter-spacing: .17em;
 }
 
 .kc-profile-main {
-    min-width: 0;
-    min-height: 0;
-    display: grid;
     grid-template-columns: 210px minmax(0, 1fr);
-}
-
-.kc-profile-navigation {
-    min-width: 0;
-    min-height: 0;
-    margin: 10px 0 10px 10px;
-    color: #c9c9bd;
-    overflow: auto;
-    background: linear-gradient(180deg, var(--kc-panel-bg-start), var(--kc-panel-bg-end));
-    border: 1px solid var(--kc-shell-border);
-    border-radius: 8px;
-    box-shadow: inset 0 3px 7px rgba(0, 0, 0, .66);
-}
-
-.kc-profile-navigation-title {
-    padding: 13px 14px 11px;
-    color: #d8d5a6;
-    font: 700 .76rem/1.1 'Share Tech Mono', monospace;
-    letter-spacing: .14em;
-    background: var(--kc-shell-bg);
-    border-bottom: 1px solid var(--kc-shell-border);
-}
-
-.kc-profile-navigation nav {
-    padding: 8px;
-}
-
-.kc-profile-nav-button {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 20px minmax(0, 1fr);
-    align-items: center;
-    gap: 4px;
-    padding: 11px 8px;
-    color: #f0eec2;
-    font: .9rem/1.2 'Courier New', monospace;
-    text-align: left;
-    background: transparent;
-    border: 0;
-    border-radius: 4px;
-    box-shadow: none;
-    cursor: url('/Images/cursors/active.cur'), pointer;
-}
-
-.kc-profile-nav-button.active {
-    background: color-mix(in srgb, var(--kc-accent) 42%, transparent);
-    box-shadow: inset 3px 0 color-mix(in srgb, var(--kc-lcd-background) 80%, white);
 }
 
 .kc-profile-content {
@@ -240,14 +169,6 @@
     .kc-profile-main {
         grid-template-columns: minmax(0, 1fr);
         grid-template-rows: auto minmax(0, 1fr);
-    }
-
-    .kc-profile-navigation {
-        margin: 8px 10px 0;
-    }
-
-    .kc-profile-navigation-title {
-        display: none;
     }
 
     .kc-profile-content {

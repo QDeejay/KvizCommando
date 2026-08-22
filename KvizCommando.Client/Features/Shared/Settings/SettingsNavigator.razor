@@ -3,14 +3,14 @@
 
 @if (_isOpen)
 {
-    <div class="kc-settings-backdrop">
-        <section class="kc-settings-window kc-window-shell"
+    <div class="kc-settings-backdrop kc-window-backdrop">
+        <section class="kc-settings-window kc-window-dialog kc-window-shell"
                  role="dialog"
                  aria-modal="true"
                  aria-labelledby="kc-settings-title">
             <header class="kc-settings-header kc-window-header">
                 <div>
-                    <span class="kc-settings-kicker">KCV // CLIENT CONFIG</span>
+                    <span class="kc-window-kicker">KCV // CLIENT CONFIG</span>
                     <h2 id="kc-settings-title" class="kc-window-title">@Ui.Lang["mainlayout.Settings.Title"]</h2>
                 </div>
                 <button type="button"
@@ -21,17 +21,17 @@
                 </button>
             </header>
 
-            <div class="kc-settings-main">
-                <aside class="kc-settings-navigation" aria-label="@Ui.Lang["mainlayout.Settings.Navigation"]">
-                    <div class="kc-settings-navigation-title">@Ui.Lang["mainlayout.Settings.Navigation"]</div>
-                    <nav>
+            <div class="kc-settings-main kc-window-main">
+                <aside class="kc-window-navigation kc-window-navigation--sections" aria-label="@Ui.Lang["mainlayout.Settings.Navigation"]">
+                    <div class="kc-window-navigation-title">@Ui.Lang["mainlayout.Settings.Navigation"]</div>
+                    <nav class="kc-window-navigation-list">
                         @foreach (var section in Enum.GetValues<SettingsSection>())
                         {
                             <button type="button"
-                                    class="kc-settings-nav-button @(section == _selectedSection ? "active" : null)"
+                                    class="kc-window-navigation-button @(section == _selectedSection ? "active" : null)"
                                     aria-current="@(section == _selectedSection ? "page" : null)"
                                     @onclick="() => SelectSection(section)">
-                                <span class="kc-settings-nav-mark" aria-hidden="true">@(section == _selectedSection ? "▸" : "·")</span>
+                                <span class="kc-window-navigation-mark" aria-hidden="true">@(section == _selectedSection ? "▸" : "·")</span>
                                 <span>@Ui.Lang[$"mainlayout.Settings.Section.{section}"]</span>
                             </button>
                         }

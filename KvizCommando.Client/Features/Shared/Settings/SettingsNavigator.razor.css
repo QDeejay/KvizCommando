@@ -1,27 +1,6 @@
-.kc-settings-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 2000;
-    display: grid;
-    place-items: center;
-    padding: 24px;
-    background: rgba(5, 7, 5, .78);
-    backdrop-filter: blur(7px) saturate(.7);
-}
-
 .kc-settings-window {
     width: min(960px, calc(100vw - 48px));
     height: min(700px, calc(100vh - 48px));
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr) auto;
-}
-
-.kc-settings-kicker {
-    display: block;
-    margin-bottom: 3px;
-    color: #aaa474;
-    font: 700 .7rem/1.1 'Share Tech Mono', monospace;
-    letter-spacing: .17em;
 }
 
 .kc-settings-header h2 {
@@ -29,70 +8,7 @@
 }
 
 .kc-settings-main {
-    min-width: 0;
-    min-height: 0;
-    display: grid;
     grid-template-columns: 230px minmax(0, 1fr);
-}
-
-.kc-settings-navigation {
-    min-width: 0;
-    min-height: 0;
-    margin: 10px 0 10px 10px;
-    overflow: auto;
-    color: #c9c9bd;
-    background: linear-gradient(180deg, var(--kc-panel-bg-start), var(--kc-panel-bg-end));
-    border: 1px solid var(--kc-shell-border);
-    border-radius: 8px;
-    box-shadow: inset 0 3px 7px rgba(0, 0, 0, .66);
-}
-
-.kc-settings-navigation-title {
-    padding: 13px 14px 11px;
-    color: #d8d5a6;
-    font: 700 .76rem/1.1 'Share Tech Mono', monospace;
-    letter-spacing: .14em;
-    background: var(--kc-shell-bg);
-    border-bottom: 1px solid var(--kc-shell-border);
-}
-
-.kc-settings-navigation nav {
-    padding: 8px;
-}
-
-.kc-settings-nav-button {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 18px minmax(0, 1fr);
-    align-items: center;
-    gap: 4px;
-    padding: 8px 7px;
-    color: #c7c9b8;
-    font: .9rem/1.2 'Courier New', monospace;
-    text-align: left;
-    background: transparent;
-    border: 0;
-    border-radius: 4px;
-    cursor: url('/Images/cursors/active.cur'), pointer;
-}
-
-.kc-settings-nav-button:hover,
-.kc-settings-nav-button:focus-visible {
-    color: #f0eec2;
-    background: color-mix(in srgb, var(--kc-shell-hover) 72%, transparent);
-    outline: none;
-}
-
-.kc-settings-nav-button.active {
-    color: #f0eec2;
-    background: color-mix(in srgb, var(--kc-accent) 42%, transparent);
-    box-shadow: inset 3px 0 color-mix(in srgb, var(--kc-lcd-background) 80%, white);
-}
-
-.kc-settings-nav-mark {
-    color: color-mix(in srgb, var(--kc-lcd-background) 72%, white);
-    font: .9rem/1 Arial, sans-serif;
-    text-align: center;
 }
 
 .kc-settings-content {
@@ -300,28 +216,6 @@
         grid-template-rows: auto minmax(0, 1fr);
     }
 
-    .kc-settings-navigation {
-        margin: 8px 8px 0;
-        overflow: visible;
-    }
-
-    .kc-settings-navigation-title { display: none; }
-
-    .kc-settings-navigation nav {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        padding: 5px;
-    }
-
-    .kc-settings-nav-button {
-        grid-template-columns: minmax(0, 1fr);
-        padding: 9px 4px;
-        font-size: .78rem;
-        text-align: center;
-    }
-
-    .kc-settings-nav-button.active { box-shadow: inset 0 -3px var(--kc-lcd-background); }
-    .kc-settings-nav-mark { display: none; }
     .kc-settings-content { margin: 8px; }
     .kc-settings-themes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .kc-settings-autosave { display: none; }

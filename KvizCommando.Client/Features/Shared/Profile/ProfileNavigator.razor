@@ -3,14 +3,14 @@
 
 @if (_isOpen)
 {
-    <div class="kc-profile-backdrop">
-        <section class="kc-profile-window kc-window-shell"
+    <div class="kc-profile-backdrop kc-window-backdrop">
+        <section class="kc-profile-window kc-window-dialog kc-window-shell"
                  role="dialog"
                  aria-modal="true"
                  aria-labelledby="kc-profile-title">
             <header class="kc-profile-header kc-window-header">
                 <div>
-                    <span class="kc-profile-kicker">KCV // PLAYER PROFILE</span>
+                    <span class="kc-window-kicker">KCV // PLAYER PROFILE</span>
                     <h2 id="kc-profile-title" class="kc-window-title">@Ui.Lang["profile.Title"]</h2>
                 </div>
                 <button type="button"
@@ -21,29 +21,29 @@
                 </button>
             </header>
 
-            <div class="kc-profile-main">
-                <aside class="kc-profile-navigation" aria-label="@Ui.Lang["profile.Navigation"]">
-                    <div class="kc-profile-navigation-title">@Ui.Lang["profile.Navigation"]</div>
-                    <nav>
+            <div class="kc-profile-main kc-window-main">
+                <aside class="kc-window-navigation kc-window-navigation--sections" aria-label="@Ui.Lang["profile.Navigation"]">
+                    <div class="kc-window-navigation-title">@Ui.Lang["profile.Navigation"]</div>
+                    <nav class="kc-window-navigation-list">
                         <button type="button"
-                                class="kc-profile-nav-button @(_activeSection == ProfileSection.Team ? "active" : null)"
+                                class="kc-window-navigation-button @(_activeSection == ProfileSection.Team ? "active" : null)"
                                 aria-current="@(_activeSection == ProfileSection.Team ? "page" : null)"
                                 @onclick="() => SelectSectionAsync(ProfileSection.Team)">
-                            <span aria-hidden="true">▶</span>
+                            <span class="kc-window-navigation-mark" aria-hidden="true">@(_activeSection == ProfileSection.Team ? "▸" : "·")</span>
                             <span>@Ui.Lang["profile.Section.Team"]</span>
                         </button>
                         <button type="button"
-                                class="kc-profile-nav-button @(_activeSection == ProfileSection.Contact ? "active" : null)"
+                                class="kc-window-navigation-button @(_activeSection == ProfileSection.Contact ? "active" : null)"
                                 aria-current="@(_activeSection == ProfileSection.Contact ? "page" : null)"
                                 @onclick="() => SelectSectionAsync(ProfileSection.Contact)">
-                            <span aria-hidden="true">▶</span>
+                            <span class="kc-window-navigation-mark" aria-hidden="true">@(_activeSection == ProfileSection.Contact ? "▸" : "·")</span>
                             <span>@Ui.Lang["profile.Section.Contact"]</span>
                         </button>
                         <button type="button"
-                                class="kc-profile-nav-button @(_activeSection == ProfileSection.Security ? "active" : null)"
+                                class="kc-window-navigation-button @(_activeSection == ProfileSection.Security ? "active" : null)"
                                 aria-current="@(_activeSection == ProfileSection.Security ? "page" : null)"
                                 @onclick="() => SelectSectionAsync(ProfileSection.Security)">
-                            <span aria-hidden="true">▶</span>
+                            <span class="kc-window-navigation-mark" aria-hidden="true">@(_activeSection == ProfileSection.Security ? "▸" : "·")</span>
                             <span>@Ui.Lang["profile.Section.Security"]</span>
                         </button>
                     </nav>
@@ -160,7 +160,7 @@
 
             <footer class="kc-profile-footer kc-window-footer">
                 <span>@Ui.Lang["profile.Footer"]</span>
-                <button type="button" class="military-button" @onclick="Close">
+                <button type="button" class="military-button--secondary" @onclick="Close">
                     @Ui.Lang["profile.Button.Close"]
                 </button>
             </footer>
