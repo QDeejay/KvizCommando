@@ -11,7 +11,16 @@ namespace KvizCommando.Client.Features.Shared.Profile;
 
 public partial class ProfileNavigator : KcComponentBase
 {
-    private enum ProfileSection { Team, Contact, Security }
+    private enum ProfileSection
+    {
+        Team,
+        Contact,
+        Security,
+        Privacy,
+        PrivacyPolicy,
+        Terms
+    }
+
     [Inject] private IProfileClientService ProfileClient { get; set; } = default!;
     [Inject] private AudioService Audio { get; set; } = default!;
 
@@ -28,6 +37,19 @@ public partial class ProfileNavigator : KcComponentBase
     private bool _isTeamNameBusy;
     private bool _isAvatarBusy;
     private ProfileSection _activeSection = ProfileSection.Team;
+
+    private bool IsPrivacySection =>
+        _activeSection is ProfileSection.Privacy or
+            ProfileSection.PrivacyPolicy or
+            ProfileSection.Terms;
+
+    private ProfilePrivacySection ActivePrivacySection =>
+        _activeSection switch
+        {
+            ProfileSection.PrivacyPolicy => ProfilePrivacySection.PrivacyPolicy,
+            ProfileSection.Terms => ProfilePrivacySection.Terms,
+            _ => ProfilePrivacySection.Root
+        };
 
     private bool CanEditTeamName =>
         _profile is not null &&

@@ -1,0 +1,110 @@
+.kc-profile-privacy-root {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.kc-profile-privacy-root section,
+.kc-profile-legal-document {
+    min-width: 0;
+    padding: 18px;
+    color: #c9c9bd;
+    background: linear-gradient(180deg, var(--kc-panel-bg-start), var(--kc-panel-bg-end));
+    border: 1px solid color-mix(in srgb, var(--kc-shell-border) 62%, #777);
+    border-radius: 7px;
+}
+
+.kc-profile-privacy-root section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+h3 {
+    margin: 0 0 10px;
+    color: #f0eec2;
+    font: 400 1.28rem/1.2 'Special Elite', cursive;
+    letter-spacing: .06em;
+}
+
+p {
+    margin: 0 0 18px;
+    color: #b9bca8;
+    font-size: .86rem;
+    line-height: 1.45;
+}
+
+label {
+    color: #c9c9bd;
+    font-size: .84rem;
+}
+
+.lcd-input {
+    width: 100%;
+}
+
+.kc-profile-privacy-root .kc-profile-privacy-delete {
+    border-color: color-mix(in srgb, #a64b2a 68%, var(--kc-shell-border));
+}
+
+.kc-profile-delete-button:not(:disabled) {
+    background-color: #a64b2a;
+}
+
+.kc-profile-privacy-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    padding-top: 18px;
+}
+
+.kc-profile-legal-document {
+    grid-column: 1 / -1;
+    overflow: auto;
+}
+
+.kc-profile-legal-markup {
+    color: #c9c9bd;
+    font-size: .9rem;
+    line-height: 1.55;
+}
+
+.kc-profile-legal-markup ::deep h1,
+.kc-profile-legal-markup ::deep h2 {
+    color: #f0eec2;
+    font-family: 'Special Elite', cursive;
+    font-weight: 400;
+    letter-spacing: .04em;
+}
+
+.kc-profile-legal-markup ::deep h1 {
+    margin: 0 0 24px;
+    font-size: 1.55rem;
+}
+
+.kc-profile-legal-markup ::deep h2 {
+    margin: 24px 0 10px;
+    font-size: 1.15rem;
+}
+
+.kc-profile-legal-markup ::deep p,
+.kc-profile-legal-markup ::deep li {
+    color: #c9c9bd;
+}
+
+.kc-profile-privacy-status {
+    grid-column: 1 / -1;
+    place-self: center;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.kc-profile-privacy-status.error {
+    color: #e47676;
+}
+
+@media (max-width: 680px) {
+    .kc-profile-privacy-root {
+        grid-template-columns: 1fr;
+    }
+}

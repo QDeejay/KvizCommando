@@ -9,6 +9,9 @@
   <data name="Section.Team" xml:space="preserve"><value>Csapat</value></data>
   <data name="Section.Contact" xml:space="preserve"><value>Kapcsolat</value></data>
   <data name="Section.Security" xml:space="preserve"><value>Biztonság</value></data>
+  <data name="Section.Privacy" xml:space="preserve"><value>Adatvédelem</value></data>
+  <data name="Section.Privacy.Policy" xml:space="preserve"><value>Adatkezelési tájékoztató</value></data>
+  <data name="Section.Privacy.Terms" xml:space="preserve"><value>Általános Szerződési Feltételek</value></data>
   <data name="Account.Loading" xml:space="preserve"><value>Fiókadatok betöltése...</value></data>
   <data name="Account.Email.Title" xml:space="preserve"><value>Bejelentkezési e-mail</value></data>
   <data name="Account.Email.Current" xml:space="preserve"><value>Jelenlegi e-mail-cím</value></data>
@@ -47,6 +50,16 @@
   <data name="Error.Request" xml:space="preserve"><value>A művelet nem hajtható végre.</value></data>
   <data name="Footer" xml:space="preserve"><value>A módosítások mentés után lépnek életbe.</value></data>
   <data name="Button.Close" xml:space="preserve"><value>Bezárás</value></data>
+  <data name="Privacy.Export.Title" xml:space="preserve"><value>Saját adatok letöltése</value></data>
+  <data name="Privacy.Export.Description" xml:space="preserve"><value>A KvizCommando által kezelt saját adataidat ZIP-csomagban töltheted le.</value></data>
+  <data name="Privacy.Export.Password" xml:space="preserve"><value>Jelenlegi jelszó</value></data>
+  <data name="Privacy.Export.Button" xml:space="preserve"><value>Adatok exportálása</value></data>
+  <data name="Privacy.Delete.Title" xml:space="preserve"><value>Fiók törlése</value></data>
+  <data name="Privacy.Delete.Description" xml:space="preserve"><value>A fiók és a hozzá tartozó játékosadatok véglegesen törlődnek. A művelet nem vonható vissza.</value></data>
+  <data name="Privacy.Delete.Button" xml:space="preserve"><value>Fiók törlése</value></data>
+  <data name="Privacy.Document.Loading" xml:space="preserve"><value>Dokumentum betöltése...</value></data>
+  <data name="Privacy.Document.Error" xml:space="preserve"><value>A dokumentum nem tölthető be.</value></data>
+  <data name="Privacy.Document.Understood" xml:space="preserve"><value>Értem</value></data>
   <data name="TeamName.Title" xml:space="preserve"><value>Csapatnév</value></data>
   <data name="TeamName.Label" xml:space="preserve"><value>Új csapatnév</value></data>
   <data name="TeamName.Check" xml:space="preserve"><value>Csapatnév ellenőrzése</value></data>

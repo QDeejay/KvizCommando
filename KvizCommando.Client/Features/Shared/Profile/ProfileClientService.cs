@@ -1,5 +1,6 @@
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.User;
+using KvizCommando.Shared.Contracts.CheckIn;
 using KvizCommando.Shared.Contracts.Profile;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -155,6 +156,29 @@ public sealed class ProfileClientService : IProfileClientService
             OldPassword = currentPassword,
             NewPassword = newPassword
         }, ct);
+
+    /// <inheritdoc />
+    public async Task<TermsMeta?> GetLegalMetaAsync(
+        CancellationToken ct = default)
+    {
+        try
+        {
+            return await _http.GetFromJsonAsync<TermsMeta>(
+                $"{PROFILE_ROUTE}/legal",
+                ct);
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(
+                exception,
+                "Profile legal document metadata request failed.");
+            return null;
+        }
+    }
 
     private async Task<ProfileIdentityUpdateResponse> UpdateIdentityAsync(
         IdentityInfoRequest request,

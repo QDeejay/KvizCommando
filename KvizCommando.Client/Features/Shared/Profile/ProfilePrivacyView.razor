@@ -1,0 +1,81 @@
+@inherits Utilities.KcComponentBase
+
+@if (Section == ProfilePrivacySection.Root)
+{
+    <div class="kc-profile-privacy-root">
+        <section>
+            <h3>@Ui.Lang["profile.Privacy.Export.Title"]</h3>
+            <p>@Ui.Lang["profile.Privacy.Export.Description"]</p>
+
+            <label for="kc-profile-export-password">
+                @Ui.Lang["profile.Privacy.Export.Password"]
+            </label>
+            <div class="password-box">
+                <input id="kc-profile-export-password"
+                       type="@ExportPasswordType"
+                       class="lcd-input"
+                       name="kc-profile-export-password"
+                       autocomplete="off"
+                       value="@_exportPassword"
+                       @oninput="OnExportPasswordInput" />
+                @if (!string.IsNullOrEmpty(_exportPassword))
+                {
+                    <button type="button"
+                            class="password-toggle"
+                            aria-label="@Ui.Lang["common.Password.Visibility"]"
+                            aria-pressed="@_showExportPassword"
+                            @onclick="ToggleExportPasswordAsync">
+                        <i class="@ExportPasswordEyeIcon" aria-hidden="true"></i>
+                    </button>
+                }
+            </div>
+
+            <div class="kc-profile-privacy-actions">
+                <button type="button" class="military-button" disabled>
+                    @Ui.Lang["profile.Privacy.Export.Button"]
+                </button>
+            </div>
+        </section>
+
+        <section class="kc-profile-privacy-delete">
+            <h3>@Ui.Lang["profile.Privacy.Delete.Title"]</h3>
+            <p>@Ui.Lang["profile.Privacy.Delete.Description"]</p>
+
+            <div class="kc-profile-privacy-actions">
+                <button type="button"
+                        class="military-button kc-profile-delete-button"
+                        disabled>
+                    @Ui.Lang["profile.Privacy.Delete.Button"]
+                </button>
+            </div>
+        </section>
+    </div>
+}
+else if (_isLoading)
+{
+    <div class="kc-profile-privacy-status" role="status">
+        @Ui.Lang["profile.Privacy.Document.Loading"]
+    </div>
+}
+else if (_loadFailed)
+{
+    <div class="kc-profile-privacy-status error" role="alert">
+        @Ui.Lang["profile.Privacy.Document.Error"]
+    </div>
+}
+else
+{
+    <article class="kc-profile-legal-document">
+        <div class="kc-profile-legal-markup">
+            @_documentMarkup
+        </div>
+
+        <div class="kc-profile-privacy-actions">
+            <button type="button"
+                    class="military-button"
+                    @onclick="ReturnToRootAsync">
+                @Ui.Lang["profile.Privacy.Document.Understood"]
+            </button>
+        </div>
+    </article>
+}

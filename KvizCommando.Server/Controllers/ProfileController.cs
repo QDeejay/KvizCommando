@@ -1,6 +1,8 @@
 using KvizCommando.Server.Authorization;
+using KvizCommando.Server.Services.CheckIn;
 using KvizCommando.Server.Services.Profile;
 using KvizCommando.Server.Services.UserPlayerIdCache;
+using KvizCommando.Shared.Contracts.CheckIn;
 using KvizCommando.Shared.Contracts.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,16 +18,25 @@ public sealed class ProfileController : ControllerBase
     private readonly IProfileService _profileService;
     private readonly IProfileAccountService _accountService;
     private readonly IUserPlayerIdCacheService _idCache;
+    private readonly ITermsProvider _termsProvider;
 
     public ProfileController(
         IProfileService profileService,
         IProfileAccountService accountService,
-        IUserPlayerIdCacheService idCache)
+        IUserPlayerIdCacheService idCache,
+        ITermsProvider termsProvider)
     {
         _profileService = profileService;
         _accountService = accountService;
         _idCache = idCache;
+        _termsProvider = termsProvider;
     }
+
+    /// <summary>Visszaadja az aktuális, kultúrafüggő jogi dokumentum metaadatait.</summary>
+    [HttpGet("legal")]
+    [ProducesResponseType(typeof(TermsMeta), StatusCodes.Status200OK)]
+    public ActionResult<TermsMeta> GetLegalMeta() =>
+        Ok(_termsProvider.GetCurrentTerms());
 
     /// <summary>Betölti a hitelesített felhasználó fiókadatait.</summary>
     [HttpGet("account")]

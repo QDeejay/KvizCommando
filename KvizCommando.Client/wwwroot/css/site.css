@@ -194,7 +194,9 @@ button.military-button:not(:disabled),
 button.military-button--secondary:not(:disabled),
 button.kc-window-close:not(:disabled),
 button.kc-help-page-dot:not(:disabled),
-button.kc-window-navigation-button:not(:disabled) { cursor: url('/Images/cursors/active.cur'), pointer; }
+button.kc-window-navigation-button:not(:disabled) { 
+    cursor: url('/Images/cursors/active.cur'), pointer; 
+}
 
 .kc-window-body {
     min-width: 0;

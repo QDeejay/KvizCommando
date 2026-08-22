@@ -1,3 +1,4 @@
+using KvizCommando.Shared.Contracts.CheckIn;
 using KvizCommando.Shared.Contracts.Profile;
 
 namespace KvizCommando.Client.Features.Shared.Profile;
@@ -42,4 +43,9 @@ public interface IProfileClientService
     /// <param name="ct">A művelet megszakítását jelző token.</param>
     /// <returns>A művelet sikeressége és az Identity hibái.</returns>
     Task<ProfileIdentityUpdateResponse> ChangePasswordAsync(string currentPassword, string newPassword, CancellationToken ct = default);
+
+    /// <summary>Betölti az aktuális, kultúrafüggő jogi dokumentum metaadatait.</summary>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
+    /// <returns>Az aktuális jogi dokumentum metaadatai, vagy <see langword="null"/>, ha a kérés sikertelen.</returns>
+    Task<TermsMeta?> GetLegalMetaAsync(CancellationToken ct = default);
 }

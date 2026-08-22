@@ -9,6 +9,9 @@
   <data name="Section.Team" xml:space="preserve"><value>Team</value></data>
   <data name="Section.Contact" xml:space="preserve"><value>Contact</value></data>
   <data name="Section.Security" xml:space="preserve"><value>Security</value></data>
+  <data name="Section.Privacy" xml:space="preserve"><value>Privacy</value></data>
+  <data name="Section.Privacy.Policy" xml:space="preserve"><value>Privacy Policy</value></data>
+  <data name="Section.Privacy.Terms" xml:space="preserve"><value>Terms of Service</value></data>
   <data name="Account.Loading" xml:space="preserve"><value>Loading account data...</value></data>
   <data name="Account.Email.Title" xml:space="preserve"><value>Sign-in email</value></data>
   <data name="Account.Email.Current" xml:space="preserve"><value>Current email</value></data>
@@ -47,6 +50,16 @@
   <data name="Error.Request" xml:space="preserve"><value>The operation could not be completed.</value></data>
   <data name="Footer" xml:space="preserve"><value>Changes take effect after saving.</value></data>
   <data name="Button.Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Privacy.Export.Title" xml:space="preserve"><value>Download your data</value></data>
+  <data name="Privacy.Export.Description" xml:space="preserve"><value>Download the personal data managed by KvizCommando in a ZIP package.</value></data>
+  <data name="Privacy.Export.Password" xml:space="preserve"><value>Current password</value></data>
+  <data name="Privacy.Export.Button" xml:space="preserve"><value>Export data</value></data>
+  <data name="Privacy.Delete.Title" xml:space="preserve"><value>Delete account</value></data>
+  <data name="Privacy.Delete.Description" xml:space="preserve"><value>The account and its player data will be permanently deleted. This action cannot be undone.</value></data>
+  <data name="Privacy.Delete.Button" xml:space="preserve"><value>Delete account</value></data>
+  <data name="Privacy.Document.Loading" xml:space="preserve"><value>Loading document...</value></data>
+  <data name="Privacy.Document.Error" xml:space="preserve"><value>The document could not be loaded.</value></data>
+  <data name="Privacy.Document.Understood" xml:space="preserve"><value>Understood</value></data>
   <data name="TeamName.Title" xml:space="preserve"><value>Team name</value></data>
   <data name="TeamName.Label" xml:space="preserve"><value>New team name</value></data>
   <data name="TeamName.Check" xml:space="preserve"><value>Check team name</value></data>

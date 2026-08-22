@@ -46,6 +46,33 @@
                             <span class="kc-window-navigation-mark" aria-hidden="true">@(_activeSection == ProfileSection.Security ? "▸" : "·")</span>
                             <span>@Ui.Lang["profile.Section.Security"]</span>
                         </button>
+                        <button type="button"
+                                class="kc-window-navigation-button @(_activeSection == ProfileSection.Privacy ? "active" : null)"
+                                aria-current="@(_activeSection == ProfileSection.Privacy ? "page" : null)"
+                                aria-expanded="@IsPrivacySection"
+                                @onclick="() => SelectSectionAsync(ProfileSection.Privacy)">
+                            <span class="kc-window-navigation-mark" aria-hidden="true">@(IsPrivacySection ? "▾" : "▸")</span>
+                            <span>@Ui.Lang["profile.Section.Privacy"]</span>
+                        </button>
+                        @if (IsPrivacySection)
+                        {
+                            <div class="kc-profile-navigation-children">
+                                <button type="button"
+                                        class="kc-window-navigation-button kc-profile-navigation-child @(_activeSection == ProfileSection.PrivacyPolicy ? "active" : null)"
+                                        aria-current="@(_activeSection == ProfileSection.PrivacyPolicy ? "page" : null)"
+                                        @onclick="() => SelectSectionAsync(ProfileSection.PrivacyPolicy)">
+                                    <span class="kc-window-navigation-mark" aria-hidden="true">@(_activeSection == ProfileSection.PrivacyPolicy ? "▸" : "·")</span>
+                                    <span>@Ui.Lang["profile.Section.Privacy.Policy"]</span>
+                                </button>
+                                <button type="button"
+                                        class="kc-window-navigation-button kc-profile-navigation-child @(_activeSection == ProfileSection.Terms ? "active" : null)"
+                                        aria-current="@(_activeSection == ProfileSection.Terms ? "page" : null)"
+                                        @onclick="() => SelectSectionAsync(ProfileSection.Terms)">
+                                    <span class="kc-window-navigation-mark" aria-hidden="true">@(_activeSection == ProfileSection.Terms ? "▸" : "·")</span>
+                                    <span>@Ui.Lang["profile.Section.Privacy.Terms"]</span>
+                                </button>
+                            </div>
+                        }
                     </nav>
                 </aside>
 
@@ -59,6 +86,11 @@
                     {
                         <ProfileAccountView Section="ProfileAccountSection.Security"
                                             Culture="@AppStates.Culture" />
+                    }
+                    else if (IsPrivacySection)
+                    {
+                        <ProfilePrivacyView Section="@ActivePrivacySection"
+                                            OnReturnToRoot="() => SelectSectionAsync(ProfileSection.Privacy)" />
                     }
                     else if (_isLoading)
                     {
