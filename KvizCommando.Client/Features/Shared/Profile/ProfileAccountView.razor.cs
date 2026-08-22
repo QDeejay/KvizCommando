@@ -31,6 +31,8 @@ public partial class ProfileAccountView
     private bool _isPiiBusy;
     private bool _isEmailBusy;
     private bool _isPasswordBusy;
+    private bool _isPhoneEditable;
+    private bool _isBillingEditable;
 
     private bool CanChangeEmail =>
         !_isEmailBusy &&
@@ -75,6 +77,15 @@ public partial class ProfileAccountView
              _account.BillingAddress.AddressLine2,
              StringComparison.Ordinal));
 
+    private bool IsPhoneNumberValid =>
+        string.IsNullOrEmpty(_phone.Number) ||
+        _phone.Number.All(char.IsDigit);
+
+    private bool CanSavePii =>
+        !_isPiiBusy &&
+        HasPiiChanges &&
+        IsPhoneNumberValid;
+
     private bool CanEnterNewPassword =>
         !_isPasswordBusy &&
         !string.IsNullOrWhiteSpace(_currentPassword);
@@ -106,7 +117,7 @@ public partial class ProfileAccountView
 
     private async Task SavePiiAsync()
     {
-        if (!HasPiiChanges)
+        if (!CanSavePii)
             return;
 
         await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
@@ -206,6 +217,24 @@ public partial class ProfileAccountView
         _phone = phone;
     }
 
+    private async Task EnablePhoneEditingAsync()
+    {
+        if (_isPiiBusy || _isPhoneEditable)
+            return;
+
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+        _isPhoneEditable = true;
+    }
+
+    private async Task EnableBillingEditingAsync()
+    {
+        if (_isPiiBusy || _isBillingEditable)
+            return;
+
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+        _isBillingEditable = true;
+    }
+
     private async Task TogglePassword(int index)
     {
         await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
@@ -238,5 +267,15 @@ public partial class ProfileAccountView
             AddressLine1 = account.BillingAddress.AddressLine1,
             AddressLine2 = account.BillingAddress.AddressLine2
         };
+        _isPhoneEditable = string.IsNullOrWhiteSpace(_phone.Number);
+        _isBillingEditable = !HasBillingData();
     }
+
+    private bool HasBillingData() =>
+        !string.IsNullOrWhiteSpace(_billingName.LastName) ||
+        !string.IsNullOrWhiteSpace(_billingName.FirstName) ||
+        !string.IsNullOrWhiteSpace(_billingAddress.PostalCode) ||
+        !string.IsNullOrWhiteSpace(_billingAddress.City) ||
+        !string.IsNullOrWhiteSpace(_billingAddress.AddressLine1) ||
+        !string.IsNullOrWhiteSpace(_billingAddress.AddressLine2);
 }

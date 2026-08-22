@@ -10,3 +10,23 @@
 .kc-international-phone ::deep .lcd-input {
     width: 100%;
 }
+
+.kc-international-phone ::deep .iti__selected-country,
+.kc-international-phone ::deep .iti__selected-dial-code {
+    color: var(--kc-lcd-input-color);
+    font-family: var(--kc-lcd-font);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.kc-international-phone ::deep .iti__selected-country:not(:disabled),
+.kc-international-phone ::deep .iti__selected-country:not(:disabled) *,
+.kc-international-phone ::deep .iti__country {
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.kc-international-phone ::deep .iti__selected-country:disabled,
+.kc-international-phone ::deep .iti__selected-country:disabled * {
+    color: var(--kc-lcd-input-disabled-color);
+    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+}

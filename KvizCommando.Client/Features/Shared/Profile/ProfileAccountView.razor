@@ -18,14 +18,34 @@ else if (Section == ProfileAccountSection.Contact)
         <strong class="kc-account-email">@_account.Email</strong>
 
         <label for="kc-international-phone">@Ui.Lang["profile.Account.Phone"]</label>
-        <InternationalPhoneInput Value="@_phone"
-                                 ValueChanged="OnPhoneChanged"
-                                 Culture="@Culture"
-                                 Disabled="@_isPiiBusy" />
+        <div class="kc-account-editable-row">
+            <InternationalPhoneInput Value="@_phone"
+                                     ValueChanged="OnPhoneChanged"
+                                     Culture="@Culture"
+                                     Disabled="@(_isPiiBusy || !_isPhoneEditable)" />
+            <button type="button"
+                    class="kc-account-edit-button"
+                    disabled="@(_isPiiBusy || _isPhoneEditable)"
+                    aria-label="@Ui.Lang["profile.Account.Phone"]"
+                    title="@Ui.Lang["profile.Account.Phone"]"
+                    @onclick="EnablePhoneEditingAsync">
+                <i class="bi bi-pencil-square" aria-hidden="true"></i>
+            </button>
+        </div>
     </section>
 
     <section>
-        <h3>@Ui.Lang["profile.Account.Billing.Title"]</h3>
+        <div class="kc-account-section-heading">
+            <h3>@Ui.Lang["profile.Account.Billing.Title"]</h3>
+            <button type="button"
+                    class="kc-account-edit-button"
+                    disabled="@(_isPiiBusy || _isBillingEditable)"
+                    aria-label="@Ui.Lang["profile.Account.Billing.Title"]"
+                    title="@Ui.Lang["profile.Account.Billing.Title"]"
+                    @onclick="EnableBillingEditingAsync">
+                <i class="bi bi-pencil-square" aria-hidden="true"></i>
+            </button>
+        </div>
 
         <div class="kc-account-two-column-row">
             <div>
@@ -34,7 +54,7 @@ else if (Section == ProfileAccountSection.Contact)
                        class="lcd-input"
                        maxlength="@ProfileAccountRules.BILLING_NAME_PART_MAX_LENGTH"
                        value="@_billingName.LastName"
-                       disabled="@_isPiiBusy"
+                       disabled="@(_isPiiBusy || !_isBillingEditable)"
                        @oninput="e => _billingName.LastName = e.Value?.ToString() ?? string.Empty" />
             </div>
             <div>
@@ -43,7 +63,7 @@ else if (Section == ProfileAccountSection.Contact)
                        class="lcd-input"
                        maxlength="@ProfileAccountRules.BILLING_NAME_PART_MAX_LENGTH"
                        value="@_billingName.FirstName"
-                       disabled="@_isPiiBusy"
+                       disabled="@(_isPiiBusy || !_isBillingEditable)"
                        @oninput="e => _billingName.FirstName = e.Value?.ToString() ?? string.Empty" />
             </div>
         </div>
@@ -55,7 +75,7 @@ else if (Section == ProfileAccountSection.Contact)
                        class="lcd-input"
                        maxlength="@ProfileAccountRules.BILLING_POSTAL_CODE_MAX_LENGTH"
                        value="@_billingAddress.PostalCode"
-                       disabled="@_isPiiBusy"
+                       disabled="@(_isPiiBusy || !_isBillingEditable)"
                        @oninput="e => _billingAddress.PostalCode = e.Value?.ToString() ?? string.Empty" />
             </div>
             <div>
@@ -64,7 +84,7 @@ else if (Section == ProfileAccountSection.Contact)
                        class="lcd-input"
                        maxlength="@ProfileAccountRules.BILLING_CITY_MAX_LENGTH"
                        value="@_billingAddress.City"
-                       disabled="@_isPiiBusy"
+                       disabled="@(_isPiiBusy || !_isBillingEditable)"
                        @oninput="e => _billingAddress.City = e.Value?.ToString() ?? string.Empty" />
             </div>
         </div>
@@ -74,7 +94,7 @@ else if (Section == ProfileAccountSection.Contact)
                class="lcd-input"
                maxlength="@ProfileAccountRules.BILLING_ADDRESS_LINE_MAX_LENGTH"
                value="@_billingAddress.AddressLine1"
-               disabled="@_isPiiBusy"
+               disabled="@(_isPiiBusy || !_isBillingEditable)"
                @oninput="e => _billingAddress.AddressLine1 = e.Value?.ToString() ?? string.Empty" />
 
         <label for="kc-account-address-line2">@Ui.Lang["profile.Account.Billing.AddressLine2"]</label>
@@ -82,7 +102,7 @@ else if (Section == ProfileAccountSection.Contact)
                class="lcd-input"
                maxlength="@ProfileAccountRules.BILLING_ADDRESS_LINE_MAX_LENGTH"
                value="@_billingAddress.AddressLine2"
-               disabled="@_isPiiBusy"
+               disabled="@(_isPiiBusy || !_isBillingEditable)"
                @oninput="e => _billingAddress.AddressLine2 = e.Value?.ToString() ?? string.Empty" />
 
     </section>
@@ -96,7 +116,7 @@ else if (Section == ProfileAccountSection.Contact)
 
     <div class="kc-profile-actions kc-account-save-actions">
         <button class="military-button"
-                disabled="@(_isPiiBusy || !HasPiiChanges)"
+                disabled="@(!CanSavePii)"
                 @onclick="SavePiiAsync">
             @Ui.Lang["profile.Account.Save"]
         </button>

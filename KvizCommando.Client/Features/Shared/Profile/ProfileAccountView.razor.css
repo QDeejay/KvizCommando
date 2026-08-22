@@ -28,13 +28,68 @@ label {
 }
 
 .kc-account-email {
-    margin-bottom: 10px;
+    display: flex;
+    box-sizing: border-box;
+    height: 36px;
+    padding: 4px 12px;
+    align-items: center;
     color: #f0eec2;
+    font-size: 1rem;
     overflow-wrap: anywhere;
 }
 
 .lcd-input {
     width: 100%;
+}
+
+.kc-account-editable-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 40px;
+    gap: 8px;
+    align-items: center;
+}
+
+.kc-account-section-heading {
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.kc-account-edit-button {
+    display: grid;
+    width: 40px;
+    height: 36px;
+    flex: 0 0 40px;
+    padding: 0;
+    place-items: center;
+    color: #d7d3b8;
+    background: var(--kc-panel-bg-end);
+    border: 1px solid var(--kc-shell-border);
+    border-radius: 5px;
+    cursor: url('/Images/cursors/active.cur'), pointer;
+}
+
+.kc-account-edit-button:hover:not(:disabled),
+.kc-account-edit-button:focus-visible:not(:disabled) {
+    color: #fffbdc;
+    background: var(--kc-shell-hover);
+    border-color: var(--kc-lcd-background);
+    outline: none;
+}
+
+.kc-account-edit-button:disabled {
+    color: #777;
+    background: #343434;
+    border-color: #555;
+    filter: grayscale(1);
+    opacity: .72;
+    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+}
+
+.kc-account-edit-button i {
+    pointer-events: none;
 }
 
 .kc-account-two-column-row,
