@@ -7,29 +7,6 @@
             <h3>@Ui.Lang["profile.Privacy.Export.Title"]</h3>
             <p>@Ui.Lang["profile.Privacy.Export.Description"]</p>
 
-            <label for="kc-profile-export-password">
-                @Ui.Lang["profile.Privacy.Export.Password"]
-            </label>
-            <div class="password-box">
-                <input id="kc-profile-export-password"
-                       type="@ExportPasswordType"
-                       class="lcd-input"
-                       name="kc-profile-export-password"
-                       autocomplete="off"
-                       value="@_exportPassword"
-                       @oninput="OnExportPasswordInput" />
-                @if (!string.IsNullOrEmpty(_exportPassword))
-                {
-                    <button type="button"
-                            class="password-toggle"
-                            aria-label="@Ui.Lang["common.Password.Visibility"]"
-                            aria-pressed="@_showExportPassword"
-                            @onclick="ToggleExportPasswordAsync">
-                        <i class="@ExportPasswordEyeIcon" aria-hidden="true"></i>
-                    </button>
-                }
-            </div>
-
             <div class="kc-profile-privacy-actions">
                 <button type="button" class="military-button" disabled>
                     @Ui.Lang["profile.Privacy.Export.Button"]

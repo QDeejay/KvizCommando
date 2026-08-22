@@ -47,7 +47,6 @@
   "Button.Close": "Close",
   "Privacy.Export.Title": "Download your data",
   "Privacy.Export.Description": "Download the personal data managed by KvizCommando in a ZIP package.",
-  "Privacy.Export.Password": "Current password",
   "Privacy.Export.Button": "Export data",
   "Privacy.Delete.Title": "Delete account",
   "Privacy.Delete.Description": "The account and its player data will be permanently deleted. This action cannot be undone.",

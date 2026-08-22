@@ -47,7 +47,6 @@
   "Button.Close": "Bezárás",
   "Privacy.Export.Title": "Saját adatok letöltése",
   "Privacy.Export.Description": "A KvizCommando által kezelt saját adataidat ZIP-csomagban töltheted le.",
-  "Privacy.Export.Password": "Jelenlegi jelszó",
   "Privacy.Export.Button": "Adatok exportálása",
   "Privacy.Delete.Title": "Fiók törlése",
   "Privacy.Delete.Description": "A fiók és a hozzá tartozó játékosadatok véglegesen törlődnek. A művelet nem vonható vissza.",

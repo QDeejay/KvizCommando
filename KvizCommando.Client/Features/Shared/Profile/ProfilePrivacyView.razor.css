@@ -35,15 +35,6 @@ p {
     line-height: 1.45;
 }
 
-label {
-    color: #c9c9bd;
-    font-size: .84rem;
-}
-
-.lcd-input {
-    width: 100%;
-}
-
 .kc-profile-privacy-root .kc-profile-privacy-delete {
     border-color: color-mix(in srgb, #a64b2a 68%, var(--kc-shell-border));
 }
@@ -62,6 +53,7 @@ label {
 .kc-profile-legal-document {
     grid-column: 1 / -1;
     overflow: auto;
+    scrollbar-color: var(--kc-accent) var(--kc-panel-bg-end);
 }
 
 .kc-profile-legal-markup {

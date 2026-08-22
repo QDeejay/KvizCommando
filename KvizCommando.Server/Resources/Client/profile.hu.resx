@@ -52,7 +52,6 @@
   <data name="Button.Close" xml:space="preserve"><value>Bezárás</value></data>
   <data name="Privacy.Export.Title" xml:space="preserve"><value>Saját adatok letöltése</value></data>
   <data name="Privacy.Export.Description" xml:space="preserve"><value>A KvizCommando által kezelt saját adataidat ZIP-csomagban töltheted le.</value></data>
-  <data name="Privacy.Export.Password" xml:space="preserve"><value>Jelenlegi jelszó</value></data>
   <data name="Privacy.Export.Button" xml:space="preserve"><value>Adatok exportálása</value></data>
   <data name="Privacy.Delete.Title" xml:space="preserve"><value>Fiók törlése</value></data>
   <data name="Privacy.Delete.Description" xml:space="preserve"><value>A fiók és a hozzá tartozó játékosadatok véglegesen törlődnek. A művelet nem vonható vissza.</value></data>
