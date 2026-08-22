@@ -1,6 +1,7 @@
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.Profile;
 using KvizCommando.Shared.Models.Rules;
@@ -12,6 +13,7 @@ public partial class ProfileNavigator : KcComponentBase
 {
     private enum ProfileSection { Team, Contact, Security }
     [Inject] private IProfileClientService ProfileClient { get; set; } = default!;
+    [Inject] private AudioService Audio { get; set; } = default!;
 
     [Parameter] public AppState AppStates { get; set; } = default!;
     [Parameter] public EventCallback OnProfileChanged { get; set; }
@@ -139,14 +141,21 @@ public partial class ProfileNavigator : KcComponentBase
         StateHasChanged();
     }
 
-    private void Close()
+    private async Task Close()
     {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _isOpen = false;
         _isLoading = false;
         _isTeamNameBusy = false;
         _isAvatarBusy = false;
         _profile = null;
         ResetTeamNameCheck();
+    }
+
+    private async Task SelectSectionAsync(ProfileSection section)
+    {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+        _activeSection = section;
     }
 
     private void OnTeamNameInput(ChangeEventArgs args)
@@ -160,6 +169,7 @@ public partial class ProfileNavigator : KcComponentBase
         if (!CanCheckTeamName)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _isTeamNameBusy = true;
         var response = await ProfileClient.CheckTeamNameAsync(_teamNameDraft);
         _isTeamNameBusy = false;
@@ -183,6 +193,7 @@ public partial class ProfileNavigator : KcComponentBase
         if (!CanSaveTeamName)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _isTeamNameBusy = true;
         var response = await ProfileClient.SaveTeamNameAsync(_teamNameDraft);
         _isTeamNameBusy = false;
@@ -214,6 +225,7 @@ public partial class ProfileNavigator : KcComponentBase
         if (!CanSaveAvatar)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _isAvatarBusy = true;
         var response = await ProfileClient.SaveAvatarAsync(
             _avatarDraft.ToString());
@@ -234,21 +246,23 @@ public partial class ProfileNavigator : KcComponentBase
         Ui.Toast.Error(Ui.Lang[$"profile.SaveState.{response.State}"]);
     }
 
-    private void PreviousAvatar()
+    private async Task PreviousAvatar()
     {
         if (!CanEditAvatar || _profile is null)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _avatarDraft = _avatarDraft <= ProfileRules.MIN_AVATAR_NO
             ? ProfileRules.MAX_AVATAR_NO
             : _avatarDraft - 1;
     }
 
-    private void NextAvatar()
+    private async Task NextAvatar()
     {
         if (!CanEditAvatar || _profile is null)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _avatarDraft = _avatarDraft >= ProfileRules.MAX_AVATAR_NO
             ? ProfileRules.MIN_AVATAR_NO
             : _avatarDraft + 1;

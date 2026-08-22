@@ -28,21 +28,21 @@
                         <button type="button"
                                 class="kc-profile-nav-button @(_activeSection == ProfileSection.Team ? "active" : null)"
                                 aria-current="@(_activeSection == ProfileSection.Team ? "page" : null)"
-                                @onclick="() => _activeSection = ProfileSection.Team">
+                                @onclick="() => SelectSectionAsync(ProfileSection.Team)">
                             <span aria-hidden="true">▶</span>
                             <span>@Ui.Lang["profile.Section.Team"]</span>
                         </button>
                         <button type="button"
                                 class="kc-profile-nav-button @(_activeSection == ProfileSection.Contact ? "active" : null)"
                                 aria-current="@(_activeSection == ProfileSection.Contact ? "page" : null)"
-                                @onclick="() => _activeSection = ProfileSection.Contact">
+                                @onclick="() => SelectSectionAsync(ProfileSection.Contact)">
                             <span aria-hidden="true">▶</span>
                             <span>@Ui.Lang["profile.Section.Contact"]</span>
                         </button>
                         <button type="button"
                                 class="kc-profile-nav-button @(_activeSection == ProfileSection.Security ? "active" : null)"
                                 aria-current="@(_activeSection == ProfileSection.Security ? "page" : null)"
-                                @onclick="() => _activeSection = ProfileSection.Security">
+                                @onclick="() => SelectSectionAsync(ProfileSection.Security)">
                             <span aria-hidden="true">▶</span>
                             <span>@Ui.Lang["profile.Section.Security"]</span>
                         </button>
@@ -158,7 +158,7 @@
 
             <footer class="kc-profile-footer kc-window-footer">
                 <span>@Ui.Lang["profile.Footer"]</span>
-                <button type="button" class="military-button--secondary" @onclick="Close">
+                <button type="button" class="military-button" @onclick="Close">
                     @Ui.Lang["profile.Button.Close"]
                 </button>
             </footer>

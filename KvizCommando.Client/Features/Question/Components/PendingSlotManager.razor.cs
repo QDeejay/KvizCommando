@@ -2,6 +2,7 @@ using KvizCommando.Client.Features.Question.Services;
 using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Features.Shared.Modal.Components;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.Question;
@@ -15,6 +16,7 @@ public partial class PendingSlotManager
     [Inject] private ILanguageService Lang { get; set; } = default!;
     [Inject] private IQuestionClientService QuestionService { get; set; } = default!;
     [Inject] private UiServices Ui { get; set; } = default!;
+    [Inject] private AudioService Audio { get; set; } = default!;
 
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
@@ -33,6 +35,8 @@ public partial class PendingSlotManager
 
     private async Task OnHandleButtonAsync()
     {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+
         if (_selectedId == 100)
             return;
 

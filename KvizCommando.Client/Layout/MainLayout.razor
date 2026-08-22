@@ -91,7 +91,7 @@
 
             @if (_isMobileNavOpen)
             {
-                <div class="kc-mainlayout-nav-backdrop" @onclick="CloseMobileSidebar"></div>
+                <div class="kc-mainlayout-nav-backdrop" @onclick="CloseMobileSidebarFromBackdropAsync"></div>
             }
 
             <LangGuard Culture="@_culture" Module="nav">

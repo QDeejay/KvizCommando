@@ -2,6 +2,7 @@ using KvizCommando.Client.Features.VsGame.Builders;
 using KvizCommando.Client.Features.VsGame.Services;
 using KvizCommando.Client.Features.VsGame.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.VsGame;
@@ -15,6 +16,7 @@ public partial class RankedBattleTeamManager
     [Inject] private ILanguageService Lang { get; set; } = default!;
     [Inject] private IVsGameClientService GameService { get; set; } = default!;
     [Inject] private UiServices Ui { get; set; } = default!;
+    [Inject] private AudioService Audio { get; set; } = default!;
 
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
@@ -70,7 +72,7 @@ public partial class RankedBattleTeamManager
         _isReady = true;
     }
 
-    private void ToggleMember(int slotNumber)
+    private async Task ToggleMember(int slotNumber)
     {
         var member = _vm.Members.FirstOrDefault(
             item => item.SlotNumber == slotNumber);
@@ -78,6 +80,7 @@ public partial class RankedBattleTeamManager
         if (member?.IsSelectable != true)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         if (_selectedSlots.Contains(slotNumber))
         {
             _selectedSlots.Remove(slotNumber);
@@ -99,6 +102,7 @@ public partial class RankedBattleTeamManager
         if (!_vm.CanSave)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         if (!await GameService.SaveBattleTeamAsync(
                 new SaveBattleTeamRequest
                 {

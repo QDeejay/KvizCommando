@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Utilities;
 using Microsoft.AspNetCore.Components;
 
@@ -10,6 +11,9 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
 {
     [Inject]
     private ILocalStorageService LocalStorage { get; set; } = default!;
+
+    [Inject]
+    private AudioService Audio { get; set; } = default!;
 
     [Parameter]
     public AppState AppStates { get; set; } = default!;
@@ -206,16 +210,23 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
             package.Value.Root == root &&
             AppStates.LocStoreStates.SeenHelps.Contains(package.Key));
 
-    private void ToggleNavigation() => _navigationOpen = !_navigationOpen;
-
-    private void ToggleRoot(HomeBoxKey root)
+    private async Task ToggleNavigation()
     {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+        _navigationOpen = !_navigationOpen;
+    }
+
+    private async Task ToggleRoot(HomeBoxKey root)
+    {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+
         if (!_expandedRoots.Add(root))
             _expandedRoots.Remove(root);
     }
 
     private async Task SelectPackageAsync(int helpKey)
     {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         await LoadPackageAsync(helpKey, showNavigation: true, isAutomatic: false);
         _navigationOpen = false;
     }
@@ -244,7 +255,10 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
         var nextHelpKey = GetNextSeenHelpKey();
 
         if (nextHelpKey.HasValue)
+        {
+            await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
             await LoadPackageAsync(nextHelpKey.Value, showNavigation: true, isAutomatic: false);
+        }
     }
 
     private void OnPageChanged()
@@ -252,26 +266,36 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
         _ = InvokeAsync(ShowAutomaticAsync);
     }
 
-    private void PreviousPage()
+    private async Task PreviousPage()
     {
         if (_currentPage > 0)
+        {
+            await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
             _currentPage--;
+        }
     }
 
-    private void NextPage()
+    private async Task NextPage()
     {
         if (_currentPage < _pages.Length - 1)
+        {
+            await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
             _currentPage++;
+        }
     }
 
-    private void GoToPage(int pageIndex)
+    private async Task GoToPage(int pageIndex)
     {
         if (pageIndex >= 0 && pageIndex < _pages.Length)
+        {
+            await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
             _currentPage = pageIndex;
+        }
     }
 
-    private void Close()
+    private async Task Close()
     {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _showHelp = false;
         _showNavigation = false;
         _navigationOpen = false;

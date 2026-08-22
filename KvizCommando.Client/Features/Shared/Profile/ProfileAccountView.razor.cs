@@ -1,4 +1,5 @@
 using KvizCommando.Shared.Contracts.Profile;
+using KvizCommando.Client.Services.Audio;
 using Microsoft.AspNetCore.Components;
 
 namespace KvizCommando.Client.Features.Shared.Profile;
@@ -12,6 +13,7 @@ public enum ProfileAccountSection
 public partial class ProfileAccountView
 {
     [Inject] private IProfileClientService ProfileClient { get; set; } = default!;
+    [Inject] private AudioService Audio { get; set; } = default!;
 
     [Parameter] public ProfileAccountSection Section { get; set; }
 
@@ -106,6 +108,7 @@ public partial class ProfileAccountView
         if (!HasPiiChanges)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _isPiiBusy = true;
         var response = await ProfileClient.SaveAccountAsync(
             new SaveProfileAccountRequest
@@ -132,6 +135,7 @@ public partial class ProfileAccountView
         if (!CanChangeEmail)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _isEmailBusy = true;
         var response = await ProfileClient.RequestEmailChangeAsync(
             _newEmail.Trim());
@@ -153,6 +157,7 @@ public partial class ProfileAccountView
         if (!CanChangePassword)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _isPasswordBusy = true;
         var response = await ProfileClient.ChangePasswordAsync(
             _currentPassword,
@@ -195,8 +200,9 @@ public partial class ProfileAccountView
         }
     }
 
-    private void TogglePassword(int index)
+    private async Task TogglePassword(int index)
     {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _showPassword[index] = !_showPassword[index];
     }
 

@@ -1,11 +1,13 @@
 ﻿using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
+using KvizCommando.Client.Services.Audio;
 
 namespace KvizCommando.Client.Layout
 {
     public partial class NavMenu
     {
+        [Inject] private AudioService Audio { get; set; } = default!;
         [Inject] private ILanguageService Lang { get; set; } = default!;
         [Parameter] public HomeScreen Hs { get; set; } = default!;
         [Parameter] public EventCallback OnClose { get; set; }
@@ -37,6 +39,10 @@ namespace KvizCommando.Client.Layout
             }
         }
 
-        private Task CloseAsync() => OnClose.InvokeAsync();
+        private async Task CloseAsync()
+        {
+            await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+            await OnClose.InvokeAsync();
+        }
     }
 }

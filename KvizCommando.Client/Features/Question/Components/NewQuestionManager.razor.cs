@@ -3,6 +3,7 @@ using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Features.Shared.Modal.Components;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Services.Visual.UiService.Language;
@@ -20,6 +21,7 @@ public partial class NewQuestionManager
     [Inject] private IQuestionClientService QuestionService { get; set; } = default!;
     [Inject] private UiServices Ui { get; set; } = default!;
     [Inject] private MarkupLoaderService MarkupLoader { get; set; } = default!;
+    [Inject] private AudioService Audio { get; set; } = default!;
 
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
@@ -61,6 +63,7 @@ public partial class NewQuestionManager
         if (NoFreeSlot)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         if (!LocNotShowStateNew)
         {
             var htmlContent = await MarkupLoader.LoadingHtmlAsync(

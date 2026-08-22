@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.Visual.UiService;
 
 namespace KvizCommando.Client.Components
@@ -9,6 +10,7 @@ namespace KvizCommando.Client.Components
         [Parameter] public bool SoundEnabled { get; set; }
         [Parameter] public EventCallback<bool> SoundEnabledChanged { get; set; }
         [Inject] public IDisplayMessageState DisplayState { get; set; } = default!;
+        [Inject] private AudioService Audio { get; set; } = default!;
 
         private int _currentIndex = 0;
         private string? CurrentText;
@@ -69,14 +71,23 @@ namespace KvizCommando.Client.Components
             StateHasChanged();
         }
 
-        private void TogglePlayback() =>
+        private async Task TogglePlayback()
+        {
+            await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
             _isPaused = !_isPaused;
+        }
 
-        private Task StepAsync() =>
-            ShowNextMessageAsync(true);
+        private async Task StepAsync()
+        {
+            await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+            await ShowNextMessageAsync(true);
+        }
 
-        private Task ToggleSoundAsync() =>
-            SoundEnabledChanged.InvokeAsync(!SoundEnabled);
+        private async Task ToggleSoundAsync()
+        {
+            await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+            await SoundEnabledChanged.InvokeAsync(!SoundEnabled);
+        }
 
         private void HandleStateChange() =>
             _ = InvokeAsync(() =>

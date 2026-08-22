@@ -1,11 +1,13 @@
 ﻿using KvizCommando.Client.Models.ViewModels.Ui;
 using Microsoft.AspNetCore.Components;
+using KvizCommando.Client.Services.Audio;
 
 
 namespace KvizCommando.Client.Components
 {
     public partial class SubHeader
     {
+        [Inject] private AudioService Audio { get; set; } = default!;
         [Parameter] public IReadOnlyList<SubHeaderVm> Tabs { get; set; } = default!;
         [Parameter] public int StartIndex { get; set; } = 0;
         [Parameter] public bool IsVisible { get; set; } = false;
@@ -29,6 +31,7 @@ namespace KvizCommando.Client.Components
                 return;
             if (!ActiveIndexChanged.HasDelegate)
                 return;
+            await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
             _activeIndex = index;
             await ActiveIndexChanged.InvokeAsync(index);
         }

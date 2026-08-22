@@ -1,6 +1,7 @@
 using KvizCommando.Client.Features.Question.Services;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Services.Visual.UiService.Language;
@@ -18,6 +19,7 @@ public partial class FactorySlotsBase
     [Inject] private CategoryOptionHelpers CatHelper { get; set; } = default!;
     [Inject] private IQuestionClientService QuestionService { get; set; } = default!;
     [Inject] private UiServices Ui { get; set; } = default!;
+    [Inject] private AudioService Audio { get; set; } = default!;
 
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
@@ -44,8 +46,9 @@ public partial class FactorySlotsBase
             QuestionHelper.CloneFactorySlots(FactSlots);
     }
 
-    private void StartEdit(int rowIndex)
+    private async Task StartEdit(int rowIndex)
     {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _editingRowIndex = rowIndex;
         StateHasChanged();
     }
@@ -61,6 +64,7 @@ public partial class FactorySlotsBase
         if (!IsDirty)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         StopEdit();
 
         var success = await QuestionService.SaveFactorySlotsAsync(

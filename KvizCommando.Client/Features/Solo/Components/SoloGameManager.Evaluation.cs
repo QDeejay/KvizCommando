@@ -85,10 +85,10 @@ partial class SoloGameManager
             0);
     }
 
-    private Task SkipEvaluationAsync()
+    private async Task SkipEvaluationAsync()
     {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _skipSignal?.TrySetResult();
-        return Task.CompletedTask;
     }
 
     private async Task ShowRewardAsync()

@@ -5,6 +5,7 @@ using KvizCommando.Client.Features.Team.Services;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.Team;
@@ -18,6 +19,7 @@ public partial class RecruitManager : IDisposable
     [Inject] private ILanguageService Lang { get; set; } = default!;
     [Inject] private ITeamClientService TeamService { get; set; } = default!;
     [Inject] private UiServices Ui { get; set; } = default!;
+    [Inject] private AudioService Audio { get; set; } = default!;
 
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
@@ -145,6 +147,7 @@ public partial class RecruitManager : IDisposable
         if (_selectedId == 0)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         var modal = MBoxBuilder.BuildParam(
             ModalTypes.THire,
             Ui.Lang);

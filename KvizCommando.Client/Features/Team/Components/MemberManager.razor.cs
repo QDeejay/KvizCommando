@@ -2,6 +2,7 @@ using KvizCommando.Client.Features.Team.Builders;
 using KvizCommando.Client.Features.Team.Services;
 using KvizCommando.Client.Features.Team.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.Team;
@@ -15,6 +16,7 @@ public partial class MemberManager : IDisposable
     [Inject] private ILanguageService Lang { get; set; } = default!;
     [Inject] private ITeamClientService TeamService { get; set; } = default!;
     [Inject] private UiServices Ui { get; set; } = default!;
+    [Inject] private AudioService Audio { get; set; } = default!;
 
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
@@ -166,7 +168,13 @@ public partial class MemberManager : IDisposable
         _currentSubPage = page;
     }
 
-    private void OnIncButtonPushed(int rowId)
+    private async Task ShowSubPageAsync(int page)
+    {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+        ShowSubPage(page);
+    }
+
+    private async Task OnIncButtonPushed(int rowId)
     {
         var member = Member;
 
@@ -176,11 +184,12 @@ public partial class MemberManager : IDisposable
             return;
         }
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _usedPoints[rowId]++;
         RebuildDevelopmentView(member);
     }
 
-    private void OnDecButtonPushed(int rowId)
+    private async Task OnDecButtonPushed(int rowId)
     {
         var member = Member;
 
@@ -191,25 +200,28 @@ public partial class MemberManager : IDisposable
             return;
         }
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _usedPoints[rowId]--;
         RebuildDevelopmentView(member);
     }
 
-    private void OnActionButtonPushed(int rowId)
+    private async Task OnActionButtonPushed(int rowId)
     {
         if (_vmBot.Rows[rowId].Remark == string.Empty)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         ShowSubPage(rowId < 7 ? 1 : 2);
     }
 
-    private void OnResetButtonPushed()
+    private async Task OnResetButtonPushed()
     {
         var member = Member;
 
         if (member is null)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         ResetUsedPoints();
         RebuildDevelopmentView(member);
     }
@@ -222,6 +234,7 @@ public partial class MemberManager : IDisposable
             return;
         }
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         var request = new ModifySkillRequest
         {
             SkillChanges = [.. _usedPoints],
@@ -248,6 +261,12 @@ public partial class MemberManager : IDisposable
     private void ResetUsedPoints()
     {
         _usedPoints = [0, 0, 0, 0];
+    }
+
+    private async Task SetProConAsync(bool value)
+    {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+        _proConSw = value;
     }
 
     /// <inheritdoc />

@@ -277,6 +277,7 @@ public partial class VsMatchPreparationView : IDisposable
         if (!Data.Preparation.CanReset)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _selectedLoadoutPosition = null;
         _selectedCategoryId = null;
         _selectedHelp = VsHelpType.None;
@@ -291,6 +292,7 @@ public partial class VsMatchPreparationView : IDisposable
             return;
         }
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         await OnFinish.InvokeAsync();
     }
 

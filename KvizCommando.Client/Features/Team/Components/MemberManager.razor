@@ -95,13 +95,13 @@
 
     <div class="component-button-row">
         <div class="component-button-group">
-            <button class="button-on-lcd" @onclick="() => ShowSubPage(0)" disabled="@(_currentSubPage == 0)">
+            <button class="button-on-lcd" @onclick="() => ShowSubPageAsync(0)" disabled="@(_currentSubPage == 0)">
                 <i class="bi bi-person-vcard"></i>
             </button>
-            <button class="button-on-lcd" @onclick="() => ShowSubPage(1)" disabled="@(_currentSubPage == 1)">
+            <button class="button-on-lcd" @onclick="() => ShowSubPageAsync(1)" disabled="@(_currentSubPage == 1)">
                 <i class="bi bi-layers"></i>
             </button>
-            <button class="button-on-lcd" @onclick="() => ShowSubPage(2)" disabled="@(_currentSubPage == 2)">
+            <button class="button-on-lcd" @onclick="() => ShowSubPageAsync(2)" disabled="@(_currentSubPage == 2)">
                 <i class="bi bi-stars"></i>
             </button>
         </div>
@@ -119,10 +119,10 @@
         else
         {
             <div class="component-button-group right">
-                <button class="button-on-lcd" @onclick="() => _proConSw = false" disabled="@(!_proConSw)">
+                <button class="button-on-lcd" @onclick="() => SetProConAsync(false)" disabled="@(!_proConSw)">
                     <i class="bi bi-plus-circle"></i>
                 </button>
-                <button class="button-on-lcd" @onclick="() => _proConSw = true" disabled="@(_proConSw)">
+                <button class="button-on-lcd" @onclick="() => SetProConAsync(true)" disabled="@(_proConSw)">
                     <i class="bi bi-dash-circle"></i>
                 </button>
             </div>

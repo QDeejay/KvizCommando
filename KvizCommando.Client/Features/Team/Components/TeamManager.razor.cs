@@ -4,6 +4,7 @@ using KvizCommando.Client.Features.Team.Builders;
 using KvizCommando.Client.Features.Team.Services;
 using KvizCommando.Client.Features.Team.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.Team;
@@ -19,6 +20,7 @@ public partial class TeamManager
     [Inject] private ILanguageService Lang { get; set; } = default!;
     [Inject] private ITeamClientService TeamService { get; set; } = default!;
     [Inject] private UiServices Ui { get; set; } = default!;
+    [Inject] private AudioService Audio { get; set; } = default!;
 
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
@@ -91,17 +93,24 @@ public partial class TeamManager
         _currentSubPage = page;
     }
 
-    private void OnIncButtonPushed(int rowId)
+    private async Task ShowSubPageAsync(int page)
+    {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+        ShowSubPage(page);
+    }
+
+    private async Task OnIncButtonPushed(int rowId)
     {
         if ((_usedPoints.Sum() + 1) *
             TeamRules.HELP_LEVEL_TEAM_DEV_POINT_COST > Info.DevPoints)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _usedPoints[rowId]++;
         RebuildDevelopmentView();
     }
 
-    private void OnDecButtonPushed(int rowId)
+    private async Task OnDecButtonPushed(int rowId)
     {
         if (_usedPoints.Sum() == 0 ||
             _usedPoints[rowId] == 0)
@@ -109,12 +118,14 @@ public partial class TeamManager
             return;
         }
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _usedPoints[rowId]--;
         RebuildDevelopmentView();
     }
 
-    private void OnResetButtonPushed()
+    private async Task OnResetButtonPushed()
     {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         ResetUsedPoints();
         RebuildDevelopmentView();
     }
@@ -124,6 +135,7 @@ public partial class TeamManager
         if (_usedPoints.Sum() == 0)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         var request = new ModifySkillRequest
         {
             SkillChanges = [.. _usedPoints],
@@ -144,6 +156,7 @@ public partial class TeamManager
         if (action is null)
             return;
 
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         if (action.Remark == MembRemark.Develop)
         {
             if (OnMemberSelected is not null)
@@ -223,6 +236,12 @@ public partial class TeamManager
     private void ResetUsedPoints()
     {
         _usedPoints = [0, 0, 0, 0];
+    }
+
+    private async Task SetListHalfAsync(bool value)
+    {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+        _listHalfSw = value;
     }
 
     private static string GetActionStyle(

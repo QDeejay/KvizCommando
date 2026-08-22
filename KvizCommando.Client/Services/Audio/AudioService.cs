@@ -35,8 +35,6 @@ namespace KvizCommando.Client.Services.Audio
 
         private readonly IJSRuntime _jsRuntime;
         private Task? _sfxPreloadTask;
-        private MusicTrack? _requestedMusic;
-
         public AudioService(IJSRuntime jsRuntime)
         {
             _jsRuntime = jsRuntime;
@@ -49,7 +47,7 @@ namespace KvizCommando.Client.Services.Audio
         public async Task SetMutedAsync(bool muted)
         {
             await _jsRuntime.InvokeVoidAsync(
-                "audioEngine.setMuted",
+                "kcHowler.setMuted",
                 muted);
         }
 
@@ -59,13 +57,8 @@ namespace KvizCommando.Client.Services.Audio
         /// <param name="track">A lejátszandó háttérzene fájlneve vagy útvonala.</param>
         public async Task PlayMusicAsync(MusicTrack track)
         {
-            if (_requestedMusic == track)
-                return;
-
-            _requestedMusic = track;
-
             await _jsRuntime.InvokeVoidAsync(
-                "audioEngine.playMusic",
+                "kcHowler.playMusic",
                 WithAssetVersion($"audio/music/{track}.webm"));
         }
 
@@ -74,10 +67,8 @@ namespace KvizCommando.Client.Services.Audio
         /// </summary>
         public async Task StopMusicAsync()
         {
-            _requestedMusic = null;
-
             await _jsRuntime.InvokeVoidAsync(
-                "audioEngine.stopMusic");
+                "kcHowler.stopMusic");
         }
 
         /// <summary>
@@ -89,7 +80,7 @@ namespace KvizCommando.Client.Services.Audio
             volume = Math.Clamp(volume, 0.0, 1.0);
 
             await _jsRuntime.InvokeVoidAsync(
-                "audioEngine.setMusicVolume",
+                "kcHowler.setMusicVolume",
                 volume);
         }
 
@@ -101,7 +92,7 @@ namespace KvizCommando.Client.Services.Audio
         {
             await EnsureSfxPreloadedAsync();
             await _jsRuntime.InvokeVoidAsync(
-                "audioEngine.playSfx",
+                "kcHowler.playSfx",
                 BuildSfxPath(fileName));
         }
 
@@ -114,7 +105,7 @@ namespace KvizCommando.Client.Services.Audio
             volume = Math.Clamp(volume, 0.0, 1.0);
 
             await _jsRuntime.InvokeVoidAsync(
-                "audioEngine.setSfxVolume",
+                "kcHowler.setSfxVolume",
                 volume);
         }
 
@@ -123,15 +114,13 @@ namespace KvizCommando.Client.Services.Audio
         /// </summary>
         public async Task StopAllAsync()
         {
-            _requestedMusic = null;
-
             await _jsRuntime.InvokeVoidAsync(
-                "audioEngine.stopAll");
+                "kcHowler.stopAll");
         }
 
         private Task EnsureSfxPreloadedAsync() =>
             _sfxPreloadTask ??= _jsRuntime.InvokeVoidAsync(
-                "audioEngine.preloadSfx",
+                "kcHowler.preloadSfx",
                 (object)Array.ConvertAll(
                     SFX_FILES,
                     BuildSfxPath)).AsTask();

@@ -97,6 +97,7 @@ namespace KvizCommando.Client.Services.User
                     return;
 
                 await _audio.StopAllAsync();
+                await _audio.SetMutedAsync(true);
                 await _settings.ExitFullscreenAsync();
                 _nav.NavigateTo("/");
                 return;
@@ -122,6 +123,7 @@ namespace KvizCommando.Client.Services.User
         private async Task ClearClientSessionAsync()
         {
             await _audio.StopAllAsync();
+            await _audio.SetMutedAsync(true);
             await _settings.ExitFullscreenAsync();
             await _session.ClearAsync();
             _home.Clear();

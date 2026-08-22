@@ -54,6 +54,9 @@ namespace KvizCommando.Client.Components
         {
             if (!_vm.ReSizable)
                 return;
+
+            await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+
             if (_vm.Size == "minimalized")
                 _vm.Size = "large";
             else if (_vm.Size != "minimalized")

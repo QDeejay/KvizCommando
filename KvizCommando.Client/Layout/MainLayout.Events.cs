@@ -19,19 +19,31 @@ namespace KvizCommando.Client.Layout
 {
     partial class MainLayout
     {
-        private void ToggleDesktopSidebar()
+        private async Task ToggleDesktopSidebar()
         {
             if (CanToggleSidebar)
+            {
+                await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
                 _isDesktopNavOpen = !_isDesktopNavOpen;
+            }
         }
 
-        private void ToggleMobileSidebar()
+        private async Task ToggleMobileSidebar()
         {
             if (CanToggleSidebar)
+            {
+                await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
                 _isMobileNavOpen = !_isMobileNavOpen;
+            }
         }
 
         private void CloseMobileSidebar() => _isMobileNavOpen = false;
+
+        private async Task CloseMobileSidebarFromBackdropAsync()
+        {
+            await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+            CloseMobileSidebar();
+        }
 
         private bool ShowLogoutToast(Uri uri)
         {
@@ -80,8 +92,9 @@ namespace KvizCommando.Client.Layout
             InvokeAsync(StateHasChanged);
         }
 
-        private void OnBackClick()
+        private async Task OnBackClick()
         {
+            await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
             Ui.SubHeader.Hide();
             Ui.Header.SetBackBtnToPushState();
         }

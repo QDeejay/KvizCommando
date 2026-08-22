@@ -33,20 +33,23 @@ public partial class SettingsNavigator : KcComponentBase
         StateHasChanged();
     }
 
-    private void Close()
+    private async Task Close()
     {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _isOpen = false;
         _helpsReset = false;
     }
 
-    private void SelectSection(SettingsSection section)
+    private async Task SelectSection(SettingsSection section)
     {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _selectedSection = section;
         _helpsReset = false;
     }
 
     private async Task SetThemeAsync(VisualTheme theme)
     {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _draft.Theme = theme;
         await SaveAsync();
     }
@@ -66,6 +69,7 @@ public partial class SettingsNavigator : KcComponentBase
 
     private async Task ResetHelpsAsync()
     {
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         await LocalStorage.RemoveItemAsync(HelpCollection.SEEN_STORAGE_KEY);
         AppStates.LocStoreStates.SeenHelps.Clear();
         _helpsReset = true;

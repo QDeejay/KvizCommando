@@ -2,6 +2,7 @@
 using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Features.Shared.Modal.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
+using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.Visual.UiService;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -12,6 +13,7 @@ namespace KvizCommando.Client.Features.Shared.Modal
     {
         [Inject] private IJSRuntime JS { get; set; } = default!;
         [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
+        [Inject] private AudioService Audio { get; set; } = default!;
         [Parameter] public AppState Appstates { get; set; } = default!;
         [Parameter] public string Id { get; set; } = "kcModal";
         [Parameter] public RenderFragment? ChildContent { get; set; }
@@ -65,6 +67,8 @@ namespace KvizCommando.Client.Features.Shared.Modal
         }
         private async Task OnActionClicked1()
         {
+            await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+
             if (CheckBox == true)
             {
                 await LocalStorage.SetItemAsync(Par.CheckBoxKey ?? "ModalChkAction", true);
@@ -79,6 +83,8 @@ namespace KvizCommando.Client.Features.Shared.Modal
         }
         private async Task OnActionClicked2()
         {
+            await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+
             if (OnAction2.HasDelegate)
                 await OnAction2.InvokeAsync();
 
@@ -86,6 +92,8 @@ namespace KvizCommando.Client.Features.Shared.Modal
         }
         private async Task CloseAsync()
         {
+            await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+
             if (OnCloseAction.HasDelegate)
                 await OnCloseAction.InvokeAsync();
 
