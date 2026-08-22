@@ -108,7 +108,7 @@
                     @if (_currentPage > 0)
                     {
                         <button type="button"
-                                class="military-button"
+                                class="military-button--secondary"
                                 @onclick="PreviousPage">
                             <span aria-hidden="true">◀</span>
                             @PreviousLabel
@@ -118,7 +118,7 @@
                     @if (_currentPage < _pages.Length - 1)
                     {
                         <button type="button"
-                                class="military-button"
+                                class="military-button--secondary"
                                 @onclick="NextPage">
                             @NextLabel
                             <span aria-hidden="true">▶</span>
@@ -128,7 +128,7 @@
                              GetNextSeenHelpKey().HasValue)
                     {
                         <button type="button"
-                                class="military-button"
+                                class="military-button--secondary"
                                 aria-label="@NextLabel"
                                 @onclick="NextPackageAsync">
                             <span aria-hidden="true">▶▶</span>
@@ -137,7 +137,7 @@
                     else
                     {
                         <button type="button"
-                                class="military-button"
+                                class="military-button--secondary"
                                 @onclick="Close">
                             @CloseLabel
                         </button>

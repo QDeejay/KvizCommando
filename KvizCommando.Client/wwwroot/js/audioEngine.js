@@ -5,7 +5,6 @@
     const forcedUiSfx = new Set();
     const preloadedSfx = new Map();
 
-    const clickSfxPath = "audio/sfx/Click.webm?v=3";
     const uiTouchSfxPath = "audio/sfx/UiTouch.webm?v=3";
 
     let currentMusicPath = null;
@@ -16,30 +15,9 @@
 
     let musicVolume = 1.0;
     let sfxVolume = 1.0;
+    let audioActivated = false;
 
     let fadeOperationId = 0;
-
-    function registerAudioUnlock() {
-        const unlockAudio = () => {
-            const audio = new Audio(clickSfxPath);
-            audio.volume = 0;
-            audio.play()
-                .then(() => {
-                    audio.pause();
-                    audio.currentTime = 0;
-                    resumeMusicInternal();
-                })
-                .catch(() => { });
-
-            document.removeEventListener("click", unlockAudio);
-            document.removeEventListener("keydown", unlockAudio);
-        };
-
-        document.addEventListener("click", unlockAudio);
-        document.addEventListener("keydown", unlockAudio);
-    }
-
-    registerAudioUnlock();
 
     function registerUiClickDelegation() {
         document.addEventListener("click", event => {
@@ -180,56 +158,22 @@
 
         musicPlayer = new Audio(path);
 
+        const canPlayAudibly =
+            audioActivated && !masterMuted && musicEnabled;
+
         musicPlayer.loop = true;
-        musicPlayer.muted = masterMuted;
-        musicPlayer.volume = 0;
+        musicPlayer.muted = !canPlayAudibly;
+        musicPlayer.volume = canPlayAudibly
+            ? musicVolume
+            : 0;
 
         try {
 
             await musicPlayer.play();
-
-            await fadeVolume(
-                musicPlayer,
-                0,
-                musicVolume,
-                700,
-                operationId);
         }
         catch (error) {
 
             console.error("Music play failed:", error);
-        }
-    }
-
-    async function resumeMusicInternal() {
-
-        if (masterMuted ||
-            !musicEnabled ||
-            musicPlayer === null ||
-            currentMusicPath === null ||
-            !musicPlayer.paused) {
-
-            return;
-        }
-
-        fadeOperationId++;
-
-        const operationId = fadeOperationId;
-
-        try {
-
-            await musicPlayer.play();
-
-            await fadeVolume(
-                musicPlayer,
-                musicPlayer.volume,
-                musicVolume,
-                700,
-                operationId);
-        }
-        catch (error) {
-
-            console.error("Music resume failed:", error);
         }
     }
 
@@ -262,38 +206,55 @@
     // SETTINGS
     // =========================================
 
+    function activateAudioInternal() {
+
+        if (audioActivated)
+            return;
+
+        audioActivated = true;
+        applyMusicOutputInternal();
+    }
+
+    function applyMusicOutputInternal() {
+
+        if (musicPlayer === null)
+            return;
+
+        const canPlayAudibly =
+            audioActivated && !masterMuted && musicEnabled;
+
+        musicPlayer.muted = !canPlayAudibly;
+
+        if (canPlayAudibly)
+            musicPlayer.volume = musicVolume;
+    }
+
     function setMuted(muted) {
 
         masterMuted = muted;
 
-        if (musicPlayer !== null)
-            musicPlayer.muted = masterMuted || !musicEnabled;
+        applyMusicOutputInternal();
 
         for (const sfx of activeSfx)
             sfx.muted = masterMuted || !sfxEnabled;
 
-        if (!masterMuted)
-            resumeMusicInternal();
     }
 
     function setMusicEnabled(enabled) {
 
         musicEnabled = enabled;
 
-        if (musicPlayer !== null) {
-
-            musicPlayer.muted = masterMuted || !enabled;
-        }
+        applyMusicOutputInternal();
     }
 
     function setMusicVolume(volume) {
 
         musicVolume = clampVolume(volume);
 
-        if (musicPlayer !== null) {
+        if (musicPlayer === null)
+            return;
 
-            musicPlayer.volume = musicVolume;
-        }
+        musicPlayer.volume = musicVolume;
     }
 
     function preloadSfx(paths) {
@@ -341,10 +302,14 @@
         sfx.onended = release;
         sfx.onerror = release;
 
-        sfx.play().catch(error => {
-            release();
-            console.error("SFX play failed:", error);
-        });
+        sfx.play()
+            .then(() => {
+                activateAudioInternal();
+            })
+            .catch(error => {
+                release();
+                console.error("SFX play failed:", error);
+            });
     }
 
     function stopSfx() {
@@ -397,14 +362,3 @@
         stopAll
     };
 })();
-
-/**
- * MÓDOSÍTÁS: a motor közös master mute állapotot használ. Némításkor
- * a zene és az aktív effektek nem állnak le, csak elnémulnak; az új
- * lejátszások is némán futnak. Feloldáskor az aktuális idővonalon
- * folytatódik a hang. A publikus API a működésének megfelelő
- * setMuted nevet használja.
- * MÓDOSÍTÁS: az effektek külön lejátszás nélkül előtölthetők. Az első
- * kattintás is a már betöltött példányt használja; párhuzamos lejátszásnál
- * a motor csak az adott alkalomhoz készít új Audio példányt.
- */

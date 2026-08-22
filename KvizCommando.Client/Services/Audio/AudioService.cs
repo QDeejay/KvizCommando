@@ -37,8 +37,6 @@ namespace KvizCommando.Client.Services.Audio
         private Task? _sfxPreloadTask;
         private MusicTrack? _requestedMusic;
 
-        public bool IsMuted { get; private set; } = true;
-
         public AudioService(IJSRuntime jsRuntime)
         {
             _jsRuntime = jsRuntime;
@@ -50,8 +48,6 @@ namespace KvizCommando.Client.Services.Audio
         /// <param name="muted">Az összes hang némításának kívánt állapota.</param>
         public async Task SetMutedAsync(bool muted)
         {
-            IsMuted = muted;
-
             await _jsRuntime.InvokeVoidAsync(
                 "audioEngine.setMuted",
                 muted);
@@ -103,9 +99,6 @@ namespace KvizCommando.Client.Services.Audio
         /// <param name="fileName">A lejátszandó hangeffektus fájlneve.</param>
         public async Task PlaySfxAsync(string fileName)
         {
-            if (IsMuted)
-                return;
-
             await EnsureSfxPreloadedAsync();
             await _jsRuntime.InvokeVoidAsync(
                 "audioEngine.playSfx",

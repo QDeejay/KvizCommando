@@ -4,7 +4,7 @@
 
 <LangGuard Culture=@Culture Module="login">
     <div class="kc-back-button-row @(_enterPassPage ? "" : "hide")">
-        <button class="military-button back-version" disabled="@(!_enterPassPage)" @onclick="() => OnSwitchPass(false)">@(" << ")</button>
+        <button class="military-button--secondary back-version" disabled="@(!_enterPassPage)" @onclick="() => OnSwitchPass(false)">@(" << ")</button>
     </div>
 <div class="kc-login-panel">
     <div class="kc-login-pnael--divider-top">
@@ -63,7 +63,7 @@
                     }
                     else
                     {
-                        <button class="military-button" disabled="@(!CanNext)" @onclick="() => OnSwitchPass(false)">@Ui.Lang["login.Button.Next"]</button>
+                        <button class="military-button--secondary" disabled="@(!CanNext)" @onclick="() => OnSwitchPass(false)">@Ui.Lang["login.Button.Next"]</button>
                     }
                 </div>
             </div>

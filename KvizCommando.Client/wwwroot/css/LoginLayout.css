@@ -16,7 +16,7 @@
     .kc-back-button-row.hide {
         display: none;
     }
-.military-button.back-version {
+.military-button--secondary.back-version {
     min-width: 0;
     border-radius: 4px;
     cursor: url('/Images/cursors/active.cur'), pointer;
