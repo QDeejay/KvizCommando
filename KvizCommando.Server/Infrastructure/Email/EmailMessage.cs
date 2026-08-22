@@ -5,7 +5,8 @@ public enum EmailMessageType
     Registration,
     PasswordReset,
     EmailChange,
-    PasswordChanged
+    PasswordChanged,
+    AccountDeleted
 }
 
 public sealed record EmailMessage(

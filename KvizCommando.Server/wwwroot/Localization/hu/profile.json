@@ -59,7 +59,6 @@
   "Privacy.Delete.Title": "Fiók törlése",
   "Privacy.Delete.Description": "A fiók és a hozzá tartozó játékosadatok véglegesen törlődnek. A művelet nem vonható vissza.",
   "Privacy.Delete.Button": "Fiók törlése",
-  "Privacy.Delete.Submit": "Fiók végleges törlése",
   "Privacy.Delete.Working": "Törlés...",
   "Privacy.Delete.Confirm": "Biztosan véglegesen törlöd a fiókodat? A profilod és a hozzá tartozó játékosadatok törlése nem vonható vissza.",
   "Privacy.Delete.InvalidPassword": "A megadott jelszó nem megfelelő.",

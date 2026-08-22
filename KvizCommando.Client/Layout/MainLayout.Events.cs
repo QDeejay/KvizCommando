@@ -75,7 +75,7 @@ namespace KvizCommando.Client.Layout
                     break;
 
                 case "deleted":
-                    Ui.Toast.Complete(Ui.Lang["mainlayout.Toast.AccountDeleted"]);
+                    Ui.Toast.Brief(Ui.Lang["mainlayout.Toast.AccountDeleted"]);
                     break;
             }
             return true;

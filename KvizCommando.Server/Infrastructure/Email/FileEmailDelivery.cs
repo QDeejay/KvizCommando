@@ -66,6 +66,7 @@ public sealed class FileEmailDelivery : IEmailDelivery
         EmailMessageType.PasswordReset => "PasswordReset",
         EmailMessageType.EmailChange => "EmailChange",
         EmailMessageType.PasswordChanged => "PasswordChanged",
+        EmailMessageType.AccountDeleted => "AccountDeleted",
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
     };
 

@@ -8,4 +8,13 @@ public interface IAccountNotificationSender
     /// <param name="user">Az értesítendő Identity-felhasználó.</param>
     /// <param name="ct">A művelet megszakítását jelző token.</param>
     Task SendPasswordChangedAsync(ApplicationUser user, CancellationToken ct = default);
+
+    /// <summary>Értesítést küld a felhasználónak a fiók végleges törléséről.</summary>
+    /// <param name="user">A törölt Identity-felhasználó korábban betöltött adatai.</param>
+    /// <param name="rankEnum">A törlés előtt eltett játékosrang.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
+    Task SendAccountDeletedAsync(
+        ApplicationUser user,
+        int rankEnum,
+        CancellationToken ct = default);
 }

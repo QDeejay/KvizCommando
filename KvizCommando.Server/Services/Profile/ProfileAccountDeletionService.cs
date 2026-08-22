@@ -1,5 +1,6 @@
 using KvizCommando.Server.Application.Abstractions.Security;
 using KvizCommando.Server.Identity;
+using KvizCommando.Server.Infrastructure.Email;
 using KvizCommando.Server.Infrastructure.Persistence;
 using KvizCommando.Server.Services.Players;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +15,7 @@ public sealed class ProfileAccountDeletionService : IProfileAccountDeletionServi
     private readonly GameDbContext _gameDb;
     private readonly IRegistrationBenefitClaimService _benefitClaims;
     private readonly IPlayerService _players;
+    private readonly IAccountNotificationSender _notifications;
     private readonly ILogger<ProfileAccountDeletionService> _logger;
 
     public ProfileAccountDeletionService(
@@ -22,6 +24,7 @@ public sealed class ProfileAccountDeletionService : IProfileAccountDeletionServi
         GameDbContext gameDb,
         IRegistrationBenefitClaimService benefitClaims,
         IPlayerService players,
+        IAccountNotificationSender notifications,
         ILogger<ProfileAccountDeletionService> logger)
     {
         _userManager = userManager;
@@ -29,6 +32,7 @@ public sealed class ProfileAccountDeletionService : IProfileAccountDeletionServi
         _gameDb = gameDb;
         _benefitClaims = benefitClaims;
         _players = players;
+        _notifications = notifications;
         _logger = logger;
     }
 
@@ -55,21 +59,26 @@ public sealed class ProfileAccountDeletionService : IProfileAccountDeletionServi
                     ct);
             }
 
-            var playerId = await _applicationDb.Players
+            var player = await _applicationDb.Players
                 .Where(player => player.UserId == userId)
-                .Select(player => (int?)player.PlayerId)
+                .Select(player => new
+                {
+                    player.PlayerId,
+                    player.RankEnum
+                })
                 .SingleOrDefaultAsync(ct);
 
-            if (playerId.HasValue)
+            if (player is not null)
             {
                 await _players.RemoveForAccountDeletionAsync(
                     userId,
-                    playerId.Value,
+                    player.PlayerId,
                     ct);
-                await DeleteQuestionDataAsync(playerId.Value, ct);
+                await DeleteQuestionDataAsync(player.PlayerId, ct);
             }
 
-            await DeleteAccountDataAsync(user, playerId, ct);
+            await DeleteAccountDataAsync(user, player?.PlayerId, ct);
+            await TrySendAccountDeletedAsync(user, player?.RankEnum ?? 0);
             return ProfileAccountDeletionServiceState.Success;
         }
         catch (OperationCanceledException) when (ct.IsCancellationRequested)
@@ -83,6 +92,29 @@ public sealed class ProfileAccountDeletionService : IProfileAccountDeletionServi
                 "Account deletion failed. UserId={UserId}",
                 userId);
             return ProfileAccountDeletionServiceState.ServerError;
+        }
+    }
+
+    private async Task TrySendAccountDeletedAsync(
+        ApplicationUser user,
+        int rankEnum)
+    {
+        if (string.IsNullOrWhiteSpace(user.Email))
+            return;
+
+        try
+        {
+            await _notifications.SendAccountDeletedAsync(
+                user,
+                rankEnum,
+                CancellationToken.None);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogWarning(
+                exception,
+                "Account deletion notification failed. UserId={UserId}",
+                user.Id);
         }
     }
 

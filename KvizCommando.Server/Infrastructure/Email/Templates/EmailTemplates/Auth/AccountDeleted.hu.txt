@@ -1,0 +1,6 @@
+Üdv, {{RankName}}!
+
+A {{AppName}} fiókod és a hozzá tartozó játékosadataid véglegesen törlődtek.
+A művelet nem vonható vissza.
+
+Ha nem te kezdeményezted a törlést, írj nekünk: {{SupportEmail}}

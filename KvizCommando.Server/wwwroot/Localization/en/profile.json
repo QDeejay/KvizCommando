@@ -59,7 +59,6 @@
   "Privacy.Delete.Title": "Delete account",
   "Privacy.Delete.Description": "The account and its player data will be permanently deleted. This action cannot be undone.",
   "Privacy.Delete.Button": "Delete account",
-  "Privacy.Delete.Submit": "Permanently delete account",
   "Privacy.Delete.Working": "Deleting...",
   "Privacy.Delete.Confirm": "Are you sure you want to permanently delete your account? Deleting your profile and its player data cannot be undone.",
   "Privacy.Delete.InvalidPassword": "The password is incorrect.",

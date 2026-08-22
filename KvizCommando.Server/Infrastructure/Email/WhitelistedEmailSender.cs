@@ -89,12 +89,45 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
         CreateAndDeliverAsync(user, EmailMessageType.PasswordChanged, user.Email ?? string.Empty,
             "PasswordChanged", string.Empty, string.Empty, ct);
 
+    /// <inheritdoc />
+    public Task SendAccountDeletedAsync(
+        ApplicationUser user,
+        int rankEnum,
+        CancellationToken ct = default) =>
+        CreateAndDeliverAsync(
+            EmailMessageType.AccountDeleted,
+            user.Email ?? string.Empty,
+            "AccountDeleted",
+            string.Empty,
+            string.Empty,
+            rankEnum,
+            ct);
+
     private async Task CreateAndDeliverAsync(ApplicationUser user, EmailMessageType type,
         string recipient, string templateName, string targetPath, string query, CancellationToken ct)
     {
+        var rankEnum = await GetRankEnumAsync(user.Id, ct);
+        await CreateAndDeliverAsync(
+            type,
+            recipient,
+            templateName,
+            targetPath,
+            query,
+            rankEnum,
+            ct);
+    }
+
+    private async Task CreateAndDeliverAsync(
+        EmailMessageType type,
+        string recipient,
+        string templateName,
+        string targetPath,
+        string query,
+        int rankEnum,
+        CancellationToken ct)
+    {
         var culture = GetSupportedCulture();
         var targetUrl = string.IsNullOrEmpty(targetPath) ? string.Empty : BuildTargetUrl(targetPath, query);
-        var rankEnum = await GetRankEnumAsync(user.Id, ct);
         var content = await LoadTemplateAsync(templateName, culture, targetUrl,
             RankCatalog.GetName(rankEnum, culture), ct);
 
@@ -120,6 +153,7 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
             "RegistrationConfirm" => "Email.Confirm.Subject",
             "EmailChangeConfirm" => "Email.Subject.EmailChange",
             "PasswordChanged" => "Email.Subject.PasswordChanged",
+            "AccountDeleted" => "Email.Subject.AccountDeleted",
             _ => "Email.Subject.ResetPassword"
         };
         return (_localizer[subjectKey].Value.Replace("{{AppName}}", _appOptions.Name), html, text);
