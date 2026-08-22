@@ -26,6 +26,7 @@ public static class KvizCommandoGameplayExtensions
         services.AddScoped<IPlayerService, PlayerService>();
         services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<IProfileAccountService, ProfileAccountService>();
+        services.AddScoped<IProfileDataExportService, ProfileDataExportService>();
         services.AddScoped<IPlayerCacheService, PlayerCacheService>();
         services.AddScoped<IUserPlayerIdCacheService, UserPlayerIdCacheService>();
 

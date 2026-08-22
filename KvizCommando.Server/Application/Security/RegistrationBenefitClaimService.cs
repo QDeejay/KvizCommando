@@ -27,15 +27,25 @@ public sealed class RegistrationBenefitClaimService : IRegistrationBenefitClaimS
     }
 
     /// <inheritdoc />
+    public Task<DateTime?> GetEligibleAgainAtUtcAsync(
+        string email,
+        CancellationToken ct = default)
+    {
+        var fingerprint = GetFingerprint(email);
+        return _db.RegistrationBenefitClaims
+            .AsNoTracking()
+            .Where(x => x.EmailFingerprint == fingerprint)
+            .Select(x => (DateTime?)x.EligibleAgainAtUtc)
+            .SingleOrDefaultAsync(ct);
+    }
+
+    /// <inheritdoc />
     public async Task RecordAsync(
         string email,
         DateTime eligibleAgainAtUtc,
         CancellationToken ct = default)
     {
-        var normalized = _normalizer.NormalizeEmail(email)
-            ?? email.Trim().ToUpperInvariant();
-        var fingerprint = Convert.ToHexString(
-            HMACSHA256.HashData(_secret, Encoding.UTF8.GetBytes(normalized)));
+        var fingerprint = GetFingerprint(email);
         var claim = await _db.RegistrationBenefitClaims
             .SingleOrDefaultAsync(x => x.EmailFingerprint == fingerprint, ct);
 
@@ -53,5 +63,15 @@ public sealed class RegistrationBenefitClaimService : IRegistrationBenefitClaimS
         }
 
         await _db.SaveChangesAsync(ct);
+    }
+
+    private string GetFingerprint(string email)
+    {
+        var normalized = _normalizer.NormalizeEmail(email)
+            ?? email.Trim().ToUpperInvariant();
+        return Convert.ToHexString(
+            HMACSHA256.HashData(
+                _secret,
+                Encoding.UTF8.GetBytes(normalized)));
     }
 }

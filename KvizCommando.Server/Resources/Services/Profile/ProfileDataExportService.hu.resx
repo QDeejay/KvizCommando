@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Section.Export" xml:space="preserve"><value>Export</value></data>
+  <data name="Section.Account" xml:space="preserve"><value>Fiók</value></data>
+  <data name="Section.Contact" xml:space="preserve"><value>Kapcsolattartási adatok</value></data>
+  <data name="Section.PaymentMethods" xml:space="preserve"><value>Fizetési módok</value></data>
+  <data name="Section.Consents" xml:space="preserve"><value>Hozzájárulások</value></data>
+  <data name="Section.RegistrationBenefit" xml:space="preserve"><value>Regisztrációs kedvezmény</value></data>
+  <data name="Section.PlayerProfile" xml:space="preserve"><value>Játékosprofil</value></data>
+  <data name="Section.Characters" xml:space="preserve"><value>Karakterek</value></data>
+  <data name="Section.GameSettings" xml:space="preserve"><value>Játékbeállítások</value></data>
+  <data name="Section.AskStatistics" xml:space="preserve"><value>Kérdezői statisztikák</value></data>
+  <data name="Section.CategoryStatistics" xml:space="preserve"><value>Kategóriastatisztikák</value></data>
+  <data name="Section.OrientationStatistics" xml:space="preserve"><value>Orientációs statisztikák</value></data>
+  <data name="Section.TeamStatistics" xml:space="preserve"><value>Csapatstatisztikák</value></data>
+  <data name="Section.UserQuestions" xml:space="preserve"><value>Saját kérdések</value></data>
+  <data name="Section.PendingQuestions" xml:space="preserve"><value>Függő kérdések</value></data>
+  <data name="Field.FormatVersion" xml:space="preserve"><value>Formátum verziója</value></data>
+  <data name="Field.ExportedUtc" xml:space="preserve"><value>Export időpontja</value></data>
+  <data name="Field.Language" xml:space="preserve"><value>Nyelv</value></data>
+  <data name="Field.UserId" xml:space="preserve"><value>Felhasználói azonosító</value></data>
+  <data name="Field.Email" xml:space="preserve"><value>E-mail-cím</value></data>
+  <data name="Field.EmailConfirmed" xml:space="preserve"><value>E-mail-cím megerősítve</value></data>
+  <data name="Field.DisplayName" xml:space="preserve"><value>Megjelenítési név</value></data>
+  <data name="Field.PreferredLocale" xml:space="preserve"><value>Kommunikációs nyelv</value></data>
+  <data name="Field.RegisteredUtc" xml:space="preserve"><value>Regisztráció időpontja</value></data>
+  <data name="Field.TwoFactorEnabled" xml:space="preserve"><value>Kétlépcsős azonosítás bekapcsolva</value></data>
+  <data name="Field.AccessFailedCount" xml:space="preserve"><value>Sikertelen bejelentkezések száma</value></data>
+  <data name="Field.LockoutEnd" xml:space="preserve"><value>Fiók zárolva eddig</value></data>
+  <data name="Field.LoginProviders" xml:space="preserve"><value>Kapcsolt bejelentkezési szolgáltatók</value></data>
+  <data name="Field.Phone" xml:space="preserve"><value>Telefonszám</value></data>
+  <data name="Field.CountryCode" xml:space="preserve"><value>Előhívó</value></data>
+  <data name="Field.PhoneNumber" xml:space="preserve"><value>Telefonszám</value></data>
+  <data name="Field.BillingName" xml:space="preserve"><value>Számlázási név</value></data>
+  <data name="Field.LastName" xml:space="preserve"><value>Vezetéknév</value></data>
+  <data name="Field.FirstName" xml:space="preserve"><value>Utónév</value></data>
+  <data name="Field.BillingAddress" xml:space="preserve"><value>Számlázási cím</value></data>
+  <data name="Field.PostalCode" xml:space="preserve"><value>Irányítószám</value></data>
+  <data name="Field.City" xml:space="preserve"><value>Város</value></data>
+  <data name="Field.AddressLine1" xml:space="preserve"><value>Cím 1</value></data>
+  <data name="Field.AddressLine2" xml:space="preserve"><value>Cím 2</value></data>
+  <data name="Field.Processor" xml:space="preserve"><value>Szolgáltató</value></data>
+  <data name="Field.CardBrand" xml:space="preserve"><value>Kártyatípus</value></data>
+  <data name="Field.CardLast4" xml:space="preserve"><value>Utolsó négy számjegy</value></data>
+  <data name="Field.ExpirationMonth" xml:space="preserve"><value>Lejárati hónap</value></data>
+  <data name="Field.ExpirationYear" xml:space="preserve"><value>Lejárati év</value></data>
+  <data name="Field.IsDefault" xml:space="preserve"><value>Alapértelmezett</value></data>
+  <data name="Field.CreatedUtc" xml:space="preserve"><value>Létrehozás időpontja</value></data>
+  <data name="Field.UpdatedUtc" xml:space="preserve"><value>Utolsó módosítás</value></data>
+  <data name="Field.TermsAccepted" xml:space="preserve"><value>ÁSZF jelenleg elfogadva</value></data>
+  <data name="Field.MarketingConsentCurrent" xml:space="preserve"><value>Marketing-hozzájárulás jelenlegi állapota</value></data>
+  <data name="Field.TermsConsentHistory" xml:space="preserve"><value>ÁSZF-elfogadások</value></data>
+  <data name="Field.MarketingConsentHistory" xml:space="preserve"><value>Marketing-hozzájárulás története</value></data>
+  <data name="Field.Version" xml:space="preserve"><value>Verzió</value></data>
+  <data name="Field.AcceptedUtc" xml:space="preserve"><value>Elfogadás időpontja</value></data>
+  <data name="Field.Granted" xml:space="preserve"><value>Hozzájárulás megadva</value></data>
+  <data name="Field.ChangedUtc" xml:space="preserve"><value>Módosítás időpontja</value></data>
+  <data name="Field.EligibleAgainUtc" xml:space="preserve"><value>Újra igénybe vehető ettől</value></data>
+  <data name="Field.PlayerId" xml:space="preserve"><value>Játékosazonosító</value></data>
+  <data name="Field.TeamName" xml:space="preserve"><value>Csapatnév</value></data>
+  <data name="Field.CaptainAvatar" xml:space="preserve"><value>Kapitány avatárja</value></data>
+  <data name="Field.TeamNameChangedUtc" xml:space="preserve"><value>Csapatnév utolsó módosítása</value></data>
+  <data name="Field.Rank" xml:space="preserve"><value>Rang</value></data>
+  <data name="Field.Xp" xml:space="preserve"><value>Tapasztalati pont</value></data>
+  <data name="Field.Credit" xml:space="preserve"><value>Kredit</value></data>
+  <data name="Field.DevelopmentPoints" xml:space="preserve"><value>Fejlesztési pont</value></data>
+  <data name="Field.Voucher" xml:space="preserve"><value>Utalvány</value></data>
+  <data name="Field.CharacterSlot" xml:space="preserve"><value>Karakterhely</value></data>
+  <data name="Field.Name" xml:space="preserve"><value>Név</value></data>
+  <data name="Field.PictureCode" xml:space="preserve"><value>Képkód</value></data>
+  <data name="Field.Pension" xml:space="preserve"><value>Nyugdíjazási érték</value></data>
+  <data name="Field.Energy" xml:space="preserve"><value>Energia</value></data>
+  <data name="Field.NextHealingGameUtc" xml:space="preserve"><value>Következő gyógyulás</value></data>
+  <data name="Field.Attributes" xml:space="preserve"><value>Tulajdonságok</value></data>
+  <data name="Field.MainOrientation" xml:space="preserve"><value>Fő irány</value></data>
+  <data name="Field.SecondaryOrientation" xml:space="preserve"><value>Másodlagos irány</value></data>
+  <data name="Field.GeneralAttributes" xml:space="preserve"><value>Általános tulajdonságok</value></data>
+  <data name="Field.Categories" xml:space="preserve"><value>Kategóriák</value></data>
+  <data name="Field.Levels" xml:space="preserve"><value>Szintek</value></data>
+  <data name="Field.Statistics" xml:space="preserve"><value>Statisztikák</value></data>
+  <data name="Field.PlayedDuels" xml:space="preserve"><value>Lejátszott párbajok</value></data>
+  <data name="Field.WonDuels" xml:space="preserve"><value>Megnyert párbajok</value></data>
+  <data name="Field.SoloBestScore" xml:space="preserve"><value>Legjobb szólóeredmény</value></data>
+  <data name="Field.FactoryQuestionSlots" xml:space="preserve"><value>Gyári kérdéshelyek</value></data>
+  <data name="Field.HelpLevels" xml:space="preserve"><value>Segítségszintek</value></data>
+  <data name="Field.TotalQuestionsAsked" xml:space="preserve"><value>Feltett kérdések</value></data>
+  <data name="Field.TotalAskPointsEarned" xml:space="preserve"><value>Kérdezőként szerzett pontok</value></data>
+  <data name="Field.AveragePointsPerAsk" xml:space="preserve"><value>Átlagos pont kérdésenként</value></data>
+  <data name="Field.Category" xml:space="preserve"><value>Kategória</value></data>
+  <data name="Field.Answered" xml:space="preserve"><value>Megválaszolt kérdések</value></data>
+  <data name="Field.Correct" xml:space="preserve"><value>Helyes válaszok</value></data>
+  <data name="Field.Ratio" xml:space="preserve"><value>Helyességi arány</value></data>
+  <data name="Field.HighScore" xml:space="preserve"><value>Legjobb eredmény</value></data>
+  <data name="Field.HighScoreTime" xml:space="preserve"><value>Legjobb eredmény ideje</value></data>
+  <data name="Field.Orientation" xml:space="preserve"><value>Orientáció</value></data>
+  <data name="Field.RankedPlayed" xml:space="preserve"><value>Rangsorolt mérkőzések</value></data>
+  <data name="Field.RankedWon" xml:space="preserve"><value>Rangsorolt győzelmek</value></data>
+  <data name="Field.RankedHighScore" xml:space="preserve"><value>Legjobb rangsorolt eredmény</value></data>
+  <data name="Field.RankedHighScoreTime" xml:space="preserve"><value>Legjobb rangsorolt eredmény ideje</value></data>
+  <data name="Field.RankedGuessCount" xml:space="preserve"><value>Rangsorolt tippelések</value></data>
+  <data name="Field.RankedGuessErrorTotal" xml:space="preserve"><value>Tippelések összes hibája</value></data>
+  <data name="Field.RankedGuessErrorRatio" xml:space="preserve"><value>Átlagos tippelési hiba</value></data>
+  <data name="Field.Placements" xml:space="preserve"><value>Helyezések</value></data>
+  <data name="Field.TwoPlayerMatches" xml:space="preserve"><value>Kétjátékos mérkőzések</value></data>
+  <data name="Field.ThreePlayerMatches" xml:space="preserve"><value>Háromjátékos mérkőzések</value></data>
+  <data name="Field.FourPlayerMatches" xml:space="preserve"><value>Négyjátékos mérkőzések</value></data>
+  <data name="Field.QuestionId" xml:space="preserve"><value>Kérdésazonosító</value></data>
+  <data name="Field.Question" xml:space="preserve"><value>Kérdés</value></data>
+  <data name="Field.Answers" xml:space="preserve"><value>Válaszok</value></data>
+  <data name="Field.AskCount" xml:space="preserve"><value>Feltéve</value></data>
+  <data name="Field.CorrectAnswerCount" xml:space="preserve"><value>Helyes válaszok</value></data>
+  <data name="Field.ReportCount" xml:space="preserve"><value>Jelentések száma</value></data>
+  <data name="Field.Status" xml:space="preserve"><value>Állapot</value></data>
+  <data name="Field.Remark" xml:space="preserve"><value>Megjegyzés</value></data>
+  <data name="Field.SubmittedUtc" xml:space="preserve"><value>Beküldés időpontja</value></data>
+  <data name="QuestionStatus.None" xml:space="preserve"><value>Nincs állapot</value></data>
+  <data name="QuestionStatus.Pending" xml:space="preserve"><value>Ellenőrzésre vár</value></data>
+  <data name="QuestionStatus.Approved" xml:space="preserve"><value>Elfogadva</value></data>
+  <data name="QuestionStatus.Rejected" xml:space="preserve"><value>Elutasítva</value></data>
+</root>

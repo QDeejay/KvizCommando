@@ -1,11 +1,13 @@
 using KvizCommando.Server.Authorization;
 using KvizCommando.Server.Services.CheckIn;
+using KvizCommando.Server.Infrastructure.Logging;
 using KvizCommando.Server.Services.Profile;
 using KvizCommando.Server.Services.UserPlayerIdCache;
 using KvizCommando.Shared.Contracts.CheckIn;
 using KvizCommando.Shared.Contracts.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 
 namespace KvizCommando.Server.Controllers;
@@ -17,19 +19,25 @@ public sealed class ProfileController : ControllerBase
 {
     private readonly IProfileService _profileService;
     private readonly IProfileAccountService _accountService;
+    private readonly IProfileDataExportService _dataExportService;
     private readonly IUserPlayerIdCacheService _idCache;
     private readonly ITermsProvider _termsProvider;
+    private readonly IAuditLogger _audit;
 
     public ProfileController(
         IProfileService profileService,
         IProfileAccountService accountService,
+        IProfileDataExportService dataExportService,
         IUserPlayerIdCacheService idCache,
-        ITermsProvider termsProvider)
+        ITermsProvider termsProvider,
+        IAuditLogger audit)
     {
         _profileService = profileService;
         _accountService = accountService;
+        _dataExportService = dataExportService;
         _idCache = idCache;
         _termsProvider = termsProvider;
+        _audit = audit;
     }
 
     /// <summary>Visszaadja az aktuális, kultúrafüggő jogi dokumentum metaadatait.</summary>
@@ -37,6 +45,50 @@ public sealed class ProfileController : ControllerBase
     [ProducesResponseType(typeof(TermsMeta), StatusCodes.Status200OK)]
     public ActionResult<TermsMeta> GetLegalMeta() =>
         Ok(_termsProvider.GetCurrentTerms());
+
+    /// <summary>Jelszavas újrahitelesítés után kiadja a felhasználó személyesadat-exportját.</summary>
+    [HttpPost("export")]
+    [EnableRateLimiting("login-protect")]
+    [Produces("application/zip")]
+    public async Task<IActionResult> ExportDataAsync(
+        [FromBody] ProfileDataExportRequest request,
+        CancellationToken ct)
+    {
+        var userId = GetUserId();
+        if (userId is null)
+            return Unauthorized();
+
+        var result = await _dataExportService.ExportAsync(
+            userId,
+            request.CurrentPassword,
+            ct);
+        var outcome = result.State switch
+        {
+            ProfileDataExportServiceState.Success => AuditOutcome.Succeeded,
+            ProfileDataExportServiceState.InvalidPassword => AuditOutcome.Denied,
+            _ => AuditOutcome.Failed
+        };
+        await _audit.LogAsync(
+            new AuditEntry(
+                AuditEvents.DATA_EXPORT,
+                outcome,
+                userId,
+                userId,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                HttpContext.TraceIdentifier),
+            ct);
+
+        return result.State switch
+        {
+            ProfileDataExportServiceState.Success => File(
+                result.Content,
+                "application/zip",
+                result.FileName),
+            ProfileDataExportServiceState.InvalidPassword => BadRequest(),
+            ProfileDataExportServiceState.NotFound => NotFound(),
+            _ => Problem(statusCode: StatusCodes.Status500InternalServerError)
+        };
+    }
 
     /// <summary>Betölti a hitelesített felhasználó fiókadatait.</summary>
     [HttpGet("account")]

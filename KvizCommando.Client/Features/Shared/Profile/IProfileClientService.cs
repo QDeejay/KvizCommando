@@ -48,4 +48,12 @@ public interface IProfileClientService
     /// <param name="ct">A művelet megszakítását jelző token.</param>
     /// <returns>Az aktuális jogi dokumentum metaadatai, vagy <see langword="null"/>, ha a kérés sikertelen.</returns>
     Task<TermsMeta?> GetLegalMetaAsync(CancellationToken ct = default);
+
+    /// <summary>Jelszavas újrahitelesítéssel lekéri a személyesadat-export ZIP-fájlját.</summary>
+    /// <param name="currentPassword">A fiók jelenlegi jelszava.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
+    /// <returns>Az export állapota és siker esetén a letölthető fájl.</returns>
+    Task<ProfileDataExportResult> ExportDataAsync(
+        string currentPassword,
+        CancellationToken ct = default);
 }

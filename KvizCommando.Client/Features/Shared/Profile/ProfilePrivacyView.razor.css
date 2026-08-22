@@ -35,6 +35,21 @@ p {
     line-height: 1.45;
 }
 
+label {
+    color: #c9c9bd;
+    font-size: .84rem;
+}
+
+.lcd-input {
+    width: 100%;
+}
+
+.kc-profile-export-error {
+    min-height: 20px;
+    margin: 4px 0 0;
+    color: #e47676;
+}
+
 .kc-profile-privacy-root .kc-profile-privacy-delete {
     border-color: color-mix(in srgb, #a64b2a 68%, var(--kc-shell-border));
 }
@@ -46,6 +61,7 @@ p {
 .kc-profile-privacy-actions {
     display: flex;
     justify-content: flex-end;
+    gap: 10px;
     margin-top: auto;
     padding-top: 18px;
 }

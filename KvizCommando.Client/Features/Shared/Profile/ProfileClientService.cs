@@ -3,6 +3,7 @@ using KvizCommando.Client.Services.User;
 using KvizCommando.Shared.Contracts.CheckIn;
 using KvizCommando.Shared.Contracts.Profile;
 using System.Net.Http.Json;
+using System.Net;
 using System.Text.Json;
 
 namespace KvizCommando.Client.Features.Shared.Profile;
@@ -180,6 +181,49 @@ public sealed class ProfileClientService : IProfileClientService
         }
     }
 
+    /// <inheritdoc />
+    public async Task<ProfileDataExportResult> ExportDataAsync(
+        string currentPassword,
+        CancellationToken ct = default)
+    {
+        try
+        {
+            using var response = await _http.PostAsJsonAsync(
+                $"{PROFILE_ROUTE}/export",
+                new ProfileDataExportRequest
+                {
+                    CurrentPassword = currentPassword
+                },
+                ct);
+
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+                return ExportResult(ProfileDataExportState.InvalidPassword);
+            if ((int)response.StatusCode == 429)
+                return ExportResult(ProfileDataExportState.RateLimited);
+            if (!response.IsSuccessStatusCode)
+                return ExportResult(ProfileDataExportState.ServerError);
+
+            var fileName = response.Content.Headers.ContentDisposition?.FileNameStar
+                ?? response.Content.Headers.ContentDisposition?.FileName
+                ?? "kvizcommando-data.zip";
+            return new ProfileDataExportResult
+            {
+                State = ProfileDataExportState.Success,
+                FileName = fileName.Trim('"'),
+                Content = await response.Content.ReadAsByteArrayAsync(ct)
+            };
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Profile data export request failed.");
+            return ExportResult(ProfileDataExportState.ServerError);
+        }
+    }
+
     private async Task<ProfileIdentityUpdateResponse> UpdateIdentityAsync(
         IdentityInfoRequest request,
         CancellationToken ct)
@@ -261,6 +305,12 @@ public sealed class ProfileClientService : IProfileClientService
     {
         State = ProfileAccountRequestState.ServerError
     };
+
+    private static ProfileDataExportResult ExportResult(
+        ProfileDataExportState state) => new()
+        {
+            State = state
+        };
 
     private sealed class IdentityInfoRequest
     {

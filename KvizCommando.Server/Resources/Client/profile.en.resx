@@ -53,6 +53,14 @@
   <data name="Privacy.Export.Title" xml:space="preserve"><value>Download your data</value></data>
   <data name="Privacy.Export.Description" xml:space="preserve"><value>Download the personal data managed by KvizCommando in a ZIP package.</value></data>
   <data name="Privacy.Export.Button" xml:space="preserve"><value>Export data</value></data>
+  <data name="Privacy.Export.Password" xml:space="preserve"><value>Current password</value></data>
+  <data name="Privacy.Export.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Privacy.Export.Download" xml:space="preserve"><value>Download</value></data>
+  <data name="Privacy.Export.Working" xml:space="preserve"><value>Exporting...</value></data>
+  <data name="Privacy.Export.Success" xml:space="preserve"><value>The data package download has started.</value></data>
+  <data name="Privacy.Export.InvalidPassword" xml:space="preserve"><value>The password is incorrect.</value></data>
+  <data name="Privacy.Export.RateLimited" xml:space="preserve"><value>Too many export requests. Try again later.</value></data>
+  <data name="Privacy.Export.Error" xml:space="preserve"><value>The data package could not be prepared.</value></data>
   <data name="Privacy.Delete.Title" xml:space="preserve"><value>Delete account</value></data>
   <data name="Privacy.Delete.Description" xml:space="preserve"><value>The account and its player data will be permanently deleted. This action cannot be undone.</value></data>
   <data name="Privacy.Delete.Button" xml:space="preserve"><value>Delete account</value></data>

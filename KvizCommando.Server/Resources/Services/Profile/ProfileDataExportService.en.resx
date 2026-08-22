@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Section.Export" xml:space="preserve"><value>Export</value></data>
+  <data name="Section.Account" xml:space="preserve"><value>Account</value></data>
+  <data name="Section.Contact" xml:space="preserve"><value>Contact details</value></data>
+  <data name="Section.PaymentMethods" xml:space="preserve"><value>Payment methods</value></data>
+  <data name="Section.Consents" xml:space="preserve"><value>Consents</value></data>
+  <data name="Section.RegistrationBenefit" xml:space="preserve"><value>Registration benefit</value></data>
+  <data name="Section.PlayerProfile" xml:space="preserve"><value>Player profile</value></data>
+  <data name="Section.Characters" xml:space="preserve"><value>Characters</value></data>
+  <data name="Section.GameSettings" xml:space="preserve"><value>Game settings</value></data>
+  <data name="Section.AskStatistics" xml:space="preserve"><value>Questioner statistics</value></data>
+  <data name="Section.CategoryStatistics" xml:space="preserve"><value>Category statistics</value></data>
+  <data name="Section.OrientationStatistics" xml:space="preserve"><value>Orientation statistics</value></data>
+  <data name="Section.TeamStatistics" xml:space="preserve"><value>Team statistics</value></data>
+  <data name="Section.UserQuestions" xml:space="preserve"><value>Own questions</value></data>
+  <data name="Section.PendingQuestions" xml:space="preserve"><value>Pending questions</value></data>
+  <data name="Field.FormatVersion" xml:space="preserve"><value>Format version</value></data>
+  <data name="Field.ExportedUtc" xml:space="preserve"><value>Export time</value></data>
+  <data name="Field.Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Field.UserId" xml:space="preserve"><value>User identifier</value></data>
+  <data name="Field.Email" xml:space="preserve"><value>Email address</value></data>
+  <data name="Field.EmailConfirmed" xml:space="preserve"><value>Email address confirmed</value></data>
+  <data name="Field.DisplayName" xml:space="preserve"><value>Display name</value></data>
+  <data name="Field.PreferredLocale" xml:space="preserve"><value>Communication language</value></data>
+  <data name="Field.RegisteredUtc" xml:space="preserve"><value>Registration time</value></data>
+  <data name="Field.TwoFactorEnabled" xml:space="preserve"><value>Two-factor authentication enabled</value></data>
+  <data name="Field.AccessFailedCount" xml:space="preserve"><value>Failed sign-in count</value></data>
+  <data name="Field.LockoutEnd" xml:space="preserve"><value>Account locked until</value></data>
+  <data name="Field.LoginProviders" xml:space="preserve"><value>Linked sign-in providers</value></data>
+  <data name="Field.Phone" xml:space="preserve"><value>Phone number</value></data>
+  <data name="Field.CountryCode" xml:space="preserve"><value>Country code</value></data>
+  <data name="Field.PhoneNumber" xml:space="preserve"><value>Phone number</value></data>
+  <data name="Field.BillingName" xml:space="preserve"><value>Billing name</value></data>
+  <data name="Field.LastName" xml:space="preserve"><value>Last name</value></data>
+  <data name="Field.FirstName" xml:space="preserve"><value>First name</value></data>
+  <data name="Field.BillingAddress" xml:space="preserve"><value>Billing address</value></data>
+  <data name="Field.PostalCode" xml:space="preserve"><value>Postal code</value></data>
+  <data name="Field.City" xml:space="preserve"><value>City</value></data>
+  <data name="Field.AddressLine1" xml:space="preserve"><value>Address line 1</value></data>
+  <data name="Field.AddressLine2" xml:space="preserve"><value>Address line 2</value></data>
+  <data name="Field.Processor" xml:space="preserve"><value>Processor</value></data>
+  <data name="Field.CardBrand" xml:space="preserve"><value>Card brand</value></data>
+  <data name="Field.CardLast4" xml:space="preserve"><value>Last four digits</value></data>
+  <data name="Field.ExpirationMonth" xml:space="preserve"><value>Expiration month</value></data>
+  <data name="Field.ExpirationYear" xml:space="preserve"><value>Expiration year</value></data>
+  <data name="Field.IsDefault" xml:space="preserve"><value>Default</value></data>
+  <data name="Field.CreatedUtc" xml:space="preserve"><value>Created at</value></data>
+  <data name="Field.UpdatedUtc" xml:space="preserve"><value>Last updated</value></data>
+  <data name="Field.TermsAccepted" xml:space="preserve"><value>Terms currently accepted</value></data>
+  <data name="Field.MarketingConsentCurrent" xml:space="preserve"><value>Current marketing consent</value></data>
+  <data name="Field.TermsConsentHistory" xml:space="preserve"><value>Terms acceptance history</value></data>
+  <data name="Field.MarketingConsentHistory" xml:space="preserve"><value>Marketing consent history</value></data>
+  <data name="Field.Version" xml:space="preserve"><value>Version</value></data>
+  <data name="Field.AcceptedUtc" xml:space="preserve"><value>Accepted at</value></data>
+  <data name="Field.Granted" xml:space="preserve"><value>Consent granted</value></data>
+  <data name="Field.ChangedUtc" xml:space="preserve"><value>Changed at</value></data>
+  <data name="Field.EligibleAgainUtc" xml:space="preserve"><value>Eligible again from</value></data>
+  <data name="Field.PlayerId" xml:space="preserve"><value>Player identifier</value></data>
+  <data name="Field.TeamName" xml:space="preserve"><value>Team name</value></data>
+  <data name="Field.CaptainAvatar" xml:space="preserve"><value>Captain avatar</value></data>
+  <data name="Field.TeamNameChangedUtc" xml:space="preserve"><value>Team name last changed</value></data>
+  <data name="Field.Rank" xml:space="preserve"><value>Rank</value></data>
+  <data name="Field.Xp" xml:space="preserve"><value>Experience points</value></data>
+  <data name="Field.Credit" xml:space="preserve"><value>Credit</value></data>
+  <data name="Field.DevelopmentPoints" xml:space="preserve"><value>Development points</value></data>
+  <data name="Field.Voucher" xml:space="preserve"><value>Voucher</value></data>
+  <data name="Field.CharacterSlot" xml:space="preserve"><value>Character slot</value></data>
+  <data name="Field.Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Field.PictureCode" xml:space="preserve"><value>Picture code</value></data>
+  <data name="Field.Pension" xml:space="preserve"><value>Pension value</value></data>
+  <data name="Field.Energy" xml:space="preserve"><value>Energy</value></data>
+  <data name="Field.NextHealingGameUtc" xml:space="preserve"><value>Next healing</value></data>
+  <data name="Field.Attributes" xml:space="preserve"><value>Attributes</value></data>
+  <data name="Field.MainOrientation" xml:space="preserve"><value>Main orientation</value></data>
+  <data name="Field.SecondaryOrientation" xml:space="preserve"><value>Secondary orientation</value></data>
+  <data name="Field.GeneralAttributes" xml:space="preserve"><value>General attributes</value></data>
+  <data name="Field.Categories" xml:space="preserve"><value>Categories</value></data>
+  <data name="Field.Levels" xml:space="preserve"><value>Levels</value></data>
+  <data name="Field.Statistics" xml:space="preserve"><value>Statistics</value></data>
+  <data name="Field.PlayedDuels" xml:space="preserve"><value>Played duels</value></data>
+  <data name="Field.WonDuels" xml:space="preserve"><value>Won duels</value></data>
+  <data name="Field.SoloBestScore" xml:space="preserve"><value>Best solo score</value></data>
+  <data name="Field.FactoryQuestionSlots" xml:space="preserve"><value>Factory question slots</value></data>
+  <data name="Field.HelpLevels" xml:space="preserve"><value>Help levels</value></data>
+  <data name="Field.TotalQuestionsAsked" xml:space="preserve"><value>Questions asked</value></data>
+  <data name="Field.TotalAskPointsEarned" xml:space="preserve"><value>Points earned as questioner</value></data>
+  <data name="Field.AveragePointsPerAsk" xml:space="preserve"><value>Average points per question</value></data>
+  <data name="Field.Category" xml:space="preserve"><value>Category</value></data>
+  <data name="Field.Answered" xml:space="preserve"><value>Answered questions</value></data>
+  <data name="Field.Correct" xml:space="preserve"><value>Correct answers</value></data>
+  <data name="Field.Ratio" xml:space="preserve"><value>Success ratio</value></data>
+  <data name="Field.HighScore" xml:space="preserve"><value>Best score</value></data>
+  <data name="Field.HighScoreTime" xml:space="preserve"><value>Best score time</value></data>
+  <data name="Field.Orientation" xml:space="preserve"><value>Orientation</value></data>
+  <data name="Field.RankedPlayed" xml:space="preserve"><value>Ranked matches</value></data>
+  <data name="Field.RankedWon" xml:space="preserve"><value>Ranked wins</value></data>
+  <data name="Field.RankedHighScore" xml:space="preserve"><value>Best ranked score</value></data>
+  <data name="Field.RankedHighScoreTime" xml:space="preserve"><value>Best ranked score time</value></data>
+  <data name="Field.RankedGuessCount" xml:space="preserve"><value>Ranked guesses</value></data>
+  <data name="Field.RankedGuessErrorTotal" xml:space="preserve"><value>Total guess error</value></data>
+  <data name="Field.RankedGuessErrorRatio" xml:space="preserve"><value>Average guess error</value></data>
+  <data name="Field.Placements" xml:space="preserve"><value>Placements</value></data>
+  <data name="Field.TwoPlayerMatches" xml:space="preserve"><value>Two-player matches</value></data>
+  <data name="Field.ThreePlayerMatches" xml:space="preserve"><value>Three-player matches</value></data>
+  <data name="Field.FourPlayerMatches" xml:space="preserve"><value>Four-player matches</value></data>
+  <data name="Field.QuestionId" xml:space="preserve"><value>Question identifier</value></data>
+  <data name="Field.Question" xml:space="preserve"><value>Question</value></data>
+  <data name="Field.Answers" xml:space="preserve"><value>Answers</value></data>
+  <data name="Field.AskCount" xml:space="preserve"><value>Times asked</value></data>
+  <data name="Field.CorrectAnswerCount" xml:space="preserve"><value>Correct answers</value></data>
+  <data name="Field.ReportCount" xml:space="preserve"><value>Report count</value></data>
+  <data name="Field.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Field.Remark" xml:space="preserve"><value>Remark</value></data>
+  <data name="Field.SubmittedUtc" xml:space="preserve"><value>Submitted at</value></data>
+  <data name="QuestionStatus.None" xml:space="preserve"><value>No status</value></data>
+  <data name="QuestionStatus.Pending" xml:space="preserve"><value>Pending review</value></data>
+  <data name="QuestionStatus.Approved" xml:space="preserve"><value>Approved</value></data>
+  <data name="QuestionStatus.Rejected" xml:space="preserve"><value>Rejected</value></data>
+</root>
