@@ -393,6 +393,26 @@ namespace KvizCommando.Server.Services.PlayerCache
         }
 
         /// <inheritdoc />
+        public async Task DiscardAsync(
+            int playerId,
+            CancellationToken ct = default)
+        {
+            if (!_entries.TryGetValue(playerId, out var entry))
+                return;
+
+            await entry.Lock.WaitAsync(ct);
+            try
+            {
+                ((ICollection<KeyValuePair<int, CacheEntry>>)_entries)
+                    .Remove(new KeyValuePair<int, CacheEntry>(playerId, entry));
+            }
+            finally
+            {
+                entry.Lock.Release();
+            }
+        }
+
+        /// <inheritdoc />
         public async Task<(SaveResult, bool)> SaveDirtyLockedAsync(
             int playerId,
             CancellationToken ct = default)

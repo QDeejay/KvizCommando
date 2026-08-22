@@ -60,5 +60,6 @@
   "Toast.Logout.Session": "Másik bejelentkezés miatt ez a munkamenet már nem érvényes.",
   "Toast.Logout.Expired": "A bejelentkezésed lejárt.",
   "Toast.Logout.Error": "A kijelentkezés nem sikerült.",
+  "Toast.AccountDeleted": "A fiókod véglegesen törölve lett.",
   "Toast.Login.Replaced": "A korábbi bejelentkezés felülírva. Ha aktív játékban voltál, onnan is kiléptetésre kerültél."
 }

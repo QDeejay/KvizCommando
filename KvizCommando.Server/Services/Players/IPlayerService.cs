@@ -25,5 +25,14 @@ namespace KvizCommando.Server.Services.Players
         /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
         /// <param name="ct">A művelet megszakítását jelző token.</param>
         Task LogoutAndRemoveCacheAsync(string userId, string sessionId, CancellationToken ct = default);
+
+        /// <summary>Eltávolítja a törlendő játékost az aktív játék- és játékoscache-ekből.</summary>
+        /// <param name="userId">Az Identity-felhasználó azonosítója.</param>
+        /// <param name="playerId">A játékos adatbázis-azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
+        Task RemoveForAccountDeletionAsync(
+            string userId,
+            int playerId,
+            CancellationToken ct = default);
     }
 }

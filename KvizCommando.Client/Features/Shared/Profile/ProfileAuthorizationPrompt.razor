@@ -1,0 +1,48 @@
+@inherits Utilities.KcComponentBase
+
+<label for="kc-profile-authorization-password">
+    @Ui.Lang["profile.Privacy.Authorization.Password"]
+</label>
+<div class="password-box">
+    <input id="kc-profile-authorization-password"
+           class="lcd-input"
+           type="@PasswordType"
+           name="kc-profile-authorization"
+           autocomplete="off"
+           value="@_password"
+           disabled="@Busy"
+           @oninput="OnPasswordInput" />
+    @if (!string.IsNullOrEmpty(_password))
+    {
+        <button type="button"
+                class="password-toggle"
+                disabled="@Busy"
+                aria-label="@Ui.Lang["common.Password.Visibility"]"
+                aria-pressed="@_showPassword"
+                @onclick="TogglePasswordAsync">
+            <i class="@PasswordEyeIcon" aria-hidden="true"></i>
+        </button>
+    }
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Error))
+{
+    <p class="kc-profile-authorization-error" role="alert">
+        @Error
+    </p>
+}
+
+<div class="kc-profile-authorization-actions">
+    <button type="button"
+            class="military-button--secondary"
+            disabled="@Busy"
+            @onclick="CancelAsync">
+        @Ui.Lang["profile.Privacy.Authorization.Cancel"]
+    </button>
+    <button type="button"
+            class="military-button"
+            disabled="@(!CanSubmit)"
+            @onclick="SubmitAsync">
+        @Ui.Lang[Busy ? WorkingTextKey : SubmitTextKey]
+    </button>
+</div>

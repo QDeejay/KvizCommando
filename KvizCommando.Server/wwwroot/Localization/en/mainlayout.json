@@ -60,5 +60,6 @@
   "Toast.Logout.Session": "This session is no longer valid because of another login.",
   "Toast.Logout.Expired": "Your login has expired.",
   "Toast.Logout.Error": "Logout failed.",
+  "Toast.AccountDeleted": "Your account has been permanently deleted.",
   "Toast.Login.Replaced": "The previous login has been replaced. If you were in an active game, you were also disconnected from it."
 }

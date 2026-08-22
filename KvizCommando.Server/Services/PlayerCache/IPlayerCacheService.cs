@@ -128,6 +128,14 @@
             int playerId,
             string sessionId,
             CancellationToken ct = default);
+
+        /// <summary>
+        /// Mentés nélkül eltávolítja a véglegesen törlendő játékos gyorsítótárazott állapotát.
+        /// </summary>
+        /// <param name="playerId">A játékos adatbázis-azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
+        Task DiscardAsync(int playerId, CancellationToken ct = default);
+
         /// <summary>
         /// A játékoslock alatt tartós tárba írja a módosított játékosadatokat.
         /// </summary>

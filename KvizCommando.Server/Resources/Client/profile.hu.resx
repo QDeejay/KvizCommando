@@ -53,17 +53,23 @@
   <data name="Privacy.Export.Title" xml:space="preserve"><value>Saját adatok letöltése</value></data>
   <data name="Privacy.Export.Description" xml:space="preserve"><value>A KvizCommando által kezelt saját adataidat ZIP-csomagban töltheted le.</value></data>
   <data name="Privacy.Export.Button" xml:space="preserve"><value>Adatok exportálása</value></data>
-  <data name="Privacy.Export.Password" xml:space="preserve"><value>Jelenlegi jelszó</value></data>
-  <data name="Privacy.Export.Cancel" xml:space="preserve"><value>Mégse</value></data>
   <data name="Privacy.Export.Download" xml:space="preserve"><value>Letöltés</value></data>
   <data name="Privacy.Export.Working" xml:space="preserve"><value>Exportálás...</value></data>
   <data name="Privacy.Export.Success" xml:space="preserve"><value>Az adatcsomag letöltése elindult.</value></data>
   <data name="Privacy.Export.InvalidPassword" xml:space="preserve"><value>A megadott jelszó nem megfelelő.</value></data>
   <data name="Privacy.Export.RateLimited" xml:space="preserve"><value>Túl sok exportkérés érkezett. Próbáld újra később.</value></data>
   <data name="Privacy.Export.Error" xml:space="preserve"><value>Nem sikerült elkészíteni az adatcsomagot.</value></data>
+  <data name="Privacy.Authorization.Password" xml:space="preserve"><value>Jelenlegi jelszó</value></data>
+  <data name="Privacy.Authorization.Cancel" xml:space="preserve"><value>Mégse</value></data>
   <data name="Privacy.Delete.Title" xml:space="preserve"><value>Fiók törlése</value></data>
   <data name="Privacy.Delete.Description" xml:space="preserve"><value>A fiók és a hozzá tartozó játékosadatok véglegesen törlődnek. A művelet nem vonható vissza.</value></data>
   <data name="Privacy.Delete.Button" xml:space="preserve"><value>Fiók törlése</value></data>
+  <data name="Privacy.Delete.Submit" xml:space="preserve"><value>Fiók végleges törlése</value></data>
+  <data name="Privacy.Delete.Working" xml:space="preserve"><value>Törlés...</value></data>
+  <data name="Privacy.Delete.Confirm" xml:space="preserve"><value>Biztosan véglegesen törlöd a fiókodat? A profilod és a hozzá tartozó játékosadatok törlése nem vonható vissza.</value></data>
+  <data name="Privacy.Delete.InvalidPassword" xml:space="preserve"><value>A megadott jelszó nem megfelelő.</value></data>
+  <data name="Privacy.Delete.RateLimited" xml:space="preserve"><value>Túl sok törlési kísérlet történt. Próbáld újra később.</value></data>
+  <data name="Privacy.Delete.Error" xml:space="preserve"><value>A fiók törlése nem sikerült.</value></data>
   <data name="Privacy.Document.Loading" xml:space="preserve"><value>Dokumentum betöltése...</value></data>
   <data name="Privacy.Document.Error" xml:space="preserve"><value>A dokumentum nem tölthető be.</value></data>
   <data name="Privacy.Document.Understood" xml:space="preserve"><value>Értem</value></data>

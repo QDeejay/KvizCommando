@@ -250,6 +250,9 @@
   <data name="Toast.Logout.Error" xml:space="preserve">
     <value>Logout failed.</value>
   </data>
+  <data name="Toast.AccountDeleted" xml:space="preserve">
+    <value>Your account has been permanently deleted.</value>
+  </data>
   <data name="Toast.Login.Replaced" xml:space="preserve">
     <value>The previous login has been replaced. If you were in an active game, you were also disconnected from it.</value>
   </data>

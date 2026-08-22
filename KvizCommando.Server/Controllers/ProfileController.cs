@@ -6,6 +6,8 @@ using KvizCommando.Server.Services.UserPlayerIdCache;
 using KvizCommando.Shared.Contracts.CheckIn;
 using KvizCommando.Shared.Contracts.Profile;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
@@ -20,6 +22,7 @@ public sealed class ProfileController : ControllerBase
     private readonly IProfileService _profileService;
     private readonly IProfileAccountService _accountService;
     private readonly IProfileDataExportService _dataExportService;
+    private readonly IProfileAccountDeletionService _accountDeletionService;
     private readonly IUserPlayerIdCacheService _idCache;
     private readonly ITermsProvider _termsProvider;
     private readonly IAuditLogger _audit;
@@ -28,6 +31,7 @@ public sealed class ProfileController : ControllerBase
         IProfileService profileService,
         IProfileAccountService accountService,
         IProfileDataExportService dataExportService,
+        IProfileAccountDeletionService accountDeletionService,
         IUserPlayerIdCacheService idCache,
         ITermsProvider termsProvider,
         IAuditLogger audit)
@@ -35,6 +39,7 @@ public sealed class ProfileController : ControllerBase
         _profileService = profileService;
         _accountService = accountService;
         _dataExportService = dataExportService;
+        _accountDeletionService = accountDeletionService;
         _idCache = idCache;
         _termsProvider = termsProvider;
         _audit = audit;
@@ -86,6 +91,52 @@ public sealed class ProfileController : ControllerBase
                 result.FileName),
             ProfileDataExportServiceState.InvalidPassword => BadRequest(),
             ProfileDataExportServiceState.NotFound => NotFound(),
+            _ => Problem(statusCode: StatusCodes.Status500InternalServerError)
+        };
+    }
+
+    /// <summary>Jelszavas újrahitelesítés után véglegesen törli a felhasználói fiókot.</summary>
+    [HttpPost("delete")]
+    [EnableRateLimiting("login-protect")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteAccountAsync(
+        [FromBody] ProfileAccountDeletionRequest request,
+        CancellationToken ct)
+    {
+        var userId = GetUserId();
+        if (userId is null)
+            return Unauthorized();
+
+        var state = await _accountDeletionService.DeleteAsync(
+            userId,
+            request.CurrentPassword,
+            ct);
+        var outcome = state switch
+        {
+            ProfileAccountDeletionServiceState.Success => AuditOutcome.Succeeded,
+            ProfileAccountDeletionServiceState.InvalidPassword => AuditOutcome.Denied,
+            _ => AuditOutcome.Failed
+        };
+        await _audit.LogAsync(
+            new AuditEntry(
+                AuditEvents.ERASURE,
+                outcome,
+                userId,
+                userId,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                HttpContext.TraceIdentifier),
+            ct);
+
+        if (state == ProfileAccountDeletionServiceState.Success)
+        {
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            return NoContent();
+        }
+
+        return state switch
+        {
+            ProfileAccountDeletionServiceState.InvalidPassword => BadRequest(),
+            ProfileAccountDeletionServiceState.NotFound => NotFound(),
             _ => Problem(statusCode: StatusCodes.Status500InternalServerError)
         };
     }

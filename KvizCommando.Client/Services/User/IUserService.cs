@@ -1,5 +1,6 @@
 ﻿using KvizCommando.Shared.Contracts.Auth;
 using KvizCommando.Shared.Contracts.CheckIn;
+using KvizCommando.Shared.Contracts.Profile;
 
 
 namespace KvizCommando.Client.Services.User
@@ -18,10 +19,14 @@ namespace KvizCommando.Client.Services.User
         /// <param name="soft"><see langword="true"/> esetén csak a kliens helyi állapotát zárja le; <see langword="false"/> esetén a szerveres kijelentkezést is kéri.</param>
         Task LogoutAsync(bool soft);
         /// <summary>
-        /// Törli az aktuális felhasználói profilt.
+        /// Jelszavas újrahitelesítés után törli az aktuális felhasználói profilt.
         /// </summary>
-        /// <returns><see langword="true"/>, ha a művelet sikeresen befejeződött; egyébként <see langword="false"/>.</returns>
-        Task<bool> ProfileDeleteAsync();
+        /// <param name="currentPassword">A fiók jelenlegi jelszava.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
+        /// <returns>A törlési művelet állapota.</returns>
+        Task<ProfileAccountDeletionState> ProfileDeleteAsync(
+            string currentPassword,
+            CancellationToken ct = default);
         /// <summary>
         /// Regisztrálja a megadott felhasználói profilt.
         /// </summary>

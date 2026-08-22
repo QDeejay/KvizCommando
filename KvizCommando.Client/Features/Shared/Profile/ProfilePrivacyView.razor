@@ -7,63 +7,24 @@
             <h3>@Ui.Lang["profile.Privacy.Export.Title"]</h3>
             <p>@Ui.Lang["profile.Privacy.Export.Description"]</p>
 
-            @if (_isExportAuthorizationOpen)
+            @if (_activeAction == ProfilePrivacyAction.Export)
             {
-                <label for="kc-profile-export-password">
-                    @Ui.Lang["profile.Privacy.Export.Password"]
-                </label>
-                <div class="password-box">
-                    <input id="kc-profile-export-password"
-                           class="lcd-input"
-                           type="@ExportPasswordType"
-                           name="kc-profile-export-password"
-                           autocomplete="off"
-                           value="@_exportPassword"
-                           disabled="@_isExporting"
-                           @oninput="OnExportPasswordInput" />
-                    @if (!string.IsNullOrEmpty(_exportPassword))
-                    {
-                        <button type="button"
-                                class="password-toggle"
-                                disabled="@_isExporting"
-                                aria-label="@Ui.Lang["common.Password.Visibility"]"
-                                aria-pressed="@_showExportPassword"
-                                @onclick="ToggleExportPasswordAsync">
-                            <i class="@ExportPasswordEyeIcon" aria-hidden="true"></i>
-                        </button>
-                    }
-                </div>
-
-                @if (!string.IsNullOrWhiteSpace(_exportError))
-                {
-                    <p class="kc-profile-export-error" role="alert">
-                        @_exportError
-                    </p>
-                }
-
-                <div class="kc-profile-privacy-actions">
-                    <button type="button"
-                            class="military-button--secondary"
-                            disabled="@_isExporting"
-                            @onclick="CancelExportAsync">
-                        @Ui.Lang["profile.Privacy.Export.Cancel"]
-                    </button>
-                    <button type="button"
-                            class="military-button"
-                            disabled="@(!CanExport)"
-                            @onclick="ExportDataAsync">
-                        @Ui.Lang[_isExporting
-                            ? "profile.Privacy.Export.Working"
-                            : "profile.Privacy.Export.Download"]
-                    </button>
-                </div>
+                <ProfileAuthorizationPrompt @key="_activeAction"
+                                            Busy="@_isAuthorizationBusy"
+                                            Error="@_authorizationError"
+                                            SubmitTextKey="profile.Privacy.Export.Download"
+                                            WorkingTextKey="profile.Privacy.Export.Working"
+                                            OnSubmit="AuthorizeAsync"
+                                            OnCancel="CloseAuthorizationAsync"
+                                            OnChanged="ClearAuthorizationError" />
             }
             else
             {
                 <div class="kc-profile-privacy-actions">
                     <button type="button"
                             class="military-button"
-                            @onclick="OpenExportAsync">
+                            disabled="@_isAuthorizationBusy"
+                            @onclick="() => OpenAuthorizationAsync(ProfilePrivacyAction.Export)">
                         @Ui.Lang["profile.Privacy.Export.Button"]
                     </button>
                 </div>
@@ -74,13 +35,28 @@
             <h3>@Ui.Lang["profile.Privacy.Delete.Title"]</h3>
             <p>@Ui.Lang["profile.Privacy.Delete.Description"]</p>
 
-            <div class="kc-profile-privacy-actions">
-                <button type="button"
-                        class="military-button kc-profile-delete-button"
-                        disabled>
-                    @Ui.Lang["profile.Privacy.Delete.Button"]
-                </button>
-            </div>
+            @if (_activeAction == ProfilePrivacyAction.Delete)
+            {
+                <ProfileAuthorizationPrompt @key="_activeAction"
+                                            Busy="@_isAuthorizationBusy"
+                                            Error="@_authorizationError"
+                                            SubmitTextKey="profile.Privacy.Delete.Submit"
+                                            WorkingTextKey="profile.Privacy.Delete.Working"
+                                            OnSubmit="AuthorizeAsync"
+                                            OnCancel="CloseAuthorizationAsync"
+                                            OnChanged="ClearAuthorizationError" />
+            }
+            else
+            {
+                <div class="kc-profile-privacy-actions">
+                    <button type="button"
+                            class="military-button kc-profile-delete-button"
+                            disabled="@_isAuthorizationBusy"
+                            @onclick="() => OpenAuthorizationAsync(ProfilePrivacyAction.Delete)">
+                        @Ui.Lang["profile.Privacy.Delete.Button"]
+                    </button>
+                </div>
+            }
         </section>
     </div>
 }

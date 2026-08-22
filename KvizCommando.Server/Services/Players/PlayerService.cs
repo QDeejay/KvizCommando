@@ -5,6 +5,7 @@ using KvizCommando.Server.Domain.Entities.Players;
 using KvizCommando.Server.Infrastructure.Persistence;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.UserPlayerIdCache;
+using KvizCommando.Server.Services.SoloGame.GameCache;
 using KvizCommando.Server.Services.VsGame.Match;
 using KvizCommando.Server.Services.VsGame.Matchmaking;
 
@@ -17,6 +18,7 @@ namespace KvizCommando.Server.Services.Players
         private readonly IUserPlayerIdCacheService _idCasche;
         private readonly IVsRankedQueueService _rankedQueue;
         private readonly IVsMatchService _vsMatch;
+        private readonly ISoloGameCache _soloGames;
         private readonly ILogger<PlayerService> _logger;
 
         public PlayerService(
@@ -24,13 +26,15 @@ namespace KvizCommando.Server.Services.Players
             ILogger<PlayerService> logger,
             IUserPlayerIdCacheService userPlayerId,
             IVsRankedQueueService rankedQueue,
-            IVsMatchService vsMatch)
+            IVsMatchService vsMatch,
+            ISoloGameCache soloGames)
         {
             _cache = cache;
             _logger = logger;
             _idCasche = userPlayerId;
             _rankedQueue = rankedQueue;
             _vsMatch = vsMatch;
+            _soloGames = soloGames;
         }
 
         /// <inheritdoc />
@@ -89,6 +93,25 @@ namespace KvizCommando.Server.Services.Players
                 playerId,
                 userId,
                 sessionId);
+        }
+
+        /// <inheritdoc />
+        public async Task RemoveForAccountDeletionAsync(
+            string userId,
+            int playerId,
+            CancellationToken ct = default)
+        {
+            await _rankedQueue.LeavePlayerAsync(playerId, ct);
+            await _vsMatch.DisconnectPlayerAsync(playerId, ct);
+
+            if (_soloGames.TryGetActiveGame(playerId, out var game) &&
+                game is not null)
+            {
+                _soloGames.Remove(game.GameId);
+            }
+
+            await _cache.DiscardAsync(playerId, ct);
+            _idCasche.Invalidate(userId);
         }
        
     }

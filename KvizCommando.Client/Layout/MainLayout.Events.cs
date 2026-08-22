@@ -73,6 +73,10 @@ namespace KvizCommando.Client.Layout
                 case "error":
                     Ui.Toast.Error(Ui.Lang["mainlayout.Toast.Logout.Error"]);
                     break;
+
+                case "deleted":
+                    Ui.Toast.Complete(Ui.Lang["mainlayout.Toast.AccountDeleted"]);
+                    break;
             }
             return true;
         }

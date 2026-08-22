@@ -5,6 +5,7 @@ using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Settings;
 using KvizCommando.Shared.Contracts.Auth;
 using KvizCommando.Shared.Contracts.CheckIn;
+using KvizCommando.Shared.Contracts.Profile;
 using Microsoft.AspNetCore.Components;
 using System.Net;
 using System.Net.Http.Json;
@@ -219,7 +220,41 @@ namespace KvizCommando.Client.Services.User
             return (false, new List<string> { "DefaultError" });
         }
         /// <inheritdoc />
-        public Task<bool> ProfileDeleteAsync() => Task.FromResult(true);
+        public async Task<ProfileAccountDeletionState> ProfileDeleteAsync(
+            string currentPassword,
+            CancellationToken ct = default)
+        {
+            try
+            {
+                using var response = await _http.PostAsJsonAsync(
+                    "api/profile/delete",
+                    new ProfileAccountDeletionRequest
+                    {
+                        CurrentPassword = currentPassword
+                    },
+                    ct);
+
+                if (response.StatusCode == HttpStatusCode.BadRequest)
+                    return ProfileAccountDeletionState.InvalidPassword;
+                if ((int)response.StatusCode == 429)
+                    return ProfileAccountDeletionState.RateLimited;
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                    return ProfileAccountDeletionState.NotFound;
+                if (!response.IsSuccessStatusCode)
+                    return ProfileAccountDeletionState.ServerError;
+
+                await CompleteClientLogoutAsync("deleted");
+                return ProfileAccountDeletionState.Success;
+            }
+            catch (OperationCanceledException) when (ct.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch
+            {
+                return ProfileAccountDeletionState.ServerError;
+            }
+        }
         /// <inheritdoc />
         public async Task<(bool Success, List<string> Errors)> ProfileRegistAsync(RegisterRequestForm formData)
         {

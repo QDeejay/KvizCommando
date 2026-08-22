@@ -1,4 +1,8 @@
 using KvizCommando.Client.Services.Audio;
+using KvizCommando.Client.Services.User;
+using KvizCommando.Client.Features.Shared.Modal.Builders;
+using KvizCommando.Client.Features.Shared.Modal.Components;
+using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Shared.Contracts.Profile;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -14,9 +18,17 @@ public enum ProfilePrivacySection
 
 public partial class ProfilePrivacyView
 {
+    private enum ProfilePrivacyAction
+    {
+        None,
+        Export,
+        Delete
+    }
+
     [Inject] private IProfileClientService ProfileClient { get; set; } = default!;
     [Inject] private HttpClient Http { get; set; } = default!;
     [Inject] private AudioService Audio { get; set; } = default!;
+    [Inject] private IUserService UserService { get; set; } = default!;
     [Inject] private IJSRuntime JS { get; set; } = default!;
 
     [Parameter] public ProfilePrivacySection Section { get; set; }
@@ -24,31 +36,19 @@ public partial class ProfilePrivacyView
 
     private MarkupString _documentMarkup;
     private string _fullHtml = string.Empty;
-    private string _exportPassword = string.Empty;
-    private string _exportError = string.Empty;
+    private string _authorizationError = string.Empty;
     private bool _isLoading;
     private bool _loadFailed;
-    private bool _isExportAuthorizationOpen;
-    private bool _isExporting;
-    private bool _showExportPassword;
+    private bool _isAuthorizationBusy;
+    private ProfilePrivacyAction _activeAction;
     private ProfilePrivacySection? _loadedSection;
-
-    private bool CanExport =>
-        !_isExporting &&
-        !string.IsNullOrWhiteSpace(_exportPassword);
-
-    private string ExportPasswordType =>
-        _showExportPassword ? "text" : "password";
-
-    private string ExportPasswordEyeIcon =>
-        _showExportPassword ? "bi bi-eye-slash" : "bi bi-eye";
 
     protected override async Task OnParametersSetAsync()
     {
         if (Section == ProfilePrivacySection.Root)
             return;
 
-        ClearExport();
+        ClearAuthorization();
 
         if (_loadedSection == Section)
             return;
@@ -99,53 +99,51 @@ public partial class ProfilePrivacyView
         await OnReturnToRoot.InvokeAsync();
     }
 
-    private async Task OpenExportAsync()
+    private async Task OpenAuthorizationAsync(ProfilePrivacyAction action)
     {
         await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
-        _isExportAuthorizationOpen = true;
+        _activeAction = action;
+        _authorizationError = string.Empty;
     }
 
-    private async Task CancelExportAsync()
+    private Task CloseAuthorizationAsync()
     {
-        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
-        ClearExport();
+        ClearAuthorization();
+        return Task.CompletedTask;
     }
 
-    private async Task ToggleExportPasswordAsync()
+    private void ClearAuthorizationError()
     {
-        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
-        _showExportPassword = !_showExportPassword;
+        _authorizationError = string.Empty;
     }
 
-    private void OnExportPasswordInput(ChangeEventArgs args)
+    private Task AuthorizeAsync(string currentPassword)
     {
-        _exportPassword = args.Value?.ToString() ?? string.Empty;
-        _exportError = string.Empty;
-        if (string.IsNullOrEmpty(_exportPassword))
-            _showExportPassword = false;
+        return _activeAction switch
+        {
+            ProfilePrivacyAction.Export => ExportDataAsync(currentPassword),
+            ProfilePrivacyAction.Delete => DeleteAccountAsync(currentPassword),
+            _ => Task.CompletedTask
+        };
     }
 
-    private async Task ExportDataAsync()
+    private async Task ExportDataAsync(string currentPassword)
     {
-        if (!CanExport)
-            return;
-
-        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
-        _isExporting = true;
-        _exportError = string.Empty;
+        _isAuthorizationBusy = true;
+        _authorizationError = string.Empty;
 
         try
         {
-            var result = await ProfileClient.ExportDataAsync(_exportPassword);
+            var result = await ProfileClient.ExportDataAsync(currentPassword);
             if (result.State == ProfileDataExportState.Success)
             {
                 await DownloadAsync(result);
-                ClearExport();
+                ClearAuthorization();
                 Ui.Toast.Success(Ui.Lang["profile.Privacy.Export.Success"]);
                 return;
             }
 
-            _exportError = Ui.Lang[result.State switch
+            _authorizationError = Ui.Lang[result.State switch
             {
                 ProfileDataExportState.InvalidPassword =>
                     "profile.Privacy.Export.InvalidPassword",
@@ -156,11 +154,47 @@ public partial class ProfilePrivacyView
         }
         catch (JSException)
         {
-            _exportError = Ui.Lang["profile.Privacy.Export.Error"];
+            _authorizationError = Ui.Lang["profile.Privacy.Export.Error"];
         }
         finally
         {
-            _isExporting = false;
+            _isAuthorizationBusy = false;
+        }
+    }
+
+    private async Task DeleteAccountAsync(string currentPassword)
+    {
+        var modal = MBoxBuilder.BuildParam(
+            ModalTypes.DialogConfirm,
+            Ui.Lang);
+        modal.BodyParameters.Add(
+            nameof(DBoxModalRender.DialogBoxType),
+            DBoxConfirmTypes.AccountDeletionConfirm);
+
+        if (await Ui.Modal.ShowAsync(modal) != ModalResult.Button1)
+            return;
+
+        _isAuthorizationBusy = true;
+        _authorizationError = string.Empty;
+
+        try
+        {
+            var state = await UserService.ProfileDeleteAsync(currentPassword);
+            if (state == ProfileAccountDeletionState.Success)
+                return;
+
+            _authorizationError = Ui.Lang[state switch
+            {
+                ProfileAccountDeletionState.InvalidPassword =>
+                    "profile.Privacy.Delete.InvalidPassword",
+                ProfileAccountDeletionState.RateLimited =>
+                    "profile.Privacy.Delete.RateLimited",
+                _ => "profile.Privacy.Delete.Error"
+            }];
+        }
+        finally
+        {
+            _isAuthorizationBusy = false;
         }
     }
 
@@ -177,13 +211,11 @@ public partial class ProfilePrivacyView
             streamReference);
     }
 
-    private void ClearExport()
+    private void ClearAuthorization()
     {
-        _exportPassword = string.Empty;
-        _exportError = string.Empty;
-        _isExportAuthorizationOpen = false;
-        _isExporting = false;
-        _showExportPassword = false;
+        _activeAction = ProfilePrivacyAction.None;
+        _authorizationError = string.Empty;
+        _isAuthorizationBusy = false;
     }
 
     private static string ExtractSection(string html, string id)

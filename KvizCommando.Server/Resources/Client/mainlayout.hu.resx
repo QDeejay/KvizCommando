@@ -250,6 +250,9 @@
   <data name="Toast.Logout.Error" xml:space="preserve">
     <value>A kijelentkezés nem sikerült.</value>
   </data>
+  <data name="Toast.AccountDeleted" xml:space="preserve">
+    <value>A fiókod véglegesen törölve lett.</value>
+  </data>
   <data name="Toast.Login.Replaced" xml:space="preserve">
     <value>A korábbi bejelentkezés felülírva. Ha aktív játékban voltál, onnan is kiléptetésre kerültél.</value>
   </data>
