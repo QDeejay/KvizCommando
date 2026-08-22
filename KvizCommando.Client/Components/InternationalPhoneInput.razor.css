@@ -1,0 +1,12 @@
+.kc-international-phone {
+    width: 100%;
+    min-width: 0;
+}
+
+.kc-international-phone ::deep .iti {
+    width: 100%;
+}
+
+.kc-international-phone ::deep .lcd-input {
+    width: 100%;
+}

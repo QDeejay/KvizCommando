@@ -16,6 +16,7 @@ public partial class ProfileAccountView
     [Inject] private AudioService Audio { get; set; } = default!;
 
     [Parameter] public ProfileAccountSection Section { get; set; }
+    [Parameter] public string Culture { get; set; } = "hu";
 
     private ProfileAccountDto? _account;
     private ProfilePhoneDto _phone = new();
@@ -198,6 +199,11 @@ public partial class ProfileAccountView
             _repeatPassword = string.Empty;
             _showPassword[2] = false;
         }
+    }
+
+    private void OnPhoneChanged(ProfilePhoneDto phone)
+    {
+        _phone = phone;
     }
 
     private async Task TogglePassword(int index)

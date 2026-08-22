@@ -17,25 +17,11 @@ else if (Section == ProfileAccountSection.Contact)
         <span class="kc-account-label">@Ui.Lang["profile.Account.Email.Current"]</span>
         <strong class="kc-account-email">@_account.Email</strong>
 
-        <label for="kc-account-phone-country-code">@Ui.Lang["profile.Account.Phone"]</label>
-        <div class="kc-account-phone-row">
-            <input id="kc-account-phone-country-code"
-                   class="lcd-input kc-account-country-code"
-                   inputmode="tel"
-                   maxlength="@ProfileAccountRules.PHONE_COUNTRY_CODE_MAX_LENGTH"
-                   value="@_phone.CountryCode"
-                   disabled="@_isPiiBusy"
-                   aria-label="@Ui.Lang["profile.Account.Phone.CountryCode"]"
-                   @oninput="e => _phone.CountryCode = e.Value?.ToString() ?? string.Empty" />
-            <input id="kc-account-phone-number"
-                   class="lcd-input"
-                   inputmode="tel"
-                   maxlength="@ProfileAccountRules.PHONE_NUMBER_MAX_LENGTH"
-                   value="@_phone.Number"
-                   disabled="@_isPiiBusy"
-                   aria-label="@Ui.Lang["profile.Account.Phone.Number"]"
-                   @oninput="e => _phone.Number = e.Value?.ToString() ?? string.Empty" />
-        </div>
+        <label for="kc-international-phone">@Ui.Lang["profile.Account.Phone"]</label>
+        <InternationalPhoneInput Value="@_phone"
+                                 ValueChanged="OnPhoneChanged"
+                                 Culture="@Culture"
+                                 Disabled="@_isPiiBusy" />
     </section>
 
     <section>

@@ -52,11 +52,13 @@
                 <div class="kc-profile-content kc-window-body kc-themed-window-content">
                     @if (_activeSection == ProfileSection.Contact)
                     {
-                        <ProfileAccountView Section="ProfileAccountSection.Contact" />
+                        <ProfileAccountView Section="ProfileAccountSection.Contact"
+                                            Culture="@AppStates.Culture" />
                     }
                     else if (_activeSection == ProfileSection.Security)
                     {
-                        <ProfileAccountView Section="ProfileAccountSection.Security" />
+                        <ProfileAccountView Section="ProfileAccountSection.Security"
+                                            Culture="@AppStates.Culture" />
                     }
                     else if (_isLoading)
                     {

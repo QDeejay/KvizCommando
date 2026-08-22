@@ -223,6 +223,34 @@ button.kc-help-page-dot:not(:disabled) {
     color: var(--kc-lcd-input-disabled-color);
 }
 
+.iti {
+    --iti-border-color: var(--kc-lcd-border);
+    --iti-country-selector-bg: var(--kc-panel-bg-start);
+    --iti-hover-color: color-mix(in srgb, var(--kc-accent) 28%, transparent);
+    --iti-icon-color: var(--kc-lcd-input-color);
+}
+
+.iti--detached-country-selector {
+    z-index: 2500;
+}
+
+.iti__country-selector {
+    color: var(--kc-lcd-input-color);
+    border: 1px solid var(--kc-lcd-border);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .72);
+}
+
+.iti__search-input {
+    color: var(--kc-lcd-input-color);
+    background: var(--kc-lcd-input-background);
+    border-bottom: 1px solid var(--kc-lcd-border);
+    outline: none;
+}
+
+.iti__selected-dial-code {
+    color: var(--kc-lcd-input-color);
+}
+
 .password-box {
     position: relative;
     width: 100%;
