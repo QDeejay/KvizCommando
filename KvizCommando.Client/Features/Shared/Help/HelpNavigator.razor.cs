@@ -293,8 +293,11 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
         }
     }
 
-    private async Task Close()
+    public async Task Close()
     {
+        if (!_showHelp)
+            return;
+
         await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _showHelp = false;
         _showNavigation = false;

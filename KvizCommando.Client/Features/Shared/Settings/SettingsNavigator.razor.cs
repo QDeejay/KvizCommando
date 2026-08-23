@@ -33,8 +33,11 @@ public partial class SettingsNavigator : KcComponentBase
         StateHasChanged();
     }
 
-    private async Task Close()
+    public async Task Close()
     {
+        if (!_isOpen)
+            return;
+
         await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         _isOpen = false;
         _helpsReset = false;

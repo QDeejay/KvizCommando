@@ -46,7 +46,11 @@
                 disabled="@IsFullScreenGame"
                 @onclick="OpenProfileAsync">
         </button>
-
+        <button id="kc-close-windows-trigger"
+                type="button"
+                hidden
+                @onclick="CloseAuxiliaryWindowsAsync">
+        </button>
         @if (!IsFullScreenGame)
         {
             <AppHeader DisplayName="@_appState.Home!.UserMainData.UserName"

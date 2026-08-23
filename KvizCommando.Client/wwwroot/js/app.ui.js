@@ -15,7 +15,8 @@ document.addEventListener("keydown", (event) => {
     const triggerId = {
         F1: "kc-help-trigger",
         F2: "kc-settings-trigger",
-        F3: "kc-profile-trigger"
+        F3: "kc-profile-trigger",
+        Escape: "kc-close-windows-trigger"
     }[event.key];
 
     if (!triggerId) return;

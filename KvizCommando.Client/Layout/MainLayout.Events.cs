@@ -1,19 +1,5 @@
-using Blazored.LocalStorage;
-using Blazored.SessionStorage;
-using KvizCommando.Client.Data;
-using KvizCommando.Client.Features.Shared.Help;
-using KvizCommando.Client.Features.Shared.Modal;
-using KvizCommando.Client.Features.Shared.Modal.Builders;
-using KvizCommando.Client.Features.Solo.Builders;
-using KvizCommando.Client.Features.VsGame.Builders;
-using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Audio;
-using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
-using KvizCommando.Client.Utilities;
-using KvizCommando.Shared.Models.Dtos;
-using Microsoft.AspNetCore.Components;
-using System.Globalization;
 
 namespace KvizCommando.Client.Layout
 {
@@ -116,14 +102,41 @@ namespace KvizCommando.Client.Layout
             await User.LogoutAsync(false);
             Console.WriteLine("User logged out.");
         }
-        private Task OpenHelpAsync() =>
-            _helpNavigator?.ShowManualAsync() ?? Task.CompletedTask;
-        private Task OpenProfileAsync() =>
-            _profileNavigator?.ShowAsync() ?? Task.CompletedTask;
-        private Task OpenSettingsAsync() =>
-            _settingsNavigator?.ShowAsync() ?? Task.CompletedTask;
-        private Task OpenCurrentHelpAsync() =>
-            _helpNavigator?.ShowCurrentAsync() ?? Task.CompletedTask;
+        private Task OpenHelpAsync() => OpenAuxiliaryWindowAsync(
+            () => _helpNavigator?.ShowManualAsync() ?? Task.CompletedTask);
+
+        private Task OpenProfileAsync() => OpenAuxiliaryWindowAsync(
+            () => _profileNavigator?.ShowAsync() ?? Task.CompletedTask);
+
+        private Task OpenSettingsAsync() => OpenAuxiliaryWindowAsync(
+            () => _settingsNavigator?.ShowAsync() ?? Task.CompletedTask);
+
+        private Task OpenCurrentHelpAsync() => OpenAuxiliaryWindowAsync(
+            () => _helpNavigator?.ShowCurrentAsync() ?? Task.CompletedTask);
+
+        private async Task OpenAuxiliaryWindowAsync(Func<Task> openAsync)
+        {
+            if (Ui.Modal.Parameter is not null)
+                return;
+
+            await CloseAuxiliaryWindowsAsync();
+            await openAsync();
+        }
+
+        private Task CloseAuxiliaryWindowsAsync()
+        {
+            if (Ui.Modal.Parameter is not null)
+            {
+                Ui.Modal.SendResult(ModalResult.Close);
+                return Task.CompletedTask;
+            }
+
+
+            return Task.WhenAll(
+                _helpNavigator?.Close() ?? Task.CompletedTask,
+                _settingsNavigator?.Close() ?? Task.CompletedTask,
+                _profileNavigator?.Close() ?? Task.CompletedTask);
+        }
 
         private Task OnRefreshRequired(ReqStates[] reqTypes) =>
             InitStatesAsync(reqTypes);
