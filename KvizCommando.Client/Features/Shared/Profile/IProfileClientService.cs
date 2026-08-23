@@ -31,6 +31,11 @@ public interface IProfileClientService
     /// <returns>A mentett fiókadatok és a művelet állapota.</returns>
     Task<ProfileAccountResponse> SaveAccountAsync(SaveProfileAccountRequest request, CancellationToken ct = default);
 
+    /// <summary>Az aktuális kliensnyelvre frissíti a kommunikációs nyelvet.</summary>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
+    /// <returns>A frissített fiókadatok és a művelet állapota.</returns>
+    Task<ProfileAccountResponse> UpdatePreferredLocaleAsync(CancellationToken ct = default);
+
     /// <summary>Elindítja az Identity e-mail-csere folyamatát.</summary>
     /// <param name="newEmail">A megerősítésre váró új e-mail-cím.</param>
     /// <param name="ct">A művelet megszakítását jelző token.</param>

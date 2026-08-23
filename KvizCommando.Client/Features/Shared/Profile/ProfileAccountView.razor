@@ -20,6 +20,26 @@ else if (Section == ProfileAccountSection.Contact)
         </div>
 
         <div class="kc-account-field">
+            <span class="kc-account-label">@Ui.Lang["profile.Account.PreferredLocale"]</span>
+            <div class="kc-account-locale-row">
+                <strong class="kc-account-locale">@_account.PreferredLocale</strong>
+                @if (PreferredLocaleDiffers)
+                {
+                    <i class="bi bi-exclamation-triangle-fill kc-account-locale-warning"
+                       aria-hidden="true"></i>
+                    <button type="button"
+                            class="kc-account-edit-button"
+                            disabled="@_isPreferredLocaleBusy"
+                            aria-label="@Ui.Lang["profile.Account.PreferredLocale.Update"]"
+                            title="@Ui.Lang["profile.Account.PreferredLocale.Update"]"
+                            @onclick="UpdatePreferredLocaleAsync">
+                        <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+                    </button>
+                }
+            </div>
+        </div>
+
+        <div class="kc-account-field">
             <label for="kc-international-phone">@Ui.Lang["profile.Account.Phone"]</label>
             <div class="kc-account-editable-row">
                 <InternationalPhoneInput Value="@_phone"

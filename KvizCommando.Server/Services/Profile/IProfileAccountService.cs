@@ -16,4 +16,14 @@ public interface IProfileAccountService
     /// <param name="ct">A művelet megszakítását jelző token.</param>
     /// <returns>A mentett fiókadatok és a művelet állapota.</returns>
     Task<ProfileAccountResponse> SaveAsync(string userId, SaveProfileAccountRequest request, CancellationToken ct = default);
+
+    /// <summary>Az aktuális klienskultúrára frissíti a felhasználó kommunikációs nyelvét.</summary>
+    /// <param name="userId">Az Identity-felhasználó azonosítója.</param>
+    /// <param name="preferredLocale">A mentendő támogatott kultúra.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
+    /// <returns>A frissített fiókadatok és a művelet állapota.</returns>
+    Task<ProfileAccountResponse> UpdatePreferredLocaleAsync(
+        string userId,
+        string preferredLocale,
+        CancellationToken ct = default);
 }

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
+using System.Globalization;
 
 namespace KvizCommando.Server.Controllers;
 
@@ -161,6 +162,20 @@ public sealed class ProfileController : ControllerBase
         return userId is null
             ? Unauthorized()
             : Ok(await _accountService.SaveAsync(userId, request, ct));
+    }
+
+    /// <summary>Az aktuális kliensnyelvre frissíti a kommunikációs nyelvet.</summary>
+    [HttpPut("preferred-locale")]
+    public async Task<ActionResult<ProfileAccountResponse>> UpdatePreferredLocaleAsync(
+        CancellationToken ct)
+    {
+        var userId = GetUserId();
+        return userId is null
+            ? Unauthorized()
+            : Ok(await _accountService.UpdatePreferredLocaleAsync(
+                userId,
+                CultureInfo.CurrentUICulture.Name,
+                ct));
     }
 
     [HttpGet]

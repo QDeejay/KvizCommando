@@ -29,6 +29,7 @@ public partial class ProfileAccountView
     private readonly bool[] _showPassword = new bool[3];
     private bool _isLoading = true;
     private bool _isPiiBusy;
+    private bool _isPreferredLocaleBusy;
     private bool _isEmailBusy;
     private bool _isPasswordBusy;
     private bool _isPhoneEditable;
@@ -40,6 +41,18 @@ public partial class ProfileAccountView
         !string.Equals(
             _newEmail.Trim(),
             _account?.Email,
+            StringComparison.OrdinalIgnoreCase);
+
+    private string CurrentPreferredLocale =>
+        Culture.Equals("en", StringComparison.OrdinalIgnoreCase)
+            ? "en-US"
+            : "hu-HU";
+
+    private bool PreferredLocaleDiffers =>
+        _account is not null &&
+        !string.Equals(
+            _account.PreferredLocale,
+            CurrentPreferredLocale,
             StringComparison.OrdinalIgnoreCase);
 
     private bool HasPiiChanges =>
@@ -162,6 +175,29 @@ public partial class ProfileAccountView
         }
 
         Ui.Toast.Error(Ui.Lang["profile.Account.Error.Identity"]);
+    }
+
+    private async Task UpdatePreferredLocaleAsync()
+    {
+        if (_isPreferredLocaleBusy || !PreferredLocaleDiffers)
+            return;
+
+        await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
+        _isPreferredLocaleBusy = true;
+        var response = await ProfileClient.UpdatePreferredLocaleAsync();
+        _isPreferredLocaleBusy = false;
+
+        if (response.State == ProfileAccountRequestState.Success &&
+            response.Account is not null)
+        {
+            _account = response.Account;
+            Ui.Toast.Success(
+                Ui.Lang["profile.Account.PreferredLocale.UpdateSuccess"]);
+            return;
+        }
+
+        Ui.Toast.Error(
+            Ui.Lang["profile.Account.PreferredLocale.UpdateError"]);
     }
 
     private async Task ChangePasswordAsync()

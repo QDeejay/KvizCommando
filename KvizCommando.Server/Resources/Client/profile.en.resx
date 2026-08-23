@@ -19,6 +19,10 @@
   <data name="Account.Email.Change" xml:space="preserve"><value>Change email</value></data>
   <data name="Account.Email.ConfirmationSent" xml:space="preserve"><value>The confirmation email was sent to the new address.</value></data>
   <data name="Account.Contact.Title" xml:space="preserve"><value>Contact details</value></data>
+  <data name="Account.PreferredLocale" xml:space="preserve"><value>Preferred language</value></data>
+  <data name="Account.PreferredLocale.Update" xml:space="preserve"><value>Update preferred language</value></data>
+  <data name="Account.PreferredLocale.UpdateSuccess" xml:space="preserve"><value>The preferred language was updated.</value></data>
+  <data name="Account.PreferredLocale.UpdateError" xml:space="preserve"><value>The preferred language could not be updated.</value></data>
   <data name="Account.Phone" xml:space="preserve"><value>Phone number</value></data>
   <data name="Account.Phone.CountryCode" xml:space="preserve"><value>Country code</value></data>
   <data name="Account.Phone.Number" xml:space="preserve"><value>Phone number</value></data>

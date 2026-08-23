@@ -28,6 +28,7 @@ public sealed class ProfileAccountService : IProfileAccountService
         var pii = await _pii.GetProfileAsync(userId, ct);
         return Success(
             user.Email ?? string.Empty,
+            user.PreferredLocale,
             ReadPhone(pii.Phone),
             ReadBillingName(pii.BillingName),
             ReadBillingAddress(pii.BillingAddress));
@@ -61,7 +62,40 @@ public sealed class ProfileAccountService : IProfileAccountService
             HasValue(billingName) ? JsonSerializer.Serialize(billingName) : string.Empty,
             HasValue(billingAddress) ? JsonSerializer.Serialize(billingAddress) : string.Empty,
             ct);
-        return Success(user.Email ?? string.Empty, phone, billingName, billingAddress);
+        return Success(
+            user.Email ?? string.Empty,
+            user.PreferredLocale,
+            phone,
+            billingName,
+            billingAddress);
+    }
+
+    /// <inheritdoc />
+    public async Task<ProfileAccountResponse> UpdatePreferredLocaleAsync(
+        string userId,
+        string preferredLocale,
+        CancellationToken ct = default)
+    {
+        var user = await _users.FindByIdAsync(userId);
+        if (user is null)
+            return new ProfileAccountResponse { State = ProfileAccountRequestState.NotFound };
+
+        var normalizedLocale = NormalizeLocale(preferredLocale);
+        if (!string.Equals(user.PreferredLocale, normalizedLocale, StringComparison.Ordinal))
+        {
+            user.PreferredLocale = normalizedLocale;
+            var result = await _users.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                return new ProfileAccountResponse
+                {
+                    State = ProfileAccountRequestState.IdentityError,
+                    Errors = result.Errors.Select(error => error.Code).ToList()
+                };
+            }
+        }
+
+        return await GetAsync(userId, ct);
     }
 
     private static List<string> Validate(SaveProfileAccountRequest request)
@@ -98,6 +132,7 @@ public sealed class ProfileAccountService : IProfileAccountService
 
     private static ProfileAccountResponse Success(
         string email,
+        string preferredLocale,
         ProfilePhoneDto phone,
         BillingNameDto billingName,
         BillingAddressDto billingAddress) => new()
@@ -106,11 +141,17 @@ public sealed class ProfileAccountService : IProfileAccountService
             Account = new ProfileAccountDto
             {
                 Email = email,
+                PreferredLocale = NormalizeLocale(preferredLocale),
                 Phone = Normalize(phone),
                 BillingName = Normalize(billingName),
                 BillingAddress = Normalize(billingAddress)
             }
         };
+
+    private static string NormalizeLocale(string? locale) =>
+        locale?.StartsWith("en", StringComparison.OrdinalIgnoreCase) == true
+            ? "en-US"
+            : "hu-HU";
 
     private static ProfilePhoneDto ReadPhone(string? value)
     {

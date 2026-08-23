@@ -101,6 +101,7 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
             string.Empty,
             string.Empty,
             rankEnum,
+            GetSupportedCulture(user.PreferredLocale),
             ct,
             user.Id);
 
@@ -108,6 +109,9 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
         string recipient, string templateName, string targetPath, string query, CancellationToken ct)
     {
         var rankEnum = await GetRankEnumAsync(user.Id, ct);
+        var culture = type == EmailMessageType.Registration
+            ? GetSupportedCulture()
+            : GetSupportedCulture(user.PreferredLocale);
         await CreateAndDeliverAsync(
             type,
             recipient,
@@ -115,6 +119,7 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
             targetPath,
             query,
             rankEnum,
+            culture,
             ct);
     }
 
@@ -125,17 +130,28 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
         string targetPath,
         string query,
         int rankEnum,
+        string culture,
         CancellationToken ct,
         string deletionId = "")
     {
-        var culture = GetSupportedCulture();
-        var targetUrl = string.IsNullOrEmpty(targetPath) ? string.Empty : BuildTargetUrl(targetPath, query);
-        var content = await LoadTemplateAsync(templateName, culture, targetUrl,
-            RankCatalog.GetName(rankEnum, culture), deletionId, ct);
+        var originalCulture = CultureInfo.CurrentUICulture;
+        try
+        {
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(ToFullCulture(culture));
+            var targetUrl = string.IsNullOrEmpty(targetPath)
+                ? string.Empty
+                : BuildTargetUrl(targetPath, AddCulture(query, culture));
+            var content = await LoadTemplateAsync(templateName, culture, targetUrl,
+                RankCatalog.GetName(rankEnum, culture), deletionId, ct);
 
-        await _delivery.DeliverAsync(new EmailMessage(type, recipient,
-            "no-reply@kvizcommando.local", content.Subject, content.TextBody, content.HtmlBody), ct);
-        _logger.LogInformation("A {EmailType} típusú levél átadásra került.", type);
+            await _delivery.DeliverAsync(new EmailMessage(type, recipient,
+                "no-reply@kvizcommando.local", content.Subject, content.TextBody, content.HtmlBody), ct);
+            _logger.LogInformation("A {EmailType} típusú levél átadásra került.", type);
+        }
+        finally
+        {
+            CultureInfo.CurrentUICulture = originalCulture;
+        }
     }
 
     private async Task<(string Subject, string HtmlBody, string TextBody)> LoadTemplateAsync(
@@ -196,6 +212,24 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
         var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
         return culture is "hu" or "en" ? culture : "en";
     }
+
+    private static string GetSupportedCulture(string? preferredLocale) =>
+        preferredLocale?.StartsWith("en", StringComparison.OrdinalIgnoreCase) == true
+            ? "en"
+            : "hu";
+
+    private static string AddCulture(string query, string culture)
+    {
+        var cultureQuery = QueryString.Create("culture", ToFullCulture(culture)).Value;
+        return string.IsNullOrEmpty(query)
+            ? cultureQuery
+            : $"{query}&{cultureQuery.TrimStart('?')}";
+    }
+
+    private static string ToFullCulture(string culture) =>
+        culture.Equals("en", StringComparison.OrdinalIgnoreCase)
+            ? "en-US"
+            : "hu-HU";
 
     private async Task<int> GetRankEnumAsync(
         string userId,

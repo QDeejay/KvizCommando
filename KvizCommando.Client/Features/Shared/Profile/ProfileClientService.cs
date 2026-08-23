@@ -142,6 +142,35 @@ public sealed class ProfileClientService : IProfileClientService
     }
 
     /// <inheritdoc />
+    public async Task<ProfileAccountResponse> UpdatePreferredLocaleAsync(
+        CancellationToken ct = default)
+    {
+        try
+        {
+            using var request = new HttpRequestMessage(
+                HttpMethod.Put,
+                $"{PROFILE_ROUTE}/preferred-locale");
+            using var response = await _http.SendAsync(request, ct);
+            if (!response.IsSuccessStatusCode)
+                return FailedAccount();
+
+            return await response.Content.ReadFromJsonAsync<ProfileAccountResponse>(
+                cancellationToken: ct) ?? FailedAccount();
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(
+                exception,
+                "Preferred locale update request failed.");
+            return FailedAccount();
+        }
+    }
+
+    /// <inheritdoc />
     public Task<ProfileIdentityUpdateResponse> RequestEmailChangeAsync(
         string newEmail,
         CancellationToken ct = default) =>

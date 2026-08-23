@@ -19,6 +19,10 @@
   <data name="Account.Email.Change" xml:space="preserve"><value>E-mail módosítása</value></data>
   <data name="Account.Email.ConfirmationSent" xml:space="preserve"><value>A megerősítő levelet elküldtük az új címre.</value></data>
   <data name="Account.Contact.Title" xml:space="preserve"><value>Kapcsolattartási adatok</value></data>
+  <data name="Account.PreferredLocale" xml:space="preserve"><value>Preferált nyelv</value></data>
+  <data name="Account.PreferredLocale.Update" xml:space="preserve"><value>Preferált nyelv frissítése</value></data>
+  <data name="Account.PreferredLocale.UpdateSuccess" xml:space="preserve"><value>A preferált nyelv frissítése sikerült.</value></data>
+  <data name="Account.PreferredLocale.UpdateError" xml:space="preserve"><value>A preferált nyelv frissítése nem sikerült.</value></data>
   <data name="Account.Phone" xml:space="preserve"><value>Telefonszám</value></data>
   <data name="Account.Phone.CountryCode" xml:space="preserve"><value>Országhívó</value></data>
   <data name="Account.Phone.Number" xml:space="preserve"><value>Telefonszám</value></data>

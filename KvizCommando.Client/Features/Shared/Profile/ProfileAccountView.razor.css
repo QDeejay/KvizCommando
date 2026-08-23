@@ -38,6 +38,32 @@ label {
     overflow-wrap: anywhere;
 }
 
+.kc-account-locale-row {
+    display: flex;
+    min-height: 36px;
+    gap: 8px;
+    align-items: center;
+}
+
+.kc-account-locale {
+    flex: 1 1 auto;
+    padding: 4px 12px;
+    color: #f0eec2;
+    font-size: 1rem;
+}
+
+.kc-account-locale-warning {
+    color: #e14646;
+    font-size: 1.2rem;
+    animation: kc-account-locale-blink 1s step-start infinite;
+}
+
+@keyframes kc-account-locale-blink {
+    50% {
+        opacity: .2;
+    }
+}
+
 .lcd-input {
     width: 100%;
 }

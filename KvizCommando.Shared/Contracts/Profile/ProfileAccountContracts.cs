@@ -12,6 +12,7 @@ public enum ProfileAccountRequestState
 public sealed class ProfileAccountDto
 {
     public string Email { get; set; } = string.Empty;
+    public string PreferredLocale { get; set; } = "hu-HU";
     public ProfilePhoneDto Phone { get; set; } = new();
     public BillingNameDto BillingName { get; set; } = new();
     public BillingAddressDto BillingAddress { get; set; } = new();
