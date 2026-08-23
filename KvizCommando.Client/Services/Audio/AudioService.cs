@@ -4,7 +4,7 @@ namespace KvizCommando.Client.Services.Audio
 {
     public sealed class AudioService
     {
-        private const string AUDIO_ASSET_VERSION = "3";
+        private const string AUDIO_ASSET_VERSION = "4";
 
         public const string SFX_CLICK = "Click.webm";
         public const string SFX_UI_TOUCH = "UiTouch.webm";

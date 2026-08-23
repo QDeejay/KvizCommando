@@ -1,5 +1,5 @@
-using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models;
+using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Rules;
 
 namespace KvizCommando.Server.Services.VsGame;
@@ -8,7 +8,7 @@ public static class VsBattleClassificationRules
 {
     public const int REQUIRED_BATTLE_READY_CHARACTERS = 3;
     public const int REQUIRED_CREDIT_BALANCE = 50;
-    public const int UNRANKED_MEMBER_MINIMUM_TEAM_RANK = 28;
+    public const int UNRANKED_MEMBER_MINIMUM_TEAM_RANK = 1;
 
     // Első, központi szabálytábla. A konkrét minimumok és létszámok
     // a játékszabály véglegesítésekor kizárólag itt módosítandók.

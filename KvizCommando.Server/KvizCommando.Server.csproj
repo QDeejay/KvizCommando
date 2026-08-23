@@ -41,6 +41,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="App\Audit\" />
+    <Folder Include="App\Email\" />
     <Folder Include="Resources\Client\localization\en\" />
     <Folder Include="Resources\Client\localization\hu\" />
     <Folder Include="Services\VsGame\" />
