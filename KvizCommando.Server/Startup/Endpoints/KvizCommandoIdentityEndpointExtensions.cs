@@ -9,9 +9,11 @@ public static class KvizCommandoIdentityEndpointExtensions
     /// Leképezi az alkalmazás Identity-, kijelentkezési és külső hitelesítési végpontjait.
     /// </summary>
     /// <param name="endpoints">A végpontokat fogadó útvonalépítő.</param>
+    /// <param name="configuration">Az Identity-végpontok konfigurációja.</param>
     /// <returns>A további végpontokhoz használható útvonalépítő.</returns>
     public static IEndpointRouteBuilder MapKvizCommandoIdentityEndpoints(
-        this IEndpointRouteBuilder endpoints)
+        this IEndpointRouteBuilder endpoints,
+        IConfiguration configuration)
     {
         endpoints.MapGroup("/")
             .MapIdentityApi<ApplicationUser>()
@@ -19,7 +21,8 @@ public static class KvizCommandoIdentityEndpointExtensions
             .WithIdentityAudit();
 
         endpoints.MapLogoutEndpoints();
-        endpoints.MapFacebookAuthEndpoints();
+        endpoints.MapFacebookAuthEndpoints(
+            IdentityConfiguration.IsFacebookLoginEnabled(configuration));
 
         return endpoints;
     }

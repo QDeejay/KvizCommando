@@ -1,21 +1,23 @@
 ﻿using KvizCommando.Client.Helpers;
-using Microsoft.JSInterop;
+using Blazored.SessionStorage;
 using System.Text.Json;
 
 namespace KvizCommando.Client.Services.Visual.UiService.Language
 {
     public class LanguageService : ILanguageService
     {
-        private readonly IJSRuntime _js;
+        private readonly ISessionStorageService _sessionStorage;
         private readonly HttpClient _http;
         private readonly Dictionary<string, string> _translations = new();
         private readonly HashSet<string> _loadedModules = new();
         public string CurrentCulture { get; private set; } = string.Empty;
         public bool IsReady => _loadedModules.Count > 0;
         
-        public LanguageService(IJSRuntime js, HttpClient http)
+        public LanguageService(
+            ISessionStorageService sessionStorage,
+            HttpClient http)
         {
-            _js = js;
+            _sessionStorage = sessionStorage;
             _http = http;
         }
         public string this[string key] => Get(key);
@@ -50,20 +52,18 @@ namespace KvizCommando.Client.Services.Visual.UiService.Language
             string cacheKey = $"langcache.{culture}.{moduleName}";
 
             // Először az adott böngészőfül session cache-ét használjuk.
-            string? cachedJson = await _js.InvokeAsync<string?>("sessionStorage.getItem", cacheKey);
-            bool hasJson = !string.IsNullOrWhiteSpace(cachedJson) && cachedJson.TrimStart().StartsWith("{");
-
-            if (hasJson)
+            var cachedModule = await _sessionStorage
+                .GetItemAsync<Dictionary<string, string>>(cacheKey);
+            if (cachedModule is not null)
             {
-                var moduleTranslations = JsonSerializer.Deserialize<Dictionary<string, string>>(cachedJson!)!;
-                foreach (var kv in moduleTranslations) _translations[kv.Key] = kv.Value;
+                foreach (var kv in cachedModule) _translations[kv.Key] = kv.Value;
                 _loadedModules.Add(moduleName);
                 CurrentCulture = culture;
                 return;
             }
 
             // Cache miss esetén a statikus JSON válasza no-cache fejlécet kap a szervertől.
-            await _js.InvokeVoidAsync("sessionStorage.removeItem", cacheKey);
+            await _sessionStorage.RemoveItemAsync(cacheKey);
 
             string moduleUrl = $"localization/{culture}/{moduleName}.json";
             var response = await _http.GetAsync(moduleUrl);
@@ -77,8 +77,7 @@ namespace KvizCommando.Client.Services.Visual.UiService.Language
             using var doc = await JsonDocument.ParseAsync(stream);
             var freshModule = FlattenJson(doc.RootElement, moduleName);
 
-            string serialized = JsonSerializer.Serialize(freshModule);
-            await _js.InvokeVoidAsync("sessionStorage.setItem", cacheKey, serialized);
+            await _sessionStorage.SetItemAsync(cacheKey, freshModule);
 
             foreach (var kv in freshModule) _translations[kv.Key] = kv.Value;
             _loadedModules.Add(moduleName);
@@ -94,7 +93,8 @@ namespace KvizCommando.Client.Services.Visual.UiService.Language
             // A korábbi nyelv betöltött moduljainak session cache-e törlődik.
             foreach (var module in _loadedModules.ToArray())
             {
-                await _js.InvokeVoidAsync("sessionStorage.removeItem", $"langcache.{deleteculture}.{module}");
+                await _sessionStorage.RemoveItemAsync(
+                    $"langcache.{deleteculture}.{module}");
             }
 
             // Memóriabeli állapot nullázása a következő nyelv betöltése előtt.

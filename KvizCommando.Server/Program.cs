@@ -135,7 +135,7 @@ app.MapControllers();
 app.MapHub<VsMatchHub>("/hubs/vs-match");
 app.MapHub<SoloGameHub>("/hubs/solo-game");
 
-app.MapKvizCommandoIdentityEndpoints();
+app.MapKvizCommandoIdentityEndpoints(builder.Configuration);
 
 app.MapFallbackToFile("index.html", clientAssetCacheOptions);
 

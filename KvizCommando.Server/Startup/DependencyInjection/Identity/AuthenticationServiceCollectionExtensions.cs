@@ -17,7 +17,7 @@ public static class AuthenticationServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services
+        var authentication = services
             .AddAuthentication(options =>
             {
                 // A böngészős kérések alapértelmezett sémája az alkalmazás cookie-ja.
@@ -35,10 +35,12 @@ public static class AuthenticationServiceCollectionExtensions
             })
             .AddCookie(IdentityConstants.TwoFactorRememberMeScheme)
             .AddCookie(IdentityConstants.TwoFactorUserIdScheme)
-            .AddBearerToken(IdentityConstants.BearerScheme)
-            .AddFacebook(options =>
-            {
+            .AddBearerToken(IdentityConstants.BearerScheme);
 
+        if (IdentityConfiguration.IsFacebookLoginEnabled(configuration))
+        {
+            authentication.AddFacebook(options =>
+            {
                 options.AppId = configuration["Authentication:Facebook:AppId"];
                 options.AppSecret = configuration["Authentication:Facebook:AppSecret"];
                 options.CallbackPath = "/signin-facebook";
@@ -81,6 +83,7 @@ public static class AuthenticationServiceCollectionExtensions
                     }
                 };
             });
+        }
 
         // A bélyeg minden kérésnél történő ellenőrzése azonnal érvényteleníti a visszavont munkameneteket.
         services.Configure<SecurityStampValidatorOptions>(options =>

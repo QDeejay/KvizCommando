@@ -13,6 +13,7 @@ namespace KvizCommando.Server.Infrastructure.Logging;
 public sealed class FileAuditLogger : IAuditLogger, IDisposable
 {
     private readonly AuditOptions _options;
+    private readonly string _outputRoot;
     private readonly ILogger<FileAuditLogger> _logger;
     private readonly SemaphoreSlim _writeLock = new(1, 1);
     private readonly byte[]? _ipHashKey;
@@ -21,9 +22,13 @@ public sealed class FileAuditLogger : IAuditLogger, IDisposable
     public FileAuditLogger(
         IOptions<AuditOptions> options,
         IConfiguration configuration,
+        IHostEnvironment environment,
         ILogger<FileAuditLogger> logger)
     {
         _options = options.Value;
+        _outputRoot = Path.IsPathRooted(_options.OutputRoot)
+            ? _options.OutputRoot
+            : Path.Combine(environment.ContentRootPath, _options.OutputRoot);
         _logger = logger;
         _ipHashKey = ReadHashKey(configuration["AuditHash:Secret"]);
     }
@@ -55,11 +60,11 @@ public sealed class FileAuditLogger : IAuditLogger, IDisposable
         await _writeLock.WaitAsync(cancellationToken);
         try
         {
-            Directory.CreateDirectory(_options.OutputRoot);
+            Directory.CreateDirectory(_outputRoot);
             CleanupExpiredFiles(now);
 
             var filePath = Path.Combine(
-                _options.OutputRoot,
+                _outputRoot,
                 $"audit-{now:yyyy-MM-dd}.jsonl");
             await File.AppendAllTextAsync(
                 filePath,
@@ -99,7 +104,7 @@ public sealed class FileAuditLogger : IAuditLogger, IDisposable
         var oldestAllowedWriteTime = now.UtcDateTime.AddDays(-_options.RetentionDays);
 
         foreach (var filePath in Directory.EnumerateFiles(
-                     _options.OutputRoot,
+                     _outputRoot,
                      "audit-*.jsonl",
                      SearchOption.TopDirectoryOnly))
         {

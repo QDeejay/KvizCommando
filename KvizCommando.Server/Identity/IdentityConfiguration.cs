@@ -6,6 +6,16 @@ namespace KvizCommando.Server.Identity;
 
 public static class IdentityConfiguration
 {
+    public const string FACEBOOK_LOGIN_ENABLED_KEY = "Authentication:Facebook:Enabled";
+
+    /// <summary>
+    /// Megadja, hogy a Facebook-bejelentkezés engedélyezve van-e.
+    /// </summary>
+    /// <param name="configuration">Az alkalmazás konfigurációja.</param>
+    /// <returns><see langword="true"/>, ha a Facebook-bejelentkezés engedélyezett.</returns>
+    public static bool IsFacebookLoginEnabled(IConfiguration configuration) =>
+        configuration.GetValue<bool>(FACEBOOK_LOGIN_ENABLED_KEY);
+
     /// <summary>
     /// Beállítja az alkalmazás Identity szabályait.
     /// </summary>

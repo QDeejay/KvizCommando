@@ -1,22 +1,23 @@
 ﻿using KvizCommando.Shared.Contracts.Auth;
-using Microsoft.JSInterop;
+using Blazored.SessionStorage;
 using System.Net.Http.Json;
-using System.Text.Json;
 
 namespace KvizCommando.Client.Services;
 
 public class IdentityRulesService
 {
     private readonly HttpClient _http;
-    private readonly IJSRuntime _js;
+    private readonly ISessionStorageService _sessionStorage;
 
     private const string STORAGE_KEY = "identity-options";
     private RegisterOptionsResponse? _rules;
 
-    public IdentityRulesService(HttpClient http, IJSRuntime js)
+    public IdentityRulesService(
+        HttpClient http,
+        ISessionStorageService sessionStorage)
     {
         _http = http;
-        _js = js;
+        _sessionStorage = sessionStorage;
     }
 
     /// <summary>
@@ -28,10 +29,11 @@ public class IdentityRulesService
             return _rules;
 
         // A sessionStorage böngészőfrissítés után is megőrzi az egyszer már lekért szabályokat.
-        var stored = await _js.InvokeAsync<string?>("sessionStorage.getItem", STORAGE_KEY);
-        if (!string.IsNullOrEmpty(stored))
+        var stored = await _sessionStorage.GetItemAsync<RegisterOptionsResponse>(
+            STORAGE_KEY);
+        if (stored is not null)
         {
-            _rules = JsonSerializer.Deserialize<RegisterOptionsResponse>(stored)!;
+            _rules = stored;
             return _rules;
         }
 
@@ -39,8 +41,7 @@ public class IdentityRulesService
         if (rules == null)
             throw new InvalidOperationException("Nem sikerült lekérni az IdentityOptions beállításokat.");
 
-        var json = JsonSerializer.Serialize(rules);
-        await _js.InvokeVoidAsync("sessionStorage.setItem", STORAGE_KEY, json);
+        await _sessionStorage.SetItemAsync(STORAGE_KEY, rules);
 
         _rules = rules;
         return _rules;

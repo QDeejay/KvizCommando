@@ -82,13 +82,16 @@
                 }
             </div>
             <div class="kc-login-footer">
-                <div class="kc-login-footer--other-providers-row @(_enterPassPage ? "hide" : "")">
-                    <label class="label-text">@Ui.Lang["login.Label.Providers"]</label>
-                    <a class="kc-btn-provider" href="/login/facebook">
-                        <img src="https://www.facebook.com/images/fb_icon_325x325.png"
-accesskey="       "      alt="Facebook logo" style="width:25px;height:25px;margin-right:8px;">
-                    </a>
-                </div>
+                @if (FacebookLoginEnabled)
+                {
+                    <div class="kc-login-footer--other-providers-row @(_enterPassPage ? "hide" : "")">
+                        <label class="label-text">@Ui.Lang["login.Label.Providers"]</label>
+                        <a class="kc-btn-provider" href="/login/facebook">
+                            <img src="https://www.facebook.com/images/fb_icon_325x325.png"
+                                 alt="Facebook logo" style="width:25px;height:25px;margin-right:8px;">
+                        </a>
+                    </div>
+                }
             </div>
             <hr/>
             <div class="kc-login-links-row">

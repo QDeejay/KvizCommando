@@ -16,15 +16,18 @@ public class AuthOptionsController : ControllerBase
     private readonly IdentityOptions _options;
     private readonly EmailOptions _emailOptions;
     private readonly IWebHostEnvironment _environment;
+    private readonly IConfiguration _configuration;
 
     public AuthOptionsController(
         IOptions<IdentityOptions> options,
         IOptions<EmailOptions> emailOptions,
-        IWebHostEnvironment environment)
+        IWebHostEnvironment environment,
+        IConfiguration configuration)
     {
         _options = options.Value;
         _emailOptions = emailOptions.Value;
         _environment = environment;
+        _configuration = configuration;
     }
 
     /// <summary>
@@ -47,6 +50,8 @@ public class AuthOptionsController : ControllerBase
 
             RequireConfirmedEmail = _options.SignIn.RequireConfirmedEmail,
             RequireConfirmedAccount = _options.SignIn.RequireConfirmedAccount,
+            FacebookLoginEnabled = IdentityConfiguration.IsFacebookLoginEnabled(
+                _configuration),
 
             DisplayNameMaxLength = CheckInValidationOptions.DISPLAY_NAME_MAX_LENGTH,
             DisplayNameMinLength = CheckInValidationOptions.DISPLAY_NAME_MIN_LENGTH,
@@ -58,12 +63,18 @@ public class AuthOptionsController : ControllerBase
                 EmailOptions.FILE_SERVICE,
                 StringComparison.OrdinalIgnoreCase))
         {
+            var projectDirectory = new DirectoryInfo(
+                _environment.ContentRootPath).Name;
             dto.RegistrationEmailOutputPath = Path.Combine(
+                projectDirectory,
                 _emailOptions.OutputRoot,
-                FileEmailDelivery.GetDirectoryName(EmailMessageType.Registration));
+                FileEmailDelivery.GetDirectoryName(
+                    EmailMessageType.Registration));
             dto.PasswordResetEmailOutputPath = Path.Combine(
+                projectDirectory,
                 _emailOptions.OutputRoot,
-                FileEmailDelivery.GetDirectoryName(EmailMessageType.PasswordReset));
+                FileEmailDelivery.GetDirectoryName(
+                    EmailMessageType.PasswordReset));
         }
 
         return Ok(dto);

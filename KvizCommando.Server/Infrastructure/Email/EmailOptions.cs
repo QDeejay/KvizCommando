@@ -7,7 +7,7 @@ public sealed class EmailOptions
     public const string MAIL_SERVICE = "Mail";
 
     public string Service { get; set; } = FILE_SERVICE;
-    public string OutputRoot { get; set; } = @"C:\KvizCommando\Email";
+    public string OutputRoot { get; set; } = "App/Email";
     public string ActiveBaseUrl { get; set; } = "PublicTunnel";
     public Dictionary<string, string> BaseUrls { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 

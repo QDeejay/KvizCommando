@@ -32,6 +32,8 @@ appsettings.*.local.json
 secrets.json
 DataProtection-Keys/
 **/DataProtection-Keys/
+KvizCommando.Server/App/Email/
+KvizCommando.Server/App/Audit/
 
 # Logs, coverage and temporary files
 *.log

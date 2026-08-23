@@ -8,14 +8,18 @@ namespace KvizCommando.Server.Infrastructure.Email;
 /// </summary>
 public sealed class FileEmailDelivery : IEmailDelivery
 {
-    private readonly EmailOptions _options;
+    private readonly string _outputRoot;
     private readonly ILogger<FileEmailDelivery> _logger;
 
     public FileEmailDelivery(
         IOptions<EmailOptions> options,
+        IHostEnvironment environment,
         ILogger<FileEmailDelivery> logger)
     {
-        _options = options.Value;
+        var outputRoot = options.Value.OutputRoot;
+        _outputRoot = Path.IsPathRooted(outputRoot)
+            ? outputRoot
+            : Path.Combine(environment.ContentRootPath, outputRoot);
         _logger = logger;
     }
 
@@ -28,12 +32,14 @@ public sealed class FileEmailDelivery : IEmailDelivery
         ValidateHeaderValue(message.From, nameof(message.From));
         ValidateHeaderValue(message.Subject, nameof(message.Subject));
 
+        var now = DateTime.UtcNow;
         var messageDirectory = Path.Combine(
-            _options.OutputRoot,
-            GetDirectoryName(message.Type));
+            _outputRoot,
+            GetDirectoryName(message.Type),
+            $"{now:yyyy-MM-dd}");
         Directory.CreateDirectory(messageDirectory);
 
-        var baseFileName = $"{DateTime.UtcNow:yyyyMMdd_HHmmssfff}_{Guid.NewGuid():N}";
+        var baseFileName = $"{now:yyyyMMdd_HHmmssfff}_{Guid.NewGuid():N}";
         var emlPath = Path.Combine(messageDirectory, baseFileName + ".eml");
         var htmlPath = Path.Combine(messageDirectory, baseFileName + ".html");
         var textPath = Path.Combine(messageDirectory, baseFileName + ".txt");

@@ -1,4 +1,5 @@
 ﻿using KvizCommando.Client.Helpers;
+using KvizCommando.Client.Services;
 using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Shared.Contracts.Auth;
@@ -12,7 +13,9 @@ namespace KvizCommando.Client.Features.Login
 {
     public partial class Login : KcComponentBase
     {
+        [Inject] private IdentityRulesService IdentityRules { get; set; } = default!;
 
+        private RegisterOptionsResponse? _options;
         private bool _enterPassPage = false;
         private bool _invalidEmail = false;
         private string _maskedEmail = string.Empty;
@@ -36,6 +39,7 @@ namespace KvizCommando.Client.Features.Login
         private bool CanNext => !string.IsNullOrWhiteSpace(_loginForm.Email);
         private bool CanLogin => !string.IsNullOrWhiteSpace(_loginForm.Email)
                               && !string.IsNullOrWhiteSpace(_loginForm.Password);
+        private bool FacebookLoginEnabled => _options?.FacebookLoginEnabled == true;
 
         private async Task OnSwitchPass(bool viaEnter)
         {
@@ -113,7 +117,7 @@ namespace KvizCommando.Client.Features.Login
             await Task.Delay(1000);
             _errorMessage = string.Empty;
         }
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             _enterPassPage = false;
             var uri = Ui.Nav.ToAbsoluteUri(Ui.Nav.Uri);
@@ -126,6 +130,8 @@ namespace KvizCommando.Client.Features.Login
                 Ui.Nav.NavigateTo(uri.GetLeftPart(UriPartial.Path), replace: true);
                 _errorMessage = Ui.Lang[$"identityerrors.{Error}"];
             }
+
+            _options = await IdentityRules.GetRulesAsync();
         }
     }
 }

@@ -17,25 +17,31 @@ public static class FacebookAuthEndpoints
     /// Regisztrálja a Facebook-hitelesítés végpontjait.
     /// </summary>
     /// <param name="app">A konfigurálandó alkalmazás vagy végpontépítő.</param>
-    public static IEndpointRouteBuilder MapFacebookAuthEndpoints(this IEndpointRouteBuilder app)
+    /// <param name="loginEnabled">Engedélyezi a Facebook bejelentkezési végpontjait.</param>
+    public static IEndpointRouteBuilder MapFacebookAuthEndpoints(
+        this IEndpointRouteBuilder app,
+        bool loginEnabled)
     {
-        // A külső szolgáltató callbackje a befejező végpontra tér vissza.
-        app.MapGet("/login/facebook", (
-            SignInManager<ApplicationUser> signInManager,
-            HttpContext ctx) =>
-            StartFacebookLoginAsync(signInManager, ctx));
-        app.MapGet("/finished", (
-            SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager,
-            IPlayerDbService playerDb,
-            IAuditLogger audit,
-            HttpContext ctx) =>
-            FinishFacebookLoginAsync(
-                signInManager,
-                userManager,
-                playerDb,
-                audit,
-                ctx));
+        if (loginEnabled)
+        {
+            // A külső szolgáltató callbackje a befejező végpontra tér vissza.
+            app.MapGet("/login/facebook", (
+                SignInManager<ApplicationUser> signInManager,
+                HttpContext ctx) =>
+                StartFacebookLoginAsync(signInManager, ctx));
+            app.MapGet("/finished", (
+                SignInManager<ApplicationUser> signInManager,
+                UserManager<ApplicationUser> userManager,
+                IPlayerDbService playerDb,
+                IAuditLogger audit,
+                HttpContext ctx) =>
+                FinishFacebookLoginAsync(
+                    signInManager,
+                    userManager,
+                    playerDb,
+                    audit,
+                    ctx));
+        }
 
         // Az alkalmazás eltávolításakor a külső bejelentkezés és minden Facebook-token törlendő.
         app.MapPost("/facebook/deauthorize", (
