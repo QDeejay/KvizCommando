@@ -103,7 +103,7 @@ public sealed class ProfileDataExportService : IProfileDataExportService
             {
                 State = ProfileDataExportServiceState.Success,
                 FileName =
-                    $"kvizcommando-{safeDisplayName}-adatexport-{DateTime.UtcNow:yyyyMMdd-HHmmss}.zip",
+                    $"kvizcommando-{safeDisplayName}-export-{DateTime.UtcNow:yyyyMMdd-HHmmss}.zip",
                 Content = archive
             };
         }

@@ -311,6 +311,7 @@ namespace KvizCommando.Server.Services.Db
             string userId,
             string displayname,
             string teamname,
+            int startingCredit,
             CancellationToken ct)
         {
             var has = await _db.Set<Player>()
@@ -330,7 +331,7 @@ namespace KvizCommando.Server.Services.Db
                     RankEnum = 0,
                     XP = 0,
                     Voucher = 0,
-                    Credit = 0,
+                    Credit = startingCredit,
                     DisplayName = displayname,
                     TeamName = teamname,
                     NormalizedTeamName =

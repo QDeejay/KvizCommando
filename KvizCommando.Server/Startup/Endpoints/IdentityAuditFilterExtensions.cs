@@ -2,6 +2,7 @@ using KvizCommando.Server.Identity;
 using KvizCommando.Server.Infrastructure.Logging;
 using KvizCommando.Server.Infrastructure.Email;
 using KvizCommando.Server.Application.Abstractions.Security;
+using KvizCommando.Server.Application.Security;
 using KvizCommando.Server.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -299,7 +300,10 @@ public static class IdentityAuditFilterExtensions
             {
                 var claims = httpContext.RequestServices
                     .GetRequiredService<IRegistrationBenefitClaimService>();
-                await claims.RecordAsync(oldEmail, DateTime.UtcNow.AddMonths(1),
+                await claims.RecordAsync(
+                    oldEmail,
+                    DateTime.UtcNow.AddDays(
+                        RegistrationBenefitRules.BENEFIT_BLOCK_DAYS),
                     httpContext.RequestAborted);
             }
 

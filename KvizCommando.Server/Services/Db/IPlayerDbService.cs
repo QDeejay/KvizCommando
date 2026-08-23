@@ -62,11 +62,13 @@ namespace KvizCommando.Server.Services.Db
         /// <param name="userId">Az Identity-felhasználó azonosítója.</param>
         /// <param name="displayname">A létrehozandó játékos nyilvános neve.</param>
         /// <param name="teamname">A létrehozandó játékos alapértelmezett csapatneve.</param>
+        /// <param name="startingCredit">A játékos induló kreditegyenlege.</param>
         /// <param name="ct">A művelet megszakítását jelző token.</param>
         Task<int> CreatePlayerToDbAsync(
             string userId,
             string displayname,
             string teamname,
+            int startingCredit,
             CancellationToken ct);
         /// <summary>
         /// Ellenőrzi, hogy a normalizált csapatnév más játékos tartós adatai között szerepel-e.

@@ -18,8 +18,7 @@ namespace KvizCommando.Client.Layout
         {
             Console.WriteLine("[EmptyLayout] OnInitializedAsync START");
 
-            await ApplyCallbackCultureAsync();
-            _culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+            _culture = await InitCultureAsync();
             await Rules.GetRulesAsync();
             await Ui.Lang.LoadModuleAsync(_culture, "common");
             await Ui.Lang.LoadModuleAsync(_culture, "identityerrors");
@@ -30,32 +29,26 @@ namespace KvizCommando.Client.Layout
             _isReady = true;
         }
 
-        private async Task ApplyCallbackCultureAsync()
+        private async Task<string> InitCultureAsync()
         {
             var uri = Ui.Nav.ToAbsoluteUri(Ui.Nav.Uri);
             var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
-            var cultureName = NormalizeCallbackCulture(query["culture"]);
+            var cultureName = query["culture"];
 
-            if (cultureName is null)
-                return;
+            if (string.IsNullOrWhiteSpace(cultureName))
+                cultureName = await LocalStorage.GetItemAsync<string>("userLang");
+
+            if (string.IsNullOrWhiteSpace(cultureName))
+                cultureName = "hu-HU";
 
             var culture = new CultureInfo(cultureName);
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
             CultureInfo.CurrentCulture = culture;
             CultureInfo.CurrentUICulture = culture;
-            await LocalStorage.SetItemAsync("userLang", cultureName);
-        }
+            await LocalStorage.SetItemAsync("userLang", culture.Name);
 
-        private static string? NormalizeCallbackCulture(string? culture)
-        {
-            if (string.Equals(culture, "hu", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(culture, "hu-HU", StringComparison.OrdinalIgnoreCase))
-                return "hu-HU";
-            if (string.Equals(culture, "en", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(culture, "en-US", StringComparison.OrdinalIgnoreCase))
-                return "en-US";
-            return null;
+            return culture.TwoLetterISOLanguageName;
         }
     }
 }

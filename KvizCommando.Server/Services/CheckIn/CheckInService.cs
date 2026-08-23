@@ -1,4 +1,6 @@
 ﻿#nullable enable
+using KvizCommando.Server.Application.Abstractions.Security;
+using KvizCommando.Server.Application.Security;
 using KvizCommando.Server.Identity;                   // IdentityErrorCodes, CheckInValidationOptions, DisplayNameValidator, ApplicationUser (ha itt van)
 using KvizCommando.Server.Services.Auth;             // IClaimsSyncService
 using KvizCommando.Server.Services.Db;
@@ -24,6 +26,7 @@ namespace KvizCommando.Server.Services.CheckIn
         private readonly IClaimsSyncService _claimsSync;
         private readonly IVsRankedQueueService _rankedQueue;
         private readonly IVsMatchService _vsMatch;
+        private readonly IRegistrationBenefitClaimService _benefitClaims;
         private readonly IStringLocalizer<CheckInService> _localizer;
 
         public CheckInService(
@@ -34,6 +37,7 @@ namespace KvizCommando.Server.Services.CheckIn
             IClaimsSyncService claimsSync,
             IVsRankedQueueService rankedQueue,
             IVsMatchService vsMatch,
+            IRegistrationBenefitClaimService benefitClaims,
             IStringLocalizer<CheckInService> localizer)
 
         {
@@ -44,6 +48,7 @@ namespace KvizCommando.Server.Services.CheckIn
             _cacheService = cacheService;
             _rankedQueue = rankedQueue;
             _vsMatch = vsMatch;
+            _benefitClaims = benefitClaims;
             _localizer = localizer;
         }
 
@@ -163,10 +168,17 @@ namespace KvizCommando.Server.Services.CheckIn
 
                 if (playerId == 0)
                 {
+                    var eligibleAgainAtUtc = await _benefitClaims
+                        .GetEligibleAgainAtUtcAsync(_user.Email!, ct);
+                    var startingCredit = eligibleAgainAtUtc > DateTime.UtcNow
+                        ? 0
+                        : RegistrationBenefitRules.STARTING_CREDIT;
+
                     playerId = await _playerDb.CreatePlayerToDbAsync(
                         userId,
                         displayName,
                         teamName,
+                        startingCredit,
                         ct);
                 }
             }

@@ -1,4 +1,5 @@
 using KvizCommando.Server.Application.Abstractions.Security;
+using KvizCommando.Server.Application.Security;
 using KvizCommando.Server.Identity;
 using KvizCommando.Server.Infrastructure.Email;
 using KvizCommando.Server.Infrastructure.Persistence;
@@ -55,7 +56,8 @@ public sealed class ProfileAccountDeletionService : IProfileAccountDeletionServi
             {
                 await _benefitClaims.RecordAsync(
                     user.Email,
-                    DateTime.UtcNow.AddMonths(1),
+                    DateTime.UtcNow.AddDays(
+                        RegistrationBenefitRules.BENEFIT_BLOCK_DAYS),
                     ct);
             }
 
