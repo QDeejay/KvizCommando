@@ -101,7 +101,8 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
             string.Empty,
             string.Empty,
             rankEnum,
-            ct);
+            ct,
+            user.Id);
 
     private async Task CreateAndDeliverAsync(ApplicationUser user, EmailMessageType type,
         string recipient, string templateName, string targetPath, string query, CancellationToken ct)
@@ -124,12 +125,13 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
         string targetPath,
         string query,
         int rankEnum,
-        CancellationToken ct)
+        CancellationToken ct,
+        string deletionId = "")
     {
         var culture = GetSupportedCulture();
         var targetUrl = string.IsNullOrEmpty(targetPath) ? string.Empty : BuildTargetUrl(targetPath, query);
         var content = await LoadTemplateAsync(templateName, culture, targetUrl,
-            RankCatalog.GetName(rankEnum, culture), ct);
+            RankCatalog.GetName(rankEnum, culture), deletionId, ct);
 
         await _delivery.DeliverAsync(new EmailMessage(type, recipient,
             "no-reply@kvizcommando.local", content.Subject, content.TextBody, content.HtmlBody), ct);
@@ -137,7 +139,8 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
     }
 
     private async Task<(string Subject, string HtmlBody, string TextBody)> LoadTemplateAsync(
-        string baseName, string culture, string targetUrl, string rankName, CancellationToken ct)
+        string baseName, string culture, string targetUrl, string rankName,
+        string deletionId, CancellationToken ct)
     {
         var directory = Path.Combine(AppContext.BaseDirectory, "Infrastructure", "Email",
             "Templates", "EmailTemplates", "Auth");
@@ -146,8 +149,10 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
         if (!File.Exists(htmlPath) || !File.Exists(textPath))
             throw new FileNotFoundException($"Hiányzik a(z) {baseName}.{culture} e-mail-sablon.");
 
-        var html = ReplaceTokens(await File.ReadAllTextAsync(htmlPath, Encoding.UTF8, ct), rankName, targetUrl);
-        var text = ReplaceTokens(await File.ReadAllTextAsync(textPath, Encoding.UTF8, ct), rankName, targetUrl);
+        var html = ReplaceTokens(await File.ReadAllTextAsync(htmlPath, Encoding.UTF8, ct),
+            rankName, targetUrl, deletionId);
+        var text = ReplaceTokens(await File.ReadAllTextAsync(textPath, Encoding.UTF8, ct),
+            rankName, targetUrl, deletionId);
         var subjectKey = baseName switch
         {
             "RegistrationConfirm" => "Email.Confirm.Subject",
@@ -159,9 +164,11 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
         return (_localizer[subjectKey].Value.Replace("{{AppName}}", _appOptions.Name), html, text);
     }
 
-    private string ReplaceTokens(string template, string rankName, string targetUrl) => template
+    private string ReplaceTokens(string template, string rankName, string targetUrl,
+        string deletionId) => template
         .Replace("{{AppName}}", _appOptions.Name).Replace("{{RankName}}", rankName)
         .Replace("{{DisplayName}}", rankName).Replace("{{ConfirmUrl}}", targetUrl)
+        .Replace("{{DeletionId}}", deletionId)
         .Replace("{{TokenValidityHours}}", _appOptions.TokenValidityHours.ToString())
         .Replace("{{SupportEmail}}", _appOptions.SupportEmail)
         .Replace("{{Year}}", DateTime.UtcNow.Year.ToString());

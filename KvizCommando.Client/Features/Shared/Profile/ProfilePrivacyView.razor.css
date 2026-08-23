@@ -39,7 +39,8 @@ p {
     border-color: color-mix(in srgb, #a64b2a 68%, var(--kc-shell-border));
 }
 
-.kc-profile-delete-button:not(:disabled) {
+.kc-profile-delete-button:not(:disabled),
+.kc-profile-privacy-delete ::deep .kc-profile-authorization-actions .military-button:not(:disabled) {
     background-color: #a64b2a;
 }
 

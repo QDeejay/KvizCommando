@@ -3,4 +3,6 @@
 A {{AppName}} fiókod és a hozzá tartozó játékosadataid véglegesen törlődtek.
 A művelet nem vonható vissza.
 
+Törlési azonosító: {{DeletionId}}
+
 Ha nem te kezdeményezted a törlést, írj nekünk: {{SupportEmail}}

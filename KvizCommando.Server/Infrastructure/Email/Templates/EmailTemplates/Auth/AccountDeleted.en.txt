@@ -3,4 +3,6 @@ Greetings, {{RankName}}!
 Your {{AppName}} account and its associated player data have been permanently deleted.
 This action cannot be undone.
 
+Deletion identifier: {{DeletionId}}
+
 If you did not request this deletion, contact us at: {{SupportEmail}}
