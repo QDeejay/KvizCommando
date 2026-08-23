@@ -29,28 +29,8 @@
         <SettingsNavigator @ref="_settingsNavigator"
                            AppStates="@_appState"
                            OnSettingsChanged="Refresh" />
-        <button id="kc-help-trigger"
-                type="button"
-                hidden
-                @onclick="OpenCurrentHelpAsync">
-        </button>
-        <button id="kc-settings-trigger"
-                type="button"
-                hidden
-                disabled="@IsFullScreenGame"
-                @onclick="OpenSettingsAsync">
-        </button>
-        <button id="kc-profile-trigger"
-                type="button"
-                hidden
-                disabled="@IsFullScreenGame"
-                @onclick="OpenProfileAsync">
-        </button>
-        <button id="kc-close-windows-trigger"
-                type="button"
-                hidden
-                @onclick="CloseAuxiliaryWindowsAsync">
-        </button>
+        <HotKeyHandler IsFullScreenGame="@IsFullScreenGame"
+                       OnKey="OpenAuxiliaryAsync" />
         @if (!IsFullScreenGame)
         {
             <AppHeader DisplayName="@_appState.Home!.UserMainData.UserName"

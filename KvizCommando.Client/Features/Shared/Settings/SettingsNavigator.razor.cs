@@ -23,6 +23,7 @@ public partial class SettingsNavigator : KcComponentBase
     private bool _isOpen;
     private bool _helpsReset;
 
+    /// <summary>Megnyitja a beállításablakot az aktuális beállítások másolatával.</summary>
     public async Task ShowAsync()
     {
         await Settings.LoadAsync();
@@ -33,6 +34,7 @@ public partial class SettingsNavigator : KcComponentBase
         StateHasChanged();
     }
 
+    /// <summary>Bezárja a beállításablakot, ha nyitva van.</summary>
     public async Task Close()
     {
         if (!_isOpen)

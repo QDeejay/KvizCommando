@@ -127,6 +127,7 @@ public sealed class VsMatchStore
         }
     }
 
+    /// <summary>Visszaadja a nyitott meccsekhez kapcsolódó játékosokat és osztályozásukat.</summary>
     public (int PlayerId, int ClassificationId)[]
         GetConnectedPlayers()
     {

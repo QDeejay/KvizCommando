@@ -87,6 +87,7 @@ public sealed class FileAuditLogger : IAuditLogger, IDisposable
         }
     }
 
+    /// <inheritdoc />
     public void Dispose()
     {
         _writeLock.Dispose();

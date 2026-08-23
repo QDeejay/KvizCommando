@@ -144,7 +144,7 @@ A fejlesztői mappa törlése nem törli az adatbázist, de érvénytelenítheti
 
 A GDPR nem ír elő konkrét AES-algoritmust, peppert vagy kötelező mezőszintű titkosítást minden személyes adatra. A kockázathoz igazodó technikai és szervezési intézkedéseket követel. A titkosítás ennek fontos része lehet, de önmagában nem teszi a teljes rendszert megfelelővé.
 
-A teljes folyamat része többek között:
+A rendszerben már működik a jelszavas újrahitelesítéshez kötött adatexport és fióktörlés. A teljes megfelelőséghez azonban ezek mellett az alábbi szervezési és üzemeltetési feladatok is hozzátartoznak:
 
 - az adatkezelés céljának és jogalapjának meghatározása;
 - csak a ténylegesen szükséges adatok gyűjtése;
@@ -152,7 +152,7 @@ A teljes folyamat része többek között:
 - hozzáférések korlátozása;
 - HTTPS és biztonságos hitelesítés;
 - megőrzési és törlési szabályok;
-- adatexport, helyesbítés és törlés kezelése;
+- a helyesbítési, korlátozási és tiltakozási kérelmek dokumentált kezelése;
 - a kötelezően megőrzendő számlázási adatok elkülönítése;
 - védett biztonsági mentések;
 - audit- és incidensnyilvántartás;
@@ -167,7 +167,7 @@ A bírálói csomagban:
 - csak lecserélhető fejlesztői kulcs lehet;
 - éles kulcs nem lehet;
 - a csomag nem kerülhet nyilvános letöltési helyre;
-- a `GameUser.db` és a fejlesztői e-mail-fájlok átadás előtt ellenőrzendők;
+- a `GameUser.db`, az `App/Email` és az `App/Audit` tartalma átadás előtt ellenőrzendő;
 - a Data Protection fejlesztői XML-kulcsait nem szükséges átadni;
 - élesítés előtt a Facebook-, audit- és PII-kulcsot le kell cserélni.
 

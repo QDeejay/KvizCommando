@@ -18,6 +18,7 @@ public sealed class SettingsService : ISettingsService
 
     private bool _isLoaded;
 
+    /// <inheritdoc />
     public ClientSettings Current { get; private set; } = new();
 
     public SettingsService(
@@ -30,6 +31,7 @@ public sealed class SettingsService : ISettingsService
         _jsRuntime = jsRuntime;
     }
 
+    /// <inheritdoc />
     public async Task LoadAsync()
     {
         if (_isLoaded)
@@ -63,6 +65,7 @@ public sealed class SettingsService : ISettingsService
         }
     }
 
+    /// <inheritdoc />
     public async Task SaveAsync(ClientSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
@@ -77,6 +80,7 @@ public sealed class SettingsService : ISettingsService
         _isLoaded = true;
     }
 
+    /// <inheritdoc />
     public Task SetSoundEnabledAsync(bool enabled) =>
         SaveAsync(new ClientSettings
         {
@@ -87,6 +91,7 @@ public sealed class SettingsService : ISettingsService
             StartFullscreen = Current.StartFullscreen
         });
 
+    /// <inheritdoc />
     public async Task ApplyAsync()
     {
         await _audio.SetMutedAsync(!Current.SoundEnabled);
@@ -98,6 +103,7 @@ public sealed class SettingsService : ISettingsService
             Current.Theme.ToString().ToLowerInvariant());
     }
 
+    /// <inheritdoc />
     public async Task TryEnterStartFullscreenAsync()
     {
         if (!Current.StartFullscreen)
@@ -107,6 +113,7 @@ public sealed class SettingsService : ISettingsService
             "settingsInterop.tryEnterFullscreen");
     }
 
+    /// <inheritdoc />
     public async Task ExitFullscreenAsync()
     {
         await _jsRuntime.InvokeVoidAsync(

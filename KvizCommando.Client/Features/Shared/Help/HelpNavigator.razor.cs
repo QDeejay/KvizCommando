@@ -293,6 +293,7 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
         }
     }
 
+    /// <summary>Bezárja a súgóablakot, ha nyitva van.</summary>
     public async Task Close()
     {
         if (!_showHelp)

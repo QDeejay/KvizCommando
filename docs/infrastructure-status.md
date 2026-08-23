@@ -1,6 +1,6 @@
 # Átmeneti infrastruktúrák állapota
 
-Ez a dokumentum azokat a technikai adaptereket foglalja össze, amelyek a fejlesztési és bírálói környezetben működnek, de production üzem előtt külső szolgáltatásra vagy erősebb védelemre cserélendők. Az átmeneti megoldások szándékosan külön interfészek mögött vannak; a korlátaikat a kód és a konfiguráció nem rejti el.
+Ez a dokumentum megmutatja, mely helyi infrastruktúrák működnek már a fejlesztői és bírálói környezetben, és mit kell még production üzem előtt lecserélni vagy megerősíteni. Az átmeneti megoldások külön interfészek mögött vannak, ezért később az üzleti folyamatok átírása nélkül cserélhetők.
 
 ## Indítási szerkezet
 
@@ -30,16 +30,22 @@ Jelenlegi adapter:
 IEmailDelivery -> FileEmailDelivery
 ```
 
-A `FileEmailDelivery` levéltípusonként külön könyvtárban azonos nevű `.eml`, `.html` és `.txt` fájlt készít. Az `.eml` szabályos `multipart/alternative` üzenet, a `.html` közvetlen böngészős előnézet.
+A `FileEmailDelivery` minden levélből azonos nevű `.eml`, `.html` és `.txt` fájlt készít. Az `.eml` szabályos `multipart/alternative` üzenet, a `.html` pedig közvetlenül megnyitható a böngészőben.
 
 A fájlok címzettet és egyszer használatos megerősítő vagy visszaállító linket tartalmazhatnak. Kizárólag tesztadatokkal használhatók, nem kerülhetnek verziókezelésbe, és a teszt lezárása után törlendők.
 
-Alapértelmezett könyvtárak:
+Az alapértelmezett gyökér a szerver projektkönyvtárához viszonyított `App/Email`. A levelek típus és UTC-dátum szerint kerülnek almappába:
 
 ```text
-C:\KvizCommando\Email\Registration
-C:\KvizCommando\Email\PasswordReset
+KvizCommando.Server/App/Email/
+├── Registration/yyyy-MM-dd/
+├── PasswordReset/yyyy-MM-dd/
+├── EmailChange/yyyy-MM-dd/
+├── PasswordChanged/yyyy-MM-dd/
+└── AccountDeleted/yyyy-MM-dd/
 ```
+
+Ha az `Email:OutputRoot` abszolút útvonal, a rendszer azt használja. Relatív értéknél a szerver tartalomgyökeréből indul ki.
 
 Az `Email:Service` jelenlegi értéke `File`. A `Mail` érték a későbbi SMTP- vagy API-alapú adapter cserepontja; ilyen adapter a diplomamunka részeként nem készül. Ha valaki idő előtt `Mail` értéket állít be, az alkalmazás érthető konfigurációs hibával leáll.
 
@@ -51,11 +57,11 @@ Az e-mailben szereplő link gyökere az `Email:ActiveBaseUrl` kulccsal választh
 
 A link hostját az engedélyezett Base URL-ekből képzett lista ellenőrzi. Új host felvételekor a konfigurációt kell bővíteni, nem a levélsablont vagy a C#-kódot.
 
-Development környezetben az `api/auth/options` válasz megadja a fájlos levél könyvtárát. A regisztrációs és jelszó-visszaállítási felület ezt a sikeres művelet után megjeleníti a bírálónak. Production környezetben helyi fájlútvonal nem kerül a klienshez.
+Development környezetben az `api/auth/options` válasz a regisztrációs és a jelszó-visszaállítási típusmappát adja vissza, például `KvizCommando.Server/App/Email/Registration`. A felület ezt a sikeres művelet után megmutatja a bírálónak. A napi almappát nem teszi hozzá, ezért a legfrissebb dátumú könyvtárban kell keresni a levelet. Production környezetben helyi fájlútvonal nem kerül a klienshez.
 
 ## Auditnapló
 
-A `FileAuditLogger` napi `audit-yyyy-MM-dd.jsonl` fájlokat ír. Egyetlen alkalmazáspéldányon belül singleton élettartam és közös `SemaphoreSlim` rendezi sorba az írásokat. A `RetentionDays` értéknél régebbi, az auditkönyvtárban található napi fájlokat a logger eltávolítja.
+A `FileAuditLogger` alapértelmezetten a `KvizCommando.Server/App/Audit` könyvtárba ír napi `audit-yyyy-MM-dd.jsonl` fájlokat. Egyetlen alkalmazáspéldányon belül singleton élettartam és közös `SemaphoreSlim` rendezi sorba az írásokat. A `RetentionDays` értéknél régebbi, az auditkönyvtárban található napi fájlokat a logger eltávolítja.
 
 Egy bejegyzés tartalma:
 
@@ -74,7 +80,7 @@ Az elfelejtett jelszó művelet anonim `Identity.PasswordResetRequested` esemén
 
 A működő folyamatok a regisztrációt, a helyi és külső bejelentkezést, a zárolást, a kijelentkezést, a sessioncserét és -visszavonást, a jelszómódosítást, az e-mail-változás megerősítését, a külső login kapcsolását és eltávolítását, valamint az ÁSZF elfogadását auditálják. Az ÁSZF-esemény `DocumentVersion` részlete a `TermsConsents` táblába mentett verzióval azonos.
 
-A még nem működő export-, helyesbítési, törlési, korlátozási és tiltakozási folyamatok eseménynevei csak fenntartott konstansok. Ezeket jelenleg semmilyen végpont nem írja az auditnaplóba.
+A személyesadat-export `Privacy.DataExport`, a fióktörlés pedig `Privacy.Erasure` eseményt ír. A helyesbítéshez, adatkezelési korlátozáshoz és tiltakozáshoz tartozó eseménynevek egyelőre csak fenntartott konstansok; ezeket jelenleg nem írja végpont az auditnaplóba.
 
 Az `IncludeIpHash` jelenleg be van kapcsolva. Csak érvényes Base64-formátumú `AuditHash:Secret` mellett készül HMAC-SHA256 hash. Az IP-cím a hash előtt normalizálásra kerül, így az IPv4 és annak IPv4-be ágyazott IPv6 alakja azonos bemenetet ad. A hash-elt IP továbbra is személyhez kapcsolható adat lehet, ezért használata külön célt és megőrzési szabályt igényel.
 
@@ -92,16 +98,14 @@ Az ASP.NET Data Protection nem azonos a mezőszintű PII-titkosítással. Előbb
 
 ## GDPR-folyamatok
 
-A `PersonalDataOptions` továbbra is a későbbi adatexport- és törlési folyamat bővítési pontja. Jelenleg nem hajt végre exportot, törlést vagy anonimizálást.
+A profil adatvédelmi felületéről két működő, jelszavas újrahitelesítést kérő művelet érhető el:
 
-A végleges folyamatnak legalább az alábbiakat kell lefednie:
+- a személyesadat-export ZIP-fájlt készít a fiók-, Identity-, játékos-, játék- és kérdésadatokból; export előtt a memóriában módosult játékosadatokat is kiírja;
+- a fióktörlés eltávolítja a játékoshoz, kérdésekhez és fiókhoz kapcsolódó adatokat, az Identity-felhasználót is törli, majd megkísérli elküldeni a törlési értesítést.
 
-- a felhasználóhoz kapcsolódó adatok összegyűjtése és hordozható exportja;
-- törlési vagy anonimizálási szabályok;
-- kötelezően megőrzendő adatok elkülönítése;
-- adatkezelési műveletek auditálása;
-- biztonsági mentések megőrzési és törlési eljárása;
-- az érintetti kérelmek teljesítésének dokumentálása.
+Mindkét végpont kéréskorlátozást használ és auditbejegyzést ír. A `PersonalDataOptions` jelenleg egyik folyamatot sem vezérli; megmaradt egy későbbi, kiegészítő adatvédelmi kulcskezelés konfigurációs cserepontjaként.
+
+Production előtt továbbra is külön üzemi szabály kell a jogszabály alapján kötelezően megőrzendő adatokhoz, a biztonsági mentések életciklusához, valamint a helyesbítési, korlátozási és tiltakozási kérelmek dokumentált kezeléséhez.
 
 ## Hitelesítési diagnosztika
 

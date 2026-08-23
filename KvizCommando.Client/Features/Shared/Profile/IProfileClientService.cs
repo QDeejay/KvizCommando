@@ -8,14 +8,26 @@ public interface IProfileClientService
     /// <summary>Betölti a csapat- és avatarprofilt.</summary>
     Task<ProfileLoadResponse> GetAsync(CancellationToken ct = default);
 
+    /// <summary>Ellenőrzi, hogy a megadott csapatnév menthető-e.</summary>
+    /// <param name="teamName">Az ellenőrizendő csapatnév.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
+    /// <returns>A normalizált név és az ellenőrzés eredménye.</returns>
     Task<CheckTeamNameResponse> CheckTeamNameAsync(
         string teamName,
         CancellationToken ct = default);
 
+    /// <summary>Elmenti a bejelentkezett játékos csapatnevét.</summary>
+    /// <param name="teamName">Az új csapatnév.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
+    /// <returns>A frissített profil és a mentés állapota.</returns>
     Task<SaveProfileResponse> SaveTeamNameAsync(
         string teamName,
         CancellationToken ct = default);
 
+    /// <summary>Elmenti a bejelentkezett játékos kapitányavatarját.</summary>
+    /// <param name="captainAvatar">Az új avatar száma szöveges formában.</param>
+    /// <param name="ct">A művelet megszakítását jelző token.</param>
+    /// <returns>A frissített profil és a mentés állapota.</returns>
     Task<SaveProfileResponse> SaveAvatarAsync(
         string captainAvatar,
         CancellationToken ct = default);

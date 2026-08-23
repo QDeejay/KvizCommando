@@ -102,25 +102,34 @@ namespace KvizCommando.Client.Layout
             await User.LogoutAsync(false);
             Console.WriteLine("User logged out.");
         }
-        private Task OpenHelpAsync() => OpenAuxiliaryWindowAsync(
-            () => _helpNavigator?.ShowManualAsync() ?? Task.CompletedTask);
+        private Task OpenHelpAsync() =>
+            _helpNavigator?.ShowManualAsync() ?? Task.CompletedTask;
+        private Task OpenProfileAsync() =>
+            _profileNavigator?.ShowAsync() ?? Task.CompletedTask;
+        private Task OpenSettingsAsync() =>
+            _settingsNavigator?.ShowAsync() ?? Task.CompletedTask;
+        private Task OpenCurrentHelpAsync() =>
+            _helpNavigator?.ShowCurrentAsync() ?? Task.CompletedTask;
 
-        private Task OpenProfileAsync() => OpenAuxiliaryWindowAsync(
-            () => _profileNavigator?.ShowAsync() ?? Task.CompletedTask);
-
-        private Task OpenSettingsAsync() => OpenAuxiliaryWindowAsync(
-            () => _settingsNavigator?.ShowAsync() ?? Task.CompletedTask);
-
-        private Task OpenCurrentHelpAsync() => OpenAuxiliaryWindowAsync(
-            () => _helpNavigator?.ShowCurrentAsync() ?? Task.CompletedTask);
-
-        private async Task OpenAuxiliaryWindowAsync(Func<Task> openAsync)
+        private async Task OpenAuxiliaryAsync(string key)
         {
-            if (Ui.Modal.Parameter is not null)
+            if (Ui.Modal.Parameter is not null && key != "Escape")
                 return;
 
             await CloseAuxiliaryWindowsAsync();
-            await openAsync();
+
+            switch (key)
+            {
+                case "F1":
+                    await OpenCurrentHelpAsync();
+                    break;
+                case "F2":
+                    await OpenSettingsAsync();
+                    break;
+                case "F3":
+                    await OpenProfileAsync();
+                    break;
+            }
         }
 
         private Task CloseAuxiliaryWindowsAsync()
@@ -130,7 +139,6 @@ namespace KvizCommando.Client.Layout
                 Ui.Modal.SendResult(ModalResult.Close);
                 return Task.CompletedTask;
             }
-
 
             return Task.WhenAll(
                 _helpNavigator?.Close() ?? Task.CompletedTask,

@@ -141,6 +141,7 @@ public partial class ProfileNavigator : KcComponentBase
     private string TeamNameStatusText =>
         Ui.Lang[$"profile.TeamName.State.{_teamNameState}"];
 
+    /// <summary>Megnyitja a profilablakot, és betölti az aktuális profiladatokat.</summary>
     public async Task ShowAsync()
     {
         _isOpen = true;
@@ -163,6 +164,7 @@ public partial class ProfileNavigator : KcComponentBase
         StateHasChanged();
     }
 
+    /// <summary>Bezárja a profilablakot, ha nyitva van.</summary>
     public async Task Close()
     {
         if (!_isOpen)

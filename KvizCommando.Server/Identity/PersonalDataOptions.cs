@@ -1,7 +1,7 @@
 namespace KvizCommando.Server.Identity;
 
 /// <summary>
-/// A későbbi személyesadat-export és törlési folyamat konfigurációs cserepontja.
+/// Egy későbbi, kiegészítő személyesadat-védelmi kulcskezelés konfigurációs cserepontja.
 /// </summary>
 public sealed class PersonalDataOptions
 {

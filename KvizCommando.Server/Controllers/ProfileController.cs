@@ -178,6 +178,7 @@ public sealed class ProfileController : ControllerBase
                 ct));
     }
 
+    /// <summary>Betölti a hitelesített játékos csapat- és avatarprofilját.</summary>
     [HttpGet]
     public async Task<ActionResult<ProfileLoadResponse>> GetAsync(
         [FromQuery] string sessionId,
@@ -193,6 +194,7 @@ public sealed class ProfileController : ControllerBase
             ct));
     }
 
+    /// <summary>Ellenőrzi, hogy a hitelesített játékos mentheti-e a megadott csapatnevet.</summary>
     [HttpPost("check-teamname")]
     public async Task<ActionResult<CheckTeamNameResponse>> CheckTeamNameAsync(
         [FromBody] CheckTeamNameRequest request,
@@ -208,6 +210,7 @@ public sealed class ProfileController : ControllerBase
             ct));
     }
 
+    /// <summary>Elmenti a hitelesített játékos új csapatnevét.</summary>
     [HttpPost("teamname")]
     public async Task<ActionResult<SaveProfileResponse>> SaveTeamNameAsync(
         [FromBody] SaveTeamNameRequest request,
@@ -223,6 +226,7 @@ public sealed class ProfileController : ControllerBase
             ct));
     }
 
+    /// <summary>Elmenti a hitelesített játékos új kapitányavatarját.</summary>
     [HttpPost("avatar")]
     public async Task<ActionResult<SaveProfileResponse>> SaveAvatarAsync(
         [FromBody] SaveAvatarRequest request,

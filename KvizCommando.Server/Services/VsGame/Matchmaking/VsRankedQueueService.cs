@@ -46,6 +46,7 @@ public sealed partial class VsRankedQueueService :
             _lifetimeCts.Token);
     }
 
+    /// <summary>Osztályozásonként visszaadja a sorban álló vagy aktív meccsen kapcsolódó játékosok számát.</summary>
     public IReadOnlyDictionary<int, int>
         GetConnectedPlayerCounts()
     {

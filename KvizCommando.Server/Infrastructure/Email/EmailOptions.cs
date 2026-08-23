@@ -11,6 +11,9 @@ public sealed class EmailOptions
     public string ActiveBaseUrl { get; set; } = "PublicTunnel";
     public Dictionary<string, string> BaseUrls { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
+    /// <summary>Feloldja az aktív e-mail-hivatkozások konfigurált alapcímét.</summary>
+    /// <returns>Az abszolút alapcím.</returns>
+    /// <exception cref="InvalidOperationException">Az aktív bejegyzés hiányzik vagy nem érvényes abszolút URI.</exception>
     public Uri GetActiveBaseUri()
     {
         if (!BaseUrls.TryGetValue(ActiveBaseUrl, out var value) ||

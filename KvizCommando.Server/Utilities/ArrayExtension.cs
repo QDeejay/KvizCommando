@@ -22,6 +22,11 @@ namespace KvizCommando.Server.Utilities
             }
             return result;
         }
+
+        /// <summary>JSON-szövegből tömböt készít.</summary>
+        /// <typeparam name="T">A tömb elemeinek típusa.</typeparam>
+        /// <param name="json">A feldolgozandó JSON-szöveg.</param>
+        /// <returns>A deszerializált tömb; üres vagy <see langword="null"/> bemenetnél üres tömb.</returns>
         public static T[] ConvertToArray<T>(this string? json)
         {
             return string.IsNullOrEmpty(json)

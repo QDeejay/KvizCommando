@@ -21,9 +21,15 @@ public static class PublicNameRules
     public const string TEAM_NAME_ALLOWED_CHARACTERS =
         NAME_ALLOWED_CHARACTERS + " '";
 
+    /// <summary>Ellenőrzi egy nyilvános játékosnév formátumát.</summary>
+    /// <param name="value">Az ellenőrizendő név.</param>
+    /// <returns>Az ellenőrzés eredménye.</returns>
     public static PublicNameValidationResult Validate(string? value) =>
         Validate(value, NAME_ALLOWED_CHARACTERS);
 
+    /// <summary>Ellenőrzi egy csapatnév formátumát.</summary>
+    /// <param name="value">Az ellenőrizendő csapatnév.</param>
+    /// <returns>Az ellenőrzés eredménye.</returns>
     public static PublicNameValidationResult ValidateTeamName(string? value) =>
         Validate(value, TEAM_NAME_ALLOWED_CHARACTERS);
 

@@ -57,8 +57,8 @@ public static class IdentityServiceCollectionExtensions
             options.RefreshTokenExpiration = TimeSpan.FromDays(7);
         });
 
-        // A beállítás jelenleg csak a későbbi GDPR-folyamat bővítési pontja.
-        // A hiányzó export- és törlési lépéseket a docs/infrastructure-status.md rögzíti.
+        // Az export és a fióktörlés működik; ez a beállítás egy későbbi,
+        // kiegészítő adatvédelmi kulcskezelés cserepontjaként maradt meg.
         services.Configure<PersonalDataOptions>(options =>
         {
             options.ProtectionKeyName = null;

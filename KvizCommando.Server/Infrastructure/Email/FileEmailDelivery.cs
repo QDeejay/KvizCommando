@@ -66,6 +66,9 @@ public sealed class FileEmailDelivery : IEmailDelivery
             messageDirectory);
     }
 
+    /// <summary>Visszaadja a levéltípushoz tartozó könyvtárnevet.</summary>
+    /// <param name="type">A levél típusa.</param>
+    /// <returns>A levéltípus stabil könyvtárneve.</returns>
     public static string GetDirectoryName(EmailMessageType type) => type switch
     {
         EmailMessageType.Registration => "Registration",

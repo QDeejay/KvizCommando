@@ -23,10 +23,11 @@ public static class AuditEvents
     public const string MARKETING_CONSENT_GRANTED = "Privacy.MarketingConsentGranted";
     public const string MARKETING_CONSENT_WITHDRAWN = "Privacy.MarketingConsentWithdrawn";
 
-    // A még nem létező GDPR-folyamatok számára fenntartott eseménynevek.
     public const string DATA_EXPORT = "Privacy.DataExport";
-    public const string RECTIFICATION = "Privacy.Rectification";
     public const string ERASURE = "Privacy.Erasure";
+
+    // A még nem létező érintetti folyamatok számára fenntartott eseménynevek.
+    public const string RECTIFICATION = "Privacy.Rectification";
     public const string RESTRICTION = "Privacy.Restriction";
     public const string OBJECTION_RECORDED = "Privacy.ObjectionRecorded";
 }

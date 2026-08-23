@@ -1,0 +1,22 @@
+<button id="kc-help-trigger"
+        type="button"
+        hidden
+        @onclick='() => SendAsync("F1")'>
+</button>
+<button id="kc-settings-trigger"
+        type="button"
+        hidden
+        disabled="@IsFullScreenGame"
+        @onclick='() => SendAsync("F2")'>
+</button>
+<button id="kc-profile-trigger"
+        type="button"
+        hidden
+        disabled="@IsFullScreenGame"
+        @onclick='() => SendAsync("F3")'>
+</button>
+<button id="kc-close-windows-trigger"
+        type="button"
+        hidden
+        @onclick='() => SendAsync("Escape")'>
+</button>
