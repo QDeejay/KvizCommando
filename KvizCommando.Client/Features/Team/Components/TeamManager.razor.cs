@@ -3,8 +3,8 @@ using KvizCommando.Client.Features.Shared.Modal.Components;
 using KvizCommando.Client.Features.Team.Builders;
 using KvizCommando.Client.Features.Team.Services;
 using KvizCommando.Client.Features.Team.ViewModels;
-using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Audio;
+using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.Team;
@@ -210,20 +210,19 @@ public partial class TeamManager
             return;
         }
 
-        ReqStates[] refreshTypes = requestType is
-            ManageType.Promote
-                ? [
-                    ReqStates.VsGame,
-                    ReqStates.Home,
-                    ReqStates.Team
-                ]
-                : [
-                    ReqStates.Home,
-                    ReqStates.Team,
-                    ReqStates.VsGame,
-                    ReqStates.SoloGame,
-                    ReqStates.Question
-                ];
+        ReqStates[] refreshTypes = (requestType is ManageType.Promote)
+     ? [
+         ReqStates.VsGame,
+        ReqStates.Home,
+        ReqStates.Team
+     ]
+     : [
+         ReqStates.Home,
+        ReqStates.Team,
+        ReqStates.VsGame,
+        ReqStates.SoloGame,
+        ReqStates.Question
+     ];
 
         await Ui.ReloadAsync(refreshTypes);
     }
