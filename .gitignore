@@ -3,6 +3,7 @@
 **/bin/
 **/obj/
 artifacts/
+/publish-linux/
 TestResults/
 *.user
 *.suo

@@ -15,10 +15,10 @@
 		<UserSecretsId>17452c6f-a4f7-4ef5-98d2-0319e5a5559e</UserSecretsId>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Compile Remove="wwwroot\Images\question\**" />
-	  <Content Remove="wwwroot\Images\question\**" />
-	  <EmbeddedResource Remove="wwwroot\Images\question\**" />
-	  <None Remove="wwwroot\Images\question\**" />
+	  <Compile Remove="wwwroot\images\question\**" />
+	  <Content Remove="wwwroot\images\question\**" />
+	  <EmbeddedResource Remove="wwwroot\images\question\**" />
+	  <None Remove="wwwroot\images\question\**" />
 	</ItemGroup>
 	
 
@@ -45,7 +45,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\audio\sfx\" />
     <Folder Include="wwwroot\Data\" />
-    <Folder Include="wwwroot\Images\buttons\vsgame\" /> 
+    <Folder Include="wwwroot\images\buttons\vsgame\" /> 
   </ItemGroup>
 
   <ItemGroup>

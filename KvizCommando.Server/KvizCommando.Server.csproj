@@ -48,7 +48,7 @@
     <Folder Include="Services\VsGame\" />
     <Folder Include="wwwroot\Denied\hu\" />
     <Folder Include="wwwroot\Denied\en\" />
-    <Folder Include="wwwroot\Localization\" />
+    <Folder Include="wwwroot\localization\" />
   </ItemGroup>
 	<ItemGroup>
 		<Content Include="Infrastructure\Email\Templates\**\*.*" CopyToOutputDirectory="PreserveNewest" />
