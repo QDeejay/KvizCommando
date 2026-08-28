@@ -131,7 +131,7 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
             pages = await Task.WhenAll(package.Paths.Select(async path =>
             {
                 var markup = await MarkupLoader.LoadingHtmlAsync(
-                    $"/Help/{AppStates.Culture}/{path}");
+                    $"/help/{AppStates.Culture}/{path}");
 
                 return new MarkupString(HelpMarkupReplacer.Replace(
                     markup.Value,
@@ -180,7 +180,7 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
             _pages =
             [
                 await MarkupLoader.LoadingHtmlAsync(
-                    $"/Help/{AppStates.Culture}/{HelpCollection.LANDING_PATH}")
+                    $"/help/{AppStates.Culture}/{HelpCollection.LANDING_PATH}")
             ];
         }
         catch (HttpRequestException exception)

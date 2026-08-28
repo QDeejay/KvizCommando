@@ -37,7 +37,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                 return null;
             }
             var culture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLowerInvariant();
-            var url = Path.Combine(_env.WebRootPath, "BulletinBoard", culture, "bb.html");
+            var url = Path.Combine(_env.WebRootPath, "bulletinboard", culture, "bb.html");
 
             var dt = File.GetLastWriteTimeUtc(url);
             // A darabszámok ugyanabból a karakterpillanatképből készülnek.

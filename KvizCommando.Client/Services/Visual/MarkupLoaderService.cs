@@ -30,10 +30,10 @@ namespace KvizCommando.Client.Services.Visual
             var html = new MarkupString(string.Empty);
             string url = reqHtml switch
             {
-                Html.Bboard => $"/BulletinBoard/{culture}/bb.html",
+                Html.Bboard => $"/bulletinboard/{culture}/bb.html",
                 Html.Terms => string.Empty,
                 Html.Privacy => string.Empty,
-                Html.NewQuestRules => $"/Manuals/{culture}/questionsend.html",
+                Html.NewQuestRules => $"/manuals/{culture}/questionsend.html",
                 _ => string.Empty,
             };
             if(!string.IsNullOrEmpty(url))
