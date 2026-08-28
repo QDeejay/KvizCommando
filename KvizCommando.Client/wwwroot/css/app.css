@@ -11,7 +11,7 @@ html, body {
     color: white;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     overflow: hidden;
-    cursor: url('/Images/cursors/normal.cur'), default;
+    cursor: url('/images/cursors/normal.cur'), default;
 }
 
 /* Linkek, gombok, hover */
@@ -19,7 +19,7 @@ html, body {
 a:hover,
 button:hover,
 input[type=button]:hover {
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
 /* disabled elemek */
@@ -27,10 +27,10 @@ button:disabled,
 input:disabled,
 select:disabled,
 textarea:disabled {
-    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+    cursor: url('/images/cursors/disabled.cur'), not-allowed;
 }
 label {
-    cursor: url('/Images/cursors/normal.cur'), default;
+    cursor: url('/images/cursors/normal.cur'), default;
 }
 .shell-game-logo {
     position: absolute;
@@ -224,7 +224,7 @@ input[type="checkbox"].custom-checkbox {
     border: 2px solid #777; /* keret színe */
     border-radius: 4px; /* lekerekítés (opcionális) */
     background-color: #fff; /* háttérszín alapból */
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
     display: inline-block;
     vertical-align: middle;
     position: relative;
