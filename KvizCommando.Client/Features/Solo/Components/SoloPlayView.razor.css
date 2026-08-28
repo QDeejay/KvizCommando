@@ -420,7 +420,7 @@
     font: inherit;
     cursor: pointer;
     transition: transform .1s ease, filter .1s ease, border-color .1s ease;
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
     .kc-solo-answer:hover:not(:disabled) {
@@ -442,7 +442,7 @@
     .kc-solo-answer:disabled {
         cursor: default;
         filter: grayscale(.5) brightness(.65);
-        cursor: url('/Images/cursors/normal.cur'), default;
+        cursor: url('/images/cursors/normal.cur'), default;
     }
 
 .kc-solo-answer.selected {

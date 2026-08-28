@@ -48,7 +48,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
 .kc-settings-switch {
@@ -120,7 +120,7 @@
 .kc-settings-range-row input[type='range'] {
     width: 100%;
     accent-color: var(--kc-lcd-background);
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
 .kc-settings-themes {
@@ -138,7 +138,7 @@
     background: var(--kc-panel-bg-end);
     border: 1px solid var(--kc-shell-border);
     border-radius: 5px;
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
 .kc-settings-theme:hover,

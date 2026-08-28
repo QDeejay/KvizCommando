@@ -80,7 +80,7 @@
     background: var(--kc-panel-bg-end);
     border: 1px solid var(--kc-shell-border);
     border-radius: 5px;
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
 .kc-profile-check-button {
@@ -107,7 +107,7 @@
     box-shadow: none;
     filter: grayscale(1);
     opacity: .72;
-    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+    cursor: url('/images/cursors/disabled.cur'), not-allowed;
 }
 
 .kc-profile-validation {

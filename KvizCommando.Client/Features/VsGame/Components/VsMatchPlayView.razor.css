@@ -306,13 +306,13 @@
     border: 2px solid #171910;
     border-radius: 6px;
     box-shadow: inset 0 0 0 1px #777850;
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
     font-family: 'Courier New', monospace;
     text-align: left;
 }
 
 .kc-vs-answers button:disabled {
-    cursor: url('/Images/cursors/normal.cur'), default;
+    cursor: url('/images/cursors/normal.cur'), default;
 }
 
 .kc-vs-answer-letter {
@@ -463,7 +463,7 @@
 }
 
 .kc-vs-guess input:disabled {
-    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+    cursor: url('/images/cursors/disabled.cur'), not-allowed;
 }
 
 .kc-vs-guess .button-on-lcd {
@@ -628,11 +628,11 @@
 }
 
 .kc-vs-question-status > button {
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
 .kc-vs-question-status > button:disabled {
-    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+    cursor: url('/images/cursors/disabled.cur'), not-allowed;
     opacity: .58;
 }
 
@@ -800,7 +800,7 @@
     border: 2px solid #171910;
     border-radius: 6px;
     box-shadow: inset 0 0 0 1px #777850;
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
     font-family: 'Courier New', monospace;
     text-align: left;
 }
@@ -819,7 +819,7 @@
 }
 
 .kc-vs-captain-questions.selection-complete button {
-    cursor: url('/Images/cursors/normal.cur'), default;
+    cursor: url('/images/cursors/normal.cur'), default;
 }
 
 .kc-vs-captain-questions button.selected {

@@ -36,7 +36,7 @@
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
     font: inherit;
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
 .kc-ranked-member:hover:not(:disabled) {
@@ -55,7 +55,7 @@
     background: rgba(60, 60, 60, 0.2);
     border-color: rgba(90, 45, 45, 0.45);
     box-shadow: none;
-    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+    cursor: url('/images/cursors/disabled.cur'), not-allowed;
 }
 
 .kc-ranked-member-picture {
@@ -142,7 +142,7 @@
     border-radius: 8px;
     font-size: 1rem;
     font-weight: bold;
-    cursor: url('/Images/cursors/normal.cur'), default;
+    cursor: url('/images/cursors/normal.cur'), default;
 }
 
 .kc-ranked-classification.active {
@@ -154,12 +154,12 @@
 .kc-ranked-classification:not(.active):hover {
     color: rgba(211, 211, 211, 0.8);
     background: rgba(90, 94, 84, 0.78);
-    cursor: url('/Images/cursors/normal.cur'), default;
+    cursor: url('/images/cursors/normal.cur'), default;
 }
 
 .kc-ranked-classification.active:hover {
     background: rgba(218, 255, 75, 0.95);
-    cursor: url('/Images/cursors/normal.cur'), default;
+    cursor: url('/images/cursors/normal.cur'), default;
 }
 
 .kc-ranked-classification:hover > .tooltip-box {

@@ -19,7 +19,7 @@
 .military-button--secondary.back-version {
     min-width: 0;
     border-radius: 4px;
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 /* === BEJELENTKEZESI ALLAPOTOK === */
 .kc-auth-status {

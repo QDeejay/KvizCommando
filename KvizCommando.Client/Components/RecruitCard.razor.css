@@ -14,7 +14,7 @@
     box-shadow:
         inset 0 0 0 1px rgba(119, 120, 80, 0.14),
         0 3px 7px rgba(0, 0, 0, 0.32);
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
 .recruit-block:hover {
@@ -29,7 +29,7 @@
     box-shadow:
         inset 0 0 0 1px rgba(210, 255, 57, 0.14),
         inset 0 3px 7px rgba(0, 0, 0, 0.58);
-    cursor: url('/Images/cursors/normal.cur'), default;
+    cursor: url('/images/cursors/normal.cur'), default;
 }
 
 .selected-block:hover {

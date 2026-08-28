@@ -258,16 +258,16 @@
     overflow: hidden;
     min-height: 0;
     box-sizing: border-box;
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
 .kc-vs-prep-round-category:disabled,
 .kc-vs-prep-round-help:disabled {
-    cursor: url('/Images/cursors/normal.cur'), default;
+    cursor: url('/images/cursors/normal.cur'), default;
 }
 
 .kc-vs-prep-round-category.static {
-    cursor: url('/Images/cursors/normal.cur'), default;
+    cursor: url('/images/cursors/normal.cur'), default;
 }
 
 .kc-vs-prep-round-category.assignable,
@@ -414,7 +414,7 @@
     background: rgba(76, 80, 51, .55);
     border: 1px solid #686c48;
     border-radius: 5px;
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
 .kc-vs-prep-character-card:hover:not(:disabled),
@@ -465,7 +465,7 @@
     background: #343820;
     border: 2px solid #171910;
     border-radius: 6px;
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
 .kc-vs-prep-loadout-card > img {
@@ -483,7 +483,7 @@
 .kc-vs-prep-loadout-card.locked {
     opacity: .43;
     filter: grayscale(.8);
-    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+    cursor: url('/images/cursors/disabled.cur'), not-allowed;
 }
 
 .kc-vs-prep-loadout-card > i {
@@ -523,7 +523,7 @@
     background: linear-gradient(180deg, #4c5033, #343820);
     border: 1px solid #777850;
     border-radius: 5px;
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
 .kc-vs-prep-help-card > i {
@@ -538,7 +538,7 @@
 .kc-vs-prep-help-card:disabled,
 .kc-vs-prep-character-card:disabled {
     opacity: .35;
-    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+    cursor: url('/images/cursors/disabled.cur'), not-allowed;
 }
 
 .kc-vs-prep-actions {

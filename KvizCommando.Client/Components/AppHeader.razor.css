@@ -39,7 +39,7 @@
     border-radius: 6px;
     padding: .5rem .75rem;
     color: #444;
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
 
@@ -50,7 +50,7 @@
         
         width: 100%;
         text-align: inherit;
-        cursor: url('/Images/cursors/active.cur'), pointer;
+        cursor: url('/images/cursors/active.cur'), pointer;
     }
 
 /* toggle button */
@@ -63,7 +63,7 @@
     line-height: 1;
     color: #d3d3d3; /* ikon+nyíl színe */
     box-shadow: none;
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
     /* Hover/fókusz/nyitott állapot */

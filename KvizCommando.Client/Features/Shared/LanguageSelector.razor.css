@@ -56,7 +56,7 @@
     line-height: 1;
     color: #d3d3d3; /* ikon színe */
     box-shadow: none;
-    cursor: url('/Images/cursors/active.cur'), pointer;
+    cursor: url('/images/cursors/active.cur'), pointer;
 }
 
     #langToggle:hover,

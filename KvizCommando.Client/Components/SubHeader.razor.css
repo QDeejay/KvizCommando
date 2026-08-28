@@ -24,7 +24,7 @@
     font-family: 'Courier New', monospace;
     background: rgba(10, 10, 10, 0.1);
     transition: 0.3s;
-    cursor: url('/Images/cursors/normal.cur'), default;
+    cursor: url('/images/cursors/normal.cur'), default;
     border-radius: 0 0 8px 8px;
     font-size: 1.2rem;
     letter-spacing: 0.2px;
@@ -40,7 +40,7 @@
 }
     .htp-tab:hover {
         background: rgba(99, 99, 99, 0.4);
-        cursor: url('/Images/cursors/active.cur'), pointer;
+        cursor: url('/images/cursors/active.cur'), pointer;
     }
 
 .htp-tab.active {
@@ -48,7 +48,7 @@
     font-weight: bold;
     border: 1px solid var(--kc-shell-border);
     box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.6);
-    cursor: url('/Images/cursors/normal.cur'), default;
+    cursor: url('/images/cursors/normal.cur'), default;
     width: max-content;
     max-width: 100%;
     border-top: none;
@@ -57,7 +57,7 @@
 .htp-tab.disabled {
     background: rgba(255,45,45,0.15);
     color: #cccccc;
-    cursor: url('/Images/cursors/disabled.cur'), not-allowed;
+    cursor: url('/images/cursors/disabled.cur'), not-allowed;
 }
 
 .tab-text {

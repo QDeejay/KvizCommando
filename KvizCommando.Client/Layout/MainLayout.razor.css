@@ -122,7 +122,7 @@
     .kc-back-button:hover {
         background-color: rgba(255,255,255,0.1);
         color: whitesmoke;
-        cursor: url('/Images/cursors/active.cur'), pointer;
+        cursor: url('/images/cursors/active.cur'), pointer;
         border: grey 1px solid;
     }
 
@@ -219,7 +219,7 @@ main {
 
     .kc-collapse-btn:not(:disabled):hover {
         background-color: rgba(255,255,255,0.1);
-        cursor: url('/Images/cursors/active.cur'), pointer;
+        cursor: url('/images/cursors/active.cur'), pointer;
         border-color: grey;
     }
 

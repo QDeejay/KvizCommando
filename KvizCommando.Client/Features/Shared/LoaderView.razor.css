@@ -13,7 +13,7 @@
     z-index: 9999;
     pointer-events: none;
     transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
-    cursor: url('/Images/cursors/normalload.cur'), wait;
+    cursor: url('/images/cursors/normalload.cur'), wait;
 }
 
 

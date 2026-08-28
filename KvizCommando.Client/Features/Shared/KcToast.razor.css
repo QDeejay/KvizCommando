@@ -40,7 +40,7 @@
     .kc-toast-close:hover i,
     .kc-toast-close:hover {
         opacity: 1;
-        cursor: url('/Images/cursors/active.cur'), pointer;
+        cursor: url('/images/cursors/active.cur'), pointer;
     }
 
 
