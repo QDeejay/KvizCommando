@@ -3,20 +3,12 @@ using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
 using KvizCommando.Server.Startup;
 using Microsoft.AspNetCore.HttpOverrides;
 
-// Kizárólag a fejlesztői környezetben használható kapcsoló, amely meghatározza, hogy az alkalmazás SQL Server vagy SQLite adatbázist használjon. A tényleges adatbázis-kapcsolatot a konfigurációs fájlokban és a parancssori argumentumokban lehet felülírni.
-const bool USE_SQL_SERVER = false;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile(
     "secrets.json",
     optional: true,
     reloadOnChange: true);
-
-builder.Configuration["Database:Provider"] =
-    USE_SQL_SERVER ? "SqlServer" : "Sqlite";
-builder.Configuration["Database:EnableRetryOnFailure"] =
-    USE_SQL_SERVER ? "true" : "false";
 
 //  Sql server migrációs utasítások: Migration -custom elnevezés-
 /*
