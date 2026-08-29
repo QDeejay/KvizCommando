@@ -4,6 +4,7 @@
 **/obj/
 artifacts/
 /publish-linux/
+/DatabaseMigrationTool.exe
 TestResults/
 *.user
 *.suo
