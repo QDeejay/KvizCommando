@@ -4,6 +4,7 @@
 **/obj/
 artifacts/
 /publish-linux/
+/DatabaseMigrationTool.exe
 TestResults/
 *.user
 *.suo
@@ -32,6 +33,7 @@ Thumbs.db
 appsettings.*.local.json
 secrets.json
 operations.json
+/BuildTools/DatabaseMigrationTool/DatabaseMigrationTool.settings.json
 DataProtection-Keys/
 **/DataProtection-Keys/
 KvizCommando.Server/App/Email/

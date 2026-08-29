@@ -1,0 +1,4 @@
+{
+  "SshTarget": "user@host",
+  "PrivateKeyPath": "C:\\path\\to\\private-key.pem"
+}
