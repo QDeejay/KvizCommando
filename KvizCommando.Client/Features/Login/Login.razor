@@ -96,8 +96,11 @@
             <hr/>
             <div class="kc-login-links-row">
                 <a href="/ForgotPsw" class="kc-login-link">@Ui.Lang["login.ForgotPassword"]</a>
-                <span class="divider">/</span>
-                <a href="/register" class="kc-login-link">@Ui.Lang["login.ButtonLink"]</a>
+                @if (RegistrationEnabled)
+                {
+                    <span class="divider">/</span>
+                    <a href="/register" class="kc-login-link">@Ui.Lang["login.ButtonLink"]</a>
+                }
             </div>
             <hr/>
     </div>

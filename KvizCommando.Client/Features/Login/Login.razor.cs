@@ -39,6 +39,7 @@ namespace KvizCommando.Client.Features.Login
         private bool CanNext => !string.IsNullOrWhiteSpace(_loginForm.Email);
         private bool CanLogin => !string.IsNullOrWhiteSpace(_loginForm.Email)
                               && !string.IsNullOrWhiteSpace(_loginForm.Password);
+        private bool RegistrationEnabled => _options?.RegistrationEnabled == true;
         private bool FacebookLoginEnabled => _options?.FacebookLoginEnabled == true;
 
         private async Task OnSwitchPass(bool viaEnter)

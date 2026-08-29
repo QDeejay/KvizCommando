@@ -52,6 +52,7 @@
   </ItemGroup>
 	<ItemGroup>
 		<Content Include="Infrastructure\Email\Templates\**\*.*" CopyToOutputDirectory="PreserveNewest" />
+		<Content Update="secrets.json;operations.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Remove="Data\StaticData\**" />

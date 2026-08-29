@@ -18,7 +18,8 @@ public static class KvizCommandoIdentityEndpointExtensions
         endpoints.MapGroup("/")
             .MapIdentityApi<ApplicationUser>()
             .WithPerEndpointRateLimiting()
-            .WithIdentityAudit();
+            .WithIdentityAudit()
+            .WithPublicAuthAvailability(configuration);
 
         endpoints.MapLogoutEndpoints();
         endpoints.MapFacebookAuthEndpoints(

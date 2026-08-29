@@ -131,6 +131,11 @@ namespace KvizCommando.Client.Features.Login
              _registSucces = false;
              _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
              _options = await IdentityRules.GetRulesAsync();
+
+             if (!_options.RegistrationEnabled)
+             {
+                 Ui.Nav.NavigateTo("/login", replace: true);
+             }
         }
     }
 }

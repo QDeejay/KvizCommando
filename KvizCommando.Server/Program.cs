@@ -5,10 +5,28 @@ using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddJsonFile(
-    "secrets.json",
-    optional: true,
-    reloadOnChange: true);
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddJsonFile(
+        "secrets.json",
+        optional: true,
+        reloadOnChange: false);
+}
+
+if (builder.Environment.IsProduction())
+{
+    // Production secrets and operational switches live outside the deployment directory.
+    // They are loaded once at process startup; runtime reload is intentionally disabled.
+    builder.Configuration
+        .AddJsonFile(
+            "/etc/kvizcommando/secrets.json",
+            optional: false,
+            reloadOnChange: false)
+        .AddJsonFile(
+            "/etc/kvizcommando/operations.json",
+            optional: false,
+            reloadOnChange: false);
+}
 
 //  Sql server migrációs utasítások: Migration -custom elnevezés-
 /*

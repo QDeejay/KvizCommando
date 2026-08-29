@@ -16,6 +16,7 @@ namespace KvizCommando.Shared.Contracts.Auth
         // Bejelentkezési követelmények
         public bool RequireConfirmedEmail { get; set; }
         public bool RequireConfirmedAccount { get; set; }
+        public bool RegistrationEnabled { get; set; } = true;
         public bool FacebookLoginEnabled { get; set; }
 
         // Alkalmazásspecifikus szabályok

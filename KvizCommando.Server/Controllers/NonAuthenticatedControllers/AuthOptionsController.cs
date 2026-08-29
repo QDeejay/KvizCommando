@@ -50,6 +50,8 @@ public class AuthOptionsController : ControllerBase
 
             RequireConfirmedEmail = _options.SignIn.RequireConfirmedEmail,
             RequireConfirmedAccount = _options.SignIn.RequireConfirmedAccount,
+            RegistrationEnabled = IdentityConfiguration.IsRegistrationEnabled(
+                _configuration),
             FacebookLoginEnabled = IdentityConfiguration.IsFacebookLoginEnabled(
                 _configuration),
 
