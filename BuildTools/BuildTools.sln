@@ -6,8 +6,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResxExporter", "ResxExporte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tosExporter", "tosExporter\tosExporter.csproj", "{FC8F5145-88B4-4E79-8F20-68F8A9513200}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseMigrationTool", "DatabaseMigrationTool\DatabaseMigrationTool.csproj", "{BCA32146-59C2-4B6B-9CF1-950310A2857F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,10 +20,6 @@ Global
 		{FC8F5145-88B4-4E79-8F20-68F8A9513200}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC8F5145-88B4-4E79-8F20-68F8A9513200}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC8F5145-88B4-4E79-8F20-68F8A9513200}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BCA32146-59C2-4B6B-9CF1-950310A2857F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BCA32146-59C2-4B6B-9CF1-950310A2857F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BCA32146-59C2-4B6B-9CF1-950310A2857F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BCA32146-59C2-4B6B-9CF1-950310A2857F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -34,3 +28,4 @@ Global
 		SolutionGuid = {68120650-F3C9-4A7D-9A58-72A7324E2F3B}
 	EndGlobalSection
 EndGlobal
+
