@@ -22,13 +22,14 @@ public static class KvizCommandoWebExtensions
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
         {
+            options.CustomSchemaIds(type => type.FullName?.Replace("+", "."));
             options.SwaggerDoc(
-                "v1",
-                new OpenApiInfo
-                {
-                    Title = "KvizCommando API",
-                    Version = "v1"
-                });
+                   "v1",
+                   new OpenApiInfo
+                   {
+                       Title = "KvizCommando API",
+                       Version = "v1"
+                   });
 
             options.AddSecurityDefinition(
                 "oauth2",

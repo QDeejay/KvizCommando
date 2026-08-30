@@ -147,6 +147,8 @@ app.MapHub<SoloGameHub>("/hubs/solo-game");
 
 app.MapKvizCommandoIdentityEndpoints(builder.Configuration);
 
+app.MapGet("/health", () => Results.Ok("OK"));
+
 app.MapFallbackToFile("index.html", clientAssetCacheOptions);
 
 app.Run();
