@@ -70,4 +70,4 @@ jobs:
             -i ~/.ssh/kvizcommando_deploy \
             -o IdentitiesOnly=yes \
             kcadmin@68.210.99.129 \
-            "test -f '/tmp/$PACKAGE_NAME' && sudo /usr/local/sbin/kvizcommando-deploy '${GITHUB_REF_NAME}'"
+            "test -f '/tmp/$PACKAGE_NAME' && sudo /usr/local/sbin/kvizcommando-deploy '${GITHUB_REF_NAME}' '/tmp/$PACKAGE_NAME'"
