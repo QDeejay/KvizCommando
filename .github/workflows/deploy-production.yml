@@ -17,6 +17,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore KvizCommando.sln
+
+      - name: Build
+        run: dotnet build KvizCommando.sln -c Release --no-restore
+
+      - name: Publish linux-x64
+        run: |
+          dotnet publish KvizCommando.Server/KvizCommando.Server.csproj \
+            -c Release \
+            -r linux-x64 \
+            --self-contained false \
+            --no-build \
+            -o ./publish
+
+      - name: Create release package
+        shell: bash
+        run: |
+          PACKAGE_NAME="kvizcommando-${GITHUB_REF_NAME}.tar.gz"
+          tar -czf "$PACKAGE_NAME" -C publish .
+          echo "PACKAGE_NAME=$PACKAGE_NAME" >> "$GITHUB_ENV"
+
       - name: Configure SSH key
         shell: bash
         run: |
@@ -25,11 +55,20 @@ jobs:
           chmod 600 ~/.ssh/kvizcommando_deploy
           ssh-keyscan -H 68.210.99.129 >> ~/.ssh/known_hosts
 
-      - name: Start dummy server release
+      - name: Upload release package
+        shell: bash
+        run: |
+          scp \
+            -i ~/.ssh/kvizcommando_deploy \
+            -o IdentitiesOnly=yes \
+            "$PACKAGE_NAME" \
+            kcadmin@68.210.99.129:/tmp/"$PACKAGE_NAME"
+
+      - name: Verify uploaded package and start dummy server release
         shell: bash
         run: |
           ssh \
             -i ~/.ssh/kvizcommando_deploy \
             -o IdentitiesOnly=yes \
             kcadmin@68.210.99.129 \
-            "sudo /usr/local/sbin/kvizcommando-deploy '${GITHUB_REF_NAME}'"
+            "test -f '/tmp/$PACKAGE_NAME' && sudo /usr/local/sbin/kvizcommando-deploy '${GITHUB_REF_NAME}'"
