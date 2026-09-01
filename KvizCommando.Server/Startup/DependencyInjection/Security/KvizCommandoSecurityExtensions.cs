@@ -38,11 +38,21 @@ public static class KvizCommandoSecurityExtensions
                     StringComparison.OrdinalIgnoreCase),
                 "Az e-mail-fájlok könyvtára nem lehet a nyilvános wwwroot alatt.")
             .Validate(
+                options => !string.IsNullOrWhiteSpace(options.SenderAddress),
+                "Az Email:SenderAddress beállítás kötelező.")
+            .Validate(
                 options => options.BaseUrls.TryGetValue(
                     options.ActiveBaseUrl,
                     out var value) &&
                     Uri.TryCreate(value, UriKind.Absolute, out _),
                 "Az Email:ActiveBaseUrl beállításhoz érvényes abszolút URL szükséges.")
+            .Validate(
+                options => !string.Equals(
+                    options.Service,
+                    EmailOptions.MAIL_SERVICE,
+                    StringComparison.OrdinalIgnoreCase) ||
+                    HasValidAzureEmailConfiguration(options.Azure),
+                "Az Email:Service = Mail használatához az Email:Azure:Endpoint, TenantId, ClientId és ClientSecret beállítások kötelezők.")
             .ValidateOnStart();
 
         var emailService = configuration[$"{EmailOptions.SECTION_NAME}:Service"];
@@ -52,8 +62,7 @@ public static class KvizCommandoSecurityExtensions
         }
         else if (string.Equals(emailService, EmailOptions.MAIL_SERVICE, StringComparison.OrdinalIgnoreCase))
         {
-            throw new InvalidOperationException(
-                "Az Email:Service értéke Mail, de valódi levélküldő adapter még nincs regisztrálva.");
+            services.AddSingleton<IEmailDelivery, AzureEmailDelivery>();
         }
         else
         {
@@ -108,4 +117,10 @@ public static class KvizCommandoSecurityExtensions
 
         return services;
     }
+
+    private static bool HasValidAzureEmailConfiguration(AzureEmailOptions options) =>
+        Uri.TryCreate(options.Endpoint, UriKind.Absolute, out _) &&
+        !string.IsNullOrWhiteSpace(options.TenantId) &&
+        !string.IsNullOrWhiteSpace(options.ClientId) &&
+        !string.IsNullOrWhiteSpace(options.ClientSecret);
 }
