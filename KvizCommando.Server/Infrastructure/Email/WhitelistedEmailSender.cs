@@ -145,7 +145,7 @@ public sealed class WhitelistedEmailSender : IEmailSender<ApplicationUser>, IAcc
                 RankCatalog.GetName(rankEnum, culture), deletionId, ct);
 
             await _delivery.DeliverAsync(new EmailMessage(type, recipient,
-                "no-reply@kvizcommando.local", content.Subject, content.TextBody, content.HtmlBody), ct);
+                _emailOptions.SenderAddress, content.Subject, content.TextBody, content.HtmlBody), ct);
             _logger.LogInformation("A {EmailType} típusú levél átadásra került.", type);
         }
         finally
