@@ -8,8 +8,10 @@ public sealed class EmailOptions
 
     public string Service { get; set; } = FILE_SERVICE;
     public string OutputRoot { get; set; } = "App/Email";
+    public string SenderAddress { get; set; } = "no-reply@kvizcommando.local";
     public string ActiveBaseUrl { get; set; } = "PublicTunnel";
     public Dictionary<string, string> BaseUrls { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+    public AzureEmailOptions Azure { get; set; } = new();
 
     /// <summary>Feloldja az aktív e-mail-hivatkozások konfigurált alapcímét.</summary>
     /// <returns>Az abszolút alapcím.</returns>
@@ -25,4 +27,12 @@ public sealed class EmailOptions
 
         return uri;
     }
+}
+
+public sealed class AzureEmailOptions
+{
+    public string Endpoint { get; set; } = string.Empty;
+    public string TenantId { get; set; } = string.Empty;
+    public string ClientId { get; set; } = string.Empty;
+    public string ClientSecret { get; set; } = string.Empty;
 }
