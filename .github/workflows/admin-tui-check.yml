@@ -1,0 +1,26 @@
+name: Admin TUI Build Check
+
+on:
+  pull_request:
+    paths:
+      - 'BuildTools/KvizCommando.Admin/**'
+      - 'BuildTools/BuildTools.sln'
+      - '.github/workflows/admin-tui-check.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build-admin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Restore
+        run: dotnet restore BuildTools/KvizCommando.Admin/KvizCommando.Admin.csproj
+      - name: Build
+        run: dotnet build BuildTools/KvizCommando.Admin/KvizCommando.Admin.csproj -c Release --no-restore
+      - name: Publish linux-x64
+        run: dotnet publish BuildTools/KvizCommando.Admin/KvizCommando.Admin.csproj -c Release -r linux-x64 --self-contained false -o ./admin-publish
