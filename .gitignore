@@ -32,6 +32,7 @@ Thumbs.db
 !.env.example
 appsettings.*.local.json
 secrets.json
+admin-secrets.json
 operations.json
 /BuildTools/DatabaseMigrationTool/DatabaseMigrationTool.settings.json
 DataProtection-Keys/
