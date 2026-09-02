@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 using Terminal.Gui;
 
@@ -6,11 +8,13 @@ namespace KvizCommando.Admin;
 internal sealed class AdminMainWindow : Window
 {
     private readonly AdminDatabase _database;
+    private readonly bool _isProduction;
 
-    public AdminMainWindow(AdminDatabase database)
+    public AdminMainWindow(AdminDatabase database, bool isProduction)
         : base("KvizCommando Admin")
     {
         _database = database;
+        _isProduction = isProduction;
         X = 0;
         Y = 0;
         Width = Dim.Fill();
@@ -22,19 +26,26 @@ internal sealed class AdminMainWindow : Window
             Y = 1
         };
 
-        var users = new Button("Users") { X = 4, Y = 4, Width = 24 };
-        var pending = new Button("Pending questions") { X = 4, Y = 7, Width = 24 };
-        var userQuestions = new Button("User questions") { X = 4, Y = 10, Width = 24 };
-        var operations = new Button("Operations") { X = 4, Y = 13, Width = 24 };
-        var quit = new Button("Kilépés") { X = 4, Y = 17, Width = 24 };
+        var users = new Button("_Users") { X = 4, Y = 4, Width = 24 };
+        var pending = new Button("_Pending questions") { X = 4, Y = 7, Width = 24 };
+        var userQuestions = new Button("User _questions") { X = 4, Y = 10, Width = 24 };
+        var quit = new Button("_Kilépés") { X = 4, Y = _isProduction ? 20 : 14, Width = 24 };
 
         users.Clicked += OpenUsers;
         pending.Clicked += OpenPendingQuestions;
         userQuestions.Clicked += OpenUserQuestions;
-        operations.Clicked += OpenOperations;
         quit.Clicked += () => Application.RequestStop();
 
-        Add(environment, users, pending, userQuestions, operations, quit);
+        Add(environment, users, pending, userQuestions, quit);
+
+        if (_isProduction)
+        {
+            var operations = new Button("_Operations") { X = 4, Y = 13, Width = 24 };
+            var logs = new Button("_Logs") { X = 4, Y = 16, Width = 24 };
+            operations.Clicked += OpenOperations;
+            logs.Clicked += OpenLogs;
+            Add(operations, logs);
+        }
     }
 
     private void OpenUsers()
@@ -58,10 +69,10 @@ internal sealed class AdminMainWindow : Window
             }
         }
 
-        var refresh = new Button("Frissítés") { X = 1, Y = Pos.Bottom(list) + 1 };
-        var open = new Button("Megnyitás") { X = Pos.Right(refresh) + 2, Y = Pos.Top(refresh) };
-        var create = new Button("Új user") { X = Pos.Right(open) + 2, Y = Pos.Top(refresh) };
-        var close = new Button("Vissza") { X = Pos.Right(create) + 2, Y = Pos.Top(refresh) };
+        var refresh = new Button("_Frissítés") { X = 1, Y = Pos.Bottom(list) + 1 };
+        var open = new Button("_Megnyitás") { X = Pos.Right(refresh) + 2, Y = Pos.Top(refresh) };
+        var create = new Button("_Új user") { X = Pos.Right(open) + 2, Y = Pos.Top(refresh) };
+        var close = new Button("_Vissza") { X = Pos.Right(create) + 2, Y = Pos.Top(refresh) };
 
         refresh.Clicked += Refresh;
         open.Clicked += () =>
@@ -89,8 +100,8 @@ internal sealed class AdminMainWindow : Window
         var emailLabel = new Label("E-mail:") { X = 2, Y = 2 };
         var email = new TextField(string.Empty) { X = 20, Y = 2, Width = 50 };
         var confirmed = new CheckBox("E-mail confirmed", true) { X = 20, Y = 5 };
-        var save = new Button("Létrehozás") { X = 20, Y = 9 };
-        var cancel = new Button("Mégse") { X = Pos.Right(save) + 3, Y = 9 };
+        var save = new Button("_Létrehozás") { X = 20, Y = 9 };
+        var cancel = new Button("_Mégse") { X = Pos.Right(save) + 3, Y = 9 };
 
         save.Clicked += () =>
         {
@@ -133,10 +144,10 @@ internal sealed class AdminMainWindow : Window
         if (!row.PlayerId.HasValue)
             dialog.Add(new Label("Player rekord még nincs; Rank/XP/Credit/Voucher az első check-in után lesz módosítható.") { X = 36, Y = 11 });
 
-        var save = new Button("Mentés") { X = 2, Y = 20 };
-        var reset = new Button("Forgot password e-mail") { X = Pos.Right(save) + 2, Y = 20 };
-        var delete = new Button("Törlés") { X = Pos.Right(reset) + 2, Y = 20 };
-        var close = new Button("Vissza") { X = Pos.Right(delete) + 2, Y = 20 };
+        var save = new Button("_Mentés") { X = 2, Y = 20 };
+        var reset = new Button("_Forgot password e-mail") { X = Pos.Right(save) + 2, Y = 20 };
+        var delete = new Button("_Törlés") { X = Pos.Right(reset) + 2, Y = 20 };
+        var close = new Button("_Vissza") { X = Pos.Right(delete) + 2, Y = 20 };
 
         save.Clicked += () =>
         {
@@ -214,9 +225,9 @@ internal sealed class AdminMainWindow : Window
             }
         }
 
-        var refresh = new Button("Frissítés") { X = 1, Y = Pos.Bottom(list) + 1 };
-        var open = new Button("Szerkesztés") { X = Pos.Right(refresh) + 2, Y = Pos.Top(refresh) };
-        var close = new Button("Vissza") { X = Pos.Right(open) + 2, Y = Pos.Top(refresh) };
+        var refresh = new Button("_Frissítés") { X = 1, Y = Pos.Bottom(list) + 1 };
+        var open = new Button("_Szerkesztés") { X = Pos.Right(refresh) + 2, Y = Pos.Top(refresh) };
+        var close = new Button("_Vissza") { X = Pos.Right(open) + 2, Y = Pos.Top(refresh) };
 
         refresh.Clicked += Refresh;
         open.Clicked += () =>
@@ -241,10 +252,10 @@ internal sealed class AdminMainWindow : Window
         var status = new TextField(row.Status) { X = 16, Y = 20, Width = 18 };
         var remarkLabel = new Label("Remark:") { X = 2, Y = 22 };
         var remark = new TextField(row.Remark ?? string.Empty) { X = 16, Y = 22, Width = 65 };
-        var save = new Button("Mentés") { X = 2, Y = 25 };
-        var approve = new Button("Jóváhagyás") { X = Pos.Right(save) + 2, Y = 25 };
-        var reject = new Button("Elutasítás") { X = Pos.Right(approve) + 2, Y = 25 };
-        var close = new Button("Vissza") { X = Pos.Right(reject) + 2, Y = 25 };
+        var save = new Button("_Mentés") { X = 2, Y = 25 };
+        var approve = new Button("_Jóváhagyás") { X = Pos.Right(save) + 2, Y = 25 };
+        var reject = new Button("_Elutasítás") { X = Pos.Right(approve) + 2, Y = 25 };
+        var close = new Button("_Vissza") { X = Pos.Right(reject) + 2, Y = 25 };
 
         void Save(string requestedStatus)
         {
@@ -294,9 +305,9 @@ internal sealed class AdminMainWindow : Window
             }
         }
 
-        var refresh = new Button("Frissítés") { X = 1, Y = Pos.Bottom(list) + 1 };
-        var open = new Button("Szerkesztés") { X = Pos.Right(refresh) + 2, Y = Pos.Top(refresh) };
-        var close = new Button("Vissza") { X = Pos.Right(open) + 2, Y = Pos.Top(refresh) };
+        var refresh = new Button("_Frissítés") { X = 1, Y = Pos.Bottom(list) + 1 };
+        var open = new Button("_Szerkesztés") { X = Pos.Right(refresh) + 2, Y = Pos.Top(refresh) };
+        var close = new Button("_Vissza") { X = Pos.Right(open) + 2, Y = Pos.Top(refresh) };
 
         refresh.Clicked += Refresh;
         open.Clicked += () =>
@@ -318,8 +329,8 @@ internal sealed class AdminMainWindow : Window
         var answers = DeserializeAnswers(row.AnswersJson);
         var dialog = CreateQuestionDialog($"User question #{row.Id}", row.CategoryNo, row.Question, answers, out var category, out var text, out var answerFields);
         dialog.Add(new Label($"Ask: {row.Ask}   OkAnswer: {row.OkAnswer}") { X = 2, Y = 20 });
-        var save = new Button("Mentés") { X = 2, Y = 24 };
-        var close = new Button("Vissza") { X = Pos.Right(save) + 3, Y = 24 };
+        var save = new Button("_Mentés") { X = 2, Y = 24 };
+        var close = new Button("_Vissza") { X = Pos.Right(save) + 3, Y = 24 };
 
         save.Clicked += () =>
         {
@@ -387,15 +398,44 @@ internal sealed class AdminMainWindow : Window
 
     private void OpenOperations()
     {
-        var dialog = new Dialog("Operations", 80, 20);
-        var state = new Label($"KvizCommando.Server: {SystemOperations.GetServerState()}") { X = 2, Y = 2 };
-        var online = new Button("ONLINE / Start") { X = 2, Y = 6 };
-        var maintenance = new Button("MAINTENANCE / Stop") { X = 24, Y = 6 };
-        var restart = new Button("Restart") { X = 52, Y = 6 };
-        var refresh = new Button("Frissítés") { X = 2, Y = 10 };
-        var close = new Button("Vissza") { X = 18, Y = 10 };
+        var dialog = new Dialog("Operations", 104, 30);
 
-        void RefreshState() => state.Text = $"KvizCommando.Server: {SystemOperations.GetServerState()}";
+        var serverState = new Label(string.Empty) { X = 2, Y = 2, Width = 90 };
+        var serverStart = new Button("_Start server") { X = 2, Y = 4 };
+        var serverStop = new Button("Sto_p server") { X = 22, Y = 4 };
+        var serverRestart = new Button("_Restart server") { X = 41, Y = 4 };
+
+        var siteState = new Label(string.Empty) { X = 2, Y = 8, Width = 90 };
+        var siteOnline = new Button("_ONLINE") { X = 2, Y = 10 };
+        var siteMaintenance = new Button("_MAINTENANCE") { X = 18, Y = 10 };
+
+        var registrationState = new Label(string.Empty) { X = 2, Y = 14, Width = 90 };
+        var registrationOn = new Button("Registration _ON") { X = 2, Y = 16 };
+        var registrationOff = new Button("Registration O_FF") { X = 24, Y = 16 };
+
+        var facebookState = new Label(string.Empty) { X = 2, Y = 20, Width = 90 };
+        var facebookOn = new Button("Facebook O_N") { X = 2, Y = 22 };
+        var facebookOff = new Button("Facebook OF_F") { X = 24, Y = 22 };
+
+        var refresh = new Button("_Frissítés") { X = 2, Y = 26 };
+        var close = new Button("_Vissza") { X = 20, Y = 26 };
+
+        void RefreshState()
+        {
+            try
+            {
+                serverState.Text = $"KvizCommando.Server: {SystemOperations.GetServerState()}";
+                siteState.Text = $"Public site: {ProductionOperations.GetSiteMode()}";
+                var auth = ProductionOperations.GetPublicAuthState();
+                registrationState.Text = $"Registration: {(auth.RegistrationEnabled ? "ON" : "OFF")}";
+                facebookState.Text = $"Facebook Login: {(auth.FacebookLoginEnabled ? "ON" : "OFF")}";
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
+        }
+
         void Execute(Action operation)
         {
             try
@@ -409,14 +449,164 @@ internal sealed class AdminMainWindow : Window
             }
         }
 
-        online.Clicked += () => Execute(SystemOperations.StartServer);
-        maintenance.Clicked += () => Execute(SystemOperations.StopServer);
-        restart.Clicked += () => Execute(SystemOperations.RestartServer);
+        serverStart.Clicked += () => Execute(SystemOperations.StartServer);
+        serverStop.Clicked += () => Execute(SystemOperations.StopServer);
+        serverRestart.Clicked += () => Execute(SystemOperations.RestartServer);
+        siteOnline.Clicked += () => Execute(ProductionOperations.SetSiteOnline);
+        siteMaintenance.Clicked += () => Execute(ProductionOperations.SetSiteMaintenance);
+        registrationOn.Clicked += () => Execute(() => ProductionOperations.SetRegistrationEnabled(true));
+        registrationOff.Clicked += () => Execute(() => ProductionOperations.SetRegistrationEnabled(false));
+        facebookOn.Clicked += () => Execute(() => ProductionOperations.SetFacebookLoginEnabled(true));
+        facebookOff.Clicked += () => Execute(() => ProductionOperations.SetFacebookLoginEnabled(false));
         refresh.Clicked += RefreshState;
         close.Clicked += () => Application.RequestStop();
 
-        dialog.Add(state, online, maintenance, restart, refresh, close);
+        dialog.Add(
+            serverState, serverStart, serverStop, serverRestart,
+            siteState, siteOnline, siteMaintenance,
+            registrationState, registrationOn, registrationOff,
+            facebookState, facebookOn, facebookOff,
+            refresh, close);
+        RefreshState();
         Application.Run(dialog);
+    }
+
+    private void OpenLogs()
+    {
+        var dialog = new Dialog("Logs", 70, 16);
+        var server = new Button("_Server log") { X = 4, Y = 3, Width = 24 };
+        var deploy = new Button("_Deploy log") { X = 4, Y = 7, Width = 24 };
+        var close = new Button("_Vissza") { X = 4, Y = 11, Width = 24 };
+
+        server.Clicked += OpenServerLog;
+        deploy.Clicked += OpenDeployLog;
+        close.Clicked += () => Application.RequestStop();
+
+        dialog.Add(server, deploy, close);
+        Application.Run(dialog);
+    }
+
+    private void OpenServerLog()
+    {
+        var dialog = new Dialog("Server log", 118, 34);
+        var live = new Button("_Live") { X = 2, Y = 2 };
+        var last200 = new Button("Last _200") { X = 16, Y = 2 };
+        var close = new Button("_Vissza") { X = 34, Y = 2 };
+
+        live.Clicked += () => OpenLiveLog("Server log - LIVE", LogOperations.StartServerLive);
+        last200.Clicked += () =>
+        {
+            try
+            {
+                OpenStaticLog("Server log - Last 200", LogOperations.GetServerLast200());
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
+        };
+        close.Clicked += () => Application.RequestStop();
+
+        dialog.Add(live, last200, close);
+        Application.Run(dialog);
+    }
+
+    private void OpenDeployLog()
+    {
+        var dialog = new Dialog("Deploy log", 118, 34);
+        var live = new Button("_Live") { X = 2, Y = 2 };
+        var clear = new Button("_Clear") { X = 16, Y = 2 };
+        var close = new Button("_Vissza") { X = 30, Y = 2 };
+
+        live.Clicked += () => OpenLiveLog("Deploy log - LIVE", LogOperations.StartDeployLive);
+        clear.Clicked += () =>
+        {
+            if (MessageBox.Query("Deploy log törlése", "Biztosan üríted a deploy logot?", "NEM", "IGEN") != 1)
+                return;
+            try
+            {
+                LogOperations.ClearDeployLog();
+                MessageBox.Query("Kész", "Deploy log ürítve.", "OK");
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
+        };
+        close.Clicked += () => Application.RequestStop();
+
+        dialog.Add(live, clear, close);
+        Application.Run(dialog);
+    }
+
+    private static void OpenStaticLog(string title, string content)
+    {
+        var dialog = new Dialog(title, 120, 38);
+        var text = new TextView
+        {
+            X = 1,
+            Y = 1,
+            Width = Dim.Fill(2),
+            Height = Dim.Fill(4),
+            ReadOnly = true,
+            WordWrap = false,
+            Text = content
+        };
+        var close = new Button("_Vissza") { X = 1, Y = Pos.Bottom(text) + 1 };
+        close.Clicked += () => Application.RequestStop();
+        dialog.Add(text, close);
+        Application.Run(dialog);
+    }
+
+    private static void OpenLiveLog(string title, Func<Process> processFactory)
+    {
+        Process? process = null;
+        try
+        {
+            process = processFactory();
+            var dialog = new Dialog(title, 120, 38);
+            var text = new TextView
+            {
+                X = 1,
+                Y = 1,
+                Width = Dim.Fill(2),
+                Height = Dim.Fill(4),
+                ReadOnly = true,
+                WordWrap = false
+            };
+            var close = new Button("_Vissza") { X = 1, Y = Pos.Bottom(text) + 1 };
+            close.Clicked += () => Application.RequestStop();
+
+            var buffer = new StringBuilder();
+            void Append(string? line)
+            {
+                if (line is null)
+                    return;
+                Application.MainLoop.Invoke(() =>
+                {
+                    buffer.AppendLine(line);
+                    text.Text = buffer.ToString();
+                });
+            }
+
+            process.OutputDataReceived += (_, args) => Append(args.Data);
+            process.ErrorDataReceived += (_, args) => Append(args.Data);
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+
+            dialog.Add(text, close);
+            Application.Run(dialog);
+        }
+        catch (Exception ex)
+        {
+            ShowError(ex);
+        }
+        finally
+        {
+            if (process is { HasExited: false })
+                process.Kill(entireProcessTree: true);
+            process?.Dispose();
+        }
     }
 
     private static int? ParseNullableInt(string? value)
