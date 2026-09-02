@@ -16,6 +16,8 @@ internal sealed record AdminSettings(
     string ServerLocalBaseUrl,
     bool IsProduction)
 {
+    private const string USER_SECRETS_ID = "66c00aba-ecb3-4d1e-89f0-b323f37e8306";
+
     public static AdminSettings Resolve()
     {
         if (OperatingSystem.IsLinux())
@@ -61,7 +63,7 @@ internal sealed record AdminSettings(
     private static AdminSettings ResolveDevelopmentSqlServer()
     {
         var configuration = new ConfigurationBuilder()
-            .AddUserSecrets<Program>()
+            .AddUserSecrets(USER_SECRETS_ID)
             .Build();
 
         var application = configuration["ConnectionStrings:SqlServerApplication"];
