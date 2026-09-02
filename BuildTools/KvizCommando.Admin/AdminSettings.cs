@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 
 namespace KvizCommando.Admin;
@@ -59,11 +60,23 @@ internal sealed record AdminSettings(
 
     private static AdminSettings ResolveDevelopmentSqlServer()
     {
-        var serverDirectory = FindServerDirectory();
-        var secretsPath = Path.Combine(serverDirectory, "secrets.json");
-        return FromSecrets(
-            secretsPath,
-            Environment.GetEnvironmentVariable("KVIZCOMMANDO_SERVER_LOCAL_URL") ?? "http://localhost:5055",
+        var configuration = new ConfigurationBuilder()
+            .AddUserSecrets<Program>()
+            .Build();
+
+        var application = configuration["ConnectionStrings:SqlServerApplication"];
+        var game = configuration["ConnectionStrings:SqlServerGame"];
+
+        if (string.IsNullOrWhiteSpace(application))
+            throw new InvalidOperationException("Hiányzó User Secret: ConnectionStrings:SqlServerApplication");
+        if (string.IsNullOrWhiteSpace(game))
+            throw new InvalidOperationException("Hiányzó User Secret: ConnectionStrings:SqlServerGame");
+
+        return new AdminSettings(
+            AdminDatabaseProvider.SqlServer,
+            application,
+            game,
+            (Environment.GetEnvironmentVariable("KVIZCOMMANDO_SERVER_LOCAL_URL") ?? "http://localhost:5055").TrimEnd('/'),
             false);
     }
 
