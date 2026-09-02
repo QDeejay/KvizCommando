@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-set "OUTPUT=%~dp0..\..\publish-linux\admin"
+set "OUTPUT=%~dp0..\..\publish-linux\kvizcommando-admin"
 
 dotnet publish "%~dp0KvizCommando.Admin.csproj" -c Release -r linux-x64 --self-contained false -o "%OUTPUT%"
 if errorlevel 1 (

@@ -36,7 +36,7 @@ internal sealed class AdminMainWindow : Window
         userQuestions.Clicked += OpenUserQuestions;
         quit.Clicked += () => Application.RequestStop();
 
-        Add(environment, users, pending, userQuestions, quit);
+        Add(environment, users, pending, userQuestions);
 
         if (_isProduction)
         {
@@ -46,6 +46,7 @@ internal sealed class AdminMainWindow : Window
             logs.Clicked += OpenLogs;
             Add(operations, logs);
         }
+        Add(quit);
     }
 
     private void OpenUsers()
