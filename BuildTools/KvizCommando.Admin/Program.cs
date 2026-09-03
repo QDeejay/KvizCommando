@@ -18,7 +18,10 @@ internal static class Program
             Application.Init();
             try
             {
-                Application.Top.Add(new AdminMainWindow(database, settings.IsProduction));
+                Application.Top.Add(new AdminMainWindow(
+                    database,
+                    settings.IsProduction,
+                    settings.AuditOutputRoot));
                 Application.Run();
             }
             finally

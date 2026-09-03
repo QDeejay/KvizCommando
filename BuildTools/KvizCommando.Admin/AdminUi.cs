@@ -9,12 +9,17 @@ internal sealed class AdminMainWindow : Window
 {
     private readonly AdminDatabase _database;
     private readonly bool _isProduction;
+    private readonly AuditLogOperations _auditLogs;
 
-    public AdminMainWindow(AdminDatabase database, bool isProduction)
+    public AdminMainWindow(
+        AdminDatabase database,
+        bool isProduction,
+        string auditOutputRoot)
         : base("KvizCommando Admin")
     {
         _database = database;
         _isProduction = isProduction;
+        _auditLogs = new AuditLogOperations(auditOutputRoot);
         X = 0;
         Y = 0;
         Width = Dim.Fill();
@@ -29,7 +34,7 @@ internal sealed class AdminMainWindow : Window
         var users = new Button("_Users") { X = 4, Y = 4, Width = 24 };
         var pending = new Button("_Pending questions") { X = 4, Y = 7, Width = 24 };
         var userQuestions = new Button("User _questions") { X = 4, Y = 10, Width = 24 };
-        var quit = new Button("_Kilépés") { X = 4, Y = _isProduction ? 20 : 14, Width = 24 };
+        var quit = new Button("_Kilépés") { X = 4, Y = _isProduction ? 20 : 17, Width = 24 };
 
         users.Clicked += OpenUsers;
         pending.Clicked += OpenPendingQuestions;
@@ -45,6 +50,12 @@ internal sealed class AdminMainWindow : Window
             operations.Clicked += OpenOperations;
             logs.Clicked += OpenLogs;
             Add(operations, logs);
+        }
+        else
+        {
+            var logs = new Button("_Logs") { X = 4, Y = 13, Width = 24 };
+            logs.Clicked += OpenLogs;
+            Add(logs);
         }
         Add(quit);
     }
@@ -72,7 +83,8 @@ internal sealed class AdminMainWindow : Window
 
         var refresh = new Button("_Frissítés") { X = 1, Y = Pos.Bottom(list) + 1 };
         var open = new Button("_Megnyitás") { X = Pos.Right(refresh) + 2, Y = Pos.Top(refresh) };
-        var create = new Button("_Új user") { X = Pos.Right(open) + 2, Y = Pos.Top(refresh) };
+        var audit = new Button("_Log") { X = Pos.Right(open) + 2, Y = Pos.Top(refresh) };
+        var create = new Button("_Új user") { X = Pos.Right(audit) + 2, Y = Pos.Top(refresh) };
         var close = new Button("_Vissza") { X = Pos.Right(create) + 2, Y = Pos.Top(refresh) };
 
         refresh.Clicked += Refresh;
@@ -83,6 +95,14 @@ internal sealed class AdminMainWindow : Window
             OpenUserEditor(rows[list.SelectedItem]);
             Refresh();
         };
+        audit.Clicked += () =>
+        {
+            if (rows.Count == 0 || list.SelectedItem < 0 || list.SelectedItem >= rows.Count)
+                return;
+
+            var row = rows[list.SelectedItem];
+            OpenAuditFiles(row.Id, row.Email);
+        };
         create.Clicked += () =>
         {
             OpenCreateUser();
@@ -90,7 +110,7 @@ internal sealed class AdminMainWindow : Window
         };
         close.Clicked += () => Application.RequestStop();
 
-        dialog.Add(searchLabel, search, list, refresh, open, create, close);
+        dialog.Add(searchLabel, search, list, refresh, open, audit, create, close);
         Refresh();
         Application.Run(dialog);
     }
@@ -481,17 +501,143 @@ internal sealed class AdminMainWindow : Window
 
     private void OpenLogs()
     {
-        var dialog = new Dialog("Logs", 70, 16);
-        var server = new Button("_Server log") { X = 4, Y = 3, Width = 24 };
-        var deploy = new Button("_Deploy log") { X = 4, Y = 7, Width = 24 };
-        var close = new Button("_Vissza") { X = 4, Y = 11, Width = 24 };
+        var dialog = new Dialog("Logs", 70, _isProduction ? 20 : 12);
+        var audit = new Button("_Audit log") { X = 4, Y = 3, Width = 24 };
+        var close = new Button("_Vissza") { X = 4, Y = _isProduction ? 15 : 7, Width = 24 };
 
-        server.Clicked += OpenServerLog;
-        deploy.Clicked += OpenDeployLog;
+        audit.Clicked += () => OpenAuditFiles();
         close.Clicked += () => Application.RequestStop();
 
-        dialog.Add(server, deploy, close);
+        dialog.Add(audit, close);
+
+        if (_isProduction)
+        {
+            var server = new Button("_Server log") { X = 4, Y = 7, Width = 24 };
+            var deploy = new Button("_Deploy log") { X = 4, Y = 11, Width = 24 };
+            server.Clicked += OpenServerLog;
+            deploy.Clicked += OpenDeployLog;
+            dialog.Add(server, deploy);
+        }
+
         Application.Run(dialog);
+    }
+
+    private void OpenAuditFiles(string? userId = null, string? userLabel = null)
+    {
+        var title = userId is null
+            ? "Audit log"
+            : $"Audit log: {userLabel}";
+        var dialog = new Dialog(title, 92, 32);
+        var heading = new Label("Napi auditfájlok") { X = 2, Y = 1 };
+        var list = new ListView
+        {
+            X = 2,
+            Y = 3,
+            Width = Dim.Fill(2),
+            Height = Dim.Fill(5)
+        };
+
+        IReadOnlyList<AuditFileRow> files = Array.Empty<AuditFileRow>();
+
+        void Refresh()
+        {
+            try
+            {
+                files = _auditLogs.GetFiles();
+                list.SetSource(files.Select(file => file.ToString()).ToList());
+            }
+            catch (Exception exception)
+            {
+                ShowError(exception);
+            }
+        }
+
+        void OpenSelected()
+        {
+            if (files.Count == 0 || list.SelectedItem < 0 || list.SelectedItem >= files.Count)
+                return;
+
+            OpenAuditEntries(files[list.SelectedItem], userId, userLabel);
+        }
+
+        var refresh = new Button("_Frissítés") { X = 2, Y = Pos.Bottom(list) + 1 };
+        var open = new Button("_Megnyitás") { X = Pos.Right(refresh) + 2, Y = Pos.Top(refresh) };
+        var close = new Button("_Vissza") { X = Pos.Right(open) + 2, Y = Pos.Top(refresh) };
+
+        refresh.Clicked += Refresh;
+        open.Clicked += OpenSelected;
+        close.Clicked += () => Application.RequestStop();
+
+        dialog.Add(heading, list, refresh, open, close);
+        Refresh();
+        Application.Run(dialog);
+    }
+
+    private void OpenAuditEntries(
+        AuditFileRow file,
+        string? userId,
+        string? userLabel)
+    {
+        var title = userId is null
+            ? file.FileName
+            : $"{file.FileName}: {userLabel}";
+        var dialog = new Dialog(title, 120, 38);
+        var list = new ListView
+        {
+            X = 1,
+            Y = 1,
+            Width = Dim.Fill(2),
+            Height = Dim.Fill(5)
+        };
+
+        IReadOnlyList<AuditEntryRow> entries;
+        try
+        {
+            entries = _auditLogs.GetEntries(file, userId);
+            list.SetSource(entries.Select(entry => entry.ToString()).ToList());
+        }
+        catch (Exception exception)
+        {
+            ShowError(exception);
+            return;
+        }
+
+        var details = new Button("_Részletek") { X = 1, Y = Pos.Bottom(list) + 1 };
+        var close = new Button("_Vissza") { X = Pos.Right(details) + 2, Y = Pos.Top(details) };
+
+        details.Clicked += () =>
+        {
+            if (entries.Count == 0 || list.SelectedItem < 0 || list.SelectedItem >= entries.Count)
+                return;
+
+            OpenAuditEntryDetails(entries[list.SelectedItem]);
+        };
+        close.Clicked += () => Application.RequestStop();
+
+        dialog.Add(list, details, close);
+        Application.Run(dialog);
+    }
+
+    private static void OpenAuditEntryDetails(AuditEntryRow entry)
+    {
+        var changedFields = entry.Details?.ChangedFields is { Length: > 0 }
+            ? string.Join(", ", entry.Details.ChangedFields)
+            : "-";
+        var content = new StringBuilder()
+            .AppendLine($"Idő (UTC):        {entry.UtcTime:yyyy-MM-dd HH:mm:ss.fff}")
+            .AppendLine($"Esemény:          {entry.EventName}")
+            .AppendLine($"Eredmény:         {entry.Outcome}")
+            .AppendLine()
+            .AppendLine($"Actor ID:         {entry.ActorId ?? "-"}")
+            .AppendLine($"Subject ID:       {entry.SubjectId ?? "-"}")
+            .AppendLine($"Request ID:       {entry.RequestId ?? "-"}")
+            .AppendLine($"IP hash:          {entry.IpHash ?? "-"}")
+            .AppendLine()
+            .AppendLine($"Módosított mezők: {changedFields}")
+            .AppendLine($"Dokumentumverzió: {entry.Details?.DocumentVersion ?? "-"}")
+            .ToString();
+
+        OpenStaticLog($"Audit: {entry.EventName}", content);
     }
 
     private void OpenServerLog()

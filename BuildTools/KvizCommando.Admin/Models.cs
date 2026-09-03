@@ -44,3 +44,34 @@ internal sealed record UserQuestionRow(
     public override string ToString() =>
         $"#{Id,-6} P:{PlayerId,-5} K:{CategoryNo,-2} {Question}";
 }
+
+internal sealed record AuditFileRow(string FilePath, string FileName)
+{
+    public override string ToString() => FileName;
+}
+
+internal sealed record AuditDetailsRow(
+    string[]? ChangedFields,
+    string? DocumentVersion);
+
+internal sealed record AuditEntryRow(
+    DateTimeOffset UtcTime,
+    string EventName,
+    string Outcome,
+    string? ActorId,
+    string? SubjectId,
+    string? IpHash,
+    string? RequestId,
+    AuditDetailsRow? Details)
+{
+    public override string ToString() =>
+        $"{UtcTime:HH:mm:ss}  {Outcome,-9}  {EventName,-36}  " +
+        $"Actor: {ShortId(ActorId),-10}  Subject: {ShortId(SubjectId),-10}";
+
+    private static string ShortId(string? value) =>
+        string.IsNullOrWhiteSpace(value)
+            ? "-"
+            : value.Length <= 8
+                ? value
+                : value[..8];
+}

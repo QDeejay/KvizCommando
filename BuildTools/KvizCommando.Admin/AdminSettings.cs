@@ -14,6 +14,7 @@ internal sealed record AdminSettings(
     string ApplicationConnectionString,
     string GameConnectionString,
     string ServerLocalBaseUrl,
+    string AuditOutputRoot,
     bool IsProduction)
 {
     private const string USER_SECRETS_ID = "66c00aba-ecb3-4d1e-89f0-b323f37e8306";
@@ -57,6 +58,7 @@ internal sealed record AdminSettings(
             $"Data Source={Path.Combine(serverDirectory, "GameUser.db")}",
             $"Data Source={Path.Combine(serverDirectory, "Game.db")}",
             Environment.GetEnvironmentVariable("KVIZCOMMANDO_SERVER_LOCAL_URL") ?? "http://localhost:5055",
+            Path.Combine(serverDirectory, "App", "Audit"),
             false);
     }
 
@@ -68,6 +70,7 @@ internal sealed record AdminSettings(
 
         var application = configuration["ConnectionStrings:SqlServerApplication"];
         var game = configuration["ConnectionStrings:SqlServerGame"];
+        var serverDirectory = FindServerDirectory();
 
         if (string.IsNullOrWhiteSpace(application))
             throw new InvalidOperationException("Hiányzó User Secret: ConnectionStrings:SqlServerApplication");
@@ -79,6 +82,7 @@ internal sealed record AdminSettings(
             application,
             game,
             (Environment.GetEnvironmentVariable("KVIZCOMMANDO_SERVER_LOCAL_URL") ?? "http://localhost:5055").TrimEnd('/'),
+            Path.Combine(serverDirectory, "App", "Audit"),
             false);
     }
 
@@ -108,6 +112,7 @@ internal sealed record AdminSettings(
             application,
             game,
             serverLocalBaseUrl.TrimEnd('/'),
+            "/var/lib/kvizcommando/Audit",
             production);
     }
 
