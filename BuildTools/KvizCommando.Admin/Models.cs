@@ -45,6 +45,29 @@ internal sealed record UserQuestionRow(
         $"#{Id,-6} P:{PlayerId,-5} K:{CategoryNo,-2} {Question}";
 }
 
+internal sealed record FactoryQuestionCategoryCount(
+    int CategoryNo,
+    int Count);
+
+internal sealed record FactoryQuestionRow(
+    int Id,
+    int? PlayerId,
+    int CategoryNo,
+    string Question,
+    string AnswerData,
+    int Reported,
+    bool IsTip)
+{
+    public override string ToString() =>
+        $"{Id,-8} {CategoryNo,-5} {PlayerId?.ToString() ?? "-",-9} " +
+        $"{Shorten(Question, 58),-58} {Shorten(AnswerData, 20)}";
+
+    private static string Shorten(string value, int maximumLength) =>
+        value.Length <= maximumLength
+            ? value
+            : $"{value[..(maximumLength - 1)]}…";
+}
+
 internal sealed record AuditFileRow(string FilePath, string FileName)
 {
     public override string ToString() => FileName;

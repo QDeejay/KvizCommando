@@ -1,4 +1,5 @@
 using System.Data.Common;
+using System.Globalization;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.Data.SqlClient;
@@ -252,6 +253,160 @@ internal sealed class AdminDatabase : IDisposable
         return result;
     }
 
+    public IReadOnlyList<FactoryQuestionCategoryCount> GetFactoryQuestionCategoryCounts()
+    {
+        using var connection = OpenGameConnection();
+        var counts = Enumerable.Range(1, 16).ToDictionary(category => category, _ => 0);
+
+        using (var command = CreateCommand(connection, """
+            SELECT CategoryNo, COUNT(*)
+            FROM FactoryQuestions
+            WHERE CategoryNo BETWEEN 1 AND 16
+            GROUP BY CategoryNo;
+            """))
+        using (var reader = command.ExecuteReader())
+        {
+            while (reader.Read())
+                counts[reader.GetInt32(0)] = Convert.ToInt32(reader.GetValue(1));
+        }
+
+        counts[99] = Convert.ToInt32(ExecuteScalar(connection, "SELECT COUNT(*) FROM GuessQuestions;") ?? 0);
+        return counts
+            .OrderBy(item => item.Key)
+            .Select(item => new FactoryQuestionCategoryCount(item.Key, item.Value))
+            .ToArray();
+    }
+
+    public IReadOnlyList<FactoryQuestionRow> GetFactoryQuestions(
+        int? categoryNo,
+        string? search,
+        bool reportedOnly,
+        bool playerQuestionsOnly)
+    {
+        if (categoryNo is not null && categoryNo is not (>= 1 and <= 16) && categoryNo != 99)
+            throw new InvalidOperationException("Hibás kategóriaszűrő.");
+
+        using var connection = OpenGameConnection();
+        var rows = new List<FactoryQuestionRow>();
+        var normalizedSearch = search?.Trim() ?? string.Empty;
+
+        if (categoryNo != 99)
+        {
+            var top = _settings.Provider == AdminDatabaseProvider.SqlServer ? "TOP (25) " : string.Empty;
+            var limit = _settings.Provider == AdminDatabaseProvider.Sqlite ? " LIMIT 25" : string.Empty;
+            using var command = CreateCommand(connection, $"""
+                SELECT {top}Id, PlayerId, CategoryNo, Question, AnswersJson, Reported
+                FROM FactoryQuestions
+                WHERE (@categoryNo = 0 OR CategoryNo = @categoryNo)
+                  AND (@search = '' OR Question LIKE @pattern)
+                  AND (@reportedOnly = 0 OR Reported > 0)
+                  AND (@playerQuestionsOnly = 0 OR PlayerId > 0)
+                ORDER BY Id DESC{limit};
+                """);
+            AddParameter(command, "@categoryNo", categoryNo ?? 0);
+            AddParameter(command, "@search", normalizedSearch);
+            AddParameter(command, "@pattern", $"%{normalizedSearch}%");
+            AddParameter(command, "@reportedOnly", reportedOnly ? 1 : 0);
+            AddParameter(command, "@playerQuestionsOnly", playerQuestionsOnly ? 1 : 0);
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                rows.Add(new FactoryQuestionRow(
+                    reader.GetInt32(0),
+                    reader.GetInt32(1) > 0 ? reader.GetInt32(1) : null,
+                    reader.GetInt32(2),
+                    reader.GetString(3),
+                    reader.GetString(4),
+                    reader.GetInt32(5),
+                    false));
+            }
+        }
+
+        if ((categoryNo is null or 99) && !playerQuestionsOnly)
+        {
+            var top = _settings.Provider == AdminDatabaseProvider.SqlServer ? "TOP (25) " : string.Empty;
+            var limit = _settings.Provider == AdminDatabaseProvider.Sqlite ? " LIMIT 25" : string.Empty;
+            using var command = CreateCommand(connection, $"""
+                SELECT {top}Id, Question, Answer, Reported
+                FROM GuessQuestions
+                WHERE (@search = '' OR Question LIKE @pattern)
+                  AND (@reportedOnly = 0 OR Reported > 0)
+                ORDER BY Id DESC{limit};
+                """);
+            AddParameter(command, "@search", normalizedSearch);
+            AddParameter(command, "@pattern", $"%{normalizedSearch}%");
+            AddParameter(command, "@reportedOnly", reportedOnly ? 1 : 0);
+
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                rows.Add(new FactoryQuestionRow(
+                    reader.GetInt32(0),
+                    null,
+                    99,
+                    reader.GetString(1),
+                    Convert.ToDouble(reader.GetValue(2)).ToString("G15", CultureInfo.InvariantCulture),
+                    reader.GetInt32(3),
+                    true));
+            }
+        }
+
+        return rows
+            .OrderByDescending(row => row.Id)
+            .ThenBy(row => row.CategoryNo)
+            .Take(25)
+            .ToArray();
+    }
+
+    public void UpdateFactoryQuestion(
+        FactoryQuestionRow question,
+        int categoryNo,
+        string text,
+        IReadOnlyList<string> answers,
+        int reported)
+    {
+        ValidateQuestion(categoryNo, text, answers);
+        ValidateReported(reported);
+        using var connection = OpenGameConnection();
+        using var command = CreateCommand(connection, """
+            UPDATE FactoryQuestions
+            SET CategoryNo = @categoryNo,
+                Question = @question,
+                AnswersJson = @answersJson,
+                Reported = @reported
+            WHERE Id = @id;
+            """);
+        AddParameter(command, "@categoryNo", categoryNo);
+        AddParameter(command, "@question", text.Trim());
+        AddParameter(command, "@answersJson", JsonSerializer.Serialize(answers));
+        AddParameter(command, "@reported", reported);
+        AddParameter(command, "@id", question.Id);
+        if (command.ExecuteNonQuery() != 1)
+            throw new InvalidOperationException("A Factory kérdés nem található.");
+    }
+
+    public void UpdateTipQuestion(FactoryQuestionRow question, string text, double answer, int reported)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            throw new InvalidOperationException("A kérdésszöveg nem lehet üres.");
+        ValidateReported(reported);
+        using var connection = OpenGameConnection();
+        using var command = CreateCommand(connection, """
+            UPDATE GuessQuestions
+            SET Question = @question,
+                Answer = @answer,
+                Reported = @reported
+            WHERE Id = @id;
+            """);
+        AddParameter(command, "@question", text.Trim());
+        AddParameter(command, "@answer", answer);
+        AddParameter(command, "@reported", reported);
+        AddParameter(command, "@id", question.Id);
+        if (command.ExecuteNonQuery() != 1)
+            throw new InvalidOperationException("A Tipp kérdés nem található.");
+    }
+
     public void UpdatePendingQuestion(PendingQuestionRow question, int categoryNo, string text, IReadOnlyList<string> answers, string status, string? remark)
     {
         ValidateQuestion(categoryNo, text, answers);
@@ -490,6 +645,12 @@ internal sealed class AdminDatabase : IDisposable
             throw new InvalidOperationException("A kérdésszöveg nem lehet üres.");
         if (answers.Count != 4 || answers.Any(string.IsNullOrWhiteSpace))
             throw new InvalidOperationException("Pontosan négy nem üres válasz szükséges. Az első válasz a helyes.");
+    }
+
+    private static void ValidateReported(int reported)
+    {
+        if (reported < 0)
+            throw new InvalidOperationException("A Reported értéke nem lehet negatív.");
     }
 
     private DbConnection OpenApplicationConnection() => Open(_settings.ApplicationConnectionString);

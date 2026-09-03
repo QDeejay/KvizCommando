@@ -6,7 +6,7 @@ using Terminal.Gui;
 
 namespace KvizCommando.Admin;
 
-internal sealed class AdminMainWindow : Window
+internal sealed partial class AdminMainWindow : Window
 {
     private readonly AdminDatabase _database;
     private readonly bool _isProduction;
@@ -37,20 +37,22 @@ internal sealed class AdminMainWindow : Window
         var users = new Button("_Users") { X = 4, Y = 4, Width = 24 };
         var pending = new Button("_Pending questions") { X = 4, Y = 7, Width = 24 };
         var userQuestions = new Button("User _questions") { X = 4, Y = 10, Width = 24 };
-        var quit = new Button("_Kilépés") { X = 4, Y = _isProduction ? 23 : 17, Width = 24 };
+        var factoryQuestions = new Button("_Factory questions") { X = 4, Y = 13, Width = 24 };
+        var quit = new Button("_Kilépés") { X = 4, Y = _isProduction ? 26 : 20, Width = 24 };
 
         users.Clicked += OpenUsers;
         pending.Clicked += OpenPendingQuestions;
         userQuestions.Clicked += OpenUserQuestions;
+        factoryQuestions.Clicked += OpenFactoryQuestions;
         quit.Clicked += () => Application.RequestStop();
 
-        Add(environment, users, pending, userQuestions);
+        Add(environment, users, pending, userQuestions, factoryQuestions);
 
         if (_isProduction)
         {
-            var operations = new Button("_Operations") { X = 4, Y = 13, Width = 24 };
-            var logs = new Button("_Logs") { X = 4, Y = 16, Width = 24 };
-            var deploy = new Button("_Deploy") { X = 4, Y = 19, Width = 24 };
+            var operations = new Button("_Operations") { X = 4, Y = 16, Width = 24 };
+            var logs = new Button("_Logs") { X = 4, Y = 19, Width = 24 };
+            var deploy = new Button("_Deploy") { X = 4, Y = 22, Width = 24 };
             operations.Clicked += OpenOperations;
             logs.Clicked += OpenLogs;
             deploy.Clicked += OpenDeployments;
@@ -58,7 +60,7 @@ internal sealed class AdminMainWindow : Window
         }
         else
         {
-            var logs = new Button("_Logs") { X = 4, Y = 13, Width = 24 };
+            var logs = new Button("_Logs") { X = 4, Y = 16, Width = 24 };
             logs.Clicked += OpenLogs;
             Add(logs);
         }
