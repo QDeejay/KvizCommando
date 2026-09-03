@@ -73,31 +73,43 @@ internal sealed class DeploymentOperations
             ?? throw new InvalidDataException("A last-upload.json tartalma üres.");
 
         var application = GetTargetStatus(
+            manifest.UploadId,
             manifest.Application,
+            _database.GetApplicationMigrationExecution,
             _database.IsApplicationMigrationApplied);
         var game = GetTargetStatus(
+            manifest.UploadId,
             manifest.Game,
+            _database.GetGameMigrationExecution,
             _database.IsGameMigrationApplied);
 
-        return new MigrationSnapshot(manifest.UploadedAtUtc, application, game);
+        return new MigrationSnapshot(manifest.UploadId, manifest.UploadedAtUtc, application, game);
     }
 
     private static MigrationTargetState GetTargetStatus(
+        Guid uploadId,
         MigrationUploadTarget target,
+        Func<Guid, string, DateTimeOffset?> getExecution,
         Func<string, bool> isApplied)
     {
         if (!target.Required)
-            return new MigrationTargetState(false, null, null, MigrationExecutionState.NotRequired);
+            return new MigrationTargetState(false, null, null, MigrationExecutionState.NotRequired, null);
         if (string.IsNullOrWhiteSpace(target.Migration))
             throw new InvalidDataException("A kötelező migráció azonosítója hiányzik a last-upload.json fájlból.");
+
+        var appliedAtUtc = getExecution(uploadId, target.Migration);
+        var isLegacyApplied = uploadId == Guid.Empty &&
+                              !appliedAtUtc.HasValue &&
+                              isApplied(target.Migration);
 
         return new MigrationTargetState(
             true,
             target.Migration,
             target.File,
-            isApplied(target.Migration)
+            appliedAtUtc.HasValue || isLegacyApplied
                 ? MigrationExecutionState.Applied
-                : MigrationExecutionState.Pending);
+                : MigrationExecutionState.Pending,
+            appliedAtUtc);
     }
 
     private static ReleaseRow CreateRelease(
@@ -111,9 +123,8 @@ internal sealed class DeploymentOperations
         var deployedAtUtc = deployTimes.TryGetValue(id, out var loggedAt)
             ? loggedAt
             : new DateTimeOffset(directory.LastWriteTimeUtc, TimeSpan.Zero);
-        var hasMigrationRisk = migration is not null &&
-                               migration.HasAppliedMigration &&
-                               deployedAtUtc < migration.UploadedAtUtc;
+        var hasMigrationRisk = migration?.FirstAppliedAtUtc is { } appliedAtUtc &&
+                               deployedAtUtc < appliedAtUtc;
 
         return new ReleaseRow(
             id,
@@ -221,6 +232,7 @@ internal sealed class DeploymentOperations
     }
 
     private sealed record MigrationUploadManifest(
+        Guid UploadId,
         DateTimeOffset UploadedAtUtc,
         MigrationUploadTarget Application,
         MigrationUploadTarget Game);

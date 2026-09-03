@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using Terminal.Gui;
@@ -644,12 +645,14 @@ internal sealed class AdminMainWindow : Window
         var activate = new Button("_Aktiválás") { X = Pos.Right(refresh) + 2, Y = Pos.Top(refresh) };
         var delete = new Button("_Törlés") { X = Pos.Right(activate) + 2, Y = Pos.Top(refresh) };
         var log = new Button("Deploy _log") { X = Pos.Right(delete) + 2, Y = Pos.Top(refresh) };
-        var close = new Button("_Vissza") { X = Pos.Right(log) + 2, Y = Pos.Top(refresh) };
+        var migrationTracking = new Button("_Migráció DB") { X = Pos.Right(log) + 2, Y = Pos.Top(refresh) };
+        var close = new Button("_Vissza") { X = Pos.Right(migrationTracking) + 2, Y = Pos.Top(refresh) };
 
         refresh.Clicked += Refresh;
         activate.Clicked += ActivateSelected;
         delete.Clicked += DeleteSelected;
         log.Clicked += OpenDeployLog;
+        migrationTracking.Clicked += OpenMigrationTracking;
         close.Clicked += () => Application.RequestStop();
         BindListAction(list, ActivateSelected, 'a');
 
@@ -664,9 +667,161 @@ internal sealed class AdminMainWindow : Window
             activate,
             delete,
             log,
+            migrationTracking,
             close);
         Refresh();
         Application.Run(dialog);
+    }
+
+    private void OpenMigrationTracking()
+    {
+        var dialog = new Dialog("Migrációkövetés", 108, 18);
+        var hint = new Label("Az időpont helyi idő; az adatbázisban UTC-ként tárolódik.")
+        {
+            X = 2,
+            Y = 1,
+            Width = 100
+        };
+        var applicationState = new Label(string.Empty) { X = 2, Y = 4, Width = 100 };
+        var gameState = new Label(string.Empty) { X = 2, Y = 7, Width = 100 };
+
+        MigrationTrackingState? application = null;
+        MigrationTrackingState? game = null;
+
+        void Refresh()
+        {
+            try
+            {
+                application = _database.GetApplicationMigrationTracking();
+                game = _database.GetGameMigrationTracking();
+                applicationState.Text = $"Application: {application.DisplayText}";
+                gameState.Text = $"Game:        {game.DisplayText}";
+            }
+            catch (Exception exception)
+            {
+                ShowError(exception);
+            }
+        }
+
+        void Configure(
+            string databaseName,
+            MigrationTrackingState? state,
+            Action<DateTimeOffset> initialize,
+            Action<long, DateTimeOffset> update)
+        {
+            if (state is null)
+                return;
+
+            if (state.IsInitialized && !state.ExecutionId.HasValue)
+            {
+                MessageBox.Query(
+                    databaseName,
+                    "A követés inicializálva van, de még nincs rögzített migráció.",
+                    "OK");
+                return;
+            }
+
+            var title = state.IsInitialized
+                ? $"{databaseName} időpont módosítása"
+                : $"{databaseName} inicializálása";
+            var initialValue = state.AppliedAtUtc?.ToLocalTime() ?? DateTimeOffset.Now;
+            var entered = ReadLocalMigrationTime(title, initialValue);
+            if (!entered.HasValue)
+                return;
+
+            try
+            {
+                if (state.IsInitialized)
+                    update(state.ExecutionId!.Value, entered.Value);
+                else
+                    initialize(entered.Value);
+
+                Refresh();
+            }
+            catch (Exception exception)
+            {
+                ShowError(exception);
+            }
+        }
+
+        var applicationButton = new Button("_Application inicializálás / időpont")
+        {
+            X = 2,
+            Y = 10,
+            Width = 39
+        };
+        var gameButton = new Button("_Game inicializálás / időpont")
+        {
+            X = Pos.Right(applicationButton) + 2,
+            Y = Pos.Top(applicationButton),
+            Width = 34
+        };
+        var refresh = new Button("_Frissítés") { X = 2, Y = 13 };
+        var close = new Button("_Vissza") { X = Pos.Right(refresh) + 2, Y = Pos.Top(refresh) };
+
+        applicationButton.Clicked += () => Configure(
+            "Application",
+            application,
+            _database.InitializeApplicationMigrationTracking,
+            _database.UpdateApplicationMigrationExecution);
+        gameButton.Clicked += () => Configure(
+            "Game",
+            game,
+            _database.InitializeGameMigrationTracking,
+            _database.UpdateGameMigrationExecution);
+        refresh.Clicked += Refresh;
+        close.Clicked += () => Application.RequestStop();
+
+        dialog.Add(
+            hint,
+            applicationState,
+            gameState,
+            applicationButton,
+            gameButton,
+            refresh,
+            close);
+        Refresh();
+        Application.Run(dialog);
+    }
+
+    private static DateTimeOffset? ReadLocalMigrationTime(string title, DateTimeOffset initialValue)
+    {
+        var dialog = new Dialog(title, 68, 12);
+        var label = new Label("Helyi idő (yyyy-MM-dd HH:mm:ss):") { X = 2, Y = 2 };
+        var value = new TextField(initialValue.ToString("yyyy-MM-dd HH:mm:ss"))
+        {
+            X = 2,
+            Y = 4,
+            Width = 30
+        };
+        var save = new Button("_Mentés") { X = 2, Y = 7 };
+        var cancel = new Button("_Mégse") { X = Pos.Right(save) + 2, Y = Pos.Top(save) };
+        DateTimeOffset? result = null;
+
+        save.Clicked += () =>
+        {
+            if (!DateTime.TryParseExact(
+                    value.Text?.ToString(),
+                    "yyyy-MM-dd HH:mm:ss",
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out var localTime))
+            {
+                MessageBox.ErrorQuery("Hibás időpont", "A formátum: yyyy-MM-dd HH:mm:ss", "OK");
+                return;
+            }
+
+            result = new DateTimeOffset(
+                    DateTime.SpecifyKind(localTime, DateTimeKind.Local))
+                .ToUniversalTime();
+            Application.RequestStop();
+        };
+        cancel.Clicked += () => Application.RequestStop();
+
+        dialog.Add(label, value, save, cancel);
+        value.SetFocus();
+        Application.Run(dialog);
+        return result;
     }
 
     private void OpenLogs()

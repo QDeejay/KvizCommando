@@ -301,11 +301,171 @@ internal sealed class AdminDatabase : IDisposable
             throw new InvalidOperationException($"Forgot password kérés sikertelen: {(int)response.StatusCode} {response.ReasonPhrase}");
     }
 
+    public DateTimeOffset? GetApplicationMigrationExecution(Guid uploadId, string migrationId) =>
+        GetMigrationExecution(OpenApplicationConnection, uploadId, migrationId);
+
+    public DateTimeOffset? GetGameMigrationExecution(Guid uploadId, string migrationId) =>
+        GetMigrationExecution(OpenGameConnection, uploadId, migrationId);
+
     public bool IsApplicationMigrationApplied(string migrationId) =>
         IsMigrationApplied(OpenApplicationConnection, migrationId);
 
     public bool IsGameMigrationApplied(string migrationId) =>
         IsMigrationApplied(OpenGameConnection, migrationId);
+
+    public MigrationTrackingState GetApplicationMigrationTracking() =>
+        GetMigrationTracking(OpenApplicationConnection);
+
+    public MigrationTrackingState GetGameMigrationTracking() =>
+        GetMigrationTracking(OpenGameConnection);
+
+    public void InitializeApplicationMigrationTracking(DateTimeOffset appliedAtUtc) =>
+        InitializeMigrationTracking(OpenApplicationConnection, appliedAtUtc);
+
+    public void InitializeGameMigrationTracking(DateTimeOffset appliedAtUtc) =>
+        InitializeMigrationTracking(OpenGameConnection, appliedAtUtc);
+
+    public void UpdateApplicationMigrationExecution(long executionId, DateTimeOffset appliedAtUtc) =>
+        UpdateMigrationExecution(OpenApplicationConnection, executionId, appliedAtUtc);
+
+    public void UpdateGameMigrationExecution(long executionId, DateTimeOffset appliedAtUtc) =>
+        UpdateMigrationExecution(OpenGameConnection, executionId, appliedAtUtc);
+
+    private static DateTimeOffset? GetMigrationExecution(
+        Func<DbConnection> openConnection,
+        Guid uploadId,
+        string migrationId)
+    {
+        using var connection = openConnection();
+        if (!TableExists(connection, "kcops.MigrationExecutions"))
+            return null;
+
+        var sql = uploadId == Guid.Empty
+            ? """
+                SELECT TOP (1) AppliedAtUtc
+                FROM [kcops].[MigrationExecutions]
+                WHERE MigrationId = @migrationId
+                ORDER BY Id DESC;
+                """
+            : """
+                SELECT AppliedAtUtc
+                FROM [kcops].[MigrationExecutions]
+                WHERE UploadId = @uploadId AND MigrationId = @migrationId;
+                """;
+        using var command = CreateCommand(connection, sql);
+        AddParameter(command, "@uploadId", uploadId);
+        AddParameter(command, "@migrationId", migrationId);
+        var value = command.ExecuteScalar();
+        return value is null || value is DBNull
+            ? null
+            : AsUtc(Convert.ToDateTime(value));
+    }
+
+    private static MigrationTrackingState GetMigrationTracking(Func<DbConnection> openConnection)
+    {
+        using var connection = openConnection();
+        if (!TableExists(connection, "kcops.MigrationExecutions"))
+            return new MigrationTrackingState(false, null, null, null);
+
+        using var command = CreateCommand(connection, """
+            SELECT TOP (1) Id, MigrationId, AppliedAtUtc
+            FROM [kcops].[MigrationExecutions]
+            ORDER BY Id DESC;
+            """);
+        using var reader = command.ExecuteReader();
+        return !reader.Read()
+            ? new MigrationTrackingState(true, null, null, null)
+            : new MigrationTrackingState(
+                true,
+                reader.GetInt64(0),
+                reader.GetString(1),
+                AsUtc(reader.GetDateTime(2)));
+    }
+
+    private static void InitializeMigrationTracking(
+        Func<DbConnection> openConnection,
+        DateTimeOffset appliedAtUtc)
+    {
+        using var connection = openConnection();
+        if (TableExists(connection, "kcops.MigrationExecutions"))
+            throw new InvalidOperationException("A migrációkövetés már inicializálva van.");
+
+        using var transaction = connection.BeginTransaction();
+        using (var create = CreateCommand(connection, """
+            IF SCHEMA_ID(N'kcops') IS NULL
+                EXEC(N'CREATE SCHEMA [kcops]');
+
+            CREATE TABLE [kcops].[MigrationExecutions]
+            (
+                [Id] bigint IDENTITY(1,1) NOT NULL CONSTRAINT [PK_kcops_MigrationExecutions] PRIMARY KEY,
+                [UploadId] uniqueidentifier NOT NULL,
+                [MigrationId] nvarchar(150) NOT NULL,
+                [AppliedAtUtc] datetime2(7) NOT NULL,
+                CONSTRAINT [UQ_kcops_MigrationExecutions_UploadId] UNIQUE ([UploadId])
+            );
+            """, transaction))
+        {
+            create.ExecuteNonQuery();
+        }
+
+        var latestMigration = GetLatestEfMigration(connection, transaction);
+        if (latestMigration is not null)
+        {
+            using var seed = CreateCommand(connection, """
+                INSERT INTO [kcops].[MigrationExecutions] ([UploadId], [MigrationId], [AppliedAtUtc])
+                VALUES (@uploadId, @migrationId, @appliedAtUtc);
+                """, transaction);
+            AddParameter(seed, "@uploadId", Guid.NewGuid());
+            AddParameter(seed, "@migrationId", latestMigration);
+            AddParameter(seed, "@appliedAtUtc", appliedAtUtc.UtcDateTime);
+            seed.ExecuteNonQuery();
+        }
+
+        transaction.Commit();
+    }
+
+    private static void UpdateMigrationExecution(
+        Func<DbConnection> openConnection,
+        long executionId,
+        DateTimeOffset appliedAtUtc)
+    {
+        using var connection = openConnection();
+        using var command = CreateCommand(connection, """
+            UPDATE [kcops].[MigrationExecutions]
+            SET AppliedAtUtc = @appliedAtUtc
+            WHERE Id = @executionId;
+            """);
+        AddParameter(command, "@appliedAtUtc", appliedAtUtc.UtcDateTime);
+        AddParameter(command, "@executionId", executionId);
+        if (command.ExecuteNonQuery() != 1)
+            throw new InvalidOperationException("A migrációs végrehajtás nem található.");
+    }
+
+    private static string? GetLatestEfMigration(DbConnection connection, DbTransaction transaction)
+    {
+        if (!TableExists(connection, "dbo.__EFMigrationsHistory", transaction))
+            return null;
+
+        using var command = CreateCommand(connection, """
+            SELECT TOP (1) MigrationId
+            FROM [__EFMigrationsHistory]
+            ORDER BY MigrationId DESC;
+            """, transaction);
+        return command.ExecuteScalar() as string;
+    }
+
+    private static bool TableExists(
+        DbConnection connection,
+        string tableName,
+        DbTransaction? transaction = null)
+    {
+        using var command = CreateCommand(
+            connection,
+            "SELECT CASE WHEN OBJECT_ID(@tableName, N'U') IS NULL THEN 0 ELSE 1 END;",
+            transaction);
+        AddParameter(command, "@tableName", tableName);
+        return Convert.ToInt32(command.ExecuteScalar()) == 1;
+    }
 
     private static bool IsMigrationApplied(
         Func<DbConnection> openConnection,
@@ -318,6 +478,9 @@ internal sealed class AdminDatabase : IDisposable
         AddParameter(command, "@migrationId", migrationId);
         return Convert.ToInt32(command.ExecuteScalar()) > 0;
     }
+
+    private static DateTimeOffset AsUtc(DateTime value) =>
+        new(DateTime.SpecifyKind(value, DateTimeKind.Utc));
 
     private static void ValidateQuestion(int categoryNo, string text, IReadOnlyList<string> answers)
     {

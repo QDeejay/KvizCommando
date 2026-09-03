@@ -87,24 +87,31 @@ internal sealed record MigrationTargetState(
     bool Required,
     string? Migration,
     string? File,
-    MigrationExecutionState State)
+    MigrationExecutionState State,
+    DateTimeOffset? AppliedAtUtc)
 {
     public string DisplayText => State switch
     {
         MigrationExecutionState.NotRequired => "nem érintett",
-        MigrationExecutionState.Applied => $"végrehajtva ({Migration})",
+        MigrationExecutionState.Applied when AppliedAtUtc.HasValue =>
+            $"végrehajtva: {AppliedAtUtc.Value.ToLocalTime():yyyy-MM-dd HH:mm:ss} ({Migration})",
+        MigrationExecutionState.Applied => $"végrehajtva, időpont nincs ({Migration})",
         _ => $"feltöltve, nincs végrehajtva ({Migration})"
     };
 }
 
 internal sealed record MigrationSnapshot(
+    Guid UploadId,
     DateTimeOffset UploadedAtUtc,
     MigrationTargetState Application,
     MigrationTargetState Game)
 {
-    public bool HasAppliedMigration =>
-        Application.State == MigrationExecutionState.Applied ||
-        Game.State == MigrationExecutionState.Applied;
+    public DateTimeOffset? FirstAppliedAtUtc =>
+        new[] { Application.AppliedAtUtc, Game.AppliedAtUtc }
+            .Where(value => value.HasValue)
+            .Select(value => value!.Value)
+            .Cast<DateTimeOffset?>()
+            .Min();
 
     public string PackageState
     {
@@ -119,6 +126,19 @@ internal sealed record MigrationSnapshot(
                     : "RÉSZBEN VÉGREHAJTVA";
         }
     }
+}
+
+internal sealed record MigrationTrackingState(
+    bool IsInitialized,
+    long? ExecutionId,
+    string? MigrationId,
+    DateTimeOffset? AppliedAtUtc)
+{
+    public string DisplayText => !IsInitialized
+        ? "nincs inicializálva"
+        : MigrationId is null
+            ? "inicializálva, még nincs migráció"
+            : $"{MigrationId} — {AppliedAtUtc?.ToLocalTime():yyyy-MM-dd HH:mm:ss}";
 }
 
 internal sealed record ReleaseRow(
