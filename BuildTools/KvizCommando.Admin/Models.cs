@@ -59,8 +59,7 @@ internal sealed record FactoryQuestionRow(
     bool IsTip)
 {
     public override string ToString() =>
-        $"{Id,-8} {CategoryNo,-5} {PlayerId?.ToString() ?? "-",-9} " +
-        $"{Shorten(Question, 58),-58} {Shorten(AnswerData, 20)}";
+        $"{Id,-8} {CategoryNo,-5} {Shorten(Question, 53),-53} {Shorten(AnswerData, 20)}";
 
     private static string Shorten(string value, int maximumLength) =>
         value.Length <= maximumLength

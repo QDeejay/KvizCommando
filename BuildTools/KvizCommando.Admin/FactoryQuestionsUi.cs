@@ -5,6 +5,27 @@ namespace KvizCommando.Admin;
 
 internal sealed partial class AdminMainWindow
 {
+    private static readonly IReadOnlyDictionary<int, string> CATEGORY_SHORT_NAMES =
+        new Dictionary<int, string>
+        {
+            [1] = "<Val>",
+            [2] = "<Dat>",
+            [3] = "<Zen>",
+            [4] = "<Spo>",
+            [5] = "<Tec>",
+            [6] = "<Ter>",
+            [7] = "<H.E>",
+            [8] = "<Kép>",
+            [9] = "<Mit>",
+            [10] = "<Tör>",
+            [11] = "<Fil>",
+            [12] = "<Ját>",
+            [13] = "<Inf>",
+            [14] = "<FCS>",
+            [15] = "<Div>",
+            [16] = "<Iro>"
+        };
+
     private void OpenFactoryQuestions()
     {
         var dialog = new Dialog("Factory questions", 142, 39);
@@ -16,7 +37,7 @@ internal sealed partial class AdminMainWindow
         var search = new TextField(string.Empty) { X = 47, Y = 1, Width = 43 };
         var reportedOnly = new CheckBox("Reported", false) { X = 94, Y = 1 };
         var playerQuestionsOnly = new CheckBox("From user", false) { X = 110, Y = 1 };
-        var header = new Label("ID       Kat.  Player ID Kérdés                                                     Válaszok")
+        var header = new Label("ID       Kat.  Kérdés                                                Válaszok")
         {
             X = 25,
             Y = 3
@@ -61,7 +82,7 @@ internal sealed partial class AdminMainWindow
 
         AddCategoryControl(null, "Összes", 3);
         for (var category = 1; category <= 16; category++)
-            AddCategoryControl(category, category.ToString(), category + 3);
+            AddCategoryControl(category, CATEGORY_SHORT_NAMES[category], category + 3);
         AddCategoryControl(99, "Tipp", 20);
 
         var refresh = new Button("_Frissítés") { X = 25, Y = Pos.Bottom(list) + 1 };
@@ -96,7 +117,7 @@ internal sealed partial class AdminMainWindow
         void AddCategoryControl(int? categoryNo, string label, int y)
         {
             var marker = new Label(categoryNo == selectedCategory ? ">" : " ") { X = 0, Y = y };
-            var button = new Button(label) { X = 2, Y = y };
+            var button = new Button(label) { X = 2, Y = y, Width = 10 };
             var count = new Label(": 0") { X = 13, Y = y, Width = 11 };
             button.Clicked += () => SelectCategory(categoryNo);
             categoryControls.Add((categoryNo, marker, button, count));
@@ -114,7 +135,6 @@ internal sealed partial class AdminMainWindow
             out var category,
             out var text,
             out var answerFields);
-        dialog.Add(new Label($"Player ID: {row.PlayerId ?? 0}") { X = 2, Y = 20 });
         var reportedLabel = new Label("Reported:") { X = 2, Y = 22 };
         var reported = new TextField(row.Reported.ToString()) { X = 16, Y = 22, Width = 10 };
         var save = new Button("_Mentés") { X = 2, Y = 25 };
