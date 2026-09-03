@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace DatabaseMigrationTool;
@@ -120,12 +121,19 @@ internal sealed class MigrationWorkflow
 
     public async Task GenerateProductionScriptsAsync(bool upload)
     {
+        var selection = ReadProductionSelection();
+        if (selection is null)
+        {
+            Console.WriteLine("Production script generálás megszakítva.");
+            return;
+        }
+
         if (!await CheckEfPrerequisitesAsync())
         {
             return;
         }
 
-        var generatedScripts = await GenerateProductionScriptsInternalAsync();
+        var generatedScripts = await GenerateProductionScriptsInternalAsync(selection);
         if (generatedScripts is null)
         {
             return;
@@ -133,8 +141,8 @@ internal sealed class MigrationWorkflow
 
         Console.WriteLine();
         Console.WriteLine("Production SQL scripts generated:");
-        Console.WriteLine($"  {Path.GetRelativePath(_repoRoot, generatedScripts.ApplicationScript)}");
-        Console.WriteLine($"  {Path.GetRelativePath(_repoRoot, generatedScripts.GameScript)}");
+        foreach (var script in generatedScripts.Scripts)
+            Console.WriteLine($"  {Path.GetRelativePath(_repoRoot, script.FilePath)}");
 
         if (!upload)
         {
@@ -243,68 +251,66 @@ internal sealed class MigrationWorkflow
         return false;
     }
 
-    private async Task<GeneratedScripts?> GenerateProductionScriptsInternalAsync()
+    private async Task<GeneratedScripts?> GenerateProductionScriptsInternalAsync(
+        ProductionMigrationSelection selection)
     {
         var generatedAt = DateTime.Now;
         var timestamp = generatedAt.ToString("yyyyMMdd_HHmmss");
         var outputDirectory = Path.Combine(_repoRoot, "publish-linux", "migration");
         Directory.CreateDirectory(outputDirectory);
 
-        var applicationFinal = Path.Combine(outputDirectory, $"{timestamp}_application.sql");
-        var gameFinal = Path.Combine(outputDirectory, $"{timestamp}_game.sql");
-
-        if (File.Exists(applicationFinal) || File.Exists(gameFinal))
+        var targets = new List<ProductionScriptTarget>();
+        if (selection.ApplicationRequired)
         {
-            Console.WriteLine("Az adott másodperchez tartozó production SQL fájl már létezik. Futtasd újra a generálást.");
-            return null;
-        }
-
-        var applicationTemp = Path.Combine(outputDirectory, $".{timestamp}_application.tmp.sql");
-        var gameTemp = Path.Combine(outputDirectory, $".{timestamp}_game.tmp.sql");
-
-        try
-        {
-            Console.WriteLine("SQL Server Application production script generálása...");
-            var applicationResult = await GenerateScriptAsync(
+            targets.Add(new ProductionScriptTarget(
+                "application",
                 "SqlServerApplicationDbContext",
-                applicationTemp);
-
-            if (!applicationResult.Success)
-            {
-                Console.WriteLine("APPLICATION SCRIPT GENERATION FAILED. A folyamat leállt.");
-                return null;
-            }
-
-            Console.WriteLine("SQL Server Game production script generálása...");
-            var gameResult = await GenerateScriptAsync(
-                "SqlServerGameDbContext",
-                gameTemp);
-
-            if (!gameResult.Success)
-            {
-                Console.WriteLine("GAME SCRIPT GENERATION FAILED. A folyamat leállt.");
-                return null;
-            }
-
-            await WriteFinalScriptAsync(
-                applicationTemp,
-                applicationFinal,
-                generatedAt,
-                "SqlServerApplicationDbContext");
-
-            await WriteFinalScriptAsync(
-                gameTemp,
-                gameFinal,
-                generatedAt,
-                "SqlServerGameDbContext");
-
-            return new GeneratedScripts(applicationFinal, gameFinal);
+                "Data/Migrations/SqlServer/Application"));
         }
-        finally
+
+        if (selection.GameRequired)
         {
-            DeleteIfExists(applicationTemp);
-            DeleteIfExists(gameTemp);
+            targets.Add(new ProductionScriptTarget(
+                "game",
+                "SqlServerGameDbContext",
+                "Data/Migrations/SqlServer/Game"));
         }
+
+        var scripts = new List<GeneratedScript>();
+        foreach (var target in targets)
+        {
+            var finalPath = Path.Combine(outputDirectory, $"{timestamp}_{target.Key}.sql");
+            if (File.Exists(finalPath))
+            {
+                Console.WriteLine("Az adott másodperchez tartozó production SQL fájl már létezik. Futtasd újra a generálást.");
+                return null;
+            }
+
+            var tempPath = Path.Combine(outputDirectory, $".{timestamp}_{target.Key}.tmp.sql");
+            try
+            {
+                Console.WriteLine($"SQL Server {target.Key} production script generálása...");
+                var result = await GenerateScriptAsync(target.Context, tempPath);
+
+                if (!result.Success)
+                {
+                    Console.WriteLine($"{target.Key.ToUpperInvariant()} SCRIPT GENERATION FAILED. A folyamat leállt.");
+                    return null;
+                }
+
+                await WriteFinalScriptAsync(tempPath, finalPath, generatedAt, target.Context);
+                scripts.Add(new GeneratedScript(
+                    target.Key,
+                    finalPath,
+                    GetLatestMigrationId(target.MigrationDirectory)));
+            }
+            finally
+            {
+                DeleteIfExists(tempPath);
+            }
+        }
+
+        return new GeneratedScripts(scripts, selection);
     }
 
     private Task<CommandResult> GenerateScriptAsync(string context, string outputPath) =>
@@ -349,8 +355,7 @@ internal sealed class MigrationWorkflow
             arguments.Add(sshKey);
         }
 
-        arguments.Add(scripts.ApplicationScript);
-        arguments.Add(scripts.GameScript);
+        arguments.AddRange(scripts.Scripts.Select(script => script.FilePath));
         arguments.Add($"{sshTarget}:{PRODUCTION_UPLOAD_DIRECTORY}");
 
         Console.WriteLine();
@@ -363,9 +368,92 @@ internal sealed class MigrationWorkflow
             return;
         }
 
+        var manifestPath = await WriteUploadManifestAsync(scripts);
+        var manifestArguments = new List<string>();
+        if (!string.IsNullOrWhiteSpace(sshKey))
+        {
+            manifestArguments.Add("-i");
+            manifestArguments.Add(sshKey);
+        }
+        manifestArguments.Add(manifestPath);
+        manifestArguments.Add($"{sshTarget}:{PRODUCTION_UPLOAD_DIRECTORY}last-upload.json");
+
+        Console.WriteLine("Migration upload manifest feltöltése...");
+        var manifestUploadResult = await CommandRunner.RunAsync("scp", manifestArguments, _repoRoot);
+        if (!manifestUploadResult.Success)
+        {
+            Console.WriteLine("SQL UPLOAD OK, MANIFEST UPLOAD FAILED.");
+            Console.WriteLine("Az SQL fájlok a szerveren vannak, de az admin nem tudja ezt a feltöltést követni.");
+            return;
+        }
+
         Console.WriteLine($"Upload OK: {PRODUCTION_UPLOAD_DIRECTORY}");
         Console.WriteLine("NO PRODUCTION DATABASE CHANGES WERE EXECUTED.");
     }
+
+    private ProductionMigrationSelection? ReadProductionSelection()
+    {
+        Console.WriteLine("Melyik production adatbázist érinti a migráció?");
+        Console.WriteLine("[1] Application");
+        Console.WriteLine("[2] Game");
+        Console.WriteLine("[3] Application + Game");
+        Console.WriteLine("[0] Cancel");
+        Console.Write("Selection: ");
+
+        return Console.ReadLine()?.Trim() switch
+        {
+            "1" => new ProductionMigrationSelection(true, false),
+            "2" => new ProductionMigrationSelection(false, true),
+            "3" => new ProductionMigrationSelection(true, true),
+            _ => null
+        };
+    }
+
+    private string GetLatestMigrationId(string relativeDirectory)
+    {
+        var directory = Path.Combine(
+            _repoRoot,
+            "KvizCommando.Server",
+            relativeDirectory.Replace('/', Path.DirectorySeparatorChar));
+        var migration = Directory
+            .EnumerateFiles(directory, "*.cs", SearchOption.TopDirectoryOnly)
+            .Where(path => !path.EndsWith(".Designer.cs", StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.EndsWith("ModelSnapshot.cs", StringComparison.OrdinalIgnoreCase))
+            .OrderBy(path => Path.GetFileName(path), StringComparer.Ordinal)
+            .LastOrDefault();
+
+        return migration is null
+            ? throw new InvalidOperationException($"Nem található SQL Server migráció: {directory}")
+            : Path.GetFileNameWithoutExtension(migration);
+    }
+
+    private async Task<string> WriteUploadManifestAsync(GeneratedScripts scripts)
+    {
+        var application = scripts.Scripts.SingleOrDefault(script => script.Key == "application");
+        var game = scripts.Scripts.SingleOrDefault(script => script.Key == "game");
+        var manifest = new MigrationUploadManifest(
+            DateTimeOffset.UtcNow,
+            CreateManifestTarget(scripts.Selection.ApplicationRequired, application),
+            CreateManifestTarget(scripts.Selection.GameRequired, game));
+        var path = Path.Combine(_repoRoot, "publish-linux", "migration", "last-upload.json");
+        var json = JsonSerializer.Serialize(manifest, new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = true
+        });
+        await File.WriteAllTextAsync(
+            path,
+            json + Environment.NewLine,
+            new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        return path;
+    }
+
+    private static MigrationUploadTarget CreateManifestTarget(
+        bool required,
+        GeneratedScript? script) =>
+        required
+            ? new MigrationUploadTarget(true, script!.MigrationId, Path.GetFileName(script.FilePath))
+            : new MigrationUploadTarget(false, null, null);
 
     private async Task<bool> CheckEfPrerequisitesAsync()
     {
@@ -476,5 +564,31 @@ internal sealed class MigrationWorkflow
         string Context,
         string MigrationDirectory);
 
-    private sealed record GeneratedScripts(string ApplicationScript, string GameScript);
+    private sealed record ProductionMigrationSelection(
+        bool ApplicationRequired,
+        bool GameRequired);
+
+    private sealed record ProductionScriptTarget(
+        string Key,
+        string Context,
+        string MigrationDirectory);
+
+    private sealed record GeneratedScript(
+        string Key,
+        string FilePath,
+        string MigrationId);
+
+    private sealed record GeneratedScripts(
+        IReadOnlyList<GeneratedScript> Scripts,
+        ProductionMigrationSelection Selection);
+
+    private sealed record MigrationUploadManifest(
+        DateTimeOffset UploadedAtUtc,
+        MigrationUploadTarget Application,
+        MigrationUploadTarget Game);
+
+    private sealed record MigrationUploadTarget(
+        bool Required,
+        string? Migration,
+        string? File);
 }
