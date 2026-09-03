@@ -21,7 +21,7 @@
     opacity: 1;
     padding: 2px;
     width: 520px;
-    height: 580px;
+    height: 570px;
     position: relative;
     align-items: center;
 }
@@ -49,6 +49,8 @@
 
 .kc-start-logo {
     display: flex;
+    position:absolute;
+    top:0;
     width: 500px;
     height: auto;
     border-radius: 12px;
@@ -62,14 +64,9 @@
     padding:5px;
 }
 
-.kc-start-login-panel {
-    display:flex;
-    position:relative;
-    flex-direction:column;
-    top:-30px;
-    padding:10px;
-    width:85%;
-}
+.kc-start-login-panel { display: flex; position: absolute;
+                        bottom:0;
+                        flex-direction: column; padding: 10px; width: 85%; }
 
 .kc-start-login-panel--head {
     text-align: center;
@@ -80,16 +77,17 @@
     justify-content: center;
 }
 
-@media (max-width: 520px), (max-height: 700px) {
+@media (max-width: 680px), (max-height: 700px) {
     .kc-start-layout {
         align-items: start;
         top: 70px;
     }
     .kc-start-main-container {
         width: 260px;
-        height: 480px;
+        height: 460px;
     }
     .kc-start-logo {
+        top:10px;
         width: 380px;
     }
 
