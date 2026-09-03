@@ -7,7 +7,11 @@
   "Error.EmptyFields": "Fill up all fields",
   "Error.Login": "Invalid login details or your email address is not verified!",
   "ForgotPassword": "Forgot password",
+  "InvitationOnly.Apply": "Apply",
+  "InvitationOnly.Period": "Daily test period:",
+  "InvitationOnly.Title": "Closed invitation-only test",
   "Label.Providers": "Other login providers:",
+  "Start.Slogan": "A battle where knowledge is your only weapon",
   "Title": "Login",
   "Title2": "Enter password"
 }

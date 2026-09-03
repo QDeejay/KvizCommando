@@ -18,6 +18,8 @@ namespace KvizCommando.Shared.Contracts.Auth
         public bool RequireConfirmedAccount { get; set; }
         public bool RegistrationEnabled { get; set; } = true;
         public bool FacebookLoginEnabled { get; set; }
+        public string InvitationTestPeriod { get; set; } = string.Empty;
+        public string SupportEmail { get; set; } = string.Empty;
 
         // Alkalmazásspecifikus szabályok
         public int DisplayNameMaxLength { get; set; }

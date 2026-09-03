@@ -77,6 +77,22 @@
         
     }
 
+.kc-invitation-test-notice {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    margin-top: 10px;
+    color: #cccccc;
+    font-family: 'Courier New', monospace;
+    font-size: 0.82rem;
+    text-align: center;
+}
+
+.kc-invitation-test-notice strong {
+    color: #ffe14d;
+}
+
         .kc-login-links-row .divider {
             color: #888;
             font-weight: bold;

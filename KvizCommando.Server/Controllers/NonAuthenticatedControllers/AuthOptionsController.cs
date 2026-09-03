@@ -54,6 +54,9 @@ public class AuthOptionsController : ControllerBase
                 _configuration),
             FacebookLoginEnabled = IdentityConfiguration.IsFacebookLoginEnabled(
                 _configuration),
+            InvitationTestPeriod = IdentityConfiguration.GetInvitationTestPeriod(
+                _configuration),
+            SupportEmail = _configuration["App:SupportEmail"] ?? string.Empty,
 
             DisplayNameMaxLength = CheckInValidationOptions.DISPLAY_NAME_MAX_LENGTH,
             DisplayNameMinLength = CheckInValidationOptions.DISPLAY_NAME_MIN_LENGTH,

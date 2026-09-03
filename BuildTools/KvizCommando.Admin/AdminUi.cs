@@ -399,7 +399,7 @@ internal sealed class AdminMainWindow : Window
 
     private void OpenOperations()
     {
-        var dialog = new Dialog("Operations", 104, 30);
+        var dialog = new Dialog("Operations", 104, 36);
 
         var serverState = new Label(string.Empty) { X = 2, Y = 2, Width = 90 };
         var serverStart = new Button("_Start server") { X = 2, Y = 4 };
@@ -414,12 +414,16 @@ internal sealed class AdminMainWindow : Window
         var registrationOn = new Button("Registration _ON") { X = 2, Y = 16 };
         var registrationOff = new Button("Registration O_FF") { X = 24, Y = 16 };
 
-        var facebookState = new Label(string.Empty) { X = 2, Y = 20, Width = 90 };
-        var facebookOn = new Button("Facebook O_N") { X = 2, Y = 22 };
-        var facebookOff = new Button("Facebook OF_F") { X = 24, Y = 22 };
+        var testPeriodLabel = new Label("Tesztidőszak:") { X = 2, Y = 20 };
+        var testPeriod = new TextField(string.Empty) { X = 18, Y = 20, Width = 45 };
+        var saveTestPeriod = new Button("_Mentés") { X = 66, Y = 20 };
 
-        var refresh = new Button("_Frissítés") { X = 2, Y = 26 };
-        var close = new Button("_Vissza") { X = 20, Y = 26 };
+        var facebookState = new Label(string.Empty) { X = 2, Y = 24, Width = 90 };
+        var facebookOn = new Button("Facebook O_N") { X = 2, Y = 26 };
+        var facebookOff = new Button("Facebook OF_F") { X = 24, Y = 26 };
+
+        var refresh = new Button("_Frissítés") { X = 2, Y = 30 };
+        var close = new Button("_Vissza") { X = 20, Y = 30 };
 
         void RefreshState()
         {
@@ -430,6 +434,7 @@ internal sealed class AdminMainWindow : Window
                 var auth = ProductionOperations.GetPublicAuthState();
                 registrationState.Text = $"Registration: {(auth.RegistrationEnabled ? "ON" : "OFF")}";
                 facebookState.Text = $"Facebook Login: {(auth.FacebookLoginEnabled ? "ON" : "OFF")}";
+                testPeriod.Text = auth.InvitationTestPeriod;
             }
             catch (Exception ex)
             {
@@ -457,6 +462,7 @@ internal sealed class AdminMainWindow : Window
         siteMaintenance.Clicked += () => Execute(ProductionOperations.SetSiteMaintenance);
         registrationOn.Clicked += () => Execute(() => ProductionOperations.SetRegistrationEnabled(true));
         registrationOff.Clicked += () => Execute(() => ProductionOperations.SetRegistrationEnabled(false));
+        saveTestPeriod.Clicked += () => Execute(() => ProductionOperations.SetInvitationTestPeriod(testPeriod.Text?.ToString() ?? string.Empty));
         facebookOn.Clicked += () => Execute(() => ProductionOperations.SetFacebookLoginEnabled(true));
         facebookOff.Clicked += () => Execute(() => ProductionOperations.SetFacebookLoginEnabled(false));
         refresh.Clicked += RefreshState;
@@ -466,6 +472,7 @@ internal sealed class AdminMainWindow : Window
             serverState, serverStart, serverStop, serverRestart,
             siteState, siteOnline, siteMaintenance,
             registrationState, registrationOn, registrationOff,
+            testPeriodLabel, testPeriod, saveTestPeriod,
             facebookState, facebookOn, facebookOff,
             refresh, close);
         RefreshState();

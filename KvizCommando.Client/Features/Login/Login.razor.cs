@@ -41,6 +41,9 @@ namespace KvizCommando.Client.Features.Login
                               && !string.IsNullOrWhiteSpace(_loginForm.Password);
         private bool RegistrationEnabled => _options?.RegistrationEnabled == true;
         private bool FacebookLoginEnabled => _options?.FacebookLoginEnabled == true;
+        private string InvitationTestPeriod => _options?.InvitationTestPeriod ?? string.Empty;
+        private string ApplicationEmailHref =>
+            $"mailto:{_options?.SupportEmail ?? string.Empty}";
 
         private async Task OnSwitchPass(bool viaEnter)
         {

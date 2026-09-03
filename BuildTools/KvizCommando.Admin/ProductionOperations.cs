@@ -4,7 +4,10 @@ using System.Text.Json.Nodes;
 
 namespace KvizCommando.Admin;
 
-internal sealed record PublicAuthState(bool RegistrationEnabled, bool FacebookLoginEnabled);
+internal sealed record PublicAuthState(
+    bool RegistrationEnabled,
+    bool FacebookLoginEnabled,
+    string InvitationTestPeriod);
 
 internal static class ProductionOperations
 {
@@ -20,7 +23,8 @@ internal static class ProductionOperations
 
         return new PublicAuthState(
             publicAuth?["RegistrationEnabled"]?.GetValue<bool>() ?? false,
-            publicAuth?["FacebookLoginEnabled"]?.GetValue<bool>() ?? false);
+            publicAuth?["FacebookLoginEnabled"]?.GetValue<bool>() ?? false,
+            publicAuth?["InvitationTestPeriod"]?.GetValue<string>() ?? "16:00 - 20:00");
     }
 
     public static void SetRegistrationEnabled(bool enabled) =>
@@ -28,6 +32,9 @@ internal static class ProductionOperations
 
     public static void SetFacebookLoginEnabled(bool enabled) =>
         UpdatePublicAuth("FacebookLoginEnabled", enabled);
+
+    public static void SetInvitationTestPeriod(string value) =>
+        UpdatePublicAuth("InvitationTestPeriod", value);
 
     public static string GetSiteMode()
     {
@@ -46,6 +53,16 @@ internal static class ProductionOperations
 
     private static void UpdatePublicAuth(string propertyName, bool enabled)
     {
+        UpdatePublicAuth(propertyName, JsonValue.Create(enabled));
+    }
+
+    private static void UpdatePublicAuth(string propertyName, string value)
+    {
+        UpdatePublicAuth(propertyName, JsonValue.Create(value));
+    }
+
+    private static void UpdatePublicAuth(string propertyName, JsonNode? value)
+    {
         EnsureLinux();
         var root = LoadOperations();
         var publicAuth = root["PublicAuth"] as JsonObject;
@@ -55,7 +72,7 @@ internal static class ProductionOperations
             root["PublicAuth"] = publicAuth;
         }
 
-        publicAuth[propertyName] = enabled;
+        publicAuth[propertyName] = value;
 
         var tempPath = OPERATIONS_PATH + ".tmp";
         File.WriteAllText(tempPath, root.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));

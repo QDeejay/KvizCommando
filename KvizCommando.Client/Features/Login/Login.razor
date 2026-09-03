@@ -101,7 +101,19 @@
                     <span class="divider">/</span>
                     <a href="/register" class="kc-login-link">@Ui.Lang["login.ButtonLink"]</a>
                 }
+                else
+                {
+                    <span class="divider">/</span>
+                    <a href="@ApplicationEmailHref" class="kc-login-link">@Ui.Lang["login.InvitationOnly.Apply"]</a>
+                }
             </div>
+            @if (!RegistrationEnabled)
+            {
+                <div class="kc-invitation-test-notice">
+                    <strong>@Ui.Lang["login.InvitationOnly.Title"]</strong>
+                    <span>@Ui.Lang["login.InvitationOnly.Period"] @InvitationTestPeriod</span>
+                </div>
+            }
             <hr/>
     </div>
 </div>

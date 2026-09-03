@@ -8,6 +8,7 @@ public static class IdentityConfiguration
 {
     public const string REGISTRATION_ENABLED_KEY = "PublicAuth:RegistrationEnabled";
     public const string FACEBOOK_LOGIN_ENABLED_KEY = "PublicAuth:FacebookLoginEnabled";
+    public const string INVITATION_TEST_PERIOD_KEY = "PublicAuth:InvitationTestPeriod";
     public const string LEGACY_FACEBOOK_LOGIN_ENABLED_KEY = "Authentication:Facebook:Enabled";
 
     /// <summary>
@@ -15,6 +16,12 @@ public static class IdentityConfiguration
     /// </summary>
     public static bool IsRegistrationEnabled(IConfiguration configuration) =>
         configuration.GetValue<bool>(REGISTRATION_ENABLED_KEY);
+
+    /// <summary>
+    /// Returns the display-only test period configured for invitation-only operation.
+    /// </summary>
+    public static string GetInvitationTestPeriod(IConfiguration configuration) =>
+        configuration[INVITATION_TEST_PERIOD_KEY] ?? string.Empty;
 
     /// <summary>
     /// Returns whether Facebook login is enabled.
