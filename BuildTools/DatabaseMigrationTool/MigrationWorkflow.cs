@@ -255,6 +255,7 @@ internal sealed class MigrationWorkflow
         ProductionMigrationSelection selection)
     {
         var generatedAt = DateTime.Now;
+        var uploadId = Guid.NewGuid();
         var timestamp = generatedAt.ToString("yyyyMMdd_HHmmss");
         var outputDirectory = Path.Combine(_repoRoot, "publish-linux", "migration");
         Directory.CreateDirectory(outputDirectory);
@@ -298,11 +299,18 @@ internal sealed class MigrationWorkflow
                     return null;
                 }
 
-                await WriteFinalScriptAsync(tempPath, finalPath, generatedAt, target.Context);
+                var migrationId = GetLatestMigrationId(target.MigrationDirectory);
+                await WriteFinalScriptAsync(
+                    tempPath,
+                    finalPath,
+                    generatedAt,
+                    target.Context,
+                    uploadId,
+                    migrationId);
                 scripts.Add(new GeneratedScript(
                     target.Key,
                     finalPath,
-                    GetLatestMigrationId(target.MigrationDirectory)));
+                    migrationId));
             }
             finally
             {
@@ -310,7 +318,7 @@ internal sealed class MigrationWorkflow
             }
         }
 
-        return new GeneratedScripts(scripts, selection);
+        return new GeneratedScripts(uploadId, scripts, selection);
     }
 
     private Task<CommandResult> GenerateScriptAsync(string context, string outputPath) =>
@@ -432,6 +440,7 @@ internal sealed class MigrationWorkflow
         var application = scripts.Scripts.SingleOrDefault(script => script.Key == "application");
         var game = scripts.Scripts.SingleOrDefault(script => script.Key == "game");
         var manifest = new MigrationUploadManifest(
+            scripts.UploadId,
             DateTimeOffset.UtcNow,
             CreateManifestTarget(scripts.Selection.ApplicationRequired, application),
             CreateManifestTarget(scripts.Selection.GameRequired, game));
@@ -536,19 +545,44 @@ internal sealed class MigrationWorkflow
         string sourcePath,
         string destinationPath,
         DateTime generatedAt,
-        string context)
+        string context,
+        Guid uploadId,
+        string migrationId)
     {
         var sql = await File.ReadAllTextAsync(sourcePath);
         var header =
             $"-- KvizCommando production database migration{Environment.NewLine}" +
             $"-- Generated: {generatedAt:yyyy-MM-dd HH:mm:ss}{Environment.NewLine}" +
-            $"-- Context: {context}{Environment.NewLine}{Environment.NewLine}";
+            $"-- Context: {context}{Environment.NewLine}" +
+            $"-- Upload ID: {uploadId:D}{Environment.NewLine}" +
+            $"-- Target migration: {migrationId}{Environment.NewLine}{Environment.NewLine}" +
+            $":ON ERROR EXIT{Environment.NewLine}{Environment.NewLine}" +
+            $"IF OBJECT_ID(N'[kcops].[MigrationExecutions]', N'U') IS NULL{Environment.NewLine}" +
+            $"BEGIN{Environment.NewLine}" +
+            $"    THROW 51000, 'Migration tracking is not initialized. Initialize it from the Admin application.', 1;{Environment.NewLine}" +
+            $"END;{Environment.NewLine}" +
+            $"GO{Environment.NewLine}{Environment.NewLine}";
+
+        var footer =
+            $"{Environment.NewLine}{Environment.NewLine}" +
+            $"IF NOT EXISTS (SELECT 1 FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'{EscapeSqlLiteral(migrationId)}'){Environment.NewLine}" +
+            $"BEGIN{Environment.NewLine}" +
+            $"    THROW 51001, 'The target migration was not applied; execution was not recorded.', 1;{Environment.NewLine}" +
+            $"END;{Environment.NewLine}{Environment.NewLine}" +
+            $"IF NOT EXISTS (SELECT 1 FROM [kcops].[MigrationExecutions] WHERE [UploadId] = '{uploadId:D}'){Environment.NewLine}" +
+            $"BEGIN{Environment.NewLine}" +
+            $"    INSERT INTO [kcops].[MigrationExecutions] ([UploadId], [MigrationId], [AppliedAtUtc]){Environment.NewLine}" +
+            $"    VALUES ('{uploadId:D}', N'{EscapeSqlLiteral(migrationId)}', SYSUTCDATETIME());{Environment.NewLine}" +
+            $"END;{Environment.NewLine}" +
+            $"GO{Environment.NewLine}";
 
         await File.WriteAllTextAsync(
             destinationPath,
-            header + sql,
+            header + sql + footer,
             new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
     }
+
+    private static string EscapeSqlLiteral(string value) => value.Replace("'", "''");
 
     private static void DeleteIfExists(string path)
     {
@@ -579,10 +613,12 @@ internal sealed class MigrationWorkflow
         string MigrationId);
 
     private sealed record GeneratedScripts(
+        Guid UploadId,
         IReadOnlyList<GeneratedScript> Scripts,
         ProductionMigrationSelection Selection);
 
     private sealed record MigrationUploadManifest(
+        Guid UploadId,
         DateTimeOffset UploadedAtUtc,
         MigrationUploadTarget Application,
         MigrationUploadTarget Game);
