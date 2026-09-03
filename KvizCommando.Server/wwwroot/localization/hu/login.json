@@ -7,12 +7,8 @@
   "Error.EmptyFields": "Töltsd ki az összes mezőt!",
   "Error.Login": "Hibás belépési adataok vagy nincs ellenőrizve az e-mail cím!",
   "ForgotPassword": "Elfelejtett jelszó",
-  "InvitationOnly.Apply": "Jelentkezem",
   "InvitationOnly.EmailSubject": "Jelentkezés a Kvíz Commando zárt tesztjére",
-  "InvitationOnly.Period": "Napi tesztidőszak:",
-  "InvitationOnly.Title": "Zárt, meghívásos tesztüzem",
   "Label.Providers": "Egyéb lehetőségek:",
-  "Start.Slogan": "Egy harc, ahol a tudás az egyetlen fegyvered",
   "Title": "Bejelentkezés",
   "Title2": "Jelszó megadása"
 }

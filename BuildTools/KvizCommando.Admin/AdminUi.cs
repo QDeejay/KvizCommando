@@ -833,7 +833,7 @@ internal sealed class AdminMainWindow : Window
         audit.Clicked += () => OpenAuditFiles();
         close.Clicked += () => Application.RequestStop();
 
-        dialog.Add(audit, close);
+        dialog.Add(audit);
 
         if (_isProduction)
         {
@@ -843,7 +843,7 @@ internal sealed class AdminMainWindow : Window
             deploy.Clicked += OpenDeployLog;
             dialog.Add(server, deploy);
         }
-
+        dialog.Add(close);
         Application.Run(dialog);
     }
 
