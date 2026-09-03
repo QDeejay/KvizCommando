@@ -301,6 +301,24 @@ internal sealed class AdminDatabase : IDisposable
             throw new InvalidOperationException($"Forgot password kérés sikertelen: {(int)response.StatusCode} {response.ReasonPhrase}");
     }
 
+    public bool IsApplicationMigrationApplied(string migrationId) =>
+        IsMigrationApplied(OpenApplicationConnection, migrationId);
+
+    public bool IsGameMigrationApplied(string migrationId) =>
+        IsMigrationApplied(OpenGameConnection, migrationId);
+
+    private static bool IsMigrationApplied(
+        Func<DbConnection> openConnection,
+        string migrationId)
+    {
+        using var connection = openConnection();
+        using var command = CreateCommand(
+            connection,
+            "SELECT COUNT(*) FROM [__EFMigrationsHistory] WHERE [MigrationId] = @migrationId;");
+        AddParameter(command, "@migrationId", migrationId);
+        return Convert.ToInt32(command.ExecuteScalar()) > 0;
+    }
+
     private static void ValidateQuestion(int categoryNo, string text, IReadOnlyList<string> answers)
     {
         if (categoryNo is < 1 or > 16)

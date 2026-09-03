@@ -10,6 +10,7 @@ internal sealed class AdminMainWindow : Window
     private readonly AdminDatabase _database;
     private readonly bool _isProduction;
     private readonly AuditLogOperations _auditLogs;
+    private readonly DeploymentOperations? _deployments;
 
     public AdminMainWindow(
         AdminDatabase database,
@@ -20,6 +21,7 @@ internal sealed class AdminMainWindow : Window
         _database = database;
         _isProduction = isProduction;
         _auditLogs = new AuditLogOperations(auditOutputRoot);
+        _deployments = isProduction ? new DeploymentOperations(database) : null;
         X = 0;
         Y = 0;
         Width = Dim.Fill();
@@ -34,7 +36,7 @@ internal sealed class AdminMainWindow : Window
         var users = new Button("_Users") { X = 4, Y = 4, Width = 24 };
         var pending = new Button("_Pending questions") { X = 4, Y = 7, Width = 24 };
         var userQuestions = new Button("User _questions") { X = 4, Y = 10, Width = 24 };
-        var quit = new Button("_Kilépés") { X = 4, Y = _isProduction ? 20 : 17, Width = 24 };
+        var quit = new Button("_Kilépés") { X = 4, Y = _isProduction ? 23 : 17, Width = 24 };
 
         users.Clicked += OpenUsers;
         pending.Clicked += OpenPendingQuestions;
@@ -47,9 +49,11 @@ internal sealed class AdminMainWindow : Window
         {
             var operations = new Button("_Operations") { X = 4, Y = 13, Width = 24 };
             var logs = new Button("_Logs") { X = 4, Y = 16, Width = 24 };
+            var deploy = new Button("_Deploy") { X = 4, Y = 19, Width = 24 };
             operations.Clicked += OpenOperations;
             logs.Clicked += OpenLogs;
-            Add(operations, logs);
+            deploy.Clicked += OpenDeployments;
+            Add(operations, logs, deploy);
         }
         else
         {
@@ -88,13 +92,14 @@ internal sealed class AdminMainWindow : Window
         var close = new Button("_Vissza") { X = Pos.Right(create) + 2, Y = Pos.Top(refresh) };
 
         refresh.Clicked += Refresh;
-        open.Clicked += () =>
+        void OpenSelected()
         {
             if (rows.Count == 0 || list.SelectedItem < 0 || list.SelectedItem >= rows.Count)
                 return;
             OpenUserEditor(rows[list.SelectedItem]);
             Refresh();
-        };
+        }
+        open.Clicked += OpenSelected;
         audit.Clicked += () =>
         {
             if (rows.Count == 0 || list.SelectedItem < 0 || list.SelectedItem >= rows.Count)
@@ -109,6 +114,7 @@ internal sealed class AdminMainWindow : Window
             Refresh();
         };
         close.Clicked += () => Application.RequestStop();
+        BindListAction(list, OpenSelected, 'm');
 
         dialog.Add(searchLabel, search, list, refresh, open, audit, create, close);
         Refresh();
@@ -251,14 +257,16 @@ internal sealed class AdminMainWindow : Window
         var close = new Button("_Vissza") { X = Pos.Right(open) + 2, Y = Pos.Top(refresh) };
 
         refresh.Clicked += Refresh;
-        open.Clicked += () =>
+        void OpenSelected()
         {
             if (rows.Count == 0 || list.SelectedItem < 0 || list.SelectedItem >= rows.Count)
                 return;
             OpenPendingEditor(rows[list.SelectedItem]);
             Refresh();
-        };
+        }
+        open.Clicked += OpenSelected;
         close.Clicked += () => Application.RequestStop();
+        BindListAction(list, OpenSelected, 's');
 
         dialog.Add(list, refresh, open, close);
         Refresh();
@@ -331,14 +339,16 @@ internal sealed class AdminMainWindow : Window
         var close = new Button("_Vissza") { X = Pos.Right(open) + 2, Y = Pos.Top(refresh) };
 
         refresh.Clicked += Refresh;
-        open.Clicked += () =>
+        void OpenSelected()
         {
             if (rows.Count == 0 || list.SelectedItem < 0 || list.SelectedItem >= rows.Count)
                 return;
             OpenUserQuestionEditor(rows[list.SelectedItem]);
             Refresh();
-        };
+        }
+        open.Clicked += OpenSelected;
         close.Clicked += () => Application.RequestStop();
+        BindListAction(list, OpenSelected, 's');
 
         dialog.Add(list, refresh, open, close);
         Refresh();
@@ -499,6 +509,166 @@ internal sealed class AdminMainWindow : Window
         Application.Run(dialog);
     }
 
+    private void OpenDeployments()
+    {
+        if (_deployments is null)
+            return;
+
+        var dialog = new Dialog("Deploy / release-ek", 124, 39);
+        var serverState = new Label(string.Empty) { X = 2, Y = 1, Width = 116 };
+        var migrationState = new Label(string.Empty) { X = 2, Y = 3, Width = 116 };
+        var applicationState = new Label(string.Empty) { X = 2, Y = 4, Width = 116 };
+        var gameState = new Label(string.Empty) { X = 2, Y = 5, Width = 116 };
+        var warning = new Label("⚠ A jelölés csak rollback-kockázatot jelez; a release-váltást nem tiltja.")
+        {
+            X = 2,
+            Y = 7,
+            Width = 116
+        };
+        var list = new ListView
+        {
+            X = 2,
+            Y = 9,
+            Width = Dim.Fill(2),
+            Height = Dim.Fill(5)
+        };
+
+        DeploymentSnapshot? snapshot = null;
+
+        void Refresh()
+        {
+            try
+            {
+                snapshot = _deployments.GetSnapshot();
+                serverState.Text = $"KvizCommando.Server: {snapshot.ServerState}";
+                if (snapshot.Migration is null)
+                {
+                    migrationState.Text = "Utolsó SQL migrációs feltöltés: nincs nyilvántartott manifest";
+                    applicationState.Text = "Application: -";
+                    gameState.Text = "Game: -";
+                }
+                else
+                {
+                    migrationState.Text =
+                        $"Utolsó SQL migrációs feltöltés: {snapshot.Migration.UploadedAtUtc.ToLocalTime():yyyy-MM-dd HH:mm:ss}   " +
+                        $"Állapot: {snapshot.Migration.PackageState}";
+                    applicationState.Text = $"Application: {snapshot.Migration.Application.DisplayText}";
+                    gameState.Text = $"Game:        {snapshot.Migration.Game.DisplayText}";
+                }
+
+                list.SetSource(snapshot.Releases.Select(release => release.ToString()).ToList());
+            }
+            catch (Exception exception)
+            {
+                ShowError(exception);
+            }
+        }
+
+        ReleaseRow? GetSelected()
+        {
+            if (snapshot is null ||
+                list.SelectedItem < 0 ||
+                list.SelectedItem >= snapshot.Releases.Count)
+            {
+                return null;
+            }
+
+            return snapshot.Releases[list.SelectedItem];
+        }
+
+        void ActivateSelected()
+        {
+            var release = GetSelected();
+            if (release is null)
+                return;
+            if (release.IsActive)
+            {
+                MessageBox.Query("Release", "A kiválasztott release már aktív.", "OK");
+                return;
+            }
+
+            var risk = release.HasMigrationRisk
+                ? "\n\nFIGYELEM: ez a release az utolsó végrehajtott migrációs feltöltés előtti."
+                : string.Empty;
+            if (MessageBox.Query(
+                    "Release aktiválása",
+                    $"Aktiválod ezt a release-t?\n{release.Id}{risk}\n\nA szerver nem indul el automatikusan.",
+                    "NEM",
+                    "IGEN") != 1)
+            {
+                return;
+            }
+
+            try
+            {
+                _deployments.ActivateRelease(release);
+                Refresh();
+            }
+            catch (Exception exception)
+            {
+                ShowError(exception);
+            }
+        }
+
+        void DeleteSelected()
+        {
+            var release = GetSelected();
+            if (release is null)
+                return;
+            if (release.IsActive)
+            {
+                MessageBox.Query("Release törlése", "Az aktív release nem törölhető.", "OK");
+                return;
+            }
+            if (MessageBox.Query(
+                    "Release törlése",
+                    $"Végleg törlöd ezt az inaktív release-t?\n{release.Id}",
+                    "NEM",
+                    "IGEN") != 1)
+            {
+                return;
+            }
+
+            try
+            {
+                _deployments.DeleteRelease(release);
+                Refresh();
+            }
+            catch (Exception exception)
+            {
+                ShowError(exception);
+            }
+        }
+
+        var refresh = new Button("_Frissítés") { X = 2, Y = Pos.Bottom(list) + 1 };
+        var activate = new Button("_Aktiválás") { X = Pos.Right(refresh) + 2, Y = Pos.Top(refresh) };
+        var delete = new Button("_Törlés") { X = Pos.Right(activate) + 2, Y = Pos.Top(refresh) };
+        var log = new Button("Deploy _log") { X = Pos.Right(delete) + 2, Y = Pos.Top(refresh) };
+        var close = new Button("_Vissza") { X = Pos.Right(log) + 2, Y = Pos.Top(refresh) };
+
+        refresh.Clicked += Refresh;
+        activate.Clicked += ActivateSelected;
+        delete.Clicked += DeleteSelected;
+        log.Clicked += OpenDeployLog;
+        close.Clicked += () => Application.RequestStop();
+        BindListAction(list, ActivateSelected, 'a');
+
+        dialog.Add(
+            serverState,
+            migrationState,
+            applicationState,
+            gameState,
+            warning,
+            list,
+            refresh,
+            activate,
+            delete,
+            log,
+            close);
+        Refresh();
+        Application.Run(dialog);
+    }
+
     private void OpenLogs()
     {
         var dialog = new Dialog("Logs", 70, _isProduction ? 20 : 12);
@@ -567,6 +737,7 @@ internal sealed class AdminMainWindow : Window
         refresh.Clicked += Refresh;
         open.Clicked += OpenSelected;
         close.Clicked += () => Application.RequestStop();
+        BindListAction(list, OpenSelected, 'm');
 
         dialog.Add(heading, list, refresh, open, close);
         Refresh();
@@ -605,14 +776,16 @@ internal sealed class AdminMainWindow : Window
         var details = new Button("_Részletek") { X = 1, Y = Pos.Bottom(list) + 1 };
         var close = new Button("_Vissza") { X = Pos.Right(details) + 2, Y = Pos.Top(details) };
 
-        details.Clicked += () =>
+        void OpenSelected()
         {
             if (entries.Count == 0 || list.SelectedItem < 0 || list.SelectedItem >= entries.Count)
                 return;
 
             OpenAuditEntryDetails(entries[list.SelectedItem]);
-        };
+        }
+        details.Clicked += OpenSelected;
         close.Clicked += () => Application.RequestStop();
+        BindListAction(list, OpenSelected, 'r');
 
         dialog.Add(list, details, close);
         Application.Run(dialog);
@@ -770,6 +943,23 @@ internal sealed class AdminMainWindow : Window
         if (!int.TryParse(value, out var result))
             throw new InvalidOperationException($"Nem egész szám: {value}");
         return result;
+    }
+
+    private static void BindListAction(ListView list, Action action, char shortcut)
+    {
+        list.OpenSelectedItem += _ => action();
+        list.KeyPress += args =>
+        {
+            var key = args.KeyEvent.Key;
+            if (key != (Key)char.ToLowerInvariant(shortcut) &&
+                key != (Key)char.ToUpperInvariant(shortcut))
+            {
+                return;
+            }
+
+            args.Handled = true;
+            action();
+        };
     }
 
     private static int ParseCategory(string? value)

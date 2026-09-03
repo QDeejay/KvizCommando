@@ -15,6 +15,9 @@ internal static class SystemOperations
         return string.IsNullOrWhiteSpace(result.Output) ? result.Error : result.Output.Trim();
     }
 
+    public static bool IsServerStopped() =>
+        string.Equals(GetServerState(), "inactive", StringComparison.OrdinalIgnoreCase);
+
     public static void StartServer() => RunRequired("sudo", $"systemctl start {SERVICE_NAME}");
     public static void StopServer() => RunRequired("sudo", $"systemctl stop {SERVICE_NAME}");
     public static void RestartServer() => RunRequired("sudo", $"systemctl restart {SERVICE_NAME}");
