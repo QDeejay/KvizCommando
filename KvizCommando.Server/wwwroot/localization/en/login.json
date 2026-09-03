@@ -8,6 +8,7 @@
   "Error.Login": "Invalid login details or your email address is not verified!",
   "ForgotPassword": "Forgot password",
   "InvitationOnly.Apply": "Apply",
+  "InvitationOnly.EmailSubject": "Application for the Kvíz Commando closed test",
   "InvitationOnly.Period": "Daily test period:",
   "InvitationOnly.Title": "Closed invitation-only test",
   "Label.Providers": "Other login providers:",

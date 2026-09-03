@@ -141,6 +141,9 @@
   <data name="ForgotPassword" xml:space="preserve">
     <value>Forgot password</value>
   </data>
+  <data name="InvitationOnly.EmailSubject" xml:space="preserve">
+    <value>Application for the Kvíz Commando closed test</value>
+  </data>
   <data name="Label.Providers" xml:space="preserve">
     <value>Other login providers:</value>
   </data>

@@ -8,6 +8,7 @@
   "Error.Login": "Hibás belépési adataok vagy nincs ellenőrizve az e-mail cím!",
   "ForgotPassword": "Elfelejtett jelszó",
   "InvitationOnly.Apply": "Jelentkezem",
+  "InvitationOnly.EmailSubject": "Jelentkezés a Kvíz Commando zárt tesztjére",
   "InvitationOnly.Period": "Napi tesztidőszak:",
   "InvitationOnly.Title": "Zárt, meghívásos tesztüzem",
   "Label.Providers": "Egyéb lehetőségek:",

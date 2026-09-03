@@ -20,7 +20,7 @@ namespace KvizCommando.Client.Features.Login
         private bool _invalidEmail = false;
         private string _maskedEmail = string.Empty;
         private string _errorMessage = string.Empty;
-        private ElementReference passwordInput; 
+        private ElementReference passwordInput;
         private bool _showPassword;
 
         private string _passwordType => _showPassword ? "text" : "password";
@@ -43,7 +43,7 @@ namespace KvizCommando.Client.Features.Login
         private bool FacebookLoginEnabled => _options?.FacebookLoginEnabled == true;
         private string InvitationTestPeriod => _options?.InvitationTestPeriod ?? string.Empty;
         private string ApplicationEmailHref =>
-            $"mailto:{_options?.SupportEmail ?? string.Empty}";
+            $"mailto:{_options?.SupportEmail ?? string.Empty}?subject={Uri.EscapeDataString(Ui.Lang["login.InvitationOnly.EmailSubject"])}";
 
         private async Task OnSwitchPass(bool viaEnter)
         {

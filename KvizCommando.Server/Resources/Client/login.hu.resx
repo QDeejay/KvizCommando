@@ -141,6 +141,9 @@
   <data name="ForgotPassword" xml:space="preserve">
     <value>Elfelejtett jelszó</value>
   </data>
+  <data name="InvitationOnly.EmailSubject" xml:space="preserve">
+    <value>Jelentkezés a Kvíz Commando zárt tesztjére</value>
+  </data>
   <data name="Label.Providers" xml:space="preserve">
     <value>Egyéb lehetőségek:</value>
   </data>
