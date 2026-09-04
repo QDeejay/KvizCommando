@@ -45,8 +45,14 @@ namespace KvizCommando.Server.Services.DtoMapping
                         return null;
                     }
 
+                    var maxUserSlot = Math.Min(
+                        RankRewards.List[player.Core.RankEnum].OwnQuestSlot,
+                        question.uSlots.Length);
+
                     var maxPendingSlot = Math.Min(
-                        RankRewards.List[player.Core.RankEnum].OwnQuestSlot >> 1,
+                        maxUserSlot == 0
+                            ? 0
+                            : Math.Max(1, maxUserSlot >> 1),
                         question.pSlots.Length);
 
                     if (dto.SlotNo < 0 ||
