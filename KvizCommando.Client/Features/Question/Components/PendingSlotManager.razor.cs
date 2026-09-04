@@ -45,7 +45,8 @@ public partial class PendingSlotManager
             Ui.Lang);
         modal = modal with
         {
-            ActionText2 = Slots[_selectedId].Status == "Approved"
+            ActionText2 = Slots[_selectedId].Status == "Approved" &&
+                ExtInfo.FreeUserSlot > 0
                 ? modal.ActionText2
                 : string.Empty
         };

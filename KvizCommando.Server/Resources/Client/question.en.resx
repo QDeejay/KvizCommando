@@ -147,6 +147,9 @@
   <data name="Button.Send" xml:space="preserve">
     <value>Send</value>
   </data>
+  <data name="Warning.UserQuestionStorageFull" xml:space="preserve">
+    <value>There is no room in the user question storage, so the selected question can only be deleted.</value>
+  </data>
   <data name="Label.AnswerNg" xml:space="preserve">
     <value>Bad answer</value>
   </data>

@@ -25,7 +25,16 @@
     text-align: center;
     animation: blink 1s step-start infinite;
 }
-
+.pending-storage-warning {
+    position: absolute;
+    right: 24px;
+    bottom: 65px;
+    left: 24px;
+    color: red;
+    font-weight: bold;
+    line-height: 1.25;
+    text-align: center;
+}
 
 @keyframes blink {
     0%, 49% {

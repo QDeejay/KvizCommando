@@ -147,6 +147,9 @@
   <data name="Button.Send" xml:space="preserve">
     <value>Elküld</value>
   </data>
+  <data name="Warning.UserQuestionStorageFull" xml:space="preserve">
+    <value>Nincs hely a felhasználói kérdés tárolóban, így csak törölni lehet a kijelölt kérdést.</value>
+  </data>
   <data name="Label.AnswerNg" xml:space="preserve">
     <value>Rossz válasz</value>
   </data>

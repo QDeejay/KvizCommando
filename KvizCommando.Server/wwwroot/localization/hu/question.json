@@ -9,6 +9,7 @@
   "Button.New": "Új",
   "Button.Save": "Mentés",
   "Button.Send": "Elküld",
+  "Warning.UserQuestionStorageFull": "Nincs hely a felhasználói kérdés tárolóban, így csak törölni lehet a kijelölt kérdést.",
   "Label.AnswerNg": "Rossz válasz",
   "Label.AnswerOk": "Jó válasz",
   "Modal.Content.QuestAsked": "Kérdés feltéve:",

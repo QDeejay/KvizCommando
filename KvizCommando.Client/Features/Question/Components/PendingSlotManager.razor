@@ -54,6 +54,16 @@
     }
 </div>
 
+@if (_selectedId != 100 &&
+     Slots[_selectedId].Status == "Approved" &&
+     ExtInfo.FreeUserSlot == 0)
+{
+    <div class="pending-storage-warning">
+        @Lang["question.Warning.UserQuestionStorageFull"]
+    </div>
+}
+
+
 <div class="component-button-row">
     <div class="component-button-group right">
         <button class="button-on-lcd"

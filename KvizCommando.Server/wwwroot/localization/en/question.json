@@ -9,6 +9,7 @@
   "Button.New": "New",
   "Button.Save": "Save",
   "Button.Send": "Send",
+  "Warning.UserQuestionStorageFull": "There is no room in the user question storage, so the selected question can only be deleted.",
   "Label.AnswerNg": "Bad answer",
   "Label.AnswerOk": "Good answer",
   "Modal.Content.QuestAsked": "Question asked:",
