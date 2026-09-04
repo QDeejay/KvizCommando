@@ -28,7 +28,7 @@ internal sealed partial class AdminMainWindow
 
     private void OpenFactoryQuestions()
     {
-        var dialog = new Dialog("Factory questions", 136, 39);
+        var dialog = new Dialog("Factory questions", 120, 39);
         var categoryControls = new List<(int? CategoryNo, Label Marker, Button Button, Label Count)>();
         int? selectedCategory = null;
 
