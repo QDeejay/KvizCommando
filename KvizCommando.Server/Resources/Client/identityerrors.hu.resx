@@ -240,4 +240,7 @@
   <data name="access_denied" xml:space="preserve">
     <value>Belépés megtagadva!</value>
   </data>
+  <data name="external_login_failed" xml:space="preserve">
+    <value>Külső bejelentkezés sikertelen.</value>
+  </data>
 </root>

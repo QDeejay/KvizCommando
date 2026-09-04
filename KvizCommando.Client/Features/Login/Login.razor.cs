@@ -90,7 +90,7 @@ namespace KvizCommando.Client.Features.Login
             catch (Exception ex)
             {
                 Console.WriteLine($"Login failed: {ex.Message}");
-                _errorMessage = Ui.Lang["identityerrors.default"];
+                _errorMessage = Ui.Lang["identityerrors.DefaultError"];
             }
         }
         private async Task ContinueAfterLoginAsync()
@@ -126,13 +126,22 @@ namespace KvizCommando.Client.Features.Login
             _enterPassPage = false;
             var uri = Ui.Nav.ToAbsoluteUri(Ui.Nav.Uri);
             var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
-            var Error = query["error"];
+            var error = query["error"];
 
             // (opcionális) takarítsd le az URL-ből az ?error-t a címsorból:
-            if (!string.IsNullOrEmpty(Error))
+            if (!string.IsNullOrEmpty(error))
             {
                 Ui.Nav.NavigateTo(uri.GetLeftPart(UriPartial.Path), replace: true);
-                _errorMessage = Ui.Lang[$"identityerrors.{Error}"];
+                var errorKey = error switch
+                {
+                    "NoInfo" or
+                    "CreateFailed" or
+                    "LinkFailed" or
+                    "access_denied" or
+                    "external_login_failed" => $"identityerrors.{error}",
+                    _ => "identityerrors.DefaultError"
+                };
+                _errorMessage = Ui.Lang[errorKey];
             }
 
             _options = await IdentityRules.GetRulesAsync();

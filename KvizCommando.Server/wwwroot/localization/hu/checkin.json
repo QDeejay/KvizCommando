@@ -1,0 +1,22 @@
+{
+  "button.CheckIn": "Bejelentkezik",
+  "ButtonLink.Terms": "Általános Szerződési Feltételeket",
+  "Reason.DisplayName": "Nem adott még meg játékos nevet!",
+  "Reason.TermsUpdated": "Az ÁSZF megváltozott, kérem olvasd át és fogadd el a belépéshez!",
+  "Title.DisplayName": "Új játékos belépés",
+  "Title.TermsOutdated": "ÁSZF változás",
+  "Label.DisplayName": "Nyilvános játékos név",
+  "Reason.FallBack": "Érvénytelen meghívás, navigáljon vissza a főoldalra",
+  "Title.Fallback": "Új játékos belépés",
+  "Label.AcceptTerms": "Megértettem és elfogadom az ",
+  "button.RedirectToLogin": "Kilép",
+  "Team.Append": " csapata",
+  "modal.TermsTitle": "Általános szerződési feltételek",
+  "modal.Button.Action": "Megértettem",
+  "modal.Button.Close": "Bezár",
+  "Reason.SuggestedName": "Javaslat:",
+  "modal.PrivacyTitle": "Adatkezelési tájékoztató",
+  "ButtonLink.Privacy": "Adatvédelmi Tájékoztatót",
+  "Label.AcceptTerms1": "és az ",
+  "Label.AcceptTerms2": "."
+}

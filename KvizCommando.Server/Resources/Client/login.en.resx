@@ -144,8 +144,20 @@
   <data name="InvitationOnly.EmailSubject" xml:space="preserve">
     <value>Application for the Kvíz Commando closed test</value>
   </data>
+  <data name="InvitationOnly.Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="InvitationOnly.Period" xml:space="preserve">
+    <value>Daily test period:</value>
+  </data>
+  <data name="InvitationOnly.Title" xml:space="preserve">
+    <value>Closed invitation-only test</value>
+  </data>
   <data name="Label.Providers" xml:space="preserve">
     <value>Other login providers:</value>
+  </data>
+  <data name="Start.Slogan" xml:space="preserve">
+    <value>A battle where knowledge is your only weapon</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>Login</value>

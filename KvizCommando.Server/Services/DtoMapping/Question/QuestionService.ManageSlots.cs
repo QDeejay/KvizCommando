@@ -2,9 +2,6 @@ using KvizCommando.Server.Domain.Entities.Questions;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Models;
-using KvizCommando.Shared.Models.Enums;
-using KvizCommando.Shared.Models.Rules;
-using System.Text.Json;
 
 namespace KvizCommando.Server.Services.DtoMapping
 {
@@ -44,18 +41,20 @@ namespace KvizCommando.Server.Services.DtoMapping
                                     dto.SlotNo);
                                 return null;
                             }
-
-                            var userId = question.uSlots[dto.SlotNo].Id;
+                            var id = question.uSlots[dto.SlotNo].Id;
                             question.fSlots.Add(new FactoryQuestion
                             {
                                 Id = 0,
+                                PlayerId = playerId,
                                 Question = question.uSlots[dto.SlotNo].Question,
                                 AnswersJson = question.uSlots[dto.SlotNo].AnswersJson,
                                 CategoryNo = question.uSlots[dto.SlotNo].CategoryNo
                             });
+
+
                             question.uSlots[dto.SlotNo] = new UserQuestion
                             {
-                                Id = userId,
+                                Id = id,
                                 PlayerId = playerId
                             };
                             return 1u << dto.SlotNo;

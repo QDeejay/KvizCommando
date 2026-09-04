@@ -16,7 +16,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             {
                 [ModalTypes.Terms] = new MboxSpecs
                 {
-                    TitleKey = "PLACEHOLDER",
+                    TitleKey = string.Empty,
                     TextKey1 = "checkin.modal.Button.Action",
                     Size = "modal-xl",
                     CheckBottom = true,

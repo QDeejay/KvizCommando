@@ -129,6 +129,9 @@
   <data name="Label.Level" xml:space="preserve">
     <value>Szint: </value>
   </data>
+  <data name="Label.NoMember" xml:space="preserve">
+    <value>Nincs csapattag</value>
+  </data>
   <data name="Label.Attitude.Help" xml:space="preserve">
     <value>Segítség módosítók:</value>
   </data>

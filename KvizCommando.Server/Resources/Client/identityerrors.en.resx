@@ -240,4 +240,7 @@
   <data name="access_denied" xml:space="preserve">
     <value>Access denied!</value>
   </data>
+  <data name="external_login_failed" xml:space="preserve">
+    <value>External login failed.</value>
+  </data>
 </root>
