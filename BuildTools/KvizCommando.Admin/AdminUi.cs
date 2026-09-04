@@ -162,17 +162,19 @@ internal sealed partial class AdminMainWindow : Window
         var display = new TextField(row.DisplayName ?? string.Empty) { X = 21, Y = 5, Width = 45 };
         var confirmed = new CheckBox("E-mail confirmed", row.EmailConfirmed) { X = 21, Y = 7 };
 
-        var rankLabel = new Label("Rank:") { X = 2, Y = 10 };
-        var rank = new TextField(row.Rank?.ToString() ?? string.Empty) { X = 21, Y = 10, Width = 12, ReadOnly = !row.PlayerId.HasValue };
-        var xpLabel = new Label("XP:") { X = 2, Y = 12 };
-        var xp = new TextField(row.XP?.ToString() ?? string.Empty) { X = 21, Y = 12, Width = 12, ReadOnly = !row.PlayerId.HasValue };
-        var creditLabel = new Label("Credit:") { X = 2, Y = 14 };
-        var credit = new TextField(row.Credit?.ToString() ?? string.Empty) { X = 21, Y = 14, Width = 12, ReadOnly = !row.PlayerId.HasValue };
-        var voucherLabel = new Label("Voucher:") { X = 2, Y = 16 };
-        var voucher = new TextField(row.Voucher?.ToString() ?? string.Empty) { X = 21, Y = 16, Width = 12, ReadOnly = !row.PlayerId.HasValue };
+        var playerId = new Label($"Player ID: {row.PlayerId?.ToString() ?? "-"}") { X = 2, Y = 9 };
+
+        var rankLabel = new Label("Rank:") { X = 2, Y = 11 };
+        var rank = new TextField(row.Rank?.ToString() ?? string.Empty) { X = 21, Y = 11, Width = 12, ReadOnly = !row.PlayerId.HasValue };
+        var xpLabel = new Label("XP:") { X = 2, Y = 13 };
+        var xp = new TextField(row.XP?.ToString() ?? string.Empty) { X = 21, Y = 13, Width = 12, ReadOnly = !row.PlayerId.HasValue };
+        var creditLabel = new Label("Credit:") { X = 2, Y = 15 };
+        var credit = new TextField(row.Credit?.ToString() ?? string.Empty) { X = 21, Y = 15, Width = 12, ReadOnly = !row.PlayerId.HasValue };
+        var voucherLabel = new Label("Voucher:") { X = 2, Y = 17 };
+        var voucher = new TextField(row.Voucher?.ToString() ?? string.Empty) { X = 21, Y = 17, Width = 12, ReadOnly = !row.PlayerId.HasValue };
 
         if (!row.PlayerId.HasValue)
-            dialog.Add(new Label("Player rekord még nincs; Rank/XP/Credit/Voucher az első check-in után lesz módosítható.") { X = 36, Y = 11 });
+            dialog.Add(new Label("Player rekord még nincs; Rank/XP/Credit/Voucher az első check-in után lesz módosítható.") { X = 36, Y = 12 });
 
         var save = new Button("_Mentés") { X = 2, Y = 20 };
         var reset = new Button("_Forgot password e-mail") { X = Pos.Right(save) + 2, Y = 20 };
@@ -231,7 +233,7 @@ internal sealed partial class AdminMainWindow : Window
         };
         close.Clicked += () => Application.RequestStop();
 
-        dialog.Add(displayLabel, display, confirmed, rankLabel, rank, xpLabel, xp, creditLabel, credit, voucherLabel, voucher,
+        dialog.Add(displayLabel, display, confirmed, playerId, rankLabel, rank, xpLabel, xp, creditLabel, credit, voucherLabel, voucher,
             save, reset, delete, close);
         Application.Run(dialog);
     }
@@ -239,14 +241,20 @@ internal sealed partial class AdminMainWindow : Window
     private void OpenPendingQuestions()
     {
         var dialog = new Dialog("Pending questions", 118, 34);
-        var list = new ListView { X = 1, Y = 1, Width = Dim.Fill(2), Height = Dim.Fill(5) };
+        var questionLabel = new Label("Kérdés:") { X = 1, Y = 1 };
+        var questionSearch = new TextField(string.Empty) { X = 10, Y = 1, Width = 45 };
+        var playerIdLabel = new Label("Player ID (0 = összes):") { X = 58, Y = 1 };
+        var playerIdSearch = new TextField("0") { X = 81, Y = 1, Width = 10 };
+        var list = new ListView { X = 1, Y = 3, Width = Dim.Fill(2), Height = Dim.Fill(5) };
         IReadOnlyList<PendingQuestionRow> rows = Array.Empty<PendingQuestionRow>();
 
         void Refresh()
         {
             try
             {
-                rows = _database.GetPendingQuestions();
+                rows = _database.GetPendingQuestions(
+                    questionSearch.Text?.ToString(),
+                    ParsePlayerIdFilter(playerIdSearch.Text?.ToString()));
                 list.SetSource(rows.Select(x => x.ToString()).ToList());
             }
             catch (Exception ex)
@@ -271,7 +279,7 @@ internal sealed partial class AdminMainWindow : Window
         close.Clicked += () => Application.RequestStop();
         BindListAction(list, OpenSelected, 's');
 
-        dialog.Add(list, refresh, open, close);
+        dialog.Add(questionLabel, questionSearch, playerIdLabel, playerIdSearch, list, refresh, open, close);
         Refresh();
         Application.Run(dialog);
     }
@@ -279,7 +287,7 @@ internal sealed partial class AdminMainWindow : Window
     private void OpenPendingEditor(PendingQuestionRow row)
     {
         var answers = DeserializeAnswers(row.AnswersJson);
-        var dialog = CreateQuestionDialog($"Pending #{row.Id}", row.CategoryNo, row.Question, answers, out var category, out var text, out var answerFields);
+        var dialog = CreateQuestionDialog($"Pending #{row.Id}", row.CategoryNo, row.Question, answers, out var text, out var answerFields);
         var statusLabel = new Label("Status:") { X = 2, Y = 20 };
         var status = new TextField(row.Status) { X = 16, Y = 20, Width = 18 };
         var remarkLabel = new Label("Remark:") { X = 2, Y = 22 };
@@ -295,7 +303,6 @@ internal sealed partial class AdminMainWindow : Window
             {
                 _database.UpdatePendingQuestion(
                     row,
-                    ParseCategory(category.Text?.ToString()),
                     text.Text?.ToString() ?? string.Empty,
                     answerFields.Select(x => x.Text?.ToString() ?? string.Empty).ToArray(),
                     requestedStatus,
@@ -321,14 +328,20 @@ internal sealed partial class AdminMainWindow : Window
     private void OpenUserQuestions()
     {
         var dialog = new Dialog("User questions", 118, 34);
-        var list = new ListView { X = 1, Y = 1, Width = Dim.Fill(2), Height = Dim.Fill(5) };
+        var questionLabel = new Label("Kérdés:") { X = 1, Y = 1 };
+        var questionSearch = new TextField(string.Empty) { X = 10, Y = 1, Width = 45 };
+        var playerIdLabel = new Label("Player ID (0 = összes):") { X = 58, Y = 1 };
+        var playerIdSearch = new TextField("0") { X = 81, Y = 1, Width = 10 };
+        var list = new ListView { X = 1, Y = 3, Width = Dim.Fill(2), Height = Dim.Fill(5) };
         IReadOnlyList<UserQuestionRow> rows = Array.Empty<UserQuestionRow>();
 
         void Refresh()
         {
             try
             {
-                rows = _database.GetUserQuestions();
+                rows = _database.GetUserQuestions(
+                    questionSearch.Text?.ToString(),
+                    ParsePlayerIdFilter(playerIdSearch.Text?.ToString()));
                 list.SetSource(rows.Select(x => x.ToString()).ToList());
             }
             catch (Exception ex)
@@ -353,7 +366,7 @@ internal sealed partial class AdminMainWindow : Window
         close.Clicked += () => Application.RequestStop();
         BindListAction(list, OpenSelected, 's');
 
-        dialog.Add(list, refresh, open, close);
+        dialog.Add(questionLabel, questionSearch, playerIdLabel, playerIdSearch, list, refresh, open, close);
         Refresh();
         Application.Run(dialog);
     }
@@ -361,7 +374,7 @@ internal sealed partial class AdminMainWindow : Window
     private void OpenUserQuestionEditor(UserQuestionRow row)
     {
         var answers = DeserializeAnswers(row.AnswersJson);
-        var dialog = CreateQuestionDialog($"User question #{row.Id}", row.CategoryNo, row.Question, answers, out var category, out var text, out var answerFields);
+        var dialog = CreateQuestionDialog($"User question #{row.Id}", row.CategoryNo, row.Question, answers, out var text, out var answerFields);
         dialog.Add(new Label($"Ask: {row.Ask}   OkAnswer: {row.OkAnswer}") { X = 2, Y = 20 });
         var save = new Button("_Mentés") { X = 2, Y = 24 };
         var close = new Button("_Vissza") { X = Pos.Right(save) + 3, Y = 24 };
@@ -372,7 +385,6 @@ internal sealed partial class AdminMainWindow : Window
             {
                 _database.UpdateUserQuestion(
                     row,
-                    ParseCategory(category.Text?.ToString()),
                     text.Text?.ToString() ?? string.Empty,
                     answerFields.Select(x => x.Text?.ToString() ?? string.Empty).ToArray());
                 MessageBox.Query("Kész", "User question módosítva.", "OK");
@@ -394,13 +406,12 @@ internal sealed partial class AdminMainWindow : Window
         int categoryNo,
         string question,
         IReadOnlyList<string> answers,
-        out TextField category,
         out TextView text,
         out TextField[] answerFields)
     {
         var dialog = new Dialog(title, 110, 31);
         var categoryLabel = new Label("Kategória:") { X = 2, Y = 1 };
-        category = new TextField(categoryNo.ToString()) { X = 16, Y = 1, Width = 8 };
+        var category = new Label(QuestionCategories.GetName(categoryNo)) { X = 16, Y = 1 };
         var questionLabel = new Label("Kérdés:") { X = 2, Y = 3 };
         text = new TextView
         {
@@ -977,7 +988,10 @@ internal sealed partial class AdminMainWindow : Window
         var last200 = new Button("Last _200") { X = 16, Y = 2 };
         var close = new Button("_Vissza") { X = 34, Y = 2 };
 
-        live.Clicked += () => OpenLiveLog("Server log - LIVE", LogOperations.StartServerLive);
+        live.Clicked += () => OpenLiveLog(
+            "Server log - LIVE",
+            LogOperations.StartServerLive,
+            LogOperations.FormatServerLog);
         last200.Clicked += () =>
         {
             try
@@ -1042,7 +1056,10 @@ internal sealed partial class AdminMainWindow : Window
         Application.Run(dialog);
     }
 
-    private static void OpenLiveLog(string title, Func<Process> processFactory)
+    private static void OpenLiveLog(
+        string title,
+        Func<Process> processFactory,
+        Func<string, string>? lineFormatter = null)
     {
         Process? process = null;
         try
@@ -1068,7 +1085,7 @@ internal sealed partial class AdminMainWindow : Window
                     return;
                 Application.MainLoop.Invoke(() =>
                 {
-                    buffer.AppendLine(line);
+                    buffer.AppendLine(lineFormatter?.Invoke(line) ?? line);
                     text.Text = buffer.ToString();
                 });
             }
@@ -1119,10 +1136,10 @@ internal sealed partial class AdminMainWindow : Window
         };
     }
 
-    private static int ParseCategory(string? value)
+    private static int ParsePlayerIdFilter(string? value)
     {
-        if (!int.TryParse(value, out var result))
-            throw new InvalidOperationException("Hibás kategória.");
+        if (!int.TryParse(value, out var result) || result < 0)
+            throw new InvalidOperationException("A Player ID 0 vagy pozitív egész szám legyen.");
         return result;
     }
 

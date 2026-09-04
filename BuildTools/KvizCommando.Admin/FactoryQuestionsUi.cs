@@ -28,7 +28,7 @@ internal sealed partial class AdminMainWindow
 
     private void OpenFactoryQuestions()
     {
-        var dialog = new Dialog("Factory questions", 142, 39);
+        var dialog = new Dialog("Factory questions", 136, 39);
         var categoryControls = new List<(int? CategoryNo, Label Marker, Button Button, Label Count)>();
         int? selectedCategory = null;
 
@@ -37,13 +37,17 @@ internal sealed partial class AdminMainWindow
         var search = new TextField(string.Empty) { X = 47, Y = 1, Width = 43 };
         var reportedOnly = new CheckBox("Reported", false) { X = 94, Y = 1 };
         var playerQuestionsOnly = new CheckBox("From user", false) { X = 110, Y = 1 };
-        var header = new Label("ID       Kat.  Kérdés                                                Válaszok")
+        var header = new Label("ID       Kérdés                                                Válaszok")
         {
             X = 25,
             Y = 3
         };
         var list = new ListView { X = 25, Y = 4, Width = Dim.Fill(2), Height = Dim.Fill(5) };
         IReadOnlyList<FactoryQuestionRow> rows = Array.Empty<FactoryQuestionRow>();
+        var refresh = new Button("_Frissítés") { X = 25, Y = Pos.Bottom(list) + 1 };
+        var edit = new Button("_Szerkesztés") { X = Pos.Right(refresh) + 2, Y = Pos.Top(refresh) };
+        var create = new Button("_Új kérdés") { X = Pos.Right(edit) + 2, Y = Pos.Top(refresh), Enabled = false };
+        var close = new Button("_Vissza") { X = Pos.Right(create) + 2, Y = Pos.Top(refresh) };
 
         void Refresh()
         {
@@ -77,6 +81,7 @@ internal sealed partial class AdminMainWindow
             playerQuestionsOnly.Enabled = categoryNo != 99;
             if (categoryNo == 99)
                 playerQuestionsOnly.Checked = false;
+            create.Enabled = categoryNo.HasValue;
             Refresh();
         }
 
@@ -84,10 +89,6 @@ internal sealed partial class AdminMainWindow
         for (var category = 1; category <= 16; category++)
             AddCategoryControl(category, CATEGORY_SHORT_NAMES[category], category + 3);
         AddCategoryControl(99, "Tipp", 20);
-
-        var refresh = new Button("_Frissítés") { X = 25, Y = Pos.Bottom(list) + 1 };
-        var edit = new Button("_Szerkesztés") { X = Pos.Right(refresh) + 2, Y = Pos.Top(refresh) };
-        var close = new Button("_Vissza") { X = Pos.Right(edit) + 2, Y = Pos.Top(refresh) };
 
         void OpenSelected()
         {
@@ -104,10 +105,21 @@ internal sealed partial class AdminMainWindow
 
         refresh.Clicked += Refresh;
         edit.Clicked += OpenSelected;
+        create.Clicked += () =>
+        {
+            if (!selectedCategory.HasValue)
+                return;
+
+            if (selectedCategory.Value == 99)
+                OpenNewTipQuestion();
+            else
+                OpenNewFactoryQuestion(selectedCategory.Value);
+            Refresh();
+        };
         close.Clicked += () => Application.RequestStop();
         BindListAction(list, OpenSelected, 's');
 
-        dialog.Add(categoryLabel, searchLabel, search, reportedOnly, playerQuestionsOnly, header, list, refresh, edit, close);
+        dialog.Add(categoryLabel, searchLabel, search, reportedOnly, playerQuestionsOnly, header, list, refresh, edit, create, close);
         foreach (var item in categoryControls)
             dialog.Add(item.Marker, item.Button, item.Count);
 
@@ -132,7 +144,6 @@ internal sealed partial class AdminMainWindow
             row.CategoryNo,
             row.Question,
             answers,
-            out var category,
             out var text,
             out var answerFields);
         var reportedLabel = new Label("Reported:") { X = 2, Y = 22 };
@@ -146,7 +157,6 @@ internal sealed partial class AdminMainWindow
             {
                 _database.UpdateFactoryQuestion(
                     row,
-                    ParseCategory(category.Text?.ToString()),
                     text.Text?.ToString() ?? string.Empty,
                     answerFields.Select(field => field.Text?.ToString() ?? string.Empty).ToArray(),
                     ParseRequiredInt(reported.Text?.ToString(), "Reported"));
@@ -166,7 +176,7 @@ internal sealed partial class AdminMainWindow
     private void OpenTipQuestionEditor(FactoryQuestionRow row)
     {
         var dialog = new Dialog($"Tipp #{row.Id}", 110, 24);
-        dialog.Add(new Label("Kategória: 99 (Tipp)") { X = 2, Y = 1 });
+        dialog.Add(new Label($"Kategória: {QuestionCategories.GetName(row.CategoryNo)}") { X = 2, Y = 1 });
         var questionLabel = new Label("Kérdés:") { X = 2, Y = 3 };
         var question = new TextView
         {
@@ -203,6 +213,77 @@ internal sealed partial class AdminMainWindow
         };
         close.Clicked += () => Application.RequestStop();
         dialog.Add(questionLabel, question, answerLabel, answer, reportedLabel, reported, save, close);
+        Application.Run(dialog);
+    }
+
+    private void OpenNewFactoryQuestion(int categoryNo)
+    {
+        var dialog = CreateQuestionDialog(
+            "Új Factory kérdés",
+            categoryNo,
+            string.Empty,
+            Array.Empty<string>(),
+            out var text,
+            out var answerFields);
+        var save = new Button("_Létrehozás") { X = 2, Y = 25 };
+        var close = new Button("_Vissza") { X = Pos.Right(save) + 3, Y = 25 };
+
+        save.Clicked += () =>
+        {
+            try
+            {
+                _database.CreateFactoryQuestion(
+                    categoryNo,
+                    text.Text?.ToString() ?? string.Empty,
+                    answerFields.Select(field => field.Text?.ToString() ?? string.Empty).ToArray());
+                MessageBox.Query("Kész", "Factory kérdés létrehozva.", "OK");
+                Application.RequestStop();
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
+        };
+        close.Clicked += () => Application.RequestStop();
+        dialog.Add(save, close);
+        Application.Run(dialog);
+    }
+
+    private void OpenNewTipQuestion()
+    {
+        var dialog = new Dialog("Új Tipp kérdés", 110, 21);
+        dialog.Add(new Label($"Kategória: {QuestionCategories.GetName(99)}") { X = 2, Y = 1 });
+        var questionLabel = new Label("Kérdés:") { X = 2, Y = 3 };
+        var question = new TextView
+        {
+            X = 16,
+            Y = 3,
+            Width = 86,
+            Height = 7,
+            WordWrap = true
+        };
+        var answerLabel = new Label("Válasz:") { X = 2, Y = 12 };
+        var answer = new TextField(string.Empty) { X = 16, Y = 12, Width = 30 };
+        var save = new Button("_Létrehozás") { X = 2, Y = 16 };
+        var close = new Button("_Vissza") { X = Pos.Right(save) + 3, Y = 16 };
+
+        save.Clicked += () =>
+        {
+            try
+            {
+                _database.CreateTipQuestion(
+                    question.Text?.ToString() ?? string.Empty,
+                    ParseRequiredDouble(answer.Text?.ToString()));
+                MessageBox.Query("Kész", "Tipp kérdés létrehozva.", "OK");
+                Application.RequestStop();
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
+        };
+        close.Clicked += () => Application.RequestStop();
+        dialog.Add(questionLabel, question, answerLabel, answer, save, close);
         Application.Run(dialog);
     }
 

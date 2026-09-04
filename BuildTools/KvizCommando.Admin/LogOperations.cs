@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace KvizCommando.Admin;
 
@@ -6,11 +7,14 @@ internal static class LogOperations
 {
     private const string SERVICE_NAME = "KvizCommando.Server";
     private const string DEPLOY_LOG_PATH = "/var/log/kvizcommando/deploy.log";
+    private static readonly Regex SERVER_PREFIX = new(
+        @"^(?<timestamp>[A-Z][a-z]{2}\s+\d+\s+\d{2}:\d{2}:\d{2})\s+\S+\s+KvizCommando\.Server\[(?<pid>\d+)\]:",
+        RegexOptions.Multiline | RegexOptions.CultureInvariant);
 
     public static string GetServerLast200()
     {
         EnsureLinux();
-        return RunRequired("journalctl", $"-u {SERVICE_NAME} -n 200 --no-pager");
+        return FormatServerLog(RunRequired("journalctl", $"-u {SERVICE_NAME} -n 200 --no-pager"));
     }
 
     public static Process StartServerLive() =>
@@ -18,6 +22,9 @@ internal static class LogOperations
 
     public static Process StartDeployLive() =>
         StartLiveProcess("tail", $"-n 50 -F {DEPLOY_LOG_PATH}");
+
+    public static string FormatServerLog(string content) =>
+        SERVER_PREFIX.Replace(content, "${timestamp} KC Server [${pid}]:");
 
     public static void ClearDeployLog()
     {

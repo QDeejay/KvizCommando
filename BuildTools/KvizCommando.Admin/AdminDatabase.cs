@@ -211,16 +211,22 @@ internal sealed class AdminDatabase : IDisposable
         transaction.Commit();
     }
 
-    public IReadOnlyList<PendingQuestionRow> GetPendingQuestions()
+    public IReadOnlyList<PendingQuestionRow> GetPendingQuestions(string? questionSearch, int playerId)
     {
         using var connection = OpenGameConnection();
         var top = _settings.Provider == AdminDatabaseProvider.SqlServer ? "TOP (300) " : string.Empty;
         var limit = _settings.Provider == AdminDatabaseProvider.Sqlite ? " LIMIT 300" : string.Empty;
+        var normalizedSearch = questionSearch?.Trim() ?? string.Empty;
         using var command = CreateCommand(connection, $"""
             SELECT {top}Id, PlayerId, CategoryNo, Question, AnswersJson, Status, Remark, SubmittedAt
             FROM PendingQuestions
+            WHERE (@search = '' OR Question LIKE @pattern)
+              AND (@playerId = 0 OR PlayerId = @playerId)
             ORDER BY SubmittedAt DESC{limit};
             """);
+        AddParameter(command, "@search", normalizedSearch);
+        AddParameter(command, "@pattern", $"%{normalizedSearch}%");
+        AddParameter(command, "@playerId", playerId);
         using var reader = command.ExecuteReader();
         var result = new List<PendingQuestionRow>();
         while (reader.Read())
@@ -232,16 +238,22 @@ internal sealed class AdminDatabase : IDisposable
         return result;
     }
 
-    public IReadOnlyList<UserQuestionRow> GetUserQuestions()
+    public IReadOnlyList<UserQuestionRow> GetUserQuestions(string? questionSearch, int playerId)
     {
         using var connection = OpenGameConnection();
         var top = _settings.Provider == AdminDatabaseProvider.SqlServer ? "TOP (300) " : string.Empty;
         var limit = _settings.Provider == AdminDatabaseProvider.Sqlite ? " LIMIT 300" : string.Empty;
+        var normalizedSearch = questionSearch?.Trim() ?? string.Empty;
         using var command = CreateCommand(connection, $"""
             SELECT {top}Id, PlayerId, CategoryNo, Question, AnswersJson, Ask, OkAnswer
             FROM UserQuestions
+            WHERE (@search = '' OR Question LIKE @pattern)
+              AND (@playerId = 0 OR PlayerId = @playerId)
             ORDER BY Id DESC{limit};
             """);
+        AddParameter(command, "@search", normalizedSearch);
+        AddParameter(command, "@pattern", $"%{normalizedSearch}%");
+        AddParameter(command, "@playerId", playerId);
         using var reader = command.ExecuteReader();
         var result = new List<UserQuestionRow>();
         while (reader.Read())
@@ -361,29 +373,40 @@ internal sealed class AdminDatabase : IDisposable
 
     public void UpdateFactoryQuestion(
         FactoryQuestionRow question,
-        int categoryNo,
         string text,
         IReadOnlyList<string> answers,
         int reported)
     {
-        ValidateQuestion(categoryNo, text, answers);
+        ValidateQuestion(question.CategoryNo, text, answers);
         ValidateReported(reported);
         using var connection = OpenGameConnection();
         using var command = CreateCommand(connection, """
             UPDATE FactoryQuestions
-            SET CategoryNo = @categoryNo,
-                Question = @question,
+            SET Question = @question,
                 AnswersJson = @answersJson,
                 Reported = @reported
             WHERE Id = @id;
             """);
-        AddParameter(command, "@categoryNo", categoryNo);
         AddParameter(command, "@question", text.Trim());
         AddParameter(command, "@answersJson", JsonSerializer.Serialize(answers));
         AddParameter(command, "@reported", reported);
         AddParameter(command, "@id", question.Id);
         if (command.ExecuteNonQuery() != 1)
             throw new InvalidOperationException("A Factory kérdés nem található.");
+    }
+
+    public void CreateFactoryQuestion(int categoryNo, string text, IReadOnlyList<string> answers)
+    {
+        ValidateQuestion(categoryNo, text, answers);
+        using var connection = OpenGameConnection();
+        using var command = CreateCommand(connection, """
+            INSERT INTO FactoryQuestions (PlayerId, CategoryNo, Question, AnswersJson, Reported)
+            VALUES (0, @categoryNo, @question, @answersJson, 0);
+            """);
+        AddParameter(command, "@categoryNo", categoryNo);
+        AddParameter(command, "@question", text.Trim());
+        AddParameter(command, "@answersJson", JsonSerializer.Serialize(answers));
+        command.ExecuteNonQuery();
     }
 
     public void UpdateTipQuestion(FactoryQuestionRow question, string text, double answer, int reported)
@@ -407,20 +430,32 @@ internal sealed class AdminDatabase : IDisposable
             throw new InvalidOperationException("A Tipp kérdés nem található.");
     }
 
-    public void UpdatePendingQuestion(PendingQuestionRow question, int categoryNo, string text, IReadOnlyList<string> answers, string status, string? remark)
+    public void CreateTipQuestion(string text, double answer)
     {
-        ValidateQuestion(categoryNo, text, answers);
+        if (string.IsNullOrWhiteSpace(text))
+            throw new InvalidOperationException("A kérdésszöveg nem lehet üres.");
+        using var connection = OpenGameConnection();
+        using var command = CreateCommand(connection, """
+            INSERT INTO GuessQuestions (Question, Answer, Reported)
+            VALUES (@question, @answer, 0);
+            """);
+        AddParameter(command, "@question", text.Trim());
+        AddParameter(command, "@answer", answer);
+        command.ExecuteNonQuery();
+    }
+
+    public void UpdatePendingQuestion(PendingQuestionRow question, string text, IReadOnlyList<string> answers, string status, string? remark)
+    {
+        ValidateQuestion(question.CategoryNo, text, answers);
         using var connection = OpenGameConnection();
         using var command = CreateCommand(connection, """
             UPDATE PendingQuestions
-            SET CategoryNo = @categoryNo,
-                Question = @question,
+            SET Question = @question,
                 AnswersJson = @answersJson,
                 Status = @status,
                 Remark = @remark
             WHERE Id = @id;
             """);
-        AddParameter(command, "@categoryNo", categoryNo);
         AddParameter(command, "@question", text.Trim());
         AddParameter(command, "@answersJson", JsonSerializer.Serialize(answers));
         AddParameter(command, "@status", status);
@@ -429,18 +464,16 @@ internal sealed class AdminDatabase : IDisposable
         command.ExecuteNonQuery();
     }
 
-    public void UpdateUserQuestion(UserQuestionRow question, int categoryNo, string text, IReadOnlyList<string> answers)
+    public void UpdateUserQuestion(UserQuestionRow question, string text, IReadOnlyList<string> answers)
     {
-        ValidateQuestion(categoryNo, text, answers);
+        ValidateQuestion(question.CategoryNo, text, answers);
         using var connection = OpenGameConnection();
         using var command = CreateCommand(connection, """
             UPDATE UserQuestions
-            SET CategoryNo = @categoryNo,
-                Question = @question,
+            SET Question = @question,
                 AnswersJson = @answersJson
             WHERE Id = @id;
             """);
-        AddParameter(command, "@categoryNo", categoryNo);
         AddParameter(command, "@question", text.Trim());
         AddParameter(command, "@answersJson", JsonSerializer.Serialize(answers));
         AddParameter(command, "@id", question.Id);
