@@ -28,7 +28,9 @@ namespace KvizCommando.Server.Services.DtoMapping
                         question.uSlots.Length);
 
                     var maxPendingSlot = Math.Min(
-                        maxUserSlot >> 1,
+                        maxUserSlot == 0
+                            ? 0
+                            : Math.Max(1, maxUserSlot >> 1),
                         question.pSlots.Length);
 
                     switch (dto.ReqType)

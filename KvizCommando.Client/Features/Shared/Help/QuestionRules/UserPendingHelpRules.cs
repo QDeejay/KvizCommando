@@ -17,7 +17,7 @@ public static class UserPendingHelpRules
             .Distinct()
             .ToArray();
         var pendingSlotSizes = RankRewards.List
-            .Select(reward => reward.OwnQuestSlot >> 1)
+            .Select(GetPendingSlotSize)
             .Where(slotSize => slotSize > 0)
             .Distinct()
             .ToArray();
@@ -32,7 +32,7 @@ public static class UserPendingHelpRules
             tokens,
             "PENDING_SLOT",
             pendingSlotSizes,
-            reward => reward.OwnQuestSlot >> 1);
+            GetPendingSlotSize);
 
         return tokens;
     }
@@ -68,4 +68,9 @@ public static class UserPendingHelpRules
 
     private static string GetPublicLevel(int rankIndex) =>
         RankNameTable.Data[rankIndex].PublicLevel!;
+
+    private static int GetPendingSlotSize(RankRewardRow reward) =>
+        reward.OwnQuestSlot == 0
+            ? 0
+            : Math.Max(1, reward.OwnQuestSlot >> 1);
 }
