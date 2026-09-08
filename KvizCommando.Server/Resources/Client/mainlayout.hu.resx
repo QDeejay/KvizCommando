@@ -222,6 +222,7 @@
   <data name="Settings.Sound.MusicVolume" xml:space="preserve"><value>Zene hangerő</value></data>
   <data name="Settings.Sound.SfxVolume" xml:space="preserve"><value>SFX hangerő</value></data>
   <data name="Settings.Appearance.Theme" xml:space="preserve"><value>Színtéma</value></data>
+  <data name="Settings.Appearance.CustomCursor" xml:space="preserve"><value>Egyéni kurzor</value></data>
   <data name="Settings.Appearance.Fullscreen" xml:space="preserve"><value>Bejelentkezés után teljes képernyős mód</value></data>
   <data name="Settings.Theme.Default" xml:space="preserve"><value>Alap</value></data>
   <data name="Settings.Theme.Olive" xml:space="preserve"><value>Olíva</value></data>

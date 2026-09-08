@@ -88,6 +88,7 @@ public sealed class SettingsService : ISettingsService
             MusicVolume = Current.MusicVolume,
             SfxVolume = Current.SfxVolume,
             Theme = Current.Theme,
+            CustomCursorEnabled = Current.CustomCursorEnabled,
             StartFullscreen = Current.StartFullscreen
         });
 
@@ -101,6 +102,10 @@ public sealed class SettingsService : ISettingsService
         await _jsRuntime.InvokeVoidAsync(
             "settingsInterop.setTheme",
             Current.Theme.ToString().ToLowerInvariant());
+
+        await _jsRuntime.InvokeVoidAsync(
+            "settingsInterop.setCustomCursor",
+            Current.CustomCursorEnabled);
     }
 
     /// <inheritdoc />
@@ -138,6 +143,7 @@ public sealed class SettingsService : ISettingsService
                 MIN_VOLUME,
                 MAX_VOLUME),
             Theme = theme,
+            CustomCursorEnabled = settings.CustomCursorEnabled,
             StartFullscreen = settings.StartFullscreen
         };
     }
@@ -149,5 +155,6 @@ public sealed class SettingsService : ISettingsService
         left.MusicVolume == right.MusicVolume &&
         left.SfxVolume == right.SfxVolume &&
         left.Theme == right.Theme &&
+        left.CustomCursorEnabled == right.CustomCursorEnabled &&
         left.StartFullscreen == right.StartFullscreen;
 }

@@ -170,11 +170,11 @@
 }
 
 .recruit-button:not(:disabled) {
-    cursor: url('/images/cursors/active.cur'), pointer;
+    cursor: var(--kc-cursor-active);
 }
 
 .recruit-button:disabled {
-    cursor: url('/images/cursors/disabled.cur'), not-allowed;
+    cursor: var(--kc-cursor-disabled);
 }
 
 .candidate-list {

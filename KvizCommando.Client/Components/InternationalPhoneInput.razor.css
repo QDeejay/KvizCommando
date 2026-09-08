@@ -22,11 +22,11 @@
 .kc-international-phone ::deep .iti__selected-country:not(:disabled),
 .kc-international-phone ::deep .iti__selected-country:not(:disabled) *,
 .kc-international-phone ::deep .iti__country {
-    cursor: url('/images/cursors/active.cur'), pointer;
+    cursor: var(--kc-cursor-active);
 }
 
 .kc-international-phone ::deep .iti__selected-country:disabled,
 .kc-international-phone ::deep .iti__selected-country:disabled * {
     color: var(--kc-lcd-input-disabled-color);
-    cursor: url('/images/cursors/disabled.cur'), not-allowed;
+    cursor: var(--kc-cursor-disabled);
 }

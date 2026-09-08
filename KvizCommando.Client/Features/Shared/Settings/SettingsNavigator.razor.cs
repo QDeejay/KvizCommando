@@ -86,6 +86,7 @@ public partial class SettingsNavigator : KcComponentBase
         MusicVolume = source.MusicVolume,
         SfxVolume = source.SfxVolume,
         Theme = source.Theme,
+        CustomCursorEnabled = source.CustomCursorEnabled,
         StartFullscreen = source.StartFullscreen
     };
 

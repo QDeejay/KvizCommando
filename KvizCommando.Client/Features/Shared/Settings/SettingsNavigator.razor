@@ -106,6 +106,16 @@
                                 </div>
 
                                 <label class="kc-settings-row kc-settings-toggle-row">
+                                    <strong>@Ui.Lang["mainlayout.Settings.Appearance.CustomCursor"]</strong>
+                                    <span class="kc-settings-switch">
+                                        <input type="checkbox"
+                                               @bind="_draft.CustomCursorEnabled"
+                                               @bind:after="SaveAsync" />
+                                        <span aria-hidden="true"></span>
+                                    </span>
+                                </label>
+
+                                <label class="kc-settings-row kc-settings-toggle-row">
                                     <strong>@Ui.Lang["mainlayout.Settings.Appearance.Fullscreen"]</strong>
                                     <span class="kc-settings-switch">
                                         <input type="checkbox"

@@ -222,6 +222,7 @@
   <data name="Settings.Sound.MusicVolume" xml:space="preserve"><value>Music volume</value></data>
   <data name="Settings.Sound.SfxVolume" xml:space="preserve"><value>SFX volume</value></data>
   <data name="Settings.Appearance.Theme" xml:space="preserve"><value>Color theme</value></data>
+  <data name="Settings.Appearance.CustomCursor" xml:space="preserve"><value>Custom cursor</value></data>
   <data name="Settings.Appearance.Fullscreen" xml:space="preserve"><value>Fullscreen mode after login</value></data>
   <data name="Settings.Theme.Default" xml:space="preserve"><value>Default</value></data>
   <data name="Settings.Theme.Olive" xml:space="preserve"><value>Olive</value></data>

@@ -89,7 +89,7 @@
     .bottom-action-label:hover {
         color: blue;
         font-weight: bold;
-        cursor: url('/images/cursors/active.cur'), pointer;
+        cursor: var(--kc-cursor-active);
         animation: none;
     }
 

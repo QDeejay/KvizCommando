@@ -135,7 +135,7 @@
 
 /* Interaktív viselkedés */
 .clickable {
-    cursor: url('/images/cursors/active.cur'), pointer;
+    cursor: var(--kc-cursor-active);
 }
 
     .clickable:hover {
@@ -163,7 +163,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: url('/images/cursors/disabled.cur'), not-allowed;
+    cursor: var(--kc-cursor-disabled);
 }
 
 .kc-disable-icon {

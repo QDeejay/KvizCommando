@@ -25,7 +25,7 @@ namespace KvizCommando.Client.Components
 
         private string FooterCursorStyle =>
             _vm.ReSizable
-                ? "cursor: url('/images/cursors/active.cur'), pointer;"
+                ? "cursor: var(--kc-cursor-active);"
                 : string.Empty;
         private string CssClass =>
             $"kc-content-box {_vm.Size}" + (_vm.IsClickable ? " clickable" : "");

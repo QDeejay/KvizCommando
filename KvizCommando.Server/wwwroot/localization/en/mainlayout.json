@@ -40,6 +40,7 @@
   "Settings.Sound.MusicVolume": "Music volume",
   "Settings.Sound.SfxVolume": "SFX volume",
   "Settings.Appearance.Theme": "Color theme",
+  "Settings.Appearance.CustomCursor": "Custom cursor",
   "Settings.Appearance.Fullscreen": "Fullscreen mode after login",
   "Settings.Theme.Default": "Default",
   "Settings.Theme.Olive": "Olive",

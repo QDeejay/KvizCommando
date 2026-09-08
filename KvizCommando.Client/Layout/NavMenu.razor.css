@@ -64,7 +64,7 @@
         border-radius: 8px;
         color: #d3d3d3;
         font-size: 1.35rem;
-        cursor: url('/images/cursors/active.cur'), pointer;
+        cursor: var(--kc-cursor-active);
     }
 
     .nav-drawer-close:hover {

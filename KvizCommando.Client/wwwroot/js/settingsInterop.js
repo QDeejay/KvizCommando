@@ -3,6 +3,10 @@ window.settingsInterop = (() => {
         document.documentElement.dataset.theme = theme;
     }
 
+    function setCustomCursor(enabled) {
+        document.documentElement.dataset.customCursor = enabled ? "true" : "false";
+    }
+
     async function tryEnterFullscreen() {
         if (document.fullscreenElement !== null)
             return;
@@ -29,6 +33,7 @@ window.settingsInterop = (() => {
 
     return {
         setTheme,
+        setCustomCursor,
         tryEnterFullscreen,
         exitFullscreen
     };

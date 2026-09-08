@@ -68,7 +68,7 @@
     font-size: 1.15rem;
     line-height: 1;
     opacity: .78;
-    cursor: url('/images/cursors/active.cur'), pointer;
+    cursor: var(--kc-cursor-active);
 }
 
 .lcd-control:hover {

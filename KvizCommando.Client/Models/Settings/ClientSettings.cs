@@ -6,5 +6,6 @@ public sealed class ClientSettings
     public int MusicVolume { get; set; } = 70;
     public int SfxVolume { get; set; } = 80;
     public VisualTheme Theme { get; set; } = VisualTheme.Default;
+    public bool CustomCursorEnabled { get; set; }
     public bool StartFullscreen { get; set; }
 }

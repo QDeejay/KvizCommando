@@ -49,7 +49,7 @@ public partial class NewQuestionManager
         _formData.Answers.Any(string.IsNullOrWhiteSpace) ||
         _formData.Answers.Distinct().Count() != _formData.Answers.Length;
     private string DisCursor => DisabledLcd
-        ? "cursor: url('/images/cursors/disabled.cur'), not-allowed !Important;"
+        ? "cursor: var(--kc-cursor-disabled) !important;"
         : string.Empty;
     private string DisBckGround => DisabledLcd
         ? "background-color: #2a2a2a"
