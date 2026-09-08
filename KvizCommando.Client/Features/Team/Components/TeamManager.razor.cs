@@ -139,7 +139,7 @@ public partial class TeamManager
         var request = new ModifySkillRequest
         {
             SkillChanges = [.. _usedPoints],
-            SkillType = 1,
+            SkillType = 0,
             MemberId = 0
         };
 

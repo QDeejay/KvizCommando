@@ -44,5 +44,13 @@ namespace KvizCommando.Client.Layout
             await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
             await OnClose.InvokeAsync();
         }
+
+        private async Task HandleNavigationAsync(bool isEnabled)
+        {
+            if (!isEnabled)
+                return;
+
+            await CloseAsync();
+        }
     }
 }

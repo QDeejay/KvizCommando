@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="VsGame.Error.InvalidTeam" xml:space="preserve">
-    <value>&lt; Érvénytelen csatacsapat! &gt;</value>
+    <value>Érvénytelen csatacsapat!</value>
   </data>
   <data name="VsGame.Error.Session" xml:space="preserve">
     <value>Másik eszközön be lett jelentkezve!</value>
   </data>
   <data name="VsGame.Response.TeamSaved" xml:space="preserve">
-    <value>&lt; Harci csapat elmentve! &gt;</value>
+    <value>Harci csapat elmentve!</value>
   </data>
 </root>

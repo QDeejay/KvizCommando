@@ -12,56 +12,105 @@
                 </button>
             </div>
 
-            <NavLink class=@btnNavClass[0] href="home" Match="NavLinkMatch.All" @onclick="CloseAsync">
+            <NavLink class=@btnNavClass[0]
+                     href="@(Hs.NavBarEnable ? "home" : null)"
+                     Match="NavLinkMatch.All"
+                     aria-disabled="@(!Hs.NavBarEnable)"
+                     tabindex="@(Hs.NavBarEnable ? null : "-1")"
+                     @onclick="() => HandleNavigationAsync(Hs.NavBarEnable)">
                 <i class="bi bi-house-door"></i>
                 <span>@Lang["nav.Button.Home"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[1] href="team" Match="NavLinkMatch.All" @onclick="CloseAsync">
+            <NavLink class=@btnNavClass[1]
+                     href="@(Hs.Team.Enable ? "team" : null)"
+                     Match="NavLinkMatch.All"
+                     aria-disabled="@(!Hs.Team.Enable)"
+                     tabindex="@(Hs.Team.Enable ? null : "-1")"
+                     @onclick="() => HandleNavigationAsync(Hs.Team.Enable)">
                 <i class="bi bi-person-badge-fill"></i>
                 <span>@Lang["nav.Button.Team"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[2] href="question" Match=" NavLinkMatch.All" @onclick="CloseAsync">
+            <NavLink class=@btnNavClass[2]
+                     href="@(Hs.Question.Enable ? "question" : null)"
+                     Match="NavLinkMatch.All"
+                     aria-disabled="@(!Hs.Question.Enable)"
+                     tabindex="@(Hs.Question.Enable ? null : "-1")"
+                     @onclick="() => HandleNavigationAsync(Hs.Question.Enable)">
                 <i class="bi bi-patch-question"></i>
                 <span>@Lang["nav.Button.Question"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[3] href="solo-game" Match=" NavLinkMatch.All" @onclick="CloseAsync">
+            <NavLink class=@btnNavClass[3]
+                     href="@(Hs.SoloGame.Enable ? "solo-game" : null)"
+                     Match="NavLinkMatch.All"
+                     aria-disabled="@(!Hs.SoloGame.Enable)"
+                     tabindex="@(Hs.SoloGame.Enable ? null : "-1")"
+                     @onclick="() => HandleNavigationAsync(Hs.SoloGame.Enable)">
                 <i class="bi bi-controller"></i>
                 <span>@Lang["nav.Button.Game"]</span>
             </NavLink>
-            <NavLink class=@btnNavClass[4] href="vs-game" Match=" NavLinkMatch.All" @onclick="CloseAsync">
+            <NavLink class=@btnNavClass[4]
+                     href="@(Hs.VsGame.Enable ? "vs-game" : null)"
+                     Match="NavLinkMatch.All"
+                     aria-disabled="@(!Hs.VsGame.Enable)"
+                     tabindex="@(Hs.VsGame.Enable ? null : "-1")"
+                     @onclick="() => HandleNavigationAsync(Hs.VsGame.Enable)">
                 <i class="bi bi-broadcast-pin"></i>
                 <span>@Lang["nav.Button.Game"] VS</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[5] href="#" @onclick="CloseAsync">
+            <NavLink class=@btnNavClass[5]
+                     href="@(Hs.Shop.Enable ? "#" : null)"
+                     aria-disabled="@(!Hs.Shop.Enable)"
+                     tabindex="@(Hs.Shop.Enable ? null : "-1")"
+                     @onclick="() => HandleNavigationAsync(Hs.Shop.Enable)">
                 <i class="bi bi-shop"></i>
                 <span>@Lang["nav.Button.Shop"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[6] href="#" @onclick="CloseAsync">
+            <NavLink class=@btnNavClass[6]
+                     href="@(Hs.Ranking.Enable ? "#" : null)"
+                     aria-disabled="@(!Hs.Ranking.Enable)"
+                     tabindex="@(Hs.Ranking.Enable ? null : "-1")"
+                     @onclick="() => HandleNavigationAsync(Hs.Ranking.Enable)">
                 <i class="bi bi-trophy-fill"></i>
                 <span>@Lang["nav.Button.Rankings"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[7] href="#" @onclick="CloseAsync">
+            <NavLink class=@btnNavClass[7]
+                     href="@(Hs.Statistic.Enable ? "#" : null)"
+                     aria-disabled="@(!Hs.Statistic.Enable)"
+                     tabindex="@(Hs.Statistic.Enable ? null : "-1")"
+                     @onclick="() => HandleNavigationAsync(Hs.Statistic.Enable)">
                 <i class="bi bi-graph-up"></i>
                 <span>@Lang["nav.Button.Statistic"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[8] href="#" @onclick="CloseAsync">
+            <NavLink class=@btnNavClass[8]
+                     href="@(Hs.Events.Enable ? "#" : null)"
+                     aria-disabled="@(!Hs.Events.Enable)"
+                     tabindex="@(Hs.Events.Enable ? null : "-1")"
+                     @onclick="() => HandleNavigationAsync(Hs.Events.Enable)">
                 <i class="bi bi-calendar-event"></i>
                 <span>@Lang["nav.Button.Events"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[10] href="#" @onclick="CloseAsync">
+            <NavLink class=@btnNavClass[10]
+                     href="@(Hs.Messages.Enable ? "#" : null)"
+                     aria-disabled="@(!Hs.Messages.Enable)"
+                     tabindex="@(Hs.Messages.Enable ? null : "-1")"
+                     @onclick="() => HandleNavigationAsync(Hs.Messages.Enable)">
                 <i class="bi bi-chat-left-text"></i>
                 <span>@Lang["nav.Button.Messages"]</span>
             </NavLink>
 
-            <NavLink class=@btnNavClass[9] href="#" @onclick="CloseAsync">
+            <NavLink class=@btnNavClass[9]
+                     href="@(Hs.Community.Enable ? "#" : null)"
+                     aria-disabled="@(!Hs.Community.Enable)"
+                     tabindex="@(Hs.Community.Enable ? null : "-1")"
+                     @onclick="() => HandleNavigationAsync(Hs.Community.Enable)">
                 <i class="bi bi-people"></i>
                 <span>@Lang["nav.Button.Community"]</span>
             </NavLink>

@@ -136,21 +136,21 @@
     <value>Másik eszközön be lett jelentkezve!</value>
   </data>
   <data name="Resp.Fire" xml:space="preserve">
-    <value>&lt; Csapattag kirúgva!&gt;</value>
+    <value>Csapattag kirúgva!</value>
   </data>
   <data name="Resp.Heal" xml:space="preserve">
-    <value>&lt;Csapattag vitalitása visszaállítva! &gt;</value>
+    <value>Csapattag vitalitása visszaállítva!</value>
   </data>
   <data name="Resp.Promote" xml:space="preserve">
-    <value>&lt;Csapattag előléptetve! &gt;</value>
+    <value>Csapattag előléptetve!</value>
   </data>
   <data name="Resp.Hire" xml:space="preserve">
-    <value>&lt; Sikeres toborzás! &gt;</value>
+    <value>Sikeres toborzás!</value>
   </data>
   <data name="Resp.Retire" xml:space="preserve">
-    <value>&lt; Csapattag visszavonult! &gt;</value>
+    <value>Csapattag visszavonult!</value>
   </data>
   <data name="Resp.SaveSkill" xml:space="preserve">
-    <value>&lt; Mentve {0} pont! &gt;</value>
+    <value>Mentve {0} pont!</value>
   </data>
 </root>

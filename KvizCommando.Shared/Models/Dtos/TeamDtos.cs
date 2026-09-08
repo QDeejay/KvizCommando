@@ -66,7 +66,8 @@ namespace KvizCommando.Shared.Models.Dtos
         public byte LvlCurrent { get; set; } = 0;
         public byte LvlCurMax { get; set; } = 0;
         public byte LvlOvrMax { get; set; } = 0;
-        public bool SkillCanDev = false;
+
+        public bool SkillCanDev { get; set; } = false;
     }
     public sealed class CandidateDto
     {

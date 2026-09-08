@@ -59,7 +59,15 @@ namespace KvizCommando.Server.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            if (dto.SkillType > 2 || dto.SkillType < 1 || dto.MemberId > 8)
+            bool isHelpRequest =
+                dto.SkillType == 0 &&
+                dto.MemberId == 0;
+
+            bool isMemberSkillRequest =
+                dto.SkillType is 1 or 2 &&
+                dto.MemberId is >= 1 and <= 8;
+
+            if (!isHelpRequest && !isMemberSkillRequest)
                 return FailToast(400, _localizer["Resp.Error.InValidData"].Value);
 
             var playerId = await _idCache.GetPlayerIdAsync(userId, ct);

@@ -19,10 +19,11 @@ namespace KvizCommando.Server.Services.DtoMapping
                 {
                     if (dto.MemberId > 0 && player.CharCatMask[dto.MemberId - 1] == false)
                         return null;
+                    bool isHelp = dto.SkillType == 0;
 
-                    var member = dto.MemberId > 0
-                        ? player.Characters[dto.MemberId - 1]
-                        : null;
+                    var member = isHelp
+                        ? null
+                        : player.Characters[dto.MemberId - 1];
 
                     if (dto.MemberId > 0 && member is null)
                         return null;
@@ -33,25 +34,31 @@ namespace KvizCommando.Server.Services.DtoMapping
                         return null;
                     }
 
-                    int availableDevPoints = dto.MemberId == 0
+                    int availableDevPoints = isHelp
                         ? player.Core.DevPoint
                         : member!.DevPoints;
 
                     var requestedLevels = dto.SkillChanges.Sum();
-                    var totalUsedPoints = dto.MemberId == 0
-                        ? requestedLevels * TeamRules.HELP_LEVEL_TEAM_DEV_POINT_COST
+
+                    var totalUsedPoints = isHelp
+                        ? requestedLevels *
+                            TeamRules.HELP_LEVEL_TEAM_DEV_POINT_COST
                         : requestedLevels;
 
                     if (availableDevPoints < totalUsedPoints)
                         return null;
 
-                    int skillType = dto.MemberId == 0
-                        ? 12
-                        : dto.SkillType == 1 ? 4 : 8;
+                    int rankRuleOffset = dto.SkillType switch
+                    {
+                        0 => 12, // segítségek
+                        1 => 4,  // másodlagos képességek
+                        2 => 8,  // extra képességek
+                        _ => throw new InvalidOperationException()
+                    };
 
-                    int maxLevel = dto.MemberId == 0
-                        ? player.Core.RankEnum
-                        : member!.Rank;
+                    int actualRank = isHelp
+                         ? player.Core.RankEnum
+                         : member!.Rank;
 
                     var helpDatas = string.IsNullOrEmpty(player.Loadout.HelpLevelsJson)
                         ? []
@@ -60,15 +67,25 @@ namespace KvizCommando.Server.Services.DtoMapping
                     for (int i = 0; i < 4; i++)
                     {
                         if (dto.SkillChanges[i] > 0 &&
-                            maxLevel < RankConstants.startLevels[i + skillType])
+                            actualRank < RankConstants.startLevels[i + rankRuleOffset])
                             return null;
 
-                        int levelLimit = Math.Min(
-                            RankConstants.maxLevels[i + skillType],
-                            RankConstants.maxLevels[i + skillType] - 21 + maxLevel);
-                        levelLimit = Math.Max(0, levelLimit);
+                        int ruleIndex = i + rankRuleOffset;
+                        int startLevel = RankConstants.startLevels[ruleIndex];
+                        int overallMax = RankConstants.maxLevels[ruleIndex];
 
-                        if (dto.MemberId == 0)
+                        int corrector =
+                            dto.SkillType != 0 && i % 2 == 1
+                                ? 1
+                                : 0;
+
+                        int levelLimit = actualRank < startLevel
+                            ? 0
+                            : Math.Min(
+                                overallMax,
+                                actualRank - startLevel + 1 + corrector);
+
+                        if (dto.SkillType == 0)
                         {
                             if (dto.SkillChanges[i] > 0 &&
                                 dto.SkillChanges[i] + helpDatas[i] > levelLimit)

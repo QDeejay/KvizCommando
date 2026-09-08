@@ -1,17 +1,10 @@
-using KvizCommando.Server.Domain.Entities.Statistics;
 using KvizCommando.Server.Models;
 using KvizCommando.Server.Services.PlayerCache;
-using KvizCommando.Server.Services.VsGame;
-using KvizCommando.Server.Services.VsGame.Matchmaking;
-using KvizCommando.Server.Utilities;
 using KvizCommando.Server.Utilities.Recruit;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Enums;
 using KvizCommando.Shared.Models.Rules;
-using KvizCommando.Shared.Models.User;
-using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 using System.Text.Json;
 
 namespace KvizCommando.Server.Services.DtoMapping
@@ -306,14 +299,21 @@ namespace KvizCommando.Server.Services.DtoMapping
         private static SkillPartial SkillPartialResolver(int currentLevel, int actualRank, int maxLevel, int startmodifier, int corrector)
         {
             int maxmodify = Math.Max(0, actualRank - startmodifier);
-            int maxlevel = Math.Min(maxLevel, maxmodify);
-            maxlevel = Math.Max(0, maxlevel);
+
+            int currentMax = Math.Max(
+                0,
+                Math.Min(maxLevel, maxmodify));
+
+            int lvlCurMax = currentMax > 0
+               ? Math.Min(maxLevel, currentMax + corrector)
+               : currentMax;
+
             return new SkillPartial
             {
                 LvlCurrent = (byte)currentLevel,
-                LvlCurMax = maxlevel > 0 ? (byte)(maxlevel + corrector) : (byte)maxlevel,
-                LvlOvrMax = maxlevel > 0 ? (byte)(maxlevel + corrector) : (byte)maxlevel,
-                SkillCanDev = (byte)currentLevel < (byte)maxlevel
+                LvlCurMax = (byte)lvlCurMax,
+                LvlOvrMax = (byte)maxLevel,
+                SkillCanDev = (byte)currentLevel < (byte)lvlCurMax
             };
         }
         private static MembRemark RemarkResolver(TeamMemberDto mem, int teamPoints, int teamLevel)

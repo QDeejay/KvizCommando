@@ -136,21 +136,21 @@
     <value>Re-Logined on other device!</value>
   </data>
   <data name="Resp.Fire" xml:space="preserve">
-    <value>&lt; Team member fired! &gt;</value>
+    <value>Team member fired!</value>
   </data>
   <data name="Resp.Heal" xml:space="preserve">
-    <value>&lt;Team member healed! &gt;</value>
+    <value>Team member healed!</value>
   </data>
   <data name="Resp.Promote" xml:space="preserve">
-    <value>&lt; Team member promoted! &gt;</value>
+    <value>Team member promoted!</value>
   </data>
   <data name="Resp.Hire" xml:space="preserve">
-    <value>&lt; Successed recruit! &gt;</value>
+    <value>Successed recruit!</value>
   </data>
   <data name="Resp.Retire" xml:space="preserve">
-    <value>&lt; Team member retired! &gt;</value>
+    <value>Team member retired!</value>
   </data>
   <data name="Resp.SaveSkill" xml:space="preserve">
-    <value>&lt; Saved {0} points! &gt;</value>
+    <value>Saved {0} points!</value>
   </data>
 </root>

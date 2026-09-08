@@ -70,7 +70,7 @@ namespace KvizCommando.Client.Features.Team.Builders
                 )
             );
 
-            BuildMemberRows(member, vm, culture);
+            BuildMemberRows(member, vm, culture, _lang);
             return vm;
         }
         /// <summary>
@@ -116,7 +116,7 @@ namespace KvizCommando.Client.Features.Team.Builders
             return vm;
         }
 
-        private static void BuildMemberRows(TeamMemberDto mem, BottomBlockVm vm, string culture)
+        private static void BuildMemberRows(TeamMemberDto mem, BottomBlockVm vm, string culture, ILanguageService lang)
         {
             int lvl = mem.Level;
             string levelShort = TeamHelpers.Right(RankNameTable.Data[lvl].PublicLevel ?? "", 2);
@@ -127,20 +127,20 @@ namespace KvizCommando.Client.Features.Team.Builders
             vm.Rows.Add(BuildMainSkillRow(0, mainAt.Category[0], mem.Level, levelShort, culture));
             vm.Rows.Add(BuildMainSkillRow(2, mainAt.Category[2], mem.Level, levelShort, culture));
 
-            vm.Rows.Add(BuildSkillRow(secAt.Skill[0], secAt.Category[0], 0, culture));
-            vm.Rows.Add(BuildSkillRow(secAt.Skill[2], secAt.Category[2], 2, culture));
-            vm.Rows.Add(BuildSkillRow(genAt.Skill[0], genAt.Category[0], 4, culture));
-            vm.Rows.Add(BuildSkillRow(genAt.Skill[2], genAt.Category[2], 6, culture));
+            vm.Rows.Add(BuildSkillRow(secAt.Skill[0], secAt.Category[0], 0, culture, lang));
+            vm.Rows.Add(BuildSkillRow(secAt.Skill[2], secAt.Category[2], 2, culture, lang));
+            vm.Rows.Add(BuildSkillRow(genAt.Skill[0], genAt.Category[0], 4, culture, lang));
+            vm.Rows.Add(BuildSkillRow(genAt.Skill[2], genAt.Category[2], 6, culture, lang));
 
             vm.Rows.Add(BuildMainSkillRow(1, mainAt.Category[1], mem.Level, levelShort, culture));
             vm.Rows.Add(BuildMainSkillRow(3, mainAt.Category[3], mem.Level, levelShort, culture));
 
-            vm.Rows.Add(BuildSkillRow(secAt.Skill[1], secAt.Category[1], 1, culture));
-            vm.Rows.Add(BuildSkillRow(secAt.Skill[3], secAt.Category[3], 3, culture));
-            vm.Rows.Add(BuildSkillRow(genAt.Skill[1], genAt.Category[1], 5, culture));
-            vm.Rows.Add(BuildSkillRow(genAt.Skill[3], genAt.Category[3], 7, culture));
+            vm.Rows.Add(BuildSkillRow(secAt.Skill[1], secAt.Category[1], 1, culture, lang));
+            vm.Rows.Add(BuildSkillRow(secAt.Skill[3], secAt.Category[3], 3, culture, lang));
+            vm.Rows.Add(BuildSkillRow(genAt.Skill[1], genAt.Category[1], 5, culture, lang));
+            vm.Rows.Add(BuildSkillRow(genAt.Skill[3], genAt.Category[3], 7, culture, lang));
         }
-        private static BottomRow BuildSkillRow(SkillPartial skill, int category, int modifier, string culture)
+        private static BottomRow BuildSkillRow(SkillPartial skill, int category, int modifier, string culture, ILanguageService lg)
         {
             double val = ModifierTable.Data[skill.LvlCurrent].Modifier[modifier] ?? 0.0;
             string prefix = val > 0 ? "+" : "";
@@ -149,7 +149,7 @@ namespace KvizCommando.Client.Features.Team.Builders
                 CategoryNameLocalizer.GetCategory(category, culture),
                 "",
                 prefix + TeamHelpers.FormatOneDecimal(val, false),
-                skill.SkillCanDev ? "team.Label.Remark.Develop" : string.Empty,
+                skill.SkillCanDev ? lg["team.Label.Remark.Develop"] : string.Empty,
                 null
             );
         }

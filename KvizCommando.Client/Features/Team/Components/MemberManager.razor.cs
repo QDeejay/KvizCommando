@@ -1,8 +1,8 @@
 using KvizCommando.Client.Features.Team.Builders;
 using KvizCommando.Client.Features.Team.Services;
 using KvizCommando.Client.Features.Team.ViewModels;
-using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Audio;
+using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.Team;
@@ -211,7 +211,7 @@ public partial class MemberManager : IDisposable
             return;
 
         await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
-        ShowSubPage(rowId < 7 ? 1 : 2);
+        ShowSubPage(rowId is 3 or 4 or 9 or 10 ? 1 : 2);
     }
 
     private async Task OnResetButtonPushed()
