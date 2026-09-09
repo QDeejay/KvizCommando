@@ -52,7 +52,6 @@ namespace KvizCommando.Client.Layout
         private bool _isLoggedIn = false;
         private bool _isBckBtnEna = false;
         private string _currentTitle = string.Empty;
-        private bool _isDesktopNavOpen = true;
         private bool _isMobileNavOpen;
 
         private string Greetings => _isLoggedIn
@@ -60,13 +59,14 @@ namespace KvizCommando.Client.Layout
             : string.Empty;
 
         private bool IsFullScreenGame =>
-            Ui.Header.PageIndex is >= (int)SgameBoxKeyRoot.Category and <= (int)SgameBoxKeyRoot.Category + SoloBoxSpecs.CATEGORY_BOX_COUNT ||
-            Ui.Header.PageIndex is >= (int)SgameBoxKeyRoot.Orientation and <= (int)SgameBoxKeyRoot.Orientation + SoloBoxSpecs.ORIENTATION_BOX_COUNT ||
+            Ui.Header.PageIndex is > (int)SgameBoxKeyRoot.Category and <= (int)SgameBoxKeyRoot.Category + SoloBoxSpecs.CATEGORY_BOX_COUNT ||
+            Ui.Header.PageIndex is > (int)SgameBoxKeyRoot.Orientation and <= (int)SgameBoxKeyRoot.Orientation + SoloBoxSpecs.ORIENTATION_BOX_COUNT ||
             Ui.Header.PageIndex is > (int)VsBoxKeyRanked.Classification and <= (int)VsBoxKeyRanked.Classification + VsGameBoxSpecs.CLASSIFICATION_BOX_COUNT;
-        private bool CanToggleSidebar => _isLoggedIn && Hs.NavBarEnable;
+        private bool IsNavigationAvailable =>
+            _isLoggedIn && !IsFullScreenGame && Hs.NavBarEnable;
         private string MainBackgroundImage =>
             _isLoggedIn ? "/images/lobby.webp" : "/images/login.webp";
-        private bool BackNavigationEna => (!_isMobileNavOpen && Ui.Header.PageIndex != 0) || _isBckBtnEna;
+        private bool BackNavigationEna => _isBckBtnEna;
         private HomeScreen Hs =>
             _isLoggedIn && !IsFullScreenGame
                 ? _appState.Home!.HomeScreen

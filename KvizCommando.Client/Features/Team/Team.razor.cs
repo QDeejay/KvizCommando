@@ -26,6 +26,7 @@ public partial class Team : KcComponentBase, IDisposable
     {
         Ui.Header.OnBackBtnClicked += HandleBack;
         Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Team"], (int)HomeBoxKey.Team);
+        Ui.Header.SetBackBtnEna(false);
         _boxOrder = TBoxBuilder.Root;
     }
 

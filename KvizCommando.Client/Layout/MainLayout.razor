@@ -52,22 +52,13 @@
     <div class="kc-unsupported-screen">
         <ScreenTooSmall />
     </div>
-    <div class="kc-mainlayout-root @(_isLoggedIn ? "authenticated" : "guest") @(_isDesktopNavOpen && CanToggleSidebar ? "desktop-nav-open" : "")"
+    <div class="kc-mainlayout-root @(_isLoggedIn ? "authenticated" : "guest") @(IsNavigationAvailable ? "navigation-available" : "")"
          style="--kc-main-background-image: url('@MainBackgroundImage');">
         
-        @if (_isLoggedIn)
+        @if (IsNavigationAvailable)
         {
             <button type="button"
-                    class="kc-collapse-btn kc-desktop-nav-toggle"
-                    disabled="@(!CanToggleSidebar)"
-                    aria-label="Navigation"
-                    aria-expanded="@_isDesktopNavOpen"
-                    @onclick="ToggleDesktopSidebar">
-            </button>
-
-            <button type="button"
                     class="kc-collapse-btn kc-mobile-nav-toggle"
-                    disabled="@(!CanToggleSidebar)"
                     aria-label="Navigation"
                     aria-expanded="@_isMobileNavOpen"
                     @onclick="ToggleMobileSidebar">
@@ -79,7 +70,7 @@
             }
 
             <LangGuard Culture="@_culture" Module="nav">
-                <div class="kc-mainlayout-nav-side @(_isDesktopNavOpen ? "desktop-open" : "") @(_isMobileNavOpen ? "mobile-open" : "")">
+                <div class="kc-mainlayout-nav-side @(_isMobileNavOpen ? "mobile-open" : "")">
                     <NavMenu Hs="@Hs" OnClose="CloseMobileSidebar" />
                 </div>
             </LangGuard>
@@ -92,12 +83,12 @@
                         <header class="kc-mainlayout-content-header">
 
                             <div class="kc-mainlayout-content-header--left-warper">
-                                  <div class="kc-mainlayout-content-header--left">
+                                  <div class="kc-mainlayout-content-header--left @(BackNavigationEna ? "back-enabled" : "")"
+                                       @onclick="OnBackClick">
 
 
                                 <div class="kc-back-button-slot">
-                                    <div class="kc-back-button @(BackNavigationEna ? "" : "btn-hidden")"
-                                         @onclick="OnBackClick">
+                                    <div class="kc-back-button @(BackNavigationEna ? "" : "btn-hidden")">
                                         @("◀")
                                     </div>
                                 </div>

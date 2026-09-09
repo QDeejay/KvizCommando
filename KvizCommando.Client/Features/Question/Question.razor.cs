@@ -56,6 +56,7 @@ public partial class Question : KcComponentBase, IDisposable
         _hasAccess = true;
         Ui.Header.OnBackBtnClicked += HandleBack;
         Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Question"], (int)HomeBoxKey.Question);
+        Ui.Header.SetBackBtnEna(false);
         _boxOrder = QBoxBuilder.Root;
     }
     protected override void OnParametersSet()

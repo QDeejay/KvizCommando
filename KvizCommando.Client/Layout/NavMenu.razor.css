@@ -16,15 +16,66 @@
 }
 
 .side-nav ::deep .navigation-button {
+    display: flex;
     flex-direction: row;
+    align-items: center;
     justify-content: flex-start;
+    width: 100%;
+    height: 5.4vh;
+    padding: 0 12px;
+    box-sizing: border-box;
+    color: #d3d3d3;
+    background-color: var(--kc-shell-bg);
+    font-family: Arial, sans-serif;
+    font-size: clamp(12px, 1.2vh, 34px);
     gap: 10px;
     text-align: left;
+    text-decoration: none;
+    transition: background-color 0.2s, border-right-width 0.2s;
+}
+
+.side-nav ::deep .navigation-button i {
+    flex-shrink: 0;
+    color: inherit;
+    font-size: clamp(12px, 1.6vh, 34px);
+    transition: transform 0.2s ease;
 }
 
 .side-nav ::deep .navigation-button span {
+    min-width: 0;
     display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     text-align: left;
+}
+
+.side-nav ::deep .navigation-button:hover {
+    color: whitesmoke;
+    background-color: var(--kc-shell-hover);
+    border-right: 4px solid whitesmoke;
+}
+
+.side-nav ::deep .navigation-button:hover i {
+    transform: scale(1.1);
+}
+
+.side-nav ::deep .navigation-button.active {
+    color: var(--kc-shell-border);
+    background-color: whitesmoke;
+    border-right: 6px solid whitesmoke;
+}
+
+.side-nav ::deep .navigation-button.disabled {
+    color: #d3d3d3;
+    background-color: #666666;
+    border: 1px solid var(--kc-shell-border);
+    border-right: 4px solid var(--kc-shell-border);
+    cursor: var(--kc-cursor-disabled);
+}
+
+.side-nav ::deep .navigation-button.disabled i {
+    transform: none;
 }
 
 .nav-footer {
@@ -37,6 +88,36 @@
     height: 6%;
     display: flex;
     z-index: 0;
+}
+
+@media (min-width: 801px) and (min-height: 800px) {
+ 
+    .side-nav ::deep .navigation-button {
+        flex-direction: column;
+        justify-content: center;
+        gap: 2px;
+        text-align: center;
+    }
+
+    .side-nav ::deep .navigation-button i {
+        padding: 0;
+    }
+
+    .side-nav ::deep .navigation-button span {
+        text-align: center;
+    }
+}
+
+@media (min-width: 801px) and (max-width: 1000px) {
+    .side-nav { width: 50%; }
+    .side-nav ::deep .navigation-button {
+        justify-content: center;
+        gap: 0;
+    }
+
+    .side-nav ::deep .navigation-button span {
+        display: none;
+    }
 }
 
 @media (max-width: 800px) {
@@ -87,13 +168,21 @@
     }
 
     .side-nav ::deep .navigation-button {
+        flex-direction: row;
+        justify-content: flex-start;
         min-height: 46px;
         padding: 0 16px;
         gap: 12px;
+        text-align: left;
     }
 
     .side-nav ::deep .navigation-button i {
         width: 24px;
         text-align: center;
+    }
+
+    .side-nav ::deep .navigation-button span {
+        display: block;
+        text-align: left;
     }
 }

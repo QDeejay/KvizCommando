@@ -31,6 +31,7 @@ public partial class VsGame : KcComponentBase, IDisposable
     {
         Ui.Header.OnBackBtnClicked += HandleBack;
         Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.GameVs"], (int)HomeBoxKey.GameVs);
+        Ui.Header.SetBackBtnEna(false);
         _boxOrder = VsBoxBuilder.Root;
     }
 

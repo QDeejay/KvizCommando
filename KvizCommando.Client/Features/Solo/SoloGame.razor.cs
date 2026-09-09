@@ -38,6 +38,7 @@ public partial class SoloGame : KcComponentBase, IDisposable
     {
         Ui.Header.OnBackBtnClicked += HandleBack;
         Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.GameSolo"], (int)HomeBoxKey.GameSolo);
+        Ui.Header.SetBackBtnEna(false);
         _boxOrder = SgameBoxBuilder.Root;
     }
 

@@ -5,18 +5,9 @@ namespace KvizCommando.Client.Layout
 {
     partial class MainLayout
     {
-        private async Task ToggleDesktopSidebar()
-        {
-            if (CanToggleSidebar)
-            {
-                await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
-                _isDesktopNavOpen = !_isDesktopNavOpen;
-            }
-        }
-
         private async Task ToggleMobileSidebar()
         {
-            if (CanToggleSidebar)
+            if (IsNavigationAvailable)
             {
                 await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
                 _isMobileNavOpen = !_isMobileNavOpen;
@@ -84,6 +75,9 @@ namespace KvizCommando.Client.Layout
 
         private async Task OnBackClick()
         {
+            if (!BackNavigationEna)
+                return;
+
             await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
             Ui.SubHeader.Hide();
             Ui.Header.SetBackBtnToPushState();
