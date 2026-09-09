@@ -1,7 +1,7 @@
-﻿using KvizCommando.Client.Services.Visual.UiService.Language;
+﻿using KvizCommando.Client.Services.Audio;
+using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
-using KvizCommando.Client.Services.Audio;
 
 namespace KvizCommando.Client.Layout
 {
@@ -16,6 +16,7 @@ namespace KvizCommando.Client.Layout
         private bool _isReady;
         private string[] btnNavClass = new string[16];
         private const string BTN_NAV_CLASS_DEF = "navigation-button";
+        private const string DEPLOY_VERSION = "v1.0.6"; // TODO: Automate this versioning
 
 
         protected override void OnParametersSet()
