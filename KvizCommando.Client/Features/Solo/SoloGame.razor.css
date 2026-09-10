@@ -19,7 +19,7 @@
 }
 
 /* Tablet: 2 oszlop */
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
     .kc-solo-selector-sub {
         grid-template-columns: repeat(2, 1fr);
         max-width: 440px; /* 2x140px + 1x12px gap ≈ 300px */

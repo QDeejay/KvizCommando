@@ -108,7 +108,7 @@
     }
 }
 
-@media (min-width: 801px) and (max-width: 1000px) {
+@media (min-width: 821px) and (max-width: 1000px) {
     .side-nav { width: 50%; }
     .side-nav ::deep .navigation-button {
         justify-content: center;
@@ -120,7 +120,7 @@
     }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 820px) {
     .nav-drawer-header {
         flex: 0 0 60px;
         min-height: 60px;
