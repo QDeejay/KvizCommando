@@ -35,24 +35,24 @@ namespace KvizCommando.Client.Layout
             switch (reason.ToLowerInvariant())
             {
                 case "success":
-                    Ui.Toast.Complete(Ui.Lang["mainlayout.Toast.Logout.Success"]);
+                    Ui.Toast.Complete(Lang["mainlayout.Toast.Logout.Success"]);
                     break;
 
                 case "session":
-                    Ui.Toast.Brief(Ui.Lang["mainlayout.Toast.Logout.Session"]);
+                    Ui.Toast.Brief(Lang["mainlayout.Toast.Logout.Session"]);
 
                     break;
 
                 case "expired":
-                    Ui.Toast.Brief(Ui.Lang["mainlayout.Toast.Logout.Expired"]);
+                    Ui.Toast.Brief(Lang["mainlayout.Toast.Logout.Expired"]);
                     break;
 
                 case "error":
-                    Ui.Toast.Error(Ui.Lang["mainlayout.Toast.Logout.Error"]);
+                    Ui.Toast.Error(Lang["mainlayout.Toast.Logout.Error"]);
                     break;
 
                 case "deleted":
-                    Ui.Toast.Brief(Ui.Lang["mainlayout.Toast.AccountDeleted"]);
+                    Ui.Toast.Brief(Lang["mainlayout.Toast.AccountDeleted"]);
                     break;
             }
             return true;

@@ -1,6 +1,5 @@
 using Blazored.LocalStorage;
 using Blazored.SessionStorage;
-using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Shared.Help;
 using KvizCommando.Client.Features.Shared.Modal;
 using KvizCommando.Client.Features.Shared.Modal.Builders;
@@ -14,8 +13,10 @@ using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Settings;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.MainLayout;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using System.Globalization;
 
 namespace KvizCommando.Client.Layout
@@ -25,7 +26,8 @@ namespace KvizCommando.Client.Layout
     /// </summary>
     public partial class MainLayout : KcLayoutComponentBase, IDisposable
     {
-[Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
+        [Inject] private IStringLocalizer<MainLayoutResource> Lang { get; set; } = default!;
+        [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
         [Inject] private ISessionStorageService SessionStorage { get; set; } = default!;
         [Inject] private IHomeState HState { get; set; } = default!;
         [Inject] private IQuestionState QState { get; set; } = default!;
@@ -55,7 +57,9 @@ namespace KvizCommando.Client.Layout
         private bool _isMobileNavOpen;
 
         private string Greetings => _isLoggedIn
-            ? Ui.Lang["mainlayout.Text.Greetings"].FormatSafe(RankNameLocalizer.GetName(_appState.Home!.UserMainData.RankEnum, _culture))
+            ? Lang["mainlayout.Text.Greetings", RankNameLocalizer.GetName(
+                _appState.Home!.UserMainData.RankEnum,
+                _culture)]
             : string.Empty;
 
         private bool IsFullScreenGame =>
@@ -80,7 +84,7 @@ namespace KvizCommando.Client.Layout
 
             Console.WriteLine($"[{this}] has been started");
 
-            _culture = await InitCultureAsync();
+            _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
             await Ui.Lang.LoadModuleAsync(_culture, "common");  // szükséges
             await Ui.Lang.LoadModuleAsync(_culture, "mainlayout");  // szükséges

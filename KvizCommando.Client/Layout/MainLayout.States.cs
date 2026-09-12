@@ -1,18 +1,8 @@
-using Blazored.LocalStorage;
-using Blazored.SessionStorage;
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Shared.Help;
-using KvizCommando.Client.Features.Shared.Modal;
-using KvizCommando.Client.Features.Shared.Modal.Builders;
-using KvizCommando.Client.Features.Solo.Builders;
-using KvizCommando.Client.Features.VsGame.Builders;
-using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
-using KvizCommando.Client.Utilities;
-using KvizCommando.Shared.Models.Dtos;
-using Microsoft.AspNetCore.Components;
 using System.Globalization;
 
 namespace KvizCommando.Client.Layout
@@ -166,7 +156,7 @@ namespace KvizCommando.Client.Layout
                 return;
 
             SessionService.PendingSessionReplacementWarning = false;
-            Ui.Toast.Brief(Ui.Lang["mainlayout.Toast.Login.Replaced"]);
+            Ui.Toast.Brief(Lang["mainlayout.Toast.Login.Replaced"]);
         }
 
         private async Task<bool> RestoreSessionAsync()
@@ -195,33 +185,14 @@ namespace KvizCommando.Client.Layout
 
             Ui.HeadDisplay.SetMessages(
             [
-                Ui.Lang["mainlayout.Text.TeamName"]
-                    .FormatSafe(main.TeamName),
-                Ui.Lang["mainlayout.Text.TeamLevel"]
-                    .FormatSafe(level),
-                Ui.Lang["mainlayout.Text.Xp"]
-                    .FormatSafe(main.XP),
-                Ui.Lang["mainlayout.Text.NextLevelXp"]
-                    .FormatSafe(home.ExtendedInfo.NextXp),
-                Ui.Lang["mainlayout.Text.Credit"]
-                    .FormatSafe(main.Credit),
-                Ui.Lang["mainlayout.Text.Voucher"]
-                    .FormatSafe(main.Voucher)
+                Lang["mainlayout.Text.TeamName", main.TeamName],
+                Lang["mainlayout.Text.TeamLevel", level],
+                Lang["mainlayout.Text.Xp", main.XP],
+                Lang["mainlayout.Text.NextLevelXp", home.ExtendedInfo.NextXp],
+                Lang["mainlayout.Text.Credit", main.Credit],
+                Lang["mainlayout.Text.Voucher", main.Voucher]
             ]);
         }
 
-        private async Task<string> InitCultureAsync()
-        {
-            var culture = await LocalStorage.GetItemAsync<string>("userLang");
-            if (string.IsNullOrWhiteSpace(culture))
-            {
-                culture = "hu-HU";
-                await LocalStorage.SetItemAsync("userLang", culture);
-            }
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo(culture);
-            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(culture);
-
-            return CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
-        }
     }
 }

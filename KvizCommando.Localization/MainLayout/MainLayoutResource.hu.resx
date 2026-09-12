@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="mainlayout.Header.Community" xml:space="preserve"><value>Közösség</value></data>
+  <data name="mainlayout.Header.Events" xml:space="preserve"><value>Események</value></data>
+  <data name="mainlayout.Header.Exit" xml:space="preserve"><value>Kilépés</value></data>
+  <data name="mainlayout.Header.GameSolo" xml:space="preserve"><value>Játék - Egyedül</value></data>
+  <data name="mainlayout.Header.GameVs" xml:space="preserve"><value>Játék - Online</value></data>
+  <data name="mainlayout.Header.Home" xml:space="preserve"><value>Bázis</value></data>
+  <data name="mainlayout.Header.Messages" xml:space="preserve"><value>Üzenetek</value></data>
+  <data name="mainlayout.Header.Question" xml:space="preserve"><value>Kérdések kezelése</value></data>
+  <data name="mainlayout.Header.Settings" xml:space="preserve"><value>Beállítások</value></data>
+  <data name="mainlayout.Header.Shop" xml:space="preserve"><value>Bolt</value></data>
+  <data name="mainlayout.Header.Statistic" xml:space="preserve"><value>Statisztika</value></data>
+  <data name="mainlayout.Header.Team" xml:space="preserve"><value>Csapat Kezelés</value></data>
+  <data name="mainlayout.Text.Greetings" xml:space="preserve"><value>Üdvözlet {0}!</value></data>
+  <data name="mainlayout.Text.NextLevelXp" xml:space="preserve"><value>Következő szint Xp: {0}</value></data>
+  <data name="mainlayout.Text.TeamLevel" xml:space="preserve"><value>Csapat elért szintje: {0}</value></data>
+  <data name="mainlayout.Text.TeamName" xml:space="preserve"><value>Csapat: {0}</value></data>
+  <data name="mainlayout.Text.Voucher" xml:space="preserve"><value>Kupon:  {0}</value></data>
+  <data name="mainlayout.Text.Xp" xml:space="preserve"><value>Csapat Xp: {0}</value></data>
+  <data name="mainlayout.Text.Credit" xml:space="preserve"><value>Kredit: {0}</value></data>
+  <data name="mainlayout.Bootstrap.Label.Profile" xml:space="preserve"><value>Profil</value></data>
+  <data name="mainlayout.Bootstrap.Label.Settings" xml:space="preserve"><value>Beállítások</value></data>
+  <data name="mainlayout.Bootstrap.Label.Logout" xml:space="preserve"><value>Kilépés</value></data>
+  <data name="mainlayout.Bootstrap.Label.Help" xml:space="preserve"><value>Súgó - F1</value></data>
+  <data name="mainlayout.Toast.Logout.Success" xml:space="preserve"><value>Sikeresen kijelentkeztél.</value></data>
+  <data name="mainlayout.Toast.Logout.Session" xml:space="preserve"><value>Másik bejelentkezés miatt ez a munkamenet már nem érvényes.</value></data>
+  <data name="mainlayout.Toast.Logout.Expired" xml:space="preserve"><value>A bejelentkezésed lejárt.</value></data>
+  <data name="mainlayout.Toast.Logout.Error" xml:space="preserve"><value>A kijelentkezés nem sikerült.</value></data>
+  <data name="mainlayout.Toast.AccountDeleted" xml:space="preserve"><value>A fiókod véglegesen törölve lett.</value></data>
+  <data name="mainlayout.Toast.Login.Replaced" xml:space="preserve"><value>A korábbi bejelentkezés felülírva. Ha aktív játékban voltál, onnan is kiléptetésre kerültél.</value></data>
+</root>
