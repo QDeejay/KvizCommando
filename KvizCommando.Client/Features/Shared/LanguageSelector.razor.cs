@@ -2,6 +2,7 @@ using Blazored.LocalStorage;
 using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Features.Shared.Modal.Components;
 using KvizCommando.Client.Services.Visual.UiService;
+using KvizCommando.Localization;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
 
@@ -12,14 +13,18 @@ namespace KvizCommando.Client.Features.Shared
         [Inject] private UiServices Ui { get; set; } = default!;
         [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
 
-        private Task HuClickAsync() => ShowConfirmAsync("hu");
-        private Task EnClickAsync() => ShowConfirmAsync("en");
+        private Task HuClickAsync() => ShowConfirmAsync("hu-HU");
+        private Task EnClickAsync() => ShowConfirmAsync("en-US");
 
-        private async Task ShowConfirmAsync(string languageCode)
+        private async Task ShowConfirmAsync(string cultureName)
         {
-            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName ==
-                languageCode)
+            if (!SupportedCultureCatalog.TryGet(cultureName, out var culture) ||
+                CultureInfo.CurrentCulture.Name.Equals(
+                    culture.Name,
+                    StringComparison.OrdinalIgnoreCase))
                 return;
+
+            var languageCode = culture.TwoLetterISOLanguageName;
 
             var modal = MBoxBuilder.BuildParam(
                 ModalTypes.LangConfirm,
@@ -45,11 +50,7 @@ namespace KvizCommando.Client.Features.Shared
             await Ui.Lang.ClearLanguageCacheAsync(
                 CultureInfo.CurrentCulture.TwoLetterISOLanguageName);
 
-            var culture = languageCode == "hu"
-                ? "hu-HU"
-                : "en-US";
-
-            await LocalStorage.SetItemAsync("userLang", culture);
+            await LocalStorage.SetItemAsync("userLang", culture.Name);
             Ui.Nav.NavigateTo(Ui.Nav.Uri, forceLoad: true);
         }
     }
