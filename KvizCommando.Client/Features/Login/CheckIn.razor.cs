@@ -5,9 +5,11 @@ using KvizCommando.Client.Features.Shared.Modal.ViewModels;
 using KvizCommando.Client.Models.StoreModels;
 using KvizCommando.Client.Services;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.Login;
 using KvizCommando.Shared.Contracts.Auth;
 using KvizCommando.Shared.Contracts.CheckIn;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using System.Globalization;
 
 
@@ -18,6 +20,7 @@ namespace KvizCommando.Client.Features.Login
         [Inject] private ISessionStorageService SessionStorage { get; set; } = default!;
         [Inject] private HttpClient Http { get; set; } = default!;
         [Inject] private IdentityRulesService IdentityRules { get; set; } = default!;
+        [Inject] private IStringLocalizer<LoginResource> Lang { get; set; } = default!;
 
         private string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         private KcModal? _termsModal;
@@ -129,22 +132,22 @@ namespace KvizCommando.Client.Features.Login
             {
                 if (_options.DisplayNameMinLength > dsp.Length && _cacheData.needsName == true)
                 {
-                    _resultMessage = Ui.Lang["identityerrors.DisplayNameTooShort"];
+                    _resultMessage = Lang["identityerrors.DisplayNameTooShort"];
                     _displayNameField = true;
                 }
                 else if (_options.DisplayNameMaxLength < dsp.Length & _cacheData.needsName == true)
                 {
-                    _resultMessage = Ui.Lang["identityerrors.DisplayNameTooLong"];
+                    _resultMessage = Lang["identityerrors.DisplayNameTooLong"];
                     _displayNameField = true;
                 }
                 else if (IsAccepted == false)
                 {
-                    _resultMessage = Ui.Lang["identityerrors.TermsNotAccepted"];
+                    _resultMessage = Lang["identityerrors.TermsNotAccepted"];
                 }
             }
             if ((_displayNameField && _cacheData.needsName) || IsAccepted == false)
                 return;
-            _formData.TeamName = _formData.DisplayName + Ui.Lang["checkin.Team.Append"];
+            _formData.TeamName = _formData.DisplayName + Lang["checkin.Team.Append"];
             // Kérés a szerver felé
             var (response, errors, suggestedname) = await User.CheckInFinishedAsync(_formData);
 
@@ -159,15 +162,15 @@ namespace KvizCommando.Client.Features.Login
             if (errors is { Count: > 0 })
             {
                 // csak az első hibát mutatjuk; ha több kell, join-olható
-                _resultMessage = Ui.Lang[$"identityerrors.{errors[0]}"];
+                _resultMessage = Lang[$"identityerrors.{errors[0]}"];
             }
             else
             {
-                _resultMessage = Ui.Lang["identityerrors.DefaultError"];
+                _resultMessage = Lang["identityerrors.DefaultError"];
             }
             if (suggestedname is not null && suggestedname != string.Empty)
             {
-                _resultMessage += " " + Ui.Lang["checkin.Reason.SuggestedName"] + $" '{suggestedname}'.";
+                _resultMessage += " " + Lang["checkin.Reason.SuggestedName"] + $" '{suggestedname}'.";
                 _formData.DisplayName = suggestedname;
                 _displayNameField = true;
             }
@@ -178,19 +181,19 @@ namespace KvizCommando.Client.Features.Login
         {
             if (_cacheData is null || (_cacheData.needsName == false && _cacheData.needsTerms == false))
             {
-                _message = Ui.Lang["checkin.Reason.FallBack"];
-                _dynamicTitle = Ui.Lang["checkin.Title.Fallback"];
+                _message = Lang["checkin.Reason.FallBack"];
+                _dynamicTitle = Lang["checkin.Title.Fallback"];
             }
             else if (_cacheData.needsName == true)
             {
                 _cacheData.needsTerms = true;
-                _message = Ui.Lang["checkin.Reason.DisplayName"];
-                _dynamicTitle = Ui.Lang["checkin.Title.DisplayName"];
+                _message = Lang["checkin.Reason.DisplayName"];
+                _dynamicTitle = Lang["checkin.Title.DisplayName"];
             }
             else
             {
-                _message = Ui.Lang["checkin.Reason.TermsUpdated"];
-                _dynamicTitle = Ui.Lang["checkin.Title.TermsOutdated"];
+                _message = Lang["checkin.Reason.TermsUpdated"];
+                _dynamicTitle = Lang["checkin.Title.TermsOutdated"];
 
             }
             _termsPar = MBoxBuilder.BuildParam(ModalTypes.Terms, Ui.Lang);
@@ -199,7 +202,7 @@ namespace KvizCommando.Client.Features.Login
         private async Task OpenTerms()
         {
             _termsHtml = new MarkupString(ExtractSection(_fullHtml, "terms"));
-            _termsPar = _termsPar with { Title = Ui.Lang["checkin.modal.TermsTitle"] };
+            _termsPar = _termsPar with { Title = Lang["checkin.modal.TermsTitle"] };
             _renderHTML = _termsHtml;
             if (_termsModal is not null)
                 await _termsModal.ShowAsync(_termsPar);
@@ -208,7 +211,7 @@ namespace KvizCommando.Client.Features.Login
         {
 
             _privacyHtml = new MarkupString(ExtractSection(_fullHtml, "privacy"));
-            _termsPar = _termsPar with { Title = Ui.Lang["checkin.modal.PrivacyTitle"] };
+            _termsPar = _termsPar with { Title = Lang["checkin.modal.PrivacyTitle"] };
             _renderHTML = _privacyHtml;
             if (_termsModal is not null)
                 await _termsModal.ShowAsync(_termsPar);

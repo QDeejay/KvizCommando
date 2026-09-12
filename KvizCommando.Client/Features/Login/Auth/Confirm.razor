@@ -3,10 +3,9 @@
 @inherits Utilities.KcComponentBase
 @layout LoginLayout
 
-<LangGuard Culture=@_culture Module="auth">
     <div class="emailconfirm-panel">
         <div class="emailconfirm-head">
-            <label class="label-title">@Ui.Lang["auth.email.Title"]</label>
+            <label class="label-title">@Lang["auth.email.Title"]</label>
         </div>
         <div class="emailconfirm-body">
             @if (_isLoading)
@@ -14,8 +13,8 @@
                 <div class="kc-auth-status kc-auth-status--loading">
                     <i class="bi bi-hourglass-split kc-auth-status__icon"></i>
                     <div>
-                        <h2 class="kc-auth-status__title">@Ui.Lang["auth.email.Loading"]</h2>
-                        <p class="kc-auth-status__text">@Ui.Lang["auth.email.Loading.Description"]</p>
+                        <h2 class="kc-auth-status__title">@Lang["auth.email.Loading"]</h2>
+                        <p class="kc-auth-status__text">@Lang["auth.email.Loading.Description"]</p>
                     </div>
                 </div>
             }
@@ -25,12 +24,12 @@
                     <i class="bi bi-check-circle-fill kc-auth-status__icon"></i>
                     <div>
                         <h2 class="kc-auth-status__title">
-                            @Ui.Lang[_isEmailChange
+                            @Lang[_isEmailChange
                                 ? "auth.email.Change.Success"
                                 : "auth.email.Success"]
                         </h2>
                         <p class="kc-auth-status__text">
-                            @Ui.Lang[_isEmailChange
+                            @Lang[_isEmailChange
                                 ? "auth.email.Change.Success.Description"
                                 : "auth.email.Success.Description"]
                         </p>
@@ -42,8 +41,8 @@
                 <div class="kc-auth-status kc-auth-status--error">
                     <i class="bi bi-x-circle-fill kc-auth-status__icon"></i>
                     <div>
-                        <h2 class="kc-auth-status__title">@Ui.Lang["auth.email.Fail"]</h2>
-                        <p class="kc-auth-status__text">@Ui.Lang["auth.email.Fail.Description"]</p>
+                        <h2 class="kc-auth-status__title">@Lang["auth.email.Fail"]</h2>
+                        <p class="kc-auth-status__text">@Lang["auth.email.Fail.Description"]</p>
                     </div>
                 </div>
             }
@@ -52,9 +51,8 @@
 
         <div class="emailconfirm-footer">
             <button class="military-button--secondary" @onclick="NavigateHome">
-                @Ui.Lang["auth.button.RedirectToLogin"]
+                @Lang["auth.button.RedirectToLogin"]
             </button>
 
         </div>
     </div>
-</LangGuard>

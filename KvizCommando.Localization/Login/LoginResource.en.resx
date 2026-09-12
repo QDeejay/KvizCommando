@@ -1,0 +1,474 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Microsoft ResX Schema
+
+    Version 2.0
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
+    associated with the data types.
+
+    Example:
+
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+
+    There are any number of "resheader" rows that contain simple
+    name/value pairs.
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
+    mimetype set.
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
+    extensible. For a given mimetype the value must be set accordingly:
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
+    read any of the formats listed below.
+
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="auth.button.RedirectToLogin" xml:space="preserve">
+    <value>To login</value>
+  </data>
+  <data name="auth.buttton.RecoverPsw" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="auth.email.Fail" xml:space="preserve">
+    <value>Confirmation failed</value>
+  </data>
+  <data name="auth.email.Fail.Description" xml:space="preserve">
+    <value>The link has expired, is invalid, or has already been used.</value>
+  </data>
+  <data name="auth.email.Loading" xml:space="preserve">
+    <value>E-mail confirmation in progress</value>
+  </data>
+  <data name="auth.email.Loading.Description" xml:space="preserve">
+    <value>Please wait while we verify the link.</value>
+  </data>
+  <data name="auth.email.Success" xml:space="preserve">
+    <value>E-mail address confirmed</value>
+  </data>
+  <data name="auth.email.Success.Description" xml:space="preserve">
+    <value>Your account is active. You can now sign in.</value>
+  </data>
+  <data name="auth.email.Change.Success" xml:space="preserve">
+    <value>E-mail address changed</value>
+  </data>
+  <data name="auth.email.Change.Success.Description" xml:space="preserve">
+    <value>Any previous active sign-in is now invalid. Sign in again with your new e-mail address.</value>
+  </data>
+  <data name="auth.email.Title" xml:space="preserve">
+    <value>E-mail confirmation</value>
+  </data>
+  <data name="auth.psw.Fail" xml:space="preserve">
+    <value>Password change failed</value>
+  </data>
+  <data name="auth.psw.Fail.Description" xml:space="preserve">
+    <value>The link has expired, is invalid, or has already been used.</value>
+  </data>
+  <data name="auth.psw.Loading" xml:space="preserve">
+    <value>Password recovery is in progress</value>
+  </data>
+  <data name="auth.psw.NewPassword" xml:space="preserve">
+    <value>New password</value>
+  </data>
+  <data name="auth.psw.NewPasswordConfirm" xml:space="preserve">
+    <value>New password confirm</value>
+  </data>
+  <data name="auth.psw.Success" xml:space="preserve">
+    <value>Password changed successfully</value>
+  </data>
+  <data name="auth.psw.Success.Description" xml:space="preserve">
+    <value>You can now sign in with your new password.</value>
+  </data>
+  <data name="auth.psw.Title" xml:space="preserve">
+    <value>Set a new password</value>
+  </data>
+  <data name="checkin.button.CheckIn" xml:space="preserve">
+    <value>Check in</value>
+  </data>
+  <data name="checkin.ButtonLink.Terms" xml:space="preserve">
+    <value>Terms of Service</value>
+  </data>
+  <data name="checkin.Reason.DisplayName" xml:space="preserve">
+    <value>You did not set player name!</value>
+  </data>
+  <data name="checkin.Reason.TermsUpdated" xml:space="preserve">
+    <value>Terms and conditoion are updated, please check and accept it to logging in!</value>
+  </data>
+  <data name="checkin.Title.DisplayName" xml:space="preserve">
+    <value>New player logging in</value>
+  </data>
+  <data name="checkin.Title.TermsOutdated" xml:space="preserve">
+    <value>The terms updated</value>
+  </data>
+  <data name="checkin.Label.DisplayName" xml:space="preserve">
+    <value>Public player name</value>
+  </data>
+  <data name="checkin.Reason.FallBack" xml:space="preserve">
+    <value>Expired call, navigate back to login page</value>
+  </data>
+  <data name="checkin.Title.Fallback" xml:space="preserve">
+    <value>New player logging in</value>
+  </data>
+  <data name="checkin.Label.AcceptTerms" xml:space="preserve">
+    <value>I have read and agree to the </value>
+  </data>
+  <data name="checkin.button.RedirectToLogin" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="checkin.Team.Append" xml:space="preserve">
+    <value>' team</value>
+  </data>
+  <data name="checkin.modal.TermsTitle" xml:space="preserve">
+    <value>Terms of Service</value>
+  </data>
+  <data name="checkin.modal.Button.Action" xml:space="preserve">
+    <value>I Understood</value>
+  </data>
+  <data name="checkin.modal.Button.Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="checkin.Reason.SuggestedName" xml:space="preserve">
+    <value>Suggest:</value>
+  </data>
+  <data name="checkin.modal.PrivacyTitle" xml:space="preserve">
+    <value>Privacy Policy</value>
+  </data>
+  <data name="checkin.ButtonLink.Privacy" xml:space="preserve">
+    <value>Privacy Policy</value>
+  </data>
+  <data name="checkin.Label.AcceptTerms1" xml:space="preserve">
+    <value>and the </value>
+  </data>
+  <data name="checkin.Label.AcceptTerms2" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="forgotosw.Email" xml:space="preserve">
+    <value>Please give your e-mail address!</value>
+  </data>
+  <data name="forgotosw.Error.Email" xml:space="preserve">
+    <value>Invalid e-mail address!</value>
+  </data>
+  <data name="forgotosw.Succes.Email" xml:space="preserve">
+    <value>If an account belongs to the provided e-mail address, we sent password reset instructions.</value>
+  </data>
+  <data name="forgotosw.Success.Title" xml:space="preserve">
+    <value>Check your e-mail</value>
+  </data>
+  <data name="forgotosw.EmailOutput.Description" xml:space="preserve">
+    <value>The password reset e-mail is available in this folder:</value>
+  </data>
+  <data name="forgotosw.EmailOutput.Title" xml:space="preserve">
+    <value>Development file delivery</value>
+  </data>
+  <data name="forgotosw.Title" xml:space="preserve">
+    <value>Forgot password request</value>
+  </data>
+  <data name="identityerrors.DefaultError" xml:space="preserve">
+    <value>An unknown failure has occurred.</value>
+  </data>
+  <data name="identityerrors.ConcurrencyFailure" xml:space="preserve">
+    <value>Optimistic concurrency failure, object has been modified.</value>
+  </data>
+  <data name="identityerrors.PasswordMismatch" xml:space="preserve">
+    <value>Incorrect password.</value>
+  </data>
+  <data name="identityerrors.InvalidToken" xml:space="preserve">
+    <value>Invalid token.</value>
+  </data>
+  <data name="identityerrors.RecoveryCodeRedemptionFailed" xml:space="preserve">
+    <value>Recovery code redemption failed.</value>
+  </data>
+  <data name="identityerrors.LoginAlreadyAssociated" xml:space="preserve">
+    <value>A user with this login already exists.</value>
+  </data>
+  <data name="identityerrors.InvalidUserName" xml:space="preserve">
+    <value>User name '{0}' is invalid, can only contain letters or digits.</value>
+  </data>
+  <data name="identityerrors.InvalidEmail" xml:space="preserve">
+    <value>Email '{0}' is invalid.</value>
+  </data>
+  <data name="identityerrors.DuplicateUserName" xml:space="preserve">
+    <value>User name '{0}' is already taken.</value>
+  </data>
+  <data name="identityerrors.DuplicateEmail" xml:space="preserve">
+    <value>Email '{0}' is already taken.</value>
+  </data>
+  <data name="identityerrors.InvalidRoleName" xml:space="preserve">
+    <value>Role name '{0}' is invalid.</value>
+  </data>
+  <data name="identityerrors.DuplicateRoleName" xml:space="preserve">
+    <value>Role name '{0}' is already taken.</value>
+  </data>
+  <data name="identityerrors.UserAlreadyHasPassword" xml:space="preserve">
+    <value>User already has a password set.</value>
+  </data>
+  <data name="identityerrors.UserLockoutNotEnabled" xml:space="preserve">
+    <value>Lockout is not enabled for this user.</value>
+  </data>
+  <data name="identityerrors.UserAlreadyInRole" xml:space="preserve">
+    <value>User already in role '{0}'.</value>
+  </data>
+  <data name="identityerrors.UserNotInRole" xml:space="preserve">
+    <value>User is not in role '{0}'.</value>
+  </data>
+  <data name="identityerrors.PasswordTooShort" xml:space="preserve">
+    <value>Passwords must be at least {0} characters.</value>
+  </data>
+  <data name="identityerrors.PasswordRequiresNonAlphanumeric" xml:space="preserve">
+    <value>Passwords must have at least one non alphanumeric character.</value>
+  </data>
+  <data name="identityerrors.PasswordRequiresDigit" xml:space="preserve">
+    <value>Passwords must have at least one digit ('0'-'9').</value>
+  </data>
+  <data name="identityerrors.PasswordRequiresLower" xml:space="preserve">
+    <value>Passwords must have at least one lowercase ('a'-'z').</value>
+  </data>
+  <data name="identityerrors.PasswordRequiresUpper" xml:space="preserve">
+    <value>Passwords must have at least one uppercase ('A'-'Z').</value>
+  </data>
+  <data name="identityerrors.PasswordRequiresUniqueChars" xml:space="preserve">
+    <value>Passwords must use at least {0} different characters.</value>
+  </data>
+  <data name="identityerrors.InvalidAuthenticatorKey" xml:space="preserve">
+    <value>Invalid authenticator key.</value>
+  </data>
+  <data name="identityerrors.InvalidTwoFactorProvider" xml:space="preserve">
+    <value>Invalid two-factor provider.</value>
+  </data>
+  <data name="identityerrors.AuthenticatorCodeMismatch" xml:space="preserve">
+    <value>Invalid authenticator code.</value>
+  </data>
+  <data name="identityerrors.RecoveryCodeMismatch" xml:space="preserve">
+    <value>Invalid recovery code.</value>
+  </data>
+  <data name="identityerrors.DuplicatePhoneNumber" xml:space="preserve">
+    <value>Phone number '{0}' is already taken.</value>
+  </data>
+  <data name="identityerrors.InvalidPhoneNumber" xml:space="preserve">
+    <value>Phone number '{0}' is invalid.</value>
+  </data>
+  <data name="identityerrors.PasswordNotMatched" xml:space="preserve">
+    <value>Password are not matched</value>
+  </data>
+  <data name="identityerrors.LoginFailed" xml:space="preserve">
+    <value>Login is failed.</value>
+  </data>
+  <data name="identityerrors.DisplayNameRequired" xml:space="preserve">
+    <value>User nem is required.</value>
+  </data>
+  <data name="identityerrors.DisplayNameTooShort" xml:space="preserve">
+    <value>User name is too short.</value>
+  </data>
+  <data name="identityerrors.DisplayNameTooLong" xml:space="preserve">
+    <value>User name is too long.</value>
+  </data>
+  <data name="identityerrors.DisplayNameInvalidCharacters" xml:space="preserve">
+    <value>User name is invalid, can only contain letters or digits.</value>
+  </data>
+  <data name="identityerrors.DisplayNameAlreadyTaken" xml:space="preserve">
+    <value>User name is already taken.</value>
+  </data>
+  <data name="identityerrors.TermsNotAccepted" xml:space="preserve">
+    <value>Accepting terms is required.</value>
+  </data>
+  <data name="identityerrors.TermsVersionOutdated" xml:space="preserve">
+    <value>Terms version is outdated.</value>
+  </data>
+  <data name="identityerrors.NoInfo" xml:space="preserve">
+    <value>Login via 3rd party is failed.</value>
+  </data>
+  <data name="identityerrors.CreateFailed" xml:space="preserve">
+    <value>User creation via 3rd party is failed</value>
+  </data>
+  <data name="identityerrors.LinkFailed" xml:space="preserve">
+    <value>Account link faild with 3rd party provider</value>
+  </data>
+  <data name="identityerrors.access_denied" xml:space="preserve">
+    <value>Access denied!</value>
+  </data>
+  <data name="identityerrors.external_login_failed" xml:space="preserve">
+    <value>External login failed.</value>
+  </data>
+  <data name="login.Button" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="login.Button.Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="login.ButtonLink" xml:space="preserve">
+    <value>Registration</value>
+  </data>
+  <data name="login.CheckBox.RememberMe" xml:space="preserve">
+    <value>Remember me</value>
+  </data>
+  <data name="login.Enter.Password" xml:space="preserve">
+    <value>Enter your password for:</value>
+  </data>
+  <data name="login.Error.EmptyFields" xml:space="preserve">
+    <value>Fill up all fields</value>
+  </data>
+  <data name="login.Error.Login" xml:space="preserve">
+    <value>Invalid login details or your email address is not verified!</value>
+  </data>
+  <data name="login.ForgotPassword" xml:space="preserve">
+    <value>Forgot password</value>
+  </data>
+  <data name="login.InvitationOnly.EmailSubject" xml:space="preserve">
+    <value>Application for the Kvíz Commando closed test</value>
+  </data>
+  <data name="login.InvitationOnly.Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="login.InvitationOnly.Period" xml:space="preserve">
+    <value>Daily test period:</value>
+  </data>
+  <data name="login.InvitationOnly.Title" xml:space="preserve">
+    <value>Closed invitation-only test</value>
+  </data>
+  <data name="login.Label.Providers" xml:space="preserve">
+    <value>Other login providers:</value>
+  </data>
+  <data name="login.Start.Slogan" xml:space="preserve">
+    <value>A battle where knowledge is your only weapon</value>
+  </data>
+  <data name="login.Title" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="login.Title2" xml:space="preserve">
+    <value>Enter password</value>
+  </data>
+  <data name="register.Button" xml:space="preserve">
+    <value>Regist</value>
+  </data>
+  <data name="register.ConfirmPassword" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="register.Email" xml:space="preserve">
+    <value>E-mail address</value>
+  </data>
+  <data name="register.ResultMsg01" xml:space="preserve">
+    <value>Registration successful</value>
+  </data>
+  <data name="register.ResultMsg02" xml:space="preserve">
+    <value>Open the confirmation e-mail to activate your account.</value>
+  </data>
+  <data name="register.EmailOutput.Description" xml:space="preserve">
+    <value>The confirmation e-mail is available in this folder:</value>
+  </data>
+  <data name="register.EmailOutput.Title" xml:space="preserve">
+    <value>Development file delivery</value>
+  </data>
+  <data name="register.Title" xml:space="preserve">
+    <value>Registration</value>
+  </data>
+  <data name="common.Button.Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="common.Button.Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="common.Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="common.Email" xml:space="preserve">
+    <value>E-mail address:</value>
+  </data>
+  <data name="common.Password.Confirm" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="common.Password.Visibility" xml:space="preserve">
+    <value>Toggle password visibility</value>
+  </data>
+</root>

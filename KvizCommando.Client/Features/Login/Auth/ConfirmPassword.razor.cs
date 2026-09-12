@@ -3,18 +3,18 @@ using KvizCommando.Client.Services;
 using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.Login;
 using KvizCommando.Shared.Contracts.Auth;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
-using System.Globalization;
 
 namespace KvizCommando.Client.Features.Login.Auth;
 
 public partial class ConfirmPassword : KcComponentBase
 {
     [Inject] private IdentityRulesService IdentityRules { get; set; } = default!;
-
-    private string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+    [Inject] private IStringLocalizer<LoginResource> Lang { get; set; } = default!;
 
     private bool? success = null;
     private RegisterOptionsResponse? Options { get; set; }
@@ -52,37 +52,37 @@ public partial class ConfirmPassword : KcComponentBase
 
             if (pwd.Length < Options.RequiredLength)
             {
-                ResultMessage = Ui.Lang["identityerrors.PasswordTooShort"].FormatSafe(Options.RequiredLength);
+                ResultMessage = Lang["identityerrors.PasswordTooShort"].Value.FormatSafe(Options.RequiredLength);
                 PasswordFiledSW = true;
             }
             else if (Options.RequireDigit && !pwd.Any(char.IsDigit))
             {
-                ResultMessage = Ui.Lang["identityerrors.PasswordRequiresDigit"];
+                ResultMessage = Lang["identityerrors.PasswordRequiresDigit"];
                 PasswordFiledSW = true;
             }
             else if (Options.RequireLowercase && !pwd.Any(char.IsLower))
             {
-                ResultMessage = Ui.Lang["identityerrors.PasswordRequiresLower"];
+                ResultMessage = Lang["identityerrors.PasswordRequiresLower"];
                 PasswordFiledSW = true;
             }
             else if (Options.RequireUppercase && !pwd.Any(char.IsUpper))
             {
-                ResultMessage = Ui.Lang["identityerrors.PasswordRequiresUpper"];
+                ResultMessage = Lang["identityerrors.PasswordRequiresUpper"];
                 PasswordFiledSW = true;
             }
             else if (Options.RequireNonAlphanumeric && pwd.All(char.IsLetterOrDigit))
             {
-                ResultMessage = Ui.Lang["identityerrors.PasswordRequiresNonAlphanumeric"];
+                ResultMessage = Lang["identityerrors.PasswordRequiresNonAlphanumeric"];
                 PasswordFiledSW = true;
             }
             else if (Options.RequiredUniqueChars > 1 && pwd.Distinct().Count() < Options.RequiredUniqueChars)
             {
-                ResultMessage = Ui.Lang["identityerrors.PasswordRequiresUniqueChars"].FormatSafe(Options.RequiredLength);
+                ResultMessage = Lang["identityerrors.PasswordRequiresUniqueChars"].Value.FormatSafe(Options.RequiredLength);
                 PasswordFiledSW = true;
             }
             else if (FormData.newPassword != FormData.confirmedNewPsw)
             {
-                ResultMessage = Ui.Lang["identityerrors.PasswordNotMatched"];
+                ResultMessage = Lang["identityerrors.PasswordNotMatched"];
                 PasswordFiledSW = true;
             }
         }
@@ -99,11 +99,11 @@ public partial class ConfirmPassword : KcComponentBase
         if (errors is { Count: > 0 })
         {
             // csak az első hibát mutatjuk; ha több kell, join-olható
-            ResultMessage = Ui.Lang[$"identityerrors.{errors[0]}"];
+            ResultMessage = Lang[$"identityerrors.{errors[0]}"];
         }
         else
         {
-            ResultMessage = Ui.Lang["identityerrors.DefaultError"];
+            ResultMessage = Lang["identityerrors.DefaultError"];
         }
     }
 

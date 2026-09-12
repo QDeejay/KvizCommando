@@ -1,16 +1,15 @@
 ﻿using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.Login;
 using Microsoft.AspNetCore.Components;
-using System.Globalization;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Login.Auth;
 
 public partial class Confirm : KcComponentBase
     {
-
-
-        private readonly string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+        [Inject] private IStringLocalizer<LoginResource> Lang { get; set; } = default!;
 
         private bool _isLoading = true;
         private bool? _isSuccess = null;

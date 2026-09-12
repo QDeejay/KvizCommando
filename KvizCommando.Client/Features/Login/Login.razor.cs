@@ -2,10 +2,11 @@
 using KvizCommando.Client.Services;
 using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.Login;
 using KvizCommando.Shared.Contracts.Auth;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using System.Globalization;
+using Microsoft.Extensions.Localization;
 
 
 
@@ -14,6 +15,7 @@ namespace KvizCommando.Client.Features.Login
     public partial class Login : KcComponentBase
     {
         [Inject] private IdentityRulesService IdentityRules { get; set; } = default!;
+        [Inject] private IStringLocalizer<LoginResource> Lang { get; set; } = default!;
 
         private RegisterOptionsResponse? _options;
         private bool _enterPassPage = false;
@@ -35,7 +37,6 @@ namespace KvizCommando.Client.Features.Login
 
         private readonly LoginRequestForm _loginForm = new();
 
-        private static string Culture => CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         private bool CanNext => !string.IsNullOrWhiteSpace(_loginForm.Email);
         private bool CanLogin => !string.IsNullOrWhiteSpace(_loginForm.Email)
                               && !string.IsNullOrWhiteSpace(_loginForm.Password);
@@ -43,7 +44,7 @@ namespace KvizCommando.Client.Features.Login
         private bool FacebookLoginEnabled => _options?.FacebookLoginEnabled == true;
         private string InvitationTestPeriod => _options?.InvitationTestPeriod ?? string.Empty;
         private string ApplicationEmailHref =>
-            $"mailto:{_options?.SupportEmail ?? string.Empty}?subject={Uri.EscapeDataString(Ui.Lang["login.InvitationOnly.EmailSubject"])}";
+            $"mailto:{_options?.SupportEmail ?? string.Empty}?subject={Uri.EscapeDataString(Lang["login.InvitationOnly.EmailSubject"])}";
 
         private async Task OnSwitchPass(bool viaEnter)
         {
@@ -66,7 +67,7 @@ namespace KvizCommando.Client.Features.Login
             }
             else
             {
-                _errorMessage = Ui.Lang["identityerrors.InvalidEmail"].FormatSafe(_loginForm.Email);
+                _errorMessage = Lang["identityerrors.InvalidEmail"].Value.FormatSafe(_loginForm.Email);
                 _invalidEmail = true;
                 _ =  ShowError();
             }
@@ -83,14 +84,14 @@ namespace KvizCommando.Client.Features.Login
                 }
                 else
                 {
-                    _errorMessage = Ui.Lang[response.Errors];
+                    _errorMessage = Lang[response.Errors];
 
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Login failed: {ex.Message}");
-                _errorMessage = Ui.Lang["identityerrors.DefaultError"];
+                _errorMessage = Lang["identityerrors.DefaultError"];
             }
         }
         private async Task ContinueAfterLoginAsync()
@@ -104,7 +105,7 @@ namespace KvizCommando.Client.Features.Login
             }
 
             if (result.Errors.Count > 0)
-                _errorMessage = Ui.Lang["identityerrors.DefaultError"];
+                _errorMessage = Lang["identityerrors.DefaultError"];
         }
         private async Task OnKeyDown(KeyboardEventArgs e)
         {
@@ -141,7 +142,7 @@ namespace KvizCommando.Client.Features.Login
                     "external_login_failed" => $"identityerrors.{error}",
                     _ => "identityerrors.DefaultError"
                 };
-                _errorMessage = Ui.Lang[errorKey];
+                _errorMessage = Lang[errorKey];
             }
 
             _options = await IdentityRules.GetRulesAsync();

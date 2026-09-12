@@ -1,17 +1,18 @@
 ﻿using KvizCommando.Client.Services;
 using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.Login;
 using KvizCommando.Shared.Contracts.Auth;
 using Microsoft.AspNetCore.Components;
-using System.Globalization;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Login
 {
     partial class ForgotPsw : KcComponentBase
     {
         [Inject] private IdentityRulesService IdentityRules { get; set; } = default!;
+        [Inject] private IStringLocalizer<LoginResource> Lang { get; set; } = default!;
 
-        readonly string culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
         private ForgotPasswordRequestForm formData { get; set; } = new();
         private string ResultMessage { get; set; } = string.Empty;
@@ -31,14 +32,14 @@ namespace KvizCommando.Client.Features.Login
         {
             if (!IsValidEmail(formData.email))
             {
-                ResultMessage = Ui.Lang["forgotosw.Error.Email"];
+                ResultMessage = Lang["forgotosw.Error.Email"];
                 ColorSW = true;
                 return;
             }
             ColorSW = false;
             await User.ForgotPswAsync(formData);
             Success = true;
-            ResultMessage = Ui.Lang["forgotosw.Succes.Email"];
+            ResultMessage = Lang["forgotosw.Succes.Email"];
             formData.email = string.Empty;
         }
         private void NavigateHome()

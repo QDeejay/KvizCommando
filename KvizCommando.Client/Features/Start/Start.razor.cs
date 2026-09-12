@@ -1,9 +1,10 @@
 ﻿using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.Login;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using System;
-using System.Globalization;
 using System.Threading.Tasks;
 
 
@@ -12,8 +13,8 @@ namespace KvizCommando.Client.Features.Start
     public partial class Start : KcComponentBase
     {
         [Inject] private IUserService _userService { get; set; } = default!;
+        [Inject] private IStringLocalizer<LoginResource> Lang { get; set; } = default!;
 
-        private readonly string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         private bool _isLoaded = false;
 
         protected override async Task OnInitializedAsync()

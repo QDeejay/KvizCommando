@@ -2,15 +2,17 @@
 using KvizCommando.Client.Services;
 using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.Login;
 using KvizCommando.Shared.Contracts.Auth;
 using Microsoft.AspNetCore.Components;
-using System.Globalization;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Login
 {
     public partial class Register : KcComponentBase
     {
         [Inject] private IdentityRulesService IdentityRules { get; set; } = default!;
+        [Inject] private IStringLocalizer<LoginResource> Lang { get; set; } = default!;
 
         private readonly RegisterRequestForm _formData = new();
         private RegisterOptionsResponse? _options = default!;
@@ -32,7 +34,6 @@ namespace KvizCommando.Client.Features.Login
         {
              _showPassword[pw] = !_showPassword[pw];
         }
-        private string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         private bool CanRegister =>
             !string.IsNullOrWhiteSpace(_formData.ConfirmPassword)
             && !string.IsNullOrWhiteSpace(_formData.Email)
@@ -45,7 +46,7 @@ namespace KvizCommando.Client.Features.Login
             // E-mail-cím
             if (!LoginHelper.IsValidEmail(_formData.Email))
             {
-                _resultMessage = Ui.Lang["identityerrors.InvalidEmail"].FormatSafe(_formData.Email);
+                _resultMessage = Lang["identityerrors.InvalidEmail"].Value.FormatSafe(_formData.Email);
                 _emailFiledSW = true;
             }
             else
@@ -61,37 +62,37 @@ namespace KvizCommando.Client.Features.Login
 
                 if (pwd.Length < _options.RequiredLength)
                 {
-                    _resultMessage = Ui.Lang["identityerrors.PasswordTooShort"].FormatSafe(_options.RequiredLength);
+                    _resultMessage = Lang["identityerrors.PasswordTooShort"].Value.FormatSafe(_options.RequiredLength);
                     _passwordFiledSW = true;
                 }
                 else if (_options.RequireDigit && !pwd.Any(char.IsDigit))
                 {
-                    _resultMessage = Ui.Lang["identityerrors.PasswordRequiresDigit"];
+                    _resultMessage = Lang["identityerrors.PasswordRequiresDigit"];
                     _passwordFiledSW = true;
                 }
                 else if (_options.RequireLowercase && !pwd.Any(char.IsLower))
                 {
-                    _resultMessage = Ui.Lang["identityerrors.PasswordRequiresLower"];
+                    _resultMessage = Lang["identityerrors.PasswordRequiresLower"];
                     _passwordFiledSW = true;
                 }
                 else if (_options.RequireUppercase && !pwd.Any(char.IsUpper))
                 {
-                    _resultMessage = Ui.Lang["identityerrors.PasswordRequiresUpper"];
+                    _resultMessage = Lang["identityerrors.PasswordRequiresUpper"];
                     _passwordFiledSW = true;
                 }
                 else if (_options.RequireNonAlphanumeric && pwd.All(char.IsLetterOrDigit))
                 {
-                    _resultMessage = Ui.Lang["identityerrors.PasswordRequiresNonAlphanumeric"];
+                    _resultMessage = Lang["identityerrors.PasswordRequiresNonAlphanumeric"];
                     _passwordFiledSW = true;
                 }
                 else if (_options.RequiredUniqueChars > 1 && pwd.Distinct().Count() < _options.RequiredUniqueChars)
                 {
-                    _resultMessage = Ui.Lang["identityerrors.PasswordRequiresUniqueChars"].FormatSafe(_options.RequiredLength);
+                    _resultMessage = Lang["identityerrors.PasswordRequiresUniqueChars"].Value.FormatSafe(_options.RequiredLength);
                     _passwordFiledSW = true;
                 }
                 else if (_formData.Password != _formData.ConfirmPassword)
                 {
-                    _resultMessage = Ui.Lang["identityerrors.PasswordNotMatched"];
+                    _resultMessage = Lang["identityerrors.PasswordNotMatched"];
                     _passwordFiledSW = true;
                 }
             }
@@ -115,11 +116,11 @@ namespace KvizCommando.Client.Features.Login
             if (errors is { Count: > 0 })
             {
                 // csak az első hibát mutatjuk; ha több kell, join-olható
-                _resultMessage = Ui.Lang[$"identityerrors.{errors[0]}"];
+                _resultMessage = Lang[$"identityerrors.{errors[0]}"];
             }
             else
             {
-                _resultMessage = Ui.Lang["identityerrors.DefaultError"];
+                _resultMessage = Lang["identityerrors.DefaultError"];
             }
         }
         private void NavigateHome()
@@ -129,7 +130,6 @@ namespace KvizCommando.Client.Features.Login
         protected override async Task OnInitializedAsync()
         {
              _registSucces = false;
-             _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
              _options = await IdentityRules.GetRulesAsync();
 
              if (!_options.RegistrationEnabled)

@@ -33,12 +33,13 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.18" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.18" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.18" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.18" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Private.Uri" Version="4.3.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\KvizCommando.Localization\KvizCommando.Localization.csproj" />
     <ProjectReference Include="..\KvizCommando.Shared\KvizCommando.Shared.csproj" />
   </ItemGroup>
 

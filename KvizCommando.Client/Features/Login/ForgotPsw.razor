@@ -2,15 +2,14 @@
 @inherits Utilities.KcComponentBase
 @layout LoginLayout
 
-<LangGuard Culture=@culture Module="forgotosw">
 <div class="forgotpsw-panel">
     <div class="forgotpsw-head">
-            <label class="label-title">@Ui.Lang["forgotosw.Title"]</label>
+            <label class="label-title">@Lang["forgotosw.Title"]</label>
     </div>
     <div class="forgotpsw-body">
             @if (Success != true)
             {
-                <label class="label-text">@Ui.Lang["forgotosw.Email"] </label>
+                <label class="label-text">@Lang["forgotosw.Email"] </label>
                 <input class="lcd-input"
                        type="text"
                        name="kc-forgot-password-email"
@@ -22,7 +21,7 @@
         
         
                 <button class="military-button" disabled="@(!CanSend)" type="button" @onclick="SendEmail">
-                        @Ui.Lang["common.Button.Send"]
+                        @Lang["common.Button.Send"]
                 </button>
                 @if (!string.IsNullOrWhiteSpace(ResultMessage))
                 {
@@ -34,7 +33,7 @@
                 <div class="kc-auth-status kc-auth-status--success">
                     <i class="bi bi-envelope-check-fill kc-auth-status__icon"></i>
                     <div>
-                        <h2 class="kc-auth-status__title">@Ui.Lang["forgotosw.Success.Title"]</h2>
+                        <h2 class="kc-auth-status__title">@Lang["forgotosw.Success.Title"]</h2>
                         <p class="kc-auth-status__text">@ResultMessage</p>
                     </div>
                 </div>
@@ -43,10 +42,10 @@
                     <div class="kc-dev-email-location">
                         <div class="kc-dev-email-location__title">
                             <i class="bi bi-folder2-open"></i>
-                            <span>@Ui.Lang["forgotosw.EmailOutput.Title"]</span>
+                            <span>@Lang["forgotosw.EmailOutput.Title"]</span>
                         </div>
                         <p class="kc-dev-email-location__text">
-                            @Ui.Lang["forgotosw.EmailOutput.Description"]
+                            @Lang["forgotosw.EmailOutput.Description"]
                         </p>
                         <code class="kc-dev-email-location__path">@PasswordResetEmailOutputPath</code>
                     </div>
@@ -57,9 +56,8 @@
 
     <div class="forgotpsw-footer">
         <button class="military-button--secondary" @onclick="NavigateHome">
-                @Ui.Lang["common.Button.Back"]
+                @Lang["common.Button.Back"]
         </button>
 
     </div>
 </div> 
-</LangGuard>

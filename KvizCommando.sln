@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KvizCommando.Shared", "Kviz
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KvizCommando.Client", "KvizCommando.Client\KvizCommando.Client.csproj", "{4D03EE89-2887-4811-B816-E757BBE9B88B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KvizCommando.Localization", "KvizCommando.Localization\KvizCommando.Localization.csproj", "{743D2B0C-D8C1-4B12-98D0-1F88D1A98C29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{4D03EE89-2887-4811-B816-E757BBE9B88B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D03EE89-2887-4811-B816-E757BBE9B88B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D03EE89-2887-4811-B816-E757BBE9B88B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{743D2B0C-D8C1-4B12-98D0-1F88D1A98C29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{743D2B0C-D8C1-4B12-98D0-1F88D1A98C29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{743D2B0C-D8C1-4B12-98D0-1F88D1A98C29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{743D2B0C-D8C1-4B12-98D0-1F88D1A98C29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -34,4 +40,3 @@ Global
 		SolutionGuid = {09E8A238-9981-4E5A-96C5-FB90CB02DAA8}
 	EndGlobalSection
 EndGlobal
-

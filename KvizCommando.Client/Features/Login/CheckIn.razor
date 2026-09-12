@@ -33,7 +33,7 @@
                      <br>
                 @if (_cacheData.needsName == true)
                 {
-                    <label class="label-text">@Ui.Lang["checkin.Label.DisplayName"]</label>
+                    <label class="label-text">@Lang["checkin.Label.DisplayName"]</label>
                      <input class="lcd-input"   @bind-value="_formData.DisplayName"
                                     @bind-value:event="oninput"
                     style="@((_displayNameField ? "border: 1px solid red;" : null))" />
@@ -48,15 +48,15 @@
                                             />
                                 </div>
                          <div class="checkin-AcceptText">                             <span class="label-text" style="font-size: 10px" for="AcceptTerms">
-                                @Ui.Lang["checkin.Label.AcceptTerms"]
+                                @Lang["checkin.Label.AcceptTerms"]
                             </span>
-                            <a class="AcceptTerms-link" @onclick="OpenTerms">@Ui.Lang["checkin.ButtonLink.Terms"]</a>
+                            <a class="AcceptTerms-link" @onclick="OpenTerms">@Lang["checkin.ButtonLink.Terms"]</a>
                               <span class="label-text" style="font-size: 10px" for="AcceptTerms">
-                                @Ui.Lang["checkin.Label.AcceptTerms1"]
+                                @Lang["checkin.Label.AcceptTerms1"]
                             </span>
-                            <a class="AcceptTerms-link" @onclick="OpenPrivacy">@Ui.Lang["checkin.ButtonLink.Privacy"]</a>
+                            <a class="AcceptTerms-link" @onclick="OpenPrivacy">@Lang["checkin.ButtonLink.Privacy"]</a>
                               <span class="label-text" style="font-size: 10px"  for="AcceptTerms">
-                                @Ui.Lang["checkin.Label.AcceptTerms2"]
+                                @Lang["checkin.Label.AcceptTerms2"]
                             </span>
                         </div>
 
@@ -64,10 +64,10 @@
                      </div>
                     <div class="checkin-row">
                           <button class="military-button" disabled="@(!CanCheckIn)" type="button" @onclick="HandleValidSubmit">
-                            @Ui.Lang["checkin.button.CheckIn"]
+                            @Lang["checkin.button.CheckIn"]
                           </button>
                           <button class="military-button--secondary" @onclick="NavigateHome">
-                            @Ui.Lang["checkin.button.RedirectToLogin"]
+                            @Lang["checkin.button.RedirectToLogin"]
                           </button>
                      </div>
 
@@ -77,7 +77,7 @@
                      <div class="checkin-footer">
                         
                     <button class="military-button--secondary" @onclick="NavigateHome">
-                            @Ui.Lang["checkin.button.RedirectToLogin"]
+                            @Lang["checkin.button.RedirectToLogin"]
                      </button>
                  </div>
                 }
