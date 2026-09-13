@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Email.Confirm.Subject" xml:space="preserve">
-    <value>{{AppName}} – E-mail megerősítés</value>
+    <value>{{AppName}} – E-mail-megerősítés</value>
   </data>
   <data name="Email.Subject.ResetPassword" xml:space="preserve">
     <value>{{AppName}} – Jelszó visszaállítása</value>

@@ -18,17 +18,17 @@
   <data name="modal.team.Label.Vitality" xml:space="preserve"><value>Vitalitás:</value></data>
   <data name="modal.team.Label.Orientation.Main" xml:space="preserve"><value>Fő:</value></data>
   <data name="modal.team.Label.Orientation.Secondary" xml:space="preserve"><value>2.:</value></data>
-  <data name="modal.team.Recruit.Bonuses" xml:space="preserve"><value>Kategoria bonuszok:</value></data>
-  <data name="modal.team.Recruit.Maluses" xml:space="preserve"><value>Kategoria maluszok:</value></data>
-  <data name="modal.team.Handle.NoVitality" xml:space="preserve"><value>A csapattagnak elfogytak a vitalítási pontjai! Rendelkezel orientáció releváns fejlesztési ponttal akkor visszatöltheted a maximum értékre!</value></data>
+  <data name="modal.team.Recruit.Bonuses" xml:space="preserve"><value>Kategóriabónuszok:</value></data>
+  <data name="modal.team.Recruit.Maluses" xml:space="preserve"><value>Kategóriamaluszok:</value></data>
+  <data name="modal.team.Handle.NoVitality" xml:space="preserve"><value>A csapattagnak elfogytak a vitalitási pontjai! Rendelkezel orientáció releváns fejlesztési ponttal akkor visszatöltheted a maximum értékre!</value></data>
   <data name="modal.team.Handle.Attention" xml:space="preserve"><value>Figyelem!</value></data>
-  <data name="modal.team.Handle.HireCooldown" xml:space="preserve"><value>Ha a kirugás mellett döntesz, nem fogod tudni pótolni 1 napig!</value></data>
-  <data name="modal.team.Handle.RestoreRequirement" xml:space="preserve"><value>Szerezz {0} pontokat, hogy vissza tudd állítani a  vitalitástt!</value></data>
+  <data name="modal.team.Handle.HireCooldown" xml:space="preserve"><value>Ha a kirúgás mellett döntesz, nem fogod tudni pótolni 1 napig!</value></data>
+  <data name="modal.team.Handle.RestoreRequirement" xml:space="preserve"><value>Szerezz {0} pontokat, hogy vissza tudd állítani a  vitalitást!</value></data>
   <data name="modal.team.Promotion.Cost" xml:space="preserve"><value>Az előléptetés költsége {0} Csp!</value></data>
-  <data name="modal.team.Promotion.Free" xml:space="preserve"><value>Az elöléptetés ingyenes, mert változik  a rang osztálya is!</value></data>
+  <data name="modal.team.Promotion.Free" xml:space="preserve"><value>Az előléptetés ingyenes, mert változik  a rang osztálya is!</value></data>
   <data name="modal.team.Retire.Description" xml:space="preserve"><value>A csapattag nyugdíjazásra kerül, az összegyűjtött kreditjét megkapod!</value></data>
   <data name="modal.team.Reward.Title" xml:space="preserve"><value>Jutalmak:</value></data>
-  <data name="modal.team.Reward.WinBonus" xml:space="preserve"><value>Győzelmi bonusz:</value></data>
+  <data name="modal.team.Reward.WinBonus" xml:space="preserve"><value>Győzelmi bónusz:</value></data>
   <data name="modal.team.Reward.TeamSize" xml:space="preserve"><value>Csapat létszám:</value></data>
   <data name="modal.team.Reward.LoadoutSize" xml:space="preserve"><value>Felszerelés tároló:</value></data>
   <data name="modal.team.Reward.OwnQuestionSlots" xml:space="preserve"><value>Saját kérdések:</value></data>

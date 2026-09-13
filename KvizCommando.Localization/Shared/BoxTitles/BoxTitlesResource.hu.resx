@@ -70,10 +70,10 @@
   <data name="Root.Question" xml:space="preserve"><value>Kérdéseid</value></data>
   <data name="Question.Factory" xml:space="preserve"><value>Felszerelés</value></data>
   <data name="Question.Usr" xml:space="preserve"><value>Felhasználói kérdések</value></data>
-  <data name="Question.Pending" xml:space="preserve"><value>Fűggőben levő kérdések</value></data>
+  <data name="Question.Pending" xml:space="preserve"><value>Függőben levő kérdések</value></data>
   <data name="Question.New" xml:space="preserve"><value>Új kérdés beküldése</value></data>
-  <data name="Team.TeamOverview" xml:space="preserve"><value>Csapat áttekintés</value></data>
-  <data name="Team.Members" xml:space="preserve"><value>Csapat tagok</value></data>
+  <data name="Team.TeamOverview" xml:space="preserve"><value>Csapatáttekintés</value></data>
+  <data name="Team.Members" xml:space="preserve"><value>Csapattagok</value></data>
   <data name="Team.Recruit" xml:space="preserve"><value>Toborzás</value></data>
   <data name="VsGame.CreateBattlefield" xml:space="preserve"><value>Csatatér létrehozása</value></data>
   <data name="VsGame.JoinBattlefield" xml:space="preserve"><value>Csatlakozás csatatérhez</value></data>
@@ -85,9 +85,9 @@
   <data name="VsGame.Classification.3" xml:space="preserve"><value>III. harci besorolás</value></data>
   <data name="VsGame.Classification.4" xml:space="preserve"><value>IV. harci besorolás</value></data>
   <data name="VsGame.Classification.5" xml:space="preserve"><value>V. harci besorolás</value></data>
-  <data name="SoloGame.Category" xml:space="preserve"><value>Kategoria mód</value></data>
+  <data name="SoloGame.Category" xml:space="preserve"><value>Kategóriamód</value></data>
   <data name="SoloGame.Orientation" xml:space="preserve"><value>Orientáció mód</value></data>
   <data name="SoloGame.Campaign" xml:space="preserve"><value>Kampány mód</value></data>
-  <data name="SoloGame.CategoryGame" xml:space="preserve"><value>Kategória Játék</value></data>
-  <data name="SoloGame.OrientationGame" xml:space="preserve"><value>Orientáció Játék</value></data>
+  <data name="SoloGame.CategoryGame" xml:space="preserve"><value>Kategóriajáték</value></data>
+  <data name="SoloGame.OrientationGame" xml:space="preserve"><value>Orientációjáték</value></data>
 </root>

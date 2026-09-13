@@ -70,7 +70,7 @@
   <data name="team.Label.Attitude.3rd" xml:space="preserve"><value>Extra módosítók({0}):</value></data>
   <data name="team.Label.Attitude.Help" xml:space="preserve"><value>Segítség módosítók:</value></data>
   <data name="team.Label.Attitude.Sec" xml:space="preserve"><value>Másodlagos ({0}):</value></data>
-  <data name="team.Label.Bonus" xml:space="preserve"><value>Bonusz:</value></data>
+  <data name="team.Label.Bonus" xml:space="preserve"><value>Bónusz:</value></data>
   <data name="team.Label.Class" xml:space="preserve"><value>Osztály:</value></data>
   <data name="team.Label.Credit" xml:space="preserve"><value>Kredit:</value></data>
   <data name="team.Label.Level" xml:space="preserve"><value>Szint: </value></data>

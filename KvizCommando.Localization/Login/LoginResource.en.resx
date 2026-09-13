@@ -184,7 +184,7 @@
     <value>You did not set player name!</value>
   </data>
   <data name="checkin.Reason.TermsUpdated" xml:space="preserve">
-    <value>Terms and conditoion are updated, please check and accept it to logging in!</value>
+    <value>Terms and condition are updated, please check and accept it to logging in!</value>
   </data>
   <data name="checkin.Title.DisplayName" xml:space="preserve">
     <value>New player logging in</value>
@@ -295,7 +295,7 @@
     <value>Passwords must be at least {0} characters.</value>
   </data>
   <data name="identityerrors.PasswordRequiresNonAlphanumeric" xml:space="preserve">
-    <value>Passwords must have at least one non alphanumeric character.</value>
+    <value>Passwords must have at least one non-alphanumeric character.</value>
   </data>
   <data name="identityerrors.PasswordRequiresDigit" xml:space="preserve">
     <value>Passwords must have at least one digit ('0'-'9').</value>
@@ -334,7 +334,7 @@
     <value>Login is failed.</value>
   </data>
   <data name="identityerrors.DisplayNameRequired" xml:space="preserve">
-    <value>User nem is required.</value>
+    <value>User name is required.</value>
   </data>
   <data name="identityerrors.DisplayNameTooShort" xml:space="preserve">
     <value>User name is too short.</value>
@@ -361,7 +361,7 @@
     <value>User creation via 3rd party is failed</value>
   </data>
   <data name="identityerrors.LinkFailed" xml:space="preserve">
-    <value>Account link faild with 3rd party provider</value>
+    <value>Account link failed with 3rd party provider</value>
   </data>
   <data name="identityerrors.access_denied" xml:space="preserve">
     <value>Access denied!</value>
@@ -418,7 +418,7 @@
     <value>Enter password</value>
   </data>
   <data name="register.Button" xml:space="preserve">
-    <value>Regist</value>
+    <value>Register</value>
   </data>
   <data name="register.ConfirmPassword" xml:space="preserve">
     <value>Confirm password</value>

@@ -151,7 +151,7 @@
     <value>A kérdés hossza {0} és {1} karakter között lehet</value>
   </data>
   <data name="Resp.Qustion.BadData" xml:space="preserve">
-    <value>Nem megfelelő kérdés adat</value>
+    <value>Nem megfelelő kérdésadat</value>
   </data>
   <data name="Resp.SaveOk" xml:space="preserve">
     <value>Sikeres mentés!</value>

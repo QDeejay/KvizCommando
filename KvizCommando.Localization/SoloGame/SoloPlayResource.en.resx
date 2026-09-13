@@ -61,7 +61,7 @@
   <data name="solo.Button.Game.Skip" xml:space="preserve"><value>Skip</value></data>
   <data name="solo.Label.Game.Points" xml:space="preserve"><value>Actual points</value></data>
   <data name="solo.Label.Game.HighScorePts" xml:space="preserve"><value>Best</value></data>
-  <data name="solo.Label.Game.Message.NewRecord" xml:space="preserve"><value>Congratulation! New highscore!</value></data>
+  <data name="solo.Label.Game.Message.NewRecord" xml:space="preserve"><value>Congratulation! New high score!</value></data>
   <data name="solo.Label.Game.PointUnit" xml:space="preserve"><value>points</value></data>
   <data name="solo.Label.Game.SecondUnit" xml:space="preserve"><value>sec</value></data>
   <data name="solo.Label.GameProcess.Preparing" xml:space="preserve"><value>Preparing terminal</value></data>

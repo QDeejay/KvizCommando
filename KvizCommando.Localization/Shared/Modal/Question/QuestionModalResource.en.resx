@@ -4,7 +4,7 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
-  <data name="modal.question.Delete.Confirm" xml:space="preserve"><value>Are You sure? This operation is not reversable. Your question will be deleted, no longer available for your loadout!</value></data>
+  <data name="modal.question.Delete.Confirm" xml:space="preserve"><value>Are You sure? This operation is not reversible. Your question will be deleted, no longer available for your loadout!</value></data>
   <data name="modal.question.Field.Category" xml:space="preserve"><value>Category</value></data>
   <data name="modal.question.Field.Remark" xml:space="preserve"><value>Info:</value></data>
   <data name="modal.question.Status.Approved" xml:space="preserve"><value>Approved</value></data>

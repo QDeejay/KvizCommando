@@ -169,7 +169,7 @@
     <value>Nincs</value>
   </data>
   <data name="question.Table.Status.Pending" xml:space="preserve">
-    <value>Fűggőben</value>
+    <value>Függőben</value>
   </data>
   <data name="question.Table.Status.Rejected" xml:space="preserve">
     <value>Elutasítva</value>

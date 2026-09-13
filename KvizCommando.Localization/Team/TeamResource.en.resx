@@ -87,7 +87,7 @@
   <data name="team.Label.Recruit.SelectedCandidate" xml:space="preserve"><value>Selected candidate</value></data>
   <data name="team.Label.Recruit.Suspended" xml:space="preserve"><value>Recruit process temporary disabled!</value></data>
   <data name="team.Label.Remark.AtMaximum" xml:space="preserve"><value>On Maximum</value></data>
-  <data name="team.Label.Remark.Develop" xml:space="preserve"><value>(Able to develope)</value></data>
+  <data name="team.Label.Remark.Develop" xml:space="preserve"><value>(Able to develop)</value></data>
   <data name="team.Label.SkillPointShort" xml:space="preserve"><value>Sp&lt;{0}&gt;:</value></data>
   <data name="team.Label.TeamDevPointShort" xml:space="preserve"><value>Tp:</value></data>
   <data name="team.Label.TeamName" xml:space="preserve"><value>Team</value></data>

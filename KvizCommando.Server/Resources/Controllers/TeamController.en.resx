@@ -118,22 +118,22 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Error.Internal" xml:space="preserve">
-    <value>&lt; UnSuccessed (8101)&gt;</value>
+    <value>&lt; Unsuccessful (8101)&gt;</value>
   </data>
   <data name="Error.InvalidCandidate" xml:space="preserve">
-    <value>&lt; UnSuccessed (8203)&gt;</value>
+    <value>&lt; Unsuccessful (8203)&gt;</value>
   </data>
   <data name="Error.InValidData" xml:space="preserve">
-    <value>&lt; UnSuccessed (8102)&gt;</value>
+    <value>&lt; Unsuccessful (8102)&gt;</value>
   </data>
   <data name="Error.InvalidMember" xml:space="preserve">
-    <value>&lt; UnSuccessed (8202)&gt;</value>
+    <value>&lt; Unsuccessful (8202)&gt;</value>
   </data>
   <data name="Error.InvalidRequest" xml:space="preserve">
-    <value>&lt; UnSuccessed (8201)&gt;</value>
+    <value>&lt; Unsuccessful (8201)&gt;</value>
   </data>
   <data name="Error.Session" xml:space="preserve">
-    <value>Re-Logined on other device!</value>
+    <value>Re-logged in on other device!</value>
   </data>
   <data name="Resp.Fire" xml:space="preserve">
     <value>Team member fired!</value>
@@ -145,7 +145,7 @@
     <value>Team member promoted!</value>
   </data>
   <data name="Resp.Hire" xml:space="preserve">
-    <value>Successed recruit!</value>
+    <value>Successful recruit!</value>
   </data>
   <data name="Resp.Retire" xml:space="preserve">
     <value>Team member retired!</value>

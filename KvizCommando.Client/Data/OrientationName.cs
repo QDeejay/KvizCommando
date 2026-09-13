@@ -7,7 +7,7 @@ namespace KvizCommando.Client.Data
         public static readonly List<OrientationNameRow> Data =
         [
             new(0, "Szabad", "Vacant", "N/A","N/A"),
-            new(1, "Teologus", "Theologian", "Teo","Teo"),
+            new(1, "Teológus", "Theologian", "Teo","Teo"),
             new(2, "Kronológus", "Chronologist", "Kro","Chr"),
             new(3, "Médiaguru", "Media Guru", "Méd", "Med"),
             new(4, "Játékmester", "Game Master", "Ját", "Gam"),
@@ -15,7 +15,7 @@ namespace KvizCommando.Client.Data
             new(6, "Tudós", "Scientist", "Tud", "Sci"),
             new(7, "Trendológus", "Trendologist", "Tre", "Tre"),
             new(8, "Esztéta", "Aesthete", "Esz", "Aes"),
-            new(9, "Csapat Kapitány", "Team Captain", "Kap", "Cap"),
+            new(9, "Csapatkapitány", "Team Captain", "Kap", "Cap"),
         ];
     }
 }

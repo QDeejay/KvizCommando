@@ -118,22 +118,22 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Error.Internal" xml:space="preserve">
-    <value>&lt; UnSuccessed (8001)&gt;</value>
+    <value>&lt; Unsuccessful (8001)&gt;</value>
   </data>
   <data name="Error.InValidData" xml:space="preserve">
-    <value>&lt; UnSuccessed (8002)&gt;</value>
+    <value>&lt; Unsuccessful (8002)&gt;</value>
   </data>
   <data name="Error.MustOneSlot" xml:space="preserve">
-    <value>&lt; UnSuccessed (8003)&gt;</value>
+    <value>&lt; Unsuccessful (8003)&gt;</value>
   </data>
   <data name="Error.RequestIsNull" xml:space="preserve">
-    <value>&lt; UnSuccessed (8004)&gt;</value>
+    <value>&lt; Unsuccessful (8004)&gt;</value>
   </data>
   <data name="Error.Session" xml:space="preserve">
-    <value>Re-Logined on other device!</value>
+    <value>Re-logged in on other device!</value>
   </data>
   <data name="Error.UnAuthorized" xml:space="preserve">
-    <value>&lt; UnSuccessed (8005)&gt;</value>
+    <value>&lt; Unsuccessful (8005)&gt;</value>
   </data>
   <data name="Resp.Answer.BadData" xml:space="preserve">
     <value>Invalid answer data</value>
@@ -142,10 +142,10 @@
     <value>Two or more answer matched</value>
   </data>
   <data name="Resp.DeleteOk" xml:space="preserve">
-    <value>Deletion is successed!</value>
+    <value>Deletion is successful!</value>
   </data>
   <data name="Resp.MoveOk" xml:space="preserve">
-    <value>Move to user slot successed!</value>
+    <value>Move to user slot successful!</value>
   </data>
   <data name="Resp.Question.TooLong" xml:space="preserve">
     <value>The question must be between {0} and {1} characters long</value>
@@ -154,9 +154,9 @@
     <value>Invalid question data</value>
   </data>
   <data name="Resp.SaveOk" xml:space="preserve">
-    <value>Successed save!</value>
+    <value>Successful save!</value>
   </data>
   <data name="Resp.SendOk" xml:space="preserve">
-    <value>Sending is successed!</value>
+    <value>Sending is successful!</value>
   </data>
 </root>
