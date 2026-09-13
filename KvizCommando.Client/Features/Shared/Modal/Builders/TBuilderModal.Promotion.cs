@@ -2,7 +2,6 @@ using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Team;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Rules;
@@ -54,11 +53,11 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
             vm.Info = BuildInfoRow(bi, addDevPoints, culture, _lang);
 
-            vm.Unlocks = _lang["team.modal.Label.Unlocks"];
+            vm.Unlocks = _lang["modal.team.Reward.Title"];
             vm.UnlocksLevel = (RankNameTable.Data[newLevel].PublicLevel ?? "") + ": ";
             vm.UnlocksOrg = RankNameLocalizer.GetTeam(newLevel, culture);
-            vm.UnlockExtras = newExtra > 0 ? _lang["team.modal.Label.UnlocksExtras"] : string.Empty;
-            vm.UnlockHelps = _lang["team.modal.Label.UnlocksHelps"];
+            vm.UnlockExtras = newExtra > 0 ? _lang["modal.team.Reward.Extra"] : string.Empty;
+            vm.UnlockHelps = _lang["modal.team.Reward.HelpModifiers"];
 
             vm.Rows.Add(newExtra >= 200
                 ? new ModalRow(
@@ -71,7 +70,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
             if (newBonus > 0)
                 vm.Rows.Add(new ModalRow(
-                    CategoryName: _lang["team.modal.Label.Bonus"],
+                    CategoryName: _lang["modal.team.Reward.WinBonus"],
                     ValueDisplay: $"{RankRewards.List[bi.Level].WinBonus}%",
                     separator: UNLOCK_SEP,
                     ValueChangeDisplay: $"{newBonus}%",
@@ -80,7 +79,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
             if (addDevPoints > 0)
                 vm.Rows.Add(new ModalRow(
-                    CategoryName: _lang["team.label.TeamDevPoint"],
+                    CategoryName: _lang["modal.team.Label.TeamDevelopmentPoint"],
                     ValueDisplay: string.Empty,
                     separator: UNLOCK_SEP,
                     ValueChangeDisplay: "+" + addDevPoints,
@@ -89,7 +88,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
             if (newTeamSize > 0)
                 vm.Rows.Add(new ModalRow(
-                    CategoryName: _lang["team.modal.Label.TeamSize"],
+                    CategoryName: _lang["modal.team.Reward.TeamSize"],
                     ValueDisplay: $"{RankRewards.List[bi.Level].MaxCharacters}",
                     separator: UNLOCK_SEP,
                     ValueChangeDisplay: $"{newTeamSize}",
@@ -98,7 +97,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
             if (newLoadOutSize > 0)
                 vm.Rows.Add(new ModalRow(
-                    CategoryName: _lang["team.modal.Label.LoadoutSize"],
+                    CategoryName: _lang["modal.team.Reward.LoadoutSize"],
                     ValueDisplay: $"{oldLoadOutSize}",
                     separator: UNLOCK_SEP,
                     ValueChangeDisplay: $"{newLoadOutSize}",
@@ -107,7 +106,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
             if (newOwnSlotSize > 0)
                 vm.Rows.Add(new ModalRow(
-                    CategoryName: _lang["team.modal.Label.OwnSlotSize"],
+                    CategoryName: _lang["modal.team.Reward.OwnQuestionSlots"],
                     ValueDisplay: $"{RankRewards.List[bi.Level].OwnQuestSlot}",
                     separator: UNLOCK_SEP,
                     ValueChangeDisplay: $"{newOwnSlotSize}",
@@ -136,19 +135,21 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             int addDevPoints = RankRewards.List[newLevel].DevPointRevard;
             vm.Info = BuildInfoRow(bi, addDevPoints, culture, _lang);
 
-            vm.Unlocks = _lang["team.Label.Attitude.Mai"];
+            vm.Unlocks = _lang["modal.team.Label.Attitude.Main"];
             vm.UnlocksLevel = (RankNameTable.Data[newLevel].PublicLevel ?? "") + ": ";
             vm.UnlocksRank = RankNameLocalizer.GetName(newLevel, culture);
             vm.RankClass = RankNameLocalizer.GetClass(newRc, culture);
             vm.RankClassChanged = rankClassChanged;
             vm.Infotext1 = rankClassChanged
-                ? _lang["team.modal.Text.Promote2"]
-                : _lang["team.modal.Text.Promote1"].FormatSafe(
+                ? _lang["modal.team.Promotion.Free"]
+                : _lang["modal.team.Promotion.Cost"].Value.FormatSafe(
                     TeamRules.PROMOTION_TEAM_DEV_POINT_COST);
-            vm.UnlockMaxLevels1 = _lang["team.Label.Attitude.Sec"] + " (max)";
-            vm.UnlockMaxLevels2 = _lang["team.Label.Attitude.3rd"] + " (max)";
+            vm.UnlockMaxLevels1 = _lang["modal.team.Label.Attitude.Secondary"].Value +
+                _lang["modal.team.Format.MaximumShort"].Value;
+            vm.UnlockMaxLevels2 = _lang["modal.team.Label.Attitude.Third"].Value +
+                _lang["modal.team.Format.MaximumShort"].Value;
             vm.Rows.Add(rankClassChanged ? new ModalRow(
-                CategoryName: _lang["team.label.TeamDevPoint"],
+                CategoryName: _lang["modal.team.Label.TeamDevelopmentPoint"],
                 ValueDisplay: string.Empty,
                 separator: UNLOCK_SEP,
                 ValueChangeDisplay: "+" + RankRewards.List[newLevel].DevPointToStore.ToString(),
@@ -162,7 +163,9 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                     color: string.Empty
                     ));
             vm.Rows.Add(new ModalRow(
-                CategoryName: _lang["team.Label.Vitality"][0..(_lang["team.Label.Vitality"].Length - 1)] + " maximum",
+                CategoryName: _lang["modal.team.Label.Vitality"].Value[
+                    0..(_lang["modal.team.Label.Vitality"].Value.Length - 1)] +
+                    _lang["modal.team.Format.Maximum"].Value,
                 ValueDisplay: $"{member.EnergyPoints}/{TeamRules.GetMemberMaxVitality(member.Level)}",
                 separator: UNLOCK_SEP,
                 ValueChangeDisplay: $"{TeamRules.GetMemberMaxVitality(newLevel)}/{TeamRules.GetMemberMaxVitality(newLevel)}",

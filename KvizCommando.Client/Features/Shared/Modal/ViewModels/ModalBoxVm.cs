@@ -6,15 +6,15 @@ namespace KvizCommando.Client.Features.Shared.Modal.ViewModels
     {
 
         public ModalTypes Mode { get; init; } = ModalTypes.None;
-        public string Title { get; init; } = string.Empty;
-        public string ActionText1 { get; init; } = string.Empty;
-        public string ActionText2 { get; init; } = string.Empty;
+        public string TitleKey { get; init; } = string.Empty;
+        public string ActionTextKey1 { get; init; } = string.Empty;
+        public string ActionTextKey2 { get; init; } = string.Empty;
         public string ActionStyle1 { get; init; } = string.Empty;
         public string ActionStyle2 { get; init; } = string.Empty;
-        public string CloseText { get; init; } = string.Empty;
+        public string CloseTextKey { get; init; } = string.Empty;
         public string Size { get; init; } = string.Empty;
         public bool SizeLock { get; init; } = false;
-        public string CheckBoxText { get; init; } = string.Empty;
+        public string CheckBoxTextKey { get; init; } = string.Empty;
         public string CheckBoxKey { get; init; } = string.Empty;
         public bool CheckBottom { get; init; } = new();
 

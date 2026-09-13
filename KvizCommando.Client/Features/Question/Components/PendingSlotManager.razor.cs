@@ -41,13 +41,12 @@ public partial class PendingSlotManager
             return;
 
         var modal = MBoxBuilder.BuildParam(
-            ModalTypes.QPendHandle,
-            Ui.Lang);
+            ModalTypes.QPendHandle);
         modal = modal with
         {
-            ActionText2 = Slots[_selectedId].Status == "Approved" &&
+            ActionTextKey2 = Slots[_selectedId].Status == "Approved" &&
                 ExtInfo.FreeUserSlot > 0
-                ? modal.ActionText2
+                ? modal.ActionTextKey2
                 : string.Empty
         };
         modal.BodyParameters.Add(

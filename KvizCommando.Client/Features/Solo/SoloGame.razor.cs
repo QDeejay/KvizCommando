@@ -131,8 +131,7 @@ public partial class SoloGame : KcComponentBase, IDisposable
             if (!_gameCompleted)
             {
                 var modal = MBoxBuilder.BuildParam(
-                    ModalTypes.DialogConfirm,
-                    Ui.Lang);
+                    ModalTypes.DialogConfirm);
 
                 modal.BodyParameters.Add(
                     nameof(DBoxModalRender.DialogBoxType),
@@ -145,11 +144,8 @@ public partial class SoloGame : KcComponentBase, IDisposable
             {
                 if (_newTeamLevel > 0)
                 {
-                    await Ui.Lang.LoadModuleAsync(Culture, "team");
-
                     var modal = MBoxBuilder.BuildParam(
-                        ModalTypes.TPromoteTeam,
-                        Ui.Lang);
+                        ModalTypes.TPromoteTeam);
 
                     await Ui.Modal.ShowAsync(modal);
                     _newTeamLevel = 0;

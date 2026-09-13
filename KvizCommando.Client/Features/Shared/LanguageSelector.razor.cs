@@ -27,13 +27,10 @@ namespace KvizCommando.Client.Features.Shared
             var languageCode = culture.TwoLetterISOLanguageName;
 
             var modal = MBoxBuilder.BuildParam(
-                ModalTypes.LangConfirm,
-                Ui.Lang) with
+                ModalTypes.LangConfirm) with
             {
-                Title =
-                    Ui.Lang[$"common.Modal.Language.Title.{languageCode}"],
-                ActionText1 =
-                    Ui.Lang[$"common.Modal.Language.Restart.{languageCode}"]
+                TitleKey = $"modal.Title.Language.{languageCode}",
+                ActionTextKey1 = $"modal.Button.Language.Reload.{languageCode}"
             };
 
             modal.BodyParameters.Add(

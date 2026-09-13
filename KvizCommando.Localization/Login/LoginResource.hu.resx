@@ -210,20 +210,8 @@
   <data name="checkin.Team.Append" xml:space="preserve">
     <value> csapata</value>
   </data>
-  <data name="checkin.modal.TermsTitle" xml:space="preserve">
-    <value>Általános szerződési feltételek</value>
-  </data>
-  <data name="checkin.modal.Button.Action" xml:space="preserve">
-    <value>Megértettem</value>
-  </data>
-  <data name="checkin.modal.Button.Close" xml:space="preserve">
-    <value>Bezár</value>
-  </data>
   <data name="checkin.Reason.SuggestedName" xml:space="preserve">
     <value>Javaslat:</value>
-  </data>
-  <data name="checkin.modal.PrivacyTitle" xml:space="preserve">
-    <value>Adatkezelési tájékoztató</value>
   </data>
   <data name="checkin.ButtonLink.Privacy" xml:space="preserve">
     <value>Adatvédelmi Tájékoztatót</value>

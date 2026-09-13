@@ -178,11 +178,10 @@ public partial class TeamManager
             return;
 
         var modal = MBoxBuilder.BuildParam(
-            modalType,
-            Ui.Lang);
+            modalType);
 
         if (action.Remark == MembRemark.Fire)
-            modal = modal with { ActionText2 = string.Empty };
+            modal = modal with { ActionTextKey2 = string.Empty };
 
         modal.BodyParameters.Add(
             nameof(TModalRender.SelectedMember),

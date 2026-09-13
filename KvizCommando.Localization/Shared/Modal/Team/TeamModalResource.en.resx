@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="modal.team.Label.Name" xml:space="preserve"><value>Name: </value></data>
+  <data name="modal.team.Label.Rank" xml:space="preserve"><value>Rank:</value></data>
+  <data name="modal.team.Label.Level" xml:space="preserve"><value>Level: </value></data>
+  <data name="modal.team.Label.Organization" xml:space="preserve"><value>Org.:</value></data>
+  <data name="modal.team.Label.SkillPointShort" xml:space="preserve"><value>Sp&lt;{0}&gt;:</value></data>
+  <data name="modal.team.Label.TeamDevelopmentPointShort" xml:space="preserve"><value>Tp:</value></data>
+  <data name="modal.team.Label.Pension" xml:space="preserve"><value>Pension:</value></data>
+  <data name="modal.team.Label.TeamDevelopmentPoint" xml:space="preserve"><value>Team development points:</value></data>
+  <data name="modal.team.Label.Attitude.Main" xml:space="preserve"><value>Main modifiers:</value></data>
+  <data name="modal.team.Label.Attitude.Secondary" xml:space="preserve"><value>Secondary ({0}):</value></data>
+  <data name="modal.team.Label.Attitude.Third" xml:space="preserve"><value>Extra modifiers({0}):</value></data>
+  <data name="modal.team.Label.Vitality" xml:space="preserve"><value>Vitality:</value></data>
+  <data name="modal.team.Label.Orientation.Main" xml:space="preserve"><value>Main:</value></data>
+  <data name="modal.team.Label.Orientation.Secondary" xml:space="preserve"><value>2nd:</value></data>
+  <data name="modal.team.Recruit.Bonuses" xml:space="preserve"><value>Category bonuses:</value></data>
+  <data name="modal.team.Recruit.Maluses" xml:space="preserve"><value>Category maluses:</value></data>
+  <data name="modal.team.Handle.NoVitality" xml:space="preserve"><value>The current teammember has lack of vitality points. If you have orientation relevant develepment points, you can restore!</value></data>
+  <data name="modal.team.Handle.Attention" xml:space="preserve"><value>Attention!</value></data>
+  <data name="modal.team.Handle.HireCooldown" xml:space="preserve"><value>If you choose fire option, you will not able to hire another member for a day!</value></data>
+  <data name="modal.team.Handle.RestoreRequirement" xml:space="preserve"><value>You have to get {0} points to be able to charge!</value></data>
+  <data name="modal.team.Promotion.Cost" xml:space="preserve"><value>The cost of promotion is {0} Tp!</value></data>
+  <data name="modal.team.Promotion.Free" xml:space="preserve"><value>The promotion is free, because of rank class changing!</value></data>
+  <data name="modal.team.Retire.Description" xml:space="preserve"><value>The team member will be retired, the collected pension will be added to  your credit pot!</value></data>
+  <data name="modal.team.Reward.Title" xml:space="preserve"><value>Unlocks:</value></data>
+  <data name="modal.team.Reward.WinBonus" xml:space="preserve"><value>Wining bonus:</value></data>
+  <data name="modal.team.Reward.TeamSize" xml:space="preserve"><value>Size of team:</value></data>
+  <data name="modal.team.Reward.LoadoutSize" xml:space="preserve"><value>Loadout size:</value></data>
+  <data name="modal.team.Reward.OwnQuestionSlots" xml:space="preserve"><value>Own slots size:</value></data>
+  <data name="modal.team.Reward.Extra" xml:space="preserve"><value>Unlock extras:</value></data>
+  <data name="modal.team.Reward.HelpModifiers" xml:space="preserve"><value>Help modifiers</value></data>
+  <data name="modal.team.Format.MaximumShort" xml:space="preserve"><value> (max)</value></data>
+  <data name="modal.team.Format.Maximum" xml:space="preserve"><value> maximum</value></data>
+</root>

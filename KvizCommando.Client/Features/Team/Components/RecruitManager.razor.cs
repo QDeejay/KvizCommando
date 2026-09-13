@@ -149,8 +149,7 @@ public partial class RecruitManager : IDisposable
 
         await Audio.PlaySfxAsync(AudioService.SFX_UI_TOUCH);
         var modal = MBoxBuilder.BuildParam(
-            ModalTypes.THire,
-            Ui.Lang);
+            ModalTypes.THire);
         modal.BodyParameters.Add(
             nameof(TModalRender.SelectedMember),
             _selectedPosition);

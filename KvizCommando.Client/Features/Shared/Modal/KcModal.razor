@@ -3,10 +3,10 @@
         <div class="modal-content modal-custom kc-window-shell">
 
             <div class="modal-header-custom kc-window-header text-center">
-                <h5 class="modal-title-custom kc-window-title">@Par.Title</h5>
+                <h5 class="modal-title-custom kc-window-title">@Lang[Par.TitleKey]</h5>
                 <button type="button" class="modal-close kc-window-close"
                         @onclick="CloseAsync"
-                        aria-label="Close">×</button>
+                        aria-label="@Lang["modal.Aria.Close"]">×</button>
             </div>
 
             <div id="termsBody"
@@ -30,39 +30,39 @@
             </div>
                
             <div class="modal-checkbox">
-                @if (!string.IsNullOrWhiteSpace(Par.CheckBoxText) && Par.CheckBoxText!="#")
+                @if (!string.IsNullOrWhiteSpace(Par.CheckBoxTextKey) && Par.CheckBoxTextKey != "#")
                 {
                     <input class="form-check-input custom-checkbox" type="checkbox" id="notshow" @bind="CheckBox" />
                     <label class="form-check-label notshow-label" for="notshow">
-                        @Par.CheckBoxText
+                        @Lang[Par.CheckBoxTextKey]
                     </label>
                 }
             </div>
 
             <div class="modal-footer-custom kc-window-footer d-flex justify-content-around">
-                @if (!string.IsNullOrWhiteSpace(Par.ActionText1) && Par.ActionText1 != "#")
+                @if (!string.IsNullOrWhiteSpace(Par.ActionTextKey1) && Par.ActionTextKey1 != "#")
                 {
                     <button class="military-button"
                             disabled="@(CanAccept==false)"
                             @onclick="OnActionClicked1"
                             style="@Par.ActionStyle1">
-                        @Par.ActionText1
+                        @Lang[Par.ActionTextKey1]
                     </button>
                 }
-                @if (!string.IsNullOrWhiteSpace(Par.ActionText2) && Par.ActionText2 != "#")
+                @if (!string.IsNullOrWhiteSpace(Par.ActionTextKey2) && Par.ActionTextKey2 != "#")
                 {
                     <button class="military-button"
                             style="@Par.ActionStyle2"
                             disabled="@(CanAccept == false)"
                             @onclick="OnActionClicked2">
-                        @Par.ActionText2
+                        @Lang[Par.ActionTextKey2]
                     </button>
                 }
-                @if (!string.IsNullOrWhiteSpace(Par.CloseText) && Par.CloseText != "#")
+                @if (!string.IsNullOrWhiteSpace(Par.CloseTextKey) && Par.CloseTextKey != "#")
                 {
                     <button class="military-button--secondary"
                             @onclick="CloseAsync">
-                        @Par.CloseText
+                        @Lang[Par.CloseTextKey]
                     </button>
                 }
             </div>

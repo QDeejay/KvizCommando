@@ -2,7 +2,6 @@ using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Team;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Rules;
@@ -35,8 +34,8 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             int[] orientcats = oriData.Item3;
 
             vm.Info = BuildInfoRow(bi, 0, culture, _lang);
-            vm.Labelpros = _lang["team.modal.Label.Pros"];
-            vm.Labelcons = _lang["team.modal.Label.Cons"];
+            vm.Labelpros = _lang["modal.team.Recruit.Bonuses"];
+            vm.Labelcons = _lang["modal.team.Recruit.Maluses"];
             int index = -1;
             double val;
             string pref = string.Empty;

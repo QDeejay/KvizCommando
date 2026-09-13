@@ -1,10 +1,12 @@
 ﻿using Blazored.LocalStorage;
 using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Features.Shared.Modal.ViewModels;
-using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Audio;
+using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
+using KvizCommando.Localization.Shared.Modal;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 
 namespace KvizCommando.Client.Features.Shared.Modal
@@ -14,6 +16,7 @@ namespace KvizCommando.Client.Features.Shared.Modal
         [Inject] private IJSRuntime JS { get; set; } = default!;
         [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
         [Inject] private AudioService Audio { get; set; } = default!;
+        [Inject] private IStringLocalizer<ModalResource> Lang { get; set; } = default!;
         [Parameter] public AppState Appstates { get; set; } = default!;
         [Parameter] public string Id { get; set; } = "kcModal";
         [Parameter] public RenderFragment? ChildContent { get; set; }

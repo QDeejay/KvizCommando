@@ -2,7 +2,6 @@ using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Team;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Rules;
@@ -25,21 +24,21 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             int newLevel = 31;
             int newRc = 11;
             vm.Info = BuildInfoRow(bi, 0, culture, _lang);
-            vm.Infotext1 = _lang["team.modal.Text.Retire1"];
-            vm.Unlocks = _lang["team.modal.Label.Unlocks"];
+            vm.Infotext1 = _lang["modal.team.Retire.Description"];
+            vm.Unlocks = _lang["modal.team.Reward.Title"];
             vm.UnlocksLevel = (RankNameTable.Data[newLevel].PublicLevel ?? "") + ": ";
             vm.UnlocksRank = RankNameLocalizer.GetName(newLevel, culture);
             vm.RankClass = RankNameLocalizer.GetClass(newRc, culture);
             vm.RankClassChanged = true;
             vm.Rows.Add(new ModalRow(
-                CategoryName: _lang["team.Label.Pension"],
+                CategoryName: _lang["modal.team.Label.Pension"],
                 ValueDisplay: string.Empty,
                 separator: UNLOCK_SEP,
                 ValueChangeDisplay: "+" + member.Pension.ToString(),
                 color: "color: green;"
                 ));
             vm.Rows.Add(new ModalRow(
-                CategoryName: _lang["team.label.TeamDevPoint"],
+                CategoryName: _lang["modal.team.Label.TeamDevelopmentPoint"],
                 ValueDisplay: string.Empty,
                 separator: UNLOCK_SEP,
                 ValueChangeDisplay: "+" + RankRewards.List[
@@ -60,11 +59,11 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             var bi = BasicInfoResolver(member);
 
             vm.Info = BuildInfoRow(bi, 0, culture, _lang);
-            vm.Infotext1 = _lang["team.modal.Text.Handle2"];
-            vm.Infotext2 = _lang["team.modal.Text.Handle1"];
-            vm.Infotext3 = _lang["team.modal.Text.Handle3"];
+            vm.Infotext1 = _lang["modal.team.Handle.Attention"];
+            vm.Infotext2 = _lang["modal.team.Handle.NoVitality"];
+            vm.Infotext3 = _lang["modal.team.Handle.HireCooldown"];
             if (member.SkillPoints == 0)
-                vm.Infotext4 = _lang["team.modal.Text.Handle4"].FormatSafe(vm.Info.Devpoints[0..7]);
+                vm.Infotext4 = _lang["modal.team.Handle.RestoreRequirement"].Value.FormatSafe(vm.Info.Devpoints[0..7]);
             else
                 vm.Infotext4 = string.Empty;
             return vm;

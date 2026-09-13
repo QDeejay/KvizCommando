@@ -69,7 +69,6 @@
   <data name="profile.Privacy.Delete.Description" xml:space="preserve"><value>The account and its player data will be permanently deleted. This action cannot be undone.</value></data>
   <data name="profile.Privacy.Delete.Button" xml:space="preserve"><value>Delete account</value></data>
   <data name="profile.Privacy.Delete.Working" xml:space="preserve"><value>Deleting...</value></data>
-  <data name="profile.Privacy.Delete.Confirm" xml:space="preserve"><value>Are you sure you want to permanently delete your account? Deleting your profile and its player data cannot be undone.</value></data>
   <data name="profile.Privacy.Delete.InvalidPassword" xml:space="preserve"><value>The password is incorrect.</value></data>
   <data name="profile.Privacy.Delete.RateLimited" xml:space="preserve"><value>Too many deletion attempts. Try again later.</value></data>
   <data name="profile.Privacy.Delete.Error" xml:space="preserve"><value>The account could not be deleted.</value></data>

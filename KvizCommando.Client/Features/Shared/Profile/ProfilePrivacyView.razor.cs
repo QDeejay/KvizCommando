@@ -168,8 +168,7 @@ public partial class ProfilePrivacyView
     private async Task DeleteAccountAsync(string currentPassword)
     {
         var modal = MBoxBuilder.BuildParam(
-            ModalTypes.DialogConfirm,
-            Ui.Lang);
+            ModalTypes.DialogConfirm);
         modal.BodyParameters.Add(
             nameof(DBoxModalRender.DialogBoxType),
             DBoxConfirmTypes.AccountDeletionConfirm);

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="modal.team.Label.Name" xml:space="preserve"><value>Név: </value></data>
+  <data name="modal.team.Label.Rank" xml:space="preserve"><value>Rang:</value></data>
+  <data name="modal.team.Label.Level" xml:space="preserve"><value>Szint: </value></data>
+  <data name="modal.team.Label.Organization" xml:space="preserve"><value>Szerv.:</value></data>
+  <data name="modal.team.Label.SkillPointShort" xml:space="preserve"><value>Fp&lt;{0}&gt;:</value></data>
+  <data name="modal.team.Label.TeamDevelopmentPointShort" xml:space="preserve"><value>Csp:</value></data>
+  <data name="modal.team.Label.Pension" xml:space="preserve"><value>Nyugdíj:</value></data>
+  <data name="modal.team.Label.TeamDevelopmentPoint" xml:space="preserve"><value>Csapat fejlesztési pontok:</value></data>
+  <data name="modal.team.Label.Attitude.Main" xml:space="preserve"><value>Elsődleges módosítók:</value></data>
+  <data name="modal.team.Label.Attitude.Secondary" xml:space="preserve"><value>Másodlagos ({0}):</value></data>
+  <data name="modal.team.Label.Attitude.Third" xml:space="preserve"><value>Extra módosítók({0}):</value></data>
+  <data name="modal.team.Label.Vitality" xml:space="preserve"><value>Vitalitás:</value></data>
+  <data name="modal.team.Label.Orientation.Main" xml:space="preserve"><value>Fő:</value></data>
+  <data name="modal.team.Label.Orientation.Secondary" xml:space="preserve"><value>2.:</value></data>
+  <data name="modal.team.Recruit.Bonuses" xml:space="preserve"><value>Kategoria bonuszok:</value></data>
+  <data name="modal.team.Recruit.Maluses" xml:space="preserve"><value>Kategoria maluszok:</value></data>
+  <data name="modal.team.Handle.NoVitality" xml:space="preserve"><value>A csapattagnak elfogytak a vitalítási pontjai! Rendelkezel orientáció releváns fejlesztési ponttal akkor visszatöltheted a maximum értékre!</value></data>
+  <data name="modal.team.Handle.Attention" xml:space="preserve"><value>Figyelem!</value></data>
+  <data name="modal.team.Handle.HireCooldown" xml:space="preserve"><value>Ha a kirugás mellett döntesz, nem fogod tudni pótolni 1 napig!</value></data>
+  <data name="modal.team.Handle.RestoreRequirement" xml:space="preserve"><value>Szerezz {0} pontokat, hogy vissza tudd állítani a  vitalitástt!</value></data>
+  <data name="modal.team.Promotion.Cost" xml:space="preserve"><value>Az előléptetés költsége {0} Csp!</value></data>
+  <data name="modal.team.Promotion.Free" xml:space="preserve"><value>Az elöléptetés ingyenes, mert változik  a rang osztálya is!</value></data>
+  <data name="modal.team.Retire.Description" xml:space="preserve"><value>A csapattag nyugdíjazásra kerül, az összegyűjtött kreditjét megkapod!</value></data>
+  <data name="modal.team.Reward.Title" xml:space="preserve"><value>Jutalmak:</value></data>
+  <data name="modal.team.Reward.WinBonus" xml:space="preserve"><value>Győzelmi bonusz:</value></data>
+  <data name="modal.team.Reward.TeamSize" xml:space="preserve"><value>Csapat létszám:</value></data>
+  <data name="modal.team.Reward.LoadoutSize" xml:space="preserve"><value>Felszerelés tároló:</value></data>
+  <data name="modal.team.Reward.OwnQuestionSlots" xml:space="preserve"><value>Saját kérdések:</value></data>
+  <data name="modal.team.Reward.Extra" xml:space="preserve"><value>Extra Jutalom:</value></data>
+  <data name="modal.team.Reward.HelpModifiers" xml:space="preserve"><value>Segítség módosítók:</value></data>
+  <data name="modal.team.Format.MaximumShort" xml:space="preserve"><value> (max)</value></data>
+  <data name="modal.team.Format.Maximum" xml:space="preserve"><value> maximum</value></data>
+</root>

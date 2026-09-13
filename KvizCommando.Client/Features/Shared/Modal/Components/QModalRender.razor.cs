@@ -1,15 +1,16 @@
 ﻿using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.ClientCache;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.Shared.Modal.Question;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Shared.Modal.Components
 {
     public partial class QModalRender
     {
-        [Inject] private ILanguageService Lang { get; set; } = default!;
+        [Inject] private IStringLocalizer<QuestionModalResource> Lang { get; set; } = default!;
 
         [CascadingParameter]
         public AppState Appstates { get; set; } = default!;

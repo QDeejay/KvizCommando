@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="modal.Title.Confirm" xml:space="preserve"><value>Megerősítés</value></data>
+  <data name="modal.Button.Confirm.Yes" xml:space="preserve"><value>Igen</value></data>
+  <data name="modal.Button.Confirm.No" xml:space="preserve"><value>Nem</value></data>
+  <data name="modal.CheckBox.NotShowAgain" xml:space="preserve"><value>Ne mutasd többet</value></data>
+  <data name="modal.Aria.Close" xml:space="preserve"><value>Bezárás</value></data>
+  <data name="modal.Title.Language.hu" xml:space="preserve"><value>Betölti az oldalt?</value></data>
+  <data name="modal.Title.Language.en" xml:space="preserve"><value>Refresh the page?</value></data>
+  <data name="modal.Button.Language.Reload.hu" xml:space="preserve"><value>Újratölt</value></data>
+  <data name="modal.Button.Language.Reload.en" xml:space="preserve"><value>Reload</value></data>
+  <data name="modal.Button.Language.Keep" xml:space="preserve"><value>Nyelv megtart</value></data>
+  <data name="modal.Title.CheckIn.Terms" xml:space="preserve"><value>Általános szerződési feltételek</value></data>
+  <data name="modal.Title.CheckIn.Privacy" xml:space="preserve"><value>Adatkezelési tájékoztató</value></data>
+  <data name="modal.Button.CheckIn.Acknowledge" xml:space="preserve"><value>Megértettem</value></data>
+  <data name="modal.Title.Question.UserDelete" xml:space="preserve"><value>Kérelem megerősítése</value></data>
+  <data name="modal.Title.Question.PendingHandling" xml:space="preserve"><value>Művelet a kérdéssel</value></data>
+  <data name="modal.Title.Question.View" xml:space="preserve"><value>Kérdés megtekintése</value></data>
+  <data name="modal.Title.Question.New" xml:space="preserve"><value>Új kérdés beküldése</value></data>
+  <data name="modal.Button.Question.Delete" xml:space="preserve"><value>Töröl</value></data>
+  <data name="modal.Button.Question.Move" xml:space="preserve"><value>Mozgat</value></data>
+  <data name="modal.Button.Question.Close" xml:space="preserve"><value>Bezár</value></data>
+  <data name="modal.Button.Question.Send" xml:space="preserve"><value>Elküld</value></data>
+  <data name="modal.Title.Team.Hire" xml:space="preserve"><value>Csapattag behívása</value></data>
+  <data name="modal.Title.Team.PromoteMember" xml:space="preserve"><value>Csapattag előléptetése</value></data>
+  <data name="modal.Title.Team.Retire" xml:space="preserve"><value>Csapattag nyugdíjazása</value></data>
+  <data name="modal.Title.Team.Handle" xml:space="preserve"><value>Csapattag kezelése</value></data>
+  <data name="modal.Title.Team.PromoteTeam" xml:space="preserve"><value>Csapat előrelépés</value></data>
+  <data name="modal.Button.Team.Hire" xml:space="preserve"><value>Behív</value></data>
+  <data name="modal.Button.Team.Promote" xml:space="preserve"><value>Előléptet</value></data>
+  <data name="modal.Button.Team.Retire" xml:space="preserve"><value>Visszavonul</value></data>
+  <data name="modal.Button.Team.Fire" xml:space="preserve"><value>Kirúg</value></data>
+  <data name="modal.Button.Team.Heal" xml:space="preserve"><value>Feltölt</value></data>
+  <data name="modal.Button.Team.Cancel" xml:space="preserve"><value>Mégse</value></data>
+  <data name="modal.Button.Team.Acknowledge" xml:space="preserve"><value>Értettem</value></data>
+</root>

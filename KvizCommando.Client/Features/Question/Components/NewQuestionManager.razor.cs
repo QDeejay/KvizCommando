@@ -70,8 +70,7 @@ public partial class NewQuestionManager
                 Culture,
                 Html.NewQuestRules);
             var modal = MBoxBuilder.BuildParam(
-                ModalTypes.QNewRules,
-                Ui.Lang);
+                ModalTypes.QNewRules);
             modal.BodyParameters.Add(
                 nameof(QModalRender.RenderHTML),
                 htmlContent);

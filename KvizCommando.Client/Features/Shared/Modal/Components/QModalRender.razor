@@ -14,13 +14,13 @@
                 {
                     case ModalTypes.QUsrDelet:  /// user slot törlése
                         <br>
-                        @Lang["question.Modal.Text.Confirm"]
+                        @Lang["modal.question.Delete.Confirm"]
                         <br>
                         <br>
                         break;
                     case ModalTypes.QPendHandle: /// pending slot törlése vagy ha approved akkor átmozgatása
                         <div>
-                            <label class="category-label">@Lang["question.Table.Header.Category"]:</label>
+                            <label class="category-label">@Lang["modal.question.Field.Category"]:</label>
                             <span> @CatNamePend</span>
                         </div>
                     <br>
@@ -35,11 +35,11 @@
                     <span>@Slot.SubmittedAt</span>
                 </div>
                 <div class="divider status-row">
-                    <span style=@ColorStyle>@Lang[$"question.Table.Status.{Slot.Status}"]</span>
+                    <span style=@ColorStyle>@Lang[$"modal.question.Status.{Slot.Status}"]</span>
                 </div>
                 <br>
                 <div class="remark-label remark-title">
-                    <fn>@Lang["question.Table.Header.Remark"]</fn>
+                    <fn>@Lang["modal.question.Field.Remark"]</fn>
                 </div>
                 <div class="remark-label">
                     <p>@Slot.Remark</p>
@@ -47,7 +47,7 @@
                         break;
                     case ModalTypes.QCheckQuestion: /// kérdés ellenőrzése
                         <div>
-                            <label class="category-label">@Lang["question.Table.Header.Category"]:</label>
+                            <label class="category-label">@Lang["modal.question.Field.Category"]:</label>
                             <span> @CatNameUsr</span>
                         </div>
                     <br>
@@ -59,20 +59,20 @@
                     <p class="answer-label">4.) @UsrSlot.Answer[3]</p>
                 <br>
                 <div class="divider">
-                    <span>@Lang[$"question.Modal.Content.Statistic"]</span>
+                    <span>@Lang["modal.question.Statistic.Title"]</span>
                 </div>
            
                 <div class="statistic-row">
                     <div>
-                        <label class="label-statistic">@Lang["question.Modal.Content.QuestAsked"] </label>
+                        <label class="label-statistic">@Lang["modal.question.Statistic.Asked"] </label>
                         <span class="label-result">@UsrSlot.NoOfUse</span>
                     </div>
                     <div>
-                        <label class="label-statistic">@Lang["question.Modal.Content.QuestCorrect"] </label>
+                        <label class="label-statistic">@Lang["modal.question.Statistic.Correct"] </label>
                         <span class="label-result">@UsrSlot.NofOfCorrect</span>
                     </div>
                     <div>
-                        <label class="label-statistic">@Lang["question.Modal.Content.Ratio"] </label>
+                        <label class="label-statistic">@Lang["modal.question.Statistic.Ratio"] </label>
                         <span class="label-result">@UsrSlot.Ratio</span>
                     </div>
                         </div>

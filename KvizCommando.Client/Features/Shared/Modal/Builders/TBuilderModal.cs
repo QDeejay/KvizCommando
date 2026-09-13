@@ -2,10 +2,11 @@ using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Team;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.Shared.Modal.Team;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Rules;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Shared.Modal.Builders
 {
@@ -14,53 +15,57 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
     /// </summary>
     public sealed partial class TBuilderModal
     {
-        private readonly ILanguageService _lang;
+        private readonly IStringLocalizer<TeamModalResource> _lang;
 
         /// <summary>
         /// Létrehozza a csapatmodálok nézetmodell-builderét.
         /// </summary>
-        /// <param name="lang">A feliratok feloldásához használt nyelvi szolgáltatás.</param>
-        public TBuilderModal(ILanguageService lang)
+        /// <param name="lang">A modális feliratok feloldásához használt localizer.</param>
+        public TBuilderModal(IStringLocalizer<TeamModalResource> lang)
         {
             _lang = lang;
         }
 
         private const string UNLOCK_SEP = " => ";
 
-        private static InfoBlock BuildInfoRow(BasicInfo infoRowData, int adddevpoints, string culture, ILanguageService lang)
+        private static InfoBlock BuildInfoRow(
+            BasicInfo infoRowData,
+            int adddevpoints,
+            string culture,
+            IStringLocalizer<TeamModalResource> lang)
         {
 
             if (infoRowData.IsMember)
                 return new InfoBlock(
-                    Name: lang["team.Label.Name"],
+                    Name: lang["modal.team.Label.Name"],
                     Color: GenreColorResolver(infoRowData.Piccode),
                     NameValue: infoRowData.Name,
-                    Rank: lang["team.Label.Rank"],
+                    Rank: lang["modal.team.Label.Rank"],
                     RankValue: RankNameLocalizer.GetName(infoRowData.Level, culture),
-                    Level: lang["team.Label.Level"],
+                    Level: lang["modal.team.Label.Level"],
                     LevelValue: RankNameTable.Data[infoRowData.Level].PublicLevel ?? "",
-                    Orient1: lang["team.modal.Label.Orient1"],
-                    Orient2: lang["team.modal.Label.Orient2"],
+                    Orient1: lang["modal.team.Label.Orientation.Main"],
+                    Orient2: lang["modal.team.Label.Orientation.Secondary"],
                     Orient1Value: OrientationLocalizer.GetOrientation(infoRowData.Orient1, culture),
                     Orient2Value: OrientationLocalizer.GetOrientation(infoRowData.Orient2, culture),
-                    Devpoints: lang["team.Label.SkillPointShort"].FormatSafe(OrientationLocalizer.GetOrientShort(infoRowData.Orient1, culture)),
+                    Devpoints: lang["modal.team.Label.SkillPointShort"].Value.FormatSafe(OrientationLocalizer.GetOrientShort(infoRowData.Orient1, culture)),
                     DevPointsValue: infoRowData.Devpoints,
                     AddedDevPoints: adddevpoints > 0 ? "+" + adddevpoints.ToString() : ""
                 );
             else
                 return new InfoBlock(
-                    Name: lang["team.Label.Name"],
+                    Name: lang["modal.team.Label.Name"],
                     Color: GenreColorResolver(infoRowData.Piccode),
                     NameValue: infoRowData.Name,
-                    Rank: lang["team.Label.Org"],
+                    Rank: lang["modal.team.Label.Organization"],
                     RankValue: RankNameLocalizer.GetTeam(infoRowData.Level, culture),
-                    Level: lang["team.Label.Level"],
+                    Level: lang["modal.team.Label.Level"],
                     LevelValue: RankNameTable.Data[infoRowData.Level].PublicLevel ?? "",
                     Orient1: string.Empty,
                     Orient2: string.Empty,
                     Orient1Value: string.Empty,
                     Orient2Value: string.Empty,
-                    Devpoints: lang["team.label.TeamDevPointShort"],
+                    Devpoints: lang["modal.team.Label.TeamDevelopmentPointShort"],
                     DevPointsValue: infoRowData.Devpoints,
                     AddedDevPoints: adddevpoints > 0 ? "+" + adddevpoints.ToString() : ""
                 );

@@ -210,20 +210,8 @@
   <data name="checkin.Team.Append" xml:space="preserve">
     <value>' team</value>
   </data>
-  <data name="checkin.modal.TermsTitle" xml:space="preserve">
-    <value>Terms of Service</value>
-  </data>
-  <data name="checkin.modal.Button.Action" xml:space="preserve">
-    <value>I Understood</value>
-  </data>
-  <data name="checkin.modal.Button.Close" xml:space="preserve">
-    <value>Close</value>
-  </data>
   <data name="checkin.Reason.SuggestedName" xml:space="preserve">
     <value>Suggest:</value>
-  </data>
-  <data name="checkin.modal.PrivacyTitle" xml:space="preserve">
-    <value>Privacy Policy</value>
   </data>
   <data name="checkin.ButtonLink.Privacy" xml:space="preserve">
     <value>Privacy Policy</value>

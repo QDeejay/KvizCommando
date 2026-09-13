@@ -17,7 +17,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                 [ModalTypes.Terms] = new MboxSpecs
                 {
                     TitleKey = string.Empty,
-                    TextKey1 = "checkin.modal.Button.Action",
+                    TextKey1 = "modal.Button.CheckIn.Acknowledge",
                     Size = "modal-xl",
                     CheckBottom = true,
                     BodyComponent = null
@@ -28,7 +28,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                     TitleKey = string.Empty,
                     TextKey1 = string.Empty,
                     TextKey2 = string.Empty,
-                    CloseTextKey = "common.Modal.Language.Keep",
+                    CloseTextKey = "modal.Button.Language.Keep",
                     Style1 = "#4b5320",
                     Style2 = string.Empty,
                     Size = string.Empty,
@@ -36,10 +36,10 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                 },
                 [ModalTypes.DialogConfirm] = new MboxSpecs
                 {
-                    TitleKey = "common.Modal.Confirm.Title",
-                    TextKey1 = "common.Modal.Confirm.Accept",
+                    TitleKey = "modal.Title.Confirm",
+                    TextKey1 = "modal.Button.Confirm.Yes",
                     TextKey2 = string.Empty,
-                    CloseTextKey = "common.Modal.Confirm.Cancel",
+                    CloseTextKey = "modal.Button.Confirm.No",
                     Style1 = "#a64b2a",
                     Style2 = string.Empty,
                     Size = string.Empty,
@@ -47,14 +47,14 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                 },
                 [ModalTypes.QUsrDelet] = new MboxSpecs
                 {
-                    TitleKey = "question.Modal.Title.Confirm",
-                    TextKey1 = "question.Button.Delete",
+                    TitleKey = "modal.Title.Question.UserDelete",
+                    TextKey1 = "modal.Button.Question.Delete",
                     TextKey2 = string.Empty,
-                    CloseTextKey = "question.Button.Close",
+                    CloseTextKey = "modal.Button.Question.Close",
                     Style1 = "#a64b2a",
                     Style2 = string.Empty,
                     Size = string.Empty,
-                    CheckBoxTextKey = "mainlayout.CheckBox.NotShow",
+                    CheckBoxTextKey = "modal.CheckBox.NotShowAgain",
                     CheckBoxKey = ModalConst.LOCAL_NOT_SHOW_DEL,
                     CheckBottom = false,
                     BodyComponent = typeof(QModalRender)
@@ -62,10 +62,10 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
                 [ModalTypes.QPendHandle] = new MboxSpecs
                 {
-                    TitleKey = "question.Modal.Title.Handling",
-                    TextKey1 = "question.Button.Delete",
-                    TextKey2 = "question.Button.Move",
-                    CloseTextKey = "question.Button.Close",
+                    TitleKey = "modal.Title.Question.PendingHandling",
+                    TextKey1 = "modal.Button.Question.Delete",
+                    TextKey2 = "modal.Button.Question.Move",
+                    CloseTextKey = "modal.Button.Question.Close",
                     Style1 = "#a64b2a",
                     Style2 = string.Empty,
                     Size = "modal-lg",
@@ -77,10 +77,10 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
                 [ModalTypes.QCheckQuestion] = new MboxSpecs
                 {
-                    TitleKey = "question.Modal.Title.CheckQuestion",
+                    TitleKey = "modal.Title.Question.View",
                     TextKey1 = string.Empty,
                     TextKey2 = string.Empty,
-                    CloseTextKey = "question.Button.Close",
+                    CloseTextKey = "modal.Button.Question.Close",
                     Style1 = string.Empty,
                     Style2 = string.Empty,
                     Size = "modal-lg",
@@ -92,14 +92,14 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
                 [ModalTypes.QNewRules] = new MboxSpecs
                 {
-                    TitleKey = "question.Modal.Title.New",
-                    TextKey1 = "question.Button.Send",
+                    TitleKey = "modal.Title.Question.New",
+                    TextKey1 = "modal.Button.Question.Send",
                     TextKey2 = string.Empty,
-                    CloseTextKey = "question.Button.Close",
+                    CloseTextKey = "modal.Button.Question.Close",
                     Style1 = "#4b5320",
                     Style2 = string.Empty,
                     Size = "modal-xl",
-                    CheckBoxTextKey = "mainlayout.CheckBox.NotShow",
+                    CheckBoxTextKey = "modal.CheckBox.NotShowAgain",
                     CheckBoxKey = ModalConst.LOCAL_NOT_SHOW_NEW,
                     CheckBottom = true,
                     BodyComponent = typeof(QModalRender)
@@ -107,10 +107,10 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
                 [ModalTypes.THire] = new MboxSpecs
                 {
-                    TitleKey = "team.modal.Title.Hire",
-                    TextKey1 = "team.modal.Button.Hire",
+                    TitleKey = "modal.Title.Team.Hire",
+                    TextKey1 = "modal.Button.Team.Hire",
                     TextKey2 = string.Empty,
-                    CloseTextKey = "team.modal.Button.Cancel",
+                    CloseTextKey = "modal.Button.Team.Cancel",
                     Style1 = "#4b5320",
                     Style2 = string.Empty,
                     Size = "modal-lg",
@@ -123,10 +123,10 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
                 [ModalTypes.TPromoteMember] = new MboxSpecs
                 {
-                    TitleKey = "team.modal.Title.Promote",
-                    TextKey1 = "team.modal.Button.Promote",
+                    TitleKey = "modal.Title.Team.PromoteMember",
+                    TextKey1 = "modal.Button.Team.Promote",
                     TextKey2 = string.Empty,
-                    CloseTextKey = "team.modal.Button.Cancel",
+                    CloseTextKey = "modal.Button.Team.Cancel",
                     Style1 = "#4b5320",
                     Style2 = string.Empty,
                     Size = "modal-lg",
@@ -139,10 +139,10 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
                 [ModalTypes.TRetire] = new MboxSpecs
                 {
-                    TitleKey = "team.modal.Title.Retire",
-                    TextKey1 = "team.modal.Button.Retire",
+                    TitleKey = "modal.Title.Team.Retire",
+                    TextKey1 = "modal.Button.Team.Retire",
                     TextKey2 = string.Empty,
-                    CloseTextKey = "team.modal.Button.Cancel",
+                    CloseTextKey = "modal.Button.Team.Cancel",
                     Style1 = "#4b5320",
                     Style2 = string.Empty,
                     Size = "modal-lg",
@@ -155,10 +155,10 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
 
                 [ModalTypes.THandle] = new MboxSpecs
                 {
-                    TitleKey = "team.modal.Title.Handle",
-                    TextKey1 = "team.modal.Button.Fire",
-                    TextKey2 = "team.modal.Button.Heal",
-                    CloseTextKey = "team.modal.Button.Cancel",
+                    TitleKey = "modal.Title.Team.Handle",
+                    TextKey1 = "modal.Button.Team.Fire",
+                    TextKey2 = "modal.Button.Team.Heal",
+                    CloseTextKey = "modal.Button.Team.Cancel",
                     Style1 = "#a64b2a",
                     Style2 = "#4b5320",
                     Size = "modal-lg",
@@ -170,10 +170,10 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                 },
                 [ModalTypes.TPromoteTeam] = new MboxSpecs
                 {
-                    TitleKey = "team.modal.Title.PromoteTeam",
+                    TitleKey = "modal.Title.Team.PromoteTeam",
                     TextKey1 = string.Empty,
                     TextKey2 = string.Empty,
-                    CloseTextKey = "team.modal.Button.Ack",
+                    CloseTextKey = "modal.Button.Team.Acknowledge",
                     Style1 = string.Empty,
                     Style2 = string.Empty,
                     Size = "modal-lg",

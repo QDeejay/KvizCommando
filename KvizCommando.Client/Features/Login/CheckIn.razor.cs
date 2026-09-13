@@ -196,13 +196,13 @@ namespace KvizCommando.Client.Features.Login
                 _dynamicTitle = Lang["checkin.Title.TermsOutdated"];
 
             }
-            _termsPar = MBoxBuilder.BuildParam(ModalTypes.Terms, Ui.Lang);
+            _termsPar = MBoxBuilder.BuildParam(ModalTypes.Terms);
         }
 
         private async Task OpenTerms()
         {
             _termsHtml = new MarkupString(ExtractSection(_fullHtml, "terms"));
-            _termsPar = _termsPar with { Title = Lang["checkin.modal.TermsTitle"] };
+            _termsPar = _termsPar with { TitleKey = "modal.Title.CheckIn.Terms" };
             _renderHTML = _termsHtml;
             if (_termsModal is not null)
                 await _termsModal.ShowAsync(_termsPar);
@@ -211,7 +211,7 @@ namespace KvizCommando.Client.Features.Login
         {
 
             _privacyHtml = new MarkupString(ExtractSection(_fullHtml, "privacy"));
-            _termsPar = _termsPar with { Title = Lang["checkin.modal.PrivacyTitle"] };
+            _termsPar = _termsPar with { TitleKey = "modal.Title.CheckIn.Privacy" };
             _renderHTML = _privacyHtml;
             if (_termsModal is not null)
                 await _termsModal.ShowAsync(_termsPar);

@@ -43,8 +43,7 @@ public partial class UserSlotManager
             return;
 
         var modal = MBoxBuilder.BuildParam(
-            ModalTypes.QCheckQuestion,
-            Ui.Lang);
+            ModalTypes.QCheckQuestion);
 
         modal.BodyParameters.Add(
             nameof(QModalRender.SlotNo),
@@ -63,8 +62,7 @@ public partial class UserSlotManager
         if (!NotShowStat)
         {
             var modal = MBoxBuilder.BuildParam(
-                ModalTypes.QUsrDelet,
-                Ui.Lang);
+                ModalTypes.QUsrDelet);
 
             if (await Ui.Modal.ShowAsync(modal) != ModalResult.Button1)
                 return;

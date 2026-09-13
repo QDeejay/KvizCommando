@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="modal.Title.Confirm" xml:space="preserve"><value>Confirmation</value></data>
+  <data name="modal.Button.Confirm.Yes" xml:space="preserve"><value>Yes</value></data>
+  <data name="modal.Button.Confirm.No" xml:space="preserve"><value>No</value></data>
+  <data name="modal.CheckBox.NotShowAgain" xml:space="preserve"><value>Do not show anymore</value></data>
+  <data name="modal.Aria.Close" xml:space="preserve"><value>Close</value></data>
+  <data name="modal.Title.Language.hu" xml:space="preserve"><value>Betölti az oldalt?</value></data>
+  <data name="modal.Title.Language.en" xml:space="preserve"><value>Refresh the page?</value></data>
+  <data name="modal.Button.Language.Reload.hu" xml:space="preserve"><value>Újratölt</value></data>
+  <data name="modal.Button.Language.Reload.en" xml:space="preserve"><value>Reload</value></data>
+  <data name="modal.Button.Language.Keep" xml:space="preserve"><value>Keep Language</value></data>
+  <data name="modal.Title.CheckIn.Terms" xml:space="preserve"><value>Terms of Service</value></data>
+  <data name="modal.Title.CheckIn.Privacy" xml:space="preserve"><value>Privacy Policy</value></data>
+  <data name="modal.Button.CheckIn.Acknowledge" xml:space="preserve"><value>I Understood</value></data>
+  <data name="modal.Title.Question.UserDelete" xml:space="preserve"><value>Confirm your request</value></data>
+  <data name="modal.Title.Question.PendingHandling" xml:space="preserve"><value>Operation via question</value></data>
+  <data name="modal.Title.Question.View" xml:space="preserve"><value>Watch Question</value></data>
+  <data name="modal.Title.Question.New" xml:space="preserve"><value>Send new Question</value></data>
+  <data name="modal.Button.Question.Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="modal.Button.Question.Move" xml:space="preserve"><value>Move</value></data>
+  <data name="modal.Button.Question.Close" xml:space="preserve"><value>Close</value></data>
+  <data name="modal.Button.Question.Send" xml:space="preserve"><value>Send</value></data>
+  <data name="modal.Title.Team.Hire" xml:space="preserve"><value>Team member hire</value></data>
+  <data name="modal.Title.Team.PromoteMember" xml:space="preserve"><value>Team member promotion</value></data>
+  <data name="modal.Title.Team.Retire" xml:space="preserve"><value>Team member retirement</value></data>
+  <data name="modal.Title.Team.Handle" xml:space="preserve"><value>Handle team member</value></data>
+  <data name="modal.Title.Team.PromoteTeam" xml:space="preserve"><value>Team promotion</value></data>
+  <data name="modal.Button.Team.Hire" xml:space="preserve"><value>Hire</value></data>
+  <data name="modal.Button.Team.Promote" xml:space="preserve"><value>Promote</value></data>
+  <data name="modal.Button.Team.Retire" xml:space="preserve"><value>Retire</value></data>
+  <data name="modal.Button.Team.Fire" xml:space="preserve"><value>Fire</value></data>
+  <data name="modal.Button.Team.Heal" xml:space="preserve"><value>Charge</value></data>
+  <data name="modal.Button.Team.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="modal.Button.Team.Acknowledge" xml:space="preserve"><value>Acknowledge</value></data>
+</root>
