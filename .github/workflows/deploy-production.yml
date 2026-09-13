@@ -29,7 +29,12 @@ jobs:
         run: dotnet restore KvizCommando.sln
 
       - name: Build
-        run: dotnet build KvizCommando.sln -c Release --no-restore
+        run: |
+          dotnet build KvizCommando.sln \
+            -c Release \
+            --no-restore \
+            -p:InformationalVersion="${GITHUB_REF_NAME}" \
+            -p:IncludeSourceRevisionInInformationalVersion=false
 
       - name: Publish linux-x64
         run: |
@@ -37,6 +42,8 @@ jobs:
             -c Release \
             -r linux-x64 \
             --self-contained false \
+            -p:InformationalVersion="${GITHUB_REF_NAME}" \
+            -p:IncludeSourceRevisionInInformationalVersion=false \
             -o ./publish
 
       - name: Create release package

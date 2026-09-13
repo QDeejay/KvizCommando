@@ -48,7 +48,7 @@ body {
 }
 
 
-@media (max-width: 650px), (max-height: 500px) {
+@media (max-width: 650px), (max-height: 560px) {
     .kc-unsupported-screen {
         display: flex;
     }

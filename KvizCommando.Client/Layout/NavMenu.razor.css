@@ -79,15 +79,14 @@
 }
 
 .nav-footer {
+    display:flex;
     position: relative;
-    width: auto;
-    bottom: 0px;
-    left: 0;
-    margin-top: auto;
-    margin-bottom: 0px;
-    height: 6%;
-    display: flex;
-    z-index: 0;
+    width: stretch;
+    bottom: 40px;
+    color: #d3d3d3;
+    border: dashed 1px green;
+    font-size:0.5rem;
+    justify-content:center;
 }
 
 @media (min-width: 901px) and (min-height: 800px) {
@@ -117,6 +116,9 @@
 
     .side-nav ::deep .navigation-button span {
         display: none;
+    }
+    .nav-footer {
+        width:50%;
     }
 }
 
@@ -185,4 +187,6 @@
         display: block;
         text-align: left;
     }
+
+    .nav-footer { display: none; }
 }
