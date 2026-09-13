@@ -2,9 +2,10 @@
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels.Ui;
 using KvizCommando.Client.Features.Team.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.Team;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Dtos;
+using Microsoft.Extensions.Localization;
 using System.Globalization;
 
 namespace KvizCommando.Client.Features.Team
@@ -45,7 +46,7 @@ namespace KvizCommando.Client.Features.Team
             int developed,
             int availableDevPoints,
             string culture,
-            ILanguageService lang)
+            IStringLocalizer<TeamResource> lang)
         {
             double actVal = ModifierTable.Data[skill.LvlCurrent].Modifier[modifier - 4] ?? 0.0;
             double devVal = ModifierTable.Data[Math.Min(skill.LvlCurrent + developed, skill.LvlCurMax)].Modifier[modifier - 4] ?? 0.0;
@@ -130,7 +131,7 @@ namespace KvizCommando.Client.Features.Team
             }
             return list;
         }
-        internal static string[] RecruitToolTipResolver(bool[] charmask, CandidateDto[] candidate, ILanguageService lang)
+        internal static string[] RecruitToolTipResolver(bool[] charmask, CandidateDto[] candidate, IStringLocalizer<TeamResource> lang)
         {
             var tooltips = new List<string>();
 
@@ -142,7 +143,7 @@ namespace KvizCommando.Client.Features.Team
                 {
                     DateTimeHelpers.GetTimeLeft(candidate[i].ExpirationTime, out int hours, out int minutes);
                     if (hours + minutes > 0)
-                        tooltips.Add(lang["team.Label.ToolTip.NotHire"].FormatSafe(hours, minutes));
+                        tooltips.Add(lang["team.Label.ToolTip.NotHire", hours, minutes]);
                     else
                     {
                         tooltips.Add(lang["team.Label.ToolTip.NotHireNext"]);

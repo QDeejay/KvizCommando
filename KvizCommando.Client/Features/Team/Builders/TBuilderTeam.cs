@@ -2,17 +2,18 @@
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Features.Team.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.Team;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Enums;
 using KvizCommando.Shared.Models.Rules;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Team.Builders
 {
     public class TBuilderTeam
     {
-        private readonly ILanguageService _lang;
-        public TBuilderTeam(ILanguageService lang)
+        private readonly IStringLocalizer<TeamResource> _lang;
+        public TBuilderTeam(IStringLocalizer<TeamResource> lang)
         {
             _lang = lang;
         }
@@ -50,9 +51,9 @@ namespace KvizCommando.Client.Features.Team.Builders
 
 
             vm.Rows.Add(new(_lang["team.Label.Credit"], t.Credits.ToString()));
-            vm.Rows.Add(new(_lang["team.label.TeamDevPointShort"], devPointsDisplay));
+            vm.Rows.Add(new(_lang["team.Label.TeamDevPointShort"], devPointsDisplay));
             vm.Rows.Add(new(_lang["team.Label.Bonus"], $"{t.Bonus}%"));
-            vm.Rows.Add(new(_lang["team.Label.Menbers"], $"{t.TotalMembers}/{t.MaxMembers}"));
+            vm.Rows.Add(new(_lang["team.Label.Members"], $"{t.TotalMembers}/{t.MaxMembers}"));
             vm.Rows.Add(new("", ""));
 
 
@@ -97,7 +98,7 @@ namespace KvizCommando.Client.Features.Team.Builders
                 AvailableDevPoints = info.DevPoints - usedDevPoints,
                 HeaderText = _lang["team.Label.Attitude.Help"],
                 ResetButtonText = usedDevPoints > 0
-                    ? _lang["team.Button.Modify"].FormatSafe(usedDevPoints)
+                    ? _lang["team.Button.Modify", usedDevPoints]
                     : ""
             };
 
@@ -136,7 +137,7 @@ namespace KvizCommando.Client.Features.Team.Builders
                         RankNameTable.Data[mem.Level].PublicLevel ?? "",
                         (int)mem.Remark < 100
                             ? (int)mem.Remark >= 50 ? _lang["team.Label.Remark.Develop"] : string.Empty
-                            : _lang[$"team.modal.Button.{mem.Remark}"],
+                            : _lang[$"team.Button.{mem.Remark}"],
                         mem.Remark == MembRemark.None
                             ? null
                             : new TeamMemberAction(j, mem.Remark)

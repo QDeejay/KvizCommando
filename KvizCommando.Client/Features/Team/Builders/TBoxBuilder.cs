@@ -1,6 +1,7 @@
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.Team;
 using KvizCommando.Shared.Models.Dtos;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Team.Builders;
 
@@ -26,7 +27,7 @@ public static class TBoxBuilder
         TeamRootBoxInfo rootInfo,
         TeamComponentParameters parameters,
         IReadOnlyDictionary<string, string> boxTitles,
-        ILanguageService lang)
+        IStringLocalizer<TeamResource> lang)
     {
         var boxes = new Dictionary<string, ContentBoxVm>(
             TeamBoxSpecs.Specs.Count);

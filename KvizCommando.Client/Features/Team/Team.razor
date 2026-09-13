@@ -6,25 +6,23 @@
 
 <link href="css/team-common.css" rel="stylesheet" />
 
-<LangGuard Culture="@Culture" Module="team" OnReady="BuildBoxes">
-    <PageContainer>
-        @if (_isReady)
-        {
-            <div class="kc-team-selector">
-                @foreach (var bx in _boxOrder)
-                {
-                    var box = Box(bx);
+<PageContainer>
+    @if (_isReady)
+    {
+        <div class="kc-team-selector">
+            @foreach (var bx in _boxOrder)
+            {
+                var box = Box(bx);
 
-                    <ContentBox Vm="@box"
-                                OnClick="OnBoxClick">
-                        <ContentBody>
+                <ContentBox Vm="@box"
+                            OnClick="OnBoxClick">
+                    <ContentBody>
 
-                            <DynamicComponent Type="@box.BodyComponent"
-                                              Parameters="box.BodyParameters" />
-                        </ContentBody>
-                    </ContentBox>
-                }
-            </div>
-        }
-    </PageContainer>
-</LangGuard>
+                        <DynamicComponent Type="@box.BodyComponent"
+                                          Parameters="box.BodyParameters" />
+                    </ContentBody>
+                </ContentBox>
+            }
+        </div>
+    }
+</PageContainer>

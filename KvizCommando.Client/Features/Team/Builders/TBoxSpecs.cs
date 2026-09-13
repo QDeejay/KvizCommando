@@ -1,8 +1,9 @@
 using KvizCommando.Client.Features.Team.Components;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.Team;
 using KvizCommando.Shared.Models.Dtos;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Team.Builders;
 
@@ -13,7 +14,7 @@ public sealed class TBoxSpecs : VmSpecs
     { get; init; } = _ => string.Empty;
     internal Func<TeamRootBoxInfo, bool> CheckEnable
     { get; init; } = _ => true;
-    internal Func<ILanguageService, TeamRootBoxInfo, string> BuildBoxText
+    internal Func<IStringLocalizer<TeamResource>, TeamRootBoxInfo, string> BuildBoxText
     { get; init; } = (_, _) => string.Empty;
     internal Func<TeamComponentParameters, Dictionary<string, object?>> BuildParams
     { get; init; } = _ => [];
@@ -33,7 +34,7 @@ public static class TeamBoxSpecs
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = true,
             ClickId = (int)TBoxKeyRoot.TeamOverview,
-            BuildBoxText = (lang, root) => lang["team.Box.Footer.Team"].FormatSafe( root.TeamOpRequired),
+            BuildBoxText = (lang, root) => lang["team.Box.Footer.Team", root.TeamOpRequired],
             CheckEnable = root => root.IsTeamEnable
         },
         new TBoxSpecs
@@ -44,7 +45,7 @@ public static class TeamBoxSpecs
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = true,
             ClickId = (int)TBoxKeyRoot.Members,
-            BuildBoxText = (lang, root) => lang["team.Box.Footer.Member"].FormatSafe(root.MemberOpRequired),
+            BuildBoxText = (lang, root) => lang["team.Box.Footer.Member", root.MemberOpRequired],
             CheckEnable = root => root.IsMemberEnable
         },
         new TBoxSpecs
@@ -55,7 +56,7 @@ public static class TeamBoxSpecs
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = true,
             ClickId = (int)TBoxKeyRoot.Recruit,
-            BuildBoxText = (lang, root) => lang["team.Box.Footer.Recruit"].FormatSafe( root.FreePositions),
+            BuildBoxText = (lang, root) => lang["team.Box.Footer.Recruit", root.FreePositions],
             CheckEnable = root => root.IsRecruitEnable
         },
         new TBoxSpecs

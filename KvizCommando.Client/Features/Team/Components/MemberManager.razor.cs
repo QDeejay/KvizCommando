@@ -4,16 +4,17 @@ using KvizCommando.Client.Features.Team.ViewModels;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.Team;
 using KvizCommando.Shared.Contracts.Team;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Team.Components;
 
 public partial class MemberManager : IDisposable
 {
-    [Inject] private ILanguageService Lang { get; set; } = default!;
+    [Inject] private IStringLocalizer<TeamResource> Lang { get; set; } = default!;
     [Inject] private ITeamClientService TeamService { get; set; } = default!;
     [Inject] private UiServices Ui { get; set; } = default!;
     [Inject] private AudioService Audio { get; set; } = default!;

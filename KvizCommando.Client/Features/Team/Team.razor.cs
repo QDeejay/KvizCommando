@@ -3,13 +3,17 @@ using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.Team;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Team;
 
 public partial class Team : KcComponentBase, IDisposable
 {
+    [Inject] private IStringLocalizer<TeamResource> Lang { get; set; } = default!;
+
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
 
@@ -19,15 +23,18 @@ public partial class Team : KcComponentBase, IDisposable
     private int _selectedMember;
     private bool _isReady;
 
-    private string Culture => AppStates.Culture;
     private TeamDtos TeamData => AppStates.Team!;
 
     protected override void OnInitialized()
     {
         Ui.Header.OnBackBtnClicked += HandleBack;
-        Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Team"], (int)HomeBoxKey.Team);
+        Ui.Header.SetTitle(
+            AppStates.BoxTitles["Root.Team"],
+            (int)HomeBoxKey.Team);
         Ui.Header.SetBackBtnEna(false);
         _boxOrder = TBoxBuilder.Root;
+        BuildBoxes();
+        _isReady = true;
     }
 
     private ContentBoxVm Box(string key) => _boxes[key];
@@ -45,18 +52,16 @@ public partial class Team : KcComponentBase, IDisposable
                      TeamData.RootBoxInfo,
                      parameters,
                      AppStates.BoxTitles,
-                     Ui.Lang))
+                     Lang))
         {
             _boxes[box.Key] = box.Value;
         }
-
-        _isReady = true;
     }
 
     private void OnBoxClick(int boxId)
     {
         _boxOrder = TBoxBuilder.Root;
-        var headerTitle = Ui.Lang["mainlayout.Header.Team"];
+        var headerTitle = AppStates.BoxTitles["Root.Team"];
 
         switch (boxId)
         {

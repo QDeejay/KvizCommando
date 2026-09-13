@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="team.Box.Footer.Member" xml:space="preserve"><value>Operation required: {0}</value></data>
+  <data name="team.Box.Footer.Recruit" xml:space="preserve"><value>Free position:{0}</value></data>
+  <data name="team.Box.Footer.Team" xml:space="preserve"><value>Operation required: {0}</value></data>
+  <data name="team.Button.Fire" xml:space="preserve"><value>Fire</value></data>
+  <data name="team.Button.Heal" xml:space="preserve"><value>Charge</value></data>
+  <data name="team.Button.Hire" xml:space="preserve"><value>Hire</value></data>
+  <data name="team.Button.Modify" xml:space="preserve"><value>Modify ({0})</value></data>
+  <data name="team.Button.Promote" xml:space="preserve"><value>Promote</value></data>
+  <data name="team.Button.Retire" xml:space="preserve"><value>Retire</value></data>
+  <data name="team.Label.Attitude.3rd" xml:space="preserve"><value>Extra modifiers({0}):</value></data>
+  <data name="team.Label.Attitude.Help" xml:space="preserve"><value>Help modifiers:</value></data>
+  <data name="team.Label.Attitude.Sec" xml:space="preserve"><value>Secondary ({0}):</value></data>
+  <data name="team.Label.Bonus" xml:space="preserve"><value>Bonus:</value></data>
+  <data name="team.Label.Class" xml:space="preserve"><value>Class:</value></data>
+  <data name="team.Label.Credit" xml:space="preserve"><value>Credit:</value></data>
+  <data name="team.Label.Level" xml:space="preserve"><value>Level: </value></data>
+  <data name="team.Label.Main" xml:space="preserve"><value>Orient:</value></data>
+  <data name="team.Label.Members" xml:space="preserve"><value>Members:</value></data>
+  <data name="team.Label.Modifiers" xml:space="preserve"><value>Modifiers:</value></data>
+  <data name="team.Label.Name" xml:space="preserve"><value>Name: </value></data>
+  <data name="team.Label.Next" xml:space="preserve"><value>Next to Xp:</value></data>
+  <data name="team.Label.NoMember" xml:space="preserve"><value>No team member</value></data>
+  <data name="team.Label.Org" xml:space="preserve"><value>Org.:</value></data>
+  <data name="team.Label.Pension" xml:space="preserve"><value>Pension:</value></data>
+  <data name="team.Label.Rank" xml:space="preserve"><value>Rank:</value></data>
+  <data name="team.Label.Recruit.CandidateNumber" xml:space="preserve"><value>#{0}</value></data>
+  <data name="team.Label.Recruit.SelectedCandidate" xml:space="preserve"><value>Selected candidate</value></data>
+  <data name="team.Label.Recruit.Suspended" xml:space="preserve"><value>Recruit process temporary disabled!</value></data>
+  <data name="team.Label.Remark.AtMaximum" xml:space="preserve"><value>On Maximum</value></data>
+  <data name="team.Label.Remark.Develop" xml:space="preserve"><value>(Able to develope)</value></data>
+  <data name="team.Label.SkillPointShort" xml:space="preserve"><value>Sp&lt;{0}&gt;:</value></data>
+  <data name="team.Label.TeamDevPointShort" xml:space="preserve"><value>Tp:</value></data>
+  <data name="team.Label.TeamName" xml:space="preserve"><value>Team</value></data>
+  <data name="team.Label.ToolTip.NotHire" xml:space="preserve"><value>Re-open : {0}h {1}m</value></data>
+  <data name="team.Label.ToolTip.NotHireNext" xml:space="preserve"><value>Re-open : Next login.</value></data>
+  <data name="team.Label.WinnerCompensationShort" xml:space="preserve"><value>W. comp.:</value></data>
+</root>

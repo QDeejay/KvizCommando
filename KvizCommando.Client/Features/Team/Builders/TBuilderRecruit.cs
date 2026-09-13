@@ -1,7 +1,8 @@
 ﻿using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.Team;
 using KvizCommando.Shared.Models.Dtos;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Team.Builders
 {
@@ -16,7 +17,7 @@ namespace KvizCommando.Client.Features.Team.Builders
         /// <param name="tabpos">A jelölthöz tartozó laphely sorszáma.</param>
         /// <param name="culture">A kért kultúra neve, például <c>hu-HU</c>.</param>
         /// <param name="lang">A feliratok feloldásához használt nyelvi szolgáltatás.</param>
-        public static RecruitVm BuildRecruitVm(CandidateDto candidate, int[] order, int tabpos, string culture, ILanguageService lang)
+        public static RecruitVm BuildRecruitVm(CandidateDto candidate, int[] order, int tabpos, string culture, IStringLocalizer<TeamResource> lang)
         {
             var vm = new RecruitVm() { Info = lang["team.Label.NoMember"] };
             if (tabpos < 1 || tabpos > 8)
