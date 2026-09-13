@@ -1,16 +1,18 @@
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.ClientCache;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.SoloGame;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Rules;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Solo.Components;
 
 public partial class SoloOrientationStatus
 {
-    [Inject] private ILanguageService Lang { get; set; } = default!;
+    [Inject]
+    private IStringLocalizer<SoloGameResource> Lang { get; set; } = default!;
 
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
@@ -68,23 +70,25 @@ public partial class SoloOrientationStatus
                 return string.Empty;
 
             if (Member.SkillPoints >= TeamRules.HEAL_CHARACTER_DEV_POINT_COST)
-                return Lang["solo.Tooltip.Orientation.HealingReload"]
-                    .FormatSafe(OrientationShort);
+                return Lang[
+                    "solo.Tooltip.Orientation.HealingReload",
+                    OrientationShort];
 
             if (IsHealingGame)
-                return Lang["solo.Tooltip.Orientation.HealingAvailable"]
-                    .FormatSafe(OrientationShort);
+                return Lang[
+                    "solo.Tooltip.Orientation.HealingAvailable",
+                    OrientationShort];
 
             var remaining = Member.NextHealingGameUtc!.Value - DateTime.UtcNow;
             var remainingMinutes = Math.Max(
                 (int)Math.Ceiling(remaining.TotalMinutes),
                 0);
 
-            return Lang["solo.Tooltip.Orientation.HealingCooldown"]
-                .FormatSafe(
-                    OrientationShort,
-                    remainingMinutes / 60,
-                    remainingMinutes % 60);
+            return Lang[
+                "solo.Tooltip.Orientation.HealingCooldown",
+                OrientationShort,
+                remainingMinutes / 60,
+                remainingMinutes % 60];
         }
     }
 

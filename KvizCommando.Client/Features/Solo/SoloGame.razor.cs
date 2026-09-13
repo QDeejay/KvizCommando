@@ -1,19 +1,23 @@
+using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Features.Shared.Modal.Components;
 using KvizCommando.Client.Features.Solo.Builders;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.SoloGame;
 using KvizCommando.Shared.Contracts.SoloGame;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Solo;
 
 public partial class SoloGame : KcComponentBase, IDisposable
 {
+    [Inject] private IStringLocalizer<SoloGameResource> Lang { get; set; } = default!;
+
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
 
@@ -37,9 +41,13 @@ public partial class SoloGame : KcComponentBase, IDisposable
     protected override void OnInitialized()
     {
         Ui.Header.OnBackBtnClicked += HandleBack;
-        Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.GameSolo"], (int)HomeBoxKey.GameSolo);
+        Ui.Header.SetTitle(
+            AppStates.BoxTitles["Root.GameSolo"],
+            (int)HomeBoxKey.GameSolo);
         Ui.Header.SetBackBtnEna(false);
         _boxOrder = SgameBoxBuilder.Root;
+        BuildBoxes();
+        _isReady = true;
     }
 
     private ContentBoxVm Box(string key) => _boxes[key];
@@ -64,12 +72,10 @@ public partial class SoloGame : KcComponentBase, IDisposable
                      parameters,
                      Culture,
                      AppStates.BoxTitles,
-                     Ui.Lang))
+                     Lang))
         {
             _boxes[box.Key] = box.Value;
         }
-
-        _isReady = true;
     }
 
     private void OnBoxClick(int boxId)
@@ -81,7 +87,7 @@ public partial class SoloGame : KcComponentBase, IDisposable
         }
 
         _boxOrder = SgameBoxBuilder.Root;
-        var headerTitle = Ui.Lang["mainlayout.Header.GameSolo"];
+        var headerTitle = AppStates.BoxTitles["Root.GameSolo"];
 
         switch (boxId)
         {

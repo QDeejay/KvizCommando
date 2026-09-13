@@ -1,9 +1,10 @@
 using KvizCommando.Client.Features.Solo.ViewModels;
 using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.SoloGame;
 using KvizCommando.Shared.Models.Enums.VsGame;
 using KvizCommando.Shared.Models.Rules;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using System.Globalization;
 
 namespace KvizCommando.Client.Features.Solo.Components;
@@ -12,7 +13,8 @@ public partial class SoloPlayView
 {
     private const int EXCELLENT_RESPONSE_TIME_MS = 50;
 
-    [Inject] private ILanguageService Lang { get; set; } = default!;
+    [Inject]
+    private IStringLocalizer<SoloPlayResource> Lang { get; set; } = default!;
 
     [Parameter, EditorRequired]
     public SoloPlayViewData Data { get; set; } = new();
@@ -64,10 +66,11 @@ public partial class SoloPlayView
         Data.Game.ConnectionQuality != VsConnectionQuality.Unknown;
 
     private string ConnectionResultText =>
-        Lang["solo.Connection.ResponseTime"].FormatSafe(
+        Lang[
+            "solo.Connection.ResponseTime",
             Data.Game.ResponseTimeMilliseconds,
             Lang[ConnectionQualityTextKey(
-                Data.Game.ConnectionQuality)]);
+                Data.Game.ConnectionQuality)]];
 
     private string ConnectionResultClass =>
         Data.Game.ConnectionQuality switch

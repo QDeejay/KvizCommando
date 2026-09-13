@@ -1,6 +1,7 @@
 ﻿using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.SoloGame;
 using KvizCommando.Shared.Models.Dtos;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Solo.Builders
 {
@@ -25,7 +26,7 @@ namespace KvizCommando.Client.Features.Solo.Builders
             SoloComponentParameters parameters,
             string cult,
             IReadOnlyDictionary<string, string> boxTitles,
-            ILanguageService lang)
+            IStringLocalizer<SoloGameResource> lang)
         {
             var dict = new Dictionary<string, ContentBoxVm>();
 
@@ -37,9 +38,7 @@ namespace KvizCommando.Client.Features.Solo.Builders
                 dict.Add(key, new ContentBoxVm
                 {
                     DictKey = key,
-                    Header = spec.TitleKey.StartsWith("SoloGame.", StringComparison.Ordinal)
-                        ? boxTitles[spec.TitleKey]
-                        : lang[spec.TitleKey],
+                    Header = boxTitles[spec.TitleKey],
                     Footer = spec.BuildFooter(lang, ss.Results, 0),
                     FooterDisplay = spec.FooterDisplay,
                     Size = spec.Size,

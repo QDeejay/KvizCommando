@@ -88,4 +88,6 @@
   <data name="SoloGame.Category" xml:space="preserve"><value>Categories mode</value></data>
   <data name="SoloGame.Orientation" xml:space="preserve"><value>Orientation mode</value></data>
   <data name="SoloGame.Campaign" xml:space="preserve"><value>Campaign mode</value></data>
+  <data name="SoloGame.CategoryGame" xml:space="preserve"><value>Category game</value></data>
+  <data name="SoloGame.OrientationGame" xml:space="preserve"><value>Orientation game</value></data>
 </root>

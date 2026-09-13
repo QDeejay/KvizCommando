@@ -1,13 +1,15 @@
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Solo.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.SoloGame;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Solo.Components;
 
 public partial class SoloRewardView
 {
-    [Inject] private ILanguageService Lang { get; set; } = default!;
+    [Inject]
+    private IStringLocalizer<SoloPlayResource> Lang { get; set; } = default!;
 
     [Parameter, EditorRequired]
     public SoloRewardViewData Data { get; set; } = default!;

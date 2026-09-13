@@ -1,8 +1,9 @@
 ﻿using KvizCommando.Client.Features.Solo.Components;
 using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.SoloGame;
 using KvizCommando.Shared.Models.Dtos;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Solo.Builders
 {
@@ -15,7 +16,7 @@ namespace KvizCommando.Client.Features.Solo.Builders
          { get; init; } =  _ => string.Empty;
         internal Func<SoloEnables, int, bool> BuildEnable 
         { get; init; } = (_, _) => true;
-        internal Func<ILanguageService, SoloResults, int, string> BuildFooter
+        internal Func<IStringLocalizer<SoloGameResource>, SoloResults, int, string> BuildFooter
         { get; init; } = (_, _, _) => string.Empty; 
         internal Func<SoloComponentParameters, int, Dictionary<string, object?>> BuildParams
         { get; init; } = (_, _) => [];
@@ -50,7 +51,9 @@ namespace KvizCommando.Client.Features.Solo.Builders
                 ImageSrc = string.Empty, Size = "wide", FooterDisplay = true, ClickId = (int)SgameBoxKeyRoot.Category,
                 BgImageSrc = $"{IMAGE_ROOT}/categories.webp",
                 BuildEnable = (se,ix) => se.EnaCategory,
-                BuildFooter = (lang, sr,ix) => lang["solo.Button.Footer.Catandori"].FormatSafe(sr.CategoryResults[0].Points)
+                BuildFooter = (lang, sr,ix) => lang[
+                    "solo.Box.Footer.TotalPoints",
+                    sr.CategoryResults[0].Points]
             },
             new SgameBoxSpecs {
                 Key = SgameBoxKeyRoot.Orientation,
@@ -58,7 +61,9 @@ namespace KvizCommando.Client.Features.Solo.Builders
                 ImageSrc = string.Empty, Size = "wide", FooterDisplay = true, ClickId = (int)SgameBoxKeyRoot.Orientation,
                 BgImageSrc = $"{IMAGE_ROOT}/orients.webp",
                 BuildEnable = (se,ix) => se.EnaOrient,
-                BuildFooter =(lang, sr, ix) => lang["solo.Button.Footer.Catandori"].FormatSafe(sr.OrientResults[0].Points)
+                BuildFooter =(lang, sr, ix) => lang[
+                    "solo.Box.Footer.TotalPoints",
+                    sr.OrientResults[0].Points]
             },
             new SgameBoxSpecs {
                 Key = SgameBoxKeyRoot.Campaign,
@@ -69,7 +74,7 @@ namespace KvizCommando.Client.Features.Solo.Builders
             },
              new SgameBoxSpecs {
                 Key = SgameBoxKeySub.GameBoxCat,
-                TitleKey = "solo.Label.Title.Game.Category",
+                TitleKey = "SoloGame.CategoryGame",
                 ImageSrc = string.Empty, Size = ContentBoxSize.CONTENT_FLEXIBLE, FooterDisplay = false, ClickId = 0,
                 BgImageSrc = string.Empty,
                 RenderContent = 1, LcdBackground = false, BodyComp = typeof(SoloGameManager),
@@ -77,7 +82,7 @@ namespace KvizCommando.Client.Features.Solo.Builders
              },
             new SgameBoxSpecs {
                 Key = SgameBoxKeySub.GameBoxOri,
-                TitleKey = "solo.Label.Title.Game.Orient",
+                TitleKey = "SoloGame.OrientationGame",
                 ImageSrc = string.Empty, Size = ContentBoxSize.CONTENT_FLEXIBLE, FooterDisplay = false, ClickId = 0,
                 BgImageSrc = string.Empty,
                 RenderContent = 1, LcdBackground = false, BodyComp = typeof(SoloGameManager),
@@ -95,7 +100,10 @@ namespace KvizCommando.Client.Features.Solo.Builders
                 ImageSrc = string.Empty,
                 BuildImageSrc = (ix) => $"{IMAGE_ROOT}/categories/{CatFileName[ix]}.webp", Size ="small", FooterDisplay=true, ClickId=(int)SgameBoxKeyRoot.Category,
                 BuildEnable = (se,ix) => se.EnaCat[ix],
-                BuildFooter = (lang,sr, ix) => lang["solo.Button.Footer.Games"].FormatSafe(sr.CategoryResults[ix].Points,sr.CategoryResults[ix].TimeStr),
+                BuildFooter = (lang,sr, ix) => lang[
+                    "solo.Box.Footer.Game",
+                    sr.CategoryResults[ix].Points,
+                    sr.CategoryResults[ix].TimeStr],
                 RenderContent = 1, LcdBackground = false, BodyComp = typeof(SoloCategoryStatus),
                 BuildParams = (_, position) => new Dictionary<string, object?>
                     { [nameof(SoloCategoryStatus.CategoryPosition)] = position }
@@ -107,7 +115,10 @@ namespace KvizCommando.Client.Features.Solo.Builders
                 ImageSrc = string.Empty,
                 BuildImageSrc = (ix) => $"{IMAGE_ROOT}/orients/{OriFileName[ix]}.webp", Size ="tall", FooterDisplay=true, ClickId=(int)SgameBoxKeyRoot.Orientation,
                 BuildEnable = (se,ix) => se.EnaOri[ix],
-                BuildFooter = (lang,sr,ix) => lang["solo.Button.Footer.Games"].FormatSafe(sr.OrientResults[ix].Points,sr.OrientResults[ix].TimeStr),
+                BuildFooter = (lang,sr,ix) => lang[
+                    "solo.Box.Footer.Game",
+                    sr.OrientResults[ix].Points,
+                    sr.OrientResults[ix].TimeStr],
                 RenderContent = 1, LcdBackground = false, BodyComp = typeof(SoloOrientationStatus),
                 BuildParams = (_, position) => new Dictionary<string, object?>
                     { [nameof(SoloOrientationStatus.CharacterPosition)] = position }
