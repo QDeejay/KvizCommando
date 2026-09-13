@@ -52,9 +52,9 @@
 
         <h2>3. Invitations, age and account security</h2>
         <p>
-            Public registration is currently unavailable. An administrator creates an account for the invited
+            Public registration is currently unavailable. An administrator creates an account using the invited
             person’s valid email address. The invited person sets a password through the password-setup or
-            password-reset link sent to that address. System messages are delivered as real emails, and links are
+            password-reset link sent to that address. System messages are delivered by email, and links are
             valid for 24 hours by default.
         </p>
         <p>
@@ -96,14 +96,14 @@
         <h2>6. User content</h2>
         <p>
             Users are responsible for their display name, team name, custom questions and other submitted content.
-            By submitting content, the user grants the non-exclusive permission required to operate, review, display
-            and correct it. Users may submit only content they are entitled to use.
+            By submitting content, the user grants a non-exclusive licence to use, review, display and correct it
+            as necessary to operate the service. Users may submit only content they are entitled to use.
         </p>
 
         <h2>7. Intellectual property</h2>
         <p>
             The KvizCommando name, visual identity, software, graphics, audio, database structure and provider-created
-            content belong to the provider or the relevant rights holder. Personal, intended use of the service does
+            content belong to the provider or the relevant rights holder. Personal use of the service as intended does
             not grant ownership of its source code, brand or content database.
         </p>
 
@@ -132,7 +132,7 @@
         <h2>11. Changes to these Terms</h2>
         <p>
             A new version will be published when material changes are made. The service may require renewed acceptance
-            before further use and records the accepted version and acceptance time.
+            before further use and record the accepted version and acceptance time.
         </p>
 
         <h2>12. Complaints and governing law</h2>
@@ -200,7 +200,7 @@
             <li>Password, email and confirmation tokens are valid for 24 hours by default.</li>
             <li>Security audit files are retained for 30 days by default.</li>
             <li>The registration-benefit fingerprint prevents a repeated starting-credit benefit for 30 days. An expired record may technically remain until database maintenance but no longer restricts eligibility.</li>
-            <li>localStorage data remains until deleted; sessionStorage data generally remains until the relevant browser-tab session ends.</li>
+            <li>localStorage data remains until deleted; sessionStorage data generally remains until the relevant browser tab's session ends.</li>
             <li>Deleted data in backups may remain until the backup cycle expires, isolated and used only for restoration.</li>
         </ul>
 
@@ -228,7 +228,7 @@
             <tbody>
                 <tr><td><code>Quiz_Commando_CookieCooker</code></td><td>Maintains login and the authenticated session. It is HttpOnly and sent only over HTTPS.</td><td>Browser session or up to 7 days, depending on “remember me”; it may renew while used.</td></tr>
                 <tr><td><code>.AspNetCore.Identity.TwoFactorUserId</code></td><td>Temporary identifier for the two-factor login flow.</td><td>Short-lived and tied to the session.</td></tr>
-                <tr><td><code>.AspNetCore.Identity.TwoFactorRememberMe</code></td><td>Remembers the device for two-factor authentication if requested by the user.</td><td>Until the period configured by Identity ends or the cookie is deleted.</td></tr>
+                <tr><td><code>.AspNetCore.Identity.TwoFactorRememberMe</code></td><td>Remembers the device for two-factor authentication if requested by the user.</td><td>For the period configured in Identity, unless the cookie is deleted earlier.</td></tr>
                 <tr><td><code>QC_External_CookieCooker</code></td><td>Protects temporary state during external login.</td><td>Only when external login is enabled, until the login flow ends.</td></tr>
             </tbody>
         </table>

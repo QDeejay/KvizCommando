@@ -1,6 +1,6 @@
+using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Client.Features.Team.Builders;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Localization.Team;
@@ -98,8 +98,11 @@ public partial class Team : KcComponentBase, IDisposable
     private Task OpenMemberAsync(int memberNo)
     {
         _selectedMember = memberNo;
+
         BuildBoxes();
+
         OnBoxClick((int)TBoxKeyRoot.Members);
+
         return Task.CompletedTask;
     }
 
@@ -107,7 +110,12 @@ public partial class Team : KcComponentBase, IDisposable
     {
         _selectedMember = 0;
         BuildBoxes();
-        OnBoxClick((int)TBoxKeyRoot.TeamOverview);
+
+        if (TeamData.RootBoxInfo.IsRecruitEnable)
+            OnBoxClick((int)TBoxKeyRoot.Recruit);
+        else
+            OnBoxClick((int)TBoxKeyRoot.TeamOverview);
+
         return Task.CompletedTask;
     }
 

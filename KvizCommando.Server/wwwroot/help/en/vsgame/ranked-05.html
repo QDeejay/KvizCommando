@@ -17,9 +17,9 @@
     <p class="lead">Every normal round starts with a numerical estimate, followed by every player taking a turn as questioner.</p>
 
     <div class="round-flow">
-        <div class="flow-card"><b>1. Numerical estimate – {{VS_GUESS_SECONDS}} sec</b>The closest estimate earns <b>+{{VS_POINT_UNIT}}</b> point. Equal errors are ordered by the faster estimate. This creates the questioner order.</div>
+        <div class="flow-card"><b>1. Numerical estimate – {{VS_GUESS_SECONDS}} sec</b>The closest estimate earns <b>+{{VS_POINT_UNIT}}</b> point. If two estimates are equally close, the faster submission ranks higher. This determines the order of questioners.</div>
         <div class="arrow">▶</div>
-        <div class="flow-card"><b>2. Questions – {{VS_QUESTION_SECONDS}} sec</b>Every player asks the category question assigned to this round. A submitted answer is final.</div>
+        <div class="flow-card"><b>2. Questions – {{VS_QUESTION_SECONDS}} sec</b>Every player asks a question from the category assigned to this round. A submitted answer is final.</div>
     </div>
 
     <div class="score-grid">
@@ -71,7 +71,7 @@
     </div>
 
     <div class="note"><b>Time modifiers:</b> in a player label, the number before the arrow is the actual answer time and the number after it is the time modified by the character. Modified time is used only to find the fastest correct answer to that question. Combined round time uses the numerical-estimate time and the actual times spent answering other players' questions; a questioner's own-question time is excluded. A wrong answer after using Time Freeze adds a {{VS_WRONG_ANSWER_TIME_PENALTY_SECONDS}} second penalty to the combined round time. Character XP may also be awarded by placement at the end of the round.</div>
-    <div class="note"><b>Vitality:</b> characters get tired during normal rounds. A character loses 1 vitality when it is their turn to ask a question. They lose another 1 vitality after an incorrect answer to another player's question; skipping an answer does not reduce vitality. If a character's vitality reaches zero during a question, they may finish that question. From the next normal question onward, they cannot answer or use help. The numerical estimate and the captain round do not consume vitality. In a four-player match, a character can lose at most 4 vitality in one normal round: 1 for their own question and another 1 for each incorrect answer to the other three questions.</div>
+    <div class="note"><b>Vitality:</b> characters get tired during normal rounds. A character loses 1 vitality when it is their turn to ask a question. They lose 1 additional vitality after an incorrect answer to another player's question; skipping an answer does not reduce vitality. If a character's vitality reaches zero during a question, they may finish that question. From the next normal question onward, they cannot answer or use help. The numerical estimate and the captain round do not consume vitality. In a four-player match, a character can lose at most 4 vitality in one normal round: 1 for their own question and 1 additional vitality for each incorrect answer to the other three questions.</div>
 </section>
 </body>
 </html>

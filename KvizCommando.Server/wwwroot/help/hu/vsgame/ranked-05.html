@@ -19,13 +19,13 @@
     <div class="round-flow">
         <div class="flow-card"><b>1. Számbecslés – {{VS_GUESS_SECONDS}} mp</b>A helyes értékhez legközelebbi tipp <b>+{{VS_POINT_UNIT}}</b> pontot kap. Azonos eltérésnél a gyorsabb tipp kerül előrébb. Ez alakítja ki a kérdezők sorrendjét.</div>
         <div class="arrow">▶</div>
-        <div class="flow-card"><b>2. Kérdések – {{VS_QUESTION_SECONDS}} mp</b>Minden játékos felteszi a köréhez rendelt kategória kérdését. A választás végleges.</div>
+        <div class="flow-card"><b>2. Kérdések – {{VS_QUESTION_SECONDS}} mp</b>Minden játékos feltesz egy kérdést a köréhez rendelt kategóriából. A választás végleges.</div>
     </div>
 
     <div class="score-grid">
         <div class="score"><b>Válaszoló:</b> <span class="positive">helyes +{{VS_POINT_UNIT}}</span>, <span class="negative">hibás −{{VS_POINT_UNIT}}</span>, kihagyás 0 pont.</div>
         <div class="score"><b>Leggyorsabb helyes válasz:</b> a legjobb módosított idő további <span class="positive">+{{VS_POINT_UNIT}}</span> pontot ér. Ha a két legjobb idő azonos, ezt a pontot most senki nem kapja meg: átkerül a kör végén kiosztott gyorsasági bónuszba. Helyes válasz nélkül a bónusz nem nő.</div>
-        <div class="score"><b>Kérdező:</b> a kérdező is válaszol. A kérdés értékéhez minden hibás ellenfél-válasz +{{VS_POINT_UNIT}}, minden kihagyás +2 pontot ad, a helyes válasz pedig 0-t. Ha a kérdező helyesen válaszol, megkapja ezt az értéket; hibás válasznál ugyanennyit veszít. Kihagyásnál a lehetséges normál maximumot veszti el.</div>
+        <div class="score"><b>Kérdező:</b> a kérdező is válaszol. A kérdés értékéhez az ellenfelek minden hibás válasza +{{VS_POINT_UNIT}}, minden kihagyás +2 pontot ad, a helyes válasz pedig 0-t. Ha a kérdező helyesen válaszol, megkapja ezt az értéket; hibás válasznál ugyanennyit veszít. Kihagyásnál a lehetséges normál maximumot veszti el.</div>
         <div class="score"><b>Kör vége:</b> a legtöbb körpontot szerző játékos további <span class="positive">+{{VS_POINT_UNIT}}</span> pontot kap. A legjobb összesített köridő tulajdonosa kapja a kör elején 1 pontról induló, döntetlenekkel növekedő gyorsasági bónuszt. A zöld nyíl azt jelzi, hogy ez a bónusz előrébb emeli a játékost a kör pontsorrendjében.</div>
     </div>
 
@@ -70,7 +70,7 @@
         <div class="kc-vs-progress"><span class="completed"><i class="bi bi-bullseye"></i></span><span class="completed">1</span><span class="current">2</span><span>3</span><strong>4<small>12.8s</small></strong></div>
     </div>
 
-    <div class="note"><b>Időmódosítók:</b> a címkén a nyíl előtti szám a tényleges válaszidő, az utána látható szám pedig a karakter által módosított idő. A módosított idő csak az adott kérdés leggyorsabb helyes válaszának kiválasztásakor számít. A kör összesített idejébe a számbecslés és a mások kérdéseire adott válaszok tényleges ideje kerül; a kérdező saját kérdésének ideje nem. Az Időtlenítő után adott hibás válasz {{VS_WRONG_ANSWER_TIME_PENALTY_SECONDS}} másodperces büntetést ad az összesített köridőhöz. A kör végén a helyezés alapján karakter-XP is járhat.</div>
+    <div class="note"><b>Időmódosítók:</b> a címkén a nyíl előtti szám a tényleges válaszidő, az utána látható szám pedig a karakter által módosított idő. A módosított idő csak az adott kérdés leggyorsabb helyes válaszának kiválasztásakor számít. A kör összesített idejébe a számbecslés és a mások kérdéseire adott válaszok tényleges ideje kerül; a kérdező saját kérdésének ideje nem. Az Időtlenítő után adott hibás válasz {{VS_WRONG_ANSWER_TIME_PENALTY_SECONDS}} másodperccel növeli az összesített köridőt. A kör végén a helyezés alapján karakter-XP is járhat.</div>
     <div class="note"><b>Vitalitás:</b> a karakterek a normál körökben fáradnak. Amikor egy karakter kérdezőként sorra kerül, 1 vitalitást veszít. Ha egy másik játékos kérdésére hibás választ ad, újabb 1 vitalitást veszít; a kihagyott válasz nem csökkenti a vitalitását. Ha a vitalitása egy kérdés közben fogy el, azt a kérdést még befejezheti. A következő normál kérdéstől viszont már nem válaszolhat, és segítséget sem használhat. A számbecslés és a kapitánykör nem fogyaszt vitalitást. Négy játékosnál egy karakter egy normál körben legfeljebb 4 vitalitást veszíthet: 1-et a saját kérdésénél, és további 1-1-et a másik három kérdésre adott hibás válaszokért.</div>
 </section>
 </body>

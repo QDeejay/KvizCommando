@@ -170,7 +170,13 @@ public partial class SoloGame : KcComponentBase, IDisposable
         }
 
         BuildBoxes();
-        OnBoxClick((int)HomeBoxKey.GameSolo);
+        if ((Ui.Header.PageIndex > (int)SgameBoxKeyRoot.Category) && Ui.Header.PageIndex <= ((int)SgameBoxKeyRoot.Category + SoloBoxSpecs.CATEGORY_BOX_COUNT))
+            OnBoxClick((int)SgameBoxKeyRoot.Category);
+        else if ((Ui.Header.PageIndex > (int)SgameBoxKeyRoot.Orientation) && Ui.Header.PageIndex <= ((int)SgameBoxKeyRoot.Orientation + SoloBoxSpecs.ORIENTATION_BOX_COUNT))
+            OnBoxClick((int)SgameBoxKeyRoot.Orientation);
+        else
+            OnBoxClick((int)HomeBoxKey.GameSolo);
+
         _gameCompleted = false;
     }
 
