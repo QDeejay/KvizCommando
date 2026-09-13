@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="settings.Title" xml:space="preserve"><value>SETTINGS</value></data>
+  <data name="settings.Navigation" xml:space="preserve"><value>Menu</value></data>
+  <data name="settings.Section.Sound" xml:space="preserve"><value>Sound</value></data>
+  <data name="settings.Section.Appearance" xml:space="preserve"><value>Appearance</value></data>
+  <data name="settings.Section.Help" xml:space="preserve"><value>Help</value></data>
+  <data name="settings.Sound.Enabled" xml:space="preserve"><value>Sound ON/OFF</value></data>
+  <data name="settings.Sound.MusicVolume" xml:space="preserve"><value>Music volume</value></data>
+  <data name="settings.Sound.SfxVolume" xml:space="preserve"><value>SFX volume</value></data>
+  <data name="settings.Appearance.Theme" xml:space="preserve"><value>Color theme</value></data>
+  <data name="settings.Appearance.CustomCursor" xml:space="preserve"><value>Custom cursor</value></data>
+  <data name="settings.Appearance.Fullscreen" xml:space="preserve"><value>Fullscreen mode after login</value></data>
+  <data name="settings.Theme.Default" xml:space="preserve"><value>Default</value></data>
+  <data name="settings.Theme.Olive" xml:space="preserve"><value>Olive</value></data>
+  <data name="settings.Theme.Desert" xml:space="preserve"><value>Desert</value></data>
+  <data name="settings.Theme.Steel" xml:space="preserve"><value>Steel</value></data>
+  <data name="settings.Theme.Night" xml:space="preserve"><value>Night</value></data>
+  <data name="settings.Theme.Lily" xml:space="preserve"><value>Lily</value></data>
+  <data name="settings.Theme.Candy" xml:space="preserve"><value>Candy</value></data>
+  <data name="settings.Theme.Phone" xml:space="preserve"><value>Phone</value></data>
+  <data name="settings.Theme.Wolf" xml:space="preserve"><value>Wolf</value></data>
+  <data name="settings.Help.Reset.Title" xml:space="preserve"><value>Reset help guides</value></data>
+  <data name="settings.Help.Reset.Description" xml:space="preserve"><value>Previously viewed help guides will appear automatically again.</value></data>
+  <data name="settings.Help.Reset.Button" xml:space="preserve"><value>RESET HELP GUIDES</value></data>
+  <data name="settings.Help.Reset.Success" xml:space="preserve"><value>Help guides have been reset.</value></data>
+  <data name="settings.Autosave" xml:space="preserve"><value>Changes are saved automatically.</value></data>
+  <data name="settings.Button.Close" xml:space="preserve"><value>Close</value></data>
+</root>

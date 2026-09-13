@@ -11,19 +11,19 @@
             <header class="kc-settings-header kc-window-header">
                 <div>
                     <span class="kc-window-kicker">KCV // CLIENT CONFIG</span>
-                    <h2 id="kc-settings-title" class="kc-window-title">@Ui.Lang["mainlayout.Settings.Title"]</h2>
+                    <h2 id="kc-settings-title" class="kc-window-title">@Lang["settings.Title"]</h2>
                 </div>
                 <button type="button"
                         class="kc-window-close"
-                        aria-label="@Ui.Lang["mainlayout.Settings.Button.Close"]"
+                        aria-label="@Lang["settings.Button.Close"]"
                         @onclick="Close">
                     ×
                 </button>
             </header>
 
             <div class="kc-settings-main kc-window-main">
-                <aside class="kc-window-navigation kc-window-navigation--sections" aria-label="@Ui.Lang["mainlayout.Settings.Navigation"]">
-                    <div class="kc-window-navigation-title">@Ui.Lang["mainlayout.Settings.Navigation"]</div>
+                <aside class="kc-window-navigation kc-window-navigation--sections" aria-label="@Lang["settings.Navigation"]">
+                    <div class="kc-window-navigation-title">@Lang["settings.Navigation"]</div>
                     <nav class="kc-window-navigation-list">
                         @foreach (var section in Enum.GetValues<SettingsSection>())
                         {
@@ -32,7 +32,7 @@
                                     aria-current="@(section == _selectedSection ? "page" : null)"
                                     @onclick="() => SelectSection(section)">
                                 <span class="kc-window-navigation-mark" aria-hidden="true">@(section == _selectedSection ? "▸" : "·")</span>
-                                <span>@Ui.Lang[$"mainlayout.Settings.Section.{section}"]</span>
+                                <span>@Lang[$"settings.Section.{section}"]</span>
                             </button>
                         }
                     </nav>
@@ -43,10 +43,10 @@
                     {
                         case SettingsSection.Sound:
                             <section aria-labelledby="kc-settings-sound-title">
-                                <h3 id="kc-settings-sound-title">@Ui.Lang["mainlayout.Settings.Section.Sound"]</h3>
+                                <h3 id="kc-settings-sound-title">@Lang["settings.Section.Sound"]</h3>
 
                                 <label class="kc-settings-row kc-settings-toggle-row">
-                                    <strong>@Ui.Lang["mainlayout.Settings.Sound.Enabled"]</strong>
+                                    <strong>@Lang["settings.Sound.Enabled"]</strong>
                                     <span class="kc-settings-switch">
                                         <input type="checkbox"
                                                @bind="_draft.SoundEnabled"
@@ -57,7 +57,7 @@
 
                                 <label class="kc-settings-row kc-settings-range-row">
                                     <span>
-                                        <strong>@Ui.Lang["mainlayout.Settings.Sound.MusicVolume"]</strong>
+                                        <strong>@Lang["settings.Sound.MusicVolume"]</strong>
                                         <output>@_draft.MusicVolume%</output>
                                     </span>
                                     <input type="range"
@@ -70,7 +70,7 @@
 
                                 <label class="kc-settings-row kc-settings-range-row">
                                     <span>
-                                        <strong>@Ui.Lang["mainlayout.Settings.Sound.SfxVolume"]</strong>
+                                        <strong>@Lang["settings.Sound.SfxVolume"]</strong>
                                         <output>@_draft.SfxVolume%</output>
                                     </span>
                                     <input type="range"
@@ -85,10 +85,10 @@
 
                         case SettingsSection.Appearance:
                             <section aria-labelledby="kc-settings-appearance-title">
-                                <h3 id="kc-settings-appearance-title">@Ui.Lang["mainlayout.Settings.Section.Appearance"]</h3>
+                                <h3 id="kc-settings-appearance-title">@Lang["settings.Section.Appearance"]</h3>
 
                                 <div class="kc-settings-row">
-                                    <strong>@Ui.Lang["mainlayout.Settings.Appearance.Theme"]</strong>
+                                    <strong>@Lang["settings.Appearance.Theme"]</strong>
                                     <div class="kc-settings-themes">
                                         @foreach (var theme in Enum.GetValues<VisualTheme>())
                                         {
@@ -99,14 +99,14 @@
                                                 <span class="kc-settings-theme-swatch" aria-hidden="true">
                                                     <span></span><span></span><span></span>
                                                 </span>
-                                                <span>@Ui.Lang[$"mainlayout.Settings.Theme.{theme}"]</span>
+                                                <span>@Lang[$"settings.Theme.{theme}"]</span>
                                             </button>
                                         }
                                     </div>
                                 </div>
 
                                 <label class="kc-settings-row kc-settings-toggle-row">
-                                    <strong>@Ui.Lang["mainlayout.Settings.Appearance.CustomCursor"]</strong>
+                                    <strong>@Lang["settings.Appearance.CustomCursor"]</strong>
                                     <span class="kc-settings-switch">
                                         <input type="checkbox"
                                                @bind="_draft.CustomCursorEnabled"
@@ -116,7 +116,7 @@
                                 </label>
 
                                 <label class="kc-settings-row kc-settings-toggle-row">
-                                    <strong>@Ui.Lang["mainlayout.Settings.Appearance.Fullscreen"]</strong>
+                                    <strong>@Lang["settings.Appearance.Fullscreen"]</strong>
                                     <span class="kc-settings-switch">
                                         <input type="checkbox"
                                                @bind="_draft.StartFullscreen"
@@ -129,22 +129,22 @@
 
                         case SettingsSection.Help:
                             <section aria-labelledby="kc-settings-help-title">
-                                <h3 id="kc-settings-help-title">@Ui.Lang["mainlayout.Settings.Section.Help"]</h3>
+                                <h3 id="kc-settings-help-title">@Lang["settings.Section.Help"]</h3>
 
                                 <div class="kc-settings-row kc-settings-help-row">
                                     <div>
-                                        <strong>@Ui.Lang["mainlayout.Settings.Help.Reset.Title"]</strong>
-                                        <p>@Ui.Lang["mainlayout.Settings.Help.Reset.Description"]</p>
+                                        <strong>@Lang["settings.Help.Reset.Title"]</strong>
+                                        <p>@Lang["settings.Help.Reset.Description"]</p>
                                     </div>
                                     <button type="button"
                                             class="military-button"
                                             @onclick="ResetHelpsAsync">
-                                        @Ui.Lang["mainlayout.Settings.Help.Reset.Button"]
+                                        @Lang["settings.Help.Reset.Button"]
                                     </button>
                                     @if (_helpsReset)
                                     {
                                         <div class="kc-settings-success" role="status">
-                                            @Ui.Lang["mainlayout.Settings.Help.Reset.Success"]
+                                            @Lang["settings.Help.Reset.Success"]
                                         </div>
                                     }
                                 </div>
@@ -155,9 +155,9 @@
             </div>
 
             <footer class="kc-settings-footer kc-window-footer">
-                <span class="kc-settings-autosave">@Ui.Lang["mainlayout.Settings.Autosave"]</span>
+                <span class="kc-settings-autosave">@Lang["settings.Autosave"]</span>
                 <button type="button" class="military-button--secondary" @onclick="Close">
-                    @Ui.Lang["mainlayout.Settings.Button.Close"]
+                    @Lang["settings.Button.Close"]
                 </button>
             </footer>
         </section>

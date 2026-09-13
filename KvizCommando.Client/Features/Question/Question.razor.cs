@@ -74,6 +74,7 @@ public partial class Question : KcComponentBase, IDisposable
 
         foreach (var box in QBoxBuilder.BuildBoxes(
                      QuestionData.ExtendedInfo!,
+                     AppStates.BoxTitles,
                      Ui.Lang))
         {
             _boxes[box.Key] = box.Value;

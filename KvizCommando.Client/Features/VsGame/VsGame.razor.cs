@@ -56,6 +56,7 @@ public partial class VsGame : KcComponentBase, IDisposable
         foreach (var box in VsBoxBuilder.BuildBoxes(
                      VsData,
                      parameters,
+                     AppStates.BoxTitles,
                      Ui.Lang))
         {
             _boxes[box.Key] = box.Value;

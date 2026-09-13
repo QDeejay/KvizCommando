@@ -44,6 +44,7 @@ public partial class Team : KcComponentBase, IDisposable
         foreach (var box in TBoxBuilder.BuildBoxes(
                      TeamData.RootBoxInfo,
                      parameters,
+                     AppStates.BoxTitles,
                      Ui.Lang))
         {
             _boxes[box.Key] = box.Value;

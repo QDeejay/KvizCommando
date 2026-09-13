@@ -31,7 +31,10 @@ public partial class Home : KcComponentBase, IDisposable
 
     private void BuildBoxes()
     {
-        var boxes = HomeBoxBuilder.Build(HState.HomeScreen!, Ui.Lang);
+        var boxes = HomeBoxBuilder.Build(
+            HState.HomeScreen!,
+            AppState.BoxTitles,
+            Ui.Lang);
         _boxOrder = HomeBoxBuilder.BtnOrder;
         foreach (var box in boxes)
         {

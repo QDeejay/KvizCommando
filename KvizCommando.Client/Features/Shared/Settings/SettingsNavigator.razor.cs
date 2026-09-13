@@ -5,12 +5,15 @@ using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Settings;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.Shared.Settings;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Shared.Settings;
 
 public partial class SettingsNavigator : KcComponentBase
 {
+    [Inject] private IStringLocalizer<SettingsResource> Lang { get; set; } = default!;
     [Inject] private ISettingsService Settings { get; set; } = default!;
     [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
     [Inject] private AudioService Audio { get; set; } = default!;

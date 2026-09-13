@@ -63,6 +63,7 @@ public partial class SoloGame : KcComponentBase, IDisposable
                      SoloData,
                      parameters,
                      Culture,
+                     AppStates.BoxTitles,
                      Ui.Lang))
         {
             _boxes[box.Key] = box.Value;

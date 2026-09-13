@@ -16,9 +16,11 @@ public static class QBoxBuilder
     /// Összeállítja a képernyő tartalmi dobozait.
     /// </summary>
     /// <param name="questionInfo">A kérdésképernyő dobozainak forrásadata.</param>
-    /// <param name="lang">A feliratok feloldásához használt nyelvi szolgáltatás.</param>
+    /// <param name="boxTitles">A közös boxcímek lokalizált értékei.</param>
+    /// <param name="lang">A további feliratok feloldásához használt nyelvi szolgáltatás.</param>
     public static Dictionary<string, ContentBoxVm> BuildBoxes(
         QuestionExtendedInfo questionInfo,
+        IReadOnlyDictionary<string, string> boxTitles,
         ILanguageService lang)
     {
         var boxes = new Dictionary<string, ContentBoxVm>(
@@ -26,16 +28,14 @@ public static class QBoxBuilder
 
         foreach (var spec in QuestionBoxSpecs.Specs)
         {
-            var titleInFooter = string.IsNullOrEmpty(spec.TitleKey);
-
             boxes[spec.Key.ToString()] = new ContentBoxVm
             {
-                Header = titleInFooter
+                Header = spec.BuildHeader is null
+                    ? boxTitles[spec.TitleKey]
+                    : spec.BuildHeader(boxTitles, questionInfo),
+                Footer = spec.FooterDisplay
                     ? spec.BuildBoxText(lang, questionInfo)
-                    : lang[spec.TitleKey],
-                Footer = titleInFooter
-                    ? string.Empty
-                    : spec.BuildBoxText(lang, questionInfo),
+                    : string.Empty,
                 FooterDisplay = spec.FooterDisplay,
                 Size = spec.Size,
                 ImageSrc = string.Empty,

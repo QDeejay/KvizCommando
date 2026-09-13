@@ -28,7 +28,7 @@ public static class HomeBoxSpecs
     {
         new HomeSpecs {
             Key = HomeBoxKey.GameVs,
-            TitleKey = "home.Box.Title.GameVs",
+            TitleKey = "Root.GameVs",
             ImageSrc = string.Empty,
             BgImageSrc =$"{IMAGE_ROOT}/game.webp",
             Size = ContentBoxSize.BUTTON_WIDE,
@@ -38,7 +38,7 @@ public static class HomeBoxSpecs
         },
         new HomeSpecs {
             Key = HomeBoxKey.GameSolo,
-            TitleKey = "home.Box.Title.GameSolo",
+            TitleKey = "Root.GameSolo",
             ImageSrc = string.Empty,
             BgImageSrc = $"{IMAGE_ROOT}/gamesolo.webp",
             Size = ContentBoxSize.BUTTON_SMALL,
@@ -48,7 +48,7 @@ public static class HomeBoxSpecs
         },
         new HomeSpecs {
             Key = HomeBoxKey.Shop,
-            TitleKey = "home.Box.Title.Shop",
+            TitleKey = "Root.Shop",
             ImageSrc = string.Empty,
             BgImageSrc = $"{IMAGE_ROOT}/shop.webp",
             Size = ContentBoxSize.BUTTON_MEDIUM,
@@ -58,7 +58,7 @@ public static class HomeBoxSpecs
         },
         new HomeSpecs {
             Key = HomeBoxKey.Rankings,
-            TitleKey = "home.Box.Title.Rankings",
+            TitleKey = "Root.Rankings",
             ImageSrc = string.Empty,
             BgImageSrc = $"{IMAGE_ROOT}/ranking.webp",
             Size = ContentBoxSize.BUTTON_MEDIUM,
@@ -71,7 +71,7 @@ public static class HomeBoxSpecs
         },
         new HomeSpecs {
             Key = HomeBoxKey.Statistic,
-            TitleKey = "home.Box.Title.Statistic",
+            TitleKey = "Root.Statistic",
             BgImageSrc = $"{IMAGE_ROOT}/statistic.webp",
             ImageSrc = string.Empty,
             Size =ContentBoxSize.BUTTON_SMALL,
@@ -81,7 +81,7 @@ public static class HomeBoxSpecs
         },
         new HomeSpecs {
             Key = HomeBoxKey.Events,
-            TitleKey = "home.Box.Title.Events",
+            TitleKey = "Root.Events",
             ImageSrc = string.Empty,
             BgImageSrc = $"{IMAGE_ROOT}/events.webp",
             Size = ContentBoxSize.BUTTON_WIDE,
@@ -97,7 +97,7 @@ public static class HomeBoxSpecs
         },
         new HomeSpecs {
             Key = HomeBoxKey.Community,
-            TitleKey = "home.Box.Title.Community",
+            TitleKey = "Root.Community",
             ImageSrc = string.Empty,
             BgImageSrc = $"{IMAGE_ROOT}/community.webp",
             Size = ContentBoxSize.BUTTON_MEDIUM,
@@ -107,7 +107,7 @@ public static class HomeBoxSpecs
         },
         new HomeSpecs {
             Key = HomeBoxKey.Messages,
-            TitleKey = "home.Box.Title.Messages",
+            TitleKey = "Root.Messages",
             ImageSrc = string.Empty,
             BgImageSrc = $"{IMAGE_ROOT}/messages.webp",
             Size = ContentBoxSize.BUTTON_MEDIUM,
@@ -117,7 +117,7 @@ public static class HomeBoxSpecs
         },
         new HomeSpecs {
             Key = HomeBoxKey.Team,
-            TitleKey = "home.Box.Title.Team",
+            TitleKey = "Root.Team",
             ImageSrc = string.Empty,
             BgImageSrc = $"{IMAGE_ROOT}/team.webp",
             Size = ContentBoxSize.BUTTON_MEDIUM,
@@ -127,7 +127,7 @@ public static class HomeBoxSpecs
         },
         new HomeSpecs {
             Key = HomeBoxKey.Question,
-            TitleKey = "home.Box.Title.Question",
+            TitleKey = "Root.Question",
             ImageSrc = string.Empty,
             BgImageSrc = $"{IMAGE_ROOT}/questions.webp",
             Size = ContentBoxSize.BUTTON_MEDIUM,

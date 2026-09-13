@@ -18,11 +18,13 @@ namespace KvizCommando.Client.Features.Solo.Builders
         /// <param name="ss">Az egyéni játékképernyő forrásadata.</param>
         /// <param name="parameters">A dobozok megjelenítését meghatározó paraméterek.</param>
         /// <param name="cult">A megjelenítéshez használt kultúra neve.</param>
-        /// <param name="lang">A feliratok feloldásához használt nyelvi szolgáltatás.</param>
+        /// <param name="boxTitles">A közös boxcímek lokalizált értékei.</param>
+        /// <param name="lang">A további feliratok feloldásához használt nyelvi szolgáltatás.</param>
         public static Dictionary<string, ContentBoxVm> BuildBoxes(
             SoloGameDtos ss,
             SoloComponentParameters parameters,
             string cult,
+            IReadOnlyDictionary<string, string> boxTitles,
             ILanguageService lang)
         {
             var dict = new Dictionary<string, ContentBoxVm>();
@@ -35,7 +37,9 @@ namespace KvizCommando.Client.Features.Solo.Builders
                 dict.Add(key, new ContentBoxVm
                 {
                     DictKey = key,
-                    Header = lang[spec.TitleKey],
+                    Header = spec.TitleKey.StartsWith("SoloGame.", StringComparison.Ordinal)
+                        ? boxTitles[spec.TitleKey]
+                        : lang[spec.TitleKey],
                     Footer = spec.BuildFooter(lang, ss.Results, 0),
                     FooterDisplay = spec.FooterDisplay,
                     Size = spec.Size,

@@ -20,10 +20,12 @@ public static class TBoxBuilder
     /// </summary>
     /// <param name="rootInfo">A csapatképernyő dobozainak forrásadata.</param>
     /// <param name="parameters">A dobozok megjelenítését meghatározó paraméterek.</param>
-    /// <param name="lang">A feliratok feloldásához használt nyelvi szolgáltatás.</param>
+    /// <param name="boxTitles">A közös boxcímek lokalizált értékei.</param>
+    /// <param name="lang">A további feliratok feloldásához használt nyelvi szolgáltatás.</param>
     public static Dictionary<string, ContentBoxVm> BuildBoxes(
         TeamRootBoxInfo rootInfo,
         TeamComponentParameters parameters,
+        IReadOnlyDictionary<string, string> boxTitles,
         ILanguageService lang)
     {
         var boxes = new Dictionary<string, ContentBoxVm>(
@@ -33,7 +35,7 @@ public static class TBoxBuilder
         {
             boxes.Add(spec.Key.ToString(), new ContentBoxVm
             {
-                Header = lang[spec.TitleKey],
+                Header = boxTitles[spec.TitleKey],
                 Footer = spec.FooterDisplay
                     ? spec.BuildBoxText(lang, rootInfo)
                     : string.Empty,

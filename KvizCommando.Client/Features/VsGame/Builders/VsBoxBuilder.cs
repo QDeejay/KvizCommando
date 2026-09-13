@@ -26,10 +26,12 @@ public static class VsBoxBuilder
     /// </summary>
     /// <param name="data">A nézetmodell felépítéséhez használt forrásadat.</param>
     /// <param name="parameters">A dobozok megjelenítését meghatározó paraméterek.</param>
-    /// <param name="lang">A feliratok feloldásához használt nyelvi szolgáltatás.</param>
+    /// <param name="boxTitles">A közös boxcímek lokalizált értékei.</param>
+    /// <param name="lang">A további feliratok feloldásához használt nyelvi szolgáltatás.</param>
     public static Dictionary<string, ContentBoxVm> BuildBoxes(
         VsGameDtos data,
         VsComponentParameters parameters,
+        IReadOnlyDictionary<string, string> boxTitles,
         ILanguageService lang)
     {
         var boxes = new Dictionary<string, ContentBoxVm>(
@@ -44,7 +46,9 @@ public static class VsBoxBuilder
             boxes.Add(key, new ContentBoxVm
             {
                 DictKey = key,
-                Header = lang[spec.TitleKey],
+                Header = spec.TitleKey.StartsWith("VsGame.", StringComparison.Ordinal)
+                    ? boxTitles[spec.TitleKey]
+                    : lang[spec.TitleKey],
                 Footer = spec.FooterDisplay ? spec.BuildFooter(lang, data, 0) : string.Empty,
                 FooterDisplay = spec.FooterDisplay,
                 Size = spec.ReSizable ? spec.SizeBuilder(data) : spec.Size,

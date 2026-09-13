@@ -28,7 +28,7 @@ public static class TeamBoxSpecs
         new TBoxSpecs
         {
             Key = TBoxKeyRoot.TeamOverview,
-            TitleKey = "home.SubBox.Title.Team.TeamOverview",
+            TitleKey = "Team.TeamOverview",
             ImageSrc = $"{IMAGE_ROOT}/team.webp",
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = true,
@@ -39,7 +39,7 @@ public static class TeamBoxSpecs
         new TBoxSpecs
         {
             Key = TBoxKeyRoot.Members,
-            TitleKey = "home.SubBox.Title.Team.Members",
+            TitleKey = "Team.Members",
             ImageSrc = $"{IMAGE_ROOT}/members.webp",
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = true,
@@ -50,7 +50,7 @@ public static class TeamBoxSpecs
         new TBoxSpecs
         {
             Key = TBoxKeyRoot.Recruit,
-            TitleKey = "home.SubBox.Title.Team.Recruit",
+            TitleKey = "Team.Recruit",
             ImageSrc = $"{IMAGE_ROOT}/recruit.webp",
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = true,
@@ -61,7 +61,7 @@ public static class TeamBoxSpecs
         new TBoxSpecs
         {
             Key = TBoxKeyContent.Team,
-            TitleKey = "home.SubBox.Title.Team.TeamOverview",
+            TitleKey = "Team.TeamOverview",
             ImageSrc = string.Empty,
             Size = ContentBoxSize.CONTENT_LARGE,
             FooterDisplay = false,
@@ -76,7 +76,7 @@ public static class TeamBoxSpecs
         new TBoxSpecs
         {
             Key = TBoxKeyContent.Member,
-            TitleKey = "home.SubBox.Title.Team.Members",
+            TitleKey = "Team.Members",
             ImageSrc = string.Empty,
             Size = ContentBoxSize.CONTENT_LARGE,
             FooterDisplay = false,
@@ -91,7 +91,7 @@ public static class TeamBoxSpecs
         new TBoxSpecs
         {
             Key = TBoxKeyContent.RecruitContent,
-            TitleKey = "home.SubBox.Title.Team.Recruit",
+            TitleKey = "Team.Recruit",
             ImageSrc = string.Empty,
             Size = string.Empty,
             FooterDisplay = false,

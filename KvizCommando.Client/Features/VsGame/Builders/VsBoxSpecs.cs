@@ -41,7 +41,7 @@ public static class VsGameBoxSpecs
         new()
         {
             Key = VsBoxKeyRoot.CreateBattlefield,
-            TitleKey = "home.SubBox.Title.GameVs.CreateBattlefield",
+            TitleKey = "VsGame.CreateBattlefield",
             ImageSrc = string.Empty,
             BgImageSrc = $"{IMAGE_ROOT}/create.webp",
             Size = ContentBoxSize.BUTTON_WIDE,
@@ -53,7 +53,7 @@ public static class VsGameBoxSpecs
         new()
         {
             Key = VsBoxKeyRoot.JoinBattlefield,
-            TitleKey = "home.SubBox.Title.GameVs.JoinBattlefield",
+            TitleKey = "VsGame.JoinBattlefield",
             ImageSrc = string.Empty,
             BgImageSrc = $"{IMAGE_ROOT}/private.webp",
             Size = ContentBoxSize.BUTTON_WIDE,
@@ -67,7 +67,7 @@ public static class VsGameBoxSpecs
         new()
         {
             Key = VsBoxKeyRoot.RankedBattlefields,
-            TitleKey = "home.SubBox.Title.GameVs.RankedBattlefields",
+            TitleKey = "VsGame.RankedBattlefields",
             ImageSrc = string.Empty,
             BgImageSrc = $"{IMAGE_ROOT}/ranked.webp",
             Size = ContentBoxSize.BUTTON_WIDE,

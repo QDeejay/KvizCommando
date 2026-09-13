@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="settings.Title" xml:space="preserve"><value>BEÁLLÍTÁSOK</value></data>
+  <data name="settings.Navigation" xml:space="preserve"><value>Menü</value></data>
+  <data name="settings.Section.Sound" xml:space="preserve"><value>Hang</value></data>
+  <data name="settings.Section.Appearance" xml:space="preserve"><value>Megjelenés</value></data>
+  <data name="settings.Section.Help" xml:space="preserve"><value>Súgó</value></data>
+  <data name="settings.Sound.Enabled" xml:space="preserve"><value>Hang BE/KI</value></data>
+  <data name="settings.Sound.MusicVolume" xml:space="preserve"><value>Zene hangerő</value></data>
+  <data name="settings.Sound.SfxVolume" xml:space="preserve"><value>SFX hangerő</value></data>
+  <data name="settings.Appearance.Theme" xml:space="preserve"><value>Színtéma</value></data>
+  <data name="settings.Appearance.CustomCursor" xml:space="preserve"><value>Egyéni kurzor</value></data>
+  <data name="settings.Appearance.Fullscreen" xml:space="preserve"><value>Bejelentkezés után teljes képernyős mód</value></data>
+  <data name="settings.Theme.Default" xml:space="preserve"><value>Alap</value></data>
+  <data name="settings.Theme.Olive" xml:space="preserve"><value>Olíva</value></data>
+  <data name="settings.Theme.Desert" xml:space="preserve"><value>Sivatag</value></data>
+  <data name="settings.Theme.Steel" xml:space="preserve"><value>Acél</value></data>
+  <data name="settings.Theme.Night" xml:space="preserve"><value>Éjszaka</value></data>
+  <data name="settings.Theme.Lily" xml:space="preserve"><value>Liliom</value></data>
+  <data name="settings.Theme.Candy" xml:space="preserve"><value>Cukor</value></data>
+  <data name="settings.Theme.Phone" xml:space="preserve"><value>Telefon</value></data>
+  <data name="settings.Theme.Wolf" xml:space="preserve"><value>Farkas</value></data>
+  <data name="settings.Help.Reset.Title" xml:space="preserve"><value>Súgók visszaállítása</value></data>
+  <data name="settings.Help.Reset.Description" xml:space="preserve"><value>Az eddig megtekintett súgók ismét automatikusan megjelennek.</value></data>
+  <data name="settings.Help.Reset.Button" xml:space="preserve"><value>SÚGÓK VISSZAÁLLÍTÁSA</value></data>
+  <data name="settings.Help.Reset.Success" xml:space="preserve"><value>A súgók visszaállítva.</value></data>
+  <data name="settings.Autosave" xml:space="preserve"><value>A módosítások automatikusan mentődnek.</value></data>
+  <data name="settings.Button.Close" xml:space="preserve"><value>Bezárás</value></data>
+</root>

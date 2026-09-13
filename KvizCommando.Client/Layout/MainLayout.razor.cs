@@ -14,6 +14,7 @@ using KvizCommando.Client.Services.Settings;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Localization.MainLayout;
+using KvizCommando.Localization.Shared.BoxTitles;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
@@ -27,6 +28,7 @@ namespace KvizCommando.Client.Layout
     public partial class MainLayout : KcLayoutComponentBase, IDisposable
     {
         [Inject] private IStringLocalizer<MainLayoutResource> Lang { get; set; } = default!;
+        [Inject] private IStringLocalizer<BoxTitlesResource> BoxTitlesLang { get; set; } = default!;
         [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
         [Inject] private ISessionStorageService SessionStorage { get; set; } = default!;
         [Inject] private IHomeState HState { get; set; } = default!;
@@ -111,13 +113,20 @@ namespace KvizCommando.Client.Layout
                 }
 
             }
-
+            _appState.BoxTitles = BoxTitlesLang
+               .GetAllStrings(includeParentCultures: true)
+               .ToDictionary(
+                   item => item.Name,
+                   item => item.Value,
+                   StringComparer.Ordinal);
             _isReady = true;
         }
 
 
         protected override void OnInitialized()
         {
+
+
             Ui.Header.OnTitleChanged += UpdateTitle;
             Ui.Header.OnBackBtnEnaChanged += UpdateBackBtnEna;
             Ui.Modal.OnModalShow += ShowModal;

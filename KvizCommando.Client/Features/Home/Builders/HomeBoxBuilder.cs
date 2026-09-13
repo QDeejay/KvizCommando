@@ -16,8 +16,12 @@ public static class HomeBoxBuilder
     /// Összeállítja a bemeneti adatokhoz tartozó megjelenítési modellt.
     /// </summary>
     /// <param name="hs">A kezdőképernyő forrásadata.</param>
-    /// <param name="lang">A feliratok feloldásához használt nyelvi szolgáltatás.</param>
-    public static Dictionary<string, ContentBoxVm> Build(HomeScreen hs, ILanguageService lang)
+    /// <param name="boxTitles">A közös boxcímek lokalizált értékei.</param>
+    /// <param name="lang">A további feliratok feloldásához használt nyelvi szolgáltatás.</param>
+    public static Dictionary<string, ContentBoxVm> Build(
+        HomeScreen hs,
+        IReadOnlyDictionary<string, string> boxTitles,
+        ILanguageService lang)
     {
         var dict = new Dictionary<string, ContentBoxVm>(HomeBoxSpecs.Specs.Count);
 
@@ -29,7 +33,9 @@ public static class HomeBoxBuilder
             dict[dictKey] = new ContentBoxVm
             {
                 DictKey = dictKey,
-                Header = lang[spec.TitleKey],
+                Header = spec.TitleKey.StartsWith("Root.", StringComparison.Ordinal)
+                    ? boxTitles[spec.TitleKey]
+                    : lang[spec.TitleKey],
                 Footer = spec.BuildFooter(lang, btn),
                 FooterDisplay = spec.FooterDisplay,
                 Size = spec.Size,

@@ -46,7 +46,7 @@ namespace KvizCommando.Client.Features.Solo.Builders
         [
             new SgameBoxSpecs {
                 Key = SgameBoxKeyRoot.Category,
-                TitleKey = "home.SubBox.Title.GameSolo.Category",
+                TitleKey = "SoloGame.Category",
                 ImageSrc = string.Empty, Size = "wide", FooterDisplay = true, ClickId = (int)SgameBoxKeyRoot.Category,
                 BgImageSrc = $"{IMAGE_ROOT}/categories.webp",
                 BuildEnable = (se,ix) => se.EnaCategory,
@@ -54,7 +54,7 @@ namespace KvizCommando.Client.Features.Solo.Builders
             },
             new SgameBoxSpecs {
                 Key = SgameBoxKeyRoot.Orientation,
-                TitleKey = "home.SubBox.Title.GameSolo.Orientation",
+                TitleKey = "SoloGame.Orientation",
                 ImageSrc = string.Empty, Size = "wide", FooterDisplay = true, ClickId = (int)SgameBoxKeyRoot.Orientation,
                 BgImageSrc = $"{IMAGE_ROOT}/orients.webp",
                 BuildEnable = (se,ix) => se.EnaOrient,
@@ -62,7 +62,7 @@ namespace KvizCommando.Client.Features.Solo.Builders
             },
             new SgameBoxSpecs {
                 Key = SgameBoxKeyRoot.Campaign,
-                TitleKey = "home.SubBox.Title.GameSolo.Campaign",
+                TitleKey = "SoloGame.Campaign",
                 ImageSrc = string.Empty, Size = "wide", FooterDisplay = false, ClickId = (int)SgameBoxKeyRoot.Campaign,
                 BgImageSrc = $"{IMAGE_ROOT}/campaign.webp",
                 BuildEnable = (se,ix) => se.EnaCampaign,

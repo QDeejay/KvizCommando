@@ -16,6 +16,8 @@ namespace KvizCommando.Client.Features.Question.Builders
         { get; init; } = _ => true;
         internal Func<ILanguageService, QuestionExtendedInfo, string> BuildBoxText
         { get; init; } = (_, _) => string.Empty;
+        internal Func<IReadOnlyDictionary<string, string>, QuestionExtendedInfo, string>? BuildHeader
+        { get; init; }
     }
 
     public static class QuestionBoxSpecs
@@ -26,7 +28,7 @@ namespace KvizCommando.Client.Features.Question.Builders
         [
             new QBoxSpecs {
                 Key = QBoxKeyRoot.Factory,
-                TitleKey = "home.SubBox.Title.Question.Factory",
+                TitleKey = "Question.Factory",
                 ImageSrc = $"{IMAGE_ROOT}/fact.webp",
                 Size =ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = (int)QBoxKeyRoot.Factory,
@@ -39,7 +41,7 @@ namespace KvizCommando.Client.Features.Question.Builders
             },
             new QBoxSpecs {
                 Key = QBoxKeyRoot.Usr,
-                TitleKey = "home.SubBox.Title.Question.Usr",
+                TitleKey = "Question.Usr",
                 ImageSrc =$"{IMAGE_ROOT}/usr.webp",
                 Size = ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = (int)QBoxKeyRoot.Usr,
@@ -51,7 +53,7 @@ namespace KvizCommando.Client.Features.Question.Builders
             },
             new QBoxSpecs {
                 Key = QBoxKeyRoot.Pending,
-                TitleKey = "home.SubBox.Title.Question.Pending",
+                TitleKey = "Question.Pending",
                 ImageSrc = $"{IMAGE_ROOT}/pending.webp",
                 Size = ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = (int)QBoxKeyRoot.Pending,
@@ -63,7 +65,7 @@ namespace KvizCommando.Client.Features.Question.Builders
             },
             new QBoxSpecs {
                 Key = QBoxKeyRoot.New,
-                TitleKey = "home.SubBox.Title.Question.New",
+                TitleKey = "Question.New",
                 ImageSrc = $"{IMAGE_ROOT}/new.webp",
                 Size = ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = (int)QBoxKeyRoot.New,
@@ -77,7 +79,7 @@ namespace KvizCommando.Client.Features.Question.Builders
             },
             new QBoxSpecs {
                 Key = QBoxKeyContent.FactSlots,
-                TitleKey = "home.SubBox.Title.Question.Factory",
+                TitleKey = "Question.Factory",
                 ImageSrc = string.Empty,
                 Size = ContentBoxSize.CONTENT_HALF_LARGE,
                 FooterDisplay = false, ClickId = 0,
@@ -87,8 +89,9 @@ namespace KvizCommando.Client.Features.Question.Builders
             },
             new QBoxSpecs {
                 Key = QBoxKeyContent.UsrSlots,
-                TitleKey = string.Empty,
-                BuildBoxText = (lang, qn) => $"{lang["home.SubBox.Title.Question.Usr"]} ({qn.OccupiedUserSlot}/{qn.AvailableUserSlot})",
+                TitleKey = "Question.Usr",
+                BuildHeader = (boxTitles, qn) =>
+                    $"{boxTitles["Question.Usr"]} ({qn.OccupiedUserSlot}/{qn.AvailableUserSlot})",
                 ImageSrc = string.Empty,
                 Size = ContentBoxSize.CONTENT_LARGE,
                 FooterDisplay = false, ClickId = 0,
@@ -99,8 +102,9 @@ namespace KvizCommando.Client.Features.Question.Builders
             },
             new QBoxSpecs {
                 Key = QBoxKeyContent.PendigSlots,
-                TitleKey = string.Empty,
-                BuildBoxText = (lang, qn) => $"{lang["home.SubBox.Title.Question.Pending"]} ({qn.OccupiedPendingSlot}/{qn.AvailablePendingSlot})",
+                TitleKey = "Question.Pending",
+                BuildHeader = (boxTitles, qn) =>
+                    $"{boxTitles["Question.Pending"]} ({qn.OccupiedPendingSlot}/{qn.AvailablePendingSlot})",
                 ImageSrc = string.Empty,
                  Size = ContentBoxSize.CONTENT_LARGE,
                 FooterDisplay = false, ClickId = 0,
@@ -110,7 +114,7 @@ namespace KvizCommando.Client.Features.Question.Builders
             },
             new QBoxSpecs {
                 Key = QBoxKeyContent.NewSlot,
-                TitleKey = "home.SubBox.Title.Question.New",
+                TitleKey = "Question.New",
                 ImageSrc = string.Empty,
                  Size = ContentBoxSize.CONTENT_LARGE,
                 FooterDisplay = false, ClickId = 0,

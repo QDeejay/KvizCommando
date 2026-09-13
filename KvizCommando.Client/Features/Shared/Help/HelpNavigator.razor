@@ -52,7 +52,7 @@
                                         <span class="kc-help-tree-arrow kc-window-navigation-mark" aria-hidden="true">
                                             @(hasSeenPackages ? (isExpanded ? "▾" : "▸") : "—")
                                         </span>
-                                        <span>@Ui.Lang[$"home.Box.Title.{root}"]</span>
+                                        <span>@AppStates.BoxTitles[$"Root.{root}"]</span>
                                     </button>
 
                                     @if (isExpanded)
@@ -64,7 +64,7 @@
                                                         class="kc-help-package-button @(package.Key == _selectedHelpKey ? "active" : null)"
                                                         aria-current="@(package.Key == _selectedHelpKey ? "page" : null)"
                                                         @onclick="() => SelectPackageAsync(package.Key)">
-                                                    @Ui.Lang[package.Value.TitleKey]
+                                                    @AppStates.BoxTitles[package.Value.TitleKey]
                                                 </button>
                                             }
                                         </div>

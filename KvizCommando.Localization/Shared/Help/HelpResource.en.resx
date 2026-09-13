@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="help.Title" xml:space="preserve"><value>HELP</value></data>
+  <data name="help.Page" xml:space="preserve"><value>PAGE</value></data>
+  <data name="help.Navigation" xml:space="preserve"><value>CONTENTS</value></data>
+  <data name="help.Landing.Title" xml:space="preserve"><value>HANDBOOK</value></data>
+  <data name="help.Button.Previous" xml:space="preserve"><value>Previous</value></data>
+  <data name="help.Button.Next" xml:space="preserve"><value>Next</value></data>
+  <data name="help.Button.Close" xml:space="preserve"><value>Close</value></data>
+</root>

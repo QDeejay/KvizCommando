@@ -3,12 +3,17 @@ using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.Shared.Help;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Shared.Help;
 
 public partial class HelpNavigator : KcComponentBase, IDisposable
 {
+    [Inject]
+    private IStringLocalizer<HelpResource> Lang { get; set; } = default!;
+
     [Inject]
     private ILocalStorageService LocalStorage { get; set; } = default!;
 
@@ -34,14 +39,14 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
     private bool _isAutomatic;
 
     private string WindowTitle =>
-        $"{Ui.Lang["mainlayout.Help.Title"]} - {_helpTitle}";
+        $"{Lang["help.Title"]} - {_helpTitle}";
     private string NavigationLabel =>
-        Ui.Lang["mainlayout.Help.Navigation"];
-    private string PageLabel => Ui.Lang["mainlayout.Help.Page"];
+        Lang["help.Navigation"];
+    private string PageLabel => Lang["help.Page"];
     private string PreviousLabel =>
-        Ui.Lang["mainlayout.Help.Button.Previous"];
-    private string NextLabel => Ui.Lang["mainlayout.Help.Button.Next"];
-    private string CloseLabel => Ui.Lang["mainlayout.Help.Button.Close"];
+        Lang["help.Button.Previous"];
+    private string NextLabel => Lang["help.Button.Next"];
+    private string CloseLabel => Lang["help.Button.Close"];
     private string BackgroundStyle =>
         $"--kc-help-background-image: url('{_backgroundImage}');";
 
@@ -151,7 +156,7 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
         _pages = pages;
         _currentPage = 0;
         _selectedHelpKey = helpKey;
-        _helpTitle = Ui.Lang[package.TitleKey];
+        _helpTitle = AppStates.BoxTitles[package.TitleKey];
         _backgroundImage = package.BackgroundImage;
         _showNavigation = showNavigation;
         _navigationOpen = false;
@@ -193,7 +198,7 @@ public partial class HelpNavigator : KcComponentBase, IDisposable
 
         _currentPage = 0;
         _selectedHelpKey = null;
-        _helpTitle = Ui.Lang["mainlayout.Help.Landing.Title"];
+        _helpTitle = Lang["help.Landing.Title"];
         _backgroundImage = HelpCollection.LANDING_BACKGROUND;
         _showNavigation = true;
         _navigationOpen = true;

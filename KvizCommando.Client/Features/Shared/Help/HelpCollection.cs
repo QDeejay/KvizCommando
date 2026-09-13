@@ -46,7 +46,7 @@ public static class HelpCollection
                 _ => LoadoutHelpRules.Tokens)
             {
                 Root = HomeBoxKey.Question,
-                TitleKey = "home.SubBox.Title.Question.Factory",
+                TitleKey = "Question.Factory",
                 BackgroundImage = "/images/buttons/question/fact.webp"
             },
             [(int)QBoxKeyRoot.Usr] = new(
@@ -57,7 +57,7 @@ public static class HelpCollection
                 _ => UserPendingHelpRules.Tokens)
             {
                 Root = HomeBoxKey.Question,
-                TitleKey = "home.SubBox.Title.Question.Usr",
+                TitleKey = "Question.Usr",
                 BackgroundImage = "/images/buttons/question/usr.webp"
             },
             [(int)QBoxKeyRoot.Pending] = new(
@@ -68,7 +68,7 @@ public static class HelpCollection
                 _ => UserPendingHelpRules.Tokens)
             {
                 Root = HomeBoxKey.Question,
-                TitleKey = "home.SubBox.Title.Question.Pending",
+                TitleKey = "Question.Pending",
                 BackgroundImage = "/images/buttons/question/pending.webp"
             },
             [(int)QBoxKeyRoot.New] = new(
@@ -79,7 +79,7 @@ public static class HelpCollection
                 _ => NewQuestionHelpRules.Tokens)
             {
                 Root = HomeBoxKey.Question,
-                TitleKey = "home.SubBox.Title.Question.New",
+                TitleKey = "Question.New",
                 BackgroundImage = "/images/buttons/question/new.webp"
             },
             [(int)TBoxKeyRoot.TeamOverview] = new(
@@ -94,7 +94,7 @@ public static class HelpCollection
                 TeamOverviewHelpRules.BuildTokens)
             {
                 Root = HomeBoxKey.Team,
-                TitleKey = "home.SubBox.Title.Team.TeamOverview",
+                TitleKey = "Team.TeamOverview",
                 BackgroundImage = "/images/buttons/team/team.webp"
             },
             [(int)TBoxKeyRoot.Members] = new(
@@ -108,7 +108,7 @@ public static class HelpCollection
                 MemberHelpRules.BuildTokens)
             {
                 Root = HomeBoxKey.Team,
-                TitleKey = "home.SubBox.Title.Team.Members",
+                TitleKey = "Team.Members",
                 BackgroundImage = "/images/buttons/team/members.webp"
             },
             [(int)TBoxKeyRoot.Recruit] = new(
@@ -122,7 +122,7 @@ public static class HelpCollection
                 RecruitHelpRules.BuildTokens)
             {
                 Root = HomeBoxKey.Team,
-                TitleKey = "home.SubBox.Title.Team.Recruit",
+                TitleKey = "Team.Recruit",
                 BackgroundImage = "/images/buttons/team/recruit.webp"
             },
             [(int)VsBoxKeyRoot.RankedBattlefields] = new(
@@ -137,7 +137,7 @@ public static class HelpCollection
                 VsRankedHelpRules.BuildTokens)
             {
                 Root = HomeBoxKey.GameVs,
-                TitleKey = "home.SubBox.Title.GameVs.RankedBattlefields",
+                TitleKey = "VsGame.RankedBattlefields",
                 BackgroundImage = "/images/buttons/vsgame/ranked.webp"
             },
             [(int)SgameBoxKeyRoot.Category] = new(
@@ -152,7 +152,7 @@ public static class HelpCollection
                 _ => SoloCategoryHelpRules.Tokens)
             {
                 Root = HomeBoxKey.GameSolo,
-                TitleKey = "home.SubBox.Title.GameSolo.Category",
+                TitleKey = "SoloGame.Category",
                 BackgroundImage = "/images/buttons/solo/categories.webp"
             },
             [(int)SgameBoxKeyRoot.Orientation] = new(
@@ -166,7 +166,7 @@ public static class HelpCollection
                 _ => SoloOrientationHelpRules.Tokens)
             {
                 Root = HomeBoxKey.GameSolo,
-                TitleKey = "home.SubBox.Title.GameSolo.Orientation",
+                TitleKey = "SoloGame.Orientation",
                 BackgroundImage = "/images/buttons/solo/orients.webp"
             }
         };

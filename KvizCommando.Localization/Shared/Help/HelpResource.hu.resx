@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="help.Title" xml:space="preserve"><value>SÚGÓ</value></data>
+  <data name="help.Page" xml:space="preserve"><value>OLDAL</value></data>
+  <data name="help.Navigation" xml:space="preserve"><value>TARTALOM</value></data>
+  <data name="help.Landing.Title" xml:space="preserve"><value>KÉZIKÖNYV</value></data>
+  <data name="help.Button.Previous" xml:space="preserve"><value>Előző</value></data>
+  <data name="help.Button.Next" xml:space="preserve"><value>Következő</value></data>
+  <data name="help.Button.Close" xml:space="preserve"><value>Bezárás</value></data>
+</root>
