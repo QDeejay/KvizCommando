@@ -13,7 +13,7 @@
             <option value="0"
                     disabled="@(_formData.Category != 0 || !NoFreeSlot)"
                     selected="@(_formData.Category == 0)">
-                @Lang["mainlayout.Option.Default"]
+                @Lang["question.Option.Default"]
             </option>
             @foreach (var option in Options)
             {

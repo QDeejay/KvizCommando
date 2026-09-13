@@ -1,6 +1,7 @@
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.Question;
 using KvizCommando.Shared.Models.Dtos;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Question.Builders;
 
@@ -21,7 +22,7 @@ public static class QBoxBuilder
     public static Dictionary<string, ContentBoxVm> BuildBoxes(
         QuestionExtendedInfo questionInfo,
         IReadOnlyDictionary<string, string> boxTitles,
-        ILanguageService lang)
+        IStringLocalizer<QuestionResource> lang)
     {
         var boxes = new Dictionary<string, ContentBoxVm>(
             QuestionBoxSpecs.Specs.Count);

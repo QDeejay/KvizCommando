@@ -4,16 +4,17 @@ using KvizCommando.Client.Features.Shared.Modal.Components;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.Visual.UiService;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.Question;
 using KvizCommando.Shared.Contracts.Question;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Question.Components;
 
 public partial class UserSlotManager
 {
-    [Inject] private ILanguageService Lang { get; set; } = default!;
+    [Inject] private IStringLocalizer<QuestionResource> Lang { get; set; } = default!;
     [Inject] private IQuestionClientService QuestionService { get; set; } = default!;
     [Inject] private UiServices Ui { get; set; } = default!;
     [Inject] private AudioService Audio { get; set; } = default!;

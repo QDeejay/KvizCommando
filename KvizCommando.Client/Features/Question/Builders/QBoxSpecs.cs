@@ -1,8 +1,8 @@
 ﻿using KvizCommando.Client.Features.Question.Components;
-using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.Question;
 using KvizCommando.Shared.Models.Dtos;
+using Microsoft.Extensions.Localization;
 
 
 namespace KvizCommando.Client.Features.Question.Builders
@@ -14,7 +14,7 @@ namespace KvizCommando.Client.Features.Question.Builders
         internal Enum Key { get; init; } = default!;
         internal Func<QuestionExtendedInfo, bool> CheckEnable
         { get; init; } = _ => true;
-        internal Func<ILanguageService, QuestionExtendedInfo, string> BuildBoxText
+        internal Func<IStringLocalizer<QuestionResource>, QuestionExtendedInfo, string> BuildBoxText
         { get; init; } = (_, _) => string.Empty;
         internal Func<IReadOnlyDictionary<string, string>, QuestionExtendedInfo, string>? BuildHeader
         { get; init; }
@@ -32,7 +32,7 @@ namespace KvizCommando.Client.Features.Question.Builders
                 ImageSrc = $"{IMAGE_ROOT}/fact.webp",
                 Size =ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = (int)QBoxKeyRoot.Factory,
-                BuildBoxText = (lang, qn) => lang["question.Box.Footer.FactorySlots"].FormatSafe(qn.NoFownQuestion),
+                BuildBoxText = (lang, qn) => lang["question.Box.Footer.FactorySlots", qn.NoFownQuestion],
                 CheckEnable = (qn) =>
                     qn.CharCatMask.Any(hasCharacter => hasCharacter),
                 LcdBackground = false,
@@ -45,7 +45,7 @@ namespace KvizCommando.Client.Features.Question.Builders
                 ImageSrc =$"{IMAGE_ROOT}/usr.webp",
                 Size = ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = (int)QBoxKeyRoot.Usr,
-                BuildBoxText =(lang, qn) => lang["question.Box.Footer.UsrSlots"].FormatSafe(qn.OccupiedUserSlot,qn.AvailableUserSlot),
+                BuildBoxText =(lang, qn) => lang["question.Box.Footer.UsrSlots", qn.OccupiedUserSlot, qn.AvailableUserSlot],
                 CheckEnable = (qn) => qn.AvailableUserSlot>0,
                 LcdBackground = false,
                 RenderContent = 0,
@@ -57,7 +57,7 @@ namespace KvizCommando.Client.Features.Question.Builders
                 ImageSrc = $"{IMAGE_ROOT}/pending.webp",
                 Size = ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = (int)QBoxKeyRoot.Pending,
-                BuildBoxText = (lang, qn) => lang["question.Box.Footer.PendingSlots"].FormatSafe(qn.HandlePendingSlot),
+                BuildBoxText = (lang, qn) => lang["question.Box.Footer.PendingSlots", qn.HandlePendingSlot],
                 CheckEnable = (qn) => qn.AvailablePendingSlot>0,
                 LcdBackground = false,
                 RenderContent = 0,
@@ -69,7 +69,7 @@ namespace KvizCommando.Client.Features.Question.Builders
                 ImageSrc = $"{IMAGE_ROOT}/new.webp",
                 Size = ContentBoxSize.BUTTON_WIDE,
                 FooterDisplay = true, ClickId = (int)QBoxKeyRoot.New,
-                BuildBoxText = (lang, qn) => lang["question.Box.Footer.New"].FormatSafe(qn.FreePendingSlot),
+                BuildBoxText = (lang, qn) => lang["question.Box.Footer.New", qn.FreePendingSlot],
                 CheckEnable = (qn) =>
                     qn.FreePendingSlot > 0 &&
                     qn.CharCatMask.Any(hasCharacter => hasCharacter),

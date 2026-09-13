@@ -1,6 +1,6 @@
 ﻿using Blazored.LocalStorage;
-using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Features.Home.Builders;
+using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Utilities;
@@ -47,7 +47,6 @@ public partial class Home : KcComponentBase, IDisposable
     }
     private void OnBoxClick(int boxId)
     {
-        Console.WriteLine($"Box {boxId} kattintva.");
         switch ((HomeBoxKey)boxId)
         {
             case HomeBoxKey.InfoBoard:
@@ -68,10 +67,7 @@ public partial class Home : KcComponentBase, IDisposable
     }
     private async Task CloseBBoard()
     {
-        Console.WriteLine("faxom1");
-
         await LocalStorage.SetItemAsync("B.B", DateTime.UtcNow);
-
     }
     protected override async Task OnInitializedAsync()
     {

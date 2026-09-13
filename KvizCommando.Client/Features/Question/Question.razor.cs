@@ -4,14 +4,18 @@ using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.Question;
 using KvizCommando.Shared.Models.Dtos;
 using KvizCommando.Shared.Models.Rules;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Question;
 
 public partial class Question : KcComponentBase, IDisposable
 {
+    [Inject] private IStringLocalizer<QuestionResource> Lang { get; set; } = default!;
+
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
 
@@ -21,7 +25,6 @@ public partial class Question : KcComponentBase, IDisposable
     private bool _hasAccess;
     private bool _isReady;
 
-    private string Culture => AppStates.Culture;
     private QuestionDtos QuestionData => AppStates.Question!;
 
     protected override async Task OnInitializedAsync()
@@ -55,9 +58,13 @@ public partial class Question : KcComponentBase, IDisposable
 
         _hasAccess = true;
         Ui.Header.OnBackBtnClicked += HandleBack;
-        Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Question"], (int)HomeBoxKey.Question);
+        Ui.Header.SetTitle(
+            AppStates.BoxTitles["Root.Question"],
+            (int)HomeBoxKey.Question);
         Ui.Header.SetBackBtnEna(false);
         _boxOrder = QBoxBuilder.Root;
+        BuildBoxes();
+        _isReady = true;
     }
     protected override void OnParametersSet()
     {
@@ -75,18 +82,16 @@ public partial class Question : KcComponentBase, IDisposable
         foreach (var box in QBoxBuilder.BuildBoxes(
                      QuestionData.ExtendedInfo!,
                      AppStates.BoxTitles,
-                     Ui.Lang))
+                     Lang))
         {
             _boxes[box.Key] = box.Value;
         }
-
-        _isReady = true;
     }
 
     private void OnBoxClick(int boxId)
     {
         _boxOrder = QBoxBuilder.Root;
-        var headerTitle = Ui.Lang["mainlayout.Header.Question"];
+        var headerTitle = AppStates.BoxTitles["Root.Question"];
 
         switch (boxId)
         {
