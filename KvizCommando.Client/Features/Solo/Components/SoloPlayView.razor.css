@@ -617,7 +617,7 @@
     }
 }
 
-@media (max-width: 820px) {
+@media (max-width: 900px) {
     .kc-solo-play {
         height: auto;
         min-height: 0;
@@ -677,16 +677,12 @@
 
 
 }
-@media (max-width: 520px) {
-    .kc-solo-player-panel {
-        grid-template-columns: 18px 72px minmax(0, 1fr);
-    }
 
-    .kc-solo-score-box {
-        grid-column: 1 / -1;
-        border-left: 0;
-        border-top: 1px solid #55583f;
-    }
+@media (max-width: 520px) {
+    .kc-solo-player-panel { grid-template-columns: 18px 72px minmax(0, 1fr); }
+
+    .kc-solo-score-box { border-left: 0; border-top: 1px solid #55583f; }
+   
 
     .kc-solo-timer {
         grid-template-columns: auto 1fr;
