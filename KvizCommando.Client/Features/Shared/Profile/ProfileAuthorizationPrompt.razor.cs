@@ -1,10 +1,13 @@
 using KvizCommando.Client.Services.Audio;
+using KvizCommando.Localization.Shared.Profile;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Shared.Profile;
 
 public partial class ProfileAuthorizationPrompt
 {
+    [Inject] private IStringLocalizer<ProfileResource> Lang { get; set; } = default!;
     [Inject] private AudioService Audio { get; set; } = default!;
 
     [Parameter] public bool Busy { get; set; }

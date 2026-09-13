@@ -1,10 +1,12 @@
-using KvizCommando.Client.Services.Audio;
-using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Features.Shared.Modal.Components;
+using KvizCommando.Client.Services.Audio;
+using KvizCommando.Client.Services.User;
 using KvizCommando.Client.Services.Visual.UiService;
+using KvizCommando.Localization.Shared.Profile;
 using KvizCommando.Shared.Contracts.Profile;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 
 namespace KvizCommando.Client.Features.Shared.Profile;
@@ -25,6 +27,7 @@ public partial class ProfilePrivacyView
         Delete
     }
 
+    [Inject] private IStringLocalizer<ProfileResource> Lang { get; set; } = default!;
     [Inject] private IProfileClientService ProfileClient { get; set; } = default!;
     [Inject] private HttpClient Http { get; set; } = default!;
     [Inject] private AudioService Audio { get; set; } = default!;
@@ -139,11 +142,11 @@ public partial class ProfilePrivacyView
             {
                 await DownloadAsync(result);
                 ClearAuthorization();
-                Ui.Toast.Success(Ui.Lang["profile.Privacy.Export.Success"]);
+                Ui.Toast.Success(Lang["profile.Privacy.Export.Success"]);
                 return;
             }
 
-            _authorizationError = Ui.Lang[result.State switch
+            _authorizationError = Lang[result.State switch
             {
                 ProfileDataExportState.InvalidPassword =>
                     "profile.Privacy.Export.InvalidPassword",
@@ -154,7 +157,7 @@ public partial class ProfilePrivacyView
         }
         catch (JSException)
         {
-            _authorizationError = Ui.Lang["profile.Privacy.Export.Error"];
+            _authorizationError = Lang["profile.Privacy.Export.Error"];
         }
         finally
         {
@@ -183,7 +186,7 @@ public partial class ProfilePrivacyView
             if (state == ProfileAccountDeletionState.Success)
                 return;
 
-            _authorizationError = Ui.Lang[state switch
+            _authorizationError = Lang[state switch
             {
                 ProfileAccountDeletionState.InvalidPassword =>
                     "profile.Privacy.Delete.InvalidPassword",

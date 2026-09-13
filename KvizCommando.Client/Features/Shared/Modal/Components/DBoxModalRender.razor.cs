@@ -14,5 +14,6 @@ namespace KvizCommando.Client.Features.Shared.Modal.Components
 
         [Parameter]
         public string RequestedLanguage { get; set; } = string.Empty;
+
     }
 }

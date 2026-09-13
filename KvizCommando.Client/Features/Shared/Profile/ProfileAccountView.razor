@@ -3,24 +3,24 @@
 
 @if (_isLoading)
 {
-    <div class="kc-profile-loading" role="status">@Ui.Lang["profile.Account.Loading"]</div>
+    <div class="kc-profile-loading" role="status">@Lang["profile.Account.Loading"]</div>
 }
 else if (_account is null)
 {
-    <div class="kc-profile-error" role="alert">@Ui.Lang["profile.Account.Error.Load"]</div>
+    <div class="kc-profile-error" role="alert">@Lang["profile.Account.Error.Load"]</div>
 }
 else if (Section == ProfileAccountSection.Contact)
 {
     <section>
-        <h3>@Ui.Lang["profile.Account.Contact.Title"]</h3>
+        <h3>@Lang["profile.Account.Contact.Title"]</h3>
 
         <div class="kc-account-field">
-            <span class="kc-account-label">@Ui.Lang["profile.Account.Email.Current"]</span>
+            <span class="kc-account-label">@Lang["profile.Account.Email.Current"]</span>
             <strong class="kc-account-email">@_account.Email</strong>
         </div>
 
         <div class="kc-account-field">
-            <span class="kc-account-label">@Ui.Lang["profile.Account.PreferredLocale"]</span>
+            <span class="kc-account-label">@Lang["profile.Account.PreferredLocale"]</span>
             <div class="kc-account-locale-row">
                 <strong class="kc-account-locale">@_account.PreferredLocale</strong>
                 @if (PreferredLocaleDiffers)
@@ -30,8 +30,8 @@ else if (Section == ProfileAccountSection.Contact)
                     <button type="button"
                             class="kc-account-edit-button"
                             disabled="@_isPreferredLocaleBusy"
-                            aria-label="@Ui.Lang["profile.Account.PreferredLocale.Update"]"
-                            title="@Ui.Lang["profile.Account.PreferredLocale.Update"]"
+                            aria-label="@Lang["profile.Account.PreferredLocale.Update"]"
+                            title="@Lang["profile.Account.PreferredLocale.Update"]"
                             @onclick="UpdatePreferredLocaleAsync">
                         <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
                     </button>
@@ -40,7 +40,7 @@ else if (Section == ProfileAccountSection.Contact)
         </div>
 
         <div class="kc-account-field">
-            <label for="kc-international-phone">@Ui.Lang["profile.Account.Phone"]</label>
+            <label for="kc-international-phone">@Lang["profile.Account.Phone"]</label>
             <div class="kc-account-editable-row">
                 <InternationalPhoneInput Value="@_phone"
                                          ValueChanged="OnPhoneChanged"
@@ -49,8 +49,8 @@ else if (Section == ProfileAccountSection.Contact)
                 <button type="button"
                         class="kc-account-edit-button"
                         disabled="@(_isPiiBusy || _isPhoneEditable)"
-                        aria-label="@Ui.Lang["profile.Account.Phone"]"
-                        title="@Ui.Lang["profile.Account.Phone"]"
+                        aria-label="@Lang["profile.Account.Phone"]"
+                        title="@Lang["profile.Account.Phone"]"
                         @onclick="EnablePhoneEditingAsync">
                     <i class="bi bi-pencil-square" aria-hidden="true"></i>
                 </button>
@@ -60,12 +60,12 @@ else if (Section == ProfileAccountSection.Contact)
 
     <section>
         <div class="kc-account-section-heading">
-            <h3>@Ui.Lang["profile.Account.Billing.Title"]</h3>
+            <h3>@Lang["profile.Account.Billing.Title"]</h3>
             <button type="button"
                     class="kc-account-edit-button"
                     disabled="@(_isPiiBusy || _isBillingEditable)"
-                    aria-label="@Ui.Lang["profile.Account.Billing.Title"]"
-                    title="@Ui.Lang["profile.Account.Billing.Title"]"
+                    aria-label="@Lang["profile.Account.Billing.Title"]"
+                    title="@Lang["profile.Account.Billing.Title"]"
                     @onclick="EnableBillingEditingAsync">
                 <i class="bi bi-pencil-square" aria-hidden="true"></i>
             </button>
@@ -73,7 +73,7 @@ else if (Section == ProfileAccountSection.Contact)
 
         <div class="kc-account-two-column-row">
             <div class="kc-account-field">
-                <label for="kc-account-last-name">@Ui.Lang["profile.Account.Billing.LastName"]</label>
+                <label for="kc-account-last-name">@Lang["profile.Account.Billing.LastName"]</label>
                 <input id="kc-account-last-name"
                        class="lcd-input"
                        maxlength="@ProfileAccountRules.BILLING_NAME_PART_MAX_LENGTH"
@@ -82,7 +82,7 @@ else if (Section == ProfileAccountSection.Contact)
                        @oninput="e => _billingName.LastName = e.Value?.ToString() ?? string.Empty" />
             </div>
             <div class="kc-account-field">
-                <label for="kc-account-first-name">@Ui.Lang["profile.Account.Billing.FirstName"]</label>
+                <label for="kc-account-first-name">@Lang["profile.Account.Billing.FirstName"]</label>
                 <input id="kc-account-first-name"
                        class="lcd-input"
                        maxlength="@ProfileAccountRules.BILLING_NAME_PART_MAX_LENGTH"
@@ -94,7 +94,7 @@ else if (Section == ProfileAccountSection.Contact)
 
         <div class="kc-account-address-head-row">
             <div class="kc-account-field">
-                <label for="kc-account-postal-code">@Ui.Lang["profile.Account.Billing.PostalCode"]</label>
+                <label for="kc-account-postal-code">@Lang["profile.Account.Billing.PostalCode"]</label>
                 <input id="kc-account-postal-code"
                        class="lcd-input"
                        maxlength="@ProfileAccountRules.BILLING_POSTAL_CODE_MAX_LENGTH"
@@ -103,7 +103,7 @@ else if (Section == ProfileAccountSection.Contact)
                        @oninput="e => _billingAddress.PostalCode = e.Value?.ToString() ?? string.Empty" />
             </div>
             <div class="kc-account-field">
-                <label for="kc-account-city">@Ui.Lang["profile.Account.Billing.City"]</label>
+                <label for="kc-account-city">@Lang["profile.Account.Billing.City"]</label>
                 <input id="kc-account-city"
                        class="lcd-input"
                        maxlength="@ProfileAccountRules.BILLING_CITY_MAX_LENGTH"
@@ -114,7 +114,7 @@ else if (Section == ProfileAccountSection.Contact)
         </div>
 
         <div class="kc-account-field">
-            <label for="kc-account-address-line1">@Ui.Lang["profile.Account.Billing.AddressLine1"]</label>
+            <label for="kc-account-address-line1">@Lang["profile.Account.Billing.AddressLine1"]</label>
             <input id="kc-account-address-line1"
                    class="lcd-input"
                    maxlength="@ProfileAccountRules.BILLING_ADDRESS_LINE_MAX_LENGTH"
@@ -124,7 +124,7 @@ else if (Section == ProfileAccountSection.Contact)
         </div>
 
         <div class="kc-account-field">
-            <label for="kc-account-address-line2">@Ui.Lang["profile.Account.Billing.AddressLine2"]</label>
+            <label for="kc-account-address-line2">@Lang["profile.Account.Billing.AddressLine2"]</label>
             <input id="kc-account-address-line2"
                    class="lcd-input"
                    maxlength="@ProfileAccountRules.BILLING_ADDRESS_LINE_MAX_LENGTH"
@@ -136,9 +136,9 @@ else if (Section == ProfileAccountSection.Contact)
     </section>
 
     <section>
-        <h3>@Ui.Lang["profile.Account.Payment"]</h3>
+        <h3>@Lang["profile.Account.Payment"]</h3>
         <input class="lcd-input"
-               value="@Ui.Lang["profile.Account.Payment.NotConfigured"]"
+               value="@Lang["profile.Account.Payment.NotConfigured"]"
                disabled />
     </section>
 
@@ -146,21 +146,21 @@ else if (Section == ProfileAccountSection.Contact)
         <button class="military-button"
                 disabled="@(!CanSavePii)"
                 @onclick="SavePiiAsync">
-            @Ui.Lang["profile.Account.Save"]
+            @Lang["profile.Account.Save"]
         </button>
     </div>
 }
 else
 {
     <section>
-        <h3>@Ui.Lang["profile.Account.Email.Title"]</h3>
+        <h3>@Lang["profile.Account.Email.Title"]</h3>
         <div class="kc-account-field">
-            <span class="kc-account-label">@Ui.Lang["profile.Account.Email.Current"]</span>
+            <span class="kc-account-label">@Lang["profile.Account.Email.Current"]</span>
             <strong class="kc-account-email">@_account.Email</strong>
         </div>
 
         <div class="kc-account-field">
-            <label for="kc-account-new-email">@Ui.Lang["profile.Account.Email.New"]</label>
+            <label for="kc-account-new-email">@Lang["profile.Account.Email.New"]</label>
             <input id="kc-account-new-email"
                    class="lcd-input"
                    type="email"
@@ -172,16 +172,16 @@ else
         </div>
         <div class="kc-profile-actions">
             <button class="military-button" disabled="@(!CanChangeEmail)" @onclick="ChangeEmailAsync">
-                @Ui.Lang["profile.Account.Email.Change"]
+                @Lang["profile.Account.Email.Change"]
             </button>
         </div>
     </section>
 
     <section>
-        <h3>@Ui.Lang["profile.Account.Password.Title"]</h3>
+        <h3>@Lang["profile.Account.Password.Title"]</h3>
 
         <div class="kc-account-field">
-            <label for="kc-account-current-password">@Ui.Lang["profile.Account.Password.Current"]</label>
+            <label for="kc-account-current-password">@Lang["profile.Account.Password.Current"]</label>
             <div class="password-box">
                 <input id="kc-account-current-password"
                        class="lcd-input"
@@ -206,7 +206,7 @@ else
         </div>
 
         <div class="kc-account-field">
-            <label for="kc-account-new-password">@Ui.Lang["profile.Account.Password.New"]</label>
+            <label for="kc-account-new-password">@Lang["profile.Account.Password.New"]</label>
             <div class="password-box">
                 <input id="kc-account-new-password"
                        class="lcd-input"
@@ -230,7 +230,7 @@ else
         </div>
 
         <div class="kc-account-field">
-            <label for="kc-account-repeat-password">@Ui.Lang["profile.Account.Password.Repeat"]</label>
+            <label for="kc-account-repeat-password">@Lang["profile.Account.Password.Repeat"]</label>
             <div class="password-box">
                 <input id="kc-account-repeat-password"
                        class="lcd-input"
@@ -255,17 +255,17 @@ else
 
         <div class="kc-profile-actions">
             <button class="military-button" disabled="@(!CanChangePassword)" @onclick="ChangePasswordAsync">
-                @Ui.Lang["profile.Account.Password.Change"]
+                @Lang["profile.Account.Password.Change"]
             </button>
         </div>
     </section>
 
     <section>
-        <h3>@Ui.Lang["profile.Account.Security.Title"]</h3>
+        <h3>@Lang["profile.Account.Security.Title"]</h3>
         <label class="kc-account-disabled-row">
             <input type="checkbox" role="switch" disabled />
-            @Ui.Lang["profile.Account.TwoFactor"]
+            @Lang["profile.Account.TwoFactor"]
         </label>
-        <small>@Ui.Lang["profile.Account.ComingSoon"]</small>
+        <small>@Lang["profile.Account.ComingSoon"]</small>
     </section>
 }

@@ -1,7 +1,7 @@
-﻿using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.Home;
 using KvizCommando.Shared.Models.Dtos; // itt van a HomeDTOs, HomeScreen, ScreenButtonEntity
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Home.Builders;
 
@@ -12,7 +12,7 @@ public sealed class HomeSpecs : VmSpecs
 {
     internal HomeBoxKey Key { get; init; }
     internal Func<HomeScreen, ScreenButtonEntity> Pick { get; init; } = default!;
-    internal Func<ILanguageService, ScreenButtonEntity, string> BuildFooter 
+    internal Func<IStringLocalizer<HomeResource>, ScreenButtonEntity, string> BuildFooter
         { get; init; } = (_, _) => string.Empty;
 }
 
@@ -34,7 +34,8 @@ public static class HomeBoxSpecs
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = true, ClickId = (int)HomeBoxKey.GameVs,
             Pick = s => s.VsGame,
-            BuildFooter = (lang, b) => $"Online: {b.FooterData1}"
+            BuildFooter = (lang, b) =>
+                lang["home.Box.Footer.GameVs", b.FooterData1]
         },
         new HomeSpecs {
             Key = HomeBoxKey.GameSolo,
@@ -67,7 +68,7 @@ public static class HomeBoxSpecs
             BuildFooter = (lang, b) =>
                 b.FooterData1 < 1
                 ? lang["home.Box.Footer.Rankings2"]
-                : lang["home.Box.Footer.Rankings1"].FormatSafe(b.FooterData1)
+                : lang["home.Box.Footer.Rankings1", b.FooterData1]
         },
         new HomeSpecs {
             Key = HomeBoxKey.Statistic,
@@ -90,8 +91,8 @@ public static class HomeBoxSpecs
             BuildFooter = (lang, b) => b.FooterData1 switch
             {
                 99 => lang["home.Box.Footer.Events2"],
-                > 0 => lang["home.Box.Footer.Events1"].FormatSafe(b.FooterData1),
-                0   => lang["home.Box.Footer.Events3"].FormatSafe(b.FooterData2), // pl. duration
+                > 0 => lang["home.Box.Footer.Events1", b.FooterData1],
+                0   => lang["home.Box.Footer.Events3", b.FooterData2], // pl. duration
                 _   => $"#{b.FooterData1}"
             }
         },
@@ -103,7 +104,8 @@ public static class HomeBoxSpecs
             Size = ContentBoxSize.BUTTON_MEDIUM,
             FooterDisplay = true, ClickId = (int)HomeBoxKey.Community,
             Pick = s => s.Community,
-            BuildFooter = (lang, b) => lang["home.Box.Footer.Community"].FormatSafe(b.FooterData1, b.FooterData2)
+            BuildFooter = (lang, b) =>
+                lang["home.Box.Footer.Community", b.FooterData1, b.FooterData2]
         },
         new HomeSpecs {
             Key = HomeBoxKey.Messages,
@@ -113,7 +115,8 @@ public static class HomeBoxSpecs
             Size = ContentBoxSize.BUTTON_MEDIUM,
             FooterDisplay = true, ClickId = (int)HomeBoxKey.Messages,
             Pick = s => s.Messages,
-            BuildFooter = (lang, b) => lang["home.Box.Footer.Messages"].FormatSafe(b.FooterData1)
+            BuildFooter = (lang, b) =>
+                lang["home.Box.Footer.Messages", b.FooterData1]
         },
         new HomeSpecs {
             Key = HomeBoxKey.Team,
@@ -123,7 +126,8 @@ public static class HomeBoxSpecs
             Size = ContentBoxSize.BUTTON_MEDIUM,
             FooterDisplay = true, ClickId = (int)HomeBoxKey.Team,
             Pick = s => s.Team,
-            BuildFooter = (lang, b) => lang["home.Box.Footer.Team"].FormatSafe(b.FooterData1, b.FooterData2)
+            BuildFooter = (lang, b) =>
+                lang["home.Box.Footer.Team", b.FooterData1, b.FooterData2]
         },
         new HomeSpecs {
             Key = HomeBoxKey.Question,

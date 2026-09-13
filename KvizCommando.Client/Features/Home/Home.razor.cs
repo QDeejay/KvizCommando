@@ -4,13 +4,17 @@ using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.Home;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Home;
 
 public partial class Home : KcComponentBase, IDisposable
 {
+    [Inject] private IStringLocalizer<HomeResource> Lang { get; set; } = default!;
+
     [CascadingParameter]
     private AppState AppState { get; set; } = default!;
     [Inject] private ILocalStorageService LocalStorage { get; set; } = default!;
@@ -34,7 +38,7 @@ public partial class Home : KcComponentBase, IDisposable
         var boxes = HomeBoxBuilder.Build(
             HState.HomeScreen!,
             AppState.BoxTitles,
-            Ui.Lang);
+            Lang);
         _boxOrder = HomeBoxBuilder.BtnOrder;
         foreach (var box in boxes)
         {
@@ -82,7 +86,7 @@ public partial class Home : KcComponentBase, IDisposable
         else
             _bBoardSize = BOX_SIZE_MINIMAL;
 
-        Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.Home"], 0);
+        Ui.Header.SetTitle(Lang["home.Header.Title"], 0);
         Ui.Header.SetBackBtnEna(false);
         _isLoaded = true;
         if (_isReady == false)

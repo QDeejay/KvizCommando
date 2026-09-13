@@ -90,7 +90,6 @@ namespace KvizCommando.Client.Layout
 
             await Ui.Lang.LoadModuleAsync(_culture, "common");  // szükséges
             await Ui.Lang.LoadModuleAsync(_culture, "mainlayout");  // szükséges
-            await Ui.Lang.LoadModuleAsync(_culture, "home");
             var uri = Ui.Nav.ToAbsoluteUri(Ui.Nav.Uri);
             var loggedOut = ShowLogoutToast(uri);
 

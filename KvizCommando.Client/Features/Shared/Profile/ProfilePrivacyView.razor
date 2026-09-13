@@ -4,8 +4,8 @@
 {
     <div class="kc-profile-privacy-root">
         <section>
-            <h3>@Ui.Lang["profile.Privacy.Export.Title"]</h3>
-            <p>@Ui.Lang["profile.Privacy.Export.Description"]</p>
+            <h3>@Lang["profile.Privacy.Export.Title"]</h3>
+            <p>@Lang["profile.Privacy.Export.Description"]</p>
 
             @if (_activeAction == ProfilePrivacyAction.Export)
             {
@@ -25,15 +25,15 @@
                             class="military-button"
                             disabled="@_isAuthorizationBusy"
                             @onclick="() => OpenAuthorizationAsync(ProfilePrivacyAction.Export)">
-                        @Ui.Lang["profile.Privacy.Export.Button"]
+                        @Lang["profile.Privacy.Export.Button"]
                     </button>
                 </div>
             }
         </section>
 
         <section class="kc-profile-privacy-delete">
-            <h3>@Ui.Lang["profile.Privacy.Delete.Title"]</h3>
-            <p>@Ui.Lang["profile.Privacy.Delete.Description"]</p>
+            <h3>@Lang["profile.Privacy.Delete.Title"]</h3>
+            <p>@Lang["profile.Privacy.Delete.Description"]</p>
 
             @if (_activeAction == ProfilePrivacyAction.Delete)
             {
@@ -53,7 +53,7 @@
                             class="military-button kc-profile-delete-button"
                             disabled="@_isAuthorizationBusy"
                             @onclick="() => OpenAuthorizationAsync(ProfilePrivacyAction.Delete)">
-                        @Ui.Lang["profile.Privacy.Delete.Button"]
+                        @Lang["profile.Privacy.Delete.Button"]
                     </button>
                 </div>
             }
@@ -63,13 +63,13 @@
 else if (_isLoading)
 {
     <div class="kc-profile-privacy-status" role="status">
-        @Ui.Lang["profile.Privacy.Document.Loading"]
+        @Lang["profile.Privacy.Document.Loading"]
     </div>
 }
 else if (_loadFailed)
 {
     <div class="kc-profile-privacy-status error" role="alert">
-        @Ui.Lang["profile.Privacy.Document.Error"]
+        @Lang["profile.Privacy.Document.Error"]
     </div>
 }
 else
@@ -83,7 +83,7 @@ else
             <button type="button"
                     class="military-button"
                     @onclick="ReturnToRootAsync">
-                @Ui.Lang["profile.Privacy.Document.Understood"]
+                @Lang["profile.Privacy.Document.Understood"]
             </button>
         </div>
     </article>

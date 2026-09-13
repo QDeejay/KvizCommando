@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="home.Header.Title" xml:space="preserve"><value>Bázis</value></data>
+  <data name="home.Title.BulleteinBoard" xml:space="preserve"><value>Faliújság</value></data>
+  <data name="home.Box.Footer.GameVs" xml:space="preserve"><value>Online: {0}</value></data>
+  <data name="home.Box.Footer.Community" xml:space="preserve"><value>Barátok: {0}/{1}</value></data>
+  <data name="home.Box.Footer.Events1" xml:space="preserve"><value>Következőig: {0} nap</value></data>
+  <data name="home.Box.Footer.Events2" xml:space="preserve"><value>Nincs közelgő esemény</value></data>
+  <data name="home.Box.Footer.Events3" xml:space="preserve"><value>Esemény vége {0} nap múlva!</value></data>
+  <data name="home.Box.Footer.Messages" xml:space="preserve"><value>Új: {0}</value></data>
+  <data name="home.Box.Footer.Rankings1" xml:space="preserve"><value>Heti helyezés: {0}</value></data>
+  <data name="home.Box.Footer.Rankings2" xml:space="preserve"><value>Nincs helyezés</value></data>
+  <data name="home.Box.Footer.Team" xml:space="preserve"><value>Aktív: {0}/{1}</value></data>
+</root>

@@ -1,6 +1,8 @@
 using KvizCommando.Shared.Contracts.Profile;
 using KvizCommando.Client.Services.Audio;
+using KvizCommando.Localization.Shared.Profile;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Shared.Profile;
 
@@ -12,6 +14,7 @@ public enum ProfileAccountSection
 
 public partial class ProfileAccountView
 {
+    [Inject] private IStringLocalizer<ProfileResource> Lang { get; set; } = default!;
     [Inject] private IProfileClientService ProfileClient { get; set; } = default!;
     [Inject] private AudioService Audio { get; set; } = default!;
 
@@ -148,11 +151,11 @@ public partial class ProfileAccountView
             response.Account is not null)
         {
             Apply(response.Account);
-            Ui.Toast.Success(Ui.Lang["profile.Account.SaveSuccess"]);
+            Ui.Toast.Success(Lang["profile.Account.SaveSuccess"]);
             return;
         }
 
-        Ui.Toast.Error(Ui.Lang["profile.Account.Error.Save"]);
+        Ui.Toast.Error(Lang["profile.Account.Error.Save"]);
     }
 
     private async Task ChangeEmailAsync()
@@ -170,11 +173,11 @@ public partial class ProfileAccountView
         {
             _newEmail = string.Empty;
             Ui.Toast.Success(
-                Ui.Lang["profile.Account.Email.ConfirmationSent"]);
+                Lang["profile.Account.Email.ConfirmationSent"]);
             return;
         }
 
-        Ui.Toast.Error(Ui.Lang["profile.Account.Error.Identity"]);
+        Ui.Toast.Error(Lang["profile.Account.Error.Identity"]);
     }
 
     private async Task UpdatePreferredLocaleAsync()
@@ -192,12 +195,12 @@ public partial class ProfileAccountView
         {
             _account = response.Account;
             Ui.Toast.Success(
-                Ui.Lang["profile.Account.PreferredLocale.UpdateSuccess"]);
+                Lang["profile.Account.PreferredLocale.UpdateSuccess"]);
             return;
         }
 
         Ui.Toast.Error(
-            Ui.Lang["profile.Account.PreferredLocale.UpdateError"]);
+            Lang["profile.Account.PreferredLocale.UpdateError"]);
     }
 
     private async Task ChangePasswordAsync()
@@ -219,11 +222,11 @@ public partial class ProfileAccountView
             _repeatPassword = string.Empty;
             Array.Fill(_showPassword, false);
             Ui.Toast.Success(
-                Ui.Lang["profile.Account.Password.SaveSuccess"]);
+                Lang["profile.Account.Password.SaveSuccess"]);
             return;
         }
 
-        Ui.Toast.Error(Ui.Lang["profile.Account.Error.Identity"]);
+        Ui.Toast.Error(Lang["profile.Account.Error.Identity"]);
     }
 
     private void OnCurrentPasswordInput(ChangeEventArgs args)

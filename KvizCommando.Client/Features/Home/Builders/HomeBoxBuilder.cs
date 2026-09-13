@@ -1,6 +1,7 @@
 ﻿using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.Home;
 using KvizCommando.Shared.Models.Dtos;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Home.Builders;
 
@@ -21,7 +22,7 @@ public static class HomeBoxBuilder
     public static Dictionary<string, ContentBoxVm> Build(
         HomeScreen hs,
         IReadOnlyDictionary<string, string> boxTitles,
-        ILanguageService lang)
+        IStringLocalizer<HomeResource> lang)
     {
         var dict = new Dictionary<string, ContentBoxVm>(HomeBoxSpecs.Specs.Count);
 

@@ -1,7 +1,7 @@
 @inherits Utilities.KcComponentBase
 
 <label for="kc-profile-authorization-password">
-    @Ui.Lang["profile.Privacy.Authorization.Password"]
+    @Lang["profile.Privacy.Authorization.Password"]
 </label>
 <div class="password-box">
     <input id="kc-profile-authorization-password"
@@ -36,12 +36,12 @@
             class="military-button--secondary"
             disabled="@Busy"
             @onclick="CancelAsync">
-        @Ui.Lang["profile.Privacy.Authorization.Cancel"]
+        @Lang["profile.Privacy.Authorization.Cancel"]
     </button>
     <button type="button"
             class="military-button"
             disabled="@(!CanSubmit)"
             @onclick="SubmitAsync">
-        @Ui.Lang[Busy ? WorkingTextKey : SubmitTextKey]
+        @Lang[Busy ? WorkingTextKey : SubmitTextKey]
     </button>
 </div>

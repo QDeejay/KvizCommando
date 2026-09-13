@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="profile.Title" xml:space="preserve"><value>Profil</value></data>
+  <data name="profile.Navigation" xml:space="preserve"><value>Profil menü</value></data>
+  <data name="profile.Section.Team" xml:space="preserve"><value>Csapat</value></data>
+  <data name="profile.Section.Contact" xml:space="preserve"><value>Kapcsolat</value></data>
+  <data name="profile.Section.Security" xml:space="preserve"><value>Biztonság</value></data>
+  <data name="profile.Section.Privacy" xml:space="preserve"><value>Adatvédelem</value></data>
+  <data name="profile.Section.Privacy.Policy" xml:space="preserve"><value>Adatkezelési tájékoztató</value></data>
+  <data name="profile.Section.Privacy.Terms" xml:space="preserve"><value>Általános Szerződési Feltételek</value></data>
+  <data name="profile.Account.Loading" xml:space="preserve"><value>Fiókadatok betöltése...</value></data>
+  <data name="profile.Account.Email.Title" xml:space="preserve"><value>Bejelentkezési e-mail</value></data>
+  <data name="profile.Account.Email.Current" xml:space="preserve"><value>Jelenlegi e-mail-cím</value></data>
+  <data name="profile.Account.Email.New" xml:space="preserve"><value>Új e-mail-cím</value></data>
+  <data name="profile.Account.Email.Change" xml:space="preserve"><value>E-mail módosítása</value></data>
+  <data name="profile.Account.Email.ConfirmationSent" xml:space="preserve"><value>A megerősítő levelet elküldtük az új címre.</value></data>
+  <data name="profile.Account.Contact.Title" xml:space="preserve"><value>Kapcsolattartási adatok</value></data>
+  <data name="profile.Account.PreferredLocale" xml:space="preserve"><value>Preferált nyelv</value></data>
+  <data name="profile.Account.PreferredLocale.Update" xml:space="preserve"><value>Preferált nyelv frissítése</value></data>
+  <data name="profile.Account.PreferredLocale.UpdateSuccess" xml:space="preserve"><value>A preferált nyelv frissítése sikerült.</value></data>
+  <data name="profile.Account.PreferredLocale.UpdateError" xml:space="preserve"><value>A preferált nyelv frissítése nem sikerült.</value></data>
+  <data name="profile.Account.Phone" xml:space="preserve"><value>Telefonszám</value></data>
+  <data name="profile.Account.Phone.CountryCode" xml:space="preserve"><value>Országhívó</value></data>
+  <data name="profile.Account.Phone.Number" xml:space="preserve"><value>Telefonszám</value></data>
+  <data name="profile.Account.Billing.Title" xml:space="preserve"><value>Számlázási adatok</value></data>
+  <data name="profile.Account.Billing.LastName" xml:space="preserve"><value>Vezetéknév</value></data>
+  <data name="profile.Account.Billing.FirstName" xml:space="preserve"><value>Utónév</value></data>
+  <data name="profile.Account.Billing.PostalCode" xml:space="preserve"><value>Irányítószám</value></data>
+  <data name="profile.Account.Billing.City" xml:space="preserve"><value>Város</value></data>
+  <data name="profile.Account.Billing.AddressLine1" xml:space="preserve"><value>Cím 1</value></data>
+  <data name="profile.Account.Billing.AddressLine2" xml:space="preserve"><value>Cím 2</value></data>
+  <data name="profile.Account.Save" xml:space="preserve"><value>Adatok mentése</value></data>
+  <data name="profile.Account.SaveSuccess" xml:space="preserve"><value>A fiókadatok mentése sikerült.</value></data>
+  <data name="profile.Account.Password.Title" xml:space="preserve"><value>Jelszó módosítása</value></data>
+  <data name="profile.Account.Password.Current" xml:space="preserve"><value>Jelenlegi jelszó</value></data>
+  <data name="profile.Account.Password.New" xml:space="preserve"><value>Új jelszó</value></data>
+  <data name="profile.Account.Password.Repeat" xml:space="preserve"><value>Új jelszó ismét</value></data>
+  <data name="profile.Account.Password.Change" xml:space="preserve"><value>Jelszó módosítása</value></data>
+  <data name="profile.Account.Password.SaveSuccess" xml:space="preserve"><value>A jelszó módosítása sikerült.</value></data>
+  <data name="profile.Account.Security.Title" xml:space="preserve"><value>Kétlépcsős azonosítás</value></data>
+  <data name="profile.Account.TwoFactor" xml:space="preserve"><value>Kétlépcsős azonosítás (TOTP)</value></data>
+  <data name="profile.Account.ComingSoon" xml:space="preserve"><value>Hamarosan elérhető.</value></data>
+  <data name="profile.Account.Payment" xml:space="preserve"><value>Fizetési mód</value></data>
+  <data name="profile.Account.Payment.NotConfigured" xml:space="preserve"><value>Még nem állítható be</value></data>
+  <data name="profile.Account.Error.Load" xml:space="preserve"><value>A fiókadatok nem tölthetők be.</value></data>
+  <data name="profile.Account.Error.Save" xml:space="preserve"><value>A fiókadatok mentése nem sikerült.</value></data>
+  <data name="profile.Account.Error.Identity" xml:space="preserve"><value>A módosítás nem sikerült. Ellenőrizd a megadott adatokat.</value></data>
+  <data name="profile.Loading" xml:space="preserve"><value>Profil betöltése...</value></data>
+  <data name="profile.Error.Load" xml:space="preserve"><value>A profil nem tölthető be.</value></data>
+  <data name="profile.Error.Request" xml:space="preserve"><value>A művelet nem hajtható végre.</value></data>
+  <data name="profile.Footer" xml:space="preserve"><value>A módosítások mentés után lépnek életbe.</value></data>
+  <data name="profile.Button.Close" xml:space="preserve"><value>Bezárás</value></data>
+  <data name="profile.Privacy.Export.Title" xml:space="preserve"><value>Saját adatok letöltése</value></data>
+  <data name="profile.Privacy.Export.Description" xml:space="preserve"><value>A KvizCommando által kezelt saját adataidat ZIP-csomagban töltheted le.</value></data>
+  <data name="profile.Privacy.Export.Button" xml:space="preserve"><value>Adatok exportálása</value></data>
+  <data name="profile.Privacy.Export.Download" xml:space="preserve"><value>Letöltés</value></data>
+  <data name="profile.Privacy.Export.Working" xml:space="preserve"><value>Exportálás...</value></data>
+  <data name="profile.Privacy.Export.Success" xml:space="preserve"><value>Az adatcsomag letöltése elindult.</value></data>
+  <data name="profile.Privacy.Export.InvalidPassword" xml:space="preserve"><value>A megadott jelszó nem megfelelő.</value></data>
+  <data name="profile.Privacy.Export.RateLimited" xml:space="preserve"><value>Túl sok exportkérés érkezett. Próbáld újra később.</value></data>
+  <data name="profile.Privacy.Export.Error" xml:space="preserve"><value>Nem sikerült elkészíteni az adatcsomagot.</value></data>
+  <data name="profile.Privacy.Authorization.Password" xml:space="preserve"><value>Jelenlegi jelszó</value></data>
+  <data name="profile.Privacy.Authorization.Cancel" xml:space="preserve"><value>Mégse</value></data>
+  <data name="profile.Privacy.Delete.Title" xml:space="preserve"><value>Fiók törlése</value></data>
+  <data name="profile.Privacy.Delete.Description" xml:space="preserve"><value>A fiók és a hozzá tartozó játékosadatok véglegesen törlődnek. A művelet nem vonható vissza.</value></data>
+  <data name="profile.Privacy.Delete.Button" xml:space="preserve"><value>Fiók törlése</value></data>
+  <data name="profile.Privacy.Delete.Working" xml:space="preserve"><value>Törlés...</value></data>
+  <data name="profile.Privacy.Delete.Confirm" xml:space="preserve"><value>Biztosan véglegesen törlöd a fiókodat? A profilod és a hozzá tartozó játékosadatok törlése nem vonható vissza.</value></data>
+  <data name="profile.Privacy.Delete.InvalidPassword" xml:space="preserve"><value>A megadott jelszó nem megfelelő.</value></data>
+  <data name="profile.Privacy.Delete.RateLimited" xml:space="preserve"><value>Túl sok törlési kísérlet történt. Próbáld újra később.</value></data>
+  <data name="profile.Privacy.Delete.Error" xml:space="preserve"><value>A fiók törlése nem sikerült.</value></data>
+  <data name="profile.Privacy.Document.Loading" xml:space="preserve"><value>Dokumentum betöltése...</value></data>
+  <data name="profile.Privacy.Document.Error" xml:space="preserve"><value>A dokumentum nem tölthető be.</value></data>
+  <data name="profile.Privacy.Document.Understood" xml:space="preserve"><value>Értem</value></data>
+  <data name="profile.TeamName.Title" xml:space="preserve"><value>Csapatnév</value></data>
+  <data name="profile.TeamName.Label" xml:space="preserve"><value>Új csapatnév</value></data>
+  <data name="profile.TeamName.Check" xml:space="preserve"><value>Csapatnév ellenőrzése</value></data>
+  <data name="profile.TeamName.Save" xml:space="preserve"><value>Csapatnév mentése</value></data>
+  <data name="profile.TeamName.RequiredRank" xml:space="preserve"><value>Csapat módosításához szükséges szint: {0}</value></data>
+  <data name="profile.TeamName.NextChange" xml:space="preserve"><value>A csapatnév legközelebb ekkor módosítható: {0}</value></data>
+  <data name="profile.TeamName.ChangeAvailable" xml:space="preserve"><value>A csapatnév módosítható. Mentés előtt ellenőrizd a nevet.</value></data>
+  <data name="profile.TeamName.SaveSuccess" xml:space="preserve"><value>A csapatnév mentése sikerült.</value></data>
+  <data name="profile.TeamName.State.NotChecked" xml:space="preserve"><value>A név még nincs ellenőrizve.</value></data>
+  <data name="profile.TeamName.State.Available" xml:space="preserve"><value>A név szabad és megfelel a szabályoknak.</value></data>
+  <data name="profile.TeamName.State.Required" xml:space="preserve"><value>Adj meg csapatnevet.</value></data>
+  <data name="profile.TeamName.State.TooShort" xml:space="preserve"><value>A csapatnév legalább 3 karakter legyen.</value></data>
+  <data name="profile.TeamName.State.TooLong" xml:space="preserve"><value>A csapatnév legfeljebb 20 karakter lehet.</value></data>
+  <data name="profile.TeamName.State.InvalidCharacters" xml:space="preserve"><value>Csak betű, szám, szóköz, aposztróf, kötőjel és aláhúzásjel használható.</value></data>
+  <data name="profile.TeamName.State.Taken" xml:space="preserve"><value>Ez a csapatnév már foglalt.</value></data>
+  <data name="profile.Avatar.Title" xml:space="preserve"><value>Kapitány avatar</value></data>
+  <data name="profile.Avatar.RequiredRank" xml:space="preserve"><value>Avatar módosításához szükséges szint: {0}</value></data>
+  <data name="profile.Avatar.Previous" xml:space="preserve"><value>Előző avatar</value></data>
+  <data name="profile.Avatar.Next" xml:space="preserve"><value>Következő avatar</value></data>
+  <data name="profile.Avatar.Save" xml:space="preserve"><value>Avatar mentése</value></data>
+  <data name="profile.Avatar.SaveSuccess" xml:space="preserve"><value>Az avatar mentése sikerült.</value></data>
+  <data name="profile.SaveState.RankLocked" xml:space="preserve"><value>A szükséges szintet még nem érted el.</value></data>
+  <data name="profile.SaveState.CooldownActive" xml:space="preserve"><value>A csapatnév 30 napos módosítási ideje még nem telt le.</value></data>
+  <data name="profile.SaveState.SameValue" xml:space="preserve"><value>Nem történt módosítás.</value></data>
+  <data name="profile.SaveState.TeamNameRejected" xml:space="preserve"><value>A csapatnév nem menthető.</value></data>
+  <data name="profile.SaveState.SessionMismatch" xml:space="preserve"><value>A munkamenet megváltozott. Jelentkezz be újra.</value></data>
+  <data name="profile.SaveState.NotFound" xml:space="preserve"><value>A játékosprofil nem található.</value></data>
+  <data name="profile.SaveState.ServerError" xml:space="preserve"><value>Szerverhiba történt a mentés közben.</value></data>
+</root>

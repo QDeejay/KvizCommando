@@ -11,40 +11,40 @@
             <header class="kc-profile-header kc-window-header">
                 <div>
                     <span class="kc-window-kicker">KCV // PLAYER PROFILE</span>
-                    <h2 id="kc-profile-title" class="kc-window-title">@Ui.Lang["profile.Title"]</h2>
+                    <h2 id="kc-profile-title" class="kc-window-title">@Lang["profile.Title"]</h2>
                 </div>
                 <button type="button"
                         class="kc-window-close"
-                        aria-label="@Ui.Lang["profile.Button.Close"]"
+                        aria-label="@Lang["profile.Button.Close"]"
                         @onclick="Close">
                     ×
                 </button>
             </header>
 
             <div class="kc-profile-main kc-window-main">
-                <aside class="kc-window-navigation kc-window-navigation--sections" aria-label="@Ui.Lang["profile.Navigation"]">
-                    <div class="kc-window-navigation-title">@Ui.Lang["profile.Navigation"]</div>
+                <aside class="kc-window-navigation kc-window-navigation--sections" aria-label="@Lang["profile.Navigation"]">
+                    <div class="kc-window-navigation-title">@Lang["profile.Navigation"]</div>
                     <nav class="kc-window-navigation-list">
                         <button type="button"
                                 class="kc-window-navigation-button @(_activeSection == ProfileSection.Team ? "active" : null)"
                                 aria-current="@(_activeSection == ProfileSection.Team ? "page" : null)"
                                 @onclick="() => SelectSectionAsync(ProfileSection.Team)">
                             <span class="kc-window-navigation-mark" aria-hidden="true">@(_activeSection == ProfileSection.Team ? "▸" : "·")</span>
-                            <span>@Ui.Lang["profile.Section.Team"]</span>
+                            <span>@Lang["profile.Section.Team"]</span>
                         </button>
                         <button type="button"
                                 class="kc-window-navigation-button @(_activeSection == ProfileSection.Contact ? "active" : null)"
                                 aria-current="@(_activeSection == ProfileSection.Contact ? "page" : null)"
                                 @onclick="() => SelectSectionAsync(ProfileSection.Contact)">
                             <span class="kc-window-navigation-mark" aria-hidden="true">@(_activeSection == ProfileSection.Contact ? "▸" : "·")</span>
-                            <span>@Ui.Lang["profile.Section.Contact"]</span>
+                            <span>@Lang["profile.Section.Contact"]</span>
                         </button>
                         <button type="button"
                                 class="kc-window-navigation-button @(_activeSection == ProfileSection.Security ? "active" : null)"
                                 aria-current="@(_activeSection == ProfileSection.Security ? "page" : null)"
                                 @onclick="() => SelectSectionAsync(ProfileSection.Security)">
                             <span class="kc-window-navigation-mark" aria-hidden="true">@(_activeSection == ProfileSection.Security ? "▸" : "·")</span>
-                            <span>@Ui.Lang["profile.Section.Security"]</span>
+                            <span>@Lang["profile.Section.Security"]</span>
                         </button>
                         <button type="button"
                                 class="kc-window-navigation-button @(_activeSection == ProfileSection.Privacy ? "active" : null)"
@@ -52,7 +52,7 @@
                                 aria-expanded="@IsPrivacySection"
                                 @onclick="() => SelectSectionAsync(ProfileSection.Privacy)">
                             <span class="kc-window-navigation-mark" aria-hidden="true">@(IsPrivacySection ? "▾" : "▸")</span>
-                            <span>@Ui.Lang["profile.Section.Privacy"]</span>
+                            <span>@Lang["profile.Section.Privacy"]</span>
                         </button>
                         @if (IsPrivacySection)
                         {
@@ -62,14 +62,14 @@
                                         aria-current="@(_activeSection == ProfileSection.PrivacyPolicy ? "page" : null)"
                                         @onclick="() => SelectSectionAsync(ProfileSection.PrivacyPolicy)">
                                     <span class="kc-window-navigation-mark" aria-hidden="true">@(_activeSection == ProfileSection.PrivacyPolicy ? "▸" : "·")</span>
-                                    <span>@Ui.Lang["profile.Section.Privacy.Policy"]</span>
+                                    <span>@Lang["profile.Section.Privacy.Policy"]</span>
                                 </button>
                                 <button type="button"
                                         class="kc-window-navigation-button kc-profile-navigation-child @(_activeSection == ProfileSection.Terms ? "active" : null)"
                                         aria-current="@(_activeSection == ProfileSection.Terms ? "page" : null)"
                                         @onclick="() => SelectSectionAsync(ProfileSection.Terms)">
                                     <span class="kc-window-navigation-mark" aria-hidden="true">@(_activeSection == ProfileSection.Terms ? "▸" : "·")</span>
-                                    <span>@Ui.Lang["profile.Section.Privacy.Terms"]</span>
+                                    <span>@Lang["profile.Section.Privacy.Terms"]</span>
                                 </button>
                             </div>
                         }
@@ -95,22 +95,22 @@
                     else if (_isLoading)
                     {
                         <div class="kc-profile-loading" role="status">
-                            @Ui.Lang["profile.Loading"]
+                            @Lang["profile.Loading"]
                         </div>
                     }
                     else if (_profile is null)
                     {
                         <div class="kc-profile-error" role="alert">
-                            @Ui.Lang["profile.Error.Load"]
+                            @Lang["profile.Error.Load"]
                         </div>
                     }
                     else
                     {
                         <section class="kc-profile-team-name" aria-labelledby="kc-profile-team-name-title">
-                            <h3 id="kc-profile-team-name-title">@Ui.Lang["profile.TeamName.Title"]</h3>
+                            <h3 id="kc-profile-team-name-title">@Lang["profile.TeamName.Title"]</h3>
                             <p class="kc-profile-rule-message">@TeamNameRuleText</p>
 
-                            <label for="kc-profile-team-name-input">@Ui.Lang["profile.TeamName.Label"]</label>
+                            <label for="kc-profile-team-name-input">@Lang["profile.TeamName.Label"]</label>
                             <div class="kc-profile-name-row">
                                 <span class="kc-profile-name-status @TeamNameStatusClass"
                                       aria-label="@TeamNameStatusText">
@@ -125,8 +125,8 @@
                                 <button type="button"
                                         class="kc-profile-check-button"
                                         disabled="@(!CanCheckTeamName)"
-                                        aria-label="@Ui.Lang["profile.TeamName.Check"]"
-                                        title="@Ui.Lang["profile.TeamName.Check"]"
+                                        aria-label="@Lang["profile.TeamName.Check"]"
+                                        title="@Lang["profile.TeamName.Check"]"
                                         @onclick="CheckTeamNameAsync">
                                     <i class="bi bi-binoculars-fill" aria-hidden="true"></i>
                                 </button>
@@ -142,13 +142,13 @@
                                         class="military-button"
                                         disabled="@(!CanSaveTeamName)"
                                         @onclick="SaveTeamNameAsync">
-                                    @Ui.Lang["profile.TeamName.Save"]
+                                    @Lang["profile.TeamName.Save"]
                                 </button>
                             </div>
                         </section>
 
                         <section class="kc-profile-avatar" aria-labelledby="kc-profile-avatar-title">
-                            <h3 id="kc-profile-avatar-title">@Ui.Lang["profile.Avatar.Title"]</h3>
+                            <h3 id="kc-profile-avatar-title">@Lang["profile.Avatar.Title"]</h3>
                             @if (!CanEditAvatar)
                             {
                                 <p class="kc-profile-rule-message">@AvatarRuleText</p>
@@ -158,20 +158,20 @@
                                 <button type="button"
                                         class="kc-profile-avatar-arrow"
                                         disabled="@(!CanEditAvatar || _isAvatarBusy)"
-                                        aria-label="@Ui.Lang["profile.Avatar.Previous"]"
+                                        aria-label="@Lang["profile.Avatar.Previous"]"
                                         @onclick="PreviousAvatar">
                                     ◀
                                 </button>
 
                                 <div class="kc-profile-avatar-frame kc-lcd-surface kc-avatar-surface">
                                     <img src="@AvatarImageSrc"
-                                         alt="@Ui.Lang["profile.Avatar.Title"]" />
+                                         alt="@Lang["profile.Avatar.Title"]" />
                                 </div>
 
                                 <button type="button"
                                         class="kc-profile-avatar-arrow"
                                         disabled="@(!CanEditAvatar || _isAvatarBusy)"
-                                        aria-label="@Ui.Lang["profile.Avatar.Next"]"
+                                        aria-label="@Lang["profile.Avatar.Next"]"
                                         @onclick="NextAvatar">
                                     ▶
                                 </button>
@@ -182,7 +182,7 @@
                                         class="military-button"
                                         disabled="@(!CanSaveAvatar)"
                                         @onclick="SaveAvatarAsync">
-                                    @Ui.Lang["profile.Avatar.Save"]
+                                    @Lang["profile.Avatar.Save"]
                                 </button>
                             </div>
                         </section>
@@ -191,9 +191,9 @@
             </div>
 
             <footer class="kc-profile-footer kc-window-footer">
-                <span>@Ui.Lang["profile.Footer"]</span>
+                <span>@Lang["profile.Footer"]</span>
                 <button type="button" class="military-button--secondary" @onclick="Close">
-                    @Ui.Lang["profile.Button.Close"]
+                    @Lang["profile.Button.Close"]
                 </button>
             </footer>
         </section>
