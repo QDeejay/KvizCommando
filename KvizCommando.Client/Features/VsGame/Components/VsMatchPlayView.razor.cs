@@ -1,9 +1,10 @@
 using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.VsGame;
 using KvizCommando.Shared.Contracts.VsGame.Match;
 using KvizCommando.Shared.Models.Enums.VsGame;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Localization;
 using System.Globalization;
 using KvizCommando.Client.Features.VsGame.ViewModels;
 using KvizCommando.Client.Features.VsGame.Services;
@@ -12,7 +13,8 @@ namespace KvizCommando.Client.Features.VsGame.Components;
 
 public partial class VsMatchPlayView : IDisposable
 {
-    [Inject] private ILanguageService Lang { get; set; } = default!;
+    [Inject]
+    private IStringLocalizer<VsMatchResource> Lang { get; set; } = default!;
     [Inject]
     private IVsMatchClientService MatchClient { get; set; } = default!;
 
@@ -156,9 +158,9 @@ public partial class VsMatchPlayView : IDisposable
             : Data.Game.CurrentRoundNumber >
         Data.Game.NormalRoundCount
             ? Lang["vsgame.Match.Round.Captain"]
-            : Lang["vsgame.Match.Round.Normal"]
-                .FormatSafe(
-                    Data.Game.CurrentRoundNumber);
+            : Lang[
+                "vsgame.Match.Round.Normal",
+                Data.Game.CurrentRoundNumber];
 
     private bool CanSubmitGuess =>
         IsAnswerTimeActive &&

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="vsgame.Match.Title.Preparation" xml:space="preserve"><value>Preparation</value></data>
+  <data name="vsgame.Match.Queue.Status" xml:space="preserve"><value>Waiting for the other players</value></data>
+  <data name="vsgame.Match.Queue.StartingIn" xml:space="preserve"><value>Match starts in: {0} sec</value></data>
+  <data name="vsgame.Match.Queue.LeftWarning" xml:space="preserve"><value>Other players were waiting with you. You left the queue, so joining a new match is blocked for 1 minute.</value></data>
+  <data name="vsgame.Match.Queue.LeftInfo" xml:space="preserve"><value>You left the lobby!</value></data>
+  <data name="vsgame.Match.Queue.Stake" xml:space="preserve"><value>Stake</value></data>
+  <data name="vsgame.Match.Queue.Rounds" xml:space="preserve"><value>Rounds: {0} normal + 1 captain round</value></data>
+  <data name="vsgame.Match.Status.Connecting" xml:space="preserve"><value>Checking connection</value></data>
+  <data name="vsgame.Match.Connection.ResponseTime" xml:space="preserve"><value>Response time: {0} ms - {1}</value></data>
+  <data name="vsgame.Match.Connection.Good" xml:space="preserve"><value>good</value></data>
+  <data name="vsgame.Match.Connection.Medium" xml:space="preserve"><value>medium</value></data>
+  <data name="vsgame.Match.Connection.Bad" xml:space="preserve"><value>poor</value></data>
+  <data name="vsgame.Match.Info.Locked" xml:space="preserve"><value>Match locked</value></data>
+  <data name="vsgame.Match.Info.LoadingQuestions" xml:space="preserve"><value>Loading the match questions once</value></data>
+  <data name="vsgame.Match.Info.PreparationStarting" xml:space="preserve"><value>Everyone is connected... starting.</value></data>
+  <data name="vsgame.Match.Info.Order" xml:space="preserve"><value>Choose the order!</value></data>
+  <data name="vsgame.Match.Info.Categories" xml:space="preserve"><value>Assign your categories to the rounds!</value></data>
+  <data name="vsgame.Match.Info.Helps" xml:space="preserve"><value>Assign your helps!</value></data>
+  <data name="vsgame.Match.Info.WaitingForPlayers" xml:space="preserve"><value>Waiting for the other players</value></data>
+  <data name="vsgame.Match.Info.PreparationCompleted" xml:space="preserve"><value>Preparation completed</value></data>
+  <data name="vsgame.Match.Info.Aborted" xml:space="preserve"><value>The match was aborted</value></data>
+  <data name="vsgame.Match.Round.Captain" xml:space="preserve"><value>Captain round</value></data>
+  <data name="vsgame.Match.Round.Normal" xml:space="preserve"><value>Normal round {0}</value></data>
+  <data name="vsgame.Match.Help.1" xml:space="preserve"><value>50-50</value></data>
+  <data name="vsgame.Match.Help.2" xml:space="preserve"><value>Guess range</value></data>
+  <data name="vsgame.Match.Help.3" xml:space="preserve"><value>Time freeze</value></data>
+  <data name="vsgame.Match.Help.4" xml:space="preserve"><value>AI help</value></data>
+  <data name="vsgame.Match.Category.Own" xml:space="preserve"><value>Own question</value></data>
+  <data name="vsgame.Match.Category.All" xml:space="preserve"><value>All categories</value></data>
+  <data name="vsgame.Match.Inventory.Characters" xml:space="preserve"><value>Battle characters</value></data>
+  <data name="vsgame.Match.Inventory.Loadout" xml:space="preserve"><value>Loadout categories</value></data>
+  <data name="vsgame.Match.Inventory.Helps" xml:space="preserve"><value>Helps</value></data>
+  <data name="vsgame.Match.Inventory.Title" xml:space="preserve"><value>Inventory</value></data>
+  <data name="vsgame.Match.Timer.SecondsShort" xml:space="preserve"><value>SEC</value></data>
+  <data name="vsgame.Match.Roster.Match" xml:space="preserve"><value>VS match</value></data>
+  <data name="vsgame.Match.Roster.Lobby" xml:space="preserve"><value>Lobby</value></data>
+  <data name="vsgame.Match.Round.Empty" xml:space="preserve"><value>Empty slot</value></data>
+  <data name="vsgame.Match.Button.Reset" xml:space="preserve"><value>Reset</value></data>
+  <data name="vsgame.Match.Button.Finish" xml:space="preserve"><value>Finish</value></data>
+  <data name="vsgame.Match.Error.Identity" xml:space="preserve"><value>Player identification failed.</value></data>
+  <data name="vsgame.Match.Error.Player" xml:space="preserve"><value>The player was not found.</value></data>
+  <data name="vsgame.Match.Error.Classification" xml:space="preserve"><value>Invalid battle classification.</value></data>
+  <data name="vsgame.Match.Error.AlreadyLocked" xml:space="preserve"><value>The player is already in a locked match.</value></data>
+  <data name="vsgame.Match.Error.QueueValidation" xml:space="preserve"><value>The team, loadout or credit balance no longer meets the classification requirements.</value></data>
+  <data name="vsgame.Match.Error.QueueCooldown" xml:space="preserve"><value>You cannot start a new match for 1 minute after leaving the queue.</value></data>
+  <data name="vsgame.Match.Error.Connection" xml:space="preserve"><value>The ranked connection was closed.</value></data>
+  <data name="vsgame.Match.Error.ConnectionSpeed" xml:space="preserve"><value>The connection speed is not sufficient!</value></data>
+  <data name="vsgame.Match.Error.Disconnected" xml:space="preserve"><value>The match connection was closed; this match does not support reconnecting.</value></data>
+  <data name="vsgame.Match.Info.GameStarting" xml:space="preserve"><value>The game is starting</value></data>
+  <data name="vsgame.Match.Info.Guess" xml:space="preserve"><value>Make your guess!</value></data>
+  <data name="vsgame.Match.Info.Question" xml:space="preserve"><value>Answer the question!</value></data>
+  <data name="vsgame.Match.Info.QuestionResult" xml:space="preserve"><value>Question result</value></data>
+  <data name="vsgame.Match.Info.RoundResult" xml:space="preserve"><value>Round result</value></data>
+  <data name="vsgame.Match.Info.CaptainSelection" xml:space="preserve"><value>Captain question selection</value></data>
+  <data name="vsgame.Match.Info.CaptainQuestion" xml:space="preserve"><value>Captain round</value></data>
+  <data name="vsgame.Match.Info.CaptainResult" xml:space="preserve"><value>Captain round result</value></data>
+  <data name="vsgame.Match.Info.GameCompleted" xml:space="preserve"><value>The game has ended</value></data>
+  <data name="vsgame.Match.Game.WaitingCaptain" xml:space="preserve"><value>Waiting for the questioner's selection</value></data>
+  <data name="vsgame.Match.Game.Team" xml:space="preserve"><value>Team</value></data>
+  <data name="vsgame.Match.Game.RoundPoints" xml:space="preserve"><value>Round points</value></data>
+  <data name="vsgame.Match.Game.Time" xml:space="preserve"><value>Time</value></data>
+  <data name="vsgame.Match.Game.Total" xml:space="preserve"><value>Total</value></data>
+  <data name="vsgame.Match.Game.Reward" xml:space="preserve"><value>Reward</value></data>
+  <data name="vsgame.Match.Game.WinnerBonus" xml:space="preserve"><value>Round winner bonus</value></data>
+  <data name="vsgame.Match.Game.QuestionSpeedBonus" xml:space="preserve"><value>Fastest correct answer bonus</value></data>
+  <data name="vsgame.Match.Game.SpeedBonusPool" xml:space="preserve"><value>Combined speed bonus</value></data>
+  <data name="vsgame.Match.Game.SpeedPositionGain" xml:space="preserve"><value>Improved the round-points position with the speed bonus</value></data>
+  <data name="vsgame.Match.Game.Questioner" xml:space="preserve"><value>Questioner</value></data>
+  <data name="vsgame.Match.Game.CorrectGuess" xml:space="preserve"><value>Correct value</value></data>
+  <data name="vsgame.Match.Game.GuessRangeHelp" xml:space="preserve"><value>Guess range help</value></data>
+  <data name="vsgame.Match.Game.Submit" xml:space="preserve"><value>Submit</value></data>
+  <data name="vsgame.Match.Game.EnergyShort" xml:space="preserve"><value>EN</value></data>
+  <data name="vsgame.Match.Reward.Victory" xml:space="preserve"><value>victory</value></data>
+  <data name="vsgame.Match.Reward.FinalStanding" xml:space="preserve"><value>Final standing</value></data>
+  <data name="vsgame.Match.Reward.Team" xml:space="preserve"><value>Team reward</value></data>
+  <data name="vsgame.Match.Reward.RankedScore" xml:space="preserve"><value>Leaderboard result</value></data>
+  <data name="vsgame.Match.Reward.CharacterAverageXp" xml:space="preserve"><value>Character Ø XP</value></data>
+  <data name="vsgame.Match.Reward.ScoreXp" xml:space="preserve"><value>Score XP</value></data>
+  <data name="vsgame.Match.Reward.XpTotal" xml:space="preserve"><value>Total XP</value></data>
+  <data name="vsgame.Match.Reward.NewTeamLevel" xml:space="preserve"><value>New level!</value></data>
+  <data name="vsgame.Match.Reward.StakeReturn" xml:space="preserve"><value>Stake returned</value></data>
+  <data name="vsgame.Match.Reward.BaseCredit" xml:space="preserve"><value>Prize</value></data>
+  <data name="vsgame.Match.Reward.TeamBonus" xml:space="preserve"><value>Team bonus</value></data>
+  <data name="vsgame.Match.Reward.CreditTotal" xml:space="preserve"><value>Total credit</value></data>
+  <data name="vsgame.Match.Reward.ConsumedHelps" xml:space="preserve"><value>Consumed help</value></data>
+  <data name="vsgame.Match.Reward.Characters" xml:space="preserve"><value>Character reward</value></data>
+  <data name="vsgame.Match.Reward.PensionTotal" xml:space="preserve"><value>Total pension fund:</value></data>
+  <data name="vsgame.Match.Reward.None" xml:space="preserve"><value>None</value></data>
+  <data name="vsgame.Match.Reward.CreditUnit" xml:space="preserve"><value>credit</value></data>
+</root>

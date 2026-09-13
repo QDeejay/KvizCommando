@@ -1,4 +1,3 @@
-@using KvizCommando.Client.Helpers
 @using KvizCommando.Shared.Models.Enums.VsGame
 
 <div class="kc-vs-match-manager @(IsPreparationPhase ? "preparation" : "")">
@@ -83,8 +82,9 @@
                         <div class="kc-vs-queue-timer">
                             <i class="bi bi-hourglass-split"></i>
                             <strong>
-                                @Lang["vsgame.Match.Queue.StartingIn"].FormatSafe(
-                                    QueueRemainingSeconds)
+                                @Lang[
+                                    "vsgame.Match.Queue.StartingIn",
+                                    QueueRemainingSeconds]
                             </strong>
                         </div>
                     }
@@ -93,8 +93,9 @@
                         <span>
                             <i class="bi bi-list-ol"></i>
                             <strong>
-                                @Lang["vsgame.Match.Queue.Rounds"].FormatSafe(
-                                    _queue.RequiredPartySize)
+                                @Lang[
+                                    "vsgame.Match.Queue.Rounds",
+                                    _queue.RequiredPartySize]
                             </strong>
                         </span>
                         <span>

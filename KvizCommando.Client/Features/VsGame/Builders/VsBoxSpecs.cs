@@ -1,10 +1,10 @@
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.Solo.Builders;
 using KvizCommando.Client.Features.VsGame.Components;
-using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.VsGame;
 using KvizCommando.Shared.Models.Dtos;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.VsGame.Builders;
 
@@ -13,7 +13,7 @@ public class VsBoxSpecs : VmSpecs
     internal Enum Key { get; init; } = default!;
     internal Func<VsGameDtos, int, bool> CheckEnable { get; init; } =
         (_, _) => true;
-    internal Func<ILanguageService, VsGameDtos, int, string> BuildFooter
+    internal Func<IStringLocalizer<VsGameResource>, VsGameDtos, int, string> BuildFooter
     { get; init; } = (_, _, _) => string.Empty;
     internal Func<VsGameDtos, string> SizeBuilder { get; init; } =
         _ => string.Empty;
@@ -24,7 +24,7 @@ public class VsBoxSpecs : VmSpecs
 public sealed class VsBoxSub : VsBoxSpecs
 {
     internal int BtnQnty { get; init; }
-    internal Func<ILanguageService, int, string>
+    internal Func<IReadOnlyDictionary<string, string>, int, string>
         BuildTitle
     { get; init; } = default!;
     internal Func<int, string> BuildImageSrc { get; init; } = default!;
@@ -61,8 +61,10 @@ public static class VsGameBoxSpecs
             ClickId = (int)VsBoxKeyRoot.JoinBattlefield,
             CheckEnable = (data, _) =>
                 data.RootBoxInfo.IsJoinBattlefieldEnabled,
-             BuildFooter = (_, data, _) =>
-                $"Online: {data.RootBoxInfo.PrivatePlayerCount}"
+            BuildFooter = (lang, data, _) =>
+                lang[
+                    "vsgame.Box.Footer.Online",
+                    data.RootBoxInfo.PrivatePlayerCount]
         },
         new()
         {
@@ -76,15 +78,16 @@ public static class VsGameBoxSpecs
             CheckEnable = (data, _) =>
                 data.RootBoxInfo.IsRankedBattlefieldsEnabled,
             BuildFooter = (lang, data, _) =>
-                lang["vsgame.Box.Footer.Ranked"].FormatSafe(
+                lang[
+                    "vsgame.Box.Footer.Ranked",
                     data.RootBoxInfo.RankedPlayerCount,
                     data.RootBoxInfo.RankedHighScore
-                        .ToString("0.0"))
+                        .ToString("0.0")]
         },
         new()
         {
             Key = VsBoxKeyContent.RankedBattleTeamManager,
-            TitleKey = "vsgame.Manager.Title",
+            TitleKey = "VsGame.RankedBattleTeamManager",
             ImageSrc = string.Empty,
             BgImageSrc = string.Empty,
             Size = ContentBoxSize.CONTENT_LARGE,
@@ -101,7 +104,7 @@ public static class VsGameBoxSpecs
         new()
         {
             Key = VsBoxKeyContent.RankedMatchManager,
-            TitleKey = "vsgame.Match.Title",
+            TitleKey = "VsGame.RankedMatchManager",
             ImageSrc = string.Empty,
             BgImageSrc = string.Empty,
             Size = ContentBoxSize.CONTENT_FLEXIBLE,
@@ -133,7 +136,8 @@ public static class VsGameBoxSpecs
             Size = ContentBoxSize.BUTTON_WIDE,
             FooterDisplay = true,
             ClickId = (int)VsBoxKeyRanked.Classification,
-            BuildTitle = (lang, id) => lang[$"vsgame.Classification.Title.{id}"],
+            BuildTitle = (boxTitles, id) =>
+                boxTitles[$"VsGame.Classification.{id}"],
             CheckEnable = (data, id) => data.RankedBattlefields
                     .SavedSelection
                     .EligibleClassificationIds
@@ -141,8 +145,11 @@ public static class VsGameBoxSpecs
                 data.RootBoxInfo.CreditBalance >=
                     data.RankedBattlefields
                         .Classifications[id - 1].Stake,
-            BuildFooter = (_, data, id) =>
-                $"Online: {data.RankedBattlefields.Classifications[id - 1].PlayerCount}"
+            BuildFooter = (lang, data, id) =>
+                lang[
+                    "vsgame.Box.Footer.Online",
+                    data.RankedBattlefields
+                        .Classifications[id - 1].PlayerCount]
         }
     ];
 

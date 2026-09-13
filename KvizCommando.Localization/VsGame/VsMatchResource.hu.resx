@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="vsgame.Match.Title.Preparation" xml:space="preserve"><value>Preparáció</value></data>
+  <data name="vsgame.Match.Queue.Status" xml:space="preserve"><value>Várakozás a többi játékosra</value></data>
+  <data name="vsgame.Match.Queue.StartingIn" xml:space="preserve"><value>Meccs indul: {0} mp</value></data>
+  <data name="vsgame.Match.Queue.LeftWarning" xml:space="preserve"><value>Más játékosok is várakoztak veled. Megszakítottad a várólistát, ezért új belépés 1 percig tiltva.</value></data>
+  <data name="vsgame.Match.Queue.LeftInfo" xml:space="preserve"><value>Elhagytad a várótermet!</value></data>
+  <data name="vsgame.Match.Queue.Stake" xml:space="preserve"><value>Tét</value></data>
+  <data name="vsgame.Match.Queue.Rounds" xml:space="preserve"><value>Körök: {0} normál + 1 kapitánykör</value></data>
+  <data name="vsgame.Match.Status.Connecting" xml:space="preserve"><value>Kapcsolat ellenőrzése</value></data>
+  <data name="vsgame.Match.Connection.ResponseTime" xml:space="preserve"><value>Válaszidő: {0}ms - {1}</value></data>
+  <data name="vsgame.Match.Connection.Good" xml:space="preserve"><value>megfelelő</value></data>
+  <data name="vsgame.Match.Connection.Medium" xml:space="preserve"><value>közepes</value></data>
+  <data name="vsgame.Match.Connection.Bad" xml:space="preserve"><value>rossz</value></data>
+  <data name="vsgame.Match.Info.Locked" xml:space="preserve"><value>A meccs lezárva</value></data>
+  <data name="vsgame.Match.Info.LoadingQuestions" xml:space="preserve"><value>A meccs kérdéseinek egyszeri betöltése</value></data>
+  <data name="vsgame.Match.Info.PreparationStarting" xml:space="preserve"><value>Mindenki csatlakozott... kezdünk.</value></data>
+  <data name="vsgame.Match.Info.Order" xml:space="preserve"><value>Válassz sorrendet!</value></data>
+  <data name="vsgame.Match.Info.Categories" xml:space="preserve"><value>Párosítsd a kategóriáid a körökhöz!</value></data>
+  <data name="vsgame.Match.Info.Helps" xml:space="preserve"><value>Párosítsd a segítségeid!</value></data>
+  <data name="vsgame.Match.Info.WaitingForPlayers" xml:space="preserve"><value>Várakozás a többi játékosra</value></data>
+  <data name="vsgame.Match.Info.PreparationCompleted" xml:space="preserve"><value>A preparáció befejeződött</value></data>
+  <data name="vsgame.Match.Info.Aborted" xml:space="preserve"><value>A meccs megszakadt</value></data>
+  <data name="vsgame.Match.Round.Captain" xml:space="preserve"><value>Kapitánykör</value></data>
+  <data name="vsgame.Match.Round.Normal" xml:space="preserve"><value>{0}. normál kör</value></data>
+  <data name="vsgame.Match.Help.1" xml:space="preserve"><value>50-50</value></data>
+  <data name="vsgame.Match.Help.2" xml:space="preserve"><value>Tippsáv</value></data>
+  <data name="vsgame.Match.Help.3" xml:space="preserve"><value>Időtlenítő</value></data>
+  <data name="vsgame.Match.Help.4" xml:space="preserve"><value>AI-segítség</value></data>
+  <data name="vsgame.Match.Category.Own" xml:space="preserve"><value>Saját kérdés</value></data>
+  <data name="vsgame.Match.Category.All" xml:space="preserve"><value>Összes kategória</value></data>
+  <data name="vsgame.Match.Inventory.Characters" xml:space="preserve"><value>Csatába hozott karakterek</value></data>
+  <data name="vsgame.Match.Inventory.Loadout" xml:space="preserve"><value>Loadout kategóriák</value></data>
+  <data name="vsgame.Match.Inventory.Helps" xml:space="preserve"><value>Segítségek</value></data>
+  <data name="vsgame.Match.Inventory.Title" xml:space="preserve"><value>Készlet</value></data>
+  <data name="vsgame.Match.Timer.SecondsShort" xml:space="preserve"><value>MP</value></data>
+  <data name="vsgame.Match.Roster.Match" xml:space="preserve"><value>VS meccs</value></data>
+  <data name="vsgame.Match.Roster.Lobby" xml:space="preserve"><value>Váróterem</value></data>
+  <data name="vsgame.Match.Round.Empty" xml:space="preserve"><value>Üres hely</value></data>
+  <data name="vsgame.Match.Button.Reset" xml:space="preserve"><value>Visszaállítás</value></data>
+  <data name="vsgame.Match.Button.Finish" xml:space="preserve"><value>Kész</value></data>
+  <data name="vsgame.Match.Error.Identity" xml:space="preserve"><value>A játékosazonosítás sikertelen.</value></data>
+  <data name="vsgame.Match.Error.Player" xml:space="preserve"><value>A játékos nem található.</value></data>
+  <data name="vsgame.Match.Error.Classification" xml:space="preserve"><value>Érvénytelen harci besorolás.</value></data>
+  <data name="vsgame.Match.Error.AlreadyLocked" xml:space="preserve"><value>A játékos már lezárt meccsben van.</value></data>
+  <data name="vsgame.Match.Error.QueueValidation" xml:space="preserve"><value>A csapat, a loadout vagy a kreditegyenleg már nem felel meg a besorolás feltételeinek.</value></data>
+  <data name="vsgame.Match.Error.QueueCooldown" xml:space="preserve"><value>A várólista elhagyása után 1 percig nem indíthatsz új játékot.</value></data>
+  <data name="vsgame.Match.Error.Connection" xml:space="preserve"><value>A rangsorolt kapcsolat megszakadt.</value></data>
+  <data name="vsgame.Match.Error.ConnectionSpeed" xml:space="preserve"><value>A kapcsolati sebesség nem megfelelő!</value></data>
+  <data name="vsgame.Match.Error.Disconnected" xml:space="preserve"><value>A meccskapcsolat megszakadt; ehhez a meccshez nincs újracsatlakozás.</value></data>
+  <data name="vsgame.Match.Info.GameStarting" xml:space="preserve"><value>A játék indul</value></data>
+  <data name="vsgame.Match.Info.Guess" xml:space="preserve"><value>Tippelj!</value></data>
+  <data name="vsgame.Match.Info.Question" xml:space="preserve"><value>Válaszolj a kérdésre!</value></data>
+  <data name="vsgame.Match.Info.QuestionResult" xml:space="preserve"><value>A kérdés eredménye</value></data>
+  <data name="vsgame.Match.Info.RoundResult" xml:space="preserve"><value>A kör eredménye</value></data>
+  <data name="vsgame.Match.Info.CaptainSelection" xml:space="preserve"><value>Kapitánykérdés kiválasztása</value></data>
+  <data name="vsgame.Match.Info.CaptainQuestion" xml:space="preserve"><value>Kapitánykör</value></data>
+  <data name="vsgame.Match.Info.CaptainResult" xml:space="preserve"><value>A kapitánykör eredménye</value></data>
+  <data name="vsgame.Match.Info.GameCompleted" xml:space="preserve"><value>A játék véget ért</value></data>
+  <data name="vsgame.Match.Game.WaitingCaptain" xml:space="preserve"><value>Várakozás a kérdező választására</value></data>
+  <data name="vsgame.Match.Game.Team" xml:space="preserve"><value>Csapat</value></data>
+  <data name="vsgame.Match.Game.RoundPoints" xml:space="preserve"><value>Körpont</value></data>
+  <data name="vsgame.Match.Game.Time" xml:space="preserve"><value>Idő</value></data>
+  <data name="vsgame.Match.Game.Total" xml:space="preserve"><value>Összesen</value></data>
+  <data name="vsgame.Match.Game.Reward" xml:space="preserve"><value>Jutalom</value></data>
+  <data name="vsgame.Match.Game.WinnerBonus" xml:space="preserve"><value>Körgyőztes bónusz</value></data>
+  <data name="vsgame.Match.Game.QuestionSpeedBonus" xml:space="preserve"><value>Leggyorsabb helyes válasz bónusza</value></data>
+  <data name="vsgame.Match.Game.SpeedBonusPool" xml:space="preserve"><value>Összesített gyorsasági bónusz</value></data>
+  <data name="vsgame.Match.Game.SpeedPositionGain" xml:space="preserve"><value>A gyorsasági bónusszal javított a körpontok szerinti helyezésén</value></data>
+  <data name="vsgame.Match.Game.Questioner" xml:space="preserve"><value>Kérdező</value></data>
+  <data name="vsgame.Match.Game.CorrectGuess" xml:space="preserve"><value>Helyes érték</value></data>
+  <data name="vsgame.Match.Game.GuessRangeHelp" xml:space="preserve"><value>Tippsáv segítség</value></data>
+  <data name="vsgame.Match.Game.Submit" xml:space="preserve"><value>Beküldés</value></data>
+  <data name="vsgame.Match.Game.EnergyShort" xml:space="preserve"><value>EP</value></data>
+  <data name="vsgame.Match.Reward.Victory" xml:space="preserve"><value>győzelem</value></data>
+  <data name="vsgame.Match.Reward.FinalStanding" xml:space="preserve"><value>Végeredmény</value></data>
+  <data name="vsgame.Match.Reward.Team" xml:space="preserve"><value>Csapatjutalmak</value></data>
+  <data name="vsgame.Match.Reward.RankedScore" xml:space="preserve"><value>Ranglistás eredmény</value></data>
+  <data name="vsgame.Match.Reward.CharacterAverageXp" xml:space="preserve"><value>Karakter Ø XP</value></data>
+  <data name="vsgame.Match.Reward.ScoreXp" xml:space="preserve"><value>Pontszám utáni XP</value></data>
+  <data name="vsgame.Match.Reward.XpTotal" xml:space="preserve"><value>Összes XP</value></data>
+  <data name="vsgame.Match.Reward.NewTeamLevel" xml:space="preserve"><value>Új szint!</value></data>
+  <data name="vsgame.Match.Reward.StakeReturn" xml:space="preserve"><value>Tét vissza</value></data>
+  <data name="vsgame.Match.Reward.BaseCredit" xml:space="preserve"><value>Nyeremény</value></data>
+  <data name="vsgame.Match.Reward.TeamBonus" xml:space="preserve"><value>Csapatbónusz</value></data>
+  <data name="vsgame.Match.Reward.CreditTotal" xml:space="preserve"><value>Összes kredit</value></data>
+  <data name="vsgame.Match.Reward.ConsumedHelps" xml:space="preserve"><value>Felhasznált segítség</value></data>
+  <data name="vsgame.Match.Reward.Characters" xml:space="preserve"><value>Karakterjutalmak</value></data>
+  <data name="vsgame.Match.Reward.PensionTotal" xml:space="preserve"><value>Nyugdíjalap összesen:</value></data>
+  <data name="vsgame.Match.Reward.None" xml:space="preserve"><value>Nincs</value></data>
+  <data name="vsgame.Match.Reward.CreditUnit" xml:space="preserve"><value>kredit</value></data>
+</root>

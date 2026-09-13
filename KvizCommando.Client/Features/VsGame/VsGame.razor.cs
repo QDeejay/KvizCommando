@@ -1,18 +1,22 @@
+using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Client.Features.Shared.Modal.Builders;
 using KvizCommando.Client.Features.Shared.Modal.Components;
 using KvizCommando.Client.Features.VsGame.Builders;
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Features.Home.Builders;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.VsGame;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.VsGame;
 
 public partial class VsGame : KcComponentBase, IDisposable
 {
+    [Inject] private IStringLocalizer<VsGameResource> Lang { get; set; } = default!;
+
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
 
@@ -24,15 +28,18 @@ public partial class VsGame : KcComponentBase, IDisposable
     private bool _requiresQuitConfirmation;
     private int _newTeamLevel;
 
-    private string Culture => AppStates.Culture;
     private VsGameDtos VsData => AppStates.VsGame!;
 
     protected override void OnInitialized()
     {
         Ui.Header.OnBackBtnClicked += HandleBack;
-        Ui.Header.SetTitle(Ui.Lang["mainlayout.Header.GameVs"], (int)HomeBoxKey.GameVs);
+        Ui.Header.SetTitle(
+            AppStates.BoxTitles["Root.GameVs"],
+            (int)HomeBoxKey.GameVs);
         Ui.Header.SetBackBtnEna(false);
         _boxOrder = VsBoxBuilder.Root;
+        BuildBoxes();
+        _isReady = true;
     }
 
     private ContentBoxVm Box(string key) => _boxes[key];
@@ -57,19 +64,17 @@ public partial class VsGame : KcComponentBase, IDisposable
                      VsData,
                      parameters,
                      AppStates.BoxTitles,
-                     Ui.Lang))
+                     Lang))
         {
             _boxes[box.Key] = box.Value;
         }
-
-        _isReady = true;
     }
 
     private void OnBoxClick(int boxId)
     {
         _boxOrder = VsBoxBuilder.Root;
         var headerTitle =
-            Ui.Lang["mainlayout.Header.GameVs"];
+            AppStates.BoxTitles["Root.GameVs"];
 
         if (boxId == (int)VsBoxKeyRoot.RankedBattlefields)
         {

@@ -78,6 +78,13 @@
   <data name="VsGame.CreateBattlefield" xml:space="preserve"><value>Csatatér létrehozása</value></data>
   <data name="VsGame.JoinBattlefield" xml:space="preserve"><value>Csatlakozás csatatérhez</value></data>
   <data name="VsGame.RankedBattlefields" xml:space="preserve"><value>Rangsorolásos csataterek</value></data>
+  <data name="VsGame.RankedBattleTeamManager" xml:space="preserve"><value>Csapat összeállítása</value></data>
+  <data name="VsGame.RankedMatchManager" xml:space="preserve"><value>Rangsorolt csatatér</value></data>
+  <data name="VsGame.Classification.1" xml:space="preserve"><value>I. harci besorolás</value></data>
+  <data name="VsGame.Classification.2" xml:space="preserve"><value>II. harci besorolás</value></data>
+  <data name="VsGame.Classification.3" xml:space="preserve"><value>III. harci besorolás</value></data>
+  <data name="VsGame.Classification.4" xml:space="preserve"><value>IV. harci besorolás</value></data>
+  <data name="VsGame.Classification.5" xml:space="preserve"><value>V. harci besorolás</value></data>
   <data name="SoloGame.Category" xml:space="preserve"><value>Kategoria mód</value></data>
   <data name="SoloGame.Orientation" xml:space="preserve"><value>Orientáció mód</value></data>
   <data name="SoloGame.Campaign" xml:space="preserve"><value>Kampány mód</value></data>

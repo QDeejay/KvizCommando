@@ -1,7 +1,6 @@
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.VsGame.ViewModels;
 using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Services.Visual.UiService.Language;
 using KvizCommando.Shared.Contracts.VsGame.Match;
 using KvizCommando.Shared.Models.Enums.VsGame;
 
@@ -59,8 +58,9 @@ partial class VsMatchViewBuilder
             RoundNumber = round.RoundNumber,
             RoundText = round.IsCaptainRound
                 ? _lang["vsgame.Match.Round.Captain"]
-                : _lang["vsgame.Match.Round.Normal"]
-                    .FormatSafe(round.RoundNumber),
+                : _lang[
+                    "vsgame.Match.Round.Normal",
+                    round.RoundNumber],
             IsCaptainRound = round.IsCaptainRound,
             Character = round.Character is null
                 ? null

@@ -58,34 +58,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Root.GameVs" xml:space="preserve"><value>Game - Vs</value></data>
-  <data name="Root.GameSolo" xml:space="preserve"><value>Game - Solo</value></data>
-  <data name="Root.Shop" xml:space="preserve"><value>Shop</value></data>
-  <data name="Root.Rankings" xml:space="preserve"><value>Rankings</value></data>
-  <data name="Root.Statistic" xml:space="preserve"><value>Statistic</value></data>
-  <data name="Root.Events" xml:space="preserve"><value>Events</value></data>
-  <data name="Root.Community" xml:space="preserve"><value>Community</value></data>
-  <data name="Root.Messages" xml:space="preserve"><value>Messages</value></data>
-  <data name="Root.Team" xml:space="preserve"><value>Your team</value></data>
-  <data name="Root.Question" xml:space="preserve"><value>Questions</value></data>
-  <data name="Question.Factory" xml:space="preserve"><value>Loadout</value></data>
-  <data name="Question.Usr" xml:space="preserve"><value>User questions</value></data>
-  <data name="Question.Pending" xml:space="preserve"><value>Pending questions</value></data>
-  <data name="Question.New" xml:space="preserve"><value>Send new Question</value></data>
-  <data name="Team.TeamOverview" xml:space="preserve"><value>Team overview</value></data>
-  <data name="Team.Members" xml:space="preserve"><value>Team members</value></data>
-  <data name="Team.Recruit" xml:space="preserve"><value>Recruiting</value></data>
-  <data name="VsGame.CreateBattlefield" xml:space="preserve"><value>Create battlefield</value></data>
-  <data name="VsGame.JoinBattlefield" xml:space="preserve"><value>Join battlefield</value></data>
-  <data name="VsGame.RankedBattlefields" xml:space="preserve"><value>Ranked battlefields</value></data>
-  <data name="VsGame.RankedBattleTeamManager" xml:space="preserve"><value>Assemble battle team</value></data>
-  <data name="VsGame.RankedMatchManager" xml:space="preserve"><value>Ranked battlefield</value></data>
-  <data name="VsGame.Classification.1" xml:space="preserve"><value>Battle classification I</value></data>
-  <data name="VsGame.Classification.2" xml:space="preserve"><value>Battle classification II</value></data>
-  <data name="VsGame.Classification.3" xml:space="preserve"><value>Battle classification III</value></data>
-  <data name="VsGame.Classification.4" xml:space="preserve"><value>Battle classification IV</value></data>
-  <data name="VsGame.Classification.5" xml:space="preserve"><value>Battle classification V</value></data>
-  <data name="SoloGame.Category" xml:space="preserve"><value>Categories mode</value></data>
-  <data name="SoloGame.Orientation" xml:space="preserve"><value>Orientation mode</value></data>
-  <data name="SoloGame.Campaign" xml:space="preserve"><value>Campaign mode</value></data>
+  <data name="vsgame.Box.Footer.Online" xml:space="preserve"><value>Online: {0}</value></data>
+  <data name="vsgame.Box.Footer.Ranked" xml:space="preserve"><value>Online: {0}, Best result: {1} pts</value></data>
+  <data name="vsgame.Manager.Button.Save" xml:space="preserve"><value>Save</value></data>
+  <data name="vsgame.Manager.Member.Classification" xml:space="preserve"><value>Classification: {0}</value></data>
+  <data name="vsgame.Manager.Message.Initial" xml:space="preserve"><value>Assemble today's team!</value></data>
+  <data name="vsgame.Manager.Message.Invalidated" xml:space="preserve"><value>Your team has changed. Assemble it again!</value></data>
+  <data name="vsgame.Manager.Message.Saved" xml:space="preserve"><value>Today's team is ready.</value></data>
+  <data name="vsgame.Manager.Tooltip.MinimumTeamLevel" xml:space="preserve"><value>Minimum team level: {0}</value></data>
+  <data name="vsgame.Manager.Tooltip.PartySize" xml:space="preserve"><value>Team size: {0}</value></data>
+  <data name="vsgame.Manager.Tooltip.RankClassZone" xml:space="preserve"><value>Rank-class zone: {0}–{1} ({2}–{3})</value></data>
+  <data name="vsgame.Manager.Tooltip.RequiredMembers" xml:space="preserve"><value>Required members in zone: {0}</value></data>
 </root>

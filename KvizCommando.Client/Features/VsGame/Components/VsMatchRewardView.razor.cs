@@ -1,14 +1,14 @@
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.VsGame.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.VsGame;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.VsGame.Components;
 
 public partial class VsMatchRewardView
 {
-    [Inject]
-    private ILanguageService Lang { get; set; } = default!;
+    [Inject] private IStringLocalizer<VsMatchResource> Lang { get; set; } = default!;
 
     [Parameter, EditorRequired]
     public VsMatchViewData Data { get; set; } = default!;

@@ -1,9 +1,10 @@
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Features.VsGame.ViewModels;
 using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.VsGame;
 using KvizCommando.Shared.Contracts.VsGame.Match;
 using KvizCommando.Shared.Models.Enums.VsGame;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.VsGame.Builders;
 
@@ -36,15 +37,20 @@ private const string CATEGORY_IMAGE_ROOT =
         "literature"
     ];
 
-    private readonly ILanguageService _lang;
+    private readonly IStringLocalizer<VsMatchResource> _lang;
+    private readonly IReadOnlyDictionary<string, string> _boxTitles;
 
     /// <summary>
     /// Létrehozza a VS nézetadatokat összeállító buildert.
     /// </summary>
-    /// <param name="lang">A feliratok feloldásához használt nyelvi szolgáltatás.</param>
-    public VsMatchViewBuilder(ILanguageService lang)
+    /// <param name="lang">A feliratok feloldásához használt localizer.</param>
+    /// <param name="boxTitles">A közös boxcímek lokalizált értékei.</param>
+    public VsMatchViewBuilder(
+        IStringLocalizer<VsMatchResource> lang,
+        IReadOnlyDictionary<string, string> boxTitles)
     {
         _lang = lang;
+        _boxTitles = boxTitles;
     }
 
     /// <summary>
@@ -57,8 +63,8 @@ private const string CATEGORY_IMAGE_ROOT =
         return new VsQueueViewData
         {
             ClassificationText =
-                _lang[
-                    $"vsgame.Classification.Title.{snapshot.ClassificationId}"],
+                _boxTitles[
+                    $"VsGame.Classification.{snapshot.ClassificationId}"],
             StatusText = _lang["vsgame.Match.Queue.Status"],
             WaitingPlayers = snapshot.WaitingPlayers,
             RequiredPlayers = snapshot.RequiredPlayers,
@@ -92,8 +98,8 @@ private const string CATEGORY_IMAGE_ROOT =
                 snapshot.PhaseDurationSeconds,
             InfoText = _lang[snapshot.InfoKey],
             ClassificationText =
-                _lang[
-                    $"vsgame.Classification.Title.{snapshot.ClassificationId}"],
+                _boxTitles[
+                    $"VsGame.Classification.{snapshot.ClassificationId}"],
             Stake = snapshot.Stake,
             Players =
             [

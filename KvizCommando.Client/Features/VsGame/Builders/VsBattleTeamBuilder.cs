@@ -1,8 +1,9 @@
 using KvizCommando.Client.Features.VsGame.ViewModels;
 using KvizCommando.Client.Data;
 using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.VsGame;
 using KvizCommando.Shared.Models.Dtos;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.VsGame.Builders;
 
@@ -11,9 +12,9 @@ public sealed class VsBattleTeamBuilder
     private static readonly string[] RomanNumbers =
         ["", "I.", "II.", "III.", "IV.", "V."];
 
-    private readonly ILanguageService _lang;
+    private readonly IStringLocalizer<VsGameResource> _lang;
 
-    public VsBattleTeamBuilder(ILanguageService lang)
+    public VsBattleTeamBuilder(IStringLocalizer<VsGameResource> lang)
     {
         _lang = lang;
     }
@@ -47,8 +48,9 @@ public sealed class VsBattleTeamBuilder
                     member.RankClass,
                     culture),
                 ClassificationText =
-                    _lang["vsgame.Manager.Member.Classification"]
-                        .FormatSafe(member.RankClass),
+                    _lang[
+                        "vsgame.Manager.Member.Classification",
+                        member.RankClass],
                 OrientationShort =
                     OrientationLocalizer.GetOrientShort(
                         member.OrientationId,
@@ -75,31 +77,29 @@ public sealed class VsBattleTeamBuilder
                     selectedSlots),
                 MinimumTeamLevelText =
                     _lang[
-                        "vsgame.Manager.Tooltip.MinimumTeamLevel"]
-                        .FormatSafe(
-                            RankNameTable.Data[
-                                rule.MinimumTeamRank]
-                                .PublicLevel ?? string.Empty),
+                        "vsgame.Manager.Tooltip.MinimumTeamLevel",
+                        RankNameTable.Data[
+                            rule.MinimumTeamRank]
+                            .PublicLevel ?? string.Empty],
                 PartySizeText =
-                    _lang["vsgame.Manager.Tooltip.PartySize"]
-                        .FormatSafe(rule.RequiredPartySize),
+                    _lang[
+                        "vsgame.Manager.Tooltip.PartySize",
+                        rule.RequiredPartySize],
                 RankClassZoneText =
                     _lang[
-                        "vsgame.Manager.Tooltip.RankClassZone"]
-                        .FormatSafe(
+                        "vsgame.Manager.Tooltip.RankClassZone",
+                        rule.MemberMinimumRankClass,
+                        rule.MemberMaximumRankClass,
+                        RankNameLocalizer.GetClass(
                             rule.MemberMinimumRankClass,
+                            culture),
+                        RankNameLocalizer.GetClass(
                             rule.MemberMaximumRankClass,
-                            RankNameLocalizer.GetClass(
-                                rule.MemberMinimumRankClass,
-                                culture),
-                            RankNameLocalizer.GetClass(
-                                rule.MemberMaximumRankClass,
-                                culture)),
+                            culture)],
                 RequiredMembersText =
                     _lang[
-                        "vsgame.Manager.Tooltip.RequiredMembers"]
-                        .FormatSafe(
-                            rule.RequiredMembersInRankClassRange)
+                        "vsgame.Manager.Tooltip.RequiredMembers",
+                        rule.RequiredMembersInRankClassRange]
             })
             .ToArray();
 

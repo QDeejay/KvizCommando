@@ -1,14 +1,14 @@
 using KvizCommando.Client.Features.VsGame.Builders;
 using KvizCommando.Client.Features.VsGame.Services;
 using KvizCommando.Client.Features.VsGame.ViewModels;
-using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Visual.UiService;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.VsGame;
 using KvizCommando.Shared.Contracts.VsGame.Match;
 using KvizCommando.Shared.Models.Enums.VsGame;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.VsGame.Components;
 
@@ -16,7 +16,8 @@ public partial class VsMatchManager : IAsyncDisposable
 {
     [Inject] private IVsMatchClientService MatchClient { get; set; } = default!;
 
-    [Inject] private ILanguageService Lang { get; set; } = default!;
+    [Inject]
+    private IStringLocalizer<VsMatchResource> Lang { get; set; } = default!;
 
     [Inject] private AudioService Audio { get; set; } = default!;
 
@@ -46,7 +47,9 @@ public partial class VsMatchManager : IAsyncDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        _builder = new VsMatchViewBuilder(Lang);
+        _builder = new VsMatchViewBuilder(
+            Lang,
+            AppStates.BoxTitles);
         MatchClient.OnChanged += OnMatchClientChanged;
         _queueTimer = new System.Threading.Timer(
             _ =>
@@ -300,11 +303,11 @@ public partial class VsMatchManager : IAsyncDisposable
 
             return check is null
                 ? string.Empty
-                : Lang["vsgame.Match.Connection.ResponseTime"]
-                    .FormatSafe(
-                        check.ResponseTimeMilliseconds,
-                        Lang[ConnectionQualityTextKey(
-                            check.Quality)]);
+                : Lang[
+                    "vsgame.Match.Connection.ResponseTime",
+                    check.ResponseTimeMilliseconds,
+                    Lang[ConnectionQualityTextKey(
+                        check.Quality)]];
         }
     }
 

@@ -1,7 +1,8 @@
 using KvizCommando.Client.Models.ViewModels;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.VsGame;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.VsGame.Builders;
 
@@ -32,7 +33,7 @@ public static class VsBoxBuilder
         VsGameDtos data,
         VsComponentParameters parameters,
         IReadOnlyDictionary<string, string> boxTitles,
-        ILanguageService lang)
+        IStringLocalizer<VsGameResource> lang)
     {
         var boxes = new Dictionary<string, ContentBoxVm>(
             VsGameBoxSpecs.Specs.Count +
@@ -46,9 +47,7 @@ public static class VsBoxBuilder
             boxes.Add(key, new ContentBoxVm
             {
                 DictKey = key,
-                Header = spec.TitleKey.StartsWith("VsGame.", StringComparison.Ordinal)
-                    ? boxTitles[spec.TitleKey]
-                    : lang[spec.TitleKey],
+                Header = boxTitles[spec.TitleKey],
                 Footer = spec.FooterDisplay ? spec.BuildFooter(lang, data, 0) : string.Empty,
                 FooterDisplay = spec.FooterDisplay,
                 Size = spec.ReSizable ? spec.SizeBuilder(data) : spec.Size,
@@ -76,7 +75,7 @@ public static class VsBoxBuilder
                 boxes.Add(key, new ContentBoxVm
                 {
                     DictKey = key,
-                    Header = spec.BuildTitle(lang, id),
+                    Header = spec.BuildTitle(boxTitles, id),
                     Footer = spec.FooterDisplay ? spec.BuildFooter(lang, data, id) : string.Empty,
                     FooterDisplay = spec.FooterDisplay,
                     Size = spec.Size,

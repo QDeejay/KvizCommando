@@ -4,16 +4,18 @@ using KvizCommando.Client.Features.VsGame.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.Visual.UiService;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.VsGame;
 using KvizCommando.Shared.Contracts.VsGame;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.VsGame.Components;
 
 public partial class RankedBattleTeamManager
 {
-    [Inject] private ILanguageService Lang { get; set; } = default!;
+    [Inject]
+    private IStringLocalizer<VsGameResource> Lang { get; set; } = default!;
     [Inject] private IVsGameClientService GameService { get; set; } = default!;
     [Inject] private UiServices Ui { get; set; } = default!;
     [Inject] private AudioService Audio { get; set; } = default!;

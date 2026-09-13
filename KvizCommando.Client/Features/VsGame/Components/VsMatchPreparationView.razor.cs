@@ -1,28 +1,28 @@
 using KvizCommando.Client.Features.VsGame.Services;
 using KvizCommando.Client.Features.VsGame.ViewModels;
 using KvizCommando.Client.Services.Audio;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.VsGame;
 using KvizCommando.Shared.Contracts.VsGame.Match;
 using KvizCommando.Shared.Models.Enums.VsGame;
 using KvizCommando.Shared.Models.Rules;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using System.Globalization;
 
 namespace KvizCommando.Client.Features.VsGame.Components;
 
 public partial class VsMatchPreparationView : IDisposable
 {
-    [Inject] private ILanguageService Lang { get; set; } = default!;
+    [Inject] private IStringLocalizer<VsMatchResource> Lang { get; set; } = default!;
     [Inject] private AudioService Audio { get; set; } = default!;
-    [Inject]
-    private IVsMatchClientService MatchClient { get; set; } = default!;
+    [Inject] private IVsMatchClientService MatchClient { get; set; } = default!;
 
     [Parameter, EditorRequired]
     public VsMatchViewData Data { get; set; } = new();
 
     [Parameter] public EventCallback<int> OnCharacterSelected { get; set; }
-    [Parameter] public EventCallback<VsLoadoutAssignmentRequest>  OnLoadoutAssigned   { get; set; }
-    [Parameter] public EventCallback<VsHelpAssignmentRequest>  OnHelpAssigned { get; set; }
+    [Parameter] public EventCallback<VsLoadoutAssignmentRequest> OnLoadoutAssigned { get; set; }
+    [Parameter] public EventCallback<VsHelpAssignmentRequest> OnHelpAssigned { get; set; }
     [Parameter] public EventCallback OnReset { get; set; }
     [Parameter] public EventCallback OnFinish { get; set; }
 
