@@ -29,7 +29,6 @@ public partial class Home : KcComponentBase, IDisposable
     private string _bBoardSize = string.Empty;
     private string[] _boxOrder = [];
     private bool _isReady = false;
-    private bool _isLoaded = false;
     private MarkupString _bBoardHTML = new();
     private ContentBoxVm Box(string orx) => _boxes![orx];
 
@@ -45,7 +44,6 @@ public partial class Home : KcComponentBase, IDisposable
             _boxes[box.Key] = box.Value;
         }
         _boxes[HomeBoxKey.InfoBoard.ToString()].Size = _bBoardSize;
-        _isReady = _isLoaded;
     }
     private void OnBoxClick(int boxId)
     {
@@ -88,9 +86,8 @@ public partial class Home : KcComponentBase, IDisposable
 
         Ui.Header.SetTitle(Lang["home.Header.Title"], 0);
         Ui.Header.SetBackBtnEna(false);
-        _isLoaded = true;
-        if (_isReady == false)
-            BuildBoxes();
+        BuildBoxes();
+        _isReady = true;
     }
     protected override void OnInitialized()
     {

@@ -103,4 +103,5 @@
   <data name="profile.SaveState.SessionMismatch" xml:space="preserve"><value>The session has changed. Sign in again.</value></data>
   <data name="profile.SaveState.NotFound" xml:space="preserve"><value>The player profile could not be found.</value></data>
   <data name="profile.SaveState.ServerError" xml:space="preserve"><value>A server error occurred while saving.</value></data>
+  <data name="profile.Account.Password.Visibility" xml:space="preserve"><value>Toggle password visibility</value></data>
 </root>

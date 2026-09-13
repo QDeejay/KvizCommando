@@ -103,4 +103,5 @@
   <data name="profile.SaveState.SessionMismatch" xml:space="preserve"><value>A munkamenet megváltozott. Jelentkezz be újra.</value></data>
   <data name="profile.SaveState.NotFound" xml:space="preserve"><value>A játékosprofil nem található.</value></data>
   <data name="profile.SaveState.ServerError" xml:space="preserve"><value>Szerverhiba történt a mentés közben.</value></data>
+  <data name="profile.Account.Password.Visibility" xml:space="preserve"><value>Jelszó láthatóságának váltása</value></data>
 </root>

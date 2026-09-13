@@ -21,4 +21,6 @@
   <data name="mainlayout.Toast.Logout.Error" xml:space="preserve"><value>Logout failed.</value></data>
   <data name="mainlayout.Toast.AccountDeleted" xml:space="preserve"><value>Your account has been permanently deleted.</value></data>
   <data name="mainlayout.Toast.Login.Replaced" xml:space="preserve"><value>The previous login has been replaced. If you were in an active game, you were also disconnected from it.</value></data>
+  <data name="mainlayout.ScreenTooSmall.WarningMessage" xml:space="preserve"><value>This site not supported on that size</value></data>
+  <data name="mainlayout.Aria.Navigation" xml:space="preserve"><value>Navigation</value></data>
 </root>

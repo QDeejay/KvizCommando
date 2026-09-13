@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="nav.Button.Home" xml:space="preserve"><value>Bázis</value></data>
+  <data name="nav.Button.Team" xml:space="preserve"><value>Csapat</value></data>
+  <data name="nav.Button.Question" xml:space="preserve"><value>Kérdések</value></data>
+  <data name="nav.Button.Game" xml:space="preserve"><value>Játék</value></data>
+  <data name="nav.Button.Shop" xml:space="preserve"><value>Bolt</value></data>
+  <data name="nav.Button.Rankings" xml:space="preserve"><value>Ranglista</value></data>
+  <data name="nav.Button.Statistic" xml:space="preserve"><value>Statisztika</value></data>
+  <data name="nav.Button.Events" xml:space="preserve"><value>Események</value></data>
+  <data name="nav.Button.Messages" xml:space="preserve"><value>Üzenetek</value></data>
+  <data name="nav.Button.Community" xml:space="preserve"><value>Közösség</value></data>
+  <data name="nav.Aria.Close" xml:space="preserve"><value>Bezárás</value></data>
+</root>

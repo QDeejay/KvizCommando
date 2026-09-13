@@ -21,4 +21,6 @@
   <data name="mainlayout.Toast.Logout.Error" xml:space="preserve"><value>A kijelentkezés nem sikerült.</value></data>
   <data name="mainlayout.Toast.AccountDeleted" xml:space="preserve"><value>A fiókod véglegesen törölve lett.</value></data>
   <data name="mainlayout.Toast.Login.Replaced" xml:space="preserve"><value>A korábbi bejelentkezés felülírva. Ha aktív játékban voltál, onnan is kiléptetésre kerültél.</value></data>
+  <data name="mainlayout.ScreenTooSmall.WarningMessage" xml:space="preserve"><value>Ez az oldal nem támogatott ezen a képernyőméreten!</value></data>
+  <data name="mainlayout.Aria.Navigation" xml:space="preserve"><value>Navigáció</value></data>
 </root>

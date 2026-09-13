@@ -88,7 +88,6 @@ namespace KvizCommando.Client.Layout
 
             _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
 
-            await Ui.Lang.LoadModuleAsync(_culture, "common");  // szükséges
             await Ui.Lang.LoadModuleAsync(_culture, "mainlayout");  // szükséges
             var uri = Ui.Nav.ToAbsoluteUri(Ui.Nav.Uri);
             var loggedOut = ShowLogoutToast(uri);

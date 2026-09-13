@@ -50,7 +50,7 @@
     }
 
     <div class="kc-unsupported-screen">
-        <ScreenTooSmall />
+        <ScreenTooSmall WarningText="@Lang["mainlayout.ScreenTooSmall.WarningMessage"]" />
     </div>
     <div class="kc-mainlayout-root @(_isLoggedIn ? "authenticated" : "guest") @(IsNavigationAvailable ? "navigation-available" : "")"
          style="--kc-main-background-image: url('@MainBackgroundImage');">
@@ -59,7 +59,7 @@
         {
             <button type="button"
                     class="kc-collapse-btn kc-mobile-nav-toggle"
-                    aria-label="Navigation"
+                    aria-label="@Lang["mainlayout.Aria.Navigation"]"
                     aria-expanded="@_isMobileNavOpen"
                     @onclick="ToggleMobileSidebar">
             </button>
@@ -69,11 +69,9 @@
                 <div class="kc-mainlayout-nav-backdrop" @onclick="CloseMobileSidebarFromBackdropAsync"></div>
             }
 
-            <LangGuard Culture="@_culture" Module="nav">
-                <div class="kc-mainlayout-nav-side @(_isMobileNavOpen ? "mobile-open" : "")">
-                    <NavMenu Hs="@Hs" OnClose="CloseMobileSidebar" />
-                </div>
-            </LangGuard>
+            <div class="kc-mainlayout-nav-side @(_isMobileNavOpen ? "mobile-open" : "")">
+                <NavMenu Hs="@Hs" OnClose="CloseMobileSidebar" />
+            </div>
         }
 
         <main>

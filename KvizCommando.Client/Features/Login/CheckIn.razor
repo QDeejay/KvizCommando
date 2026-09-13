@@ -9,8 +9,6 @@
 
 @if (_isLoaded==true)
 {
-    <LangGuard Culture=@_culture Module="checkin" OnReady="BuildDynamicText">
-
          <KcModal @ref="_termsModal"
              Id="termsModal"
              OnAction1="AcceptTerms">
@@ -85,8 +83,6 @@
                     <p style="color:red">@_resultMessage</p> 
                  </div>
         </div>
-    </LangGuard>
 }
-
 
 

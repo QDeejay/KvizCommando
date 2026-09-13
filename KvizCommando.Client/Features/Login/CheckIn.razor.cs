@@ -10,7 +10,6 @@ using KvizCommando.Shared.Contracts.Auth;
 using KvizCommando.Shared.Contracts.CheckIn;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
-using System.Globalization;
 
 
 namespace KvizCommando.Client.Features.Login
@@ -22,7 +21,6 @@ namespace KvizCommando.Client.Features.Login
         [Inject] private IdentityRulesService IdentityRules { get; set; } = default!;
         [Inject] private IStringLocalizer<LoginResource> Lang { get; set; } = default!;
 
-        private string _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
         private KcModal? _termsModal;
         private ModalBoxVm _termsPar = new();
         private string _fullHtml = string.Empty;
@@ -73,7 +71,6 @@ namespace KvizCommando.Client.Features.Login
 
         protected override async Task OnInitializedAsync()
         {
-            _culture = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
             _options = await IdentityRules.GetRulesAsync();
             var uri = Ui.Nav.ToAbsoluteUri(Ui.Nav.Uri);
             var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
@@ -117,6 +114,7 @@ namespace KvizCommando.Client.Features.Login
 
             _cacheData = cacheData;
             _fullHtml = await Http.GetStringAsync(_cacheData.url);
+            BuildDynamicText();
             _isLoaded = true;
         }
 

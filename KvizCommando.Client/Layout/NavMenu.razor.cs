@@ -1,14 +1,15 @@
 ﻿using KvizCommando.Client.Services.Audio;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+using KvizCommando.Localization.MainLayout;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Layout
 {
     public partial class NavMenu
     {
         [Inject] private AudioService Audio { get; set; } = default!;
-        [Inject] private ILanguageService Lang { get; set; } = default!;
+        [Inject] private IStringLocalizer<NavMenuResource> Lang { get; set; } = default!;
         [Parameter] public HomeScreen Hs { get; set; } = default!;
         [Parameter] public EventCallback OnClose { get; set; }
 
