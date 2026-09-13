@@ -142,8 +142,8 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             vm.RankClassChanged = rankClassChanged;
             vm.Infotext1 = rankClassChanged
                 ? _lang["modal.team.Promotion.Free"]
-                : _lang["modal.team.Promotion.Cost"].Value.FormatSafe(
-                    TeamRules.PROMOTION_TEAM_DEV_POINT_COST);
+                : _lang["modal.team.Promotion.Cost",
+                    TeamRules.PROMOTION_TEAM_DEV_POINT_COST];
             vm.UnlockMaxLevels1 = _lang["modal.team.Label.Attitude.Secondary"].Value +
                 _lang["modal.team.Format.MaximumShort"].Value;
             vm.UnlockMaxLevels2 = _lang["modal.team.Label.Attitude.Third"].Value +

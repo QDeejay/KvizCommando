@@ -1,13 +1,9 @@
-﻿using KvizCommando.Client.Helpers;
-using KvizCommando.Client.Services;
-using KvizCommando.Client.Services.User;
-using KvizCommando.Client.Services.Visual.UiService.Language;
+﻿using KvizCommando.Client.Services;
 using KvizCommando.Client.Utilities;
 using KvizCommando.Localization.Login;
 using KvizCommando.Shared.Contracts.Auth;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Options;
 
 namespace KvizCommando.Client.Features.Login.Auth;
 
@@ -23,7 +19,7 @@ public partial class ConfirmPassword : KcComponentBase
     public string successMessage { get; set; } = string.Empty;
     private bool PasswordFiledSW { get; set; } = false;
     private readonly bool[] _showPassword = new bool[2];
-    
+
     private bool CanRecover =>
        !string.IsNullOrWhiteSpace(FormData.newPassword)
        && !string.IsNullOrWhiteSpace(FormData.email)
@@ -52,7 +48,7 @@ public partial class ConfirmPassword : KcComponentBase
 
             if (pwd.Length < Options.RequiredLength)
             {
-                ResultMessage = Lang["identityerrors.PasswordTooShort"].Value.FormatSafe(Options.RequiredLength);
+                ResultMessage = Lang["identityerrors.PasswordTooShort", Options.RequiredLength];
                 PasswordFiledSW = true;
             }
             else if (Options.RequireDigit && !pwd.Any(char.IsDigit))
@@ -77,7 +73,7 @@ public partial class ConfirmPassword : KcComponentBase
             }
             else if (Options.RequiredUniqueChars > 1 && pwd.Distinct().Count() < Options.RequiredUniqueChars)
             {
-                ResultMessage = Lang["identityerrors.PasswordRequiresUniqueChars"].Value.FormatSafe(Options.RequiredLength);
+                ResultMessage = Lang["identityerrors.PasswordRequiresUniqueChars", Options.RequiredLength];
                 PasswordFiledSW = true;
             }
             else if (FormData.newPassword != FormData.confirmedNewPsw)

@@ -48,7 +48,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
                     Orient2: lang["modal.team.Label.Orientation.Secondary"],
                     Orient1Value: OrientationLocalizer.GetOrientation(infoRowData.Orient1, culture),
                     Orient2Value: OrientationLocalizer.GetOrientation(infoRowData.Orient2, culture),
-                    Devpoints: lang["modal.team.Label.SkillPointShort"].Value.FormatSafe(OrientationLocalizer.GetOrientShort(infoRowData.Orient1, culture)),
+                    Devpoints: lang["modal.team.Label.SkillPointShort", OrientationLocalizer.GetOrientShort(infoRowData.Orient1, culture)],
                     DevPointsValue: infoRowData.Devpoints,
                     AddedDevPoints: adddevpoints > 0 ? "+" + adddevpoints.ToString() : ""
                 );

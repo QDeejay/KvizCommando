@@ -63,7 +63,7 @@ namespace KvizCommando.Client.Features.Shared.Modal.Builders
             vm.Infotext2 = _lang["modal.team.Handle.NoVitality"];
             vm.Infotext3 = _lang["modal.team.Handle.HireCooldown"];
             if (member.SkillPoints == 0)
-                vm.Infotext4 = _lang["modal.team.Handle.RestoreRequirement"].Value.FormatSafe(vm.Info.Devpoints[0..7]);
+                vm.Infotext4 = _lang["modal.team.Handle.RestoreRequirement", vm.Info.Devpoints[0..7]];
             else
                 vm.Infotext4 = string.Empty;
             return vm;

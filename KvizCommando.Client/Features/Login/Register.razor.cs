@@ -46,7 +46,7 @@ namespace KvizCommando.Client.Features.Login
             // E-mail-cím
             if (!LoginHelper.IsValidEmail(_formData.Email))
             {
-                _resultMessage = Lang["identityerrors.InvalidEmail"].Value.FormatSafe(_formData.Email);
+                _resultMessage = Lang["identityerrors.InvalidEmail", _formData.Email];
                 _emailFiledSW = true;
             }
             else
@@ -62,7 +62,7 @@ namespace KvizCommando.Client.Features.Login
 
                 if (pwd.Length < _options.RequiredLength)
                 {
-                    _resultMessage = Lang["identityerrors.PasswordTooShort"].Value.FormatSafe(_options.RequiredLength);
+                    _resultMessage = Lang["identityerrors.PasswordTooShort", _options.RequiredLength];
                     _passwordFiledSW = true;
                 }
                 else if (_options.RequireDigit && !pwd.Any(char.IsDigit))
@@ -87,7 +87,7 @@ namespace KvizCommando.Client.Features.Login
                 }
                 else if (_options.RequiredUniqueChars > 1 && pwd.Distinct().Count() < _options.RequiredUniqueChars)
                 {
-                    _resultMessage = Lang["identityerrors.PasswordRequiresUniqueChars"].Value.FormatSafe(_options.RequiredLength);
+                    _resultMessage = Lang["identityerrors.PasswordRequiresUniqueChars", _options.RequiredLength];
                     _passwordFiledSW = true;
                 }
                 else if (_formData.Password != _formData.ConfirmPassword)

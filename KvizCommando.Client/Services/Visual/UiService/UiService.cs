@@ -1,5 +1,4 @@
-﻿using KvizCommando.Client.Services.Visual.UiService.Language;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 
 namespace KvizCommando.Client.Services.Visual.UiService
 {
@@ -11,9 +10,6 @@ namespace KvizCommando.Client.Services.Visual.UiService
         public SubHeaderService SubHeader { get; }
         public IDisplayMessageState HeadDisplay { get; }
         public NavigationManager Nav { get; }
-        public ILanguageService Lang { get; }
-
-
 
         public event Func<ReqStates[], Task>? ReloadRequested;
 
@@ -29,8 +25,7 @@ namespace KvizCommando.Client.Services.Visual.UiService
             PageHeaderService header,
             SubHeaderService subHeader,
             IDisplayMessageState headDisplay,
-            NavigationManager nav,
-            ILanguageService lang)
+            NavigationManager nav)
         {
             Modal = modal;
             Toast = toast;
@@ -38,7 +33,6 @@ namespace KvizCommando.Client.Services.Visual.UiService
             SubHeader = subHeader;
             HeadDisplay = headDisplay;
             Nav = nav;
-            Lang = lang;
         }
     }
 }

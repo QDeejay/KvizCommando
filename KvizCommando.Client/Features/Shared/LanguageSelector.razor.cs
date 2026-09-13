@@ -44,9 +44,6 @@ namespace KvizCommando.Client.Features.Shared
             if (await Ui.Modal.ShowAsync(modal) != ModalResult.Button1)
                 return;
 
-            await Ui.Lang.ClearLanguageCacheAsync(
-                CultureInfo.CurrentCulture.TwoLetterISOLanguageName);
-
             await LocalStorage.SetItemAsync("userLang", culture.Name);
             Ui.Nav.NavigateTo(Ui.Nav.Uri, forceLoad: true);
         }

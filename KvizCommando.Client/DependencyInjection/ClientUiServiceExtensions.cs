@@ -2,7 +2,6 @@ using KvizCommando.Client.Helpers;
 using KvizCommando.Client.Services.Audio;
 using KvizCommando.Client.Services.Visual;
 using KvizCommando.Client.Services.Visual.UiService;
-using KvizCommando.Client.Services.Visual.UiService.Language;
 
 namespace KvizCommando.Client.DependencyInjection;
 
@@ -16,7 +15,6 @@ public static class ClientUiServiceExtensions
     public static IServiceCollection AddClientUiServices(
         this IServiceCollection services)
     {
-        services.AddScoped<ILanguageService, LanguageService>();
         services.AddSingleton<IDisplayMessageState, DisplayMessageState>();
         services.AddScoped<PageHeaderService>();
         services.AddScoped<ModalService>();

@@ -67,7 +67,7 @@ namespace KvizCommando.Client.Features.Login
             }
             else
             {
-                _errorMessage = Lang["identityerrors.InvalidEmail"].Value.FormatSafe(_loginForm.Email);
+                _errorMessage = Lang["identityerrors.InvalidEmail", _loginForm.Email];
                 _invalidEmail = true;
                 _ =  ShowError();
             }
