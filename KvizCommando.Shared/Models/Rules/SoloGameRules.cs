@@ -11,7 +11,7 @@ public static class SoloGameRules
         ANSWER_SECONDS - FULL_POINTS_SECONDS;
     public const int WARNING_REMAINING_SECONDS = 10;
     public const int CRITICAL_REMAINING_SECONDS = 5;
-    public const int EVALUATION_STEP_DELAY_MS = 2000;
+    public const int EVALUATION_STEP_DELAY_MS = 1500;
     public const int SKIP_EMPTY_SFX_DELAY_MS = 250;
     public const int HEART_REWARD_CORRECT_PERCENT = 50;
     public const int HEART_REWARD_DEVELOPMENT_POINTS = 1;

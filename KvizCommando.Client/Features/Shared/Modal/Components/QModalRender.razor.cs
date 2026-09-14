@@ -5,6 +5,7 @@ using KvizCommando.Localization.Shared.Modal.Question;
 using KvizCommando.Shared.Models.Dtos;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
+using System.Globalization;
 
 namespace KvizCommando.Client.Features.Shared.Modal.Components
 {
@@ -28,6 +29,9 @@ namespace KvizCommando.Client.Features.Shared.Modal.Components
         private string? CatNamePend => CategoryNameLocalizer.GetCategory(Slot.Category, Culture);
         private string? CatNameUsr => CategoryNameLocalizer.GetCategory(UsrSlot.Category, Culture);
         private string? ColorStyle => Slot.Status == "Approved" ? "color:lime" : "color:red";
+        private string SubmittedAtLocal => Slot.SubmittedAt
+            .ToLocalTime()
+            .ToString("g", CultureInfo.GetCultureInfo(Culture));
 
         protected override void OnInitialized()
         {

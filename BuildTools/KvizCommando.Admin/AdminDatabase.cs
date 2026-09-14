@@ -446,22 +446,47 @@ internal sealed class AdminDatabase : IDisposable
 
     public void UpdatePendingQuestion(PendingQuestionRow question, string text, IReadOnlyList<string> answers, string status, string? remark)
     {
+        SavePendingQuestion(question, text, answers, status, remark, reviewedAtUtc: null);
+    }
+
+    public void ReviewPendingQuestion(PendingQuestionRow question, string text, IReadOnlyList<string> answers, string status, string? remark)
+    {
+        if (status is not ("Approved" or "Rejected"))
+            throw new InvalidOperationException("Elbíráláskor csak Approved vagy Rejected státusz adható meg.");
+
+        SavePendingQuestion(question, text, answers, status, remark, DateTime.UtcNow);
+    }
+
+    private void SavePendingQuestion(
+        PendingQuestionRow question,
+        string text,
+        IReadOnlyList<string> answers,
+        string status,
+        string? remark,
+        DateTime? reviewedAtUtc)
+    {
         ValidateQuestion(question.CategoryNo, text, answers);
         using var connection = OpenGameConnection();
-        using var command = CreateCommand(connection, """
+        var submittedAtUpdate = reviewedAtUtc.HasValue
+            ? ", SubmittedAt = @submittedAtUtc"
+            : string.Empty;
+        using var command = CreateCommand(connection, $"""
             UPDATE PendingQuestions
             SET Question = @question,
                 AnswersJson = @answersJson,
                 Status = @status,
-                Remark = @remark
+                Remark = @remark{submittedAtUpdate}
             WHERE Id = @id;
             """);
         AddParameter(command, "@question", text.Trim());
         AddParameter(command, "@answersJson", JsonSerializer.Serialize(answers));
         AddParameter(command, "@status", status);
         AddParameter(command, "@remark", string.IsNullOrWhiteSpace(remark) ? null : remark.Trim());
+        if (reviewedAtUtc.HasValue)
+            AddParameter(command, "@submittedAtUtc", reviewedAtUtc.Value);
         AddParameter(command, "@id", question.Id);
-        command.ExecuteNonQuery();
+        if (command.ExecuteNonQuery() != 1)
+            throw new InvalidOperationException("A Pending kérdés nem található.");
     }
 
     public void UpdateUserQuestion(UserQuestionRow question, string text, IReadOnlyList<string> answers)

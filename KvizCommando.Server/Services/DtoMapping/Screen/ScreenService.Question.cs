@@ -169,7 +169,9 @@ namespace KvizCommando.Server.Services.DtoMapping
                     Category = pq.CategoryNo,
                     Status = pq.Status.ToString(),
                     Remark = pq.Remark,
-                    SubmittedAt = pq.SubmittedAt
+                    SubmittedAt = DateTime.SpecifyKind(
+                        pq.SubmittedAt,
+                        DateTimeKind.Utc)
                 });
             }
 

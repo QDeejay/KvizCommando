@@ -297,16 +297,35 @@ internal sealed partial class AdminMainWindow : Window
         var reject = new Button("_Elutasítás") { X = Pos.Right(approve) + 2, Y = 25 };
         var close = new Button("_Vissza") { X = Pos.Right(reject) + 2, Y = 25 };
 
-        void Save(string requestedStatus)
+        void Save(string requestedStatus, bool isReview = false)
         {
             try
             {
-                _database.UpdatePendingQuestion(
-                    row,
-                    text.Text?.ToString() ?? string.Empty,
-                    answerFields.Select(x => x.Text?.ToString() ?? string.Empty).ToArray(),
-                    requestedStatus,
-                    remark.Text?.ToString());
+                var questionText = text.Text?.ToString() ?? string.Empty;
+                var questionAnswers = answerFields
+                    .Select(x => x.Text?.ToString() ?? string.Empty)
+                    .ToArray();
+                var questionRemark = remark.Text?.ToString();
+
+                if (isReview)
+                {
+                    _database.ReviewPendingQuestion(
+                        row,
+                        questionText,
+                        questionAnswers,
+                        requestedStatus,
+                        questionRemark);
+                }
+                else
+                {
+                    _database.UpdatePendingQuestion(
+                        row,
+                        questionText,
+                        questionAnswers,
+                        requestedStatus,
+                        questionRemark);
+                }
+
                 MessageBox.Query("Kész", $"Kérdés mentve. Status: {requestedStatus}", "OK");
                 Application.RequestStop();
             }
@@ -317,8 +336,8 @@ internal sealed partial class AdminMainWindow : Window
         }
 
         save.Clicked += () => Save(status.Text?.ToString() ?? row.Status);
-        approve.Clicked += () => Save("Approved");
-        reject.Clicked += () => Save("Rejected");
+        approve.Clicked += () => Save("Approved", isReview: true);
+        reject.Clicked += () => Save("Rejected", isReview: true);
         close.Clicked += () => Application.RequestStop();
 
         dialog.Add(statusLabel, status, remarkLabel, remark, save, approve, reject, close);
