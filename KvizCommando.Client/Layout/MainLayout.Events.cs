@@ -61,9 +61,7 @@ namespace KvizCommando.Client.Layout
         private void UpdateTitle()
         {
             _currentTitle = Ui.Header.Title;
-
-            if (IsFullScreenGame)
-                _isMobileNavOpen = false;
+            _isMobileNavOpen = false;
 
             InvokeAsync(StateHasChanged);
         }

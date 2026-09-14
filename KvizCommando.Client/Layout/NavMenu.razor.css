@@ -82,10 +82,10 @@
     display:flex;
     position: relative;
     width: stretch;
+     font-family: 'Special Elite', cursive;
     bottom: 40px;
     color: #d3d3d3;
-    border: dashed 1px green;
-    font-size:0.5rem;
+    font-size:0.6rem;
     justify-content:center;
 }
 

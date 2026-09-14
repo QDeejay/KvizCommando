@@ -22,7 +22,7 @@ namespace KvizCommando.Server.Data.StaticData
             [11] = new(11, "Filmek", "Movies", "<Fil>", "<Mov>"),
             [12] = new(12, "Játék", "Games", "<Ját>", "<Gam>"),
             [13] = new(13, "Informatika", "IT", "<Inf>", "<IT.>"),
-            [14] = new(14, "Földrajz–csillagászat", "Geography-Astronomy", "<FCS>", "<G.A>"),
+            [14] = new(14, "Földrajz–csillagászat", "Geography-Astronomy", "<FCs>", "<G.A>"),
             [15] = new(15, "Divat és márkák", "Fashion & brands", "<Div>", "<Fas>"),
             [16] = new(16, "Irodalom", "Literature", "<Iro>", "<Lit>"),
             [17] = new(17, "Saját", "Own", "<Iro>", "<Lit>"),
