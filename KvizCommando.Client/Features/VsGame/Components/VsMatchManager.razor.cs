@@ -38,7 +38,6 @@ public partial class VsMatchManager : IAsyncDisposable
     private string _errorText = string.Empty;
     private readonly CancellationTokenSource _lifetimeCts = new();
     private System.Threading.Timer? _queueTimer;
-    private bool _preparationMusicStarted;
     private bool _battleMusicStarted;
     private bool _requiresQuitConfirmation;
     private bool _completionHandled;
@@ -66,18 +65,25 @@ public partial class VsMatchManager : IAsyncDisposable
 
         try
         {
-            var result =
-                await MatchClient.StartAsync(
-                    ClassificationId,
-                    _lifetimeCts.Token);
+            await Audio.FadeOutMusicAsync(
+                AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
+
+            var result = await MatchClient.StartAsync(
+                ClassificationId,
+                _lifetimeCts.Token);
 
             if (result.IsAccepted)
             {
+                await Audio.PlayMusicAsync(
+                    MusicTrack.MenuVs);
                 await BuildViewDataAsync();
             }
             else
             {
                 _errorText = Lang[result.ErrorKey];
+                await Audio.CrossFadeMusicAsync(
+                    MusicTrack.MenuMain,
+                    AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
 
                 if (result.ErrorKey ==
                     "vsgame.Match.Error.QueueValidation")
@@ -96,6 +102,9 @@ public partial class VsMatchManager : IAsyncDisposable
         {
             _errorText =
                 Lang["vsgame.Match.Error.Connection"];
+            await Audio.CrossFadeMusicAsync(
+                MusicTrack.MenuMain,
+                AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
         }
     }
 
@@ -150,21 +159,13 @@ public partial class VsMatchManager : IAsyncDisposable
                 await OnTeamLevelChanged.InvokeAsync(newTeamLevel);
         }
 
-        if (!_preparationMusicStarted &&
-            (_queue is not null ||
-             phase == VsMatchPhase.PreparationStarting))
-        {
-            _preparationMusicStarted = true;
-            await Audio.PlayMusicAsync(
-                MusicTrack.MenuVs);
-        }
-
         if (!_battleMusicStarted &&
             phase == VsMatchPhase.GameStarting)
         {
             _battleMusicStarted = true;
-            await Audio.PlayMusicAsync(
-                MusicTrack.BattleVs);
+            await Audio.CrossFadeMusicAsync(
+                MusicTrack.BattleVs,
+                AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
         }
 
         var requiresQuitConfirmation =
@@ -389,8 +390,9 @@ public partial class VsMatchManager : IAsyncDisposable
 
             try
             {
-                await Audio.PlayMusicAsync(
-                    MusicTrack.MenuMain);
+                await Audio.CrossFadeMusicAsync(
+                    MusicTrack.MenuMain,
+                    AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
             }
             catch (Exception ex)
             {

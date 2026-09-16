@@ -180,8 +180,9 @@ public partial class SoloGameManager : IAsyncDisposable
 
         try
         {
-            await Audio.PlayMusicAsync(
-                MusicTrack.MenuMain);
+            await Audio.CrossFadeMusicAsync(
+                MusicTrack.MenuMain,
+                AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
         }
         catch (Exception ex)
         {

@@ -55,6 +55,53 @@ window.kcHowler = (() => {
         music.play();
     }
 
+    function fadeOutMusic(durationMs) {
+        if (music === null)
+            return;
+
+        const outgoing = music;
+        music = null;
+        musicPath = null;
+
+        return new Promise(resolve => {
+            outgoing.once("fade", () => {
+                outgoing.unload();
+                resolve();
+            });
+            outgoing.fade(outgoing.volume(), 0, durationMs);
+        });
+    }
+
+    function crossFadeMusic(path, durationMs) {
+        if (music !== null && musicPath === path) {
+            if (!music.playing())
+                music.play();
+
+            return;
+        }
+
+        if (music === null) {
+            playMusic(path);
+            return;
+        }
+
+        const outgoing = music;
+        const incoming = new Howl({
+            src: [path],
+            loop: true,
+            preload: true,
+            volume: 0
+        });
+
+        music = incoming;
+        musicPath = path;
+        incoming.play();
+
+        outgoing.once("fade", () => outgoing.unload());
+        outgoing.fade(outgoing.volume(), 0, durationMs);
+        incoming.fade(0, musicVolume, durationMs);
+    }
+
     function stopMusic() {
         if (music === null)
             return;
@@ -97,6 +144,8 @@ window.kcHowler = (() => {
     return {
         setMuted,
         playMusic,
+        fadeOutMusic,
+        crossFadeMusic,
         stopMusic,
         setMusicVolume,
         preloadSfx,

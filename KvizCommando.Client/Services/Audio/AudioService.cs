@@ -63,6 +63,32 @@ namespace KvizCommando.Client.Services.Audio
         }
 
         /// <summary>
+        /// Fokozatosan lehalkítja, majd felszabadítja az aktuális háttérzenét.
+        /// </summary>
+        /// <param name="durationMs">Az átmenet időtartama ezredmásodpercben.</param>
+        public async Task FadeOutMusicAsync(int durationMs)
+        {
+            await _jsRuntime.InvokeVoidAsync(
+                "kcHowler.fadeOutMusic",
+                durationMs);
+        }
+
+        /// <summary>
+        /// Átúsztatja az aktuális háttérzenét a megadott zenébe.
+        /// </summary>
+        /// <param name="track">Az új háttérzene.</param>
+        /// <param name="durationMs">Az átmenet időtartama ezredmásodpercben.</param>
+        public async Task CrossFadeMusicAsync(
+            MusicTrack track,
+            int durationMs)
+        {
+            await _jsRuntime.InvokeVoidAsync(
+                "kcHowler.crossFadeMusic",
+                WithAssetVersion($"audio/music/{track}.webm"),
+                durationMs);
+        }
+
+        /// <summary>
         /// Leállítja a háttérzene lejátszását.
         /// </summary>
         public async Task StopMusicAsync()
