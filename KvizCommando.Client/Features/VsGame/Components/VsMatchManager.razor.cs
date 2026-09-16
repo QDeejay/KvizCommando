@@ -81,9 +81,6 @@ public partial class VsMatchManager : IAsyncDisposable
             else
             {
                 _errorText = Lang[result.ErrorKey];
-                await Audio.CrossFadeMusicAsync(
-                    MusicTrack.MenuMain,
-                    AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
 
                 if (result.ErrorKey ==
                     "vsgame.Match.Error.QueueValidation")
@@ -102,9 +99,6 @@ public partial class VsMatchManager : IAsyncDisposable
         {
             _errorText =
                 Lang["vsgame.Match.Error.Connection"];
-            await Audio.CrossFadeMusicAsync(
-                MusicTrack.MenuMain,
-                AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
         }
     }
 
@@ -151,6 +145,9 @@ public partial class VsMatchManager : IAsyncDisposable
         {
             _completionHandled = true;
             await PlayMatchCompletionEffectAsync();
+            await Audio.CrossFadeMusicAsync(
+                MusicTrack.MenuMain,
+                AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
 
             var newTeamLevel =
                 _match?.Reward.MyReward?.NewTeamLevel ?? 0;
@@ -390,9 +387,17 @@ public partial class VsMatchManager : IAsyncDisposable
 
             try
             {
-                await Audio.CrossFadeMusicAsync(
-                    MusicTrack.MenuMain,
-                    AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
+                if (_battleMusicStarted)
+                {
+                    await Audio.CrossFadeMusicAsync(
+                        MusicTrack.MenuMain,
+                        AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
+                }
+                else
+                {
+                    await Audio.PlayMusicAsync(
+                        MusicTrack.MenuMain);
+                }
             }
             catch (Exception ex)
             {

@@ -35,9 +35,6 @@ partial class SoloGameManager
 
             if (_game is null)
             {
-                await Audio.CrossFadeMusicAsync(
-                    MusicTrack.MenuMain,
-                    AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
                 await ShowFailureAsync();
                 return;
             }
@@ -70,9 +67,6 @@ partial class SoloGameManager
         catch (Exception ex)
         {
             Logger.LogError(ex, "Unexpected error during solo game.");
-            await Audio.CrossFadeMusicAsync(
-                MusicTrack.MenuMain,
-                AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
             await ShowFailureAsync();
         }
     }
@@ -226,9 +220,6 @@ partial class SoloGameManager
             await OnTeamLevelChanged.InvokeAsync(
                 _result.Rewards.NewTeamLevel);
         }
-        await Audio.CrossFadeMusicAsync(
-            MusicTrack.MenuMain,
-            AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
         await ShowStatusAsync("solo.Label.GameProcess.Evaluating", 1000, ct);
         await ShowStatusAsync("solo.Label.GameProcess.EvaluationReady", 1000, ct);
         await EvaluateAsync(ct);

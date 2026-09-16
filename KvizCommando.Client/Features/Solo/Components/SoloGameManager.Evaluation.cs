@@ -52,6 +52,9 @@ partial class SoloGameManager
         CompleteEvaluationProgress();
         await RenderAsync();
         await Task.Delay(700, ct);
+        await Audio.CrossFadeMusicAsync(
+            MusicTrack.MenuMain,
+            AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
         await ShowRewardAsync();
     }
 

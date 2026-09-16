@@ -311,8 +311,9 @@ internal static class VsMatchScoring
 
         VsMatchPlayerState? winner = null;
         var questionerOrder = isCaptainRound
-            ? match.Game.CaptainOrder
+            ? match.Game.CaptainOrder.Reverse().ToArray()
             : match.Game.QuestionerOrder;
+
         var fastest = match.Players
             .OrderBy(player =>
                 RoundToTenth(player.RoundTimeSeconds))
