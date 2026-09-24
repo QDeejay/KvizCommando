@@ -73,4 +73,6 @@
   <data name="ranking.Points" xml:space="preserve"><value>Points</value></data>
   <data name="ranking.Loading" xml:space="preserve"><value>Loading rankings…</value></data>
   <data name="ranking.NoResult" xml:space="preserve"><value>You do not have a ranking yet.</value></data>
+  <data name="ranking.Footer.Position" xml:space="preserve"><value>Rank: {0}.</value></data>
+  <data name="ranking.Footer.Unranked" xml:space="preserve"><value>No ranking</value></data>
 </root>

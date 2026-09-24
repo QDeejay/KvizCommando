@@ -1,5 +1,8 @@
 using KvizCommando.Client.Features.Rankings.Components;
 using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Localization.Rankings;
+using KvizCommando.Shared.Models.Dtos;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Rankings.Builders;
 
@@ -8,12 +11,14 @@ public sealed class RankingBoxSpecs : VmSpecs
 {
     internal RankingBoxKey Key { get; init; }
     internal bool Enabled { get; init; } = true;
+    internal Func<IStringLocalizer<RankingResource>, RankingDtos?, string> BuildFooter
+        { get; init; } = (_, _) => string.Empty;
 }
 
 /// <summary>A ranglisták gyökér- és tartalmi dobozainak meghatározásai.</summary>
 public static class RankingsBoxSpecs
 {
-    private const string IMAGE_ROOT = "images/buttons";
+    private const string IMAGE_ROOT = "images/buttons/rankings";
 
     /// <summary>A ranglistákhoz tartozó összes doboz specifikációja.</summary>
     public static readonly IReadOnlyList<RankingBoxSpecs> Specs =
@@ -22,7 +27,12 @@ public static class RankingsBoxSpecs
         {
             Key = RankingBoxKey.Solo,
             TitleKey = "Ranking.Solo",
-            BgImageSrc = $"{IMAGE_ROOT}/home/gamesolo.webp",
+            BgImageSrc = $"{IMAGE_ROOT}/solo.webp",
+            FooterDisplay = true,
+            BuildFooter = (lang, rankings) =>
+                rankings?.SoloOverall.CurrentPosition is int position && position > 0
+                    ? lang["ranking.Footer.Position", position]
+                    : lang["ranking.Footer.Unranked"],
             Size = ContentBoxSize.BUTTON_WIDE,
             ClickId = (int)RankingBoxKey.Solo
         },
@@ -30,7 +40,12 @@ public static class RankingsBoxSpecs
         {
             Key = RankingBoxKey.Vs,
             TitleKey = "Ranking.Vs",
-            BgImageSrc = $"{IMAGE_ROOT}/vsgame/ranked.webp",
+            BgImageSrc = $"{IMAGE_ROOT}/vs.webp",
+            FooterDisplay = true,
+            BuildFooter = (lang, rankings) =>
+                rankings?.VsAllTime.CurrentPosition is int position && position > 0
+                    ? lang["ranking.Footer.Position", position]
+                    : lang["ranking.Footer.Unranked"],
             Size = ContentBoxSize.BUTTON_WIDE,
             ClickId = (int)RankingBoxKey.Vs
         },
@@ -38,7 +53,9 @@ public static class RankingsBoxSpecs
         {
             Key = RankingBoxKey.Memorial,
             TitleKey = "Ranking.Memorial",
-            BgImageSrc = $"{IMAGE_ROOT}/home/ranking.webp",
+            BgImageSrc = $"{IMAGE_ROOT}/memorial.webp",
+            FooterDisplay = true,
+            BuildFooter = (lang, _) => lang["ranking.Footer.Unranked"],
             Size = ContentBoxSize.BUTTON_WIDE,
             ClickId = (int)RankingBoxKey.Memorial,
             Enabled = false

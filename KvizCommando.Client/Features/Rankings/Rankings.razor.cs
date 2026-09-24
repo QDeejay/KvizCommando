@@ -3,13 +3,17 @@ using KvizCommando.Client.Features.Rankings.Builders;
 using KvizCommando.Client.Models.ViewModels;
 using KvizCommando.Client.Services.ClientCache;
 using KvizCommando.Client.Utilities;
+using KvizCommando.Localization.Rankings;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 
 namespace KvizCommando.Client.Features.Rankings;
 
 /// <summary>A ranglisták gyökérképernyőjét és tartalmi dobozait kezeli.</summary>
 public partial class Rankings : KcComponentBase, IDisposable
 {
+    [Inject] private IStringLocalizer<RankingResource> Lang { get; set; } = default!;
+
     [CascadingParameter]
     private AppState AppStates { get; set; } = default!;
 
@@ -24,8 +28,14 @@ public partial class Rankings : KcComponentBase, IDisposable
             AppStates.BoxTitles["Root.Rankings"],
             (int)HomeBoxKey.Rankings);
         Ui.Header.SetBackBtnEna(false);
-        _boxes = RankingBoxBuilder.BuildBoxes(AppStates.BoxTitles);
         _boxOrder = RankingBoxBuilder.Root;
+    }
+
+    /// <inheritdoc />
+    protected override void OnParametersSet()
+    {
+        _boxes = RankingBoxBuilder.BuildBoxes(
+            AppStates.BoxTitles, AppStates.Ranking, Lang);
     }
 
     private void OpenSection(int boxId)

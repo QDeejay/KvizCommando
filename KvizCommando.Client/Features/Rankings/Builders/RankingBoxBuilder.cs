@@ -1,5 +1,8 @@
 using KvizCommando.Client.Features.Rankings.Components;
 using KvizCommando.Client.Models.ViewModels;
+using KvizCommando.Localization.Rankings;
+using KvizCommando.Shared.Models.Dtos;
+using Microsoft.Extensions.Localization;
 using KvizCommando.Shared.Models.Enums;
 
 namespace KvizCommando.Client.Features.Rankings.Builders;
@@ -23,9 +26,13 @@ public static class RankingBoxBuilder
 
     /// <summary>A közös boxcímekkel összeállítja a gyökér- és tartalmi dobozokat.</summary>
     /// <param name="boxTitles">A közös dobozcímek lokalizált értékei.</param>
+    /// <param name="rankings">A játékos ranglistaeredményei.</param>
+    /// <param name="lang">A láblécek lokalizált feliratai.</param>
     /// <returns>A dobozok kulcs szerinti nézetmodelljei.</returns>
     public static Dictionary<string, ContentBoxVm> BuildBoxes(
-        IReadOnlyDictionary<string, string> boxTitles)
+        IReadOnlyDictionary<string, string> boxTitles,
+        RankingDtos? rankings,
+        IStringLocalizer<RankingResource> lang)
     {
         var boxes = new Dictionary<string, ContentBoxVm>();
 
@@ -36,6 +43,10 @@ public static class RankingBoxBuilder
             {
                 DictKey = key,
                 Header = boxTitles[spec.TitleKey],
+                Footer = spec.FooterDisplay
+                    ? spec.BuildFooter(lang, rankings)
+                    : string.Empty,
+                FooterDisplay = spec.FooterDisplay,
                 Size = spec.Size,
                 BgImageSrc = spec.BgImageSrc,
                 IsEnabled = spec.Enabled,

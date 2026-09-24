@@ -73,4 +73,6 @@
   <data name="ranking.Points" xml:space="preserve"><value>Pont</value></data>
   <data name="ranking.Loading" xml:space="preserve"><value>Ranglista betöltése…</value></data>
   <data name="ranking.NoResult" xml:space="preserve"><value>Még nincs saját helyezésed.</value></data>
+  <data name="ranking.Footer.Position" xml:space="preserve"><value>Helyezés: {0}.</value></data>
+  <data name="ranking.Footer.Unranked" xml:space="preserve"><value>Nincs helyezés</value></data>
 </root>

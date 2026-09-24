@@ -4,7 +4,7 @@
     gap: 14px;
     width: 100%;
     min-width: 0;
-    padding: 16px;
+    padding: 0 16px;
 }
 
 .kc-ranking-choices {
@@ -49,7 +49,7 @@
 .kc-ranking-board {
     min-height: 515px;
     min-width: 0;
-    padding: 12px;
+    padding: 6px 12px;
     font-size: clamp(.83rem, 1.25vw, 1.08rem);
 }
 
@@ -150,11 +150,11 @@
 @media (max-width: 520px) {
     .kc-ranking-layout {
         gap: 10px;
-        padding: 8px;
+        padding: 0 8px;
     }
 
     .kc-ranking-board {
-        padding: 5px;
+        padding: 0 5px;
     }
 
     .kc-ranking-heading,
