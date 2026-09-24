@@ -43,11 +43,20 @@ internal sealed class RankingCacheService : IRankingCacheService
         var snapshot = Volatile.Read(ref _snapshot) ??
             throw new InvalidOperationException("Ranking cache has not been initialized.");
         var selections = new Dictionary<RankingList, RankingSelection>();
+        var hasNewerResult = false;
 
         foreach (var list in Enum.GetValues<RankingList>())
         {
+            var currentValue = currentValues[list];
+            var storedValue = snapshot.Values[list].GetValueOrDefault(playerId);
+            var differsFromSnapshot = storedValue is null
+                ? currentValue.Score > 0
+                : storedValue.Score != currentValue.Score ||
+                  storedValue.TimeSeconds != currentValue.TimeSeconds;
+
+            hasNewerResult |= differsFromSnapshot;
             selections.Add(list, SelectRows(
-                snapshot, list, playerId, currentValues[list]));
+                snapshot, list, playerId, currentValue, differsFromSnapshot));
         }
 
         var playerIds = selections.Values
@@ -69,8 +78,9 @@ internal sealed class RankingCacheService : IRankingCacheService
 
         return new RankingDtos
         {
-            LastFlushUtc = snapshot.UpdatedUtc,
-            FlushIntervalSeconds = _options.Value.FlushIntervalSeconds,
+            NextRefreshUtc = hasNewerResult
+                ? snapshot.UpdatedUtc.AddSeconds(_options.Value.FlushIntervalSeconds + 2)
+                : null,
             SoloOverall = MapRows(selections[RankingList.SoloOverall], playerId, players),
             SoloCategory = MapRows(selections[RankingList.SoloCategory], playerId, players),
             SoloOrientation = MapRows(selections[RankingList.SoloOrientation], playerId, players),
@@ -130,14 +140,12 @@ internal sealed class RankingCacheService : IRankingCacheService
         RankingCacheSnapshot snapshot,
         RankingList list,
         int playerId,
-        RankingValue currentValue)
+        RankingValue currentValue,
+        bool differsFromSnapshot)
     {
         var ordered = snapshot.Ordered[list];
-        var storedValue = snapshot.Values[list].GetValueOrDefault(playerId);
 
-        if (storedValue is null ||
-            storedValue.Score != currentValue.Score ||
-            storedValue.TimeSeconds != currentValue.TimeSeconds)
+        if (differsFromSnapshot)
         {
             var adjusted = ordered.Where(row => row.PlayerId != playerId).ToList();
             if (currentValue.Score > 0)
@@ -199,8 +207,7 @@ internal sealed class RankingCacheService : IRankingCacheService
                 row.Previous.Score == value.Score &&
                 value.TimeSeconds > row.Previous.TimeSeconds)
             {
-                difference = Math.Min(99.9,
-                    Math.Round(value.TimeSeconds - row.Previous.TimeSeconds, 1));
+                difference = value.TimeSeconds - row.Previous.TimeSeconds;
             }
 
             rows.Add(new RankingRowDto

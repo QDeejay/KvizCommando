@@ -40,13 +40,14 @@ public partial class RankingBoard : KcComponentBase, IDisposable
         _refreshCancellation = new CancellationTokenSource();
 
         if (AppStates.Ranking is null ||
-            DateTime.UtcNow >= AppStates.Ranking.LastFlushUtc.AddSeconds(
-                AppStates.Ranking.FlushIntervalSeconds))
+            (AppStates.Ranking.NextRefreshUtc is DateTime dueUtc &&
+             DateTime.UtcNow >= dueUtc))
         {
             await Ui.ReloadAsync(ReqStates.Ranking);
         }
 
-        _ = RefreshWhileOpenAsync(_refreshCancellation.Token);
+        if (AppStates.Ranking?.NextRefreshUtc is not null)
+            _ = RefreshWhileOpenAsync(_refreshCancellation.Token);
     }
 
     private void SelectList(RankingList list) => _selectedList = list;
@@ -58,11 +59,10 @@ public partial class RankingBoard : KcComponentBase, IDisposable
             while (!ct.IsCancellationRequested)
             {
                 var snapshot = AppStates.Ranking;
-                var dueUtc = snapshot?.LastFlushUtc.AddSeconds(
-                    snapshot.FlushIntervalSeconds);
-                var wait = dueUtc.HasValue
-                    ? dueUtc.Value - DateTime.UtcNow
-                    : TimeSpan.FromSeconds(5);
+                if (snapshot?.NextRefreshUtc is not DateTime dueUtc)
+                    return;
+
+                var wait = dueUtc - DateTime.UtcNow;
 
                 await Task.Delay(
                     wait > TimeSpan.Zero ? wait : TimeSpan.FromSeconds(5),
@@ -99,6 +99,11 @@ public partial class RankingBoard : KcComponentBase, IDisposable
 
     private string Score(double value) =>
         value.ToString(_selectedList == RankingList.VsAllTime ? "0.0" : "0");
+
+    private static string FormatTimeDifference(double difference) =>
+        difference > 99.9
+            ? "+99.9s"
+            : difference.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + "s";
 
     /// <inheritdoc />
     public void Dispose()

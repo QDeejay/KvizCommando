@@ -22,11 +22,6 @@ public interface IRankingState
     Task RefreshAsync();
 
     /// <summary>
-    /// Elavultnak jelöli a ranglisták pillanatképét.
-    /// </summary>
-    void Invalidate();
-
-    /// <summary>
     /// Törli a ranglisták pillanatképét.
     /// </summary>
     void Clear();

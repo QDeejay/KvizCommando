@@ -137,8 +137,7 @@ namespace KvizCommando.Client.Layout
 
         private async Task<bool> LoadRankingStateAsync()
         {
-            RState.Invalidate();
-            await RState.EnsureLoadedAsync();
+            await RState.RefreshAsync();
             if (!RState.IsLoaded)
                 return false;
 

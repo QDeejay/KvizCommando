@@ -3,13 +3,12 @@ using KvizCommando.Shared.Models.Dtos;
 
 namespace KvizCommando.Client.Services.ClientCache;
 
-/// <summary>Betölti és érvényteleníti a négy ranglista közös kliensállapotát.</summary>
+/// <summary>Betölti és frissíti a négy ranglista közös kliensállapotát.</summary>
 public sealed class RankingState : IRankingState
 {
     private readonly ICacheApiService _api;
     private readonly SemaphoreSlim _gate = new(1, 1);
     private RankingDtos? _snapshot;
-    private bool _dirty = true;
 
     /// <summary>Létrehozza a ranglisták kliensoldali állapotát.</summary>
     /// <param name="api">A képernyőadatokat lekérő szolgáltatás.</param>
@@ -19,7 +18,7 @@ public sealed class RankingState : IRankingState
     }
 
     /// <inheritdoc />
-    public bool IsLoaded => _snapshot is not null && !_dirty;
+    public bool IsLoaded => _snapshot is not null;
 
     /// <inheritdoc />
     public RankingDtos? Snapshot => _snapshot;
@@ -37,7 +36,6 @@ public sealed class RankingState : IRankingState
                 return;
 
             _snapshot = await _api.GetRankingsAsync();
-            _dirty = false;
         }
         finally
         {
@@ -52,7 +50,6 @@ public sealed class RankingState : IRankingState
         try
         {
             _snapshot = await _api.GetRankingsAsync();
-            _dirty = false;
         }
         finally
         {
@@ -61,17 +58,13 @@ public sealed class RankingState : IRankingState
     }
 
     /// <inheritdoc />
-    public void Invalidate() => _dirty = true;
-
-    /// <inheritdoc />
     public void Clear()
     {
         _snapshot = null;
-        _dirty = true;
     }
 
     private bool IsCurrent() =>
         IsLoaded &&
-        DateTime.UtcNow < _snapshot!.LastFlushUtc.AddSeconds(
-            _snapshot.FlushIntervalSeconds);
+        (_snapshot!.NextRefreshUtc is null ||
+         DateTime.UtcNow < _snapshot.NextRefreshUtc.Value);
 }

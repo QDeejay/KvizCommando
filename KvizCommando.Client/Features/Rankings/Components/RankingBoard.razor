@@ -44,14 +44,14 @@
                 <div class="kc-ranking-row @(row.IsCurrentPlayer ? "current" : null)">
                     <span class="kc-ranking-position">@row.Position.</span>
                     <span class="kc-ranking-identity">
-                        <span class="kc-ranking-level">@Level(row.RankEnum)</span>
                         <span class="kc-ranking-name">@row.DisplayName</span>
+                        <span class="kc-ranking-level">(@Level(row.RankEnum))</span>
                     </span>
-                    <span class="kc-ranking-result">
-                        <span>@Score(row.Score)</span>
+                    <span class="kc-ranking-points">@Score(row.Score)</span>
+                    <span class="kc-ranking-time">
                         @if (row.TimeDifferenceSeconds is double difference)
                         {
-                            <small class="kc-ranking-time">+@difference.ToString("0.0")s</small>
+                            <span>@FormatTimeDifference(difference)</span>
                         }
                     </span>
                 </div>

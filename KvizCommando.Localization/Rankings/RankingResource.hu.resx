@@ -64,7 +64,7 @@
   <data name="ranking.Solo.Category" xml:space="preserve"><value>Kategóriajáték</value></data>
   <data name="ranking.Solo.Orientation" xml:space="preserve"><value>Orientációjáték</value></data>
   <data name="ranking.Solo.Campaign" xml:space="preserve"><value>Kampány</value></data>
-  <data name="ranking.Vs.AllTime" xml:space="preserve"><value>All-time</value></data>
+  <data name="ranking.Vs.AllTime" xml:space="preserve"><value>Örökranglista</value></data>
   <data name="ranking.Vs.Daily" xml:space="preserve"><value>Napi</value></data>
   <data name="ranking.Vs.Weekly" xml:space="preserve"><value>Heti</value></data>
   <data name="ranking.Vs.Monthly" xml:space="preserve"><value>Havi</value></data>

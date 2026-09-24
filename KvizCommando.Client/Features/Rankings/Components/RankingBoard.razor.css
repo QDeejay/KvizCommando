@@ -15,18 +15,30 @@
 
 .kc-ranking-choices button {
     padding: 11px 8px;
-    border: 1px solid var(--kc-lcd-border);
-    border-radius: 5px;
-    background: #232a20;
-    color: #e0e0d8;
-    font-family: var(--kc-lcd-font);
+    border: 1px solid #55583f;
+    border-radius: 8px;
+    background-color: var(--kc-surface-bg-soft);
+    color: #cccccc;
+    box-shadow:
+        inset 0 0 0 1px rgba(119, 120, 80, 0.14),
+        0 3px 7px rgba(0, 0, 0, 0.32);
     cursor: var(--kc-cursor-active);
     text-align: left;
 }
 
+.kc-ranking-choices button:not(:disabled):not(.active):hover {
+    background-color: rgba(48, 56, 46, 0.96);
+    border-color: #777850;
+}
+
 .kc-ranking-choices button.active {
-    background: var(--kc-lcd-background);
-    color: var(--kc-lcd-color);
+    padding: 10px 7px;
+    background-color: rgba(75, 83, 32, 0.78);
+    border: 2px solid #b6bd73;
+    box-shadow:
+        inset 0 0 0 1px rgba(210, 255, 57, 0.14),
+        inset 0 3px 7px rgba(0, 0, 0, 0.58);
+    cursor: var(--kc-cursor-normal);
 }
 
 .kc-ranking-choices button:disabled {
@@ -44,7 +56,7 @@
 .kc-ranking-heading,
 .kc-ranking-row {
     display: grid;
-    grid-template-columns: 3.3rem minmax(0, 1fr) minmax(5.4rem, auto);
+    grid-template-columns: 3.3rem minmax(0, 1fr) minmax(4.4rem, max-content) 3.8rem;
     gap: 8px;
     align-items: center;
 }
@@ -55,7 +67,8 @@
     font-weight: bold;
 }
 
-.kc-ranking-heading span:last-child {
+.kc-ranking-heading span:first-child,
+.kc-ranking-heading span:nth-child(3) {
     text-align: right;
 }
 
@@ -71,6 +84,11 @@
     font-weight: bold;
 }
 
+.kc-ranking-position,
+.kc-ranking-points {
+    text-align: right;
+}
+
 .kc-ranking-identity {
     display: flex;
     gap: 9px;
@@ -81,6 +99,7 @@
 .kc-ranking-level {
     flex: none;
     font-size: .83em;
+    white-space: nowrap;
 }
 
 .kc-ranking-name {
@@ -89,16 +108,17 @@
     white-space: nowrap;
 }
 
-.kc-ranking-result {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    line-height: 1.1;
+.kc-ranking-time {
+    align-self: center;
+    color: #af1229;
+    font-size: .75em;
+    font-weight: bold;
+    text-align: right;
+    white-space: nowrap;
 }
 
-.kc-ranking-time {
-    color: #af1229;
-    font-size: .76em;
+.kc-ranking-row.current .kc-ranking-time {
+    color: #f05b64;
 }
 
 .kc-ranking-gap {
@@ -139,14 +159,13 @@
 
     .kc-ranking-heading,
     .kc-ranking-row {
-        grid-template-columns: 2.3rem minmax(0, 1fr) minmax(3.8rem, auto);
+        grid-template-columns: 2.3rem minmax(0, 1fr) minmax(3.2rem, max-content) 3.4rem;
         gap: 4px;
         padding-left: 4px;
         padding-right: 4px;
     }
 
     .kc-ranking-identity {
-        flex-wrap: wrap;
-        gap: 1px 6px;
+        gap: 3px;
     }
 }
