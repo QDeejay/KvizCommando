@@ -71,7 +71,8 @@
             </NavLink>
 
             <NavLink class=@_btnNavClass[6]
-                     href="@(Hs.Ranking.Enable ? "#" : null)"
+                     href="@(Hs.Ranking.Enable ? "rankings" : null)"
+                     Match="NavLinkMatch.All"
                      aria-disabled="@(!Hs.Ranking.Enable)"
                      tabindex="@(Hs.Ranking.Enable ? null : "-1")"
                      @onclick="() => HandleNavigationAsync(Hs.Ranking.Enable)">

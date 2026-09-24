@@ -1,0 +1,5 @@
+{
+  "PlayerCachePersistence": {
+    "FlushIntervalSeconds": 60
+  }
+}

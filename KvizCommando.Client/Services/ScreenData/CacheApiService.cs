@@ -73,6 +73,16 @@ namespace KvizCommando.Client.Services.ScreenData
                 ct);
         }
 
+        /// <inheritdoc />
+        public Task<RankingDtos?> GetRankingsAsync(CancellationToken ct = default)
+        {
+            var sessionId = _sessionCache.SessionId;
+
+            return GetAsync<RankingDtos>(
+                $"{SCREEN_ROUTE}/rankings?sessionId={sessionId}",
+                ct);
+        }
+
 
 
         private async Task<T?> GetAsync<T>(string route, CancellationToken ct)

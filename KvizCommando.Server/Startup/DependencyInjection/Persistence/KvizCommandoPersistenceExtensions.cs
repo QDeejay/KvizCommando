@@ -45,6 +45,7 @@ public static class KvizCommandoPersistenceExtensions
 
         services.AddScoped<IQuestionDbService, QuestionDbService>();
         services.AddScoped<IPlayerDbService, PlayerDbService>();
+        services.AddScoped<IRankingDbService, RankingDbService>();
 
         return services;
     }

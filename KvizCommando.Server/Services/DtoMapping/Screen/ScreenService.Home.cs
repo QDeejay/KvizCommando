@@ -115,8 +115,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                 },
                 Ranking = new ScreenButtonEntity
                 {
-                    Enable = false,
-                    FooterData1 = 9
+                    Enable = true
                 },
                 Events = new ScreenButtonEntity
                 {

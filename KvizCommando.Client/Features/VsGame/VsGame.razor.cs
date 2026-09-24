@@ -140,7 +140,8 @@ public partial class VsGame : KcComponentBase, IDisposable
                     ReqStates.Home,
                     ReqStates.Question,
                     ReqStates.Team,
-                    ReqStates.VsGame);
+                    ReqStates.VsGame,
+                    ReqStates.Ranking);
             }
 
             _requiresQuitConfirmation = false;

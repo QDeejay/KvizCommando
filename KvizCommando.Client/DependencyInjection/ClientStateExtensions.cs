@@ -23,6 +23,7 @@ public static class ClientStateExtensions
         services.AddScoped<ITeamState, TeamState>();
         services.AddScoped<ISoloState, SoloState>();
         services.AddScoped<IVsState, VsState>();
+        services.AddScoped<IRankingState, RankingState>();
         services.AddSingleton<SessionService>();
         services.AddScoped<ISettingsService, SettingsService>();
 

@@ -67,6 +67,9 @@ namespace KvizCommando.Client.Layout
                 case ReqStates.VsGame:
                     return await LoadVsGameStateAsync();
 
+                case ReqStates.Ranking:
+                    return await LoadRankingStateAsync();
+
                 case ReqStates.LocalSotrage:
                     await LoadLocalStorageStateAsync();
                     return true;
@@ -129,6 +132,17 @@ namespace KvizCommando.Client.Layout
                 return false;
 
             _appState.VsGame = VState.Snapshot;
+            return true;
+        }
+
+        private async Task<bool> LoadRankingStateAsync()
+        {
+            RState.Invalidate();
+            await RState.EnsureLoadedAsync();
+            if (!RState.IsLoaded)
+                return false;
+
+            _appState.Ranking = RState.Snapshot;
             return true;
         }
 

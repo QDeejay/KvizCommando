@@ -1,0 +1,23 @@
+@page "/rankings"
+@inherits Utilities.KcComponentBase
+
+<PageContainer>
+    <div class="kc-ranking-page">
+        <div class="kc-ranking-root">
+            @foreach (var key in _boxOrder)
+            {
+                var box = _boxes[key];
+
+                <ContentBox Vm="@box" OnClick="OpenSection">
+                    <ContentBody>
+                        @if (box.BodyComponent is not null)
+                        {
+                            <DynamicComponent Type="@box.BodyComponent"
+                                              Parameters="@box.BodyParameters" />
+                        }
+                    </ContentBody>
+                </ContentBox>
+            }
+        </div>
+    </div>
+</PageContainer>

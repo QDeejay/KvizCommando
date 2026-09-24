@@ -85,5 +85,13 @@ namespace KvizCommando.Server.Services.Db
         Task<string> SuggestAsync(
             string? rawName,
             CancellationToken ct = default);
+
+        /// <summary>
+        /// Beolvassa a megadott játékosok nyilvános nevét és szintjét.
+        /// </summary>
+        /// <param name="playerIds">A megjelenítendő játékosok azonosítói.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
+        Task<IReadOnlyDictionary<int, (string DisplayName, int RankEnum)>>
+            GetRankingPlayerDetailsAsync(int[] playerIds, CancellationToken ct = default);
     }
 }

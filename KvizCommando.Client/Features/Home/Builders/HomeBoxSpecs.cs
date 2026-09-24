@@ -63,12 +63,8 @@ public static class HomeBoxSpecs
             ImageSrc = string.Empty,
             BgImageSrc = $"{IMAGE_ROOT}/ranking.webp",
             Size = ContentBoxSize.BUTTON_MEDIUM,
-            FooterDisplay = true, ClickId = (int)HomeBoxKey.Rankings,
-            Pick = s => s.Ranking,
-            BuildFooter = (lang, b) =>
-                b.FooterData1 < 1
-                ? lang["home.Box.Footer.Rankings2"]
-                : lang["home.Box.Footer.Rankings1", b.FooterData1]
+            FooterDisplay = false, ClickId = (int)HomeBoxKey.Rankings,
+            Pick = s => s.Ranking
         },
         new HomeSpecs {
             Key = HomeBoxKey.Statistic,

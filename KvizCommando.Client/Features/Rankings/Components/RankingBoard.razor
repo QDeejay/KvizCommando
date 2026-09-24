@@ -1,0 +1,65 @@
+@using KvizCommando.Shared.Models.Enums
+@inherits KvizCommando.Client.Utilities.KcComponentBase
+
+<div class="kc-ranking-layout">
+    <nav class="kc-ranking-choices" aria-label="@Lang["ranking.SelectList"]">
+        @if (InitialList == RankingList.SoloOverall)
+        {
+            <button class="@ChoiceClass(RankingList.SoloOverall)" type="button"
+                    @onclick="() => SelectList(RankingList.SoloOverall)">@Lang["ranking.Solo.Overall"]</button>
+            <button class="@ChoiceClass(RankingList.SoloCategory)" type="button"
+                    @onclick="() => SelectList(RankingList.SoloCategory)">@Lang["ranking.Solo.Category"]</button>
+            <button class="@ChoiceClass(RankingList.SoloOrientation)" type="button"
+                    @onclick="() => SelectList(RankingList.SoloOrientation)">@Lang["ranking.Solo.Orientation"]</button>
+            <button type="button" disabled>@Lang["ranking.Solo.Campaign"]</button>
+        }
+        else
+        {
+            <button class="@ChoiceClass(RankingList.VsAllTime)" type="button"
+                    @onclick="() => SelectList(RankingList.VsAllTime)">@Lang["ranking.Vs.AllTime"]</button>
+            <button type="button" disabled>@Lang["ranking.Vs.Daily"]</button>
+            <button type="button" disabled>@Lang["ranking.Vs.Weekly"]</button>
+            <button type="button" disabled>@Lang["ranking.Vs.Monthly"]</button>
+        }
+    </nav>
+
+    <section class="kc-ranking-board kc-lcd-surface" aria-label="@Lang["ranking.List"]">
+        @if (Data is null)
+        {
+            <p>@Lang["ranking.Loading"]</p>
+        }
+        else
+        {
+            <div class="kc-ranking-heading">
+                <span>@Lang["ranking.Place"]</span>
+                <span>@Lang["ranking.Player"]</span>
+                <span>@Lang["ranking.Points"]</span>
+            </div>
+            @foreach (var row in Data.Rows)
+            {
+                @if (row.HasGapBefore)
+                {
+                    <div class="kc-ranking-gap" aria-hidden="true">⋮</div>
+                }
+                <div class="kc-ranking-row @(row.IsCurrentPlayer ? "current" : null)">
+                    <span class="kc-ranking-position">@row.Position.</span>
+                    <span class="kc-ranking-identity">
+                        <span class="kc-ranking-level">@Level(row.RankEnum)</span>
+                        <span class="kc-ranking-name">@row.DisplayName</span>
+                    </span>
+                    <span class="kc-ranking-result">
+                        <span>@Score(row.Score)</span>
+                        @if (row.TimeDifferenceSeconds is double difference)
+                        {
+                            <small class="kc-ranking-time">+@difference.ToString("0.0")s</small>
+                        }
+                    </span>
+                </div>
+            }
+            @if (Data.CurrentPosition is null)
+            {
+                <p class="kc-ranking-unranked">@Lang["ranking.NoResult"]</p>
+            }
+        }
+    </section>
+</div>

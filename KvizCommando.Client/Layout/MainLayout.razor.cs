@@ -36,6 +36,7 @@ namespace KvizCommando.Client.Layout
         [Inject] private ITeamState TState { get; set; } = default!;
         [Inject] private ISoloState SState { get; set; } = default!;
         [Inject] private IVsState VState { get; set; } = default!;
+        [Inject] private IRankingState RState { get; set; } = default!;
         [Inject] private AudioService Audio { get; set; } = default!;
         [Inject] private ISettingsService Settings { get; set; } = default!;
         [Inject] private SessionService SessionService { get; set; } = default!;

@@ -1,5 +1,6 @@
 using KvizCommando.Server.Background;
 using KvizCommando.Server.Services.PlayerCache;
+using KvizCommando.Server.Services.Rankings;
 
 namespace KvizCommando.Server.Startup;
 
@@ -13,8 +14,15 @@ public static class KvizCommandoBackgroundWorkerExtensions
     public static IServiceCollection AddKvizCommandoBackgroundWorkers(
         this IServiceCollection services)
     {
+        services.AddOptions<PlayerCachePersistenceOptions>()
+            .BindConfiguration(PlayerCachePersistenceOptions.SECTION_NAME)
+            .Validate(options => options.FlushIntervalSeconds >= 5 &&
+                                 options.FlushIntervalSeconds <= 3600,
+                "FlushIntervalSeconds must be between 5 and 3600.")
+            .ValidateOnStart();
         services.AddHostedService<ExpiredTokenKillerService>();
         services.AddSingleton<GameDbFlushService>();
+        services.AddSingleton<IRankingCacheService, RankingCacheService>();
         services.AddHostedService<PlayerCachePersistenceService>();
 
         return services;

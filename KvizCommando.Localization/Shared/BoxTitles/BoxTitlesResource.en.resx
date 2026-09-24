@@ -61,6 +61,9 @@
   <data name="Root.GameVs" xml:space="preserve"><value>Game - Vs</value></data>
   <data name="Root.GameSolo" xml:space="preserve"><value>Game - Solo</value></data>
   <data name="Root.Shop" xml:space="preserve"><value>Shop</value></data>
+  <data name="Ranking.Solo" xml:space="preserve"><value>Solo rankings</value></data>
+  <data name="Ranking.Vs" xml:space="preserve"><value>VS rankings</value></data>
+  <data name="Ranking.Memorial" xml:space="preserve"><value>Lawrence Butcher Memorial</value></data>
   <data name="Root.Rankings" xml:space="preserve"><value>Rankings</value></data>
   <data name="Root.Statistic" xml:space="preserve"><value>Statistic</value></data>
   <data name="Root.Events" xml:space="preserve"><value>Events</value></data>

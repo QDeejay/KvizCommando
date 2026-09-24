@@ -61,6 +61,9 @@
   <data name="Root.GameVs" xml:space="preserve"><value>Játék - Vs</value></data>
   <data name="Root.GameSolo" xml:space="preserve"><value>Játék - Solo</value></data>
   <data name="Root.Shop" xml:space="preserve"><value>Bolt</value></data>
+  <data name="Ranking.Solo" xml:space="preserve"><value>Solo ranglista</value></data>
+  <data name="Ranking.Vs" xml:space="preserve"><value>VS ranglista</value></data>
+  <data name="Ranking.Memorial" xml:space="preserve"><value>Lawrence Butcher Memorial</value></data>
   <data name="Root.Rankings" xml:space="preserve"><value>Ranglista</value></data>
   <data name="Root.Statistic" xml:space="preserve"><value>Statisztika</value></data>
   <data name="Root.Events" xml:space="preserve"><value>Események</value></data>

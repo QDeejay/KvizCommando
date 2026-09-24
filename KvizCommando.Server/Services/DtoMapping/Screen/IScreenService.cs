@@ -43,5 +43,13 @@ namespace KvizCommando.Server.Services.DtoMapping
         /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
         /// <param name="ct">A művelet megszakítását jelző token.</param>
         Task<VsGameDtos?> GetVsGameScreenAsync(int playerId, string sessionId, CancellationToken ct = default);
+
+        /// <summary>
+        /// Lekéri a négy ranglista képernyőadatát a játékos aktuális eredményével.
+        /// </summary>
+        /// <param name="playerId">A játékos adatbázis-azonosítója.</param>
+        /// <param name="sessionId">A kliens aktuális munkamenet-azonosítója.</param>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
+        Task<RankingDtos?> GetRankingScreenAsync(int playerId, string sessionId, CancellationToken ct = default);
     }
 }

@@ -45,6 +45,24 @@ namespace KvizCommando.Server.Services.Db
         }
 
         /// <inheritdoc />
+        public async Task<IReadOnlyDictionary<int, (string DisplayName, int RankEnum)>>
+            GetRankingPlayerDetailsAsync(int[] playerIds, CancellationToken ct = default)
+        {
+            return await _db.Players.AsNoTracking()
+                .Where(player => playerIds.Contains(player.PlayerId))
+                .Select(player => new
+                {
+                    player.PlayerId,
+                    player.DisplayName,
+                    player.RankEnum
+                })
+                .ToDictionaryAsync(
+                    player => player.PlayerId,
+                    player => (player.DisplayName, player.RankEnum),
+                    ct);
+        }
+
+        /// <inheritdoc />
         public async Task<CachedPlayer?> LoadPlayerFromDbAsync(
             int playerId,
             string sessionId,

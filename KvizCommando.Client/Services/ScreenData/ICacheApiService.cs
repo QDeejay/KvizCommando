@@ -38,5 +38,12 @@ namespace KvizCommando.Client.Services.ScreenData
         /// <returns>A többjátékos választóképernyő állapota, vagy <see langword="null"/>, ha nem tölthető be.</returns>
         Task<VsGameDtos?> GetVsGameAsync(CancellationToken ct = default);
 
+        /// <summary>
+        /// Lekéri a Solo és VS ranglisták megjelenítési adatait.
+        /// </summary>
+        /// <param name="ct">A művelet megszakítását jelző token.</param>
+        /// <returns>A négy ranglista közös állapotpillanatképe, vagy <see langword="null"/>.</returns>
+        Task<RankingDtos?> GetRankingsAsync(CancellationToken ct = default);
+
     }
 }

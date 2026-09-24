@@ -1,5 +1,6 @@
 ﻿using KvizCommando.Server.Hubs;
 using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
+using KvizCommando.Server.Services.Rankings;
 using KvizCommando.Server.Startup;
 using Microsoft.AspNetCore.HttpOverrides;
 
@@ -88,6 +89,9 @@ var categoryQuestionIndexCache =
     app.Services.GetRequiredService<ICategoryQuestionIndexCache>();
 
 await categoryQuestionIndexCache.LoadAsync();
+
+var rankingCache = app.Services.GetRequiredService<IRankingCacheService>();
+await rankingCache.RefreshAsync();
 
 // Fejlesztői eszközök
 if (app.Environment.IsDevelopment())

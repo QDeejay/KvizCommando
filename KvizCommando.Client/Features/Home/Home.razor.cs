@@ -63,6 +63,9 @@ public partial class Home : KcComponentBase, IDisposable
             case HomeBoxKey.GameSolo:
                 Ui.Nav.NavigateTo("/solo-game");
                 break;
+            case HomeBoxKey.Rankings:
+                Ui.Nav.NavigateTo("/rankings");
+                break;
         }
     }
     private async Task CloseBBoard()

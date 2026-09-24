@@ -9,6 +9,7 @@ namespace KvizCommando.Client.Services.ClientCache
         public QuestionDtos? Question { get; set; }
         public SoloGameDtos? SoloGame { get; set; }
         public VsGameDtos? VsGame { get; set; }
+        public RankingDtos? Ranking { get; set; }
         public IReadOnlyDictionary<string, string> BoxTitles { get; set; } =
             new Dictionary<string, string>();
         public string Culture { get; set; } = "hu";

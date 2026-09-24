@@ -160,7 +160,8 @@ public partial class SoloGame : KcComponentBase, IDisposable
                 await Ui.ReloadAsync(
                     ReqStates.Home,
                     ReqStates.Team,
-                    ReqStates.SoloGame);
+                    ReqStates.SoloGame,
+                    ReqStates.Ranking);
             }
         }
         if (Ui.Header.PageIndex == (int)HomeBoxKey.GameSolo)

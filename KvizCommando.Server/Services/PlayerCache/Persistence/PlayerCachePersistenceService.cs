@@ -1,24 +1,34 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
+using KvizCommando.Server.Services.Rankings;
+using Microsoft.Extensions.Options;
 
 namespace KvizCommando.Server.Services.PlayerCache
 {
-    public sealed class PlayerCachePersistenceService : BackgroundService
+    internal sealed class PlayerCachePersistenceService : BackgroundService
     {
-        private const int FLUSH_INTERVAL_SECONDS = 15;
         private const int MIN_FLUSH_DELAY_SECONDS = 5;
 
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly GameDbFlushService _gameDbFlush;
+        private readonly IRankingCacheService _rankings;
+        private readonly IOptions<PlayerCachePersistenceOptions> _options;
+        private readonly ILogger<PlayerCachePersistenceService> _logger;
 
         private static readonly ConcurrentQueue<PlayerCachePersistenceStats> _lastScans = new();
 
         public PlayerCachePersistenceService(
             IServiceScopeFactory scopeFactory,
-            GameDbFlushService gameDbFlush)
+            GameDbFlushService gameDbFlush,
+            IRankingCacheService rankings,
+            IOptions<PlayerCachePersistenceOptions> options,
+            ILogger<PlayerCachePersistenceService> logger)
         {
             _scopeFactory = scopeFactory;
             _gameDbFlush = gameDbFlush;
+            _rankings = rankings;
+            _options = options;
+            _logger = logger;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -73,6 +83,19 @@ namespace KvizCommando.Server.Services.PlayerCache
                         stoppingToken);
                 }
 
+                try
+                {
+                    await _rankings.RefreshAsync(stoppingToken);
+                }
+                catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogError(exception, "Ranking snapshot refresh failed.");
+                }
+
                 sw.Stop();
 
                 var stat = new PlayerCachePersistenceStats
@@ -108,7 +131,7 @@ namespace KvizCommando.Server.Services.PlayerCache
                     $"Átlag: {avgDuration.TotalMilliseconds:F0} ms, {avgUsers} user");
 
                 var remainingInterval =
-                    TimeSpan.FromSeconds(FLUSH_INTERVAL_SECONDS) - stat.Duration;
+                    TimeSpan.FromSeconds(_options.Value.FlushIntervalSeconds) - stat.Duration;
                 var minimumDelay =
                     TimeSpan.FromSeconds(MIN_FLUSH_DELAY_SECONDS);
                 var wait = remainingInterval > minimumDelay

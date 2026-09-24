@@ -15,10 +15,40 @@ namespace KvizCommando.Server.Controllers.ScreenControllers
     {
         private readonly IScreenService _screenService;
         private readonly IUserPlayerIdCacheService _idCache;
-        public ScreenController(IScreenService screenService, IUserPlayerIdCacheService userPlayerId)
+        public ScreenController(
+            IScreenService screenService,
+            IUserPlayerIdCacheService userPlayerId)
         {
             _screenService = screenService;
             _idCache = userPlayerId;
+        }
+
+        /// <summary>Lekéri a négy ranglistát a játékos aktuális eredményével.</summary>
+        /// <param name="sessionId">Az aktuális munkamenet azonosítója.</param>
+        /// <param name="ct">A kérés megszakítását jelző token.</param>
+        [HttpGet("rankings")]
+        [ProducesResponseType(typeof(RankingDtos), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<RankingDtos>> GetRankingAsync(
+            [FromQuery] string sessionId,
+            CancellationToken ct)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                         ?? User.FindFirstValue("sub");
+            if (userId is null)
+                return Unauthorized();
+
+            var playerId = await _idCache.GetPlayerIdAsync(userId, ct);
+            if (playerId is null or 0)
+                return NotFound();
+
+            var dto = await _screenService.GetRankingScreenAsync(
+                playerId.Value, sessionId, ct);
+            if (dto is null)
+                return NotFound();
+
+            return Ok(dto);
         }
 
 

@@ -9,5 +9,6 @@ public enum ReqStates
     Team,
     SoloGame,
     VsGame,
+    Ranking,
     LocalSotrage
 }
