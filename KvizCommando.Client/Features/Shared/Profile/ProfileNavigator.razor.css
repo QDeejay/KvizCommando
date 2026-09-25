@@ -176,7 +176,7 @@
     font-size: .8rem;
 }
 
-@media (max-width: 850px) {
+@media (max-width: 900px) {
     .kc-profile-main {
         grid-template-columns: minmax(0, 1fr);
         grid-template-rows: auto minmax(0, 1fr);
