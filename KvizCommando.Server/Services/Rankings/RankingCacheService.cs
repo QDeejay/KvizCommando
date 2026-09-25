@@ -66,8 +66,8 @@ internal sealed class RankingCacheService : IRankingCacheService
             .Distinct()
             .ToArray();
 
-        IReadOnlyDictionary<int, (string DisplayName, int RankEnum)> players =
-            new Dictionary<int, (string DisplayName, int RankEnum)>();
+        IReadOnlyDictionary<int, (string DisplayName, string TeamName, int RankEnum)> players =
+            new Dictionary<int, (string DisplayName, string TeamName, int RankEnum)>();
 
         if (playerIds.Length > 0)
         {
@@ -81,10 +81,10 @@ internal sealed class RankingCacheService : IRankingCacheService
             NextRefreshUtc = hasNewerResult
                 ? snapshot.UpdatedUtc.AddSeconds(_options.Value.FlushIntervalSeconds + 2)
                 : null,
-            SoloOverall = MapRows(selections[RankingList.SoloOverall], playerId, players),
-            SoloCategory = MapRows(selections[RankingList.SoloCategory], playerId, players),
-            SoloOrientation = MapRows(selections[RankingList.SoloOrientation], playerId, players),
-            VsAllTime = MapRows(selections[RankingList.VsAllTime], playerId, players)
+            SoloOverall = MapRows(selections[RankingList.SoloOverall], RankingList.SoloOverall, playerId, players),
+            SoloCategory = MapRows(selections[RankingList.SoloCategory], RankingList.SoloCategory, playerId, players),
+            SoloOrientation = MapRows(selections[RankingList.SoloOrientation], RankingList.SoloOrientation, playerId, players),
+            VsAllTime = MapRows(selections[RankingList.VsAllTime], RankingList.VsAllTime, playerId, players)
         };
     }
 
@@ -118,7 +118,11 @@ internal sealed class RankingCacheService : IRankingCacheService
                     continue;
                 }
 
-                var rows = currentValues.Values.Concat(RankingDefaults.Players).ToArray();
+                var defaults = RankingDefaults.Players.Select(player =>
+                     list == RankingList.VsAllTime
+                         ? player with { Score = player.Score / 2 }
+                         : player);
+                var rows = currentValues.Values.Concat(defaults).ToArray();
                 Array.Sort(rows, Order);
                 ordered[list] = rows;
             }
@@ -183,8 +187,9 @@ internal sealed class RankingCacheService : IRankingCacheService
 
     private static RankingListDto MapRows(
         RankingSelection selection,
+        RankingList list,
         int playerId,
-        IReadOnlyDictionary<int, (string DisplayName, int RankEnum)> players)
+        IReadOnlyDictionary<int, (string DisplayName, string TeamName, int RankEnum)> players)
     {
         var result = new RankingListDto { CurrentPosition = selection.CurrentPosition };
         var rows = new List<RankingRowDto>();
@@ -198,7 +203,9 @@ internal sealed class RankingCacheService : IRankingCacheService
                 continue;
 
             var name = isPlaceholder ? value.PlaceholderName! :
-                players[value.PlayerId].DisplayName;
+                list == RankingList.VsAllTime
+                    ? players[value.PlayerId].TeamName
+                    : players[value.PlayerId].DisplayName;
             var rank = isPlaceholder ? 0 :
                 players[value.PlayerId].RankEnum;
 

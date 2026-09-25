@@ -32,7 +32,7 @@
         {
             <div class="kc-ranking-heading">
                 <span>@Lang["ranking.Place"]</span>
-                <span>@Lang["ranking.Player"]</span>
+                <span>@Lang[InitialList == RankingList.VsAllTime ? "ranking.Team" : "ranking.Player"]</span>
                 <span>@Lang["ranking.Points"]</span>
             </div>
             @foreach (var row in Data.Rows)

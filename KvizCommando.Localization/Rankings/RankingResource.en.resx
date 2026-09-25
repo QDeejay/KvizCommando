@@ -70,6 +70,7 @@
   <data name="ranking.Vs.Monthly" xml:space="preserve"><value>Monthly</value></data>
   <data name="ranking.Place" xml:space="preserve"><value>Place</value></data>
   <data name="ranking.Player" xml:space="preserve"><value>Player</value></data>
+  <data name="ranking.Team" xml:space="preserve"><value>Team</value></data>
   <data name="ranking.Points" xml:space="preserve"><value>Points</value></data>
   <data name="ranking.Loading" xml:space="preserve"><value>Loading rankings…</value></data>
   <data name="ranking.NoResult" xml:space="preserve"><value>You do not have a ranking yet.</value></data>

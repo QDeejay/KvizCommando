@@ -45,7 +45,7 @@ namespace KvizCommando.Server.Services.Db
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyDictionary<int, (string DisplayName, int RankEnum)>>
+        public async Task<IReadOnlyDictionary<int, (string DisplayName, string TeamName, int RankEnum)>>
             GetRankingPlayerDetailsAsync(int[] playerIds, CancellationToken ct = default)
         {
             return await _db.Players.AsNoTracking()
@@ -54,11 +54,12 @@ namespace KvizCommando.Server.Services.Db
                 {
                     player.PlayerId,
                     player.DisplayName,
+                    player.TeamName,
                     player.RankEnum
                 })
                 .ToDictionaryAsync(
                     player => player.PlayerId,
-                    player => (player.DisplayName, player.RankEnum),
+                    player => (player.DisplayName, player.TeamName, player.RankEnum),
                     ct);
         }
 

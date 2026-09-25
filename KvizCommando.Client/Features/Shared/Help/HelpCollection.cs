@@ -3,6 +3,7 @@ using KvizCommando.Client.Features.Shared.Help.SoloRules;
 using KvizCommando.Client.Features.Shared.Help.TeamHelpRules;
 using KvizCommando.Client.Features.Shared.Help.VsRules;
 using KvizCommando.Client.Features.Question.Builders;
+using KvizCommando.Client.Features.Rankings.Builders;
 using KvizCommando.Client.Features.Solo.Builders;
 using KvizCommando.Client.Features.Team.Builders;
 using KvizCommando.Client.Features.VsGame.Builders;
@@ -168,6 +169,22 @@ public static class HelpCollection
                 Root = HomeBoxKey.GameSolo,
                 TitleKey = "SoloGame.Orientation",
                 BackgroundImage = "/images/buttons/solo/orients.webp"
+            },
+            [(int)RankingBoxKey.Solo] = new(
+                ["rankings/solo-01.html"],
+                _ => new Dictionary<string, string>())
+            {
+                Root = HomeBoxKey.Rankings,
+                TitleKey = "Ranking.Solo",
+                BackgroundImage = "/images/buttons/rankings/solo.webp"
+            },
+            [(int)RankingBoxKey.Vs] = new(
+                ["rankings/vs-01.html"],
+                _ => new Dictionary<string, string>())
+            {
+                Root = HomeBoxKey.Rankings,
+                TitleKey = "Ranking.Vs",
+                BackgroundImage = "/images/buttons/rankings/vs.webp"
             }
         };
 

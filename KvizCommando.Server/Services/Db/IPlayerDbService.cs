@@ -87,11 +87,11 @@ namespace KvizCommando.Server.Services.Db
             CancellationToken ct = default);
 
         /// <summary>
-        /// Beolvassa a megadott játékosok nyilvános nevét és szintjét.
+        /// Beolvassa a megadott játékosok játékosnevét, csapatnevét és szintjét.
         /// </summary>
         /// <param name="playerIds">A megjelenítendő játékosok azonosítói.</param>
         /// <param name="ct">A művelet megszakítását jelző token.</param>
-        Task<IReadOnlyDictionary<int, (string DisplayName, int RankEnum)>>
+        Task<IReadOnlyDictionary<int, (string DisplayName, string TeamName, int RankEnum)>>
             GetRankingPlayerDetailsAsync(int[] playerIds, CancellationToken ct = default);
     }
 }
