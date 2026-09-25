@@ -250,6 +250,7 @@
 }
 
 .kc-solo-category {
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -257,6 +258,22 @@
 
 .kc-solo-question-count {
     flex: 0 0 auto;
+}
+
+.kc-solo-question-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    white-space: nowrap;
+}
+
+.kc-solo-question-actions .kc-question-report-flag {
+    transform: translateY(3px);
+}
+
+.kc-solo-question-actions button.kc-question-report-flag {
+    cursor: var(--kc-cursor-active);
 }
 
 .kc-solo-timer {

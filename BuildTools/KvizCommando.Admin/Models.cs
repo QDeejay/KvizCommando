@@ -39,10 +39,11 @@ internal sealed record UserQuestionRow(
     string Question,
     string AnswersJson,
     int Ask,
-    int OkAnswer)
+    int OkAnswer,
+    int Reported)
 {
     public override string ToString() =>
-        $"#{Id,-6} P:{PlayerId,-5} K:{CategoryNo,-2} {Question}";
+        $"#{Id,-6} P:{PlayerId,-5} K:{CategoryNo,-2} J:{Reported,-4} {Question}";
 }
 
 internal sealed record FactoryQuestionCategoryCount(
@@ -59,7 +60,7 @@ internal sealed record FactoryQuestionRow(
     bool IsTip)
 {
     public override string ToString() =>
-        $"{Id,-8} {Shorten(Question, 53),-53} {Shorten(AnswerData, 20)}";
+        $"{Id,-8} J:{Reported,-4} {Shorten(Question, 49),-49} {Shorten(AnswerData, 20)}";
 
     private static string Shorten(string value, int maximumLength) =>
         value.Length <= maximumLength

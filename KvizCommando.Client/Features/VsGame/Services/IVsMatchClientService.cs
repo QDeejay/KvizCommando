@@ -87,6 +87,8 @@ public interface IVsMatchClientService : IAsyncDisposable
         VsChoiceAnswerRequest request,
         CancellationToken ct = default);
 
+    Task SubmitQuestionReportsAsync(int[] questionNumbers, CancellationToken ct = default);
+
     /// <summary>
     /// Felhasználja a kiválasztott segítséget az aktuális kérdésnél.
     /// </summary>

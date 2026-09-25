@@ -183,6 +183,9 @@ public sealed class VsMatchHub : Hub<IVsMatchHubClient>
             request,
             Context.ConnectionAborted);
 
+    public Task SubmitQuestionReports(int[] questionNumbers) =>
+        _matches.SubmitQuestionReportsAsync(Context.ConnectionId, questionNumbers, Context.ConnectionAborted);
+
     /// <summary>
     /// Felhasználja a kiválasztott segítséget az aktuális kérdésnél.
     /// </summary>

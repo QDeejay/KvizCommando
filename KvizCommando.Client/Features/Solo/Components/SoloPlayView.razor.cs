@@ -19,6 +19,9 @@ public partial class SoloPlayView
     [Parameter, EditorRequired]
     public SoloPlayViewData Data { get; set; } = new();
 
+    [Parameter] public bool IsQuestionReported { get; set; }
+    [Parameter] public EventCallback<int> OnQuestionReported { get; set; }
+
     [Parameter] public EventCallback<int> OnAnswerSelected { get; set; }
     [Parameter] public EventCallback OnSkipQuestion { get; set; }
     [Parameter] public EventCallback OnSkipEvaluation { get; set; }

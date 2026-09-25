@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
+using KvizCommando.Server.Services.Db;
 
 namespace KvizCommando.Server.Services.PlayerCache
 {
@@ -32,9 +33,16 @@ namespace KvizCommando.Server.Services.PlayerCache
             using var scope = _scopeFactory.CreateScope();
             var cacheService = scope.ServiceProvider
                 .GetRequiredService<IPlayerCacheService>();
+            var factory = new Dictionary<int, int>();
+            var guess = new Dictionary<int, int>();
+            var user = new Dictionary<int, int>();
 
             foreach (var playerId in playerIds)
             {
+                var reports = await cacheService.TakeReportedQuestionsLockedAsync(playerId, ct);
+                AddReports(factory, reports.FactoryIds);
+                AddReports(guess, reports.GuessIds);
+                AddReports(user, reports.UserIds);
                 var questionCount =
                     await cacheService.SaveDirtyQuestionLockedAsync(
                         playerId,
@@ -46,6 +54,9 @@ namespace KvizCommando.Server.Services.PlayerCache
                 dirtyPlayers++;
                 totalQuestions += questionCount;
             }
+
+            await scope.ServiceProvider.GetRequiredService<IQuestionDbService>()
+                .IncrementReportedAsync(factory, guess, user, ct);
 
             sw.Stop();
 
@@ -73,6 +84,12 @@ namespace KvizCommando.Server.Services.PlayerCache
                 $"Dirty player: {stat.DirtyPlayers} | " +
                 $"Mentett kérdés: {stat.SavedQuestions} | " +
                 $"Átlag: {avgDuration.TotalMilliseconds:F0} ms");
+        }
+
+        private static void AddReports(Dictionary<int, int> counts, int[] ids)
+        {
+            foreach (var id in ids)
+                counts[id] = counts.GetValueOrDefault(id) + 1;
         }
     }
 

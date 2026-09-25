@@ -249,7 +249,13 @@ public sealed class SoloGameService : ISoloGameService
                 game.Answers.Count >= game.Questions.Count ||
                 answer.SelectedOptionIndex is < -1 or > 3 ||
                 answer.AnswerTimeMs is < 0 or
-                    > SoloGameRules.ANSWER_SECONDS * 1000)
+                    > SoloGameRules.ANSWER_SECONDS * 1000 ||
+                answer.ReportedQuestionIndexes is null ||
+                (game.Answers.Count != game.Questions.Count - 1 &&
+                 answer.ReportedQuestionIndexes.Length != 0) ||
+                answer.ReportedQuestionIndexes.Length > game.Questions.Count ||
+                answer.ReportedQuestionIndexes.Any(index =>
+                    index < 0 || index >= game.Questions.Count))
             {
                 return new SoloAnswerResult
                 {
@@ -276,6 +282,17 @@ public sealed class SoloGameService : ISoloGameService
 
             if (result.Status == SoloGameOperationStatus.Success)
             {
+                if (answer.ReportedQuestionIndexes.Length > 0)
+                {
+                    await _playerCache.UpdateRewardQuestionsLockedAsync(
+                        game.PlayerId, game.SessionId,
+                        (_, questions) =>
+                        {
+                            foreach (var index in answer.ReportedQuestionIndexes)
+                                questions.rfSlots.Add(game.Questions[index].QuestionId);
+                            return 1u << 21;
+                        }, ct);
+                }
                 game.Status = SoloGameStatus.Completed;
                 _gameCache.Remove(gameId);
             }

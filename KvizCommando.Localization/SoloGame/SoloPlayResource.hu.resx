@@ -95,4 +95,6 @@
   <data name="solo.Error.InvalidAnswer" xml:space="preserve"><value>A válasz nem fogadható el.</value></data>
   <data name="solo.Error.Identity" xml:space="preserve"><value>A játékos nem azonosítható.</value></data>
   <data name="solo.Error.Player" xml:space="preserve"><value>A játékos adatai nem érhetők el.</value></data>
+  <data name="question.Report" xml:space="preserve"><value>Jelentés</value></data>
+  <data name="question.Reported" xml:space="preserve"><value>Jelentve</value></data>
 </root>

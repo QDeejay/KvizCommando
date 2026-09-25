@@ -21,5 +21,11 @@ namespace KvizCommando.Server.Services.Db
         Task<QuestionStats> SaveQuestionsToDbAsync(
             CachedQuestion cache,
             CancellationToken ct = default);
+
+        Task IncrementReportedAsync(
+            IReadOnlyDictionary<int, int> factory,
+            IReadOnlyDictionary<int, int> guess,
+            IReadOnlyDictionary<int, int> user,
+            CancellationToken ct = default);
     }
 }

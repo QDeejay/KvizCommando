@@ -44,6 +44,7 @@ namespace KvizCommando.Shared.Contracts.SoloGame
     {
         public int SelectedOptionIndex { get; set; }
         public int AnswerTimeMs { get; set; }
+        public int[] ReportedQuestionIndexes { get; set; } = [];
     }
 
     public sealed class SoloRewardDto

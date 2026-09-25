@@ -201,6 +201,9 @@ public sealed class VsMatchClientService : IVsMatchClientService
         CancellationToken ct = default) =>
         InvokeAsync("SubmitChoice", request, ct);
 
+    public Task SubmitQuestionReportsAsync(int[] questionNumbers, CancellationToken ct = default) =>
+        InvokeAsync("SubmitQuestionReports", questionNumbers, ct);
+
     /// <inheritdoc />
     public Task UseHelpAsync(
         VsUseHelpRequest request,

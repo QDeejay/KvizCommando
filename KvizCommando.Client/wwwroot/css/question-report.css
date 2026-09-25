@@ -1,0 +1,63 @@
+.kc-question-report-control {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    white-space: nowrap;
+}
+
+.kc-question-report-flag {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    display: inline-grid;
+    place-items: center;
+    color: #ed4b4b;
+    background: #382826;
+    border: 1px solid #82504a;
+    border-radius: 4px;
+    font-size: 16px;
+    line-height: 1;
+}
+
+button.kc-question-report-flag:hover,
+button.kc-question-report-flag:focus-visible {
+    color: #ffe8e5;
+    border-color: #ed776b;
+}
+
+.kc-question-report-flag.reported {
+    color: #ffe8e5;
+    background: #802f2e;
+    border-color: #ed776b;
+}
+
+.kc-question-report-flag.reported:hover,
+.kc-question-report-flag.reported:focus-visible {
+    color: #fff;
+}
+
+.kc-question-report-help {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--kc-help-border);
+    border-radius: 6px;
+    background: var(--kc-help-panel);
+    color: var(--kc-help-text-soft);
+}
+
+.kc-question-report-help .kc-question-report-states {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    margin-bottom: 7px;
+}
+
+.kc-question-report-help .kc-question-report-control > span:first-child {
+    color: var(--kc-help-title);
+    font-family: 'Special Elite', cursive;
+    font-size: 1rem;
+}
+
+.kc-question-report-help p {
+    margin: 0;
+}

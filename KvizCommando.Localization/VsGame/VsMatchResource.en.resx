@@ -147,4 +147,6 @@
   <data name="vsgame.Match.Reward.PensionTotal" xml:space="preserve"><value>Total pension fund:</value></data>
   <data name="vsgame.Match.Reward.None" xml:space="preserve"><value>None</value></data>
   <data name="vsgame.Match.Reward.CreditUnit" xml:space="preserve"><value>credit</value></data>
+  <data name="question.Report" xml:space="preserve"><value>Report</value></data>
+  <data name="question.Reported" xml:space="preserve"><value>Reported</value></data>
 </root>

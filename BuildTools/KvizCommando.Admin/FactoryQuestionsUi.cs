@@ -37,7 +37,7 @@ internal sealed partial class AdminMainWindow
         var search = new TextField(string.Empty) { X = 47, Y = 1, Width = 43 };
         var reportedOnly = new CheckBox("Reported", false) { X = 94, Y = 1 };
         var playerQuestionsOnly = new CheckBox("From user", false) { X = 110, Y = 1 };
-        var header = new Label("ID       Kérdés                                                Válaszok")
+        var header = new Label("ID       J:    Kérdés                                            Válaszok")
         {
             X = 25,
             Y = 3
@@ -146,8 +146,7 @@ internal sealed partial class AdminMainWindow
             answers,
             out var text,
             out var answerFields);
-        var reportedLabel = new Label("Reported:") { X = 2, Y = 22 };
-        var reported = new TextField(row.Reported.ToString()) { X = 16, Y = 22, Width = 10 };
+        AddReportClearControls(dialog, row.Reported, 22, () => _database.ClearFactoryQuestionReports(row.Id));
         var save = new Button("_Mentés") { X = 2, Y = 25 };
         var close = new Button("_Vissza") { X = Pos.Right(save) + 3, Y = 25 };
 
@@ -158,8 +157,7 @@ internal sealed partial class AdminMainWindow
                 _database.UpdateFactoryQuestion(
                     row,
                     text.Text?.ToString() ?? string.Empty,
-                    answerFields.Select(field => field.Text?.ToString() ?? string.Empty).ToArray(),
-                    ParseRequiredInt(reported.Text?.ToString(), "Reported"));
+                    answerFields.Select(field => field.Text?.ToString() ?? string.Empty).ToArray());
                 MessageBox.Query("Kész", "Factory kérdés módosítva.", "OK");
                 Application.RequestStop();
             }
@@ -169,7 +167,7 @@ internal sealed partial class AdminMainWindow
             }
         };
         close.Clicked += () => Application.RequestStop();
-        dialog.Add(reportedLabel, reported, save, close);
+        dialog.Add(save, close);
         Application.Run(dialog);
     }
 
@@ -189,8 +187,7 @@ internal sealed partial class AdminMainWindow
         };
         var answerLabel = new Label("Válasz:") { X = 2, Y = 12 };
         var answer = new TextField(row.AnswerData) { X = 16, Y = 12, Width = 30 };
-        var reportedLabel = new Label("Reported:") { X = 2, Y = 14 };
-        var reported = new TextField(row.Reported.ToString()) { X = 16, Y = 14, Width = 10 };
+        AddReportClearControls(dialog, row.Reported, 14, () => _database.ClearTipQuestionReports(row.Id));
         var save = new Button("_Mentés") { X = 2, Y = 18 };
         var close = new Button("_Vissza") { X = Pos.Right(save) + 3, Y = 18 };
 
@@ -201,8 +198,7 @@ internal sealed partial class AdminMainWindow
                 _database.UpdateTipQuestion(
                     row,
                     question.Text?.ToString() ?? string.Empty,
-                    ParseRequiredDouble(answer.Text?.ToString()),
-                    ParseRequiredInt(reported.Text?.ToString(), "Reported"));
+                    ParseRequiredDouble(answer.Text?.ToString()));
                 MessageBox.Query("Kész", "Tipp kérdés módosítva.", "OK");
                 Application.RequestStop();
             }
@@ -212,8 +208,32 @@ internal sealed partial class AdminMainWindow
             }
         };
         close.Clicked += () => Application.RequestStop();
-        dialog.Add(questionLabel, question, answerLabel, answer, reportedLabel, reported, save, close);
+        dialog.Add(questionLabel, question, answerLabel, answer, save, close);
         Application.Run(dialog);
+    }
+
+    private void AddReportClearControls(Dialog dialog, int reported, int y, Action clear)
+    {
+        var label = new Label($"Jelentések: {reported}") { X = 2, Y = y };
+        dialog.Add(label);
+        if (reported == 0)
+            return;
+
+        var button = new Button("_Törlés") { X = 24, Y = y };
+        button.Clicked += () =>
+        {
+            try
+            {
+                clear();
+                label.Text = "Jelentések: 0";
+                button.Visible = false;
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
+        };
+        dialog.Add(button);
     }
 
     private void OpenNewFactoryQuestion(int categoryNo)

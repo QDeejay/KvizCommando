@@ -52,6 +52,9 @@ namespace KvizCommando.Server.Services.PlayerCache
         public UserQuestion[] uSlots { get; } = new UserQuestion[10];
         public List<FactoryQuestion> fSlots { get; set; } = new(); // nem kellő user kérdés megy majd a gyári táblába
         public PendingQuestion[] pSlots { get; } = new PendingQuestion[5];
+        public HashSet<int> rfSlots { get; } = [];
+        public HashSet<int> rgSlots { get; } = [];
+        public HashSet<int> ruSlots { get; } = [];
         public uint DirtyMask { get; set; }
     }
    

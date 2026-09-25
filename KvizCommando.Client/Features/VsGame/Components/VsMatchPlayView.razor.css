@@ -53,7 +53,7 @@
 }
 
 .kc-vs-play-title > strong,
-.kc-vs-play-title > span {
+.kc-vs-play-title-actions {
     align-self: stretch;
     display: flex;
     align-items: center;
@@ -68,11 +68,21 @@
     white-space: nowrap;
 }
 
-.kc-vs-play-title > span {
+.kc-vs-play-title-actions {
     flex: 0 0 auto;
+    margin-left: auto;
+    gap: .75rem;
+    white-space: nowrap;
+}
+
+.kc-vs-match-reference {
     color: #c6ef39;
     font-family: 'Share Tech Mono', monospace;
     font-size: 1rem;
+}
+
+.kc-vs-play-title-actions button.kc-question-report-flag {
+    cursor: var(--kc-cursor-active);
 }
 
 .kc-vs-play-timer-slot {

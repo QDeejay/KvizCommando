@@ -50,6 +50,8 @@
                 {
                     <VsMatchPlayView
                         Data="@_match"
+                        IsQuestionReported="@_reportedQuestionNumbers.Contains(_match.Game.QuestionNumber)"
+                        OnQuestionReported="ToggleQuestionReport"
                         OnGuessSubmitted="SubmitGuessAsync"
                         OnChoiceSubmitted="SubmitChoiceAsync"
                         OnHelpUsed="UseHelpAsync"

@@ -1,4 +1,6 @@
 <SoloPlayView Data="@PlayViewData"
+              IsQuestionReported="@_reportedQuestionIndexes.Contains(_questionIndex)"
+              OnQuestionReported="ToggleQuestionReport"
               OnAnswerSelected="SelectAnswerAsync"
               OnSkipQuestion="SkipQuestionAsync"
               OnSkipEvaluation="SkipEvaluationAsync" />

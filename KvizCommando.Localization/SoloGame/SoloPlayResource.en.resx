@@ -95,4 +95,6 @@
   <data name="solo.Error.InvalidAnswer" xml:space="preserve"><value>The answer cannot be accepted.</value></data>
   <data name="solo.Error.Identity" xml:space="preserve"><value>The player cannot be identified.</value></data>
   <data name="solo.Error.Player" xml:space="preserve"><value>The player data is unavailable.</value></data>
+  <data name="question.Report" xml:space="preserve"><value>Report</value></data>
+  <data name="question.Reported" xml:space="preserve"><value>Reported</value></data>
 </root>

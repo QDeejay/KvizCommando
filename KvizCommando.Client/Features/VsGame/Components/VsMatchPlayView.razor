@@ -4,9 +4,24 @@
 <section class="kc-vs-play @(ShowProgress ? "with-progress" : "")">
     <header class="kc-vs-play-title">
         <strong>@Data.InfoText</strong>
-        <span title="@Data.MatchId">
-            @RoundText · #@MatchReference
-        </span>
+        <div class="kc-vs-play-title-actions">
+            @if (HasTimeRemaining && Data.Phase is
+                 (VsMatchPhase.NormalRoundGuess or VsMatchPhase.NormalRoundQuestion or VsMatchPhase.CaptainQuestion))
+            {
+                <span class="kc-question-report-control">
+                    <span class="kc-vs-match-reference">@(Lang[IsQuestionReported ? "question.Reported" : "question.Report"])</span>
+                    <button type="button" class="kc-question-report-flag @(IsQuestionReported ? "reported" : "")"
+                            aria-pressed="@IsQuestionReported"
+                            aria-label="@(Lang[IsQuestionReported ? "question.Reported" : "question.Report"])"
+                            @onclick="() => OnQuestionReported.InvokeAsync(Data.Game.QuestionNumber)">
+                        <i class="bi @(IsQuestionReported ? "bi-flag-fill" : "bi-flag")" aria-hidden="true"></i>
+                    </button>
+                </span>
+            }
+            <span class="kc-vs-match-reference" title="@Data.MatchId">
+                @RoundText · #@MatchReference
+            </span>
+        </div>
     </header>
 
     <div class="kc-vs-play-timer-slot">

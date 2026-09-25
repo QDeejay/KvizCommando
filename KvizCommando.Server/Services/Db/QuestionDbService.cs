@@ -59,11 +59,13 @@ namespace KvizCommando.Server.Services.Db
                     if ((cp.DirtyMask & 1u << i) != 0)
                     {
                         var usrQ = cp.uSlots[i];
-                        if (usrQ.Id > 0) //Console.WriteLine($"Update: UserSlot{i} Question:{usrQ.Question}");
-                       _GameDb.Update(usrQ);
-
-                        else //Console.WriteLine($"Add: UserSlot{i} Question:{usrQ.Question}");
-                           _GameDb.Add(usrQ);
+                        if (usrQ.Id > 0)
+                        {
+                            _GameDb.Update(usrQ);
+                            _GameDb.Entry(usrQ).Property(q => q.Reported).IsModified = false;
+                        }
+                        else
+                            _GameDb.Add(usrQ);
                         qStats.totalQuestions++;
                         qStats.userQuestions++;
                     }
@@ -106,6 +108,23 @@ namespace KvizCommando.Server.Services.Db
                 return new QuestionStats();
                 throw;
             }
+        }
+
+        public async Task IncrementReportedAsync(
+            IReadOnlyDictionary<int, int> factory,
+            IReadOnlyDictionary<int, int> guess,
+            IReadOnlyDictionary<int, int> user,
+            CancellationToken ct = default)
+        {
+            foreach (var (id, count) in factory)
+                await _GameDb.FactoryQuestions.Where(q => q.Id == id)
+                    .ExecuteUpdateAsync(set => set.SetProperty(q => q.Reported, q => q.Reported + count), ct);
+            foreach (var (id, count) in guess)
+                await _GameDb.GuessQuestions.Where(q => q.Id == id)
+                    .ExecuteUpdateAsync(set => set.SetProperty(q => q.Reported, q => q.Reported + count), ct);
+            foreach (var (id, count) in user)
+                await _GameDb.UserQuestions.Where(q => q.Id == id)
+                    .ExecuteUpdateAsync(set => set.SetProperty(q => q.Reported, q => q.Reported + count), ct);
         }
 
         private async Task<UserQuestion[]> GetUserSlotsAsync(int playerId, CancellationToken ct)

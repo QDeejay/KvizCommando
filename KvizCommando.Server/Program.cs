@@ -90,9 +90,6 @@ var categoryQuestionIndexCache =
 
 await categoryQuestionIndexCache.LoadAsync();
 
-var rankingCache = app.Services.GetRequiredService<IRankingCacheService>();
-await rankingCache.RefreshAsync();
-
 // Fejlesztői eszközök
 if (app.Environment.IsDevelopment())
 {

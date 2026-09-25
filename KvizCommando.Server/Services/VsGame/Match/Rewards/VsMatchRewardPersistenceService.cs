@@ -76,6 +76,29 @@ public sealed class VsMatchRewardPersistenceService
         }
     }
 
+    internal async Task SaveReportsAsync(
+        int playerId,
+        string sessionId,
+        ReportedQuestionBatch reports,
+        CancellationToken ct)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var cache = scope.ServiceProvider.GetRequiredService<IPlayerCacheService>();
+        await cache.UpdateRewardQuestionsLockedAsync(
+            playerId, sessionId,
+            (_, questions) =>
+            {
+                var dirty = 0u;
+                foreach (var id in reports.FactoryIds)
+                    if (questions.rfSlots.Add(id)) dirty |= 1u << 21;
+                foreach (var id in reports.GuessIds)
+                    if (questions.rgSlots.Add(id)) dirty |= 1u << 22;
+                foreach (var id in reports.UserIds)
+                    if (questions.ruSlots.Add(id)) dirty |= 1u << 23;
+                return dirty;
+            }, ct);
+    }
+
     private static DirtyFlags ApplyPlayerReward(
         CachedPlayer player,
         VsMatchPlayerRewardState reward,

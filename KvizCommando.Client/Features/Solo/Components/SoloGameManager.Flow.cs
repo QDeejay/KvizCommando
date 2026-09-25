@@ -158,6 +158,9 @@ partial class SoloGameManager
             _game!.AnswerTimeSeconds * 1000);
         _progress[_questionIndex] = SoloQuestionState.Pending;
 
+        if (_questionIndex == _answers.Length - 1)
+            _answers[_questionIndex].ReportedQuestionIndexes = [.. _reportedQuestionIndexes];
+
         var submission = await GameService.SubmitAnswerAsync(
             _answers[_questionIndex],
             ct);
@@ -181,6 +184,18 @@ partial class SoloGameManager
             await Audio.PlaySfxAsync(
                 AudioService.SFX_SELECT);
         }
+    }
+
+    private void ToggleQuestionReport(int questionNumber)
+    {
+        if (_phase != SoloGamePhase.Playing || _game is null ||
+            questionNumber != _questionIndex + 1 ||
+            !_questionWatch.IsRunning ||
+            _questionWatch.ElapsedMilliseconds >= _game.AnswerTimeSeconds * 1000L)
+            return;
+
+        if (!_reportedQuestionIndexes.Add(_questionIndex))
+            _reportedQuestionIndexes.Remove(_questionIndex);
     }
 
     private async Task SkipQuestionAsync()

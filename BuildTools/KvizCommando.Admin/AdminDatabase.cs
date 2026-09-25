@@ -238,29 +238,31 @@ internal sealed class AdminDatabase : IDisposable
         return result;
     }
 
-    public IReadOnlyList<UserQuestionRow> GetUserQuestions(string? questionSearch, int playerId)
+    public IReadOnlyList<UserQuestionRow> GetUserQuestions(string? questionSearch, int playerId, bool reportedOnly)
     {
         using var connection = OpenGameConnection();
-        var top = _settings.Provider == AdminDatabaseProvider.SqlServer ? "TOP (300) " : string.Empty;
-        var limit = _settings.Provider == AdminDatabaseProvider.Sqlite ? " LIMIT 300" : string.Empty;
+        var top = !reportedOnly && _settings.Provider == AdminDatabaseProvider.SqlServer ? "TOP (300) " : string.Empty;
+        var limit = !reportedOnly && _settings.Provider == AdminDatabaseProvider.Sqlite ? " LIMIT 300" : string.Empty;
         var normalizedSearch = questionSearch?.Trim() ?? string.Empty;
         using var command = CreateCommand(connection, $"""
-            SELECT {top}Id, PlayerId, CategoryNo, Question, AnswersJson, Ask, OkAnswer
+            SELECT {top}Id, PlayerId, CategoryNo, Question, AnswersJson, Ask, OkAnswer, Reported
             FROM UserQuestions
             WHERE (@search = '' OR Question LIKE @pattern)
               AND (@playerId = 0 OR PlayerId = @playerId)
-            ORDER BY Id DESC{limit};
+              AND (@reportedOnly = 0 OR Reported > 0)
+            ORDER BY CASE WHEN @reportedOnly = 1 THEN Reported ELSE 0 END DESC, Id DESC{limit};
             """);
         AddParameter(command, "@search", normalizedSearch);
         AddParameter(command, "@pattern", $"%{normalizedSearch}%");
         AddParameter(command, "@playerId", playerId);
+        AddParameter(command, "@reportedOnly", reportedOnly ? 1 : 0);
         using var reader = command.ExecuteReader();
         var result = new List<UserQuestionRow>();
         while (reader.Read())
         {
             result.Add(new UserQuestionRow(
                 reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetString(3), reader.GetString(4),
-                reader.GetInt32(5), reader.GetInt32(6)));
+                reader.GetInt32(5), reader.GetInt32(6), reader.GetInt32(7)));
         }
         return result;
     }
@@ -304,8 +306,8 @@ internal sealed class AdminDatabase : IDisposable
 
         if (categoryNo != 99)
         {
-            var top = _settings.Provider == AdminDatabaseProvider.SqlServer ? "TOP (25) " : string.Empty;
-            var limit = _settings.Provider == AdminDatabaseProvider.Sqlite ? " LIMIT 25" : string.Empty;
+            var top = !reportedOnly && _settings.Provider == AdminDatabaseProvider.SqlServer ? "TOP (25) " : string.Empty;
+            var limit = !reportedOnly && _settings.Provider == AdminDatabaseProvider.Sqlite ? " LIMIT 25" : string.Empty;
             using var command = CreateCommand(connection, $"""
                 SELECT {top}Id, PlayerId, CategoryNo, Question, AnswersJson, Reported
                 FROM FactoryQuestions
@@ -313,7 +315,7 @@ internal sealed class AdminDatabase : IDisposable
                   AND (@search = '' OR Question LIKE @pattern)
                   AND (@reportedOnly = 0 OR Reported > 0)
                   AND (@playerQuestionsOnly = 0 OR PlayerId > 0)
-                ORDER BY Id DESC{limit};
+                ORDER BY CASE WHEN @reportedOnly = 1 THEN Reported ELSE 0 END DESC, Id DESC{limit};
                 """);
             AddParameter(command, "@categoryNo", categoryNo ?? 0);
             AddParameter(command, "@search", normalizedSearch);
@@ -337,14 +339,14 @@ internal sealed class AdminDatabase : IDisposable
 
         if ((categoryNo is null or 99) && !playerQuestionsOnly)
         {
-            var top = _settings.Provider == AdminDatabaseProvider.SqlServer ? "TOP (25) " : string.Empty;
-            var limit = _settings.Provider == AdminDatabaseProvider.Sqlite ? " LIMIT 25" : string.Empty;
+            var top = !reportedOnly && _settings.Provider == AdminDatabaseProvider.SqlServer ? "TOP (25) " : string.Empty;
+            var limit = !reportedOnly && _settings.Provider == AdminDatabaseProvider.Sqlite ? " LIMIT 25" : string.Empty;
             using var command = CreateCommand(connection, $"""
                 SELECT {top}Id, Question, Answer, Reported
                 FROM GuessQuestions
                 WHERE (@search = '' OR Question LIKE @pattern)
                   AND (@reportedOnly = 0 OR Reported > 0)
-                ORDER BY Id DESC{limit};
+                ORDER BY CASE WHEN @reportedOnly = 1 THEN Reported ELSE 0 END DESC, Id DESC{limit};
                 """);
             AddParameter(command, "@search", normalizedSearch);
             AddParameter(command, "@pattern", $"%{normalizedSearch}%");
@@ -364,32 +366,29 @@ internal sealed class AdminDatabase : IDisposable
             }
         }
 
-        return rows
-            .OrderByDescending(row => row.Id)
+        var ordered = rows
+            .OrderByDescending(row => reportedOnly ? row.Reported : 0)
+            .ThenByDescending(row => row.Id)
             .ThenBy(row => row.CategoryNo)
-            .Take(25)
             .ToArray();
+        return reportedOnly ? ordered : ordered.Take(25).ToArray();
     }
 
     public void UpdateFactoryQuestion(
         FactoryQuestionRow question,
         string text,
-        IReadOnlyList<string> answers,
-        int reported)
+        IReadOnlyList<string> answers)
     {
         ValidateQuestion(question.CategoryNo, text, answers);
-        ValidateReported(reported);
         using var connection = OpenGameConnection();
         using var command = CreateCommand(connection, """
             UPDATE FactoryQuestions
             SET Question = @question,
-                AnswersJson = @answersJson,
-                Reported = @reported
+                AnswersJson = @answersJson
             WHERE Id = @id;
             """);
         AddParameter(command, "@question", text.Trim());
         AddParameter(command, "@answersJson", JsonSerializer.Serialize(answers));
-        AddParameter(command, "@reported", reported);
         AddParameter(command, "@id", question.Id);
         if (command.ExecuteNonQuery() != 1)
             throw new InvalidOperationException("A Factory kérdés nem található.");
@@ -409,22 +408,19 @@ internal sealed class AdminDatabase : IDisposable
         command.ExecuteNonQuery();
     }
 
-    public void UpdateTipQuestion(FactoryQuestionRow question, string text, double answer, int reported)
+    public void UpdateTipQuestion(FactoryQuestionRow question, string text, double answer)
     {
         if (string.IsNullOrWhiteSpace(text))
             throw new InvalidOperationException("A kérdésszöveg nem lehet üres.");
-        ValidateReported(reported);
         using var connection = OpenGameConnection();
         using var command = CreateCommand(connection, """
             UPDATE GuessQuestions
             SET Question = @question,
-                Answer = @answer,
-                Reported = @reported
+                Answer = @answer
             WHERE Id = @id;
             """);
         AddParameter(command, "@question", text.Trim());
         AddParameter(command, "@answer", answer);
-        AddParameter(command, "@reported", reported);
         AddParameter(command, "@id", question.Id);
         if (command.ExecuteNonQuery() != 1)
             throw new InvalidOperationException("A Tipp kérdés nem található.");
@@ -487,6 +483,21 @@ internal sealed class AdminDatabase : IDisposable
         AddParameter(command, "@id", question.Id);
         if (command.ExecuteNonQuery() != 1)
             throw new InvalidOperationException("A Pending kérdés nem található.");
+    }
+
+    public void ClearFactoryQuestionReports(int id) => ClearQuestionReports("FactoryQuestions", id);
+
+    public void ClearTipQuestionReports(int id) => ClearQuestionReports("GuessQuestions", id);
+
+    public void ClearUserQuestionReports(int id) => ClearQuestionReports("UserQuestions", id);
+
+    private void ClearQuestionReports(string table, int id)
+    {
+        using var connection = OpenGameConnection();
+        using var command = CreateCommand(connection, $"UPDATE {table} SET Reported = 0 WHERE Id = @id;");
+        AddParameter(command, "@id", id);
+        if (command.ExecuteNonQuery() != 1)
+            throw new InvalidOperationException("A kérdés nem található.");
     }
 
     public void UpdateUserQuestion(UserQuestionRow question, string text, IReadOnlyList<string> answers)
@@ -703,12 +714,6 @@ internal sealed class AdminDatabase : IDisposable
             throw new InvalidOperationException("A kérdésszöveg nem lehet üres.");
         if (answers.Count != 4 || answers.Any(string.IsNullOrWhiteSpace))
             throw new InvalidOperationException("Pontosan négy nem üres válasz szükséges. Az első válasz a helyes.");
-    }
-
-    private static void ValidateReported(int reported)
-    {
-        if (reported < 0)
-            throw new InvalidOperationException("A Reported értéke nem lehet negatív.");
     }
 
     private DbConnection OpenApplicationConnection() => Open(_settings.ApplicationConnectionString);

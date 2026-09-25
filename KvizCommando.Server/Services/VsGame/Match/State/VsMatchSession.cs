@@ -12,6 +12,7 @@ public sealed class VsMatchSession : IDisposable
     public List<VsMatchPlayerState> Players { get; init; } = [];
     public List<VsMatchEventLogEntry> EventLog { get; } = [];
     public VsMatchGuessQuestionState[] GuessQuestions { get; set; } = [];
+    public Dictionary<int, VsMatchReportedQuestion> ReportableQuestions { get; } = [];
     public VsMatchGameState Game { get; } = new();
     public VsMatchRewardState? Reward { get; set; }
 
@@ -77,7 +78,10 @@ public sealed class VsMatchPlayerState
     public HashSet<int> CaptainUsedLoadoutPositions { get; } = [];
     public VsMatchCharacterRewardTotal[] CharacterRewardTotals { get; set; } = [];
     public VsMatchStatisticsState Statistics { get; } = new();
+    public bool ReportsSubmitted { get; set; }
 }
+
+public sealed record VsMatchReportedQuestion(int Id, VsQuestionKind Kind, bool IsOwnQuestion);
 
 public sealed class VsMatchCharacterRewardTotal
 {

@@ -475,10 +475,11 @@ namespace KvizCommando.Server.Services.PlayerCache
 
             try
             {
-                if (entry.CachedQ.DirtyMask == 0)
+                const uint reportBits = (1u << 21) | (1u << 22) | (1u << 23);
+                if ((entry.CachedQ.DirtyMask & ~reportBits) == 0)
                     return 0;
                 var questionStats = await _questionDb.SaveQuestionsToDbAsync(entry.CachedQ, ct);
-                entry.CachedQ.DirtyMask = 0;
+                entry.CachedQ.DirtyMask &= reportBits;
                 Console.WriteLine($"" +
                     $"User:{entry.Player.Core.PlayerId} " +
                     $"Saved: Usr: {questionStats.userQuestions} " +
@@ -492,6 +493,29 @@ namespace KvizCommando.Server.Services.PlayerCache
             {
                 return 0;
 
+            }
+            finally
+            {
+                entry.Lock.Release();
+            }
+        }
+
+        public async Task<ReportedQuestionBatch> TakeReportedQuestionsLockedAsync(int playerId, CancellationToken ct = default)
+        {
+            if (!_entries.TryGetValue(playerId, out var entry))
+                return ReportedQuestionBatch.Empty;
+
+            await entry.Lock.WaitAsync(ct);
+            try
+            {
+                var questions = entry.CachedQ;
+                var reports = new ReportedQuestionBatch(
+                    [.. questions.rfSlots], [.. questions.rgSlots], [.. questions.ruSlots]);
+                questions.rfSlots.Clear();
+                questions.rgSlots.Clear();
+                questions.ruSlots.Clear();
+                questions.DirtyMask &= ~((1u << 21) | (1u << 22) | (1u << 23));
+                return reports;
             }
             finally
             {

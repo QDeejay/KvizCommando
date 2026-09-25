@@ -50,6 +50,7 @@ public partial class SoloGameManager : IAsyncDisposable
     private StartSoloGameResponse? _game;
     private FinishSoloGameResponse? _result;
     private SoloAnswerDto[] _answers = [];
+    private readonly HashSet<int> _reportedQuestionIndexes = [];
     private SoloQuestionState[] _progress = [];
     private TaskCompletionSource<int>? _answerSignal;
     private TaskCompletionSource? _skipSignal;

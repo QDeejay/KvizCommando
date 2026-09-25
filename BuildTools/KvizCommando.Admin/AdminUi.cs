@@ -351,6 +351,7 @@ internal sealed partial class AdminMainWindow : Window
         var questionSearch = new TextField(string.Empty) { X = 10, Y = 1, Width = 45 };
         var playerIdLabel = new Label("Player ID (0 = összes):") { X = 58, Y = 1 };
         var playerIdSearch = new TextField("0") { X = 81, Y = 1, Width = 10 };
+        var reportedOnly = new CheckBox("Jelentett", false) { X = 94, Y = 1 };
         var list = new ListView { X = 1, Y = 3, Width = Dim.Fill(2), Height = Dim.Fill(5) };
         IReadOnlyList<UserQuestionRow> rows = Array.Empty<UserQuestionRow>();
 
@@ -360,7 +361,8 @@ internal sealed partial class AdminMainWindow : Window
             {
                 rows = _database.GetUserQuestions(
                     questionSearch.Text?.ToString(),
-                    ParsePlayerIdFilter(playerIdSearch.Text?.ToString()));
+                    ParsePlayerIdFilter(playerIdSearch.Text?.ToString()),
+                    reportedOnly.Checked);
                 list.SetSource(rows.Select(x => x.ToString()).ToList());
             }
             catch (Exception ex)
@@ -385,7 +387,7 @@ internal sealed partial class AdminMainWindow : Window
         close.Clicked += () => Application.RequestStop();
         BindListAction(list, OpenSelected, 's');
 
-        dialog.Add(questionLabel, questionSearch, playerIdLabel, playerIdSearch, list, refresh, open, close);
+        dialog.Add(questionLabel, questionSearch, playerIdLabel, playerIdSearch, reportedOnly, list, refresh, open, close);
         Refresh();
         Application.Run(dialog);
     }
@@ -395,6 +397,7 @@ internal sealed partial class AdminMainWindow : Window
         var answers = DeserializeAnswers(row.AnswersJson);
         var dialog = CreateQuestionDialog($"User question #{row.Id}", row.CategoryNo, row.Question, answers, out var text, out var answerFields);
         dialog.Add(new Label($"Ask: {row.Ask}   OkAnswer: {row.OkAnswer}") { X = 2, Y = 20 });
+        AddReportClearControls(dialog, row.Reported, 21, () => _database.ClearUserQuestionReports(row.Id));
         var save = new Button("_Mentés") { X = 2, Y = 24 };
         var close = new Button("_Vissza") { X = Pos.Right(save) + 3, Y = 24 };
 

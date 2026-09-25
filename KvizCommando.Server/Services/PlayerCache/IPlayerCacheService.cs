@@ -148,5 +148,7 @@
         /// <param name="ct">A művelet megszakítását jelző token.</param>
         Task<int> SaveDirtyQuestionLockedAsync(int playerId, CancellationToken ct = default);
 
+        Task<ReportedQuestionBatch> TakeReportedQuestionsLockedAsync(int playerId, CancellationToken ct = default);
+
     }
 }

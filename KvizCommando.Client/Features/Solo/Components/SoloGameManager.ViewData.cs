@@ -57,7 +57,10 @@ partial class SoloGameManager
                 _questionIndex < _evaluatedCount
                     ? _result?.AnswerResults[_questionIndex]
                     : null,
-            AnswerEnabled = _answerEnabled
+            AnswerEnabled = _answerEnabled,
+            ReportEnabled = _phase == SoloGamePhase.Playing &&
+                _game is not null && _questionWatch.IsRunning &&
+                _questionWatch.ElapsedMilliseconds < _game.AnswerTimeSeconds * 1000L
         };
     }
 

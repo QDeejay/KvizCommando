@@ -56,6 +56,15 @@ public sealed partial class VsMatchService
         match.DeadlineUtc =
             match.PhaseStartedUtc.AddSeconds(durationSeconds);
 
+        if (IsAnswerPhase(phase) && match.Game.CurrentQuestion is { } currentQuestion)
+        {
+            var id = currentQuestion.Kind == VsQuestionKind.Guess
+                ? match.GuessQuestions[match.Game.CurrentRoundNumber - 1].QuestionId
+                : currentQuestion.QuestionId;
+            match.ReportableQuestions[match.Game.QuestionNumber] =
+                new VsMatchReportedQuestion(id, currentQuestion.Kind, currentQuestion.IsOwnQuestion);
+        }
+
         AddLog(match, null, "PhaseStarted", phase.ToString());
 
         var timerDeadlineUtc =

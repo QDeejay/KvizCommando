@@ -43,6 +43,22 @@ public partial class VsMatchManager : IAsyncDisposable
     private bool _completionHandled;
     private bool _disposed;
     private int _lastEffectQuestionNumber = -1;
+    private readonly HashSet<int> _reportedQuestionNumbers = [];
+    private bool _reportsSubmitted;
+
+    private void ToggleQuestionReport(int questionNumber)
+    {
+        if (_match is null ||
+            _match.Game.QuestionNumber != questionNumber ||
+            _match.DeadlineUtc is not { } deadline ||
+            MatchClient.ServerUtcNow >= deadline ||
+            _match.Phase is not (VsMatchPhase.NormalRoundGuess or
+                VsMatchPhase.NormalRoundQuestion or VsMatchPhase.CaptainQuestion))
+            return;
+
+        if (!_reportedQuestionNumbers.Add(questionNumber))
+            _reportedQuestionNumbers.Remove(questionNumber);
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -144,6 +160,19 @@ public partial class VsMatchManager : IAsyncDisposable
         if (phase == VsMatchPhase.GameCompleted && !_completionHandled)
         {
             _completionHandled = true;
+            if (!_reportsSubmitted && _reportedQuestionNumbers.Count > 0)
+            {
+                _reportsSubmitted = true;
+                try
+                {
+                    await MatchClient.SubmitQuestionReportsAsync(
+                        [.. _reportedQuestionNumbers], _lifetimeCts.Token);
+                }
+                catch (Exception ex) when (ex is not OperationCanceledException)
+                {
+                    Logger.LogWarning(ex, "VS question reports could not be submitted.");
+                }
+            }
             await PlayMatchCompletionEffectAsync();
             await Audio.CrossFadeMusicAsync(
                 MusicTrack.MenuMain,

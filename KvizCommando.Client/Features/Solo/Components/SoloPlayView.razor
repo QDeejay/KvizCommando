@@ -57,7 +57,22 @@
     <section class="kc-solo-question-panel">
         <header class="kc-solo-question-header">
             <div class="kc-solo-category" title="@Data.Game.Title">@Data.Game.Title</div>
-            <div class="kc-solo-question-count">@Data.Game.CurrentQuestion / @Data.Game.TotalQuestions</div>
+            <div class="kc-solo-question-actions">
+                @if (Data.Panel.Mode == SoloPanelMode.Question &&
+                     Data.Panel.ReportEnabled)
+                {
+                    <span class="kc-question-report-control">
+                        <span class="kc-solo-question-count">@(Lang[IsQuestionReported ? "question.Reported" : "question.Report"])</span>
+                        <button type="button" class="kc-question-report-flag @(IsQuestionReported ? "reported" : "")"
+                                aria-pressed="@IsQuestionReported"
+                                aria-label="@(Lang[IsQuestionReported ? "question.Reported" : "question.Report"])"
+                                @onclick="() => OnQuestionReported.InvokeAsync(Data.Game.CurrentQuestion)">
+                            <i class="bi @(IsQuestionReported ? "bi-flag-fill" : "bi-flag")" aria-hidden="true"></i>
+                        </button>
+                    </span>
+                }
+                <div class="kc-solo-question-count">@Data.Game.CurrentQuestion / @Data.Game.TotalQuestions</div>
+            </div>
         </header>
 
         @if (Data.Panel.Reward is not null)

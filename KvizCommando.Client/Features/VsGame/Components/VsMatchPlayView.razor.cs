@@ -21,6 +21,9 @@ public partial class VsMatchPlayView : IDisposable
     [Parameter, EditorRequired]
     public VsMatchViewData Data { get; set; } = new();
 
+    [Parameter] public bool IsQuestionReported { get; set; }
+    [Parameter] public EventCallback<int> OnQuestionReported { get; set; }
+
     [Parameter]
     public EventCallback<VsGuessAnswerRequest>
         OnGuessSubmitted { get; set; }

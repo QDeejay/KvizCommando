@@ -48,6 +48,7 @@ namespace KvizCommando.Client.Features.Solo.ViewModels
         public int SelectedAnswerIndex { get; init; } = -1;
         public bool? CurrentAnswerResult { get; init; }
         public bool AnswerEnabled { get; init; }
+        public bool ReportEnabled { get; init; }
     }
 
     public sealed class SoloRewardViewData
