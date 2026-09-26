@@ -293,7 +293,16 @@ button.kc-window-navigation-button:not(:disabled) {
     text-align: center;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 900px) {
+    .kc-window-backdrop {
+        padding: 60px 10px;
+    }
+
+    .kc-window-dialog {
+        width: min(650px, calc(100vw - 20px));
+        height: calc(100vh - 120px);
+    }
+
     .kc-window-navigation--sections {
         margin: 8px 8px 0;
         overflow: visible;

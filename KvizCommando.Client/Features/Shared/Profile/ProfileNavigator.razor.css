@@ -1,6 +1,8 @@
-.kc-profile-window {
-    width: min(1000px, calc(100vw - 48px));
-    height: min(800px, calc(100vh - 48px));
+@media (min-width: 901px) {
+    .kc-profile-window {
+        width: min(1000px, calc(100vw - 48px));
+        height: min(800px, calc(100vh - 48px));
+    }
 }
 
 .kc-profile-main {
@@ -176,7 +178,7 @@
     font-size: .8rem;
 }
 
-@media (max-width: 950px) {
+@media (max-width: 900px) {
     .kc-profile-main {
         grid-template-columns: minmax(0, 1fr);
         grid-template-rows: auto minmax(0, 1fr);
@@ -192,19 +194,12 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
         padding: 2px 5px 5px;
     }
-    .kc-window-navigation--sections .kc-window-navigation-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .kc-window-navigation--sections .kc-window-navigation-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 560px) {
-    .kc-profile-backdrop {
-        padding: 10px;
-    }
-
-    .kc-profile-window {
-        width: calc(100vw - 20px);
-        height: calc(100vh - 20px);
-    }
-
     .kc-profile-avatar-picker {
         grid-template-columns: 36px minmax(0, 220px) 36px;
         gap: 6px;
@@ -218,4 +213,3 @@
         display: none;
     }
 }
-

@@ -1,10 +1,12 @@
-.kc-help-window {
-    width: min(940px, calc(100vw - 48px));
-    height: min(760px, calc(100vh - 48px));
-}
+@media (min-width: 901px) {
+    .kc-help-window {
+        width: min(940px, calc(100vw - 48px));
+        height: min(760px, calc(100vh - 48px));
+    }
 
-.kc-help-window.with-navigation {
-    width: min(1180px, calc(100vw - 48px));
+    .kc-help-window.with-navigation {
+        width: min(1180px, calc(100vw - 48px));
+    }
 }
 
 .kc-help-header h2 {
@@ -258,16 +260,6 @@
 }
 
 @media (max-width: 680px) {
-    .kc-help-backdrop {
-        padding: 10px;
-    }
-
-    .kc-help-window,
-    .kc-help-window.with-navigation {
-        width: calc(100vw - 20px);
-        height: calc(100vh - 20px);
-    }
-
     .kc-help-header {
         padding-left: 15px;
     }

@@ -1,6 +1,8 @@
-.kc-settings-window {
-    width: min(960px, calc(100vw - 48px));
-    height: min(700px, calc(100vh - 48px));
+@media (min-width: 901px) {
+    .kc-settings-window {
+        width: min(960px, calc(100vw - 48px));
+        height: min(700px, calc(100vh - 48px));
+    }
 }
 
 .kc-settings-header h2 {
@@ -203,14 +205,7 @@
     letter-spacing: .04em;
 }
 
-@media (max-width: 720px) {
-    .kc-settings-backdrop { padding: 10px; }
-
-    .kc-settings-window {
-        width: calc(100vw - 20px);
-        height: calc(100vh - 20px);
-    }
-
+@media (max-width: 900px) {
     .kc-settings-main {
         grid-template-columns: minmax(0, 1fr);
         grid-template-rows: auto minmax(0, 1fr);
