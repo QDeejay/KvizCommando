@@ -36,7 +36,7 @@
             @for (int i = listStart; i <= listEnd; i++)
             {
                 var row = i;
-                var colorColumn = row <= 6 ? "color: green;" : "color: red;";
+                var colorColumn = row <= 6 ? "color: green;" : "color: #af1229;";
 
                 <div class="bottom-row-marker">
                     <label>@(_vmBot.Rows[row].Remark != "" ? "!" : string.Empty)</label>
@@ -69,7 +69,7 @@
                 <div></div>
                 <div class="teampage-datacol-1" style="@(_vmDev.Rows[i].HasChanged ? "color:blue;" : "")">@_vmDev.Rows[i].CategoryName</div>
                 <div class="teampage-datacol-2" style="@(_vmDev.Rows[i].HasChanged ? "color:blue; font-weight:bold;" : "")">@_vmDev.Rows[i].LevelDisplay</div>
-                <div class="teampage-datacol-3" style="@(i == 0 || i == 2 ? "color: green;" : "color:red;")">@_vmDev.Rows[i].ValueDisplay</div>
+                <div class="teampage-datacol-3" style="@(i == 0 || i == 2 ? "color: green;" : "color: #af1229;")">@_vmDev.Rows[i].ValueDisplay</div>
                 <div class="dev-button-section">
                     @if (_vmDev.Rows[i].StatusText == "")
                     {
