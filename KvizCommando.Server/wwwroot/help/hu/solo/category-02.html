@@ -108,10 +108,6 @@
                 }
 
             .kc-solo-help .help-progress-row {
-                display: grid;
-                grid-template-columns: minmax(0,1fr) auto;
-                align-items: start;
-                gap: 8px;
                 margin: 10px 0 7px
             }
 
@@ -195,9 +191,45 @@
                 text-align: center
             }
 
+            .kc-solo-help .help-skip-examples {
+                display: grid;
+                grid-template-columns: repeat(2,minmax(0,1fr));
+                gap: 8px;
+                margin-top: 12px
+            }
+
+            .kc-solo-help .help-skip-example {
+                display: grid;
+                grid-template-columns: 50px minmax(0,1fr);
+                align-items: center;
+                gap: 10px;
+                padding: 10px;
+                border: 1px solid var(--kc-help-border);
+                border-radius: 7px;
+                background: var(--kc-help-panel-strong)
+            }
+
+            .kc-solo-help .help-skip-example b {
+                color: var(--kc-help-title)
+            }
+
+            .kc-solo-help .indicator-box .help-skip-example p {
+                margin: 3px 0 0;
+                color: var(--kc-help-text-soft)
+            }
+
             .kc-solo-help .help-skip-button {
                 width: 50px;
+                height: 50px;
+                display: grid;
+                place-items: center;
                 margin: 0
+            }
+
+            .kc-solo-help .help-skip-button i {
+                display: block;
+                flex: none;
+                line-height: 1
             }
 
             .kc-solo-help .indicator-box p {
@@ -226,6 +258,10 @@
 
             .kc-solo-help .lead {
                 font-size: 15px
+            }
+
+            .kc-solo-help .help-skip-examples {
+                grid-template-columns: 1fr
             }
         }
     </style>
@@ -258,11 +294,11 @@
                     <span class="help-question-item wrong"><span class="help-question-dot"><i class="bi bi-x-lg"></i></span><span class="help-question-label">Hibás válasz</span></span>
                     <span class="help-question-item unanswered"><span class="help-question-dot"><i class="bi bi-square-fill"></i></span><span class="help-question-label">Nincs válasz</span></span>
                 </div>
-                <div class="button-on-lcd help-skip-button">
-                    <i class="bi bi-skip-forward-fill"></i>
-                </div>
             </div>
-            <p>A léptetőgomb csak az eredmények egyenkénti bemutatását ugorja át. Kérdést nem lehet vele kihagyni.</p>
+            <div class="help-skip-examples">
+                <div class="help-skip-example"><span class="button-on-lcd help-skip-button" aria-hidden="true"><i class="bi bi-skip-end-fill"></i></span><div><b>Kérdés közben</b><p>Lezárja az aktuális kérdést válasz nélkül. A kérdés 0 pontot ér.</p></div></div>
+                <div class="help-skip-example"><span class="button-on-lcd help-skip-button" aria-hidden="true"><i class="bi bi-skip-forward-fill"></i></span><div><b>Kiértékeléskor</b><p>Átugorja a hátralévő eredmények egyenkénti bemutatását.</p></div></div>
+            </div>
         </div>
 
         <div class="kc-question-report-help">

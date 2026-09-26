@@ -565,6 +565,21 @@ button.password-toggle:disabled {
             cursor: var(--kc-cursor-disabled);
         }
 
+/* The button shapes inside help articles are illustrations, not controls. */
+.kc-help-document .button-on-lcd,
+.kc-help-document .button-on-lcd i,
+.kc-help-document .button-on-lcd:hover,
+.kc-help-document .button-on-lcd:hover i {
+    cursor: var(--kc-cursor-normal);
+    transform: none;
+    opacity: 0.6;
+}
+
+.kc-help-document .button-on-lcd i,
+.kc-help-document .button-on-lcd:hover i {
+    opacity: 1;
+}
+
 .button-on-lcd--text {
     display: inline-flex;
     min-height: 0;
