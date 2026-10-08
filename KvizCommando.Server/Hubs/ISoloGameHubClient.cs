@@ -1,3 +1,5 @@
+using KvizCommando.Shared.Contracts.SoloGame;
+
 namespace KvizCommando.Server.Hubs;
 
 public interface ISoloGameHubClient
@@ -8,4 +10,6 @@ public interface ISoloGameHubClient
     /// <param name="token">A késleltetésméréshez változatlanul visszaküldendő érték.</param>
     /// <returns>A kapott <paramref name="token"/> értéke változtatás nélkül.</returns>
     Task<long> LatencyProbe(long token);
+
+    Task StateChanged(SoloGameSnapshot state);
 }

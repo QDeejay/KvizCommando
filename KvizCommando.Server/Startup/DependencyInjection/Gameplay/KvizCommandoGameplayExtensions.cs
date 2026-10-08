@@ -37,7 +37,7 @@ public static class KvizCommandoGameplayExtensions
 
         services.AddSingleton<ISoloGameCache, SoloGameCache>();
         services.AddScoped<ISoloQuestionRepository, SoloQuestionRepository>();
-        services.AddScoped<ISoloGameService, SoloGameService>();
+        services.AddSingleton<ISoloGameService, SoloGameService>();
         services.AddSingleton<ICategoryQuestionIndexCache, CategoryQuestionIndexCache>();
 
         services.AddScoped<IVsGameService, VsGameService>();

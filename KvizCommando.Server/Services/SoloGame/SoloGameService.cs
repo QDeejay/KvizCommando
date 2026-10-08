@@ -7,38 +7,46 @@ using KvizCommando.Shared.Contracts.SoloGame;
 using KvizCommando.Shared.Models;
 using KvizCommando.Shared.Models.Rules;
 using System.Text.Json;
+using System.Diagnostics;
+using KvizCommando.Server.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace KvizCommando.Server.Services.SoloGame;
 
-public sealed class SoloGameService : ISoloGameService
+public sealed partial class SoloGameService : ISoloGameService
 {
-    private const int FEEDBACK_SECONDS = 2;
     private const int EXPIRATION_ALLOWANCE_SECONDS = 10;
 
-    private readonly IPlayerCacheService _playerCache;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly ICategoryQuestionIndexCache _questionIndex;
-    private readonly ISoloQuestionRepository _questionRepository;
     private readonly ISoloGameCache _gameCache;
+    private readonly IHubContext<SoloGameHub, ISoloGameHubClient> _hub;
+    private readonly ILogger<SoloGameService> _logger;
 
     public SoloGameService(
-        IPlayerCacheService playerCache,
+        IServiceScopeFactory scopeFactory,
         ICategoryQuestionIndexCache questionIndex,
-        ISoloQuestionRepository questionRepository,
-        ISoloGameCache gameCache)
+        ISoloGameCache gameCache,
+        IHubContext<SoloGameHub, ISoloGameHubClient> hub,
+        ILogger<SoloGameService> logger)
     {
-        _playerCache = playerCache;
+        _scopeFactory = scopeFactory;
         _questionIndex = questionIndex;
-        _questionRepository = questionRepository;
         _gameCache = gameCache;
+        _hub = hub;
+        _logger = logger;
     }
 
     /// <inheritdoc />
     public async Task<SoloStartResult> StartAsync(
             int playerId,
+            string connectionId,
             StartSoloGameRequest request,
             CancellationToken ct = default)
     {
-        var cacheResult = await _playerCache.GetOrLoadLockedAsync(
+        using var scope = _scopeFactory.CreateScope();
+        var playerCache = scope.ServiceProvider.GetRequiredService<IPlayerCacheService>();
+        var cacheResult = await playerCache.GetOrLoadLockedAsync(
             playerId,
             request.SessionId,
             ct);
@@ -94,16 +102,22 @@ public sealed class SoloGameService : ISoloGameService
 
         var game = CreateGame(
             playerId,
+            connectionId,
             request,
             level,
             isHealing,
-            utcNow,
+            DateTime.UtcNow,
             questions);
 
         if (!_gameCache.TryCreate(game))
             return CreateStartFailure(SoloGameOperationStatus.Rejected);
 
-        return CreateStartSuccess(game);
+        game.DeadlineUtc = DateTime.UtcNow.AddSeconds(SoloGameRules.PREPARATION_SECONDS);
+        game.PhaseStartedTimestamp = Stopwatch.GetTimestamp();
+        game.Revision = 1;
+        var result = CreateStartSuccess(game);
+        game.RunTask = RunGameAsync(game);
+        return result;
     }
 
     private static bool IsValidStartRequest(
@@ -128,7 +142,7 @@ public sealed class SoloGameService : ISoloGameService
         await activeGame.Lock.WaitAsync(ct);
         try
         {
-            activeGame.Status = SoloGameStatus.Abandoned;
+            activeGame.Phase = SoloGamePhase.Abandoned;
             _gameCache.Remove(activeGame.GameId);
         }
         finally
@@ -148,7 +162,9 @@ public sealed class SoloGameService : ISoloGameService
         if (questionIds.Count != questionCount)
             return null;
 
-        var entities = await _questionRepository.LoadByIdsAsync(
+        using var scope = _scopeFactory.CreateScope();
+        var repository = scope.ServiceProvider.GetRequiredService<ISoloQuestionRepository>();
+        var entities = await repository.LoadByIdsAsync(
             questionIds,
             ct);
         if (entities.Count != questionCount)
@@ -171,6 +187,7 @@ public sealed class SoloGameService : ISoloGameService
 
     private static SoloGameSession CreateGame(
         int playerId,
+        string connectionId,
         StartSoloGameRequest request,
         int level,
         bool isHealing,
@@ -179,10 +196,13 @@ public sealed class SoloGameService : ISoloGameService
     {
         var gameTime = TimeSpan.FromSeconds(
             questions.Count *
-            (SoloGameRules.ANSWER_SECONDS + FEEDBACK_SECONDS));
+            (SoloGameRules.ANSWER_SECONDS + SoloGameRules.FEEDBACK_SECONDS) +
+            SoloGameRules.PREPARATION_SECONDS + SoloGameRules.STARTING_SECONDS)
+            + TimeSpan.FromMilliseconds(questions.Count * SoloGameRules.ANSWER_RECEIVE_GRACE_MS);
 
         return new SoloGameSession
         {
+            ConnectionId = connectionId,
             GameId = Guid.NewGuid(),
             PlayerId = playerId,
             SessionId = request.SessionId,
@@ -208,16 +228,9 @@ public sealed class SoloGameService : ISoloGameService
                 IsHealing = game.IsHealing,
                 QuestionCount = game.Questions.Count,
                 AnswerTimeSeconds = SoloGameRules.ANSWER_SECONDS,
-                FeedbackTimeSeconds = FEEDBACK_SECONDS,
+                FeedbackTimeSeconds = SoloGameRules.FEEDBACK_SECONDS,
                 MaxPointsPerQuestion = game.PointsPerLevel,
-                Questions =
-                [
-                    .. game.Questions.Select(question => new SoloQuestionDto
-                    {
-                        Question = question.Question,
-                        Answers = question.Answers
-                    })
-                ]
+                State = CreateSnapshot(game)
             }
         };
 
@@ -230,74 +243,53 @@ public sealed class SoloGameService : ISoloGameService
         int playerId,
         Guid gameId,
         SoloAnswerDto answer,
+        long receivedTimestamp,
         CancellationToken ct = default)
     {
         if (!_gameCache.TryGet(gameId, out var game) || game is null)
-        {
-            return new SoloAnswerResult
-            {
-                Status = SoloGameOperationStatus.Rejected
-            };
-        }
+            return new SoloAnswerResult { Status = SoloGameOperationStatus.Rejected };
 
         await game.Lock.WaitAsync(ct);
         try
         {
+            var serverTimeMs = (int)Stopwatch.GetElapsedTime(
+                game.PhaseStartedTimestamp, receivedTimestamp).TotalMilliseconds;
+            var maximumTimeMs = SoloGameRules.ANSWER_SECONDS * 1000;
             if (game.PlayerId != playerId ||
-                game.Status != SoloGameStatus.Active ||
-                DateTime.UtcNow > game.ExpiresAtUtc ||
-                game.Answers.Count >= game.Questions.Count ||
+                game.Phase != SoloGamePhase.Question ||
+                answer.QuestionNumber != game.QuestionIndex + 1 ||
+                game.Answers.Count != game.QuestionIndex ||
+                serverTimeMs < 0 ||
+                serverTimeMs > maximumTimeMs + SoloGameRules.ANSWER_RECEIVE_GRACE_MS ||
                 answer.SelectedOptionIndex is < -1 or > 3 ||
-                answer.AnswerTimeMs is < 0 or
-                    > SoloGameRules.ANSWER_SECONDS * 1000 ||
+                answer.AnswerTimeMs < 0 || answer.AnswerTimeMs > maximumTimeMs ||
                 answer.ReportedQuestionIndexes is null ||
-                (game.Answers.Count != game.Questions.Count - 1 &&
+                (game.QuestionIndex != game.Questions.Count - 1 &&
                  answer.ReportedQuestionIndexes.Length != 0) ||
                 answer.ReportedQuestionIndexes.Length > game.Questions.Count ||
-                answer.ReportedQuestionIndexes.Any(index =>
-                    index < 0 || index >= game.Questions.Count))
+                answer.ReportedQuestionIndexes.Any(index => index < 0 || index >= game.Questions.Count))
             {
-                return new SoloAnswerResult
-                {
-                    Status = SoloGameOperationStatus.Rejected
-                };
+                return new SoloAnswerResult { Status = SoloGameOperationStatus.Rejected };
+            }
+
+            using var scope = _scopeFactory.CreateScope();
+            var playerCache = scope.ServiceProvider.GetRequiredService<IPlayerCacheService>();
+            if (await playerCache.CheckSessionLockedAsync(game.PlayerId, game.SessionId, ct)
+                != CacheReadStatus.Success)
+            {
+                return new SoloAnswerResult { Status = SoloGameOperationStatus.SessionMismatch };
             }
 
             game.Answers.Add(new SoloAnswerDto
             {
+                QuestionNumber = answer.QuestionNumber,
                 SelectedOptionIndex = answer.SelectedOptionIndex,
-                AnswerTimeMs = answer.AnswerTimeMs
+                AnswerTimeMs = SoloGameRules.ResolveAnswerTime(serverTimeMs, answer.AnswerTimeMs)
             });
-
-            if (game.Answers.Count < game.Questions.Count)
-            {
-                return new SoloAnswerResult
-                {
-                    Status = SoloGameOperationStatus.Success
-                };
-            }
-
-            game.Status = SoloGameStatus.Finishing;
-            var result = await CompleteAsync(game, ct);
-
-            if (result.Status == SoloGameOperationStatus.Success)
-            {
-                if (answer.ReportedQuestionIndexes.Length > 0)
-                {
-                    await _playerCache.UpdateRewardQuestionsLockedAsync(
-                        game.PlayerId, game.SessionId,
-                        (_, questions) =>
-                        {
-                            foreach (var index in answer.ReportedQuestionIndexes)
-                                questions.rfSlots.Add(game.Questions[index].QuestionId);
-                            return 1u << 21;
-                        }, ct);
-                }
-                game.Status = SoloGameStatus.Completed;
-                _gameCache.Remove(gameId);
-            }
-
-            return result;
+            if (game.QuestionIndex == game.Questions.Count - 1)
+                game.ReportedQuestionIndexes = answer.ReportedQuestionIndexes.Distinct().ToArray();
+            game.QuestionCompletion.TrySetResult();
+            return new SoloAnswerResult { Status = SoloGameOperationStatus.Success };
         }
         finally
         {
@@ -321,7 +313,7 @@ public sealed class SoloGameService : ISoloGameService
             if (game.PlayerId != playerId || game.SessionId != sessionId)
                 return SoloGameOperationStatus.SessionMismatch;
 
-            game.Status = SoloGameStatus.Abandoned;
+            game.Phase = SoloGamePhase.Abandoned;
             _gameCache.Remove(gameId);
             return SoloGameOperationStatus.Success;
         }
@@ -387,6 +379,7 @@ public sealed class SoloGameService : ISoloGameService
             Response = new FinishSoloGameResponse
             {
                 TotalPoints = points,
+                Answers = game.Answers.ToArray(),
                 AnswerResults =
                 [
                     .. answerResults.Select(result => result == true)
@@ -411,7 +404,9 @@ public sealed class SoloGameService : ISoloGameService
         var isNewHighScore = false;
         var totalSeconds = totalTimeMs / 1000d;
 
-        var success = await _playerCache.UpdatePlayerLockedAsync(
+        using var scope = _scopeFactory.CreateScope();
+        var playerCache = scope.ServiceProvider.GetRequiredService<IPlayerCacheService>();
+        var success = await playerCache.UpdatePlayerLockedAsync(
             game.PlayerId,
             game.SessionId,
             player =>
@@ -508,7 +503,9 @@ public sealed class SoloGameService : ISoloGameService
                 correctAnswers,
                 game.Questions.Count);
 
-        var success = await _playerCache.UpdatePlayerLockedAsync(
+        using var scope = _scopeFactory.CreateScope();
+        var playerCache = scope.ServiceProvider.GetRequiredService<IPlayerCacheService>();
+        var success = await playerCache.UpdatePlayerLockedAsync(
             game.PlayerId,
             game.SessionId,
             player =>

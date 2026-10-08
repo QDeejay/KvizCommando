@@ -19,7 +19,7 @@ partial class SoloGameManager
 {
     private async Task EvaluateAsync(CancellationToken ct)
     {
-        _phase = SoloGamePhase.Evaluation;
+        _phase = SoloGameViewPhase.Evaluation;
         _points = 0;
         _evaluatedCount = 0;
         _evaluatedCorrectAnswers = 0;
@@ -106,7 +106,7 @@ partial class SoloGameManager
                 totalPoints);
         }
 
-        _phase = SoloGamePhase.Reward;
+        _phase = SoloGameViewPhase.Reward;
         _points = totalPoints;
         await Audio.PlaySfxAsync(
             _result?.IsNewHighScore == true
@@ -120,7 +120,7 @@ partial class SoloGameManager
         int delayMs,
         CancellationToken ct)
     {
-        _phase = SoloGamePhase.Status;
+        _phase = SoloGameViewPhase.Status;
         _statusKey = resourceKey;
         await RenderAsync();
         await Task.Delay(delayMs, ct);
@@ -128,7 +128,7 @@ partial class SoloGameManager
 
     private async Task ShowFailureAsync()
     {
-        _phase = SoloGamePhase.Failed;
+        _phase = SoloGameViewPhase.Failed;
         _statusKey = string.IsNullOrWhiteSpace(
             GameService.ErrorMessageKey)
                 ? "solo.Label.GameProcess.Aborted"

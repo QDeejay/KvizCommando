@@ -45,6 +45,7 @@
   <ItemGroup>
     <Folder Include="App\Audit\" />
     <Folder Include="App\Email\" />
+    <Folder Include="Background\" />
     <Folder Include="Services\VsGame\" />
     <Folder Include="wwwroot\Denied\hu\" />
     <Folder Include="wwwroot\Denied\en\" />

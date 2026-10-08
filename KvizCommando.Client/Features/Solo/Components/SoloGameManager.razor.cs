@@ -12,15 +12,16 @@ using KvizCommando.Shared.Models.Rules;
 using KvizCommando.Shared.Models.User;
 using Microsoft.AspNetCore.Components;
 using System.Diagnostics;
+using System.Threading.Channels;
 
 namespace KvizCommando.Client.Features.Solo.Components;
 
 /// <summary>
-/// A teljes szólójáték kliensoldali folyamatát vezérli.
+/// Megjeleníti a szerver által vezérelt szólójátékot és beküldi a válaszokat.
 /// </summary>
 public partial class SoloGameManager : IAsyncDisposable
 {
-[Inject] private ISoloGameClientService GameService { get; set; } = default!;
+    [Inject] private ISoloGameClientService GameService { get; set; } = default!;
     [Inject] private AudioService Audio { get; set; } = default!;
     [Inject] private UiServices Ui { get; set; } = default!;
     [Inject] private ILogger<SoloGameManager> Logger { get; set; } = default!;
@@ -52,11 +53,16 @@ public partial class SoloGameManager : IAsyncDisposable
     private SoloAnswerDto[] _answers = [];
     private readonly HashSet<int> _reportedQuestionIndexes = [];
     private SoloQuestionState[] _progress = [];
-    private TaskCompletionSource<int>? _answerSignal;
+    private SoloQuestionDto?[] _questions = [];
+    private readonly Channel<SoloGameSnapshot> _states = Channel.CreateUnbounded<SoloGameSnapshot>(
+        new UnboundedChannelOptions { SingleReader = true, SingleWriter = false });
+    private CancellationTokenSource? _questionCts;
+    private Task? _questionTask;
+    private long _stateRevision;
     private TaskCompletionSource? _skipSignal;
     private Task? _gameTask;
     private bool _hasActiveGame;
-    private SoloGamePhase _phase = SoloGamePhase.Status;
+    private SoloGameViewPhase _phase = SoloGameViewPhase.Status;
     private int _questionIndex;
     private int _remainingSeconds;
     private int _points;
@@ -120,6 +126,7 @@ public partial class SoloGameManager : IAsyncDisposable
     {
         _player = BuildPlayerProfile();
         GameService.OnChanged += HandleConnectionChanged;
+        GameService.StateChanged += ReceiveStateAsync;
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -147,7 +154,7 @@ public partial class SoloGameManager : IAsyncDisposable
         {
             _questionWatch.Stop();
             _answerEnabled = false;
-            _phase = SoloGamePhase.Failed;
+            _phase = SoloGameViewPhase.Failed;
             _statusKey = GameService.ErrorMessageKey;
             _lifetimeCts.Cancel();
         }
@@ -163,13 +170,16 @@ public partial class SoloGameManager : IAsyncDisposable
 
         _isDisposed = true;
         GameService.OnChanged -= HandleConnectionChanged;
+        GameService.StateChanged -= ReceiveStateAsync;
+        _states.Writer.TryComplete();
+        _questionCts?.Cancel();
         _answerEnabled = false;
         _lifetimeCts.Cancel();
-        _answerSignal?.TrySetCanceled();
         _skipSignal?.TrySetResult();
 
         if (_gameTask is not null)
             await _gameTask;
+        await StopQuestionClockAsync();
 
         var hasActiveGame = _hasActiveGame;
         _hasActiveGame = false;
@@ -202,7 +212,7 @@ public partial class SoloGameManager : IAsyncDisposable
         GC.SuppressFinalize(this);
     }
 
-    private enum SoloGamePhase
+    private enum SoloGameViewPhase
     {
         Status,
         Playing,

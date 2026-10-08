@@ -27,6 +27,7 @@ public sealed class SoloGameClientService : ISoloGameClientService
     }
 
     public event Action? OnChanged;
+    public event Func<SoloGameSnapshot, Task>? StateChanged;
 
     public VsConnectionCheckResult? ConnectionCheck { get; private set; }
     public string ErrorMessageKey { get; private set; } = string.Empty;
@@ -58,6 +59,8 @@ public sealed class SoloGameClientService : ISoloGameClientService
         _handlers.Add(_connection.On<long, long>(
             "LatencyProbe",
             token => Task.FromResult(token)));
+        _handlers.Add(_connection.On<SoloGameSnapshot>(
+            "StateChanged", HandleStateChangedAsync));
         _connection.Closed += HandleClosedAsync;
 
         try
@@ -131,11 +134,7 @@ public sealed class SoloGameClientService : ISoloGameClientService
                     ct);
 
             if (!response.IsAccepted)
-            {
-                ErrorMessageKey = response.ErrorKey;
-                NotifyChanged();
                 return response;
-            }
 
             ConnectionCheck = response.Connection;
             NotifyChanged();
@@ -215,6 +214,14 @@ public sealed class SoloGameClientService : ISoloGameClientService
         }
 
         await connection.DisposeAsync();
+    }
+
+    private async Task HandleStateChangedAsync(SoloGameSnapshot state)
+    {
+        if (StateChanged is not { } handlers)
+            return;
+        foreach (Func<SoloGameSnapshot, Task> handler in handlers.GetInvocationList())
+            await handler(state);
     }
 
     private Task HandleClosedAsync(Exception? exception)

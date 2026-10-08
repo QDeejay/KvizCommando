@@ -1,4 +1,3 @@
-using KvizCommando.Server.Background;
 using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.Rankings;
 
@@ -7,7 +6,7 @@ namespace KvizCommando.Server.Startup;
 public static class KvizCommandoBackgroundWorkerExtensions
 {
     /// <summary>
-    /// Regisztrálja a lejárt tokenek és a játékos-cache tartósításának háttérfolyamatait.
+    /// Regisztrálja a játékos-cache adatainak tartósításához és a ranglistákhoz szükséges szolgáltatásokat.
     /// </summary>
     /// <param name="services">A bővítendő szolgáltatásgyűjtemény.</param>
     /// <returns>A további regisztrációkhoz használható szolgáltatásgyűjtemény.</returns>
@@ -20,7 +19,6 @@ public static class KvizCommandoBackgroundWorkerExtensions
                                  options.FlushIntervalSeconds <= 3600,
                 "FlushIntervalSeconds must be between 5 and 3600.")
             .ValidateOnStart();
-        services.AddHostedService<ExpiredTokenKillerService>();
         services.AddSingleton<GameDbFlushService>();
         services.AddSingleton<IRankingCacheService, RankingCacheService>();
         services.AddHostedService<PlayerCachePersistenceService>();

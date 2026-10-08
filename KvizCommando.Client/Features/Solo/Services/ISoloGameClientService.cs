@@ -6,6 +6,7 @@ namespace KvizCommando.Client.Features.Solo.Services;
 public interface ISoloGameClientService : IAsyncDisposable
 {
     event Action? OnChanged;
+    event Func<SoloGameSnapshot, Task>? StateChanged;
 
     VsConnectionCheckResult? ConnectionCheck { get; }
     string ErrorMessageKey { get; }

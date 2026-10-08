@@ -30,7 +30,7 @@ namespace KvizCommando.Shared.Contracts.SoloGame
         public int FeedbackTimeSeconds { get; set; }
 
         public int MaxPointsPerQuestion { get; set; }
-        public SoloQuestionDto[] Questions { get; set; } = [];
+        public SoloGameSnapshot State { get; set; } = new();
     }
 
     public sealed class StartSoloHubResponse
@@ -42,9 +42,35 @@ namespace KvizCommando.Shared.Contracts.SoloGame
 
     public sealed class SoloAnswerDto
     {
+        public int QuestionNumber { get; set; }
         public int SelectedOptionIndex { get; set; }
         public int AnswerTimeMs { get; set; }
         public int[] ReportedQuestionIndexes { get; set; } = [];
+    }
+
+    public enum SoloGamePhase
+    {
+        Preparing,
+        Starting,
+        Question,
+        Feedback,
+        Finishing,
+        Completed,
+        Abandoned
+    }
+
+    /// <summary>A szerver által vezérelt szólójáték aktuális állapota.</summary>
+    public sealed class SoloGameSnapshot
+    {
+        public Guid GameId { get; set; }
+        public long Revision { get; set; }
+        public SoloGamePhase Phase { get; set; }
+        public int QuestionNumber { get; set; }
+        public DateTime? DeadlineUtc { get; set; }
+        public SoloQuestionDto? Question { get; set; }
+        public SoloAnswerDto? Answer { get; set; }
+        public FinishSoloGameResponse? Result { get; set; }
+        public string ErrorKey { get; set; } = string.Empty;
     }
 
     public sealed class SoloRewardDto
@@ -62,6 +88,7 @@ namespace KvizCommando.Shared.Contracts.SoloGame
     public sealed class FinishSoloGameResponse
     {
         public bool[] AnswerResults { get; set; } = [];
+        public SoloAnswerDto[] Answers { get; set; } = [];
         public int CorrectAnswers { get; set; }
         public int WrongAnswers { get; set; }
         public int TotalAnswerTimeMs { get; set; }
@@ -75,6 +102,5 @@ namespace KvizCommando.Shared.Contracts.SoloGame
         public bool IsAccepted { get; set; }
         public string ErrorKey { get; set; } = string.Empty;
         public VsConnectionCheckResult Connection { get; set; } = new();
-        public FinishSoloGameResponse? Result { get; set; }
     }
 }

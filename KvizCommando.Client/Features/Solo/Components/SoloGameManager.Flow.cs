@@ -17,49 +17,59 @@ namespace KvizCommando.Client.Features.Solo.Components;
 
 partial class SoloGameManager
 {
+    private Task ReceiveStateAsync(SoloGameSnapshot state)
+    {
+        _states.Writer.TryWrite(state);
+        return Task.CompletedTask;
+    }
+
     private async Task RunGameAsync(CancellationToken ct)
     {
         try
         {
             _statusKey = "solo.Label.GameProcess.Connecting";
             await RenderAsync();
-
-            await Audio.FadeOutMusicAsync(
-                AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
-
+            await Audio.FadeOutMusicAsync(AudioRules.MUSIC_FADE_DURING_THE_BATTLES);
             _game = await GameService.StartAsync(new StartSoloGameRequest
             {
                 Mode = Mode,
                 SelectionId = SelectionId
             }, ct);
-
             if (_game is null)
             {
                 await ShowFailureAsync();
                 return;
             }
 
-            await Audio.PlayMusicAsync(
-                MusicTrack.BattleSolo);
-
             _hasActiveGame = true;
-            await ShowStatusAsync(
-                "solo.Label.GameProcess.Preparing",
-                1000,
-                ct);
-
-            _answers = [.. _game.Questions.Select(question => new SoloAnswerDto
-            {
-                SelectedOptionIndex = -1
-            })];
-            _progress = [.. Enumerable.Repeat(
-                SoloQuestionState.Pending,
-                _game.QuestionCount)];
+            _answers = Enumerable.Range(1, _game.QuestionCount)
+                .Select(number => new SoloAnswerDto
+                {
+                    QuestionNumber = number,
+                    SelectedOptionIndex = -1
+                }).ToArray();
+            _questions = new SoloQuestionDto?[_game.QuestionCount];
+            _progress = Enumerable.Repeat(SoloQuestionState.Pending, _game.QuestionCount).ToArray();
             _points = _game.MaxPointsPerQuestion;
             _remainingSeconds = _game.AnswerTimeSeconds;
+            await Audio.PlayMusicAsync(MusicTrack.BattleSolo);
+            await ApplyStateAsync(_game.State, ct);
 
-            await ShowStatusAsync("solo.Label.GameProcess.Starting", 1000, ct);
-            await PlayAsync(ct);
+            // A szerverüzeneteket egy olvasó dolgozza fel. A SignalR fogadója
+            // csak sorba állítja őket, így a renderelés nem blokkolja a kapcsolatot.
+            await foreach (var state in _states.Reader.ReadAllAsync(ct))
+            {
+                if (state.GameId != _game.GameId || state.Revision <= _stateRevision)
+                    continue;
+                await ApplyStateAsync(state, ct);
+                if (state.Phase == SoloGamePhase.Completed)
+                {
+                    await FinishGameAsync(ct);
+                    return;
+                }
+                if (state.Phase == SoloGamePhase.Abandoned)
+                    return;
+            }
         }
         catch (OperationCanceledException) when (ct.IsCancellationRequested)
         {
@@ -69,154 +79,201 @@ partial class SoloGameManager
             Logger.LogError(ex, "Unexpected error during solo game.");
             await ShowFailureAsync();
         }
-    }
-
-    private async Task PlayAsync(CancellationToken ct)
-    {
-        _phase = SoloGamePhase.Playing;
-
-        for (_questionIndex = 0; _questionIndex < _answers.Length; _questionIndex++)
+        finally
         {
-            _progress[_questionIndex] = SoloQuestionState.Active;
-            await PlayQuestionAsync(ct);
-
-            _answerEnabled = false;
-            await RenderAsync();
-            await Task.Delay(
-                TimeSpan.FromSeconds(_game!.FeedbackTimeSeconds),
-                ct);
+            await StopQuestionClockAsync();
         }
-
-        await FinishGameAsync(ct);
     }
 
-    private async Task PlayQuestionAsync(CancellationToken ct)
+    private async Task ApplyStateAsync(SoloGameSnapshot state, CancellationToken ct)
     {
-        _answerSignal = new TaskCompletionSource<int>(
-            TaskCreationOptions.RunContinuationsAsynchronously);
-        _questionWatch.Restart();
-        _remainingSeconds = _game!.AnswerTimeSeconds;
-        _points = _game.MaxPointsPerQuestion;
-        _answerEnabled = true;
-        await RenderAsync();
-
-        while (_questionWatch.ElapsedMilliseconds < _game.AnswerTimeSeconds * 1000L)
+        _stateRevision = state.Revision;
+        await StopQuestionClockAsync();
+        _answerEnabled = false;
+        switch (state.Phase)
         {
-            if (_answerSignal.Task.IsCompleted)
-            {
-                var selectedOptionIndex =
-                    await _answerSignal.Task;
-
-                if (selectedOptionIndex == -1)
+            case SoloGamePhase.Preparing:
+                _phase = SoloGameViewPhase.Status;
+                _statusKey = "solo.Label.GameProcess.Preparing";
+                break;
+            case SoloGamePhase.Starting:
+                _phase = SoloGameViewPhase.Status;
+                _statusKey = "solo.Label.GameProcess.Starting";
+                break;
+            case SoloGamePhase.Question:
+                _questionIndex = state.QuestionNumber - 1;
+                _questions[_questionIndex] = state.Question
+                    ?? throw new InvalidOperationException("Solo question payload is missing.");
+                _phase = SoloGameViewPhase.Playing;
+                _progress[_questionIndex] = SoloQuestionState.Active;
+                _remainingSeconds = _game!.AnswerTimeSeconds;
+                _points = _game.MaxPointsPerQuestion;
+                _questionWatch.Restart();
+                _answerEnabled = true;
+                _questionCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                _questionTask = UpdateQuestionClockAsync(state.QuestionNumber, _questionCts.Token);
+                break;
+            case SoloGamePhase.Feedback:
+                _questionIndex = state.QuestionNumber - 1;
+                _answers[_questionIndex] = state.Answer
+                    ?? throw new InvalidOperationException("Solo answer payload is missing.");
+                _progress[_questionIndex] = SoloQuestionState.Pending;
+                if (_answers[_questionIndex].SelectedOptionIndex == -1)
                 {
                     _remainingSeconds = 0;
                     _points = 0;
                 }
-
-                await SaveAnswerAsync(
-                    selectedOptionIndex,
-                    selectedOptionIndex == -1
-                        ? _game.AnswerTimeSeconds * 1000
-                        : (int)_questionWatch.ElapsedMilliseconds,
-                    ct);
-                return;
-            }
-
-            _remainingSeconds = Math.Max(
-                0,
-                _game.AnswerTimeSeconds -
-                (int)(_questionWatch.ElapsedMilliseconds / 1000));
-            _points = Math.Max(
-                CalculateAnswerPoints(
-                    _game.MaxPointsPerQuestion,
-                    (int)_questionWatch.ElapsedMilliseconds),
-                0);
-
-            await RenderAsync();
-            await Task.Delay(100, ct);
+                else
+                {
+                    _remainingSeconds = Math.Max(0, _game!.AnswerTimeSeconds
+                        - _answers[_questionIndex].AnswerTimeMs / 1000);
+                    _points = CalculateAnswerPoints(_game.MaxPointsPerQuestion,
+                        _answers[_questionIndex].AnswerTimeMs);
+                }
+                break;
+            case SoloGamePhase.Finishing:
+                _phase = SoloGameViewPhase.Status;
+                _statusKey = "solo.Label.GameProcess.ProcessingQuestions";
+                break;
+            case SoloGamePhase.Completed:
+                _result = state.Result
+                    ?? throw new InvalidOperationException("Solo result payload is missing.");
+                _answers = _result.Answers;
+                break;
+            case SoloGamePhase.Abandoned:
+                _phase = SoloGameViewPhase.Failed;
+                _statusKey = state.ErrorKey;
+                break;
         }
+        await RenderAsync();
+    }
 
-        _remainingSeconds = 0;
-        _points = 0;
-        await SaveAnswerAsync(
-            -1,
-            _game.AnswerTimeSeconds * 1000,
-            ct);
+    private async Task UpdateQuestionClockAsync(int questionNumber, CancellationToken ct)
+    {
+        try
+        {
+            var maximumTimeMs = _game!.AnswerTimeSeconds * 1000;
+            while (_answerEnabled)
+            {
+                ct.ThrowIfCancellationRequested();
+                var elapsedMs = (int)_questionWatch.ElapsedMilliseconds;
+                if (elapsedMs >= maximumTimeMs)
+                {
+                    _remainingSeconds = 0;
+                    _points = 0;
+                    await SaveAnswerAsync(questionNumber, -1, maximumTimeMs, ct);
+                    return;
+                }
+                _remainingSeconds = Math.Max(0, _game.AnswerTimeSeconds - elapsedMs / 1000);
+                _points = CalculateAnswerPoints(_game.MaxPointsPerQuestion, elapsedMs);
+                await RenderAsync();
+                await Task.Delay(100, ct);
+            }
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Solo question display failed.");
+            await ShowFailureAsync();
+            _lifetimeCts.Cancel();
+        }
+    }
+
+    private async Task StopQuestionClockAsync()
+    {
+        _questionWatch.Stop();
+        _questionCts?.Cancel();
+        if (_questionTask is not null)
+            await _questionTask;
+        _questionTask = null;
+        _questionCts?.Dispose();
+        _questionCts = null;
     }
 
     private async Task SaveAnswerAsync(
-        int selectedOptionIndex,
-        int answerTimeMs,
-        CancellationToken ct)
+        int questionNumber, int selectedOptionIndex, int answerTimeMs, CancellationToken ct)
     {
         _questionWatch.Stop();
         _answerEnabled = false;
-        _answers[_questionIndex].SelectedOptionIndex = selectedOptionIndex;
-        _answers[_questionIndex].AnswerTimeMs = Math.Clamp(
-            answerTimeMs,
-            0,
-            _game!.AnswerTimeSeconds * 1000);
-        _progress[_questionIndex] = SoloQuestionState.Pending;
-
-        if (_questionIndex == _answers.Length - 1)
-            _answers[_questionIndex].ReportedQuestionIndexes = [.. _reportedQuestionIndexes];
-
-        var submission = await GameService.SubmitAnswerAsync(
-            _answers[_questionIndex],
-            ct);
-
-        if (submission is null || !submission.IsAccepted)
+        var answer = new SoloAnswerDto
         {
-            throw new InvalidOperationException(
-                "Solo answer was rejected by the server.");
+            QuestionNumber = questionNumber,
+            SelectedOptionIndex = selectedOptionIndex,
+            AnswerTimeMs = Math.Clamp(answerTimeMs, 0, _game!.AnswerTimeSeconds * 1000),
+            ReportedQuestionIndexes = questionNumber == _game.QuestionCount
+                ? _reportedQuestionIndexes.ToArray() : []
+        };
+        _answers[questionNumber - 1] = answer;
+        _progress[questionNumber - 1] = SoloQuestionState.Pending;
+        await RenderAsync();
+        var submission = await GameService.SubmitAnswerAsync(answer, ct);
+        if (submission is null ||
+            (!submission.IsAccepted && submission.ErrorKey == "solo.Error.Session"))
+        {
+            await ShowFailureAsync();
+            _lifetimeCts.Cancel();
         }
-
-        if (submission.Result is not null)
-            _result = submission.Result;
+        // A szerver a határidő vagy egy korábbi válasz miatt elutasíthatja
+        // a beküldést. Az elszámolt választ a következő állapot közli.
     }
 
     private async Task SelectAnswerAsync(int answerIndex)
     {
-        if (_phase == SoloGamePhase.Playing && _answerEnabled)
+        if (_phase != SoloGameViewPhase.Playing || !_answerEnabled)
+            return;
+        var elapsedMs = (int)_questionWatch.ElapsedMilliseconds;
+        var maximumTimeMs = _game!.AnswerTimeSeconds * 1000;
+        // A kattintás pillanatát mérjük, nem a következő kijelzőfrissítést.
+        _questionWatch.Stop();
+        _answerEnabled = false;
+        try
         {
-            _answerEnabled = false;
-            _answerSignal?.TrySetResult(answerIndex);
-            await Audio.PlaySfxAsync(
-                AudioService.SFX_SELECT);
+            await SaveAnswerAsync(_questionIndex + 1,
+                elapsedMs < maximumTimeMs ? answerIndex : -1,
+                Math.Min(elapsedMs, maximumTimeMs), _lifetimeCts.Token);
+            if (!_lifetimeCts.IsCancellationRequested)
+                await Audio.PlaySfxAsync(AudioService.SFX_SELECT);
+        }
+        catch (OperationCanceledException) when (_lifetimeCts.IsCancellationRequested)
+        {
         }
     }
 
     private void ToggleQuestionReport(int questionNumber)
     {
-        if (_phase != SoloGamePhase.Playing || _game is null ||
-            questionNumber != _questionIndex + 1 ||
-            !_questionWatch.IsRunning ||
+        if (_phase != SoloGameViewPhase.Playing || _game is null ||
+            questionNumber != _questionIndex + 1 || !_questionWatch.IsRunning ||
             _questionWatch.ElapsedMilliseconds >= _game.AnswerTimeSeconds * 1000L)
             return;
-
         if (!_reportedQuestionIndexes.Add(_questionIndex))
             _reportedQuestionIndexes.Remove(_questionIndex);
     }
 
     private async Task SkipQuestionAsync()
     {
-        if (_phase != SoloGamePhase.Playing ||
-            !_answerEnabled)
-        {
+        if (_phase != SoloGameViewPhase.Playing || !_answerEnabled)
             return;
-        }
-
+        _questionWatch.Stop();
         _answerEnabled = false;
-        _answerSignal?.TrySetResult(-1);
-        await Task.Delay(
-            SoloGameRules.SKIP_EMPTY_SFX_DELAY_MS);
-        await Audio.PlaySfxAsync(
-            AudioService.SFX_EMPTY);
+        _remainingSeconds = 0;
+        _points = 0;
+        try
+        {
+            await SaveAnswerAsync(_questionIndex + 1, -1,
+                _game!.AnswerTimeSeconds * 1000, _lifetimeCts.Token);
+            await Task.Delay(SoloGameRules.SKIP_EMPTY_SFX_DELAY_MS, _lifetimeCts.Token);
+            await Audio.PlaySfxAsync(AudioService.SFX_EMPTY);
+        }
+        catch (OperationCanceledException) when (_lifetimeCts.IsCancellationRequested)
+        {
+        }
     }
 
     private async Task FinishGameAsync(CancellationToken ct)
     {
-        _phase = SoloGamePhase.Status;
+        _phase = SoloGameViewPhase.Status;
         _statusKey = "solo.Label.GameProcess.ProcessingQuestions";
         _points = 0;
         await RenderAsync();

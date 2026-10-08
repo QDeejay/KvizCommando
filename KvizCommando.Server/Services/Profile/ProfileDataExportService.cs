@@ -82,11 +82,6 @@ public sealed class ProfileDataExportService : IProfileDataExportService
                 .Select(x => (int?)x.PlayerId)
                 .SingleOrDefaultAsync(ct);
 
-            if (playerId.HasValue)
-            {
-                await _cache.SaveDirtyLockedAsync(playerId.Value, ct);
-                await _cache.SaveDirtyQuestionLockedAsync(playerId.Value, ct);
-            }
 
             var source = await LoadSourceAsync(user, playerId, ct);
             var archive = BuildArchive(source);

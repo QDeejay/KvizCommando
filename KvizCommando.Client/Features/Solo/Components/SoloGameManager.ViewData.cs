@@ -19,10 +19,10 @@ partial class SoloGameManager
 {
     private SoloPanelViewData BuildPanelData()
     {
-        if (_phase == SoloGamePhase.Reward)
+        if (_phase == SoloGameViewPhase.Reward)
             return BuildRewardPanel();
 
-        if (_phase is SoloGamePhase.Status or SoloGamePhase.Failed)
+        if (_phase is SoloGameViewPhase.Status or SoloGameViewPhase.Failed)
         {
             return new SoloPanelViewData
             {
@@ -38,11 +38,11 @@ partial class SoloGameManager
             };
         }
 
-        var question = _game?.Questions.ElementAtOrDefault(_questionIndex);
+        var question = _questions.ElementAtOrDefault(_questionIndex);
 
         return new SoloPanelViewData
         {
-            Mode = _phase == SoloGamePhase.Evaluation
+            Mode = _phase == SoloGameViewPhase.Evaluation
                 ? SoloPanelMode.Evaluation
                 : SoloPanelMode.Question,
             DisplayLines = question is null
@@ -53,12 +53,12 @@ partial class SoloGameManager
             SelectedAnswerIndex =
                 _answers.ElementAtOrDefault(_questionIndex)?.SelectedOptionIndex ?? -1,
             CurrentAnswerResult =
-                _phase == SoloGamePhase.Evaluation &&
+                _phase == SoloGameViewPhase.Evaluation &&
                 _questionIndex < _evaluatedCount
                     ? _result?.AnswerResults[_questionIndex]
                     : null,
             AnswerEnabled = _answerEnabled,
-            ReportEnabled = _phase == SoloGamePhase.Playing &&
+            ReportEnabled = _phase == SoloGameViewPhase.Playing &&
                 _game is not null && _questionWatch.IsRunning &&
                 _questionWatch.ElapsedMilliseconds < _game.AnswerTimeSeconds * 1000L
         };

@@ -2,8 +2,6 @@ using KvizCommando.Shared.Contracts.SoloGame;
 
 namespace KvizCommando.Server.Services.SoloGame.GameCache;
 
-public enum SoloGameStatus { Active, Finishing, Completed, Abandoned }
-
 public sealed class CachedSoloQuestion
 {
     public required int QuestionId { get; init; }
@@ -14,6 +12,17 @@ public sealed class CachedSoloQuestion
 
 public sealed class SoloGameSession
 {
+    public required string ConnectionId { get; init; }
+    public SoloGamePhase Phase { get; set; } = SoloGamePhase.Preparing;
+    public long Revision { get; set; }
+    public int QuestionIndex { get; set; }
+    public long PhaseStartedTimestamp { get; set; }
+    public DateTime? DeadlineUtc { get; set; }
+    public TaskCompletionSource QuestionCompletion { get; set; } =
+        new(TaskCreationOptions.RunContinuationsAsynchronously);
+    public CancellationTokenSource LifetimeCts { get; } = new();
+    public Task? RunTask { get; set; }
+    public int[] ReportedQuestionIndexes { get; set; } = [];
     public required Guid GameId { get; init; }
     public required int PlayerId { get; init; }
     public required string SessionId { get; init; }
@@ -25,6 +34,5 @@ public sealed class SoloGameSession
     public required DateTime ExpiresAtUtc { get; init; }
     public required IReadOnlyList<CachedSoloQuestion> Questions { get; init; }
     public List<SoloAnswerDto> Answers { get; } = [];
-    public SoloGameStatus Status { get; set; } = SoloGameStatus.Active;
     public SemaphoreSlim Lock { get; } = new(1, 1);
 }

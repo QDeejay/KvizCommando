@@ -1,11 +1,6 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using KvizCommando.Server.Domain.Entities.Players;
-using KvizCommando.Server.Infrastructure.Persistence;
-using KvizCommando.Server.Services.PlayerCache;
-using KvizCommando.Server.Services.UserPlayerIdCache;
+﻿using KvizCommando.Server.Services.PlayerCache;
 using KvizCommando.Server.Services.SoloGame.GameCache;
+using KvizCommando.Server.Services.UserPlayerIdCache;
 using KvizCommando.Server.Services.VsGame.Match;
 using KvizCommando.Server.Services.VsGame.Matchmaking;
 
@@ -13,7 +8,7 @@ namespace KvizCommando.Server.Services.Players
 {
     public sealed class PlayerService : IPlayerService
     {
-   
+
         private readonly IPlayerCacheService _cache;
         private readonly IUserPlayerIdCacheService _idCasche;
         private readonly IVsRankedQueueService _rankedQueue;
@@ -71,28 +66,26 @@ namespace KvizCommando.Server.Services.Players
                 playerId.Value,
                 ct);
 
-            var logoutRequested =  await _cache.LogoutLockedRequestAsync( playerId.Value, sessionId,  ct);
+            var logoutRequested = await _cache.LogoutLockedRequestAsync(playerId.Value, sessionId, ct);
 
             _idCasche.Invalidate(userId);
 
             if (logoutRequested == CacheUpdateResult.SessionMismatch)
             {
                 _logger.LogWarning(
-                    "Logout: Session mismatch. PlayerId={PlayerId}, UserId={UserId}, SessionId={SessionId}",
+                    "Logout: Session mismatch. PlayerId={PlayerId}, UserId={UserId}",
                     playerId,
-                    userId,
-                    sessionId);
+                    userId);
 
                 return;
             }
 
             _logger.LogDebug(
                 logoutRequested == CacheUpdateResult.Updated
-                    ? "Logout: Cache logout requested. PlayerId={PlayerId}, UserId={UserId}, SessionId={SessionId}"
-                    : "Logout: Player was not present in cache. PlayerId={PlayerId}, UserId={UserId}, SessionId={SessionId}",
+                    ? "Logout: Cache logout requested. PlayerId={PlayerId}, UserId={UserId}"
+                    : "Logout: Player was not present in cache. PlayerId={PlayerId}, UserId={UserId}",
                 playerId,
-                userId,
-                sessionId);
+                userId);
         }
 
         /// <inheritdoc />
@@ -113,6 +106,6 @@ namespace KvizCommando.Server.Services.Players
             await _cache.DiscardAsync(playerId, ct);
             _idCasche.Invalidate(userId);
         }
-       
+
     }
 }

@@ -6,6 +6,18 @@ namespace KvizCommando.Shared.Models.Rules;
 public static class SoloGameRules
 {
     public const int ANSWER_SECONDS = 25;
+    public const int PREPARATION_SECONDS = 1;
+    public const int STARTING_SECONDS = 1;
+    public const int FEEDBACK_SECONDS = 2;
+    public const int ANSWER_TIME_TOLERANCE_MS = 1000;
+    public const int ANSWER_RECEIVE_GRACE_MS = 1000;
+
+    /// <summary>Csak a szervermérésnél túlzottan rövidebb kliensidőt korrigálja.</summary>
+    public static int ResolveAnswerTime(int serverTimeMs, int clientTimeMs) =>
+        (long)serverTimeMs - clientTimeMs > ANSWER_TIME_TOLERANCE_MS
+            ? serverTimeMs
+            : clientTimeMs;
+
     public const int FULL_POINTS_SECONDS = 5;
     public const int POINT_DECREASE_REMAINING_SECONDS =
         ANSWER_SECONDS - FULL_POINTS_SECONDS;

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Caching.Memory;
+using KvizCommando.Shared.Contracts.SoloGame;
 using System.Collections.Concurrent;
 
 namespace KvizCommando.Server.Services.SoloGame.GameCache;
@@ -17,7 +18,10 @@ public sealed class SoloGameCache : ISoloGameCache
         options.RegisterPostEvictionCallback((_, value, _, _) =>
         {
             if (value is SoloGameSession game)
+            {
+                game.LifetimeCts.Cancel();
                 RemovePlayerGame(game.PlayerId, game.GameId);
+            }
         });
         _cache.Set(CacheKey(session.GameId), session, options);
         return true;
@@ -39,7 +43,8 @@ public sealed class SoloGameCache : ISoloGameCache
 
         if (TryGet(gameId, out var game) &&
             game is not null &&
-            game.Status == SoloGameStatus.Active)
+            game.Phase is not (SoloGamePhase.Completed or
+                SoloGamePhase.Abandoned))
         {
             session = game;
             return true;
@@ -53,7 +58,10 @@ public sealed class SoloGameCache : ISoloGameCache
     public void Remove(Guid gameId)
     {
         if (TryGet(gameId, out var game) && game is not null)
+        {
+            game.LifetimeCts.Cancel();
             RemovePlayerGame(game.PlayerId, gameId);
+        }
         _cache.Remove(CacheKey(gameId));
     }
     private static string CacheKey(Guid id) => $"solo-game:{id:N}";

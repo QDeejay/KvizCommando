@@ -74,6 +74,7 @@ public sealed class SoloGameHub : Hub<ISoloGameHubClient>
             Context.ConnectionAborted);
         var result = await _games.StartAsync(
             playerId,
+            Context.ConnectionId,
             request,
             Context.ConnectionAborted);
 
@@ -106,6 +107,7 @@ public sealed class SoloGameHub : Hub<ISoloGameHubClient>
     public async Task<SoloHubAnswerResponse> SubmitAnswer(
         SoloAnswerDto answer)
     {
+        var receivedTimestamp = Stopwatch.GetTimestamp();
         if (!TryGetGame(out var game))
             return RejectAnswer("solo.Error.InvalidAnswer");
 
@@ -113,6 +115,7 @@ public sealed class SoloGameHub : Hub<ISoloGameHubClient>
             game.PlayerId,
             game.GameId,
             answer,
+            receivedTimestamp,
             Context.ConnectionAborted);
 
         if (result.Status != SoloGameOperationStatus.Success)
@@ -129,15 +132,11 @@ public sealed class SoloGameHub : Hub<ISoloGameHubClient>
                 1,
                 Context.ConnectionAborted);
 
-        if (result.Response is not null)
-            Context.Items.Remove(typeof(SoloHubGameState));
-
         return new SoloHubAnswerResponse
         {
             IsAccepted = true,
             Connection = BuildConnectionResult(
-                responseTimeMilliseconds),
-            Result = result.Response
+                responseTimeMilliseconds)
         };
     }
 
@@ -157,6 +156,13 @@ public sealed class SoloGameHub : Hub<ISoloGameHubClient>
 
         Context.Items.Remove(typeof(SoloHubGameState));
         return result == SoloGameOperationStatus.Success;
+    }
+
+    public override async Task OnDisconnectedAsync(Exception? exception)
+    {
+        if (TryGetGame(out var game))
+            await _games.AbandonAsync(game.PlayerId, game.GameId, game.SessionId);
+        await base.OnDisconnectedAsync(exception);
     }
 
     private bool TryGetGame(out SoloHubGameState game)
@@ -203,7 +209,7 @@ public sealed class SoloGameHub : Hub<ISoloGameHubClient>
             var stopwatch = Stopwatch.StartNew();
             var response = await Clients.Caller
                 .LatencyProbe(token)
-                .WaitAsync(ct);
+                .WaitAsync(TimeSpan.FromSeconds(5), ct);
             stopwatch.Stop();
 
             if (response != token)
