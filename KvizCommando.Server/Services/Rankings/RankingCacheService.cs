@@ -11,7 +11,6 @@ internal sealed class RankingCacheService : IRankingCacheService
 {
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IOptions<PlayerCachePersistenceOptions> _options;
-    private readonly SemaphoreSlim _refreshLock = new(1, 1);
     private RankingCacheSnapshot? _snapshot;
 
     private static readonly IComparer<RankingValue> Order =
@@ -91,53 +90,45 @@ internal sealed class RankingCacheService : IRankingCacheService
     /// <inheritdoc />
     public async Task RefreshAsync(CancellationToken ct = default)
     {
-        await _refreshLock.WaitAsync(ct);
-        try
+        using var scope = _scopeFactory.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<IRankingDbService>();
+        var stored = await db.ReadAsync(ct);
+        var values = new Dictionary<RankingList, Dictionary<int, RankingValue>>();
+        var oldSnapshot = Volatile.Read(ref _snapshot);
+        var ordered = new Dictionary<RankingList, RankingValue[]>();
+
+        foreach (var (list, entries) in stored)
         {
-            using var scope = _scopeFactory.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<IRankingDbService>();
-            var stored = await db.ReadAsync(ct);
-            var values = new Dictionary<RankingList, Dictionary<int, RankingValue>>();
-            var oldSnapshot = Volatile.Read(ref _snapshot);
-            var ordered = new Dictionary<RankingList, RankingValue[]>();
+            var currentValues = entries.ToDictionary(
+                entry => entry.Key,
+                entry => new RankingValue(
+                    entry.Value.PlayerId,
+                    entry.Value.Score,
+                    entry.Value.TimeSeconds));
+            values[list] = currentValues;
 
-            foreach (var (list, entries) in stored)
+            if (oldSnapshot is not null &&
+                SameValues(oldSnapshot.Values[list], currentValues))
             {
-                var currentValues = entries.ToDictionary(
-                    entry => entry.Key,
-                    entry => new RankingValue(
-                        entry.Value.PlayerId,
-                        entry.Value.Score,
-                        entry.Value.TimeSeconds));
-                values[list] = currentValues;
-
-                if (oldSnapshot is not null &&
-                    SameValues(oldSnapshot.Values[list], currentValues))
-                {
-                    ordered[list] = oldSnapshot.Ordered[list];
-                    continue;
-                }
-
-                var defaults = RankingDefaults.Players.Select(player =>
-                     list == RankingList.VsAllTime
-                         ? player with { Score = player.Score / 2 }
-                         : player);
-                var rows = currentValues.Values.Concat(defaults).ToArray();
-                Array.Sort(rows, Order);
-                ordered[list] = rows;
+                ordered[list] = oldSnapshot.Ordered[list];
+                continue;
             }
 
-            Volatile.Write(ref _snapshot, new RankingCacheSnapshot
-            {
-                Values = values,
-                Ordered = ordered,
-                UpdatedUtc = DateTime.UtcNow
-            });
+            var defaults = RankingDefaults.Players.Select(player =>
+                 list == RankingList.VsAllTime
+                     ? player with { Score = player.Score / 2 }
+                     : player);
+            var rows = currentValues.Values.Concat(defaults).ToArray();
+            Array.Sort(rows, Order);
+            ordered[list] = rows;
         }
-        finally
+
+        Volatile.Write(ref _snapshot, new RankingCacheSnapshot
         {
-            _refreshLock.Release();
-        }
+            Values = values,
+            Ordered = ordered,
+            UpdatedUtc = DateTime.UtcNow
+        });
     }
 
     private static RankingSelection SelectRows(

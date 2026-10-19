@@ -14,7 +14,6 @@ public sealed class SoloGameSession
 {
     public required string ConnectionId { get; init; }
     public SoloGamePhase Phase { get; set; } = SoloGamePhase.Preparing;
-    public long Revision { get; set; }
     public int QuestionIndex { get; set; }
     public long PhaseStartedTimestamp { get; set; }
     public DateTime? DeadlineUtc { get; set; }

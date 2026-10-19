@@ -58,7 +58,6 @@ public partial class SoloGameManager : IAsyncDisposable
         new UnboundedChannelOptions { SingleReader = true, SingleWriter = false });
     private CancellationTokenSource? _questionCts;
     private Task? _questionTask;
-    private long _stateRevision;
     private TaskCompletionSource? _skipSignal;
     private Task? _gameTask;
     private bool _hasActiveGame;

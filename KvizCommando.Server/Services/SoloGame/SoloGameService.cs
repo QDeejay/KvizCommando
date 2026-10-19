@@ -114,7 +114,6 @@ public sealed partial class SoloGameService : ISoloGameService
 
         game.DeadlineUtc = DateTime.UtcNow.AddSeconds(SoloGameRules.PREPARATION_SECONDS);
         game.PhaseStartedTimestamp = Stopwatch.GetTimestamp();
-        game.Revision = 1;
         var result = CreateStartSuccess(game);
         game.RunTask = RunGameAsync(game);
         return result;

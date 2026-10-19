@@ -62,8 +62,6 @@ namespace KvizCommando.Shared.Contracts.SoloGame
     /// <summary>A szerver által vezérelt szólójáték aktuális állapota.</summary>
     public sealed class SoloGameSnapshot
     {
-        public Guid GameId { get; set; }
-        public long Revision { get; set; }
         public SoloGamePhase Phase { get; set; }
         public int QuestionNumber { get; set; }
         public DateTime? DeadlineUtc { get; set; }

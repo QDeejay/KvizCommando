@@ -189,15 +189,12 @@ public sealed partial class SoloGameService
     private static void SetPhase(SoloGameSession game, SoloGamePhase phase, TimeSpan? duration)
     {
         game.Phase = phase;
-        game.Revision++;
         game.PhaseStartedTimestamp = Stopwatch.GetTimestamp();
         game.DeadlineUtc = duration.HasValue ? DateTime.UtcNow.Add(duration.Value) : null;
     }
 
     private static SoloGameSnapshot CreateSnapshot(SoloGameSession game) => new()
     {
-        GameId = game.GameId,
-        Revision = game.Revision,
         Phase = game.Phase,
         QuestionNumber = game.Phase is SoloGamePhase.Question or SoloGamePhase.Feedback
             ? game.QuestionIndex + 1 : 0,

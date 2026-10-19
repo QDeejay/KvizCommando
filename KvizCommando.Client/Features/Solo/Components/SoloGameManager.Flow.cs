@@ -59,8 +59,6 @@ partial class SoloGameManager
             // csak sorba állítja őket, így a renderelés nem blokkolja a kapcsolatot.
             await foreach (var state in _states.Reader.ReadAllAsync(ct))
             {
-                if (state.GameId != _game.GameId || state.Revision <= _stateRevision)
-                    continue;
                 await ApplyStateAsync(state, ct);
                 if (state.Phase == SoloGamePhase.Completed)
                 {
@@ -87,7 +85,6 @@ partial class SoloGameManager
 
     private async Task ApplyStateAsync(SoloGameSnapshot state, CancellationToken ct)
     {
-        _stateRevision = state.Revision;
         await StopQuestionClockAsync();
         _answerEnabled = false;
         switch (state.Phase)
