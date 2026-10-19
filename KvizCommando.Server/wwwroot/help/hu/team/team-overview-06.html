@@ -11,7 +11,7 @@
 <section class="kc-help-document kc-team-help">
     <div class="eyebrow">CSAPATÁTTEKINTÉS // 06 / 06</div>
     <h1>Segítségek fejlesztése</h1>
-    <p class="lead">Minden segítségnek saját nyitási és maximális szintje van. Egy segítség egy szinttel való fejlesztése {{TEAM_HELP_LEVEL_COST}} Csp-be kerül.</p>
+    <p class="lead">Egy szint fejlesztése {{TEAM_HELP_LEVEL_COST}} Csp. A segítségek nyitási és felső szintje eltér.</p>
 
     <div class="help-grid">
         <div class="help-card">
@@ -22,13 +22,11 @@
         <div class="help-card">
             <h2>Tippsáv</h2>
             <div class="meta"><span>Nyitás: {{TEAM_HELP_GUESS_RANGE_UNLOCK_LEVEL}}</span><span>Maximum: Szint {{TEAM_HELP_GUESS_RANGE_MAX_LEVEL}}</span></div>
-            A becslős kérdéshez mutatott tartomány {{TEAM_HELP_GUESS_RANGE_START_VALUE}}%-ról {{TEAM_HELP_GUESS_RANGE_MAX_VALUE}}%-ra szűkíthető. A kisebb érték pontosabb segítséget jelent.
+            A becslős kérdéshez mutatott tartomány {{TEAM_HELP_GUESS_RANGE_START_VALUE}}%-ról {{TEAM_HELP_GUESS_RANGE_MAX_VALUE}}%-ra szűkíthető.
         </div>
         <div class="help-card">
             <h2>Időtlenítő</h2>
-            <div class="meta"><span>Nyitás: {{TEAM_HELP_TIME_FREEZE_UNLOCK_LEVEL}}</span><span>Maximum: Szint {{TEAM_HELP_TIME_FREEZE_MAX_LEVEL}}</span></div>
-            Jó válasz esetén 0 másodperces válaszidővel számol.
-        </div>
+            <div class="meta"><span>Nyitás: {{TEAM_HELP_TIME_FREEZE_UNLOCK_LEVEL}}</span><span>Maximum: Szint {{TEAM_HELP_TIME_FREEZE_MAX_LEVEL}}</span></div>Helyes válasznál a gyorsasági idő nulla.</div>
         <div class="help-card">
             <h2>AI javaslat</h2>
             <div class="meta"><span>Nyitás: {{TEAM_HELP_AI_SUGGESTION_UNLOCK_LEVEL}}</span><span>Maximum: Szint {{TEAM_HELP_AI_SUGGESTION_MAX_LEVEL}}</span></div>
@@ -36,15 +34,9 @@
         </div>
     </div>
 
-    <div class="controls">
-        <div class="control"><i class="bi bi-dash-lg" aria-hidden="true"></i>Tervezett szint visszavétele</div>
-        <div class="control"><i class="bi bi-plus-lg" aria-hidden="true"></i>Tervezett szint növelése</div>
-        <div class="control"><i class="bi bi-trash3-fill" aria-hidden="true"></i>Változtatások visszaállítása</div>
-        <div class="control"><i class="bi bi-floppy" aria-hidden="true"></i>Beállítások mentése</div>
-    </div>
-
-    <div class="note">A segítségnél látható „Szint” nem a csapat vagy a karakter Lvl-je. A módosítások csak a mentés ikon megnyomásakor lépnek életbe.</div>
-    <span class="shortcut">F1 – a segítség újbóli megnyitása</span>
+    <div class="note">A segítség szintje külön érték. A fejlesztés mentéskor lép életbe.</div>
+    <span class="shortcut">F1 – Súgó</span>
 </section>
+
 </body>
 </html>

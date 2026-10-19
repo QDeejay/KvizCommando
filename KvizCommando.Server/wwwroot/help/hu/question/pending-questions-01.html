@@ -10,10 +10,8 @@
 <body>
 <section class="kc-help-document kc-pending-question-help">
     <div class="eyebrow">FÜGGŐBEN LÉVŐ KÉRDÉSEK // 01 / 02</div>
-    <h1>Hány beküldött kérdésed lehet?</h1>
-    <p class="lead">Itt követheted az elbírálásra beküldött kérdéseidet. A függő kérdéshelyek száma a csapatod szintjével nő.</p>
-
-    <div class="header-note"><b>A fejlécben látható számpár:</b> foglalt helyek / összes jelenleg használható hely.</div>
+    <h1>Függő kérdéshelyek</h1>
+    <p class="lead">A függő kérdéshelyek száma a csapatszinttel nő.</p>
 
     <div class="levels">
         <div class="level"><span class="level-code">{{PENDING_SLOT_PUBLIC_LEVEL_START_01}} – {{PENDING_SLOT_PUBLIC_LEVEL_END_01}}</span><span class="level-count">{{PENDING_SLOT_SIZE_01}}</span></div>
@@ -24,13 +22,13 @@
     </div>
 
     <div class="statuses">
-        <div class="status pending"><b>Függőben</b>Elbírálásra vár; még nem kezelhető.</div>
-        <div class="status approved"><b>Jóváhagyva</b>Áthelyezhető a Felhasználói kérdések közé, vagy törölhető.</div>
-        <div class="status rejected"><b>Elutasítva</b>A visszajelzés megtekinthető, majd a kérdés törölhető.</div>
-        <div class="status empty"><b>Nincs</b>Üres függő kérdéshely.</div>
+        <div class="status pending"><b>Függőben</b>Elbírálásig nem kezelhető.</div>
+        <div class="status approved"><b>Jóváhagyva</b>Áthelyezhető vagy törölhető.</div>
+        <div class="status rejected"><b>Elutasítva</b>A visszajelzés megtekinthető, majd törölhető.</div>
+        <div class="status empty"><b>Nincs</b>Üres kérdéshely.</div>
     </div>
 
-    <p class="marker"><span class="bang">!</span> A villogó felkiáltójel jelzi, hogy az elbírálás befejeződött, és már választhatsz műveletet.</p>
-</section>
+    </section>
+
 </body>
 </html>

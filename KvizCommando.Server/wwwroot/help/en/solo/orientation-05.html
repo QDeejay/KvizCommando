@@ -11,12 +11,12 @@
 <section class="kc-help-document kc-solo-help">
     <div class="eyebrow">ORIENTATION GAME // 05 / 05</div>
     <h1>Result and rewards</h1>
-    <p class="lead">At the end of the game, your performance and every reward actually earned are shown separately. The trophy plate keeps the character's personal best score.</p>
+    <p class="lead">Rewards are measured against the character’s previous personal best.</p>
 
     <div class="reward-grid">
         <section class="reward-card wide">
             <h2><i class="bi bi-plus-square-fill"></i> Development points from score</h2>
-            <p>The character earns development points for newly crossed thresholds compared with their previous personal best. One strong result may cross several thresholds at once.</p>
+            <p>New thresholds above the character’s personal best earn DP. One game can cross several thresholds.</p>
             <div class="limits">
                 <span class="limit">{{SOLO_DEV_SCORE_01}}</span><span class="limit">{{SOLO_DEV_SCORE_02}}</span><span class="limit">{{SOLO_DEV_SCORE_03}}</span><span class="limit">{{SOLO_DEV_SCORE_04}}</span><span class="limit">{{SOLO_DEV_SCORE_05}}</span><span class="limit">{{SOLO_DEV_SCORE_06}}</span><span class="limit">{{SOLO_DEV_SCORE_07}}</span><span class="limit">{{SOLO_DEV_SCORE_08}}</span>
             </div>
@@ -24,19 +24,18 @@
 
         <section class="reward-card heart-card">
             <h2><i class="bi bi-heart-fill"></i> DP at 0 vitality</h2>
-            <p>If the character has 0 vitality and no DP available to spend, the number of correct answers shown in the table awards <b>{{SOLO_HEART_DEV_POINTS}} DP</b>.</p>
-            <p>The DP can be used to restore vitality.</p>
-        </section>
+            <p>At zero vitality with no spendable DP, the table’s correct-answer requirement earns <b>{{SOLO_HEART_DEV_POINTS}} DP</b> for recovery.</p>
+            </section>
 
         <section class="reward-card">
             <h2><i class="bi bi-chevron-double-up"></i> Character and team XP</h2>
-            <p>When the <b>XP</b> label appears in the bottom-left corner of the question panel, that game can award character and team XP.</p>
-            <p>Character XP can only be earned at these rank-class transition levels:</p>
+            <p>Character XP can be earned at these rank-class transition levels:</p>
             <p><b>{{SOLO_XP_LEVELS}}</b></p>
-            <p>The team receives a share of the character's XP based on the maximum team size available at that level.</p>
+            <p>The team receives a share of character XP based on the maximum team size at that level.</p>
         </section>
     </div>
-    <span class="shortcut">F1 – open help again</span>
+    <span class="shortcut">F1 – Help</span>
 </section>
+
 </body>
 </html>

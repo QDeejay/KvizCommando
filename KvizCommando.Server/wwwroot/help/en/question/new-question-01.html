@@ -10,16 +10,16 @@
 <body>
 <section class="kc-help-document kc-new-question-help">
     <div class="eyebrow">NEW QUESTION // 01 / 02</div>
-    <h1>How to submit a question</h1>
-    <p class="lead">This screen is available when you have at least one empty Pending question slot and at least one enlisted character.</p>
+    <h1>Submit a question</h1>
+    <p class="lead">Submission requires an empty Pending question slot and at least one enlisted character.</p>
 
-    <div class="access"><b>Available categories:</b> only categories linked to the orientations of your currently enlisted characters are shown.</div>
+    <div class="access">Enlisted characters’ orientations determine the available categories.</div>
 
     <div class="steps">
-        <div class="step"><span class="step-no">01</span><div><b>Select a category</b>The question field becomes available after choosing a category.</div></div>
-        <div class="step"><span class="step-no">02</span><div><b>Enter the question</b>It must contain a question mark and be between <span class="limit">{{NEW_QUESTION_MIN_LENGTH}}</span> and <span class="limit">{{NEW_QUESTION_MAX_LENGTH}}</span> characters long.</div></div>
-        <div class="step"><span class="step-no">03</span><div><b>Enter four answers</b>Each answer may contain up to <span class="limit">{{NEW_QUESTION_ANSWER_MAX_LENGTH}}</span> characters. None may be empty or identical.</div></div>
-        <div class="step"><span class="step-no">04</span><div><b>Submit it</b>The Submit button becomes available only after every field meets the requirements.</div></div>
+        <div class="step"><span class="step-no">01</span><div><b>Category</b>Choose the category first.</div></div>
+        <div class="step"><span class="step-no">02</span><div><b>Question</b>{{NEW_QUESTION_MIN_LENGTH}}–{{NEW_QUESTION_MAX_LENGTH}} characters, including a question mark.</div></div>
+        <div class="step"><span class="step-no">03</span><div><b>Four answers</b>Up to {{NEW_QUESTION_ANSWER_MAX_LENGTH}} characters each; no empty or identical answers.</div></div>
+        <div class="step"><span class="step-no">04</span><div><b>Correct answer</b>Always put the correct answer first.</div></div>
     </div>
 
     <div class="answers">
@@ -29,7 +29,8 @@
         <div class="answer"><b>Answer 4</b>incorrect</div>
     </div>
 
-    <p class="after">After submission, the question is placed in the first empty Pending question slot and waits for review.</p>
+    <p class="after">The question goes into the first empty Pending slot for review.</p>
 </section>
+
 </body>
 </html>

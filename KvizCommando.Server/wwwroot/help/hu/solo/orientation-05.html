@@ -11,12 +11,12 @@
 <section class="kc-help-document kc-solo-help">
     <div class="eyebrow">ORIENTÁCIÓS JÁTÉK // 05 / 05</div>
     <h1>Eredmény és jutalmak</h1>
-    <p class="lead">A játék végén külön látható a teljesítmény és minden ténylegesen megszerzett jutalom. A serleges lemez a karakter saját legjobb eredményét őrzi.</p>
+    <p class="lead">A jutalmakat a karakter saját korábbi eredményéhez viszonyítjuk.</p>
 
     <div class="reward-grid">
         <section class="reward-card wide">
             <h2><i class="bi bi-plus-square-fill"></i> Fejlesztési pont eredményből</h2>
-            <p>A karakter a saját korábbi legjobb eredményéhez képest újonnan átlépett ponthatárokért kap fejlesztési pontot. Egy erős eredmény egyszerre több határt is átléphet.</p>
+            <p>A karakter a saját rekordjához képest újonnan átlépett ponthatárokért kap FP-t. Egy játék több határt is átléphet.</p>
             <div class="limits">
                 <span class="limit">{{SOLO_DEV_SCORE_01}}</span><span class="limit">{{SOLO_DEV_SCORE_02}}</span><span class="limit">{{SOLO_DEV_SCORE_03}}</span><span class="limit">{{SOLO_DEV_SCORE_04}}</span><span class="limit">{{SOLO_DEV_SCORE_05}}</span><span class="limit">{{SOLO_DEV_SCORE_06}}</span><span class="limit">{{SOLO_DEV_SCORE_07}}</span><span class="limit">{{SOLO_DEV_SCORE_08}}</span>
             </div>
@@ -24,19 +24,18 @@
 
         <section class="reward-card heart-card">
             <h2><i class="bi bi-heart-fill"></i> FP 0 vitalitásnál</h2>
-            <p>Ha a karakter vitalitása 0, és nincs elkölthető FP-je, a táblázatban jelzett számú helyes válaszért <b>{{SOLO_HEART_DEV_POINTS}} FP</b>-t kap.</p>
-            <p>Az FP-ből helyreállítható a vitalitása.</p>
-        </section>
+            <p>Nulla vitalitás és elkölthető FP hiányában a táblázat szerinti számú helyes válaszért <b>{{SOLO_HEART_DEV_POINTS}} FP</b> jár a helyreállításhoz.</p>
+            </section>
 
         <section class="reward-card">
             <h2><i class="bi bi-chevron-double-up"></i> Karakter- és csapat-XP</h2>
-            <p>Ha a kérdéspanel bal alsó sarkában az <b>XP</b> felirat látható, az adott játékban karakter- és csapat-XP szerezhető.</p>
-            <p>Karakter-XP kizárólag ezeken a rangosztályváltó szinteken szerezhető:</p>
+            <p>Karakter-XP ezeken a rangosztályváltó szinteken szerezhető:</p>
             <p><b>{{SOLO_XP_LEVELS}}</b></p>
-            <p>A csapat a karakter által megszerzett XP-ből, az adott szinthez tartozó maximális csapattaglétszám arányában részesül.</p>
+            <p>A csapat a karakter XP-jéből a szinthez tartozó maximális csapatlétszám arányában részesül.</p>
         </section>
     </div>
-    <span class="shortcut">F1 – a segítség újbóli megnyitása</span>
+    <span class="shortcut">F1 – Súgó</span>
 </section>
+
 </body>
 </html>

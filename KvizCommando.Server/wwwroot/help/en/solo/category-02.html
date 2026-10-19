@@ -267,15 +267,15 @@
     </style>
 </head>
 <body>
-    <section class="kc-help-document kc-solo-help">
+<section class="kc-help-document kc-solo-help">
         <div class="eyebrow">CATEGORY GAME // 02 / 06</div>
-        <h1>Answer quickly – but carefully</h1>
-        <p class="lead">Every question has four answers. Your choice is final; when the available time expires, the question counts as unanswered.</p>
+        <h1>Answering and scoring</h1>
+        <p class="lead">Answers are final. A timed-out question counts as unanswered.</p>
 
         <div class="rule-grid">
-            <div class="rule"><strong>{{SOLO_ANSWER_SECONDS}} seconds</strong>This is the time available for one question.</div>
-            <div class="rule"><strong>First {{SOLO_FULL_POINTS_SECONDS}} seconds</strong>A correct answer still earns the level's full answer score.</div>
-            <div class="rule"><strong>Then it decreases</strong>The score you can gain or lose decreases continuously until time runs out.</div>
+            <div class="rule"><strong>{{SOLO_ANSWER_SECONDS}} seconds</strong>Answer deadline.</div>
+            <div class="rule"><strong>First {{SOLO_FULL_POINTS_SECONDS}} seconds</strong>Correct answers earn full points.</div>
+            <div class="rule"><strong>After that</strong>The points gained or lost decrease with time.</div>
         </div>
 
         <div class="score-line">
@@ -285,19 +285,9 @@
         </div>
 
         <div class="indicator-box">
-            <b>The question indicators show your position in the game and the result of each answer.</b>
-            <div class="help-progress-row">
-                <div class="help-question-track" aria-label="Question indicator states">
-                    <span class="help-question-item"><span class="help-question-dot">1</span><span class="help-question-label">Not evaluated</span></span>
-                    <span class="help-question-item active"><span class="help-question-dot">2</span><span class="help-question-label">Current question</span></span>
-                    <span class="help-question-item correct"><span class="help-question-dot"><i class="bi bi-check-lg"></i></span><span class="help-question-label">Correct answer</span></span>
-                    <span class="help-question-item wrong"><span class="help-question-dot"><i class="bi bi-x-lg"></i></span><span class="help-question-label">Wrong answer</span></span>
-                    <span class="help-question-item unanswered"><span class="help-question-dot"><i class="bi bi-square-fill"></i></span><span class="help-question-label">No answer</span></span>
-                </div>
-            </div>
             <div class="help-skip-examples">
-                <div class="help-skip-example"><span class="button-on-lcd help-skip-button" aria-hidden="true"><i class="bi bi-skip-end-fill"></i></span><div><b>During a question</b><p>Ends the current question without an answer. The question earns 0 points.</p></div></div>
-                <div class="help-skip-example"><span class="button-on-lcd help-skip-button" aria-hidden="true"><i class="bi bi-skip-forward-fill"></i></span><div><b>During evaluation</b><p>Skips the one-by-one reveal of the remaining results.</p></div></div>
+                <div class="help-skip-example"><span class="button-on-lcd help-skip-button" aria-hidden="true"><i class="bi bi-skip-end-fill"></i></span><div><b>During a question</b><p>Skips without an answer: 0 points.</p></div></div>
+                <div class="help-skip-example"><span class="button-on-lcd help-skip-button" aria-hidden="true"><i class="bi bi-skip-forward-fill"></i></span><div><b>During evaluation</b><p>Reveals the remaining results immediately.</p></div></div>
             </div>
         </div>
 
@@ -306,8 +296,9 @@
                 <span class="kc-question-report-control"><span>Report</span><span class="kc-question-report-flag"><i class="bi bi-flag" aria-hidden="true"></i></span></span>
                 <span class="kc-question-report-control"><span>Reported</span><span class="kc-question-report-flag reported"><i class="bi bi-flag-fill" aria-hidden="true"></i></span></span>
             </div>
-            <p>If a question is repeated, offensive, or incorrect, press the flag to report it. A filled flag shows your selection; press it again to undo it.</p>
+            <p>Report an incorrect, repeated or offensive question with the flag; the selection can be undone.</p>
         </div>
 </section>
+
 </body>
 </html>

@@ -11,7 +11,7 @@
 <section class="kc-help-document kc-team-help">
     <div class="eyebrow">TEAM OVERVIEW // 06 / 06</div>
     <h1>Developing helps</h1>
-    <p class="lead">Each in-game help has its own unlock level and maximum level. Raising a help by one level costs {{TEAM_HELP_LEVEL_COST}} Tp.</p>
+    <p class="lead">Each upgrade level costs {{TEAM_HELP_LEVEL_COST}} Tp. Unlock and maximum levels differ by help.</p>
 
     <div class="help-grid">
         <div class="help-card">
@@ -22,13 +22,11 @@
         <div class="help-card">
             <h2>Guess bar</h2>
             <div class="meta"><span>Unlocks: {{TEAM_HELP_GUESS_RANGE_UNLOCK_LEVEL}}</span><span>Maximum: Level {{TEAM_HELP_GUESS_RANGE_MAX_LEVEL}}</span></div>
-            The range shown for an estimation question can be narrowed from {{TEAM_HELP_GUESS_RANGE_START_VALUE}}% to {{TEAM_HELP_GUESS_RANGE_MAX_VALUE}}%. A smaller value means a more precise hint.
+            The range shown for an estimation question can be narrowed from {{TEAM_HELP_GUESS_RANGE_START_VALUE}}% to {{TEAM_HELP_GUESS_RANGE_MAX_VALUE}}%.
         </div>
         <div class="help-card">
             <h2>Time freeze</h2>
-            <div class="meta"><span>Unlocks: {{TEAM_HELP_TIME_FREEZE_UNLOCK_LEVEL}}</span><span>Maximum: Level {{TEAM_HELP_TIME_FREEZE_MAX_LEVEL}}</span></div>
-            A correct answer is counted with a response time of 0 seconds.
-        </div>
+            <div class="meta"><span>Unlocks: {{TEAM_HELP_TIME_FREEZE_UNLOCK_LEVEL}}</span><span>Maximum: Level {{TEAM_HELP_TIME_FREEZE_MAX_LEVEL}}</span></div>A correct answer has zero speed time.</div>
         <div class="help-card">
             <h2>AI suggestion</h2>
             <div class="meta"><span>Unlocks: {{TEAM_HELP_AI_SUGGESTION_UNLOCK_LEVEL}}</span><span>Maximum: Level {{TEAM_HELP_AI_SUGGESTION_MAX_LEVEL}}</span></div>
@@ -36,15 +34,9 @@
         </div>
     </div>
 
-    <div class="controls">
-        <div class="control"><i class="bi bi-dash-lg" aria-hidden="true"></i>Reduce planned level</div>
-        <div class="control"><i class="bi bi-plus-lg" aria-hidden="true"></i>Increase planned level</div>
-        <div class="control"><i class="bi bi-trash3-fill" aria-hidden="true"></i>Reset changes</div>
-        <div class="control"><i class="bi bi-floppy" aria-hidden="true"></i>Save settings</div>
-    </div>
-
-    <div class="note">The “Level” shown for a help is not the team's or a character's Lvl. Changes take effect only after pressing the save icon.</div>
-    <span class="shortcut">F1 – open help again</span>
+    <div class="note">Help level is a separate value. Upgrades take effect when saved.</div>
+    <span class="shortcut">F1 – Help</span>
 </section>
+
 </body>
 </html>

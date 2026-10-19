@@ -10,16 +10,16 @@
 <body>
 <section class="kc-help-document kc-new-question-help">
     <div class="eyebrow">ÚJ KÉRDÉS // 01 / 02</div>
-    <h1>Így küldhetsz be kérdést</h1>
-    <p class="lead">A képernyő akkor érhető el, ha van legalább egy üres függő kérdéshelyed és legalább egy besorozott karaktered.</p>
+    <h1>Kérdés beküldése</h1>
+    <p class="lead">A beküldéshez üres függő kérdéshely és legalább egy besorozott karakter kell.</p>
 
-    <div class="access"><b>Választható kategóriák:</b> csak azok jelennek meg, amelyekhez megfelelő orientációjú karakter van besorozva a csapatodba.</div>
+    <div class="access">A választható kategóriákat a besorozott karakterek orientációi határozzák meg.</div>
 
     <div class="steps">
-        <div class="step"><span class="step-no">01</span><div><b>Válassz kategóriát</b>A kategória kiválasztása után írható be a kérdés.</div></div>
-        <div class="step"><span class="step-no">02</span><div><b>Írd be a kérdést</b>Legalább <span class="limit">{{NEW_QUESTION_MIN_LENGTH}}</span>, legfeljebb <span class="limit">{{NEW_QUESTION_MAX_LENGTH}}</span> karakter lehet, és tartalmaznia kell kérdőjelet.</div></div>
-        <div class="step"><span class="step-no">03</span><div><b>Add meg a négy választ</b>Minden válasz legfeljebb <span class="limit">{{NEW_QUESTION_ANSWER_MAX_LENGTH}}</span> karakter. Egyik sem maradhat üresen, és a válaszok nem egyezhetnek meg egymással.</div></div>
-        <div class="step"><span class="step-no">04</span><div><b>Küldd be</b>A Beküldés gomb csak akkor használható, ha minden mező megfelel a szabályoknak.</div></div>
+        <div class="step"><span class="step-no">01</span><div><b>Kategória</b>Először válassz kategóriát.</div></div>
+        <div class="step"><span class="step-no">02</span><div><b>Kérdés</b>{{NEW_QUESTION_MIN_LENGTH}}–{{NEW_QUESTION_MAX_LENGTH}} karakter, legalább egy kérdőjellel.</div></div>
+        <div class="step"><span class="step-no">03</span><div><b>Négy válasz</b>Egyenként legfeljebb {{NEW_QUESTION_ANSWER_MAX_LENGTH}} karakter; üres vagy azonos válasz nem lehet.</div></div>
+        <div class="step"><span class="step-no">04</span><div><b>Helyes válasz</b>Mindig az első válasz legyen a helyes.</div></div>
     </div>
 
     <div class="answers">
@@ -29,7 +29,8 @@
         <div class="answer"><b>4. válasz</b>helytelen</div>
     </div>
 
-    <p class="after">Sikeres beküldés után a kérdés az első üres függő kérdéshelyre kerül, ahol elbírálásra vár.</p>
+    <p class="after">A beküldött kérdés az első üres függő helyre kerül, elbírálásra.</p>
 </section>
+
 </body>
 </html>

@@ -10,10 +10,8 @@
 <body>
 <section class="kc-help-document kc-pending-question-help">
     <div class="eyebrow">PENDING QUESTIONS // 01 / 02</div>
-    <h1>How many submitted questions can you have?</h1>
-    <p class="lead">This screen lets you track questions submitted for review. The number of pending-question slots increases with your team level.</p>
-
-    <div class="header-note"><b>The pair of numbers in the header means:</b> occupied slots / all slots currently available.</div>
+    <h1>Pending question slots</h1>
+    <p class="lead">The number of Pending question slots grows with team level.</p>
 
     <div class="levels">
         <div class="level"><span class="level-code">{{PENDING_SLOT_PUBLIC_LEVEL_START_01}} – {{PENDING_SLOT_PUBLIC_LEVEL_END_01}}</span><span class="level-count">{{PENDING_SLOT_SIZE_01}}</span></div>
@@ -24,13 +22,13 @@
     </div>
 
     <div class="statuses">
-        <div class="status pending"><b>Pending</b>Waiting for review; no action is available yet.</div>
-        <div class="status approved"><b>Approved</b>Can be moved to User questions or deleted.</div>
-        <div class="status rejected"><b>Rejected</b>The feedback can be viewed, then the question can be deleted.</div>
-        <div class="status empty"><b>None</b>An empty pending-question slot.</div>
+        <div class="status pending"><b>Pending</b>Cannot be managed before review.</div>
+        <div class="status approved"><b>Approved</b>Can be moved or deleted.</div>
+        <div class="status rejected"><b>Rejected</b>Read the feedback, then delete it.</div>
+        <div class="status empty"><b>None</b>Empty question slot.</div>
     </div>
 
-    <p class="marker"><span class="bang">!</span> The flashing exclamation mark means the review has finished and an action is available.</p>
-</section>
+    </section>
+
 </body>
 </html>

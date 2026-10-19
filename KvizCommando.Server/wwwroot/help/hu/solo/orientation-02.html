@@ -267,15 +267,15 @@
     </style>
 </head>
 <body>
-    <section class="kc-help-document kc-solo-help">
+<section class="kc-help-document kc-solo-help">
         <div class="eyebrow">ORIENTÁCIÓS JÁTÉK // 02 / 05</div>
-        <h1>Válaszolj gyorsan – de biztosan</h1>
-        <p class="lead">Minden kérdéshez négy válasz tartozik. A választás végleges; ha lejár a rendelkezésre álló idő, a kérdés megválaszolatlannak számít.</p>
+        <h1>Válaszadás és pontozás</h1>
+        <p class="lead">A válasz végleges. Időlejáratkor a kérdés megválaszolatlannak számít.</p>
 
         <div class="rule-grid">
-            <div class="rule"><strong>{{SOLO_ANSWER_SECONDS}} másodperc</strong>Ennyi idő áll rendelkezésre egy kérdéshez.</div>
-            <div class="rule"><strong>Első {{SOLO_FULL_POINTS_SECONDS}} másodperc</strong>Helyes válasznál még a szint teljes válaszpontja jár.</div>
-            <div class="rule"><strong>Utána csökken</strong>A megszerezhető vagy elveszíthető pontérték az idő lejártáig folyamatosan csökken.</div>
+            <div class="rule"><strong>{{SOLO_ANSWER_SECONDS}} másodperc</strong>Válaszadási határidő.</div>
+            <div class="rule"><strong>Első {{SOLO_FULL_POINTS_SECONDS}} másodperc</strong>Helyes válaszért teljes pont jár.</div>
+            <div class="rule"><strong>Utána</strong>A nyerhető és veszíthető pontérték az idővel csökken.</div>
         </div>
 
         <div class="score-line">
@@ -285,19 +285,9 @@
         </div>
 
         <div class="indicator-box">
-            <b>A kérdésjelzők mutatják, hol tart a játék és hogyan sikerültek a válaszok.</b>
-            <div class="help-progress-row">
-                <div class="help-question-track" aria-label="A kérdésjelzők állapotai">
-                    <span class="help-question-item"><span class="help-question-dot">1</span><span class="help-question-label">Még nincs értékelve</span></span>
-                    <span class="help-question-item active"><span class="help-question-dot">2</span><span class="help-question-label">Aktuális kérdés</span></span>
-                    <span class="help-question-item correct"><span class="help-question-dot"><i class="bi bi-check-lg"></i></span><span class="help-question-label">Helyes válasz</span></span>
-                    <span class="help-question-item wrong"><span class="help-question-dot"><i class="bi bi-x-lg"></i></span><span class="help-question-label">Hibás válasz</span></span>
-                    <span class="help-question-item unanswered"><span class="help-question-dot"><i class="bi bi-square-fill"></i></span><span class="help-question-label">Nincs válasz</span></span>
-                </div>
-            </div>
             <div class="help-skip-examples">
-                <div class="help-skip-example"><span class="button-on-lcd help-skip-button" aria-hidden="true"><i class="bi bi-skip-end-fill"></i></span><div><b>Kérdés közben</b><p>Lezárja az aktuális kérdést válasz nélkül. A kérdés 0 pontot ér.</p></div></div>
-                <div class="help-skip-example"><span class="button-on-lcd help-skip-button" aria-hidden="true"><i class="bi bi-skip-forward-fill"></i></span><div><b>Kiértékeléskor</b><p>Átugorja a hátralévő eredmények egyenkénti bemutatását.</p></div></div>
+                <div class="help-skip-example"><span class="button-on-lcd help-skip-button" aria-hidden="true"><i class="bi bi-skip-end-fill"></i></span><div><b>Kérdés közben</b><p>Válasz nélkül továbblép; 0 pont.</p></div></div>
+                <div class="help-skip-example"><span class="button-on-lcd help-skip-button" aria-hidden="true"><i class="bi bi-skip-forward-fill"></i></span><div><b>Kiértékeléskor</b><p>A hátralévő eredmények azonnali megjelenítése.</p></div></div>
             </div>
         </div>
 
@@ -306,8 +296,9 @@
                 <span class="kc-question-report-control"><span>Jelentés</span><span class="kc-question-report-flag"><i class="bi bi-flag" aria-hidden="true"></i></span></span>
                 <span class="kc-question-report-control"><span>Jelentve</span><span class="kc-question-report-flag reported"><i class="bi bi-flag-fill" aria-hidden="true"></i></span></span>
             </div>
-            <p>Ha gondod van egy kérdéssel (ismétlődő, sértő vagy hibás), a zászló megnyomásával jelentheted azt. A teli zászló jelzi a kiválasztást; újabb megnyomással visszavonhatod.</p>
+            <p>Hibás, ismétlődő vagy sértő kérdést a zászlóval jelenthetsz; a jelölés visszavonható.</p>
         </div>
 </section>
+
 </body>
 </html>
