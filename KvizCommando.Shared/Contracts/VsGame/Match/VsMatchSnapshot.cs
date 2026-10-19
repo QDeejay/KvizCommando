@@ -87,4 +87,5 @@ public sealed class VsCategoryModifierDto
     public int RoundNumber { get; set; }
     public int CategoryId { get; set; }
     public double Seconds { get; set; }
+    public double OwnSeconds { get; set; }
 }

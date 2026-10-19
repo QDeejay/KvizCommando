@@ -12,7 +12,7 @@
 <section class="kc-help-document kc-vs-help">
     <div class="eyebrow">RANGSOROLÁSOS CSATATEREK // 03 / 06</div>
     <h1>Kapcsolat és váróterem</h1>
-    <p class="lead">A csatatér kiválasztása után a rendszer először ellenőrzi a kapcsolatot, majd beléptet a választott besorolás várótermébe.</p>
+    <p class="lead">Kapcsolatellenőrzés után a választott besorolás várótermébe kerülsz.</p>
 
     <section class="kc-vs-queue" aria-label="Váróterem mintája">
         <h3>II. harci besorolás</h3>
@@ -21,13 +21,10 @@
         <div class="kc-vs-queue-conditions"><span><i class="bi bi-list-ol"></i><strong>Körök: 3 normál + 1 kapitánykör</strong></span><span>Tét <strong>{{VS_CLASSIFICATION_02_STAKE}}</strong></span></div>
     </section>
 
-    <div class="matching"><b>Párosítás:</b> a rendszer elsősorban hasonló rangú játékosokat keres, és lehetőség szerint elkerüli, hogy rövid időn belül ugyanazok az ellenfelek kerüljenek újra össze.</div>
+    <div class="matching"><b>Párosítás:</b> az azonos besorolásban várakozók csatlakozási sorrendben kerülnek egy mérkőzésbe.</div>
 
-    <div class="steps">
-        <div class="step"><i class="bi bi-reception-4"></i><b>Kapcsolat</b><br>Nem megfelelő kapcsolatnál a rangsorolt mérkőzés nem indul el.</div>
-        <div class="step"><i class="bi bi-people-fill"></i><b>Várakozás</b><br>A bal oldali játékoslista és a számláló mutatja, hányan csatlakoztak.</div>
-        <div class="step"><i class="bi bi-shield-lock-fill"></i><b>A párosítás elkészült</b><br>Amikor összeállt a mezőny, a rendszer levonja a tétet, majd előkészíti a mérkőzés kérdéseit.</div>
-    </div>
+    <div class="steps"><div class="step"><i class="bi bi-reception-4" aria-hidden="true"></i><b>Kapcsolat</b><br>Túl lassú kapcsolatnál nem léphetsz a váróterembe.</div><div class="step"><i class="bi bi-people-fill" aria-hidden="true"></i><b>Létszám</b><br>Négy játékossal azonnal, a várakozási idő lejártakor két vagy három játékossal is elindulhat a mérkőzés.</div><div class="step"><i class="bi bi-shield-lock-fill" aria-hidden="true"></i><b>Tét</b><br>A mezőny lezárásakor levonjuk a tétet; ezután kezdődik a felkészülés.</div></div>
 </section>
+
 </body>
 </html>

@@ -249,6 +249,29 @@
     font-size: .88rem;
 }
 
+.kc-vs-prep-round-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    min-width: 0;
+}
+
+.kc-vs-prep-own-modifier {
+    flex: 0 0 auto;
+    font-size: .68rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.kc-vs-prep-own-modifier.negative {
+    color: #51b36d;
+}
+
+.kc-vs-prep-own-modifier.positive {
+    color: #d15f52;
+}
+
 .kc-vs-prep-round-category,
 .kc-vs-prep-round-help {
     position: relative;
@@ -592,3 +615,4 @@
         grid-template-columns: 38px minmax(0, 1fr);
     }
 }
+

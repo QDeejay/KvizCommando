@@ -103,6 +103,7 @@ public sealed class VsCategoryModifierVm
     public int RoundNumber { get; set; }
     public int CategoryId { get; set; }
     public double Seconds { get; set; }
+    public double OwnSeconds { get; set; }
 }
 
 public sealed class VsGameViewData

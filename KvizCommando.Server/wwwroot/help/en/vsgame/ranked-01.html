@@ -12,12 +12,9 @@
 <section class="kc-help-document kc-vs-help">
     <div class="eyebrow">RANKED BATTLEFIELDS // 01 / 06</div>
     <h1>Assemble your battle team</h1>
-    <p class="lead">You need at least <b>{{VS_ENTRY_READY_COUNT}}</b> battle-ready characters to open this menu. Matches always use the separately saved battle team.</p>
+    <p class="lead">Entry requires at least <b>{{VS_ENTRY_READY_COUNT}}</b> battle-ready characters. Matches use your saved battle team.</p>
 
-    <div class="entry">
-        <div><b>Selection</b><br>Click a card to add or remove that character from the current lineup.</div>
-        <div><b>Classification indicators</b><br>The I–V lamps immediately show which battlefields accept the current lineup.</div>
-    </div>
+    <div class="entry"><div><b>Lineup</b><br>Team size and character rank classes must meet the chosen classification requirements.</div><div><b>Save</b><br>Only a saved, eligible team can enter the lobby.</div></div>
 
     <div class="sample-stage" aria-label="Character card states">
         <div class="kc-ranked-member-grid"><div class="kc-ranked-member selected">
@@ -46,11 +43,8 @@
         <div class="button-on-lcd kc-ranked-save-button" aria-label="Save"><i class="bi bi-floppy"></i></div>
     </div>
 
-    <div class="rules">
-        <div class="rule"><i class="bi bi-check-lg"></i><span><b>Green check:</b> the character belongs to the current lineup.</span></div>
-        <div class="rule"><i class="bi bi-x-lg"></i><span><b>Red X:</b> the character cannot enter battle now. This can be caused by zero vitality, pending retirement or a rank restriction.</span></div>
-        <div class="rule"><i class="bi bi-floppy"></i><span><b>Save:</b> becomes available after a change when the lineup qualifies for at least one battle classification.</span></div>
-    </div>
+    <div class="rules"><div class="rule"><i class="bi bi-x-lg" aria-hidden="true"></i><span>Characters with zero vitality, pending retirement or an unmet rank requirement cannot be selected.</span></div></div>
 </section>
+
 </body>
 </html>

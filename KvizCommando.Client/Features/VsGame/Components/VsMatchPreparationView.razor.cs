@@ -221,6 +221,19 @@ public partial class VsMatchPreparationView : IDisposable
                "s";
     }
 
+    private double GetOwnModifierSeconds(VsPreparationRoundVm round)
+    {
+        var categoryId = round.Loadout?.CategoryId ?? _selectedCategoryId;
+
+        return Data.Preparation.CategoryModifiers.FirstOrDefault(item =>
+            item.RoundNumber == round.RoundNumber &&
+            item.CategoryId == categoryId)?.OwnSeconds ?? 0;
+    }
+
+    private static string OwnModifierText(double seconds) =>
+        (seconds > 0 ? "+" : string.Empty) +
+        seconds.ToString("0.0", CultureInfo.InvariantCulture) + "s";
+
     private string GetModifierClass(VsPreparationRoundVm round)
     {
         var text = GetModifierText(round);

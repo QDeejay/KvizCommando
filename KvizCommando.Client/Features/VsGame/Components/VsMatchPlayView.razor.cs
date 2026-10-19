@@ -196,9 +196,9 @@ public partial class VsMatchPlayView : IDisposable
         Data.Game.QuestionKind == VsQuestionKind.Choice &&
         !Data.Game.QuestionPlayers.Any(player =>
             player.HasSpeedBonus) &&
-        Data.Game.QuestionPlayers.Count(player =>
+        Data.Game.QuestionPlayers.Any(player =>
             player.IsCorrect &&
-            player.ModifiedTimeSeconds.HasValue) > 1;
+            player.ModifiedTimeSeconds.HasValue);
 
     private IEnumerable<VsQuestionPlayerVm> QuestionStatusPlayers =>
         Data.Game.QuestionKind == VsQuestionKind.Guess ||
@@ -327,6 +327,21 @@ public partial class VsMatchPlayView : IDisposable
 
     private bool IsQuestioner(int position) =>
         Data.Game.QuestionerPosition == position;
+
+    private bool HasBestTime(VsQuestionPlayerVm player)
+    {
+        if (player.ModifiedTimeSeconds is not double time)
+            return false;
+
+        var roundedTime = Math.Round(time, 1, MidpointRounding.AwayFromZero);
+
+        return Data.Game.QuestionPlayers.All(other =>
+            !other.ModifiedTimeSeconds.HasValue ||
+            roundedTime <= Math.Round(
+                other.ModifiedTimeSeconds.Value,
+                1,
+                MidpointRounding.AwayFromZero));
+    }
 
     private string AnswerClass(int answerIndex)
     {

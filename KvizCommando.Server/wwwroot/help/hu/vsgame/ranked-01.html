@@ -12,12 +12,9 @@
 <section class="kc-help-document kc-vs-help">
     <div class="eyebrow">RANGSOROLÁSOS CSATATEREK // 01 / 06</div>
     <h1>Állítsd össze a harci csapatot</h1>
-    <p class="lead">A menü megnyitásához legalább <b>{{VS_ENTRY_READY_COUNT}}</b> hadra fogható karakter szükséges. A mérkőzésre mindig a külön elmentett harci csapat indul.</p>
+    <p class="lead">A belépéshez legalább <b>{{VS_ENTRY_READY_COUNT}}</b> hadra fogható karakter kell. A mérkőzésre az elmentett harci csapat indul.</p>
 
-    <div class="entry">
-        <div><b>Kijelölés</b><br>A kártyára kattintva a karakter bekerül vagy kikerül az összeállításból.</div>
-        <div><b>Besorolásjelzők</b><br>Az I–V. lámpák azonnal mutatják, melyik csatatér feltételeinek felel meg az aktuális csapat.</div>
-    </div>
+    <div class="entry"><div><b>Összeállítás</b><br>A csapatlétszámnak és a tagok rangosztályának meg kell felelnie a választott besorolásnak.</div><div><b>Mentés</b><br>Csak elmentett, megfelelő csapattal léphetsz váróterembe.</div></div>
 
     <div class="sample-stage" aria-label="Karakterkártya-állapotok">
         <div class="kc-ranked-member-grid"><div class="kc-ranked-member selected">
@@ -46,11 +43,8 @@
         <div class="button-on-lcd kc-ranked-save-button" aria-label="Mentés"><i class="bi bi-floppy"></i></div>
     </div>
 
-    <div class="rules">
-        <div class="rule"><i class="bi bi-check-lg"></i><span><b>Zöld pipa:</b> a karakter tagja az aktuális összeállításnak.</span></div>
-        <div class="rule"><i class="bi bi-x-lg"></i><span><b>Piros X:</b> a karakter most nem vihető csatába. Ennek oka lehet a 0 vitalitás, a visszavonulásra váró állapot vagy a rangkorlátozás.</span></div>
-        <div class="rule"><i class="bi bi-floppy"></i><span><b>Mentés:</b> akkor válik elérhetővé, ha változott az összeállítás, és legalább egy harci besorolás feltétele teljesül.</span></div>
-    </div>
+    <div class="rules"><div class="rule"><i class="bi bi-x-lg" aria-hidden="true"></i><span>Nulla vitalitású, nyugdíjazásra váró vagy a rangfeltételt nem teljesítő karakter nem választható.</span></div></div>
 </section>
+
 </body>
 </html>

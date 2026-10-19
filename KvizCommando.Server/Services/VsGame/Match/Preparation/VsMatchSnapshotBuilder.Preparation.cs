@@ -114,6 +114,11 @@ internal static partial class VsMatchSnapshotBuilder
         foreach (var round in currentPlayer.Rounds.Where(round =>
                      !round.IsCaptainRound))
         {
+            var ownCharacter = round.CharacterSlotNumber.HasValue
+                ? currentPlayer.Characters.First(character =>
+                    character.SlotNumber == round.CharacterSlotNumber.Value)
+                : null;
+
             for (var categoryId =
                      VsLoadoutCategoryIds.MINIMUM_FACTORY_CATEGORY;
                  categoryId <=
@@ -145,11 +150,15 @@ internal static partial class VsMatchSnapshotBuilder
                     }
                 }
 
+                var ownSeconds = ownCharacter?.CategoryModifiers
+                    .GetValueOrDefault(categoryId) ?? 0;
+
                 result.Add(new VsCategoryModifierDto
                 {
                     RoundNumber = round.RoundNumber,
                     CategoryId = categoryId,
-                    Seconds = Math.Truncate(seconds * 10) / 10
+                    Seconds = Math.Truncate(seconds * 10) / 10,
+                    OwnSeconds = Math.Truncate(ownSeconds * 10) / 10
                 });
             }
         }

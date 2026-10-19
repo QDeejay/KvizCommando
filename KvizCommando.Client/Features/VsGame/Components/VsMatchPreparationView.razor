@@ -61,7 +61,24 @@
                         }
 
                         <div class="kc-vs-prep-round-copy">
-                            <small>@round.RoundText</small>
+                            @if (round.IsCaptainRound)
+                            {
+                                <small>@round.RoundText</small>
+                            }
+                            else
+                            {
+                                var ownModifier = GetOwnModifierSeconds(round);
+
+                                <div class="kc-vs-prep-round-heading">
+                                    <small>@round.RoundText</small>
+                                    @if (ownModifier != 0)
+                                    {
+                                        <span class="kc-vs-prep-own-modifier @(ownModifier < 0 ? "negative" : "positive")">
+                                            @OwnModifierText(ownModifier)
+                                        </span>
+                                    }
+                                </div>
+                            }
                             <strong title="@ResolveRoundName(round)">
                                 @ResolveRoundName(round)
                             </strong>

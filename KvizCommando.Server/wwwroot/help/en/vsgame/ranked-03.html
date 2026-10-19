@@ -12,7 +12,7 @@
 <section class="kc-help-document kc-vs-help">
     <div class="eyebrow">RANKED BATTLEFIELDS // 03 / 06</div>
     <h1>Connection and lobby</h1>
-    <p class="lead">After selecting a battlefield, the system first checks the connection and then enters the lobby of the chosen classification.</p>
+    <p class="lead">After the connection check, you enter the lobby for your chosen classification.</p>
 
     <section class="kc-vs-queue" aria-label="Lobby example">
         <h3>II. battle classification</h3>
@@ -21,13 +21,10 @@
         <div class="kc-vs-queue-conditions"><span><i class="bi bi-list-ol"></i><strong>Rounds: 3 normal + 1 captain round</strong></span><span>Stake <strong>{{VS_CLASSIFICATION_02_STAKE}}</strong></span></div>
     </section>
 
-    <div class="matching"><b>Matchmaking:</b> the system first looks for players of a similar rank and, when possible, avoids matching the same opponents again within a short time.</div>
+    <div class="matching"><b>Matchmaking:</b> players in the same classification are matched in order of arrival.</div>
 
-    <div class="steps">
-        <div class="step"><i class="bi bi-reception-4"></i><b>Connection</b><br>A ranked match cannot start with an unsuitable connection.</div>
-        <div class="step"><i class="bi bi-people-fill"></i><b>Waiting</b><br>The player list on the left and the counter show how many players have joined.</div>
-        <div class="step"><i class="bi bi-shield-lock-fill"></i><b>Match ready</b><br>When the field is complete, the stake is deducted and the match questions are prepared.</div>
-    </div>
+    <div class="steps"><div class="step"><i class="bi bi-reception-4" aria-hidden="true"></i><b>Connection</b><br>A slow connection prevents lobby entry.</div><div class="step"><i class="bi bi-people-fill" aria-hidden="true"></i><b>Players</b><br>The match can start immediately with four players, or with two or three when the wait expires.</div><div class="step"><i class="bi bi-shield-lock-fill" aria-hidden="true"></i><b>Stake</b><br>Your stake is deducted when the field is locked; preparation follows.</div></div>
 </section>
+
 </body>
 </html>

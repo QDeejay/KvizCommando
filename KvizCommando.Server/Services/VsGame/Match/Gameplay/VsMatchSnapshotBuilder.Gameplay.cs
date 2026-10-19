@@ -110,7 +110,6 @@ internal static partial class VsMatchSnapshotBuilder
                  VsMatchPhase.QuestionResult) ||
             question is null ||
             question.Kind != VsQuestionKind.Choice ||
-            question.QuestionerPosition == currentPlayer.Position ||
             match.Game.CurrentRoundNumber <= 0 ||
             match.Game.CurrentRoundNumber >
                 match.Classification.RequiredPartySize)

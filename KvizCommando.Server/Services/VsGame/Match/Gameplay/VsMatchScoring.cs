@@ -82,19 +82,21 @@ internal static class VsMatchScoring
                        : 1);
         var questioner = match.Players.First(player =>
             player.Position == question.QuestionerPosition);
-        var correctResponders = GetCorrectResponders(
+        var speedCandidates = GetSpeedCandidates(
             match,
             question,
-            questioner);
-        var speedWinner = ResolveSpeedWinner(correctResponders);
+            questioner,
+            isCaptain);
+        var speedWinner = ResolveSpeedWinner(speedCandidates);
 
-        if (correctResponders.Length > 1 &&
-            speedWinner is null)
+        if (speedWinner == questioner ||
+            (speedCandidates.Length > 1 && speedWinner is null))
         {
             match.Game.SpeedBonusPoolPoints += unit;
         }
 
-        var otherCorrect = correctResponders.Length;
+        var otherCorrect = speedCandidates.Count(candidate =>
+            candidate.Player != questioner);
         var otherNoAnswer = match.Players.Count(player =>
             player != questioner &&
             player.CurrentAnswer?.AnswerIndex.HasValue != true);
@@ -122,7 +124,8 @@ internal static class VsMatchScoring
                 questioner,
                 speedWinner,
                 questionerScore,
-                unit);
+                unit,
+                isCaptain);
 
             ApplyChoicePlayerResult(
                 match,
@@ -142,13 +145,14 @@ internal static class VsMatchScoring
         };
     }
 
-    private static SpeedCandidate[] GetCorrectResponders(
+    private static SpeedCandidate[] GetSpeedCandidates(
         VsMatchSession match,
         VsMatchQuestionState question,
-        VsMatchPlayerState questioner) =>
+        VsMatchPlayerState questioner,
+        bool isCaptain) =>
         match.Players
             .Where(player =>
-                player != questioner &&
+                (!isCaptain || player != questioner) &&
                 player.CurrentAnswer?.AnswerIndex ==
                 question.CorrectOptionIndex)
             .Select(player => new SpeedCandidate(
@@ -199,7 +203,8 @@ internal static class VsMatchScoring
             VsMatchPlayerState questioner,
             VsMatchPlayerState? speedWinner,
             int questionerScore,
-            int unit)
+            int unit,
+            bool isCaptain)
     {
         var answer = player.CurrentAnswer;
         var hasAnswer = answer?.AnswerIndex.HasValue == true;
@@ -222,7 +227,8 @@ internal static class VsMatchScoring
                 hasAnswer,
                 isCorrect,
                 unit);
-        var hasSpeedBonus = player == speedWinner;
+        var hasSpeedBonus = player != questioner &&
+                            player == speedWinner;
 
         if (hasSpeedBonus)
             points += unit;
@@ -234,7 +240,7 @@ internal static class VsMatchScoring
             IsCorrect = isCorrect,
             AnswerTimeSeconds = answerTime,
             ModifiedTimeSeconds =
-                isCorrect && player != questioner
+                isCorrect && (!isCaptain || player != questioner)
                     ? CalculateModifiedTime(
                         match,
                         player,
@@ -269,7 +275,7 @@ internal static class VsMatchScoring
 
         player.RoundPoints += result.Points;
 
-        if (player != questioner)
+        if (!isCaptain || player != questioner)
             player.RoundTimeSeconds += result.AnswerTimeSeconds;
 
         player.RoundProgress.Add(result.Points);
@@ -452,9 +458,9 @@ internal static class VsMatchScoring
     }
 
     private static VsMatchPlayerState? ResolveSpeedWinner(
-        IReadOnlyCollection<SpeedCandidate> correctResponders)
+        IReadOnlyCollection<SpeedCandidate> speedCandidates)
     {
-        var entries = correctResponders
+        var entries = speedCandidates
             .OrderBy(item =>
                 RoundToTenth(item.ModifiedTime))
             .ToArray();

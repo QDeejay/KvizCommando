@@ -43,7 +43,8 @@ partial class VsMatchViewBuilder
                     {
                         RoundNumber = item.RoundNumber,
                         CategoryId = item.CategoryId,
-                        Seconds = item.Seconds
+                        Seconds = item.Seconds,
+                        OwnSeconds = item.OwnSeconds
                     })
             ]
         };

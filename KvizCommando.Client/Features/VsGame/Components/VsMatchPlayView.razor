@@ -348,7 +348,13 @@
                                                     </small>
                                                 }
 
-                                                @if (player.HasSpeedBonus)
+                                                @if (IsQuestioner(player.Position) &&
+                                                     HasBestTime(player))
+                                                {
+                                                    <i class="bi bi-trophy-fill kc-vs-speed-bonus"
+                                                       aria-hidden="true"></i>
+                                                }
+                                                else if (player.HasSpeedBonus)
                                                 {
                                                     <i class="bi bi-lightning-charge-fill kc-vs-speed-bonus"
                                                        title="@Lang["vsgame.Match.Game.QuestionSpeedBonus"]"></i>
