@@ -33,18 +33,6 @@ namespace KvizCommando.Server.Services.DtoMapping
                         return null;
                     }
 
-                    var freePendingSlots = question.pSlots
-                        .Take(5)
-                        .Count(item => item.CategoryNo == 0);
-
-                    if (freePendingSlots == 0)
-                    {
-                        _logger.LogWarning(
-                            "SendNewQuestion: No free pending slot. userId={PlayerId}",
-                            playerId);
-                        return null;
-                    }
-
                     var maxUserSlot = Math.Min(
                         RankRewards.List[player.Core.RankEnum].OwnQuestSlot,
                         question.uSlots.Length);
@@ -55,18 +43,22 @@ namespace KvizCommando.Server.Services.DtoMapping
                             : Math.Max(1, maxUserSlot >> 1),
                         question.pSlots.Length);
 
-                    if (dto.SlotNo < 0 ||
-                        dto.SlotNo >= maxPendingSlot)
+                    var slotNo = Array.FindIndex(
+                        question.pSlots,
+                        0,
+                        maxPendingSlot,
+                        slot => slot.CategoryNo == 0);
+
+                    if (slotNo < 0)
                     {
                         _logger.LogWarning(
-                            "SendNewQuestion: Invalid pending slot number. userId={PlayerId}, SlotNo={SlotNo}",
-                            playerId,
-                            dto.SlotNo);
+                            "SendNewQuestion: No free pending slot. userId={PlayerId}",
+                            playerId);
                         return null;
                     }
 
-                    var id = question.pSlots[dto.SlotNo].Id;
-                    question.pSlots[dto.SlotNo] = new PendingQuestion
+                    var id = question.pSlots[slotNo].Id;
+                    question.pSlots[slotNo] = new PendingQuestion
                     {
                         Id = id,
                         PlayerId = playerId,
@@ -77,7 +69,7 @@ namespace KvizCommando.Server.Services.DtoMapping
                         SubmittedAt = DateTime.UtcNow
                     };
 
-                    return 1u << (dto.SlotNo + 16);
+                    return 1u << (slotNo + 16);
                 },
                 ct);
         }

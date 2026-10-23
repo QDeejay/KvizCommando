@@ -172,18 +172,13 @@ public sealed class VsMatchQuestionLoader : IVsMatchQuestionLoader
                 $"Category {categoryId} has no indexed question.");
         }
 
-        var startIndex = Random.Shared.Next(ids.Count);
-
-        for (var offset = 0; offset < ids.Count; offset++)
+        while (true)
         {
-            var questionId = ids[(startIndex + offset) % ids.Count];
+            var questionId = ids[Random.Shared.Next(ids.Count)];
 
             if (usedFactoryIds.Add(questionId))
                 return questionId;
         }
-
-        throw new InvalidOperationException(
-            $"Category {categoryId} has no unused indexed question.");
     }
 
     private static VsMatchLoadoutItemState BuildLoadoutItem(

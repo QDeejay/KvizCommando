@@ -242,8 +242,7 @@ namespace KvizCommando.Server.Controllers
         /// A kérdésműveletek egységes sikerességi válaszát írja le.
         /// </summary>
         /// <param name="Success">Jelzi, hogy az üzleti művelet sikeresen befejeződött-e.</param>
-        /// <param name="ServerVersion">A válaszhoz tartozó opcionális szerververzió.</param>
-        public sealed record ApiResponse(bool Success, string? ServerVersion = null)
+        public sealed record ApiResponse(bool Success)
         {
             /// <summary>
             /// Sikeres API-választ hoz létre.

@@ -80,8 +80,6 @@ public partial class NewQuestionManager
                 return;
         }
 
-        _formData.SlotNo = SelectedId;
-
         if (!await QuestionService.SendNewQuestionAsync(_formData))
             return;
 
