@@ -12,11 +12,14 @@ public static class SoloGameRules
     public const int ANSWER_TIME_TOLERANCE_MS = 1000;
     public const int ANSWER_RECEIVE_GRACE_MS = 1000;
 
-    /// <summary>Csak a szervermérésnél túlzottan rövidebb kliensidőt korrigálja.</summary>
-    public static int ResolveAnswerTime(int serverTimeMs, int clientTimeMs) =>
-        (long)serverTimeMs - clientTimeMs > ANSWER_TIME_TOLERANCE_MS
+    /// <summary>A korrigált válaszidőt a kérdés időkeretére korlátozza.</summary>
+    public static int ResolveAnswerTime(int serverTimeMs, int clientTimeMs)
+    {
+        var resolvedTimeMs = (long)serverTimeMs - clientTimeMs > ANSWER_TIME_TOLERANCE_MS
             ? serverTimeMs
             : clientTimeMs;
+        return Math.Min(resolvedTimeMs, ANSWER_SECONDS * 1000);
+    }
 
     public const int FULL_POINTS_SECONDS = 5;
     public const int POINT_DECREASE_REMAINING_SECONDS =
