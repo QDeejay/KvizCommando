@@ -4,7 +4,7 @@
     margin: 10px auto;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    
 }
 
 .forgotpsw-head {
@@ -14,16 +14,16 @@
 
 .forgotpsw-body {
     flex: 1 1 auto;
-    overflow-y: auto;
     margin-top: 16px;
     display: flex;
     flex-direction: column;
     gap: 4px;
+   
     justify-content: flex-start;
     text-align: center;
     align-items: center;
     padding: 8px;
-  
+
 }
 
 /* ✅ Footer fixen alul, sosem mozdul, középen van */

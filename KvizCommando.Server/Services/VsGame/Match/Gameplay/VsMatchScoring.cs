@@ -484,12 +484,13 @@ internal static class VsMatchScoring
             player.CurrentAnswer?.AnswerTimeSeconds ??
             match.Profile.QuestionSeconds;
 
-        return Math.Max(
-            0,
+        return Math.Clamp(
             rawTime + CalculateTimeModifier(
                 match,
                 player,
-                question));
+                question),
+            0,
+            match.Profile.QuestionSeconds);
     }
 
     internal static double CalculateTimeModifier(
@@ -513,23 +514,10 @@ internal static class VsMatchScoring
             return 0;
         }
 
-        var modifier = 0d;
+        var character = ResolveRoundCharacter(match, player);
 
-        foreach (var otherPlayer in match.Players.Where(item =>
-                     item.PlayerId != player.PlayerId))
-        {
-            var character =
-                ResolveRoundCharacter(match, otherPlayer);
-
-            if (character?.CategoryModifiers.TryGetValue(
-                    question.CategoryId,
-                    out var value) == true)
-            {
-                modifier += value;
-            }
-        }
-
-        return modifier;
+        return character?.CategoryModifiers.GetValueOrDefault(
+            question.CategoryId) ?? 0;
     }
 
     private static VsMatchCharacterState? ResolveRoundCharacter(

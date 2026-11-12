@@ -153,21 +153,33 @@ internal static partial class VsMatchSnapshotBuilder
             currentPlayer);
 
         return round is
-            {
-                HelpType:
+        {
+            HelpType:
                     VsHelpType.FiftyFifty or
                     VsHelpType.AiSuggestion,
-                HelpUsed: false
-            }
+            HelpUsed: false
+        }
                 ? 1
                 : 0;
     }
 
     private static VsHelpType ResolveCurrentHelpType(
-        VsMatchSession match,
-        VsMatchPlayerState currentPlayer) =>
-        ResolveCurrentRound(match, currentPlayer)
+    VsMatchSession match,
+    VsMatchPlayerState currentPlayer)
+    {
+        var questionKind = match.Game.QuestionKind;
+        var helpType = ResolveCurrentRound(match, currentPlayer)
             ?.HelpType ?? VsHelpType.None;
+
+        if ((questionKind == VsQuestionKind.Guess &&
+            helpType == VsHelpType.GuessRange) ||
+            (questionKind == VsQuestionKind.Choice &&
+            helpType != VsHelpType.GuessRange))
+        {
+            return helpType;
+        }
+        return VsHelpType.None;
+    }
 
     private static VsMatchRoundState? ResolveCurrentRound(
         VsMatchSession match,

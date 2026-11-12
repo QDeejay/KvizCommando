@@ -343,8 +343,12 @@
                                                     <small class="kc-vs-question-time"
                                                            title="@Lang["vsgame.Match.Game.QuestionSpeedBonus"]">
                                                         @Seconds(player.AnswerTimeSeconds)
-                                                        <i class="bi bi-arrow-right-short"></i>
-                                                        @Seconds(player.ModifiedTimeSeconds.Value)
+                                                        @if (Data.Game.CurrentRoundNumber <=
+                                                             Data.Game.NormalRoundCount)
+                                                        {
+                                                            <i class="bi bi-arrow-right-short"></i>
+                                                            @Seconds(player.ModifiedTimeSeconds.Value)
+                                                        }
                                                     </small>
                                                 }
 

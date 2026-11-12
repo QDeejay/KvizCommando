@@ -18,9 +18,8 @@ public sealed class VsMatchProfile
     public int BotCaptainSelectionSeconds { get; init; } = 3;
     public int BotMinimumAnswerSeconds { get; init; } = 3;
     public int BotMaximumAnswerSeconds { get; init; } = 7;
-    public double TimeFreezeModifierSeconds { get; init; } = -99;
-    public int TimeFreezeWrongAnswerPenaltySeconds { get; init; } =
-        VsRankedMatchRules.TIME_FREEZE_WRONG_ANSWER_PENALTY_SECONDS;
+    public double TimeFreezeModifierSeconds => -QuestionSeconds;
+    public int TimeFreezeWrongAnswerPenaltySeconds => QuestionSeconds;
     public int PointUnit { get; init; } =
         VsRankedMatchRules.POINT_UNIT;
     public int CaptainMultiplier { get; init; } =

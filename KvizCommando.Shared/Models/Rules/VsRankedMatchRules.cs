@@ -10,7 +10,8 @@ public static class VsRankedMatchRules
     public const int QUESTION_SECONDS = 20;
     public const int POINT_UNIT = 1;
     public const int CAPTAIN_MULTIPLIER = 2;
-    public const int TIME_FREEZE_WRONG_ANSWER_PENALTY_SECONDS = 20;
+    public const int TIME_FREEZE_WRONG_ANSWER_PENALTY_SECONDS =
+        QUESTION_SECONDS;
     public const double WINNER_COMPENSATION_MIN = 1.0;
     public const double WINNER_COMPENSATION_MAX = 3.0;
 
