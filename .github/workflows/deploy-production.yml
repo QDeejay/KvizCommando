@@ -25,6 +25,9 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Verify .NET SDK
+        run: dotnet --version
+
       - name: Restore
         run: dotnet restore KvizCommando.sln
 
@@ -41,7 +44,6 @@ jobs:
           dotnet publish KvizCommando.Server/KvizCommando.Server.csproj \
             -c Release \
             -r linux-x64 \
-            --self-contained false \
             -p:InformationalVersion="${GITHUB_REF_NAME}" \
             -p:IncludeSourceRevisionInInformationalVersion=false \
             -o ./publish
