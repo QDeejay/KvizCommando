@@ -61,12 +61,11 @@ internal static partial class VsMatchSnapshotBuilder
                     .Select(help => new VsHelpCardDto
                     {
                         HelpType = help,
-                        Count =
-                            currentPlayer.HelpCounts[(int)help - 1] > 0 &&
-                            currentPlayer.Rounds.All(round =>
-                                round.HelpType != help)
-                                ? 1
-                                : 0
+                        Count = Math.Max(
+                            0,
+                            currentPlayer.HelpCounts[(int)help - 1] -
+                            currentPlayer.Rounds.Count(round =>
+                                round.HelpType == help))
                     })
             ],
             CategoryModifiers = BuildCategoryModifiers(

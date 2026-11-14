@@ -88,7 +88,9 @@ public partial class VsMatchPreparationView : IDisposable
 
         if (_selectedHelp != VsHelpType.None &&
             (selectedHelp is null ||
-             selectedHelp.Count <= 0))
+             selectedHelp.Count <= 0 ||
+             Data.Preparation.Rounds.Any(round =>
+                 round.Help?.HelpType == _selectedHelp)))
         {
             _selectedHelp = VsHelpType.None;
         }
@@ -248,7 +250,9 @@ public partial class VsMatchPreparationView : IDisposable
     private async Task SelectHelpAsync(VsHelpCardVm help)
     {
         if (help.Count <= 0 ||
-            Data.Preparation.IsFinished)
+            Data.Preparation.IsFinished ||
+            Data.Preparation.Rounds.Any(round =>
+                round.Help?.HelpType == help.HelpType))
         {
             return;
         }

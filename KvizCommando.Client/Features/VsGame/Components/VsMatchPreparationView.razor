@@ -216,7 +216,10 @@
                     {
                         <button type="button"
                                 class="kc-vs-prep-help-card @(_selectedHelp == help.HelpType ? "selected" : "")"
-                                disabled="@(help.Count <= 0 || Data.Preparation.IsFinished)"
+                                disabled="@(help.Count <= 0 ||
+                                            Data.Preparation.IsFinished ||
+                                            Data.Preparation.Rounds.Any(round =>
+                                                round.Help?.HelpType == help.HelpType))"
                                 @onclick="() => SelectHelpAsync(help)">
                             <i class="@help.IconCss"></i>
                             <span>
