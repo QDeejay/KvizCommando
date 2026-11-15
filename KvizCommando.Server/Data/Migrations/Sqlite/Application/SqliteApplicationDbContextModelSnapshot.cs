@@ -119,6 +119,20 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
                     b.ToTable("MarketingConsents", (string)null);
                 });
 
+            modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Compliance.RegistrationBenefitClaim", b =>
+                {
+                    b.Property<string>("EmailFingerprint")
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("EligibleAgainAtUtc")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("EmailFingerprint");
+
+                    b.ToTable("RegistrationBenefitClaims", (string)null);
+                });
+
             modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Compliance.TermsConsent", b =>
                 {
                     b.Property<long>("Id")
@@ -300,20 +314,6 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
 
                             t.HasCheckConstraint("CK_PlayerLoadouts_UserSlots_Json", "json_valid([UserSlotsJson])");
                         });
-                });
-
-            modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Compliance.RegistrationBenefitClaim", b =>
-                {
-                    b.Property<string>("EmailFingerprint")
-                        .HasMaxLength(64)
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("EligibleAgainAtUtc")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("EmailFingerprint");
-
-                    b.ToTable("RegistrationBenefitClaims", (string)null);
                 });
 
             modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Security.UserPii", b =>
@@ -702,11 +702,56 @@ namespace KvizCommando.Server.Data.Migrations.Sqlite.Application
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Players.PlayerCharacter", b =>
+                {
+                    b.HasOne("KvizCommando.Server.Domain.Entities.Players.Player", null)
+                        .WithOne()
+                        .HasForeignKey("KvizCommando.Server.Domain.Entities.Players.PlayerCharacter", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Players.PlayerLoadout", b =>
+                {
+                    b.HasOne("KvizCommando.Server.Domain.Entities.Players.Player", null)
+                        .WithOne()
+                        .HasForeignKey("KvizCommando.Server.Domain.Entities.Players.PlayerLoadout", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Security.UserPii", b =>
                 {
                     b.HasOne("KvizCommando.Server.Identity.ApplicationUser", null)
                         .WithOne()
                         .HasForeignKey("KvizCommando.Server.Domain.Entities.Security.UserPii", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Statistics.PlayerAskStats", b =>
+                {
+                    b.HasOne("KvizCommando.Server.Domain.Entities.Players.Player", null)
+                        .WithOne()
+                        .HasForeignKey("KvizCommando.Server.Domain.Entities.Statistics.PlayerAskStats", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Statistics.PlayerCategoryStat", b =>
+                {
+                    b.HasOne("KvizCommando.Server.Domain.Entities.Players.Player", null)
+                        .WithMany()
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KvizCommando.Server.Domain.Entities.Statistics.PlayerOrientStat", b =>
+                {
+                    b.HasOne("KvizCommando.Server.Domain.Entities.Players.Player", null)
+                        .WithMany()
+                        .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

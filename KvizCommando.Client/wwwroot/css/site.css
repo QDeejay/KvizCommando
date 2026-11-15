@@ -574,7 +574,7 @@ button.password-toggle:disabled {
             cursor: var(--kc-cursor-disabled);
         }
 
-/* The button shapes inside help articles are illustrations, not controls. */
+/* A súgócikkekben megjelenő gombok illusztrációk, nem működő vezérlőelemek. */
 .kc-help-document .button-on-lcd,
 .kc-help-document .button-on-lcd i,
 .kc-help-document .button-on-lcd:hover,

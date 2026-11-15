@@ -1,6 +1,5 @@
 ﻿using KvizCommando.Server.Hubs;
 using KvizCommando.Server.Services.SoloGame.CategoryQuestionIndex;
-using KvizCommando.Server.Services.Rankings;
 using KvizCommando.Server.Startup;
 using Microsoft.AspNetCore.HttpOverrides;
 
@@ -16,8 +15,8 @@ if (builder.Environment.IsDevelopment())
 
 if (builder.Environment.IsProduction())
 {
-    // Production secrets and operational switches live outside the deployment directory.
-    // They are loaded once at process startup; runtime reload is intentionally disabled.
+    // Az éles környezet titkos beállításai és üzemeltetési kapcsolói a telepítési könyvtáron kívül találhatók.
+    // A folyamat indulásakor egyszer töltjük be őket; a futás közbeni újratöltést szándékosan letiltottuk.
     builder.Configuration
         .AddJsonFile(
             "/etc/kvizcommando/secrets.json",
@@ -28,28 +27,6 @@ if (builder.Environment.IsProduction())
             optional: false,
             reloadOnChange: false);
 }
-
-//  Sql server migrációs utasítások: Migration -custom elnevezés-
-/*
-     Add-Migration InitialSqlServerApplication -Context SqlServerApplicationDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -OutputDir Data/Migrations/SqlServer/Application -Args "--Database:Provider=SqlServer"
-
-     Add-Migration InitialSqlServerGame -Context SqlServerGameDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -OutputDir Data/Migrations/SqlServer/Game -Args "--Database:Provider=SqlServer"
-
-     Update-Database -Context SqlServerApplicationDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -Args "--Database:Provider=SqlServer"
-
-     Update-Database -Context SqlServerGameDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -Args "--Database:Provider=SqlServer" 
-*/
-
-// SQLite migrációs utasítások: Migration -custom elnevezés-
-/*
-     Add-Migration InitialSqliteApplication -Context SqliteApplicationDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -OutputDir Data/Migrations/Sqlite/Application -Args "--Database:Provider=Sqlite"
-
-     Add-Migration InitialSqliteGame -Context SqliteGameDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -OutputDir Data/Migrations/Sqlite/Game -Args "--Database:Provider=Sqlite"
-
-     Update-Database -Context SqliteApplicationDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -Args "--Database:Provider=Sqlite"
-
-     Update-Database -Context SqliteGameDbContext -Project KvizCommando.Server -StartupProject KvizCommando.Server -Args "--Database:Provider=Sqlite"
- */
 
 // Az EF migráció miatt kell itt a fejlesztői környezetben, migraciós parancsok futtatásához. A tényleges adatbázis-kapcsolatot a konfigurációs fájlokban és a parancssori argumentumokban lehet felülírni.
 builder.Configuration.AddCommandLine(args);
@@ -73,7 +50,8 @@ if (builder.Environment.IsDevelopment())
     builder.Logging.SetMinimumLevel(LogLevel.Debug);
 }
 
-// az Ngork-os ideiglenes domain név miatt a ForwardedHeaders beállításokat kell alkalmazni, hogy a helyes protokollt és IP-címet kapjuk meg a kérésekből ellenkező esetben vissza dobja a kérést
+// A fordított proxy által továbbított fejlécekből vesszük át
+// a kliens eredeti IP-címét és a kérés HTTP/HTTPS protokollját.
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders =

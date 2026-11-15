@@ -3,7 +3,7 @@
     internal  class CharacterModel
     {
         
-        public bool? genre { get; set; } // false is male
+        public bool? genre { get; set; } // A false érték férfit jelöl.
         public bool glasses { get; set; } = false;
         public bool asian { get; set; } = false;
         public string eyeColor { get; set; } = "";

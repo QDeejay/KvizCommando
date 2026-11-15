@@ -36,8 +36,8 @@ namespace KvizCommando.Client.Layout
                 _btnNavClass[8] = BTN_NAV_CLASS_DEF + (!Hs.Events.Enable ? " disabled" : "");   // Events
                 _btnNavClass[9] = BTN_NAV_CLASS_DEF + (!Hs.Community.Enable ? " disabled" : ""); // Community
                 _btnNavClass[10] = BTN_NAV_CLASS_DEF + (!Hs.Messages.Enable ? " disabled" : "");// Messages
-                _btnNavClass[11] = BTN_NAV_CLASS_DEF;                                        // Settings allways on
-                _btnNavClass[15] = BTN_NAV_CLASS_DEF;                                        // Exit allways on
+                _btnNavClass[11] = BTN_NAV_CLASS_DEF;                                        // A beállítások mindig elérhetők
+                _btnNavClass[15] = BTN_NAV_CLASS_DEF;                                        // A kilépés mindig elérhető
                 _isReady = true;
             }
         }

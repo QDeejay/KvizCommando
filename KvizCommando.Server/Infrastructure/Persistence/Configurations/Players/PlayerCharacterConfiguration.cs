@@ -15,6 +15,11 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
             b.Property(pc => pc.PlayerId)
              .ValueGeneratedNever();
 
+            b.HasOne<Player>()
+             .WithOne()
+             .HasForeignKey<PlayerCharacter>(pc => pc.PlayerId)
+             .OnDelete(DeleteBehavior.Cascade);
+
             b.Property(pc => pc.CharactersJson)
              .IsRequired();
 

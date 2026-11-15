@@ -4,10 +4,6 @@
     {
         internal static bool IsValidEmail(string email)
         {
-#if DEBUG
-            if (email == "asd")
-                return true;
-#endif
             try
             {
                 var addr = new System.Net.Mail.MailAddress(email);

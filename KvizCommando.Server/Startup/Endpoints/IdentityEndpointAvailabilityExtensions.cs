@@ -5,7 +5,7 @@ namespace KvizCommando.Server.Startup;
 public static class IdentityEndpointAvailabilityExtensions
 {
     /// <summary>
-    /// Enforces operational availability switches on the built-in Identity endpoints.
+    /// A beépített Identity-végpontok elérhetőségét az üzemeltetési kapcsolókhoz igazítja.
     /// </summary>
     public static IEndpointConventionBuilder WithPublicAuthAvailability(
         this IEndpointConventionBuilder builder,

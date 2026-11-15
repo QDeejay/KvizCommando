@@ -15,6 +15,11 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
             b.Property(pl => pl.PlayerId)
              .ValueGeneratedNever();
 
+            b.HasOne<Player>()
+             .WithOne()
+             .HasForeignKey<PlayerLoadout>(pl => pl.PlayerId)
+             .OnDelete(DeleteBehavior.Cascade);
+
             b.Property(pl => pl.FactorySlotsJson).IsRequired();
             b.Property(pl => pl.UserSlotsJson).IsRequired();
             b.Property(pl => pl.PendingSlotsJson).IsRequired();

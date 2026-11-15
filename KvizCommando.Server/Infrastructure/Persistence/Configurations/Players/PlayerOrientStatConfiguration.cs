@@ -1,4 +1,5 @@
 ﻿using KvizCommando.Server.Domain.Entities.Statistics;
+using KvizCommando.Server.Domain.Entities.Players;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,6 +13,11 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
             b.ToTable("PlayerOrientStat");
 
             b.HasKey(x => new { x.PlayerId, x.OrientId });
+
+            b.HasOne<Player>()
+             .WithMany()
+             .HasForeignKey(x => x.PlayerId)
+             .OnDelete(DeleteBehavior.Cascade);
 
             b.Property(x => x.OrientId).HasColumnType("smallint");
 

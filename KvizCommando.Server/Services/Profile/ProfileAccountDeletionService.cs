@@ -143,24 +143,7 @@ public sealed class ProfileAccountDeletionService : IProfileAccountDeletionServi
 
         if (playerId.HasValue)
         {
-            await _applicationDb.PlayerCharacters
-                .Where(value => value.PlayerId == playerId.Value)
-                .ExecuteDeleteAsync(ct);
-            await _applicationDb.PlayerLoadouts
-                .Where(value => value.PlayerId == playerId.Value)
-                .ExecuteDeleteAsync(ct);
-            await _applicationDb.PlayerCategoryStats
-                .Where(value => value.PlayerId == playerId.Value)
-                .ExecuteDeleteAsync(ct);
-            await _applicationDb.PlayerOrientStat
-                .Where(value => value.PlayerId == playerId.Value)
-                .ExecuteDeleteAsync(ct);
-            await _applicationDb.PlayerAskStats
-                .Where(value => value.PlayerId == playerId.Value)
-                .ExecuteDeleteAsync(ct);
-            await _applicationDb.TeamStatistics
-                .Where(value => value.PlayerId == playerId.Value)
-                .ExecuteDeleteAsync(ct);
+            // A kapcsolódó játékosadatokat az adatbázis kaszkádosan törli.
             await _applicationDb.Players
                 .Where(value => value.PlayerId == playerId.Value)
                 .ExecuteDeleteAsync(ct);

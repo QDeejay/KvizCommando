@@ -1,4 +1,5 @@
 ﻿using KvizCommando.Server.Domain.Entities.Statistics;
+using KvizCommando.Server.Domain.Entities.Players;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,6 +15,11 @@ namespace KvizCommando.Server.Infrastructure.Persistence.Configurations
             b.HasKey(x => x.PlayerId);
             b.Property(x => x.PlayerId)
              .ValueGeneratedNever();
+
+            b.HasOne<Player>()
+             .WithOne()
+             .HasForeignKey<PlayerAskStats>(x => x.PlayerId)
+             .OnDelete(DeleteBehavior.Cascade);
 
             b.Property(x => x.TotalQuestionsAsked).IsRequired();
             b.Property(x => x.TotalAskPointsEarned).IsRequired();

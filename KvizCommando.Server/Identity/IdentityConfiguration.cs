@@ -12,19 +12,19 @@ public static class IdentityConfiguration
     public const string LEGACY_FACEBOOK_LOGIN_ENABLED_KEY = "Authentication:Facebook:Enabled";
 
     /// <summary>
-    /// Returns whether public account registration is enabled.
+    /// Jelzi, hogy engedélyezett-e a nyilvános fiókregisztráció.
     /// </summary>
     public static bool IsRegistrationEnabled(IConfiguration configuration) =>
         configuration.GetValue<bool>(REGISTRATION_ENABLED_KEY);
 
     /// <summary>
-    /// Returns the display-only test period configured for invitation-only operation.
+    /// Visszaadja a meghívásos tesztüzemhez beállított, csak megjelenítésre szolgáló időszakot.
     /// </summary>
     public static string GetInvitationTestPeriod(IConfiguration configuration) =>
         configuration[INVITATION_TEST_PERIOD_KEY] ?? string.Empty;
 
     /// <summary>
-    /// Returns whether Facebook login is enabled.
+    /// Jelzi, hogy engedélyezett-e a Facebook-bejelentkezés.
     /// </summary>
     public static bool IsFacebookLoginEnabled(IConfiguration configuration)
     {

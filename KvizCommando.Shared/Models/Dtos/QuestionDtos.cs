@@ -6,9 +6,9 @@ namespace KvizCommando.Shared.Models.Dtos
     public class QuestionDtos
     {
         public bool AccessDenied { get; set; } = false;
-        public int[] FactorySlots { get; set; } = new int[11]; // Fill up category names no
+        public int[] FactorySlots { get; set; } = new int[11]; // A kategóriák sorszámai.
 
-        public UserSlot[] Userlots { get; set; } = new UserSlot[11]; // Userdeclareted questions
+        public UserSlot[] Userlots { get; set; } = new UserSlot[11]; // Felhasználói kérdések.
 
         public PendingSlot[] PendingSlots { get; set; } = new PendingSlot[6];
 
